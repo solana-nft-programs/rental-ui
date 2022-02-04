@@ -135,10 +135,6 @@ export const TokenMetadata = styled.div`
       --poster-color: transparent;
     }
   }
-
-  .ant-popover {
-    z-index: 10;
-  }
 `
 
 interface NFTProps {
@@ -163,6 +159,7 @@ export function NFT({ tokenData, setIssueId }: NFTProps) {
           tokenAccount?.account.data.parsed.info.state !== 'frozen' ? (
             <Popover
               placement="bottomLeft"
+              zIndex={10}
               content={
                 <div id="context-menu">
                   <div
