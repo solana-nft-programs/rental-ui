@@ -18,6 +18,7 @@ import { NFTOverlay } from 'common/NFTOverlay'
 import { executeTransaction } from 'common/Transactions'
 import { SignerWallet } from '@saberhq/solana-contrib'
 import { shortPubKey } from 'common/utils'
+import { FaQuestionCircle } from 'react-icons/fa'
 
 const BASE_PATH = 'https://claim.cardinal.so'
 
@@ -354,11 +355,18 @@ function Claim() {
       setTokenDataError(null)
       setTokenData(null)
       const data = await getTokenData(ctx.connection, mintId!)
+      if (
+        !data.metadata &&
+        !data.metaplexData &&
+        !data.tokenAccount &&
+        !data.tokenManager
+      ) {
+        throw new Error('No token found')
+      }
       setTokenData(data)
-      setLoadingImage(true)
       console.log(data)
 
-      if (tokenData?.metadata.data.image) {
+      if (data?.metadata?.data?.image) {
         setLoadingImage(true)
       }
       if (data?.tokenManager?.parsed?.state === TokenManagerState.Claimed) {
@@ -478,7 +486,7 @@ function Claim() {
         transaction,
         [otpKeypair]
       )
-      notify({ message: 'Certificate claimed!', txid })
+      notify({ message: 'Succesfully claimed!', txid })
       getMetadata()
     } catch (e: any) {
       setTokenDataStatus({ status: VerificationStatus.ERROR })
@@ -488,6 +496,7 @@ function Claim() {
     }
   }
 
+  console.log(tokenData)
   return (
     <>
       <Header />
@@ -518,7 +527,7 @@ function Claim() {
               loading={tokenDataStatus === null || loadingImage}
             >
               <>
-                {tokenData && (
+                {tokenData ? (
                   <>
                     <NFTOuter>
                       <NFTOverlay
@@ -602,16 +611,14 @@ function Claim() {
                       )}
                     </div>
                   </>
-                )}
-                {tokenDataError && (
+                ) : (
                   <>
-                    <i
-                      className="fas fa-question-circle"
-                      style={{ fontSize: '170px' }}
-                    ></i>
-                    <div className="footer" style={{ marginTop: '25px' }}>
-                      {`${tokenDataError}`}
-                    </div>
+                    <FaQuestionCircle style={{ fontSize: '170px' }} />
+                    {tokenDataError && (
+                      <div className="footer" style={{ marginTop: '25px' }}>
+                        {`${tokenDataError}`}
+                      </div>
+                    )}
                   </>
                 )}
               </>

@@ -3,7 +3,7 @@ import Colors from 'common/colors'
 import { getQueryParam } from 'common/utils'
 import styled from '@emotion/styled'
 import { TokenData } from 'api/api'
-import { Popover } from 'antd'
+import { Popover, Tooltip } from 'antd'
 import { FaEllipsisH } from 'react-icons/fa'
 import { FiSend } from 'react-icons/fi'
 import { useRentalModal } from 'rental-components/RentalModalProvider'
@@ -12,6 +12,7 @@ import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { asWallet } from './Wallets'
 import { IoQrCodeOutline } from 'react-icons/io5'
 import { useQRCode } from 'rental-components/QRCodeProvider'
+import { NFTOverlay } from './NFTOverlay'
 
 export const TokensOuter = styled.div`
   display: flex;
@@ -56,6 +57,25 @@ export const TokenMetadata = styled.div`
       // background: rgba(120, 120, 120);
       background: ${Colors.background};
     }
+  }
+
+  #disabled-ellipsis {
+    color: ${Colors.lightGray};
+    z-index: 1;
+    top: 6px;
+    right: 10px;
+    position: absolute;
+    font-size: 20px;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: 0.2s all;
+    // background: rgba(100, 100, 100);
+    background: ${Colors.background};
   }
 
   .qr-code {
@@ -134,47 +154,56 @@ export function NFT({ tokenData, setIssueId }: NFTProps) {
   const rentalModal = useRentalModal()
   const { tokenAccount, metaplexData, metadata, tokenManager } = tokenData
   const customImageUri = getQueryParam(metadata?.data?.image, 'uri')
+  console.log(tokenManager)
   return (
     <TokenMetadata>
       {wallet &&
         wallet.connected &&
         (!tokenManager ? (
-          <Popover
-            placement="bottomLeft"
-            content={
-              <div id="context-menu">
-                <div
-                  style={{
-                    cursor: 'pointer',
-                  }}
-                >
+          tokenAccount?.account.data.parsed.info.state !== 'frozen' ? (
+            <Popover
+              placement="bottomLeft"
+              content={
+                <div id="context-menu">
                   <div
                     style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '10px',
+                      cursor: 'pointer',
                     }}
-                    onClick={() =>
-                      rentalModal.show(
-                        asWallet(wallet),
-                        ctx.connection,
-                        ctx.environment.label,
-                        tokenData
-                      )
-                    }
                   >
-                    Send
-                    <FiSend />
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '10px',
+                      }}
+                      onClick={() =>
+                        rentalModal.show(
+                          asWallet(wallet),
+                          ctx.connection,
+                          ctx.environment.label,
+                          tokenData
+                        )
+                      }
+                    >
+                      Send
+                      <FiSend />
+                    </div>
                   </div>
                 </div>
+              }
+              trigger="click"
+            >
+              <div id="ellipsis">
+                <FaEllipsisH />
               </div>
-            }
-            trigger="click"
-          >
-            <div id="ellipsis">
-              <FaEllipsisH />
-            </div>
-          </Popover>
+            </Popover>
+          ) : (
+            <Tooltip placement="topLeft" title="This item is not elligible">
+              <div id="disabled-ellipsis">
+                <FaEllipsisH />
+              </div>
+            </Tooltip>
+          )
         ) : (
           <div
             className="qr-code"
@@ -184,6 +213,9 @@ export function NFT({ tokenData, setIssueId }: NFTProps) {
           </div>
         ))}
       <div id="media-outer">
+        {tokenManager && (
+          <NFTOverlay state={tokenManager?.parsed.state} lineHeight={20} />
+        )}
         {metadata &&
           metadata.data &&
           (metadata.data.animation_url ? (

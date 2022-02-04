@@ -1,47 +1,50 @@
-import styled from "@emotion/styled";
-import { css } from "@emotion/react";
+import styled from '@emotion/styled'
+import { css } from '@emotion/react'
 import {
   AiFillInfoCircle,
   AiFillWarning,
   AiFillCheckCircle,
   AiFillExclamationCircle,
-} from "react-icons/ai";
+} from 'react-icons/ai'
 
 export const Alert = ({
   type,
   showIcon,
   message,
   style,
+  icon,
 }: {
-  type: "success" | "info" | "warning" | "error";
-  showIcon?: boolean;
-  message: React.ReactNode;
-  style: React.CSSProperties;
+  type: 'success' | 'info' | 'warning' | 'error'
+  showIcon?: boolean
+  message: React.ReactNode
+  icon?: React.ReactNode
+  style: React.CSSProperties
 }) => {
   return (
     <StyledAlert type={type} style={style}>
-      {showIcon && (
-        <AlertIcon type={type}>
-          {
+      {showIcon &&
+        (icon ?? (
+          <AlertIcon type={type}>
             {
-              info: <AiFillInfoCircle />,
-              warning: <AiFillWarning />,
-              success: <AiFillCheckCircle />,
-              error: <AiFillExclamationCircle />,
-            }[type]
-          }
-        </AlertIcon>
-      )}
+              {
+                info: <AiFillInfoCircle />,
+                warning: <AiFillWarning />,
+                success: <AiFillCheckCircle />,
+                error: <AiFillExclamationCircle />,
+              }[type]
+            }
+          </AlertIcon>
+        ))}
       {message}
     </StyledAlert>
-  );
-};
+  )
+}
 
 const AlertIcon = styled.div<{
-  type: "success" | "info" | "warning" | "error";
+  type: 'success' | 'info' | 'warning' | 'error'
 }>`
   margin-right: 8px;
-  ${({ type = "info" }) => {
+  ${({ type = 'info' }) => {
     return {
       info: css`
         color: #1890ff;
@@ -55,12 +58,12 @@ const AlertIcon = styled.div<{
       error: css`
         color: #ff4d4f;
       `,
-    }[type];
+    }[type]
   }}
-`;
+`
 
 const StyledAlert = styled.div<{
-  type: "success" | "info" | "warning" | "error";
+  type: 'success' | 'info' | 'warning' | 'error'
 }>`
   box-sizing: border-box;
   margin: 0;
@@ -70,14 +73,14 @@ const StyledAlert = styled.div<{
   font-variant: tabular-nums;
   line-height: 1.5715;
   list-style: none;
-  font-feature-settings: "tnum";
+  font-feature-settings: 'tnum';
   position: relative;
   display: flex;
   align-items: center;
   padding: 8px 15px;
   word-wrap: break-word;
   border-radius: 2px;
-  ${({ type = "info" }) => {
+  ${({ type = 'info' }) => {
     return {
       info: css`
         background-color: #e6f7ff;
@@ -95,6 +98,6 @@ const StyledAlert = styled.div<{
         background-color: #fff2f0;
         border: 1px solid #ffccc7;
       `,
-    }[type];
+    }[type]
   }}
-`;
+`

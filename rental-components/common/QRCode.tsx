@@ -72,7 +72,7 @@ export const QRCode = ({
     <QRCodeOuter>
       <img
         height="300px"
-        style={{ borderRadius: '10px' }}
+        style={{ borderRadius: '1`0px' }}
         src={qrCode}
         alt="qr-code"
       />

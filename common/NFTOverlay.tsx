@@ -6,6 +6,7 @@ import * as utils from 'common/utils'
 import { useUTCNow } from 'providers/UTCNowProvider'
 import { PAYMENT_MINTS, usePaymentMints } from 'providers/PaymentMintsProvider'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
+import { useEffect, useState } from 'react'
 
 const StyledOverlay = styled.div<{
   height?: string
@@ -124,8 +125,19 @@ export function NFTOverlay({
   returnable,
   lineHeight = 20,
 }: NFTOverlayProps) {
-  const { UTCNow } = useUTCNow()
+  // const { UTCNow } = useUTCNow()
   const { paymentMintInfos } = usePaymentMints()
+  const [UTCNow, setUTCNow] = useState(Date.now() / 1000)
+  useEffect(() => {
+    const interval = setInterval(
+      (function expirationStringUpdate() {
+        setUTCNow(Math.floor(Date.now() / 1000))
+        return expirationStringUpdate
+      })(),
+      1000
+    )
+    return () => clearInterval(interval)
+  })
   return (
     <StyledOverlay
       shadow={shadow}

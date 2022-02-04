@@ -5,7 +5,7 @@ class AppDocument extends Document {
     return (
       <Html>
         <Head>
-          <title>Create Next App</title>
+          <title>Cardinal</title>
           <link rel="icon" href="/favicon.ico" />
           <link href="/globals.css" rel="stylesheet" />
 

@@ -19,6 +19,7 @@ import { NFTOverlay } from 'common/NFTOverlay'
 import { claimLinks } from '@cardinal/token-manager'
 import { executeTransaction } from 'common/Transactions'
 import { TokenManagerKind } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
+import { notify } from 'common/Notification'
 
 const NFTOuter = styled.div`
   height: 200px;
@@ -31,6 +32,11 @@ const NFTOuter = styled.div`
     height: 100%;
   }
 `
+
+const handleCopy = (shareUrl: string) => {
+  navigator.clipboard.writeText(shareUrl)
+  notify({ message: 'Share link copied' })
+}
 
 export type RentalCardProps = {
   dev?: boolean
@@ -57,8 +63,8 @@ export const RentalCard = ({
 }: RentalCardProps) => {
   const [error, setError] = useState<string>()
   const [loading, setLoading] = useState(false)
-  const [complete, setComplete] = useState(false)
   const [rentalType, setRentalType] = useState('time')
+  const [link, setLink] = useState<string | null>(null)
   const { tokenAccount, metaplexData, metadata, tokenManager } = tokenData
   console.log(tokenData)
   const customImageUri = getQueryParam(metadata?.data?.image, 'uri')
@@ -67,7 +73,7 @@ export const RentalCard = ({
   const [price, setPrice] = useState(0)
   const [paymentMint, setPaymentMint] = useState(PAYMENT_MINTS[0].mint)
   const [amount, setAmount] = useState(1)
-  const [expiration, setExpiration] = useState(null)
+  const [expiration, setExpiration] = useState<number | null>(null)
   const [maxUsages, setMaxUsages] = useState<number | null>(null)
   const [revocable, setRevocable] = useState(false)
   const [extendable, setExtendable] = useState(false)
@@ -80,6 +86,7 @@ export const RentalCard = ({
       if (!tokenAccount) {
         throw 'Token acount not found'
       }
+      setLoading(true)
       const rentalMint = new PublicKey(
         tokenAccount?.account.data.parsed.info.mint
       )
@@ -92,10 +99,14 @@ export const RentalCard = ({
         })
       await executeTransaction(connection, wallet, transaction)
       const link = claimLinks.getLink(rentalMint, otpKeypair)
+      setLink(link)
+      handleCopy(link)
       console.log(link)
     } catch (e) {
       console.log('Error handling rental', e)
       setError(`Error handling rental ${e}`)
+    } finally {
+      setLoading(false)
     }
   }
   return (
@@ -137,13 +148,13 @@ export const RentalCard = ({
               state={tokenManager?.parsed.state}
               paymentAmount={tokenManager?.parsed.paymentAmount}
               paymentMint={tokenManager?.parsed.paymentMint}
-              expiration={tokenManager?.parsed.expiration}
+              expiration={expiration}
               usages={tokenManager?.parsed.usages}
               maxUsages={maxUsages}
               revocable={tokenManager?.parsed.revokeAuthority != null}
               extendable={tokenManager?.parsed.isExtendable}
               returnable={tokenManager?.parsed.isReturnable}
-              lineHeight={14}
+              lineHeight={12}
             />
             {metadata &&
               metadata.data &&
@@ -178,7 +189,7 @@ export const RentalCard = ({
                     zIndex: 99999,
                   }}
                   showTime
-                  onChange={(e) => setExpiration(null)}
+                  onChange={(e) => setExpiration(e ? e.valueOf() / 1000 : null)}
                 />
               </div>
             }
@@ -229,9 +240,28 @@ export const RentalCard = ({
             </StyledAlert>
           )}
         </DetailsWrapper>
+        {link && (
+          <StyledAlert onClick={() => handleCopy(link)}>
+            <Alert
+              style={{ marginTop: '10px', height: 'auto', cursor: 'pointer' }}
+              message={
+                <>
+                  <div>
+                    {' '}
+                    {link.substring(0, 40)}
+                    ...
+                    {link.substring(link.length - 10)}
+                  </div>
+                </>
+              }
+              type="success"
+              showIcon
+            />
+          </StyledAlert>
+        )}
         <ButtonWithFooter
           loading={loading}
-          complete={complete}
+          complete={link != null}
           disabled={false}
           onClick={handleRental}
           footer={<PoweredByFooter />}

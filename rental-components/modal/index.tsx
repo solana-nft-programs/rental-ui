@@ -73,7 +73,7 @@ export const Modal: React.FC<ModalProps> = ({
             bottom: 0;
             left: 0;
             overflow: auto;
-            z-index: 9999;
+            z-index: 100;
           }
           [data-reach-dialog-content] {
             margin: 10vh auto;
