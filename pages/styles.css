@@ -1,13 +1,9 @@
 body {
   margin: 0;
-  background-color: #ddd !important;
-  font-family: "SFHello", sans-serif;
+  background-color: rgb(26, 27, 32) !important;
+  font-family: 'SFHello', sans-serif;
 }
 
 .ant-tag {
   margin: 0px;
-}
-
-a {
-  text-decoration: none;
 }

@@ -1,5 +1,6 @@
 import React, { useMemo, useState, useContext } from 'react'
 import { Connection, PublicKey } from '@solana/web3.js'
+import { useRouter } from 'next/router'
 
 export interface Environment {
   label: string
@@ -43,15 +44,23 @@ export const ENVIRONMENTS: Environment[] = [
 const EnvironmentContext: React.Context<null | EnvironmentContextValues> =
   React.createContext<null | EnvironmentContextValues>(null)
 
-export function EnvironmentContextProvider({
+export function EnvironmentProvider({
   children,
 }: {
   children: React.ReactChild
 }) {
-  // could be used by environment selector
-  const [environment, setEnvironment] = useState(ENVIRONMENTS[0])
+  const router = useRouter()
+  const cluster = router.query.cluster
+  const foundEnvironment = ENVIRONMENTS.find((e) => e.label === cluster)
+  const [environment, setEnvironment] = useState(
+    foundEnvironment ?? ENVIRONMENTS[0]
+  )
 
-  // only update connection if environment changes
+  useMemo(() => {
+    const foundEnvironment = ENVIRONMENTS.find((e) => e.label === cluster)
+    setEnvironment(foundEnvironment ?? ENVIRONMENTS[0])
+  }, [cluster])
+
   const connection = useMemo(
     () => new Connection(environment.value, 'recent'),
     [environment]

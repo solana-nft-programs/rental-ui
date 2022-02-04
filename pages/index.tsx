@@ -1,82 +1,87 @@
 import Head from 'next/head'
+import styled from '@emotion/styled'
+import { WalletConnectButton } from '@solana/wallet-adapter-react-ui'
+import { useWallet } from '@solana/wallet-adapter-react'
+import { useEffect } from 'react'
+import { useRouter } from 'next/router'
+
+const StyledSplash = styled.div`
+  margin-top: 30vh;
+  width: 70%;
+  max-width: 400px;
+  position: relative;
+  color: rgba(255, 255, 255, 0.8);
+
+  .title {
+    text-align: center;
+    position: relative;
+  }
+
+  .subscript {
+    font-size: 10px;
+    font-style: italic;
+    position: absolute;
+    right: -35px;
+    bottom: 5px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 6px;
+    padding: 3px 5px;
+  }
+`
 
 export default function Home() {
+  const wallet = useWallet()
+  const router = useRouter()
+
+  useEffect(() => {
+    if (wallet && wallet.connected) {
+      router.push(
+        `/${wallet.publicKey.toBase58()}${
+          new URLSearchParams(window.location.search).get('cluster')
+            ? `?cluster=${new URLSearchParams(window.location.search).get(
+                'cluster'
+              )}`
+            : ''
+        }`
+      )
+    }
+  }, [wallet.connected])
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-2 ">
+    <div className="flex min-h-screen flex-col items-center">
       <Head>
         <title>Create Next App</title>
         <link rel="icon" href="/favicon.ico" />
+        <link href="/globals.css" rel="stylesheet" />
+
+        <link
+          href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"
+          rel="stylesheet"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Lato:wght@100&display=swap"
+          rel="stylesheet"
+        />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Kanit:ital@0;1&family=Oswald:wght@200;300;400;500&display=swap"
+          rel="stylesheet"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Karla:wght@600&display=swap"
+          rel="stylesheet"
+        />
       </Head>
-
-      <main className="flex flex-col items-center justify-center flex-1 w-full px-20 text-center">
-        <h1 className="text-6xl font-bold">
-          Welcome to{' '}
-          <a className="text-blue-600" href="https://nextjs.org">
-            Next.js!
-          </a>
-        </h1>
-
-        <p className="mt-3 text-2xl">
-          Get started by editing{' '}
-          <code className="p-3 font-mono text-lg bg-gray-100 rounded-md">
-            pages/index.tsx
-          </code>
-        </p>
-
-        <div className="flex flex-wrap items-center justify-around max-w-4xl mt-6 sm:w-full">
-          <a
-            href="https://nextjs.org/docs"
-            className="p-6 mt-6 text-left border w-96 rounded-xl hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Documentation &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Find in-depth information about Next.js features and API.
-            </p>
-          </a>
-
-          <a
-            href="https://nextjs.org/learn"
-            className="p-6 mt-6 text-left border w-96 rounded-xl hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Learn &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Learn about Next.js in an interactive course with quizzes!
-            </p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className="p-6 mt-6 text-left border w-96 rounded-xl hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Examples &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Discover and deploy boilerplate example Next.js projects.
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className="p-6 mt-6 text-left border w-96 rounded-xl hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Deploy &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+      <StyledSplash>
+        <div className="title">
+          <img src="/assets/cardinal-titled.png" />
+          {/* <div className="subscript">alpha</div> */}
         </div>
-      </main>
-
-      <footer className="flex items-center justify-center w-full h-24 border-t">
-        <a
-          className="flex items-center justify-center"
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className="h-4 ml-2" />
-        </a>
-      </footer>
+        <div className="mt-5 flex items-center justify-center">
+          <WalletConnectButton />
+        </div>
+      </StyledSplash>
     </div>
   )
 }
