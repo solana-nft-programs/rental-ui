@@ -6,6 +6,7 @@ import darken from 'polished/lib/color/darken'
 import React from 'react'
 import { isMobile } from 'react-device-detect'
 import { useGesture } from 'react-use-gesture'
+import Colors from 'common/colors'
 
 import { BackIcon, CloseIcon } from '../common/icons'
 
@@ -16,6 +17,8 @@ export interface ModalProps {
   darkenOverlay?: boolean
   topArea?: boolean
   fitContent?: boolean
+  borderRadius?: string
+  dark?: boolean
 
   onBack?: () => void
   hideCloseButton?: boolean
@@ -28,6 +31,8 @@ export const Modal: React.FC<ModalProps> = ({
   darkenOverlay = true,
   topArea = true,
   fitContent = false,
+  borderRadius = '8px',
+  dark = false,
 
   onBack,
   hideCloseButton = false,
@@ -93,7 +98,9 @@ export const Modal: React.FC<ModalProps> = ({
               darkenOverlay={darkenOverlay}
             >
               <ModalWrapper
+                borderRadius={borderRadius}
                 fitContent={fitContent}
+                dark={dark}
                 aria-label="dialog content"
                 {...(isMobile
                   ? {
@@ -173,7 +180,11 @@ const ButtonIcon = styled.a`
 
 const Content = styled.div``
 
-const ModalWrapper = styled(animated(DialogContent))`
+const ModalWrapper = styled(animated(DialogContent))<{
+  fitContent?: boolean
+  borderRadius?: string
+  dark?: boolean
+}>`
   * {
     box-sizing: border-box;
   }
@@ -184,8 +195,8 @@ const ModalWrapper = styled(animated(DialogContent))`
   box-shadow: 0px 4px 16px rgba(207, 207, 207, 0.25);
   max-width: 560px;
   width: ${({ fitContent }) => (fitContent ? 'fit-content' : '100%')};
-  border-radius: 8px;
-  background: #fff;
+  border-radius: ${({ borderRadius }) => borderRadius ?? '8px'};
+  background: ${({ dark }) => (dark ? 'rgb(26, 27, 32)' : '#FFF')};
   color: #696969;
   font-weight: normal;
   font-size: 12px;

@@ -44,7 +44,7 @@ const StyledOverlay = styled.div<{
     .badge {
       svg {
         height: auto;
-        width: ${({ lineHeight }) => 1.5 * lineHeight}px;
+        width: ${({ lineHeight }) => (lineHeight ? 1.5 * lineHeight : 10)}px;
       }
     }
   }
@@ -91,13 +91,13 @@ interface NFTOverlayProps {
 function getBoxShadow(
   state: TokenManagerState,
   expiration: number | undefined,
-  usages: number,
+  usages: number | undefined,
   maxUsages: number | undefined,
   lineHeight: number
 ) {
   if (
     state === TokenManagerState.Invalidated ||
-    (maxUsages && usages >= maxUsages) ||
+    (maxUsages && usages && usages >= maxUsages) ||
     (expiration && expiration <= Math.floor(Date.now() / 1000))
   ) {
     return `0 0 ${0.4 * lineHeight}px ${0.4 * lineHeight}px rgba(125, 0, 0, 1)`

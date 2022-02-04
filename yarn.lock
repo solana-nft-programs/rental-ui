@@ -339,10 +339,10 @@
     "@solana/spl-token" "^0.1.8"
     typescript "^4.5.4"
 
-"@cardinal/token-manager@0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@cardinal/token-manager/-/token-manager-0.0.4.tgz#a11d63c06daeecba280f2361790b9a660d6de198"
-  integrity sha512-K5bnatY7SiqTMYlsZzxUHA6DN3nvNh5Fls0xqp2iMPiihy9iEDMmJ8q41SF8+DmqCAJclSymHRhpbjtnJMVvvA==
+"@cardinal/token-manager@0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@cardinal/token-manager/-/token-manager-0.0.6.tgz#7a91b24d037a4ee19ce73de1f52c03982748f210"
+  integrity sha512-1WkGcueDPEqzOhc22pfPtPYnax/X21ac9bxCAiMsgXF3ipkHU/09mn1cCQLNXunZxANam8CswROB/VeT2b4vUw==
   dependencies:
     "@solana/spl-token" "^0.1.8"
     tiny-invariant "^1.2.0"

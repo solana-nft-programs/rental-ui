@@ -34,7 +34,7 @@ export default function Home() {
   const router = useRouter()
 
   useEffect(() => {
-    if (wallet && wallet.connected) {
+    if (wallet && wallet.connected && wallet.publicKey) {
       router.push(
         `/${wallet.publicKey.toBase58()}${
           new URLSearchParams(window.location.search).get('cluster')

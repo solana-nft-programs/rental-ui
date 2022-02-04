@@ -14,8 +14,8 @@ export const MintPriceSelector = ({
 }: {
   price: number
   mint: string
-  handlePrice: (number) => void
-  handleMint: (string) => void
+  handlePrice: (p: number) => void
+  handleMint: (m: string) => void
 }) => {
   const { paymentMintInfos } = usePaymentMints()
   const paymentMintInfo = paymentMintInfos[mint]

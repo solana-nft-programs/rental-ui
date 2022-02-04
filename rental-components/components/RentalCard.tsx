@@ -95,6 +95,7 @@ export const RentalCard = ({
         await claimLinks.issueToken(connection, wallet, {
           rentalMint,
           issuerTokenAccountId: tokenAccount?.pubkey,
+          usages: maxUsages || undefined,
           kind: TokenManagerKind.Unmanaged,
         })
       await executeTransaction(connection, wallet, transaction)
@@ -148,9 +149,9 @@ export const RentalCard = ({
               state={tokenManager?.parsed.state}
               paymentAmount={tokenManager?.parsed.paymentAmount}
               paymentMint={tokenManager?.parsed.paymentMint}
-              expiration={expiration}
+              expiration={expiration || undefined}
               usages={tokenManager?.parsed.usages}
-              maxUsages={maxUsages}
+              maxUsages={maxUsages || undefined}
               revocable={tokenManager?.parsed.revokeAuthority != null}
               extendable={tokenManager?.parsed.isExtendable}
               returnable={tokenManager?.parsed.isReturnable}
@@ -205,7 +206,7 @@ export const RentalCard = ({
                   label="Uses"
                   name="tweet"
                   type="number"
-                  onChange={(e) => setMaxUsages(e.target.value)}
+                  onChange={(e) => setMaxUsages(parseInt(e.target.value))}
                 />
               </div>
             }

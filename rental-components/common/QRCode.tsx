@@ -1,17 +1,21 @@
 import { useEffect, useState, useCallback } from 'react'
 import { PublicKey, Connection } from '@solana/web3.js'
 import styled from '@emotion/styled'
-import { useWallet } from '@solana/wallet-adapter-react'
 import { AwesomeQR } from 'awesome-qr'
-import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { claimLinks } from '@cardinal/token-manager'
-import { executeTransaction } from '../../common/Transactions'
-import { asWallet } from '../../common/Wallets'
 import { TokenData } from 'api/api'
 import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 import { Wallet } from '@saberhq/solana-contrib'
 
-const BASE_URL = 'https://app.cardinal.so/use/'
+const BASE_URL = 'https://app.cardinal.so/scan'
+
+const getLink = (serializedUsage: string) => {
+  return `${BASE_URL}?tx=${encodeURIComponent(serializedUsage)}${
+    new URLSearchParams(window.location.search).get('cluster')
+      ? `&cluster=${new URLSearchParams(window.location.search).get('cluster')}`
+      : ''
+  }`
+}
 
 export const QRCode = ({
   connection,
@@ -24,18 +28,25 @@ export const QRCode = ({
   tokenData?: TokenData
   cluster?: string
 }) => {
-  const [qrCode, setQrCode] = useState('')
+  const [qrCode, setQrCode] = useState<any | null>(null)
   const getQRCode = useCallback(async () => {
-    if (wallet) {
+    if (wallet && connection) {
       try {
+        const transaction = await claimLinks.useTransaction(
+          connection,
+          wallet,
+          tokenData?.tokenManager?.parsed.mint,
+          1
+        )
+        transaction.feePayer = wallet.publicKey
+        transaction.recentBlockhash = (
+          await connection.getRecentBlockhash('max')
+        ).blockhash
+        await wallet.signTransaction(transaction)
+        const serializedUsage = transaction.serialize().toString('base64')
+        console.log(getLink(serializedUsage))
         const qrbuffer = await new AwesomeQR({
-          text: `${BASE_URL}${
-            new URLSearchParams(window.location.search).get('cluster')
-              ? `&cluster=${new URLSearchParams(window.location.search).get(
-                  'cluster'
-                )}`
-              : ''
-          }`,
+          text: getLink(serializedUsage),
           colorDark: '#000000',
           colorLight: '#555555',
           backgroundDimming: 'rgba(0, 0, 0, 4)',
@@ -70,12 +81,7 @@ export const QRCode = ({
 
   return qrCode ? (
     <QRCodeOuter>
-      <img
-        height="300px"
-        style={{ borderRadius: '1`0px' }}
-        src={qrCode}
-        alt="qr-code"
-      />
+      <img height="300px" src={qrCode} alt="qr-code" />
     </QRCodeOuter>
   ) : (
     <LoadingSpinner />
@@ -88,4 +94,8 @@ const QRCodeOuter = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  img {
+    border-radius: 30px;
+    padding: 10px;
+  }
 `

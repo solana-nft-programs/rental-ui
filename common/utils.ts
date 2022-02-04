@@ -37,3 +37,8 @@ export function getQueryParam(url: string, name: string) {
   var q = url.match(new RegExp('[?&]' + name + '=([^&#]*)'))
   return q && q[1]
 }
+
+export const firstParam = (param: string | string[] | undefined): string => {
+  if (!param) return ''
+  return typeof param === 'string' ? param : param[0]
+}

@@ -9,9 +9,15 @@ import * as spl from '@solana/spl-token'
 import { EnvironmentContextValues } from 'providers/EnvironmentProvider'
 import * as metaplex from '@metaplex-foundation/mpl-token-metadata'
 import { findTokenManagerAddress } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/pda'
-import { tokenManager } from '@cardinal/token-manager/dist/cjs/programs'
+import {
+  timeInvalidator,
+  tokenManager,
+  useInvalidator,
+} from '@cardinal/token-manager/dist/cjs/programs'
 import { AccountData } from '@cardinal/token-manager'
 import { TokenManagerData } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
+import { TimeInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
+import { UseInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
 
 export type TokenInfo = {
   issuer: PublicKey
@@ -53,6 +59,8 @@ export type TokenData = {
   tokenManager?: AccountData<TokenManagerData>
   metaplexData?: metaplex.Metadata | null
   metadata?: any
+  useInvalidator?: AccountData<UseInvalidatorData>
+  timeInvalidator?: AccountData<TimeInvalidatorData>
 }
 
 export async function getTokenAccountsWithData(
@@ -91,6 +99,7 @@ export async function getTokenAccountsWithData(
     )
   )
 
+  //   @ts-ignore
   const metadataIds: [PublicKey[], PublicKey[]] = metadataTuples.reduce(
     (acc, [metaplexId, tokenManagerId]) => [
       [...acc[0], metaplexId[0]],
@@ -112,6 +121,7 @@ export async function getTokenAccountsWithData(
   const metadata = await Promise.all(
     metaplexData.map(async (md) => {
       try {
+        if (!md?.data.data.uri) return null
         const json = await fetch(md.data.data.uri).then((r) => r.json())
         return { pubkey: md.pubkey, data: json }
       } catch (e) {
@@ -130,8 +140,8 @@ export async function getTokenAccountsWithData(
     metaplexData: metaplexData.find((data) =>
       data ? data.pubkey.toBase58() === metaplexId[0].toBase58() : undefined
     ),
+    // @ts-ignore
     tokenManager: tokenManagers.find((tkm) =>
-      // @ts-ignore
       tkm?.parsed
         ? tkm.pubkey.toBase58() === certificateId[0].toBase58()
         : undefined
@@ -159,9 +169,16 @@ export async function getTokenData(
     findTokenManagerAddress(mintId),
   ])
 
+  const [[timeInvalidatorId], [useInvalidatorId]] = await Promise.all([
+    timeInvalidator.pda.findTimeInvalidatorAddress(tokenManagerId),
+    useInvalidator.pda.findUseInvalidatorAddress(mintId),
+  ])
+
   let metaplexData: metaplex.Metadata | null = null
   let metadata: any | null = null
   let tokenManagerData: TokenManagerData | null = null
+  let timeInvalidatorData: TimeInvalidatorData | null = null
+  let useInvalidatorData: UseInvalidatorData | null = null
 
   try {
     metaplexData = await metaplex.Metadata.load(connection, metaplexId)
@@ -187,9 +204,29 @@ export async function getTokenData(
     console.log('Failed to get token manager data', e)
   }
 
+  try {
+    timeInvalidatorData = await timeInvalidator.accounts.getUseInvalidator(
+      connection,
+      timeInvalidatorId
+    )
+  } catch (e) {
+    console.log('Failed to get token manager data', e)
+  }
+
+  try {
+    useInvalidatorData = await useInvalidator.accounts.getUseInvalidator(
+      connection,
+      useInvalidatorId
+    )
+  } catch (e) {
+    console.log('Failed to get token manager data', e)
+  }
+
   return {
     metaplexData,
     tokenManager: tokenManagerData,
+    useInvalidator: useInvalidatorData,
+    timeInvalidator: timeInvalidatorData,
     metadata,
   }
 }
@@ -203,6 +240,7 @@ export async function getMintInfo(
     connection,
     mintPublicKey,
     spl.TOKEN_PROGRAM_ID,
+    // @ts-ignore
     null
   )
   return await token.getMintInfo()
@@ -219,6 +257,7 @@ export async function getATokenAccountInfo(
     mint,
     owner
   )
+  // @ts-ignore
   const token = new spl.Token(ctx.connection, mint, spl.TOKEN_PROGRAM_ID, null)
   return token.getAccountInfo(aTokenAccount)
 }

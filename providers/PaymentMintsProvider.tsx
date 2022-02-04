@@ -41,13 +41,14 @@ export function PaymentMintsProvider({ children }: { children: ReactChild }) {
 
   const refreshPaymentMints = async () => {
     setRefreshing(true)
-    const paymentMintInfoMap = {}
+    const paymentMintInfoMap: { [k: string]: splToken.MintInfo } = {}
     for (let i = 0; i < PAYMENT_MINTS.length; i++) {
       try {
         const paymentToken = new splToken.Token(
           ctx.connection,
           new web3.PublicKey(PAYMENT_MINTS[i].mint),
           splToken.TOKEN_PROGRAM_ID,
+          // @ts-ignore
           null
         )
         const mintInfo = await paymentToken.getMintInfo()

@@ -62,20 +62,22 @@ export const RentalModalProvider: React.FC<Props> = ({
         onDismiss={() => setShowRentalModal(false)}
         darkenOverlay={true}
       >
-        <RentalCard
-          dev={dev}
-          cluster={cluster}
-          wallet={wallet}
-          connection={connection}
-          tokenData={tokenData || {}}
-          appName={appName}
-          appTwitter={appTwitter}
-          onComplete={() => {
-            withSleep(() => {
-              setShowRentalModal(false)
-            }, 1000)
-          }}
-        />
+        {wallet && connection && (
+          <RentalCard
+            dev={dev}
+            cluster={cluster}
+            wallet={wallet}
+            connection={connection}
+            tokenData={tokenData || {}}
+            appName={appName}
+            appTwitter={appTwitter}
+            onComplete={() => {
+              withSleep(() => {
+                setShowRentalModal(false)
+              }, 1000)
+            }}
+          />
+        )}
       </Modal>
       {children}
     </RentalModalContext.Provider>

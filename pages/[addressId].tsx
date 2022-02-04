@@ -1,7 +1,6 @@
 import React from 'react'
 import { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
-import { Modal } from 'antd'
 import { StyledContainer } from 'common/StyledContainer'
 import { useError } from 'providers/ErrorProvider'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
@@ -11,8 +10,7 @@ import { useUserTokenData } from 'providers/TokenDataProvider'
 import { useRouter } from 'next/router'
 import Colors from 'common/colors'
 import { NFT } from 'common/NFT'
-import QRCode from 'rental-components/common/QRCode'
-import { TokenData } from 'api/api'
+import { firstParam } from 'common/utils'
 
 export const TokensOuter = styled.div`
   display: flex;
@@ -127,12 +125,12 @@ function Profile() {
   const [issueId, setIssueId] = useState(null)
 
   const { tokenDatas, address, setAddress, refreshing } = useUserTokenData()
-  setAddress(addressId)
+  setAddress(firstParam(addressId))
   useEffect(() => {
     if (addressId) {
-      setAddress(addressId)
+      setAddress(firstParam(addressId))
     }
-    if (wallet && wallet.connected) {
+    if (wallet && wallet.connected && wallet.publicKey) {
       setAddress(wallet.publicKey.toBase58())
       router.push(
         `/${wallet.publicKey.toBase58()}${
@@ -216,7 +214,7 @@ function Profile() {
                     {tokenDatas &&
                       tokenDatas.map((tokenData) => (
                         <NFT
-                          key={tokenData.tokenAccount.pubkey.toBase58()}
+                          key={tokenData?.tokenAccount?.pubkey.toBase58()}
                           // @ts-ignore
                           tokenData={tokenData}
                           setIssueId={setIssueId}

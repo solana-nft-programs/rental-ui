@@ -313,22 +313,6 @@ const tryPublicKey = (
   }
 }
 
-const getInitialProps = async ({ req }) => {
-  let fullUrl
-  if (req) {
-    // Server side rendering
-    fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl
-  } else {
-    // Client side rendering
-    fullUrl =
-      window.location.protocol +
-      '//' +
-      window.location.hostname +
-      (window.location.port ? ':' + window.location.port : '')
-  }
-  return { fullUrl: fullUrl }
-}
-
 function Claim() {
   const router = useRouter()
   const ctx = useEnvironmentCtx()

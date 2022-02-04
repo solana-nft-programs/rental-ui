@@ -252,7 +252,9 @@ export const Header = ({
       <div className="left">
         <div className="title">
           <img src="/assets/cardinal-titled.png" />
-          <div className="subscript">alpha</div>
+          <div className="subscript">
+            {ctx.environment.label === 'devnet' ? 'DEV' : 'alpha'}
+          </div>
         </div>
       </div>
       <div className="center">
@@ -274,9 +276,6 @@ export const Header = ({
         )} */}
       </div>
       <div className="right">
-        {ctx.environment.label === 'devnet' && (
-          <div style={{ color: 'white' }}>DEVNET</div>
-        )}
         {wallet.connected ? (
           <StyledProfile onClick={() => setVisible(true)}>
             <AddressImage

@@ -61,6 +61,8 @@ export const QRCodeProvider: React.FC<Props> = ({ children }: Props) => {
         darkenOverlay={true}
         topArea={false}
         fitContent={true}
+        borderRadius="30px"
+        dark={true}
       >
         <QRCode
           connection={connection}
