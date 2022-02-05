@@ -211,19 +211,27 @@ function Scan() {
             </div>
           </div>
           <div className="content">
-            <LoadingPulseWrapped loading={executeResult === null}>
+            <LoadingPulseWrapped loading={!executeResult}>
               {executeResult?.status == VerificationStatus.SUCCESS ? (
                 <>
-                  <FaCheckCircle />
+                  <div
+                    style={{
+                      fontSize: '170px',
+                      display: 'flex',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <FaCheckCircle />
+                  </div>
                   <div className="footer" style={{ marginTop: '25px' }}>
                     Message signed by{' '}
                     <a
                       className="address"
-                      href={`https://explorer.solana.com/address/${owner}`}
+                      href={`https://explorer.solana.com/address/${owner?.toString()}`}
                       target="_blank"
                       rel="noreferrer"
                     >
-                      {owner}
+                      {owner?.toString()}
                     </a>
                   </div>
                 </>

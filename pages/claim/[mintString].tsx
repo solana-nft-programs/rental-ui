@@ -8,7 +8,6 @@ import { StyledBackground } from 'common/StyledBackground'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { Header } from 'common/Header'
 import { notify } from 'common/Notification'
-import { useError } from 'providers/ErrorProvider'
 import { useRouter } from 'next/router'
 import { claimLinks } from '@cardinal/token-manager'
 import { asWallet } from 'common/Wallets'
@@ -16,11 +15,10 @@ import { getTokenData, TokenData } from 'api/api'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { NFTOverlay } from 'common/NFTOverlay'
 import { executeTransaction } from 'common/Transactions'
-import { SignerWallet } from '@saberhq/solana-contrib'
 import { shortPubKey } from 'common/utils'
 import { FaQuestionCircle } from 'react-icons/fa'
 
-const BASE_PATH = 'https://claim.cardinal.so'
+const BASE_PATH = 'https://app.cardinal.so/claim'
 
 type Hideable = {
   visible?: boolean
@@ -452,11 +450,9 @@ function Claim() {
       setError(null)
       setTokenDataStatus(null)
       setLoadingClaim(true)
-      console.log(
-        `${BASE_PATH}${router.asPath.split('/claim')[1].split('&cluster')[0]}`
-      )
       const [mintId, otpKeypair] = claimLinks.fromLink(
-        `${BASE_PATH}${router.asPath.split('/claim')[1].split('&cluster')[0]}`
+        `${BASE_PATH}${router.asPath.split('/claim')[1].split('&cluster')[0]}`,
+        BASE_PATH
       )
       const transaction = await claimLinks.claimFromLink(
         ctx.connection,
@@ -558,7 +554,6 @@ function Claim() {
                           />
                         ))}
                     </NFTOuter>
-
                     <div className="footer">
                       {tokenData.tokenManager?.parsed.state ===
                       TokenManagerState.Claimed ? (

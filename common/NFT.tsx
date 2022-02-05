@@ -148,9 +148,16 @@ export function NFT({ tokenData, setIssueId }: NFTProps) {
   const wallet = useWallet()
   const { show } = useQRCode()
   const rentalModal = useRentalModal()
-  const { tokenAccount, metaplexData, metadata, tokenManager } = tokenData
+  const {
+    tokenAccount,
+    metaplexData,
+    metadata,
+    tokenManager,
+    timeInvalidator,
+    useInvalidator,
+  } = tokenData
   const customImageUri = getQueryParam(metadata?.data?.image, 'uri')
-  console.log(tokenManager)
+  console.log(timeInvalidator, useInvalidator)
   return (
     <TokenMetadata>
       {wallet &&
@@ -211,7 +218,13 @@ export function NFT({ tokenData, setIssueId }: NFTProps) {
         ))}
       <div id="media-outer">
         {tokenManager && (
-          <NFTOverlay state={tokenManager?.parsed.state} lineHeight={20} />
+          <NFTOverlay
+            state={tokenManager?.parsed.state}
+            expiration={timeInvalidator?.parsed.expiration}
+            usages={useInvalidator?.parsed.usages}
+            maxUsages={useInvalidator?.parsed.maxUsages}
+            lineHeight={20}
+          />
         )}
         {metadata &&
           metadata.data &&

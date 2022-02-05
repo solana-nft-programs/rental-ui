@@ -21,6 +21,7 @@ import { executeTransaction } from 'common/Transactions'
 import { TokenManagerKind } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { notify } from 'common/Notification'
 import { FaLink } from 'react-icons/fa'
+import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 
 const NFTOuter = styled.div`
   margin: 20px auto 0px auto;
@@ -62,6 +63,7 @@ export const RentalCard = ({
   notify,
   onComplete,
 }: RentalCardProps) => {
+  const ctx = useEnvironmentCtx()
   const [error, setError] = useState<string>()
   const [loading, setLoading] = useState(false)
   const [rentalType, setRentalType] = useState('time')
@@ -81,7 +83,6 @@ export const RentalCard = ({
   const [recipient, setRecipient] = useState(null)
 
   const handleRental = async () => {
-    console.log('HANDLING RENTAL')
     try {
       if (!tokenAccount) {
         throw 'Token acount not found'
@@ -98,7 +99,12 @@ export const RentalCard = ({
           kind: TokenManagerKind.Unmanaged,
         })
       await executeTransaction(connection, wallet, transaction)
-      const link = claimLinks.getLink(rentalMint, otpKeypair)
+      const link = claimLinks.getLink(
+        rentalMint,
+        otpKeypair,
+        'https://app.cardinal.so/claim',
+        ctx.environment.label
+      )
       setLink(link)
       handleCopy(link)
       console.log(link)
