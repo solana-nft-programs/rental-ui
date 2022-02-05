@@ -79,7 +79,7 @@ export default function Home() {
           {/* <div className="subscript">alpha</div> */}
         </div>
         <div className="mt-5 flex items-center justify-center">
-          <WalletConnectButton />
+          <WalletConnectButton disabled={false} />
         </div>
       </StyledSplash>
     </div>
