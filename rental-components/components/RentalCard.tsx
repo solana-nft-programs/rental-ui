@@ -159,7 +159,7 @@ export const RentalCard = ({
               maxUsages={maxUsages || undefined}
               revocable={tokenManager?.parsed.revokeAuthority != null}
               extendable={tokenManager?.parsed.isExtendable}
-              returnable={tokenManager?.parsed.isReturnable}
+              returnable={invalidationType === InvalidationType.Return}
               lineHeight={12}
             />
             {metadata &&
