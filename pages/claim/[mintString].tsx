@@ -184,55 +184,6 @@ const VerificationStep = styled.div<Verifiable>`
     }
   }
 
-  .certificate-overlay {
-    bottom: 0;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-      rgba(0, 0, 0, 0.2) 70%,
-      rgba(0, 0, 0, 0.4),
-      rgba(0, 0, 0, 1) 80%
-    );
-    border-radius: 10px;
-    z-index: 2;
-    outline: 6px solid black;
-
-    .data {
-      position: absolute;
-      bottom: 8px;
-      left: 8px;
-      text-align: left;
-    }
-
-    .logo {
-      position: absolute;
-      bottom: 8px;
-      right: 8px;
-      width: 30px;
-    }
-
-    .qr-code {
-      position: absolute;
-      top: 4px;
-      right: 4px;
-      width: 40px;
-      height: 40px;
-      font-size: 18px;
-      border-radius: 50%;
-      background: #000;
-      cursor: pointer;
-      transition: transform 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      &:hover {
-        transform: scale(1.05);
-      }
-    }
-  }
-
   .content {
     position: absolute;
     top: 58%;
@@ -296,7 +247,7 @@ const NFTOuter = styled.div`
 
   .media {
     border-radius: 10px;
-    height: 100%;
+    max-height: 300px;
   }
 `
 
@@ -476,7 +427,6 @@ function Claim() {
     }
   }
 
-  console.log(tokenData)
   return (
     <>
       <Header />
@@ -511,26 +461,12 @@ function Claim() {
                   <>
                     <NFTOuter>
                       <NFTOverlay
-                        state={tokenData?.tokenManager?.parsed.state}
-                        paymentAmount={
-                          tokenData?.tokenManager?.parsed.paymentAmount
+                        state={tokenData.tokenManager?.parsed.state}
+                        expiration={
+                          tokenData.timeInvalidator?.parsed.expiration
                         }
-                        paymentMint={
-                          tokenData?.tokenManager?.parsed.paymentMint
-                        }
-                        expiration={tokenData?.tokenManager?.parsed.expiration}
-                        usages={tokenData?.tokenManager?.parsed.usages}
-                        maxUsages={tokenData?.tokenManager?.parsed.usages}
-                        revocable={
-                          tokenData?.tokenManager?.parsed.revokeAuthority !=
-                          null
-                        }
-                        extendable={
-                          tokenData?.tokenManager?.parsed.isExtendable
-                        }
-                        returnable={
-                          tokenData?.tokenManager?.parsed.isReturnable
-                        }
+                        usages={tokenData.useInvalidator?.parsed.usages}
+                        maxUsages={tokenData.useInvalidator?.parsed.maxUsages}
                         lineHeight={14}
                       />
                       {tokenData?.metadata?.data &&

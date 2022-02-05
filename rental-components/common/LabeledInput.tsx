@@ -22,20 +22,19 @@ export const LabeledInput: React.FC<Props> = ({
   )
 }
 
-const Fieldset = styled.fieldset`
+export const Fieldset = styled.fieldset`
   border: none;
   outline: none;
-  height: 66px;
+  height: 45px;
   position: relative;
   width: 100%;
   padding: 0;
   margin: 0;
 `
 
-const InputBorder = styled.div`
+export const InputBorder = styled.div`
   position: absolute;
-  height: 56px;
-  top: 10px;
+  height: 31px;
   border: 1px solid #dfdfdf;
   box-sizing: border-box;
   border-radius: 4px;
@@ -69,13 +68,13 @@ const Label = styled.label`
   color: #696969;
 `
 
-const Input = styled.input`
+export const Input = styled.input`
   border: none;
   outline: none;
-  height: 43px;
-  padding: 0 11px;
+  height: 18px;
+  padding-left: 8px;
   flex-grow: 1;
-  font-size: 16px;
+  font-size: 12px;
   line-height: 24px;
   letter-spacing: -0.02em;
   color: #000;

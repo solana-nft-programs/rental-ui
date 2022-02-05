@@ -5,6 +5,7 @@ interface Props {
   title: string
   description: string | React.ReactNode
   disabled?: boolean
+  width?: string
 }
 
 export const StepDetail: React.FC<Props> = ({
@@ -12,9 +13,10 @@ export const StepDetail: React.FC<Props> = ({
   title,
   description,
   disabled,
+  width,
 }: Props) => {
   return (
-    <Wrapper disabled={disabled}>
+    <Wrapper disabled={disabled} width={width}>
       {icon}
       <Info>
         <Title>{title}</Title>
@@ -24,11 +26,11 @@ export const StepDetail: React.FC<Props> = ({
   )
 }
 
-const Wrapper = styled.div<{ disabled?: boolean }>`
+const Wrapper = styled.div<{ disabled?: boolean; width?: string }>`
   display: grid;
   grid-template-columns: 18px 1fr;
   grid-column-gap: 9px;
-  width: 100%;
+  width: ${({ width }) => width ?? '100%'};
   opacity: ${({ disabled }) => (disabled ? 0.3 : 1)};
 
   svg {

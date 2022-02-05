@@ -22,6 +22,7 @@ export const MintPriceSelector = ({
   return (
     <SelectorOuter>
       <InputNumber
+        style={{ width: '100%' }}
         placeholder="Price"
         stringMode
         value={

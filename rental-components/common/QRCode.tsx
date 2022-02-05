@@ -9,11 +9,9 @@ import { Wallet } from '@saberhq/solana-contrib'
 
 const BASE_URL = 'https://app.cardinal.so/scan'
 
-const getLink = (serializedUsage: string) => {
+const getLink = (serializedUsage: string, cluster: string | undefined) => {
   return `${BASE_URL}?tx=${encodeURIComponent(serializedUsage)}${
-    new URLSearchParams(window.location.search).get('cluster')
-      ? `&cluster=${new URLSearchParams(window.location.search).get('cluster')}`
-      : ''
+    cluster === 'devnet' ? `&cluster=devnet` : ''
   }`
 }
 
@@ -44,9 +42,9 @@ export const QRCode = ({
         ).blockhash
         await wallet.signTransaction(transaction)
         const serializedUsage = transaction.serialize().toString('base64')
-        console.log(getLink(serializedUsage))
+        console.log(getLink(serializedUsage, cluster))
         const qrbuffer = await new AwesomeQR({
-          text: getLink(serializedUsage),
+          text: getLink(serializedUsage, cluster),
           colorDark: '#000000',
           colorLight: '#555555',
           backgroundDimming: 'rgba(0, 0, 0, 4)',

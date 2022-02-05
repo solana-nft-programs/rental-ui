@@ -1,12 +1,16 @@
 import React, { useState } from 'react'
 import styled from '@emotion/styled'
-import { DatePicker } from 'antd'
+import { DatePicker, Select } from 'antd'
 import { Connection, PublicKey } from '@solana/web3.js'
 import { Wallet } from '@saberhq/solana-contrib'
 import { ButtonWithFooter } from 'rental-components/common/ButtonWithFooter'
 import { Alert } from 'rental-components/common/Alert'
 import { StepDetail } from 'rental-components/common/StepDetail'
-import { LabeledInput } from 'rental-components/common/LabeledInput'
+import {
+  Fieldset,
+  Input,
+  InputBorder,
+} from 'rental-components/common/LabeledInput'
 import { PoweredByFooter } from 'rental-components/common/PoweredByFooter'
 import { FiSend } from 'react-icons/fi'
 import { BiTimer, BiQrScan } from 'react-icons/bi'
@@ -18,10 +22,14 @@ import { getQueryParam } from 'common/utils'
 import { NFTOverlay } from 'common/NFTOverlay'
 import { claimLinks } from '@cardinal/token-manager'
 import { executeTransaction } from 'common/Transactions'
-import { TokenManagerKind } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { notify } from 'common/Notification'
 import { FaLink } from 'react-icons/fa'
-import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
+import { GrReturn } from 'react-icons/gr'
+import {
+  InvalidationType,
+  TokenManagerKind,
+} from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
+const { Option } = Select
 
 const NFTOuter = styled.div`
   margin: 20px auto 0px auto;
@@ -63,24 +71,20 @@ export const RentalCard = ({
   notify,
   onComplete,
 }: RentalCardProps) => {
-  const ctx = useEnvironmentCtx()
   const [error, setError] = useState<string>()
   const [loading, setLoading] = useState(false)
-  const [rentalType, setRentalType] = useState('time')
   const [link, setLink] = useState<string | null>(null)
   const { tokenAccount, metaplexData, metadata, tokenManager } = tokenData
   const customImageUri = getQueryParam(metadata?.data?.image, 'uri')
+  const [invalidationType, setInvalidationType] = useState(
+    InvalidationType.Return
+  )
 
   // form
   const [price, setPrice] = useState(0)
   const [paymentMint, setPaymentMint] = useState(PAYMENT_MINTS[0].mint)
-  const [amount, setAmount] = useState(1)
   const [expiration, setExpiration] = useState<number | null>(null)
   const [maxUsages, setMaxUsages] = useState<number | null>(null)
-  const [revocable, setRevocable] = useState(false)
-  const [extendable, setExtendable] = useState(false)
-  const [returnable, setReturnable] = useState(false)
-  const [recipient, setRecipient] = useState(null)
 
   const handleRental = async () => {
     try {
@@ -97,14 +101,10 @@ export const RentalCard = ({
           issuerTokenAccountId: tokenAccount?.pubkey,
           usages: maxUsages || undefined,
           kind: TokenManagerKind.Unmanaged,
+          invalidationType,
         })
       await executeTransaction(connection, wallet, transaction)
-      const link = claimLinks.getLink(
-        rentalMint,
-        otpKeypair,
-        'https://app.cardinal.so/claim',
-        ctx.environment.label
-      )
+      const link = claimLinks.getLink(rentalMint, otpKeypair, cluster)
       setLink(link)
       handleCopy(link)
       console.log(link)
@@ -183,54 +183,111 @@ export const RentalCard = ({
                 />
               ))}
           </NFTOuter>
-          <StepDetail
-            disabled={false}
-            icon={<BiTimer />}
-            title="Duration"
-            description={
-              <div>
-                <DatePicker
-                  style={{
-                    borderRadius: '4px',
-                    zIndex: 99999,
-                  }}
-                  showTime
-                  onChange={(e) => setExpiration(e ? e.valueOf() / 1000 : null)}
-                />
-              </div>
-            }
-          />
-          <StepDetail
-            disabled={false}
-            icon={<BiQrScan />}
-            title="Uses"
-            description={
-              <div>
-                <LabeledInput
-                  disabled={false}
-                  label="Uses"
-                  name="tweet"
-                  type="number"
-                  onChange={(e) => setMaxUsages(parseInt(e.target.value))}
-                />
-              </div>
-            }
-          />
-          <StepDetail
-            disabled={false}
-            icon={<ImPriceTags />}
-            title="Pricing Details"
-            description={
-              <>
-                <MintPriceSelector
-                  price={price}
-                  mint={paymentMint}
-                  handlePrice={setPrice}
-                  handleMint={setPaymentMint}
-                />
-              </>
-            }
-          />
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              width: '100%',
+              gap: '2%',
+              alignItems: 'flex-start',
+            }}
+          >
+            <StepDetail
+              width="49%"
+              disabled={false}
+              icon={<BiTimer />}
+              title="Duration"
+              description={
+                <div>
+                  <DatePicker
+                    style={{
+                      borderRadius: '4px',
+                      zIndex: 99999,
+                    }}
+                    showTime
+                    onChange={(e) =>
+                      setExpiration(e ? e.valueOf() / 1000 : null)
+                    }
+                  />
+                </div>
+              }
+            />
+            <StepDetail
+              width="49%"
+              disabled={false}
+              icon={<BiQrScan />}
+              title="Uses"
+              description={
+                <Fieldset>
+                  <InputBorder>
+                    <Input
+                      disabled={false}
+                      name="tweet"
+                      type="number"
+                      onChange={(e) => setMaxUsages(parseInt(e.target.value))}
+                    />
+                  </InputBorder>
+                </Fieldset>
+              }
+            />
+          </div>
+
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              width: '100%',
+              gap: '2%',
+              alignItems: 'flex-start',
+            }}
+          >
+            <StepDetail
+              width="49%"
+              disabled={false}
+              icon={<ImPriceTags />}
+              title="Pricing Details"
+              description={
+                <>
+                  <MintPriceSelector
+                    price={price}
+                    mint={paymentMint}
+                    handlePrice={setPrice}
+                    handleMint={setPaymentMint}
+                  />
+                </>
+              }
+            />
+            <StepDetail
+              width="49%"
+              disabled={false}
+              icon={<GrReturn />}
+              title="Invalidation"
+              description={
+                <>
+                  <Select
+                    style={{ width: '100%' }}
+                    onChange={(e) => setInvalidationType(e)}
+                    defaultValue={invalidationType}
+                  >
+                    {[
+                      {
+                        type: InvalidationType.Return,
+                        label: 'Return',
+                      },
+                      {
+                        type: InvalidationType.Invalidate,
+                        label: 'Invalidate',
+                      },
+                    ].map(({ label, type }) => (
+                      <Option key={type} value={type}>
+                        {label}
+                      </Option>
+                    ))}
+                  </Select>
+                </>
+              }
+            />
+          </div>
         </DetailsWrapper>
         <ButtonWithFooter
           loading={loading}

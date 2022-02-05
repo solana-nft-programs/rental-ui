@@ -157,7 +157,6 @@ export function NFT({ tokenData, setIssueId }: NFTProps) {
     useInvalidator,
   } = tokenData
   const customImageUri = getQueryParam(metadata?.data?.image, 'uri')
-  console.log(timeInvalidator, useInvalidator)
   return (
     <TokenMetadata>
       {wallet &&
@@ -211,7 +210,14 @@ export function NFT({ tokenData, setIssueId }: NFTProps) {
         ) : (
           <div
             className="qr-code"
-            onClick={() => show(ctx.connection, asWallet(wallet), tokenData)}
+            onClick={() =>
+              show(
+                ctx.connection,
+                asWallet(wallet),
+                tokenData,
+                ctx.environment.label
+              )
+            }
           >
             <IoQrCodeOutline />
           </div>
