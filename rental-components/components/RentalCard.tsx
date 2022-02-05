@@ -20,10 +20,11 @@ import { claimLinks } from '@cardinal/token-manager'
 import { executeTransaction } from 'common/Transactions'
 import { TokenManagerKind } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { notify } from 'common/Notification'
+import { FaLink } from 'react-icons/fa'
 
 const NFTOuter = styled.div`
+  margin: 20px auto 0px auto;
   height: 200px;
-  margin: 0px auto;
   position: relative;
   border-radius: 10px;
 
@@ -66,7 +67,6 @@ export const RentalCard = ({
   const [rentalType, setRentalType] = useState('time')
   const [link, setLink] = useState<string | null>(null)
   const { tokenAccount, metaplexData, metadata, tokenManager } = tokenData
-  console.log(tokenData)
   const customImageUri = getQueryParam(metadata?.data?.image, 'uri')
 
   // form
@@ -90,7 +90,6 @@ export const RentalCard = ({
       const rentalMint = new PublicKey(
         tokenAccount?.account.data.parsed.info.mint
       )
-      console.log(rentalMint)
       const [transaction, _tokenManagerId, otpKeypair] =
         await claimLinks.issueToken(connection, wallet, {
           rentalMint,
@@ -130,7 +129,7 @@ export const RentalCard = ({
           />
         )}
         <DetailsWrapper>
-          <div
+          {/* <div
             style={{ padding: '0px 80px' }}
             className="flex items-center justify-center gap-10"
           >
@@ -143,7 +142,7 @@ export const RentalCard = ({
             <BigIcon selected={true}>
               <ImPriceTags />
             </BigIcon>
-          </div>
+          </div> */}
           <NFTOuter>
             <NFTOverlay
               state={tokenManager?.parsed.state}
@@ -226,54 +225,76 @@ export const RentalCard = ({
               </>
             }
           />
-          {error && (
-            <StyledAlert>
-              <Alert
-                style={{ marginTop: '10px', height: 'auto' }}
-                message={
-                  <>
-                    <div>{error}</div>
-                  </>
-                }
-                type="error"
-                showIcon
-              />
-            </StyledAlert>
-          )}
         </DetailsWrapper>
-        {link && (
-          <StyledAlert onClick={() => handleCopy(link)}>
-            <Alert
-              style={{ marginTop: '10px', height: 'auto', cursor: 'pointer' }}
-              message={
-                <>
-                  <div>
-                    {' '}
-                    {link.substring(0, 40)}
-                    ...
-                    {link.substring(link.length - 10)}
-                  </div>
-                </>
-              }
-              type="success"
-              showIcon
-            />
-          </StyledAlert>
-        )}
         <ButtonWithFooter
           loading={loading}
-          complete={link != null}
+          complete={false}
           disabled={false}
-          onClick={handleRental}
+          message={
+            link ? (
+              <StyledAlert>
+                <Alert
+                  style={{
+                    marginTop: '10px',
+                    height: 'auto',
+                    cursor: 'pointer',
+                  }}
+                  message={
+                    <>
+                      <div>
+                        Link created {link.substring(0, 20)}
+                        ...
+                        {link.substring(link.length - 5)}
+                        <div>
+                          This link can only be used once and cannot be
+                          regenerated
+                        </div>
+                      </div>
+                    </>
+                  }
+                  type="success"
+                  showIcon
+                />
+              </StyledAlert>
+            ) : (
+              error && (
+                <StyledAlert>
+                  <Alert
+                    style={{ marginTop: '10px', height: 'auto' }}
+                    message={
+                      <>
+                        <div>{error}</div>
+                      </>
+                    }
+                    type="error"
+                    showIcon
+                  />
+                </StyledAlert>
+              )
+            )
+          }
+          onClick={link ? () => handleCopy(link) : handleRental}
           footer={<PoweredByFooter />}
         >
-          <div
-            style={{ gap: '5px' }}
-            className="flex items-center justify-center"
-          >
-            Send
-            <FiSend />
-          </div>
+          {link ? (
+            <div
+              style={{ gap: '5px', fontWeight: '300' }}
+              className="flex items-center justify-center"
+            >
+              <FaLink />
+              {link.substring(0, 40)}
+              ...
+              {link.substring(link.length - 10)}
+            </div>
+          ) : (
+            <div
+              style={{ gap: '5px' }}
+              className="flex items-center justify-center"
+            >
+              Send
+              <FiSend />
+            </div>
+          )}
         </ButtonWithFooter>
       </Wrapper>
     </RentalCardOuter>
@@ -319,7 +340,9 @@ const ButtonLight = styled.div`
   }
 `
 
-const StyledAlert = styled.div``
+const StyledAlert = styled.div`
+  width: 100%;
+`
 
 const Wrapper = styled.div`
   padding: 10px 28px 28px 28px;

@@ -10,6 +10,7 @@ interface Props
   > {
   loading?: boolean
   complete?: boolean
+  message?: React.ReactNode
   footer?: React.ReactNode
 }
 
@@ -19,10 +20,12 @@ export const ButtonWithFooter: React.FC<Props> = ({
   disabled,
   loading,
   complete,
+  message,
   ...props
 }: Props) => {
   return (
     <BottomArea>
+      {message && message}
       <BigButton disabled={disabled} {...props}>
         {loading ? <LoadingSpinner /> : complete ? <FaCheckCircle /> : children}
       </BigButton>
