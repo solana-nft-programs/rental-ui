@@ -43,6 +43,8 @@ const NFTOuter = styled.div`
   }
 `
 
+const BASE_URL = 'https://stage.cardinal.so/claim'
+
 const handleCopy = (shareUrl: string) => {
   navigator.clipboard.writeText(shareUrl)
   notify({ message: 'Share link copied' })
@@ -104,7 +106,7 @@ export const RentalCard = ({
           invalidationType,
         })
       await executeTransaction(connection, wallet, transaction)
-      const link = claimLinks.getLink(rentalMint, otpKeypair, cluster)
+      const link = claimLinks.getLink(rentalMint, otpKeypair, cluster, BASE_URL)
       setLink(link)
       handleCopy(link)
       console.log(link)
