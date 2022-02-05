@@ -58,7 +58,7 @@ export function EnvironmentProvider({
 
   useMemo(() => {
     const foundEnvironment = ENVIRONMENTS.find((e) => e.label === cluster)
-    setEnvironment(foundEnvironment ?? ENVIRONMENTS[0])
+    setEnvironment(foundEnvironment ?? ENVIRONMENTS[2])
   }, [cluster])
 
   const connection = useMemo(

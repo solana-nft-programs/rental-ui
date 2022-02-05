@@ -7,7 +7,7 @@ import { TokenData } from 'api/api'
 import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 import { Wallet } from '@saberhq/solana-contrib'
 
-const BASE_URL = 'https://app.cardinal.so/scan'
+const BASE_URL = 'https://stage.cardinal.so/scan'
 
 const getLink = (serializedUsage: string, cluster: string | undefined) => {
   return `${BASE_URL}?tx=${encodeURIComponent(serializedUsage)}${

@@ -21,7 +21,7 @@ import { executeTransaction } from 'common/Transactions'
 import { shortPubKey } from 'common/utils'
 import { FaQuestionCircle } from 'react-icons/fa'
 
-const BASE_PATH = 'https://app.cardinal.so/claim'
+const BASE_PATH = 'https://stage.cardinal.so/claim'
 
 type Hideable = {
   visible?: boolean
