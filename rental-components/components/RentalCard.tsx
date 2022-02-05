@@ -155,7 +155,7 @@ export const RentalCard = ({
               paymentAmount={tokenManager?.parsed.paymentAmount}
               paymentMint={tokenManager?.parsed.paymentMint}
               expiration={expiration || undefined}
-              usages={tokenManager?.parsed.usages}
+              usages={maxUsages ? 0 : undefined}
               maxUsages={maxUsages || undefined}
               revocable={tokenManager?.parsed.revokeAuthority != null}
               extendable={tokenManager?.parsed.isExtendable}

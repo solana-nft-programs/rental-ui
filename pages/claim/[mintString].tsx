@@ -12,7 +12,10 @@ import { useRouter } from 'next/router'
 import { claimLinks } from '@cardinal/token-manager'
 import { asWallet } from 'common/Wallets'
 import { getTokenData, TokenData } from 'api/api'
-import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
+import {
+  InvalidationType,
+  TokenManagerState,
+} from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { NFTOverlay } from 'common/NFTOverlay'
 import { executeTransaction } from 'common/Transactions'
 import { shortPubKey } from 'common/utils'
@@ -427,6 +430,8 @@ function Claim() {
     }
   }
 
+  console.log(tokenData)
+
   return (
     <>
       <Header />
@@ -462,6 +467,10 @@ function Claim() {
                     <NFTOuter>
                       <NFTOverlay
                         state={tokenData.tokenManager?.parsed.state}
+                        returnable={
+                          tokenData.tokenManager?.parsed.invalidationType ===
+                          InvalidationType.Return
+                        }
                         expiration={
                           tokenData.timeInvalidator?.parsed.expiration
                         }

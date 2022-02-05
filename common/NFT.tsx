@@ -13,6 +13,7 @@ import { asWallet } from './Wallets'
 import { IoQrCodeOutline } from 'react-icons/io5'
 import { useQRCode } from 'rental-components/QRCodeProvider'
 import { NFTOverlay } from './NFTOverlay'
+import { InvalidationType } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 
 export const TokensOuter = styled.div`
   display: flex;
@@ -225,6 +226,10 @@ export function NFT({ tokenData, setIssueId }: NFTProps) {
       <div id="media-outer">
         {tokenManager && (
           <NFTOverlay
+            returnable={
+              tokenData.tokenManager?.parsed.invalidationType ===
+              InvalidationType.Return
+            }
             state={tokenManager?.parsed.state}
             expiration={timeInvalidator?.parsed.expiration}
             usages={useInvalidator?.parsed.usages}

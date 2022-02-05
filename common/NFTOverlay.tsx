@@ -191,7 +191,7 @@ export function NFTOverlay({
             {utils.getExpirationString(expiration, UTCNow)}
           </div>
         )}
-        {usages && (
+        {usages != undefined && (
           <div className="expiration">
             Used ({usages?.toString() || 0}
             {maxUsages && ` / ${maxUsages.toString()}`})
