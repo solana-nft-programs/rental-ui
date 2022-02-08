@@ -76,7 +76,6 @@ export default function Home() {
       <StyledSplash>
         <div className="title">
           <img src="/assets/cardinal-titled.png" />
-          {/* <div className="subscript">alpha</div> */}
         </div>
         <div className="mt-5 flex items-center justify-center">
           <WalletConnectButton disabled={false} />
