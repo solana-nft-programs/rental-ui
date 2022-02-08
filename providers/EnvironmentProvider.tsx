@@ -50,7 +50,7 @@ export function EnvironmentProvider({
   children: React.ReactChild
 }) {
   const router = useRouter()
-  const cluster = router.query.cluster
+  const cluster = router.query.cluster || process.env.BASE_CLUSTER
   const foundEnvironment = ENVIRONMENTS.find((e) => e.label === cluster)
   const [environment, setEnvironment] = useState(
     foundEnvironment ?? ENVIRONMENTS[0]
