@@ -64,7 +64,7 @@ export function TokenAccountsProvider({ children }: { children: ReactChild }) {
         getTokenAccounts()
         return getTokenAccountsInterval
       })(),
-      20000
+      10000
     )
     return () => clearInterval(interval)
   }, [getTokenAccounts])

@@ -45,6 +45,7 @@ export const StyledHeader = styled.div<{ isTabletOrMobile: boolean }>`
   }
 
   .right {
+    position: relative;
     display: flex;
     align-items: center;
     gap: 18px;
@@ -276,6 +277,17 @@ export const Header = ({
         )} */}
       </div>
       <div className="right">
+        <div
+          style={{
+            position: 'absolute',
+            color: 'white',
+            width: '30px',
+            height: '30px',
+            left: -50,
+          }}
+        >
+          <LoadingPulse loading={loading ?? false} />
+        </div>
         {wallet.connected ? (
           <StyledProfile onClick={() => setVisible(true)}>
             <AddressImage
