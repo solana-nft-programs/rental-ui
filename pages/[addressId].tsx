@@ -14,6 +14,7 @@ import { firstParam } from 'common/utils'
 import { Button } from 'rental-components/common/Button'
 import { airdropNFT } from 'api/utils'
 import { asWallet } from 'common/Wallets'
+import { Airdrop } from 'common/Airdrop'
 
 export const TokensOuter = styled.div`
   display: flex;
@@ -234,16 +235,7 @@ function Profile() {
                         }}
                       >
                         <div>Wallet empty!</div>
-                        <Button
-                          variant="primary"
-                          disabled={true}
-                          onClick={() => {
-                            if (!wallet.connected) return
-                            airdropNFT(ctx.connection, asWallet(wallet))
-                          }}
-                        >
-                          Airdrop
-                        </Button>
+                        <Airdrop />
                       </div>
                     )}
                   </TokensOuter>

@@ -16,6 +16,7 @@ import {
 } from '@cardinal/namespaces-components'
 import { shortPubKey } from './utils'
 import { HiUserCircle } from 'react-icons/hi'
+import { Airdrop } from './Airdrop'
 
 export const StyledHeader = styled.div<{ isTabletOrMobile: boolean }>`
   z-index: 100;
@@ -256,6 +257,9 @@ export const Header = ({
           <div className="subscript">
             {ctx.environment.label === 'devnet' ? 'DEV' : 'alpha'}
           </div>
+        </div>
+        <div style={{ marginLeft: '40px' }}>
+          <Airdrop />
         </div>
       </div>
       <div className="center">

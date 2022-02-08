@@ -24,7 +24,6 @@ export const QRCode = ({
   tokenData?: TokenData
   cluster?: string
 }) => {
-  console.log(process.env)
   const [qrCode, setQrCode] = useState<any | null>(null)
   const getQRCode = useCallback(async () => {
     if (wallet && connection) {
