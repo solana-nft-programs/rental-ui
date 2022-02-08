@@ -283,6 +283,7 @@ export const Header = ({
               address={wallet.publicKey || undefined}
               height="40px"
               width="40px"
+              dark={true}
               placeholder={
                 <div
                   style={{

@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import styled from '@emotion/styled'
-import { WalletConnectButton } from '@solana/wallet-adapter-react-ui'
+import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
@@ -78,7 +78,17 @@ export default function Home() {
           <img src="/assets/cardinal-titled.png" />
         </div>
         <div className="mt-5 flex items-center justify-center">
-          <WalletConnectButton disabled={false} />
+          <WalletMultiButton
+            style={{
+              color: 'rgba(255,255,255,0.8)',
+              fontSize: '14px',
+              zIndex: 10,
+              height: '38px',
+              border: 'none',
+              background: 'none',
+              backgroundColor: 'none',
+            }}
+          />
         </div>
       </StyledSplash>
     </div>

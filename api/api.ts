@@ -6,9 +6,8 @@ import {
 } from '@solana/web3.js'
 import * as anchor from '@project-serum/anchor'
 import * as spl from '@solana/spl-token'
-import { EnvironmentContextValues } from 'providers/EnvironmentProvider'
 import * as metaplex from '@metaplex-foundation/mpl-token-metadata'
-import { findTokenManagerAddress } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/pda'
+import { tokenManagerAddressFromMint } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/pda'
 import {
   timeInvalidator,
   tokenManager,
@@ -48,11 +47,23 @@ export type TokenData = {
   timeInvalidator?: AccountData<TimeInvalidatorData>
 }
 
+const tryTokenManagerAddress = async (
+  connection: Connection,
+  mint: PublicKey
+): Promise<PublicKey | null> => {
+  try {
+    const tokenManagerId = await tokenManagerAddressFromMint(connection, mint)
+    return tokenManagerId
+  } catch (e) {
+    return null
+  }
+}
+
 export async function getTokenAccountsWithData(
-  ctx: EnvironmentContextValues,
+  connection: Connection,
   addressId: String
 ): Promise<TokenData[]> {
-  const allTokenAccounts = await ctx.connection.getParsedTokenAccountsByOwner(
+  const allTokenAccounts = await connection.getParsedTokenAccountsByOwner(
     new PublicKey(addressId),
     { programId: spl.TOKEN_PROGRAM_ID }
   )
@@ -65,13 +76,13 @@ export async function getTokenAccountsWithData(
 
   const metadataTuples: [
     PublicKey,
-    PublicKey,
-    PublicKey,
-    PublicKey,
+    PublicKey | null,
+    PublicKey | null,
+    PublicKey | null,
     PublicKey
   ][] = await Promise.all(
     tokenAccounts.map(async (tokenAccount) => {
-      const [[metadataId], [tokenManagerId]] = await Promise.all([
+      const [[metadataId], tokenManagerId] = await Promise.all([
         PublicKey.findProgramAddress(
           [
             anchor.utils.bytes.utf8.encode(metaplex.MetadataProgram.PREFIX),
@@ -82,15 +93,20 @@ export async function getTokenAccountsWithData(
           ],
           metaplex.MetadataProgram.PUBKEY
         ),
-        findTokenManagerAddress(
+        tryTokenManagerAddress(
+          connection,
           new PublicKey(tokenAccount.account.data.parsed.info.mint)
         ),
       ])
 
-      const [[timeInvalidatorId], [useInvalidatorId]] = await Promise.all([
-        timeInvalidator.pda.findTimeInvalidatorAddress(tokenManagerId),
-        useInvalidator.pda.findUseInvalidatorAddress(tokenManagerId),
-      ])
+      let timeInvalidatorId = null
+      let useInvalidatorId = null
+      if (tokenManagerId) {
+        ;[[timeInvalidatorId], [useInvalidatorId]] = await Promise.all([
+          timeInvalidator.pda.findTimeInvalidatorAddress(tokenManagerId),
+          useInvalidator.pda.findUseInvalidatorAddress(tokenManagerId),
+        ])
+      }
 
       return [
         metadataId,
@@ -121,7 +137,7 @@ export async function getTokenAccountsWithData(
   const metaplexData = await Promise.all(
     metadataIds[0].map(async (id) => {
       try {
-        return await metaplex.Metadata.load(ctx.connection, id)
+        return await metaplex.Metadata.load(connection, id)
       } catch (e) {
         // console.log(e)
         return null
@@ -142,12 +158,18 @@ export async function getTokenAccountsWithData(
   )
 
   const [tokenManagers, timeInvalidators, useInvalidators] = await Promise.all([
-    tokenManager.accounts.getTokenManagers(ctx.connection, metadataIds[1]),
-    timeInvalidator.accounts.getTimeInvalidators(
-      ctx.connection,
-      metadataIds[2]
+    tokenManager.accounts.getTokenManagers(
+      connection,
+      metadataIds[1].filter((i) => i)
     ),
-    useInvalidator.accounts.getUseInvalidators(ctx.connection, metadataIds[3]),
+    timeInvalidator.accounts.getTimeInvalidators(
+      connection,
+      metadataIds[2].filter((i) => i)
+    ),
+    useInvalidator.accounts.getUseInvalidators(
+      connection,
+      metadataIds[3].filter((i) => i)
+    ),
   ])
 
   return metadataTuples.map(
@@ -166,7 +188,7 @@ export async function getTokenAccountsWithData(
       ),
       tokenManager: tokenManagers.find((tkm) =>
         tkm?.parsed
-          ? tkm.pubkey.toBase58() === tokenManagerId.toBase58()
+          ? tkm.pubkey.toBase58() === tokenManagerId?.toBase58()
           : undefined
       ),
       metadata: metadata.find((data) =>
@@ -174,12 +196,12 @@ export async function getTokenAccountsWithData(
       ),
       useInvalidator: useInvalidators.find((data) =>
         data?.parsed
-          ? data.pubkey.toBase58() === useInvalidatorId.toBase58()
+          ? data.pubkey.toBase58() === useInvalidatorId?.toBase58()
           : undefined
       ),
       timeInvalidator: timeInvalidators.find((data) =>
         data?.parsed
-          ? data.pubkey.toBase58() === timeInvalidatorId.toBase58()
+          ? data.pubkey.toBase58() === timeInvalidatorId?.toBase58()
           : undefined
       ),
     })
@@ -188,9 +210,15 @@ export async function getTokenAccountsWithData(
 
 export async function getTokenData(
   connection: Connection,
-  mintId: PublicKey
+  tokenManagerId: PublicKey
 ): Promise<TokenData> {
-  const [[metaplexId], [tokenManagerId]] = await Promise.all([
+  const tokenManagerData = await tokenManager.accounts.getTokenManager(
+    connection,
+    tokenManagerId
+  )
+
+  const mintId = tokenManagerData.parsed.mint
+  const [[metaplexId]] = await Promise.all([
     PublicKey.findProgramAddress(
       [
         anchor.utils.bytes.utf8.encode(metaplex.MetadataProgram.PREFIX),
@@ -199,7 +227,6 @@ export async function getTokenData(
       ],
       metaplex.MetadataProgram.PUBKEY
     ),
-    findTokenManagerAddress(mintId),
   ])
 
   const [[timeInvalidatorId], [useInvalidatorId]] = await Promise.all([
@@ -209,7 +236,6 @@ export async function getTokenData(
 
   let metaplexData: metaplex.Metadata | null = null
   let metadata: any | null = null
-  let tokenManagerData: TokenManagerData | null = null
   let timeInvalidatorData: TimeInvalidatorData | null = null
   let useInvalidatorData: UseInvalidatorData | null = null
 
@@ -226,15 +252,6 @@ export async function getTokenData(
     } catch (e) {
       console.log('Failed to get metadata data', e)
     }
-  }
-
-  try {
-    tokenManagerData = await tokenManager.accounts.getTokenManager(
-      connection,
-      tokenManagerId
-    )
-  } catch (e) {
-    console.log('Failed to get token manager data', e)
   }
 
   try {

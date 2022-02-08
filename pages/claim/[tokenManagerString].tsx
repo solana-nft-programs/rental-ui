@@ -279,14 +279,14 @@ function Claim() {
     status: VerificationStatus
     data?: TokenData
   } | null>(null)
-  const { mintString } = router.query
-  const mintId = tryPublicKey(mintString)
+  const { tokenManagerString } = router.query
+  const tokenManagerId = tryPublicKey(tokenManagerString)
 
   async function getMetadata() {
     try {
       setTokenDataError(null)
       setTokenData(null)
-      const data = await getTokenData(ctx.connection, mintId!)
+      const data = await getTokenData(ctx.connection, tokenManagerId!)
       if (
         !data.metadata &&
         !data.metaplexData &&
@@ -312,10 +312,10 @@ function Claim() {
   }
 
   useEffect(() => {
-    if (mintId) {
+    if (tokenManagerId) {
       getMetadata()
     }
-  }, [ctx, setError, mintString])
+  }, [ctx, setError, tokenManagerString])
 
   //   async function getUserPaymentTokenAccount() {
   //     if (
@@ -431,15 +431,18 @@ function Claim() {
         <VerificationStep visible={true} status={tokenDataStatus?.status}>
           <div className="header">
             <div className="step-name">Claim Asset</div>
-            {mintId && (
+            {tokenManagerId && tokenData?.tokenManager?.parsed.mint && (
               <div className="addresses">
                 <a
                   className="address"
-                  href={pubKeyUrl(mintId, ctx.environment.label)}
+                  href={pubKeyUrl(
+                    tokenData?.tokenManager?.parsed.mint,
+                    ctx.environment.label
+                  )}
                   target="_blank"
                   rel="noreferrer"
                 >
-                  {mintId?.toString()}
+                  {tokenData?.tokenManager?.parsed.mint.toString()}
                 </a>
               </div>
             )}

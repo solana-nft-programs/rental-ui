@@ -1,6 +1,6 @@
 import React from 'react'
 import Colors from 'common/colors'
-import { getQueryParam } from 'common/utils'
+import { getQueryParam, pubKeyUrl } from 'common/utils'
 import styled from '@emotion/styled'
 import { TokenData } from 'api/api'
 import { Popover, Tooltip } from 'antd'
@@ -11,6 +11,7 @@ import { useWallet } from '@solana/wallet-adapter-react'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { asWallet } from './Wallets'
 import { IoQrCodeOutline } from 'react-icons/io5'
+import { FiExternalLink } from 'react-icons/fi'
 import { useQRCode } from 'rental-components/QRCodeProvider'
 import { NFTOverlay } from './NFTOverlay'
 import { InvalidationType } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
@@ -178,6 +179,22 @@ export function NFT({ tokenData, setIssueId }: NFTProps) {
                       cursor: 'pointer',
                     }}
                   >
+                    <a
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '10px',
+                      }}
+                      href={pubKeyUrl(
+                        tokenAccount?.account.data.parsed.info.mint,
+                        ctx.environment.label
+                      )}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      View
+                      <FiExternalLink />
+                    </a>
                     <div
                       style={{
                         display: 'flex',

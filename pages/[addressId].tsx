@@ -116,7 +116,6 @@ export const TokenMetadata = styled.div`
 
 function Profile() {
   const [error, setError] = useError()
-  const ctx = useEnvironmentCtx()
   const wallet = useWallet()
   const router = useRouter()
   const { addressId } = router.query
@@ -125,7 +124,6 @@ function Profile() {
   const [issueId, setIssueId] = useState(null)
 
   const { tokenDatas, address, setAddress, refreshing } = useUserTokenData()
-  setAddress(firstParam(addressId))
   useEffect(() => {
     if (addressId) {
       setAddress(firstParam(addressId))
@@ -143,7 +141,7 @@ function Profile() {
       )
       setTab('wallet')
     }
-  }, [wallet.connected])
+  }, [wallet.connected, addressId])
 
   return (
     <>

@@ -44,7 +44,7 @@ export function TokenAccountsProvider({ children }: { children: ReactChild }) {
       }
       setRefreshing(true)
       setError(null)
-      getTokenAccountsWithData(ctx, address)
+      getTokenAccountsWithData(ctx.connection, address)
         .then((tokenDatas) => {
           setTokenDatas(tokenDatas.filter((td) => td.metaplexData))
         })
@@ -64,7 +64,7 @@ export function TokenAccountsProvider({ children }: { children: ReactChild }) {
         getTokenAccounts()
         return getTokenAccountsInterval
       })(),
-      10000
+      20000
     )
     return () => clearInterval(interval)
   }, [getTokenAccounts])
