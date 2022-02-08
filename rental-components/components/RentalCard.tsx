@@ -30,6 +30,7 @@ import {
   TokenManagerKind,
 } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import getEditionInfo, { EditionInfo } from 'api/editions'
+import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 const { Option } = Select
 
 const NFTOuter = styled.div`
@@ -43,8 +44,6 @@ const NFTOuter = styled.div`
     height: 100%;
   }
 `
-
-const BASE_URL = 'https://stage.cardinal.so/claim'
 
 const handleCopy = (shareUrl: string) => {
   navigator.clipboard.writeText(shareUrl)
@@ -91,6 +90,7 @@ export const RentalCard = ({
   notify,
   onComplete,
 }: RentalCardProps) => {
+  const ctx = useEnvironmentCtx()
   const [error, setError] = useState<string>()
   const [loading, setLoading] = useState(false)
   const [link, setLink] = useState<string | null>(null)
@@ -138,7 +138,12 @@ export const RentalCard = ({
           invalidationType,
         })
       await executeTransaction(connection, wallet, transaction)
-      const link = claimLinks.getLink(rentalMint, otpKeypair, cluster, BASE_URL)
+      const link = claimLinks.getLink(
+        rentalMint,
+        otpKeypair,
+        cluster,
+        `${process.env.BASE_URL}/claim`
+      )
       setLink(link)
       handleCopy(link)
       console.log(link)

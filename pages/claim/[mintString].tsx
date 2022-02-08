@@ -21,8 +21,6 @@ import { executeTransaction } from 'common/Transactions'
 import { pubKeyUrl, shortPubKey } from 'common/utils'
 import { FaQuestionCircle } from 'react-icons/fa'
 
-const BASE_PATH = 'https://stage.cardinal.so/claim'
-
 type Hideable = {
   visible?: boolean
 }
@@ -397,8 +395,10 @@ function Claim() {
       setTokenDataStatus(null)
       setLoadingClaim(true)
       const [mintId, otpKeypair] = claimLinks.fromLink(
-        `${BASE_PATH}${router.asPath.split('/claim')[1].split('&cluster')[0]}`,
-        BASE_PATH
+        `${process.env.BASE_URL}/claim${
+          router.asPath.split('/claim')[1].split('&cluster')[0]
+        }`,
+        `${process.env.BASE_URL}/claim`
       )
       const transaction = await claimLinks.claimFromLink(
         ctx.connection,

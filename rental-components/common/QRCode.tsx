@@ -2,17 +2,15 @@ import { useEffect, useState, useCallback } from 'react'
 import { PublicKey, Connection } from '@solana/web3.js'
 import styled from '@emotion/styled'
 import { AwesomeQR } from 'awesome-qr'
-import { claimLinks, useTransaction } from '@cardinal/token-manager'
+import { useTransaction } from '@cardinal/token-manager'
 import { TokenData } from 'api/api'
 import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 import { Wallet } from '@saberhq/solana-contrib'
 
-const BASE_URL = 'https://stage.cardinal.so/scan'
-
 const getLink = (serializedUsage: string, cluster: string | undefined) => {
-  return `${BASE_URL}?tx=${encodeURIComponent(serializedUsage)}${
-    cluster === 'devnet' ? `&cluster=devnet` : ''
-  }`
+  return `${process.env.BASE_URL}/scan?tx=${encodeURIComponent(
+    serializedUsage
+  )}${cluster === 'devnet' ? `&cluster=devnet` : ''}`
 }
 
 export const QRCode = ({
