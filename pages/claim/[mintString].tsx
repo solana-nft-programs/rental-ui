@@ -361,7 +361,6 @@ function Claim() {
   //   }
 
   const handleError = (e: Error) => {
-    console.log(e)
     if (e.message.includes('0x1')) {
       setError(
         <div>
@@ -379,7 +378,7 @@ function Claim() {
             </a>
           </div>
           <a
-            href={`https://app.saber.so/#/swap?from=So11111111111111111111111111111111111111112&to=${metadata.certificateData.parsed.paymentMint}`}
+            href={`https://app.saber.so/#/swap?from=So11111111111111111111111111111111111111112&to=${tokenData?.tokenManager?.parsed.paymentMint}`}
             target="_blank"
             rel="noreferrer"
           >
