@@ -258,9 +258,11 @@ export const Header = ({
             {ctx.environment.label === 'devnet' ? 'DEV' : 'alpha'}
           </div>
         </div>
-        <div style={{ marginLeft: '40px' }}>
-          <Airdrop />
-        </div>
+        {wallet.connected && (
+          <div style={{ marginLeft: '40px' }}>
+            <Airdrop />
+          </div>
+        )}
       </div>
       <div className="center">
         {/* {tabs && (

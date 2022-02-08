@@ -147,19 +147,11 @@ export async function getTokenAccountsWithData(
     })
   )
 
-  console.log(metadataIds[1].map((i) => i.toString()))
-  metadataIds[1].forEach((tmid) => {
-    tokenManager.accounts
-      .getTokenManager(connection, tmid)
-      .then((tm) => console.log(tm))
-      .catch((e) => console.log(e))
-  })
   const [tokenManagers, timeInvalidators, useInvalidators] = await Promise.all([
     tokenManager.accounts.getTokenManagers(connection, metadataIds[1]),
     timeInvalidator.accounts.getTimeInvalidators(connection, metadataIds[2]),
     useInvalidator.accounts.getUseInvalidators(connection, metadataIds[3]),
   ])
-  console.log(tokenManagers)
   return metadataTuples.map(
     ([
       metaplexId,

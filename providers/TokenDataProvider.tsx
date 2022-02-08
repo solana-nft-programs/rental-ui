@@ -13,6 +13,7 @@ export interface UserTokenDataValues {
   getTokenAccounts: Function
   setTokenDatas: (newEnvironment: TokenData[]) => void
   setAddress: (address: string) => void
+  loaded: boolean
   refreshing: boolean
   address: String | null
   error: String | null
@@ -24,6 +25,7 @@ const UserTokenData: React.Context<UserTokenDataValues> =
     getTokenAccounts: () => {},
     setTokenDatas: () => {},
     setAddress: () => {},
+    loaded: false,
     refreshing: true,
     address: null,
     error: null,
@@ -35,6 +37,7 @@ export function TokenAccountsProvider({ children }: { children: ReactChild }) {
   const [error, setError] = useState<string | null>(null)
   const [tokenDatas, setTokenDatas] = useState<TokenData[]>([])
   const [refreshing, setRefreshing] = useState<boolean>(false)
+  const [loaded, setLoaded] = useState<boolean>(false)
 
   const getTokenAccounts = useCallback(() => {
     if (ctx) {
@@ -53,6 +56,7 @@ export function TokenAccountsProvider({ children }: { children: ReactChild }) {
           setError(`${e}`)
         })
         .finally(() => {
+          setLoaded(true)
           setRefreshing(false)
         })
     }
@@ -74,6 +78,7 @@ export function TokenAccountsProvider({ children }: { children: ReactChild }) {
       value={{
         address,
         tokenDatas,
+        loaded,
         getTokenAccounts,
         setTokenDatas,
         setAddress,

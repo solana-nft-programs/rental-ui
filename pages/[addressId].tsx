@@ -15,6 +15,7 @@ import { Button } from 'rental-components/common/Button'
 import { airdropNFT } from 'api/utils'
 import { asWallet } from 'common/Wallets'
 import { Airdrop } from 'common/Airdrop'
+import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 
 export const TokensOuter = styled.div`
   display: flex;
@@ -128,7 +129,8 @@ function Profile() {
   const [tab, setTab] = useState<string>('wallet')
   const [issueId, setIssueId] = useState(null)
 
-  const { tokenDatas, address, setAddress, refreshing } = useUserTokenData()
+  const { tokenDatas, address, setAddress, loaded, refreshing } =
+    useUserTokenData()
   useEffect(() => {
     if (addressId) {
       setAddress(firstParam(addressId))
@@ -223,7 +225,7 @@ function Profile() {
                           setIssueId={setIssueId}
                         ></NFT>
                       ))
-                    ) : (
+                    ) : loaded ? (
                       <div
                         style={{
                           color: 'white',
@@ -237,6 +239,8 @@ function Profile() {
                         <div>Wallet empty!</div>
                         <Airdrop />
                       </div>
+                    ) : (
+                      <LoadingSpinner />
                     )}
                   </TokensOuter>
                 </>

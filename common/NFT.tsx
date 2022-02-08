@@ -247,10 +247,6 @@ export function NFT({ tokenData, setIssueId }: NFTProps) {
       <div id="media-outer">
         {tokenManager && (
           <NFTOverlay
-            returnable={
-              tokenData.tokenManager?.parsed.invalidationType ===
-              InvalidationType.Return
-            }
             state={tokenManager?.parsed.state}
             expiration={timeInvalidator?.parsed.expiration}
             usages={useInvalidator?.parsed.usages}
