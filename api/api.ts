@@ -18,7 +18,6 @@ import { AccountData } from '@cardinal/token-manager'
 import { TokenManagerData } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { TimeInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
 import { UseInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
-import { Wallet } from '@saberhq/solana-contrib'
 
 export async function findAssociatedTokenAddress(
   walletAddress: PublicKey,
