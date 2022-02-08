@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import styled from '@emotion/styled'
 import { DatePicker, Select } from 'antd'
 import { Connection, PublicKey } from '@solana/web3.js'
@@ -29,6 +29,7 @@ import {
   InvalidationType,
   TokenManagerKind,
 } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
+import getEditionInfo, { EditionInfo } from 'api/editions'
 const { Option } = Select
 
 const NFTOuter = styled.div`
@@ -48,6 +49,23 @@ const BASE_URL = 'https://stage.cardinal.so/claim'
 const handleCopy = (shareUrl: string) => {
   navigator.clipboard.writeText(shareUrl)
   notify({ message: 'Share link copied' })
+}
+
+function getEditionPill(editionInfo: EditionInfo) {
+  const masterEdition = editionInfo.masterEdition
+  const edition = editionInfo.edition
+
+  return (
+    <div className="ms-2 mx-auto flex justify-center">
+      <span className="badge badge-pill bg-dark">{`${
+        edition && masterEdition
+          ? `Edition ${edition.edition.toNumber()} / ${masterEdition.supply.toNumber()}`
+          : masterEdition
+          ? 'Master Edition'
+          : 'No Master Edition Information'
+      }`}</span>
+    </div>
+  )
 }
 
 export type RentalCardProps = {
@@ -81,6 +99,20 @@ export const RentalCard = ({
   const [invalidationType, setInvalidationType] = useState(
     InvalidationType.Return
   )
+
+  const [editionInfo, setEditionInfo] = useState<EditionInfo>({})
+  const getEdition = async () => {
+    try {
+      const editionInfo = await getEditionInfo(metadata, connection)
+      setEditionInfo(editionInfo)
+    } catch (e) {
+      console.log(e)
+    }
+  }
+  useEffect(() => {
+    getEdition()
+  }, [])
+  console.log(editionInfo)
 
   // form
   const [price, setPrice] = useState(0)
@@ -136,8 +168,7 @@ export const RentalCard = ({
             showIcon
           />
         )}
-        <DetailsWrapper>
-          {/* <div
+        {/* <div
             style={{ padding: '0px 80px' }}
             className="flex items-center justify-center gap-10"
           >
@@ -151,6 +182,7 @@ export const RentalCard = ({
               <ImPriceTags />
             </BigIcon>
           </div> */}
+        <ImageWrapper>
           <NFTOuter>
             <NFTOverlay
               state={tokenManager?.parsed.state}
@@ -185,6 +217,9 @@ export const RentalCard = ({
                 />
               ))}
           </NFTOuter>
+          {editionInfo && getEditionPill(editionInfo)}
+        </ImageWrapper>
+        <DetailsWrapper>
           <div
             style={{
               display: 'flex',
@@ -426,6 +461,12 @@ const Instruction = styled.h2`
 const DetailsWrapper = styled.div`
   display: grid;
   grid-row-gap: 28px;
+`
+
+const ImageWrapper = styled.div`
+  display: grid;
+  grid-row-gap: 10px;
+  margin-bottom: 20px;
 `
 
 export const RentalCardOuter = styled.div``

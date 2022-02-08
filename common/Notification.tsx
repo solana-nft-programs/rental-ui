@@ -7,12 +7,14 @@ export function notify({
   txid,
   type = 'info',
   placement = 'topRight',
+  cluster,
 }: {
   message: string
   description?: string | JSX.Element
   txid?: string
   type?: string
   placement?: string
+  cluster?: string
 }) {
   // @ts-ignore
   notification[type]({
@@ -24,7 +26,9 @@ export function notify({
           <a
             rel="noreferrer"
             target="_blank"
-            href={'https://explorer.solana.com/tx/' + txid}
+            href={`https://explorer.solana.com/tx/${txid}${
+              cluster === 'devnet' ? '?cluster=devnet' : ''
+            }`}
           >
             View transaction {txid.slice(0, 8)}...{txid.slice(txid.length - 8)}
           </a>

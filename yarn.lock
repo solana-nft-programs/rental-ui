@@ -339,12 +339,15 @@
     "@solana/spl-token" "^0.1.8"
     typescript "^4.5.4"
 
-"@cardinal/token-manager@0.0.12":
-  version "0.0.12"
-  resolved "https://registry.yarnpkg.com/@cardinal/token-manager/-/token-manager-0.0.12.tgz#c9753f176bb7e5bda9e3e42c9aab2fd0034e49ab"
-  integrity sha512-k7RrDseEh23pLUKRvzA3dXhdf1ssspH9R1EVwqIM0zR4F7LY464QTdMo8YyCbeha5swnPplRfsqmhFW8DvDZbQ==
+"@cardinal/token-manager@^0.0.13":
+  version "0.0.13"
+  resolved "https://registry.yarnpkg.com/@cardinal/token-manager/-/token-manager-0.0.13.tgz#fc1dbc7b34a646d8443f67aba89ed62b7d4f1e51"
+  integrity sha512-1H/Z72j2dmvpzacZrUQKaM7oM+Iw0ukcpzsNIyA56CuBp7hCgJTeG7j4n0lMGt2mKM6SfSMxVysMrJVn4lGQgg==
   dependencies:
+    "@metaplex-foundation/mpl-token-metadata" "^1.2.3"
     "@solana/spl-token" "^0.1.8"
+    borsh "^0.7.0"
+    bs58 "^4.0.1"
     tiny-invariant "^1.2.0"
     tslib "^2.3.1"
 
@@ -662,6 +665,15 @@
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@metaplex-foundation/mpl-token-metadata/-/mpl-token-metadata-1.2.0.tgz#6a37b94d0ea0ff7151adbcd3e2b09ce528100675"
   integrity sha512-bxnAlK0GvFWWoFXFHT0ba4903QYJzCP2AgGcHj+sVccvReek8hVrnF4eJqt22ZpKviHfnaUm6h6g7gXL2twRag==
+  dependencies:
+    "@metaplex-foundation/mpl-core" "^0.0.2"
+    "@solana/spl-token" "^0.1.8"
+    "@solana/web3.js" "^1.31.0"
+
+"@metaplex-foundation/mpl-token-metadata@^1.2.3":
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/@metaplex-foundation/mpl-token-metadata/-/mpl-token-metadata-1.2.3.tgz#d321f6be8aa64ede398dd2902acf7e3c786cd178"
+  integrity sha512-Zoowvt+iQyryf3lWyRpW6fZq6rkoaHquWnEk1pgzNK/QdNRt9ASpcQIhDe/Pc3VcXJVFbv5Mfr+roBkQxK8BWg==
   dependencies:
     "@metaplex-foundation/mpl-core" "^0.0.2"
     "@solana/spl-token" "^0.1.8"
@@ -1671,6 +1683,15 @@ borsh@^0.4.0:
   dependencies:
     "@types/bn.js" "^4.11.5"
     bn.js "^5.0.0"
+    bs58 "^4.0.0"
+    text-encoding-utf-8 "^1.0.2"
+
+borsh@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/borsh/-/borsh-0.7.0.tgz#6e9560d719d86d90dc589bca60ffc8a6c51fec2a"
+  integrity sha512-CLCsZGIBCFnPtkNnieW/a8wmreDmfUtjU2m9yHrzPXIlNbqVs0AQrSatSG6vdNYUqdc83tkQi2eHfF98ubzQLA==
+  dependencies:
+    bn.js "^5.2.0"
     bs58 "^4.0.0"
     text-encoding-utf-8 "^1.0.2"
 

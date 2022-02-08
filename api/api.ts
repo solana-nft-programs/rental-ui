@@ -42,6 +42,7 @@ export type TokenData = {
   }
   tokenManager?: AccountData<TokenManagerData>
   metaplexData?: metaplex.Metadata | null
+  editionData?: metaplex.Edition
   metadata?: any
   useInvalidator?: AccountData<UseInvalidatorData>
   timeInvalidator?: AccountData<TimeInvalidatorData>

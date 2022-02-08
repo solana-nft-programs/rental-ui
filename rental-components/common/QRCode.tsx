@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from 'react'
 import { PublicKey, Connection } from '@solana/web3.js'
 import styled from '@emotion/styled'
 import { AwesomeQR } from 'awesome-qr'
-import { claimLinks } from '@cardinal/token-manager'
+import { claimLinks, useTransaction } from '@cardinal/token-manager'
 import { TokenData } from 'api/api'
 import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 import { Wallet } from '@saberhq/solana-contrib'
@@ -30,7 +30,7 @@ export const QRCode = ({
   const getQRCode = useCallback(async () => {
     if (wallet && connection) {
       try {
-        const transaction = await claimLinks.useTransaction(
+        const transaction = await useTransaction(
           connection,
           wallet,
           tokenData?.tokenManager?.parsed.mint,

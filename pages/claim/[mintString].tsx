@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
 import { PublicKey } from '@solana/web3.js'
@@ -18,7 +18,7 @@ import {
 } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { NFTOverlay } from 'common/NFTOverlay'
 import { executeTransaction } from 'common/Transactions'
-import { shortPubKey } from 'common/utils'
+import { pubKeyUrl, shortPubKey } from 'common/utils'
 import { FaQuestionCircle } from 'react-icons/fa'
 
 const BASE_PATH = 'https://stage.cardinal.so/claim'
@@ -269,8 +269,7 @@ function Claim() {
   const router = useRouter()
   const ctx = useEnvironmentCtx()
   const wallet = useWallet()
-  const [error, setError] = useState<string | null>(null)
-  const [stepNumber, setStepNumber] = useState(0)
+  const [error, setError] = useState<ReactElement | null>(null)
   const [loadingClaim, setLoadingClaim] = useState(false)
   const [paymentTokenAccountError, setPaymentTokenAccountError] = useState(null)
 
@@ -280,13 +279,12 @@ function Claim() {
   const [tokenDataError, setTokenDataError] = useState<string | null>(null)
   const [tokenDataStatus, setTokenDataStatus] = useState<{
     status: VerificationStatus
-    data?: any
+    data?: TokenData
   } | null>(null)
   const { mintString } = router.query
   const mintId = tryPublicKey(mintString)
 
   async function getMetadata() {
-    setStepNumber(1)
     try {
       setTokenDataError(null)
       setTokenData(null)
@@ -301,7 +299,6 @@ function Claim() {
       }
       setTokenData(data)
       console.log(data)
-
       if (data?.metadata?.data?.image) {
         setLoadingImage(true)
       }
@@ -320,7 +317,7 @@ function Claim() {
     if (mintId) {
       getMetadata()
     }
-  }, [ctx, setError, setStepNumber, mintString])
+  }, [ctx, setError, mintString])
 
   //   async function getUserPaymentTokenAccount() {
   //     if (
@@ -366,36 +363,32 @@ function Claim() {
   const handleError = (e: Error) => {
     console.log(e)
     if (e.message.includes('0x1')) {
-      //   setError(
-      //     <div>
-      //       <div>
-      //         User does not have enough balance of{' '}
-      //         <a
-      //           href={`https://explorer.solana.com/address/${
-      //             metadata.certificateData.parsed.paymentMint
-      //           }${ctx.environment.label === 'devnet' ? 'devnet' : ''}`}
-      //           target="_blank"
-      //           rel="noreferrer"
-      //         >
-      //           mint
-      //         </a>
-      //       </div>
-      //       {metadata.certificateData.parsed.paymentMint.toString() ===
-      //       WRAPPED_SOL_MINT.toString() ? (
-      //         <Button onClick={() => handleWrap()}>Wrap sol</Button>
-      //       ) : (
-      //         <a
-      //           href={`https://app.saber.so/#/swap?from=So11111111111111111111111111111111111111112&to=${metadata.certificateData.parsed.paymentMint}`}
-      //           target="_blank"
-      //           rel="noreferrer"
-      //         >
-      //           <div>Get Funds</div>
-      //         </a>
-      //       )}
-      //     </div>
-      //   )
+      setError(
+        <div>
+          <div>
+            User does not have enough balance of{' '}
+            <a
+              href={pubKeyUrl(
+                tokenData?.tokenManager?.parsed.paymentMint,
+                ctx.environment.label
+              )}
+              target="_blank"
+              rel="noreferrer"
+            >
+              mint
+            </a>
+          </div>
+          <a
+            href={`https://app.saber.so/#/swap?from=So11111111111111111111111111111111111111112&to=${metadata.certificateData.parsed.paymentMint}`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <div>Get Funds</div>
+          </a>
+        </div>
+      )
     } else {
-      setError(`${e}`)
+      setError(<div>{`${e}`}</div>)
     }
   }
 
@@ -436,19 +429,14 @@ function Claim() {
     <>
       <Header />
       <VerificationStepsOuter>
-        <VerificationStep
-          visible={stepNumber > 0}
-          status={tokenDataStatus?.status}
-        >
+        <VerificationStep visible={true} status={tokenDataStatus?.status}>
           <div className="header">
             <div className="step-name">Claim Asset</div>
             {mintId && (
               <div className="addresses">
                 <a
                   className="address"
-                  href={`https://explorer.solana.com/address/${mintId?.toString()}${
-                    ctx.environment.label === 'devnet' ? 'devnet' : ''
-                  }`}
+                  href={pubKeyUrl(mintId, ctx.environment.label)}
                   target="_blank"
                   rel="noreferrer"
                 >
@@ -506,7 +494,11 @@ function Claim() {
                           Claimed by{' '}
                           <a
                             style={{ paddingLeft: '3px' }}
-                            href={`https://explorer.solana.com/address${tokenData.tokenManager?.parsed.recipientTokenAccount}`}
+                            href={pubKeyUrl(
+                              tokenData.tokenManager?.parsed
+                                .recipientTokenAccount,
+                              ctx.environment.label
+                            )}
                           >
                             {shortPubKey(
                               tokenData.tokenManager?.parsed

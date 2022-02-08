@@ -16,6 +16,16 @@ export function shortPubKey(pubkey: web3.PublicKey) {
     .substring(pubkey?.toBase58().length - 4)}`
 }
 
+export function pubKeyUrl(
+  pubkey: web3.PublicKey | null | undefined,
+  cluster: string
+) {
+  if (!pubkey) return 'https://explorer.solana.com'
+  return `https://explorer.solana.com/address/${pubkey.toString()}${
+    cluster === 'devnet' ? '?cluster=devnet' : ''
+  }`
+}
+
 export function shortDateString(utc_seconds: number) {
   return `${new Date(utc_seconds * 1000).toLocaleDateString([], {
     month: '2-digit',

@@ -157,13 +157,17 @@ export function NFT({ tokenData, setIssueId }: NFTProps) {
     timeInvalidator,
     useInvalidator,
   } = tokenData
-  const customImageUri = getQueryParam(metadata?.data?.image, 'uri')
+  const customImageUri =
+    tokenManager && getQueryParam(metadata?.data?.image, 'uri')
+
+  const elligibleForRent =
+    !tokenManager && tokenAccount?.account.data.parsed.info.state !== 'frozen'
   return (
     <TokenMetadata>
       {wallet &&
         wallet.connected &&
         (!tokenManager ? (
-          tokenAccount?.account.data.parsed.info.state !== 'frozen' ? (
+          elligibleForRent ? (
             <Popover
               placement="bottomLeft"
               zIndex={10}

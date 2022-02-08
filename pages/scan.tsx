@@ -9,7 +9,7 @@ import { useRouter } from 'next/router'
 import { Transaction, sendAndConfirmRawTransaction } from '@solana/web3.js'
 import { FaCheckCircle, FaQuestionCircle } from 'react-icons/fa'
 import { PublicKey } from '@solana/web3.js'
-import { firstParam } from 'common/utils'
+import { firstParam, pubKeyUrl } from 'common/utils'
 
 type Hideable = {
   visible?: boolean
@@ -167,7 +167,9 @@ function Scan() {
   >(undefined)
 
   useEffect(() => {
-    handleExecute()
+    if (tx) {
+      handleExecute()
+    }
   }, [setError, tx])
 
   const handleExecute = async () => {
@@ -205,7 +207,7 @@ function Scan() {
       <VerificationStepsOuter>
         <VerificationStep visible={true} status={executeResult?.status}>
           <div className="header">
-            <div className="step-name">Using Ticket</div>
+            <div className="step-name">Using Asset</div>
             <div className="addresses">
               {decodeURIComponent(firstParam(tx))}
             </div>
@@ -224,10 +226,10 @@ function Scan() {
                     <FaCheckCircle />
                   </div>
                   <div className="footer" style={{ marginTop: '25px' }}>
-                    Message signed by{' '}
+                    Use transaction signed by{' '}
                     <a
                       className="address"
-                      href={`https://explorer.solana.com/address/${owner?.toString()}`}
+                      href={pubKeyUrl(owner, ctx.environment.label)}
                       target="_blank"
                       rel="noreferrer"
                     >
