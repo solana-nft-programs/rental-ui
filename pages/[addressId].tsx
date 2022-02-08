@@ -11,6 +11,9 @@ import { useRouter } from 'next/router'
 import Colors from 'common/colors'
 import { NFT } from 'common/NFT'
 import { firstParam } from 'common/utils'
+import { Button } from 'rental-components/common/Button'
+import { airdropNFT } from 'api/utils'
+import { asWallet } from 'common/Wallets'
 
 export const TokensOuter = styled.div`
   display: flex;
@@ -116,6 +119,7 @@ export const TokenMetadata = styled.div`
 
 function Profile() {
   const [error, setError] = useError()
+  const ctx = useEnvironmentCtx()
   const wallet = useWallet()
   const router = useRouter()
   const { addressId } = router.query
@@ -209,7 +213,7 @@ function Profile() {
               wallet: (
                 <>
                   <TokensOuter>
-                    {tokenDatas &&
+                    {tokenDatas && tokenDatas.length > 0 ? (
                       tokenDatas.map((tokenData) => (
                         <NFT
                           key={tokenData?.tokenAccount?.pubkey.toBase58()}
@@ -217,7 +221,31 @@ function Profile() {
                           tokenData={tokenData}
                           setIssueId={setIssueId}
                         ></NFT>
-                      ))}
+                      ))
+                    ) : (
+                      <div
+                        style={{
+                          color: 'white',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '10px',
+                        }}
+                      >
+                        <div>Wallet empty!</div>
+                        <Button
+                          variant="primary"
+                          disabled={true}
+                          onClick={() => {
+                            if (!wallet.connected) return
+                            airdropNFT(ctx.connection, asWallet(wallet))
+                          }}
+                        >
+                          Airdrop
+                        </Button>
+                      </div>
+                    )}
                   </TokensOuter>
                 </>
               ),
