@@ -510,7 +510,7 @@ function Claim() {
                         </>
                       ) : paymentTokenAccountError ? (
                         <div>Error</div>
-                      ) : (
+                      ) : wallet.connected ? (
                         <div className="claim-icon" onClick={handleClaim}>
                           {loadingClaim ? (
                             <div
@@ -526,6 +526,8 @@ function Claim() {
                             'Claim'
                           )}
                         </div>
+                      ) : (
+                        <div>Connect wallet to claim</div>
                       )}
                     </div>
                   </>
