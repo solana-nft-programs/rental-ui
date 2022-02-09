@@ -14,7 +14,6 @@ import { IoQrCodeOutline } from 'react-icons/io5'
 import { FiExternalLink } from 'react-icons/fi'
 import { useQRCode } from 'rental-components/QRCodeProvider'
 import { NFTOverlay } from './NFTOverlay'
-import { InvalidationType } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 
 export const TokensOuter = styled.div`
   display: flex;

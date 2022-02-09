@@ -258,11 +258,13 @@ export const Header = ({
             {ctx.environment.label === 'devnet' ? 'DEV' : 'alpha'}
           </div>
         </div>
-        {wallet.connected && ctx.environment.label === 'devnet' && (
-          <div style={{ marginLeft: '40px' }}>
-            <Airdrop />
-          </div>
-        )}
+        {wallet.connected &&
+          ctx.environment.label === 'devnet' &&
+          !isTabletOrMobile && (
+            <div style={{ marginLeft: '40px' }}>
+              <Airdrop />
+            </div>
+          )}
       </div>
       <div className="center">
         {/* {tabs && (
@@ -289,7 +291,8 @@ export const Header = ({
             color: 'white',
             width: '30px',
             height: '30px',
-            left: -50,
+            left: isTabletOrMobile ? 'none' : -50,
+            top: isTabletOrMobile ? 50 : 8,
           }}
         >
           <LoadingPulse loading={loading ?? false} />

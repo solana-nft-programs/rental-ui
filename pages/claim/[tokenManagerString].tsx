@@ -20,6 +20,7 @@ import { NFTOverlay } from 'common/NFTOverlay'
 import { executeTransaction } from 'common/Transactions'
 import { pubKeyUrl, shortPubKey } from 'common/utils'
 import { FaQuestionCircle } from 'react-icons/fa'
+import { Button } from 'rental-components/common/Button'
 
 type Hideable = {
   visible?: boolean
@@ -52,16 +53,16 @@ const VerificationStep = styled.div<Verifiable>`
   text-align: center;
   // background-color: rgba(50,50,50,0.2);
   transition: height 0.3s;
-  height: ${(props) => (props.visible ? '500px' : '0px')};
+  height: ${(props) => (props.visible ? '550px' : '0px')};
   border-radius: 10px;
   margin: 0px auto;
-  width: 90%;
+  width: 93%;
   max-width: 500px;
   box-shadow: ${(props) => {
     if (props.visible) {
       switch (props.status) {
         case VerificationStatus.WARNING:
-          return '0 0 30px 20px rgba(255, 200, 50, 0.5)'
+          return '0 0 80px 50px rgba(255, 255, 255, 0.3)'
         case VerificationStatus.ERROR:
           return '0 0 30px 20px rgba(255, 0, 50, 0.3)'
         default:
@@ -242,6 +243,7 @@ const VerificationStep = styled.div<Verifiable>`
 `
 
 const NFTOuter = styled.div`
+  width: fit-content;
   margin: 0px auto;
   position: relative;
   border-radius: 10px;
@@ -296,7 +298,6 @@ function Claim() {
         throw new Error('No token found')
       }
       setTokenData(data)
-      console.log(data)
       if (data?.metadata?.data?.image) {
         setLoadingImage(true)
       }
@@ -491,23 +492,50 @@ function Claim() {
                     </NFTOuter>
                     <div className="footer">
                       {tokenData.tokenManager?.parsed.state ===
-                      TokenManagerState.Claimed ? (
-                        <>
-                          Claimed by{' '}
-                          <a
-                            style={{ paddingLeft: '3px' }}
-                            href={pubKeyUrl(
-                              tokenData.tokenManager?.parsed
-                                .recipientTokenAccount,
-                              ctx.environment.label
-                            )}
+                        TokenManagerState.Claimed &&
+                      tokenData.recipientTokenAccount?.owner ? (
+                        <div>
+                          <div>
+                            Claimed by{' '}
+                            <a
+                              style={{ paddingLeft: '3px', color: 'blue' }}
+                              href={pubKeyUrl(
+                                tokenData.recipientTokenAccount?.owner,
+                                ctx.environment.label
+                              )}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              {shortPubKey(
+                                tokenData.recipientTokenAccount?.owner
+                              )}
+                            </a>
+                          </div>
+                          <div>
+                            This is a cardinal-powered non-transferable NFT
+                          </div>
+                          <Button
+                            className="mx-auto mt-2"
+                            variant="primary"
+                            onClick={async () => {
+                              router.push(
+                                `/${tokenData.recipientTokenAccount?.owner}${
+                                  ctx.environment.label === 'devnet'
+                                    ? `?cluster=devnet`
+                                    : ''
+                                }`,
+                                undefined,
+                                {
+                                  shallow:
+                                    wallet?.publicKey?.toString() ===
+                                    tokenData.recipientTokenAccount?.owner.toString(),
+                                }
+                              )
+                            }}
                           >
-                            {shortPubKey(
-                              tokenData.tokenManager?.parsed
-                                .recipientTokenAccount
-                            )}
-                          </a>
-                        </>
+                            View
+                          </Button>
+                        </div>
                       ) : paymentTokenAccountError ? (
                         <div>Error</div>
                       ) : wallet.connected ? (

@@ -90,7 +90,6 @@ export const RentalCard = ({
   notify,
   onComplete,
 }: RentalCardProps) => {
-  const ctx = useEnvironmentCtx()
   const [error, setError] = useState<string>()
   const [loading, setLoading] = useState(false)
   const [link, setLink] = useState<string | null>(null)

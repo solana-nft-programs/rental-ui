@@ -3,7 +3,6 @@ import {
   ParsedAccountData,
   PublicKey,
   Connection,
-  Transaction,
 } from '@solana/web3.js'
 import * as anchor from '@project-serum/anchor'
 import * as spl from '@solana/spl-token'
@@ -46,6 +45,7 @@ export type TokenData = {
   metadata?: any
   useInvalidator?: AccountData<UseInvalidatorData>
   timeInvalidator?: AccountData<TimeInvalidatorData>
+  recipientTokenAccount?: spl.AccountInfo | null
 }
 
 export async function getTokenAccountsWithData(
@@ -217,6 +217,7 @@ export async function getTokenData(
   let metadata: any | null = null
   let timeInvalidatorData: TimeInvalidatorData | null = null
   let useInvalidatorData: UseInvalidatorData | null = null
+  let recipientTokenAccount: spl.AccountInfo | null = null
 
   try {
     metaplexData = await metaplex.Metadata.load(connection, metaplexId)
@@ -251,11 +252,29 @@ export async function getTokenData(
     console.log('Failed to get use invalidator data', e)
   }
 
+  if (tokenManagerData?.parsed.recipientTokenAccount) {
+    try {
+      const mint = new spl.Token(
+        connection,
+        tokenManagerData?.parsed.mint,
+        spl.TOKEN_PROGRAM_ID,
+        // @ts-ignore
+        null
+      )
+      recipientTokenAccount = await mint.getAccountInfo(
+        tokenManagerData?.parsed.recipientTokenAccount
+      )
+    } catch (e) {
+      console.log('Failed to get recipient token account', e)
+    }
+  }
+
   return {
     metaplexData,
     tokenManager: tokenManagerData,
     useInvalidator: useInvalidatorData,
     timeInvalidator: timeInvalidatorData,
     metadata,
+    recipientTokenAccount,
   }
 }
