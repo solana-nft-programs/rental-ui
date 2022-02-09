@@ -249,8 +249,6 @@ export const Header = ({
     ? shortPubKey(wallet?.publicKey)
     : ''
 
-  console.log(isTabletOrMobile)
-
   return (
     <StyledHeader isTabletOrMobile={isTabletOrMobile}>
       <div className="left">
@@ -300,7 +298,10 @@ export const Header = ({
           <LoadingPulse loading={loading ?? false} />
         </div>
         {wallet.connected ? (
-          <StyledProfile onClick={() => setVisible(true)}>
+          <StyledProfile
+            style={{ cursor: 'pointer' }}
+            onClick={() => setVisible(true)}
+          >
             <AddressImage
               connection={ctx.connection}
               address={wallet.publicKey || undefined}
@@ -327,6 +328,7 @@ export const Header = ({
             <div className="info">
               <div>
                 <DisplayAddress
+                  style={{ pointerEvents: 'none' }}
                   connection={ctx.connection}
                   address={wallet.publicKey || undefined}
                   height="12px"
