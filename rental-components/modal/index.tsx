@@ -19,6 +19,7 @@ export interface ModalProps {
   fitContent?: boolean
   borderRadius?: string
   dark?: boolean
+  maxWidth?: string
 
   onBack?: () => void
   hideCloseButton?: boolean
@@ -31,6 +32,7 @@ export const Modal: React.FC<ModalProps> = ({
   darkenOverlay = true,
   topArea = true,
   fitContent = false,
+  maxWidth = '560px',
   borderRadius = '8px',
   dark = false,
 
@@ -101,6 +103,7 @@ export const Modal: React.FC<ModalProps> = ({
                 borderRadius={borderRadius}
                 fitContent={fitContent}
                 dark={dark}
+                maxWidth={maxWidth}
                 aria-label="dialog content"
                 {...(isMobile
                   ? {
@@ -184,6 +187,7 @@ const ModalWrapper = styled(animated(DialogContent))<{
   fitContent?: boolean
   borderRadius?: string
   dark?: boolean
+  maxWidth?: string
 }>`
   * {
     box-sizing: border-box;
@@ -193,7 +197,7 @@ const ModalWrapper = styled(animated(DialogContent))<{
     'Segoe UI Symbol';
   position: relative;
   box-shadow: 0px 4px 16px rgba(207, 207, 207, 0.25);
-  max-width: 560px;
+  max-width: ${({ maxWidth }) => maxWidth ?? '560px'};
   width: ${({ fitContent }) => (fitContent ? 'fit-content' : '100%')};
   border-radius: ${({ borderRadius }) => borderRadius ?? '8px'};
   background: ${({ dark }) => (dark ? 'rgb(26, 27, 32)' : '#FFF')};

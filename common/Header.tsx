@@ -249,6 +249,8 @@ export const Header = ({
     ? shortPubKey(wallet?.publicKey)
     : ''
 
+  console.log(isTabletOrMobile)
+
   return (
     <StyledHeader isTabletOrMobile={isTabletOrMobile}>
       <div className="left">

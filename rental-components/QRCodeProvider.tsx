@@ -62,6 +62,7 @@ export const QRCodeProvider: React.FC<Props> = ({ children }: Props) => {
         topArea={false}
         fitContent={true}
         borderRadius="30px"
+        maxWidth="90vw"
         dark={true}
       >
         <QRCode

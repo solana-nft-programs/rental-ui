@@ -78,6 +78,10 @@ export const QRCode = ({
   return qrCode ? (
     <QRCodeOuter>
       <img height="300px" src={qrCode} alt="qr-code" />
+      <div className="disclaimer">
+        This is a rotating QR code containing a temporarily valid signed
+        transaction
+      </div>
     </QRCodeOuter>
   ) : (
     <LoadingSpinner />
@@ -90,8 +94,17 @@ const QRCodeOuter = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+
   img {
     border-radius: 30px;
     padding: 10px;
+  }
+
+  .disclaimer {
+    color: white;
+    text-align: center;
+    position: absolute;
+    bottom: -40px;
   }
 `
