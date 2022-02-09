@@ -228,7 +228,7 @@ function Profile() {
                     ) : loaded ? (
                       <div className="white flex w-full flex-col items-center justify-center gap-1">
                         <div className="text-white">Wallet empty!</div>
-                        <Airdrop />
+                        {ctx.environment.label === 'devnet' && <Airdrop />}
                       </div>
                     ) : (
                       <div className="flex w-full items-center justify-center">
