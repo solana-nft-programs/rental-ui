@@ -531,7 +531,9 @@ function Claim() {
                   </>
                 ) : (
                   <>
-                    <FaQuestionCircle style={{ fontSize: '170px' }} />
+                    <FaQuestionCircle
+                      style={{ fontSize: '170px', margin: '0px auto' }}
+                    />
                     {tokenDataError && (
                       <div className="footer" style={{ marginTop: '25px' }}>
                         {`${tokenDataError}`}
