@@ -42,6 +42,14 @@ interface Verifiable extends Hideable {
   status?: VerificationStatus
 }
 
+const formatError = (error: string): string => {
+  if (error.includes('0x1774')) {
+    return 'No more usages remaining'
+  } else {
+    return error
+  }
+}
+
 const VerificationStep = styled.div<Verifiable>`
   text-align: center;
   // background-color: rgba(50,50,50,0.2);
@@ -209,7 +217,7 @@ function Scan() {
           <div className="header">
             <div className="step-name">Using Asset</div>
             <div className="addresses">
-              {decodeURIComponent(firstParam(tx))}
+              {/* {decodeURIComponent(firstParam(tx))} */}
             </div>
           </div>
           <div className="content">
@@ -250,7 +258,7 @@ function Scan() {
                   </div>
                   {error && (
                     <div className="footer" style={{ marginTop: '25px' }}>
-                      {`${error}`}
+                      {formatError(`${error}`)}
                     </div>
                   )}
                 </>

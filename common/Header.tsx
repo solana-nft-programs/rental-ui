@@ -258,7 +258,7 @@ export const Header = ({
             {ctx.environment.label === 'devnet' ? 'DEV' : 'alpha'}
           </div>
         </div>
-        {wallet.connected && (
+        {wallet.connected && ctx.environment.label === 'devnet' && (
           <div style={{ marginLeft: '40px' }}>
             <Airdrop />
           </div>
