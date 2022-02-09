@@ -274,6 +274,7 @@ function Claim() {
   const [paymentTokenAccountError, setPaymentTokenAccountError] = useState(null)
 
   const [loadingImage, setLoadingImage] = useState(false)
+  const [claimed, setClaimed] = useState(false)
 
   const [tokenData, setTokenData] = useState<TokenData | null>(null)
   const [tokenDataError, setTokenDataError] = useState<string | null>(null)
@@ -403,6 +404,7 @@ function Claim() {
         { commitment: 'confirmed', maxRetries: 3 }
       )
       notify({ message: 'Succesfully claimed!', txid })
+      setClaimed(true)
       getMetadata()
     } catch (e: any) {
       setTokenDataStatus({ status: VerificationStatus.ERROR })
@@ -480,23 +482,26 @@ function Claim() {
                         ))}
                     </NFTOuter>
                     <div className="footer">
-                      {tokenData.tokenManager?.parsed.state ===
+                      {(claimed && wallet.publicKey) ||
+                      (tokenData.tokenManager?.parsed.state ===
                         TokenManagerState.Claimed &&
-                      tokenData.recipientTokenAccount?.owner ? (
+                        tokenData.recipientTokenAccount?.owner) ? (
                         <div>
                           <div>
                             Claimed by{' '}
                             <a
                               style={{ paddingLeft: '3px', color: 'blue' }}
                               href={pubKeyUrl(
-                                tokenData.recipientTokenAccount?.owner,
+                                tokenData.recipientTokenAccount?.owner ||
+                                  wallet.publicKey,
                                 ctx.environment.label
                               )}
                               target="_blank"
                               rel="noreferrer"
                             >
                               {shortPubKey(
-                                tokenData.recipientTokenAccount?.owner
+                                tokenData.recipientTokenAccount?.owner ||
+                                  wallet.publicKey
                               )}
                             </a>
                           </div>
@@ -508,7 +513,10 @@ function Claim() {
                             variant="primary"
                             onClick={async () => {
                               router.push(
-                                `/${tokenData.recipientTokenAccount?.owner}${
+                                `/${
+                                  tokenData.recipientTokenAccount?.owner ||
+                                  wallet.publicKey
+                                }${
                                   ctx.environment.label === 'devnet'
                                     ? `?cluster=devnet`
                                     : ''

@@ -10,7 +10,8 @@ export function getExpirationString(expiration: number, UTCSecondsNow: number) {
   )}s`
 }
 
-export function shortPubKey(pubkey: web3.PublicKey) {
+export function shortPubKey(pubkey: web3.PublicKey | null) {
+  if (!pubkey) return ''
   return `${pubkey?.toBase58().substring(0, 4)}..${pubkey
     ?.toBase58()
     .substring(pubkey?.toBase58().length - 4)}`
