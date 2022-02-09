@@ -364,14 +364,7 @@ function Claim() {
     if (e.message.includes('0x1')) {
       setError(
         <div>
-          <div>User does not have enough balance of mint</div>
-          <a
-            href={`https://app.saber.so/#/swap?from=So11111111111111111111111111111111111111112&to=${tokenData?.tokenManager?.parsed.paymentMint}`}
-            target="_blank"
-            rel="noreferrer"
-          >
-            <div>Get Funds</div>
-          </a>
+          <div>Insufficient balance of sol. Check funds and try again</div>
         </div>
       )
     } else {
