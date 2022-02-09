@@ -226,21 +226,14 @@ function Profile() {
                         ></NFT>
                       ))
                     ) : loaded ? (
-                      <div
-                        style={{
-                          color: 'white',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          display: 'flex',
-                          flexDirection: 'column',
-                          gap: '10px',
-                        }}
-                      >
-                        <div>Wallet empty!</div>
+                      <div className="white flex w-full flex-col items-center justify-center gap-1">
+                        <div className="text-white">Wallet empty!</div>
                         <Airdrop />
                       </div>
                     ) : (
-                      <LoadingSpinner />
+                      <div className="flex w-full items-center justify-center">
+                        <LoadingSpinner />
+                      </div>
                     )}
                   </TokensOuter>
                 </>
