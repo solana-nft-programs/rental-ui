@@ -3,6 +3,7 @@ import {
   Connection,
   sendAndConfirmRawTransaction,
   Signer,
+  ConfirmOptions,
 } from '@solana/web3.js'
 import { Wallet } from '@saberhq/solana-contrib'
 
@@ -10,7 +11,8 @@ export const executeTransaction = async (
   connection: Connection,
   wallet: Wallet,
   transaction: Transaction,
-  signers?: Signer[]
+  signers?: Signer[],
+  confirmOptions?: ConfirmOptions
 ): Promise<string> => {
   transaction.feePayer = wallet.publicKey
   transaction.recentBlockhash = (
@@ -22,7 +24,8 @@ export const executeTransaction = async (
   }
   const txid = await sendAndConfirmRawTransaction(
     connection,
-    transaction.serialize()
+    transaction.serialize(),
+    confirmOptions
   )
   console.log('Successful tx', txid)
   return txid

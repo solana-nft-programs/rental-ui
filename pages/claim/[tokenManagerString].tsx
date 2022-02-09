@@ -363,19 +363,7 @@ function Claim() {
     if (e.message.includes('0x1')) {
       setError(
         <div>
-          <div>
-            User does not have enough balance of{' '}
-            <a
-              href={pubKeyUrl(
-                tokenData?.tokenManager?.parsed.paymentMint,
-                ctx.environment.label
-              )}
-              target="_blank"
-              rel="noreferrer"
-            >
-              mint
-            </a>
-          </div>
+          <div>User does not have enough balance of mint</div>
           <a
             href={`https://app.saber.so/#/swap?from=So11111111111111111111111111111111111111112&to=${tokenData?.tokenManager?.parsed.paymentMint}`}
             target="_blank"
@@ -411,7 +399,8 @@ function Claim() {
         ctx.connection,
         asWallet(wallet),
         transaction,
-        [otpKeypair]
+        [otpKeypair],
+        { commitment: 'confirmed', maxRetries: 3 }
       )
       notify({ message: 'Succesfully claimed!', txid })
       getMetadata()
