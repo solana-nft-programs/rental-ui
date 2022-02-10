@@ -162,8 +162,8 @@ function Profile() {
         loading={loading || refreshing || false}
         tabs={[
           { name: 'Wallet', anchor: 'wallet' },
-          { name: 'Manage', anchor: 'manage' },
-          { name: 'Browse', anchor: 'browse' },
+          { name: 'Manage', anchor: 'manage', disabled: true },
+          { name: 'Browse', anchor: 'browse', disabled: true },
         ]}
       />
       <StyledContainer style={{ marginTop: '120px' }}>

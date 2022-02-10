@@ -199,14 +199,16 @@ export function NFT({ tokenData, setIssueId }: NFTProps) {
                         display: 'flex',
                         alignItems: 'center',
                         gap: '10px',
+                        opacity: '.5',
                       }}
                       onClick={() => {
-                        rentalModal.show(
-                          asWallet(wallet),
-                          ctx.connection,
-                          ctx.environment.label,
-                          tokenData
-                        )
+                        return
+                        // rentalModal.show(
+                        //   asWallet(wallet),
+                        //   ctx.connection,
+                        //   ctx.environment.label,
+                        //   tokenData
+                        // )
                       }}
                     >
                       Rent

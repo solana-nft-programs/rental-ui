@@ -5,7 +5,7 @@ import {
 import styled from '@emotion/styled'
 import Colors from 'common/colors'
 import { LoadingPulse } from './LoadingPulse'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
@@ -208,17 +208,21 @@ export const StyledTabs = styled.div<{ show: boolean }>`
   }
 `
 
-export const StyledTab = styled.div<{ selected: boolean; disabled: boolean }>`
+export const StyledTab = styled.div<{
+  selected: boolean
+  disabled: boolean | undefined
+}>`
   border-radius: 20px;
-  background: ${(props) => (props.selected ? Colors.lightGrayBg : 'none')};
-  color ${(props) => (props.disabled ? Colors.lightGrayBg : Colors.white)};
+  background: ${({ selected }) => (selected ? Colors.lightGrayBg : 'none')};
+  opacity: ${({ disabled }) => (disabled ? 0.25 : 1)};
+  color: ${({ disabled }) => (disabled ? Colors.white : Colors.white)};
   text-align: center;
   width: 150px;
   padding: 10px 20px;
-  cursor: pointer;
+  cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
   transition: 0.3s all;
   &:hover {
-    background: ${Colors.darkGrayBg};
+    background: ${({ disabled }) => (disabled ? '' : Colors.darkGrayBg)};
   }
 `
 
@@ -245,6 +249,11 @@ export const Header = ({
   const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' })
   const [showTabs, setShowTabs] = useState(false)
   const [tab, setTab] = useState<string>('wallet')
+
+  useEffect(() => {
+    const anchor = router.asPath.split('#')[1]
+    if (anchor != tab) setTab(anchor)
+  }, [router.asPath])
 
   const { displayName } = useAddressName(
     ctx.connection,
@@ -283,7 +292,7 @@ export const Header = ({
                 key={anchor}
                 selected={tab === anchor}
                 className="tab"
-                disabled={!disabled}
+                disabled={disabled}
                 onClick={() => {
                   if (disabled) return
                   setTab(anchor)
