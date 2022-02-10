@@ -32,7 +32,7 @@ const UserTokenData: React.Context<UserTokenDataValues> =
   })
 
 export function TokenAccountsProvider({ children }: { children: ReactChild }) {
-  const ctx = useEnvironmentCtx()
+  const { connection } = useEnvironmentCtx()
   const [address, setAddress] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [tokenDatas, setTokenDatas] = useState<TokenData[]>([])
@@ -40,27 +40,25 @@ export function TokenAccountsProvider({ children }: { children: ReactChild }) {
   const [loaded, setLoaded] = useState<boolean>(false)
 
   const getTokenAccounts = useCallback(() => {
-    if (ctx) {
-      if (!address) {
-        setError(`Address not set please connect wallet to continue`)
-        return
-      }
-      setRefreshing(true)
-      setError(null)
-      getTokenAccountsWithData(ctx.connection, address)
-        .then((tokenDatas) => {
-          setTokenDatas(tokenDatas.filter((td) => td.metaplexData))
-        })
-        .catch((e) => {
-          console.log(e)
-          setError(`${e}`)
-        })
-        .finally(() => {
-          setLoaded(true)
-          setRefreshing(false)
-        })
+    if (!address) {
+      setError(`Address not set please connect wallet to continue`)
+      return
     }
-  }, [ctx, setError, address, setRefreshing])
+    setRefreshing(true)
+    setError(null)
+    getTokenAccountsWithData(connection, address)
+      .then((tokenDatas) => {
+        setTokenDatas(tokenDatas.filter((td) => td.metaplexData))
+      })
+      .catch((e) => {
+        console.log(e)
+        setError(`${e}`)
+      })
+      .finally(() => {
+        setLoaded(true)
+        setRefreshing(false)
+      })
+  }, [connection, setError, address, setRefreshing])
 
   useEffect(() => {
     const interval = setInterval(

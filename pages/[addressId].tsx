@@ -16,6 +16,7 @@ import { airdropNFT } from 'api/utils'
 import { asWallet } from 'common/Wallets'
 import { Airdrop } from 'common/Airdrop'
 import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
+import { Manage } from 'components/Manage'
 
 export const TokensOuter = styled.div`
   display: flex;
@@ -129,6 +130,11 @@ function Profile() {
   const [tab, setTab] = useState<string>('wallet')
   const [issueId, setIssueId] = useState(null)
 
+  useEffect(() => {
+    const anchor = router.asPath.split('#')[1]
+    if (anchor != tab) setTab(anchor)
+  }, [router.asPath])
+
   const { tokenDatas, address, setAddress, loaded, refreshing } =
     useUserTokenData()
   useEffect(() => {
@@ -154,90 +160,41 @@ function Profile() {
     <>
       <Header
         loading={loading || refreshing || false}
-        tabs={
-          <>
-            <StyledTab
-              selected={tab === 'wallet'}
-              className="tab"
-              disabled={!addressId}
-              onClick={() => {
-                if (!addressId) return
-                setTab('wallet')
-                router.push(`${location.pathname}${location.search}#wallet`)
-              }}
-            >
-              Wallet
-            </StyledTab>
-            <div className="vline"></div>
-            <StyledTab
-              selected={tab === 'manage'}
-              disabled={true}
-              className="tab"
-              onClick={() => {}}
-            >
-              Manage
-            </StyledTab>
-            <div className="vline"></div>
-            <StyledTab
-              selected={tab === 'loan'}
-              disabled={true}
-              className="tab"
-              onClick={() => {}}
-            >
-              Loan
-            </StyledTab>
-            <div className="vline"></div>
-            <StyledTab
-              selected={tab === 'print'}
-              disabled={true}
-              className="tab"
-              onClick={() => {}}
-            >
-              Print
-            </StyledTab>
-            <div className="vline"></div>
-            <StyledTab
-              selected={tab === 'rent'}
-              disabled={true}
-              className="tab"
-              onClick={() => {}}
-            >
-              Rent
-            </StyledTab>
-          </>
-        }
+        tabs={[
+          { name: 'Wallet', anchor: 'wallet' },
+          { name: 'Manage', anchor: 'manage' },
+          { name: 'Browse', anchor: 'browse' },
+        ]}
       />
-
       <StyledContainer style={{ marginTop: '120px' }}>
         <div style={{ position: 'relative' }}>
           {error}
           {
             {
               wallet: (
-                <>
-                  <TokensOuter>
-                    {tokenDatas && tokenDatas.length > 0 ? (
-                      tokenDatas.map((tokenData) => (
-                        <NFT
-                          key={tokenData?.tokenAccount?.pubkey.toBase58()}
-                          // @ts-ignore
-                          tokenData={tokenData}
-                          setIssueId={setIssueId}
-                        ></NFT>
-                      ))
-                    ) : loaded ? (
-                      <div className="white flex w-full flex-col items-center justify-center gap-1">
-                        <div className="text-white">Wallet empty!</div>
-                        {ctx.environment.label === 'devnet' && <Airdrop />}
-                      </div>
-                    ) : (
-                      <div className="flex w-full items-center justify-center">
-                        <LoadingSpinner />
-                      </div>
-                    )}
-                  </TokensOuter>
-                </>
+                <TokensOuter>
+                  {tokenDatas && tokenDatas.length > 0 ? (
+                    tokenDatas.map((tokenData) => (
+                      <NFT
+                        key={tokenData?.tokenAccount?.pubkey.toBase58()}
+                        // @ts-ignore
+                        tokenData={tokenData}
+                        setIssueId={setIssueId}
+                      ></NFT>
+                    ))
+                  ) : loaded ? (
+                    <div className="white flex w-full flex-col items-center justify-center gap-1">
+                      <div className="text-white">Wallet empty!</div>
+                      {ctx.environment.label === 'devnet' && <Airdrop />}
+                    </div>
+                  ) : (
+                    <div className="flex w-full items-center justify-center">
+                      <LoadingSpinner />
+                    </div>
+                  )}
+                </TokensOuter>
               ),
+              manage: <Manage />,
             }[tab]
           }
         </div>

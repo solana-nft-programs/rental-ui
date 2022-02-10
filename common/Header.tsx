@@ -17,6 +17,7 @@ import {
 import { shortPubKey } from './utils'
 import { HiUserCircle } from 'react-icons/hi'
 import { Airdrop } from './Airdrop'
+import { useRouter } from 'next/router'
 
 export const StyledHeader = styled.div<{ isTabletOrMobile: boolean }>`
   z-index: 100;
@@ -168,10 +169,10 @@ export const Hamburger = styled.div`
 `
 
 export const StyledTabs = styled.div<{ show: boolean }>`
-  display: ${({ show }) => (show ? 'flex' : 'none')};
   font-size: 13px;
 
   @media (min-width: 1224px) {
+    display: flex;
     margin: 30px auto;
     top: 20px;
     padding: 5px;
@@ -190,11 +191,14 @@ export const StyledTabs = styled.div<{ show: boolean }>`
     }
   }
   @media (max-width: 1224px) {
-    height: 100vh;
+    transition: 0.2s all;
+    display: flex;
+    height: 40vh;
     width: 100vw;
     position: absolute;
+    gap: 10px;
     left: 0;
-    top: 0;
+    top: ${({ show }) => (show ? '0' : '-40vh')};
     text-align: center;
     align-items: center;
     flex-direction: column;
@@ -231,14 +235,16 @@ export const Header = ({
   tabs,
   loading,
 }: {
-  tabs?: React.ReactNode
+  tabs?: { disabled?: boolean; name: string; anchor: string }[]
   loading?: boolean
 }) => {
   const ctx = useEnvironmentCtx()
   const wallet = useWallet()
+  const router = useRouter()
   const { setVisible } = useWalletModal()
   const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' })
   const [showTabs, setShowTabs] = useState(false)
+  const [tab, setTab] = useState<string>('wallet')
 
   const { displayName } = useAddressName(
     ctx.connection,
@@ -267,9 +273,29 @@ export const Header = ({
           )}
       </div>
       <div className="center">
-        {/* {tabs && (
-          <StyledTabs show={!isTabletOrMobile || showTabs}>
-            {tabs}
+        {tabs && (
+          <StyledTabs
+            // show={!isTabletOrMobile || showTabs}
+            show={showTabs}
+          >
+            {tabs.map(({ disabled, name, anchor }) => (
+              <StyledTab
+                key={anchor}
+                selected={tab === anchor}
+                className="tab"
+                disabled={!disabled}
+                onClick={() => {
+                  if (disabled) return
+                  setTab(anchor)
+                  setShowTabs(false)
+                  router.push(
+                    `${location.pathname}${location.search}#${anchor}`
+                  )
+                }}
+              >
+                {name}
+              </StyledTab>
+            ))}
             <div
               style={{
                 position: 'absolute',
@@ -282,10 +308,10 @@ export const Header = ({
               <LoadingPulse loading={loading ?? false} />
             </div>
           </StyledTabs>
-        )} */}
+        )}
       </div>
       <div className="right">
-        <div
+        {/* <div
           style={{
             position: 'absolute',
             color: 'white',
@@ -296,51 +322,57 @@ export const Header = ({
           }}
         >
           <LoadingPulse loading={loading ?? false} />
-        </div>
+        </div> */}
         {wallet.connected ? (
-          <StyledProfile
-            style={{ cursor: 'pointer' }}
-            onClick={() => setVisible(true)}
-          >
-            <AddressImage
-              connection={ctx.connection}
-              address={wallet.publicKey || undefined}
-              height="40px"
-              width="40px"
-              dark={true}
-              placeholder={
-                <div
-                  style={{
-                    color: 'white',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    gap: '8px',
-                    cursor: 'pointer',
-                  }}
-                >
-                  <div style={{ height: '40px', width: '40px' }}>
-                    <HiUserCircle style={{ height: '100%', width: '100%' }} />
+          isTabletOrMobile ? (
+            <Hamburger className="hamb" onClick={() => setShowTabs(!showTabs)}>
+              <span className="hamb-line"></span>
+            </Hamburger>
+          ) : (
+            <StyledProfile
+              style={{ cursor: 'pointer' }}
+              onClick={() => setVisible(true)}
+            >
+              <AddressImage
+                connection={ctx.connection}
+                address={wallet.publicKey || undefined}
+                height="40px"
+                width="40px"
+                dark={true}
+                placeholder={
+                  <div
+                    style={{
+                      color: 'white',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      gap: '8px',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <div style={{ height: '40px', width: '40px' }}>
+                      <HiUserCircle style={{ height: '100%', width: '100%' }} />
+                    </div>
                   </div>
+                }
+              />
+              <div className="info">
+                <div>
+                  <DisplayAddress
+                    style={{ pointerEvents: 'none' }}
+                    connection={ctx.connection}
+                    address={wallet.publicKey || undefined}
+                    height="12px"
+                    width="100px"
+                    dark={true}
+                  />
                 </div>
-              }
-            />
-            <div className="info">
-              <div>
-                <DisplayAddress
-                  style={{ pointerEvents: 'none' }}
-                  connection={ctx.connection}
-                  address={wallet.publicKey || undefined}
-                  height="12px"
-                  width="100px"
-                  dark={true}
-                />
+                <div style={{ color: Colors.lightGray }}>
+                  {walletAddressFormatted}
+                </div>
               </div>
-              <div style={{ color: Colors.lightGray }}>
-                {walletAddressFormatted}
-              </div>
-            </div>
-          </StyledProfile>
+            </StyledProfile>
+          )
         ) : (
           <WalletMultiButton
             style={{

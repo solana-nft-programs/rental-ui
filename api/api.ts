@@ -187,6 +187,109 @@ export async function getTokenAccountsWithData(
   )
 }
 
+export async function getTokenDatas(
+  connection: Connection,
+  tokenManagerDatas: AccountData<TokenManagerData>[]
+): Promise<TokenData[]> {
+  const metadataTuples: [PublicKey, PublicKey, PublicKey, PublicKey][] =
+    await Promise.all(
+      tokenManagerDatas.map(async (tokenManagerData) => {
+        const [[metadataId], [timeInvalidatorId], [useInvalidatorId]] =
+          await Promise.all([
+            PublicKey.findProgramAddress(
+              [
+                anchor.utils.bytes.utf8.encode(metaplex.MetadataProgram.PREFIX),
+                metaplex.MetadataProgram.PUBKEY.toBuffer(),
+                tokenManagerData.parsed.mint.toBuffer(),
+              ],
+              metaplex.MetadataProgram.PUBKEY
+            ),
+            timeInvalidator.pda.findTimeInvalidatorAddress(
+              tokenManagerData.pubkey
+            ),
+            useInvalidator.pda.findUseInvalidatorAddress(
+              tokenManagerData.pubkey
+            ),
+          ])
+
+        return [
+          metadataId,
+          tokenManagerData.pubkey,
+          timeInvalidatorId,
+          useInvalidatorId,
+        ]
+      })
+    )
+
+  // @ts-ignore
+  const metadataIds: [PublicKey[], PublicKey[], PublicKey[]] =
+    // @ts-ignore
+    metadataTuples.reduce(
+      (
+        acc,
+        [metaplexId, _tokenManagerId, timeInvalidatorId, useInvalidatorId]
+      ) => [
+        [...acc[0], metaplexId],
+        [...acc[1], timeInvalidatorId],
+        [...acc[2], useInvalidatorId],
+      ],
+      [[], [], []]
+    )
+
+  const metaplexData = await Promise.all(
+    metadataIds[0].map(async (id) => {
+      try {
+        return await metaplex.Metadata.load(connection, id)
+      } catch (e) {
+        // console.log(e)
+        return null
+      }
+    })
+  )
+  const metadata = await Promise.all(
+    metaplexData.map(async (md) => {
+      try {
+        if (!md?.data.data.uri) return null
+        const json = await fetch(md.data.data.uri).then((r) => r.json())
+        return { pubkey: md.pubkey, data: json }
+      } catch (e) {
+        // console.log(e)
+        return null
+      }
+    })
+  )
+
+  const [timeInvalidators, useInvalidators] = await Promise.all([
+    timeInvalidator.accounts.getTimeInvalidators(connection, metadataIds[1]),
+    useInvalidator.accounts.getUseInvalidators(connection, metadataIds[2]),
+  ])
+  return metadataTuples.map(
+    ([metaplexId, tokenManagerId, timeInvalidatorId, useInvalidatorId]) => ({
+      metaplexData: metaplexData.find((data) =>
+        data ? data.pubkey.toBase58() === metaplexId.toBase58() : undefined
+      ),
+      tokenManager: tokenManagerDatas.find((tkm) =>
+        tkm?.parsed
+          ? tkm.pubkey.toBase58() === tokenManagerId?.toBase58()
+          : undefined
+      ),
+      metadata: metadata.find((data) =>
+        data ? data.pubkey.toBase58() === metaplexId.toBase58() : undefined
+      ),
+      useInvalidator: useInvalidators.find((data) =>
+        data?.parsed
+          ? data.pubkey.toBase58() === useInvalidatorId?.toBase58()
+          : undefined
+      ),
+      timeInvalidator: timeInvalidators.find((data) =>
+        data?.parsed
+          ? data.pubkey.toBase58() === timeInvalidatorId?.toBase58()
+          : undefined
+      ),
+    })
+  )
+}
+
 export async function getTokenData(
   connection: Connection,
   tokenManagerId: PublicKey

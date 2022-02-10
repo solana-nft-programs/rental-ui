@@ -14,6 +14,7 @@ import { RentalModalProvider } from 'rental-components/RentalModalProvider'
 import { PaymentMintsProvider } from 'providers/PaymentMintsProvider'
 import { UTCNowProvider } from 'providers/UTCNowProvider'
 import { QRCodeProvider } from 'rental-components/QRCodeProvider'
+import { ManagedTokensProvider } from 'providers/ManagedTokensProvider'
 
 require('@solana/wallet-adapter-react-ui/styles.css')
 
@@ -26,9 +27,11 @@ const App = ({ Component, pageProps }: AppProps) => (
             <QRCodeProvider>
               <UTCNowProvider>
                 <TokenAccountsProvider>
-                  <WalletModalProvider>
-                    <Component {...pageProps} />
-                  </WalletModalProvider>
+                  <ManagedTokensProvider>
+                    <WalletModalProvider>
+                      <Component {...pageProps} />
+                    </WalletModalProvider>
+                  </ManagedTokensProvider>
                 </TokenAccountsProvider>
               </UTCNowProvider>
             </QRCodeProvider>
