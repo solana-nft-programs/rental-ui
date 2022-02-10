@@ -29,14 +29,16 @@ export function ManagedTokensProvider({ children }: { children: ReactChild }) {
   const [refreshing, setRefreshing] = useState<Boolean>(false)
   const [loaded, setLoaded] = useState<Boolean>(false)
   const [error, setError] = useState<string | null>(null)
+  console.log(loaded)
 
   const refreshManagedTokens = async () => {
-    setRefreshing(true)
+    if (!address) {
+      setError(`Address not set please connect wallet to continue`)
+      return
+    }
     try {
-      if (!address) {
-        setError(`Address not set please connect wallet to continue`)
-        return
-      }
+      setRefreshing(true)
+      console.log(address)
       const tokenManagerDatas = await getTokenManagersForIssuerUnsafe(
         connection,
         new web3.PublicKey(address)
