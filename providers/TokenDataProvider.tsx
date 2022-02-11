@@ -48,7 +48,8 @@ export function TokenAccountsProvider({ children }: { children: ReactChild }) {
     setError(null)
     getTokenAccountsWithData(connection, address)
       .then((tokenDatas) => {
-        setTokenDatas(tokenDatas.filter((td) => td.metaplexData))
+        console.log(tokenDatas)
+        setTokenDatas(tokenDatas.filter((td) => td.metadata))
       })
       .catch((e) => {
         console.log(e)

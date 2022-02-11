@@ -17,6 +17,7 @@ import { NFTOverlay } from './NFTOverlay'
 
 export const TokensOuter = styled.div`
   display: flex;
+  align-items: flex-start;
   flex-wrap: wrap;
   max-width: 880px;
   margin: 10px auto;
@@ -140,11 +141,10 @@ export const TokenMetadata = styled.div`
 
 interface NFTProps {
   tokenData: TokenData
-  setTab?: Function
-  setIssueId?: Function
+  hideQRCode?: boolean
 }
 
-export function NFT({ tokenData, setIssueId }: NFTProps) {
+export function NFT({ tokenData, hideQRCode }: NFTProps) {
   const ctx = useEnvironmentCtx()
   const wallet = useWallet()
   const { show } = useQRCode()
@@ -231,19 +231,21 @@ export function NFT({ tokenData, setIssueId }: NFTProps) {
             </Tooltip>
           )
         ) : (
-          <div
-            className="qr-code"
-            onClick={() =>
-              show(
-                ctx.connection,
-                asWallet(wallet),
-                tokenData,
-                ctx.environment.label
-              )
-            }
-          >
-            <IoQrCodeOutline />
-          </div>
+          !hideQRCode && (
+            <div
+              className="qr-code"
+              onClick={() =>
+                show(
+                  ctx.connection,
+                  asWallet(wallet),
+                  tokenData,
+                  ctx.environment.label
+                )
+              }
+            >
+              <IoQrCodeOutline />
+            </div>
+          )
         ))}
       <div id="media-outer">
         {tokenManager && (

@@ -42,6 +42,7 @@ export function ManagedTokensProvider({ children }: { children: ReactChild }) {
         new web3.PublicKey(address)
       )
       const tokenDatas = await getTokenDatas(connection, tokenManagerDatas)
+      console.log(tokenDatas)
       setManagedTokens(tokenDatas)
     } catch (e) {
       console.log(e)

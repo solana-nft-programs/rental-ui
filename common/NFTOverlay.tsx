@@ -95,7 +95,7 @@ export const stateColor = (state: TokenManagerState, light = false): string => {
   } else if (state === TokenManagerState.Issued) {
     return light ? '#d89614' : '#593815'
   } else if (state === TokenManagerState.Claimed) {
-    return '#274916'
+    return light ? '#52c41a' : '#274916'
   } else {
     return 'rgba(255, 255, 255, 0.3)`'
   }

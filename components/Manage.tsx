@@ -59,6 +59,7 @@ export const Manage = () => {
       {managedTokens && managedTokens.length > 0 ? (
         managedTokens.map((tokenData) => (
           <div
+            key={tokenData.tokenManager?.pubkey.toString()}
             style={{
               paddingTop: '10px',
               display: 'flex',
@@ -72,6 +73,7 @@ export const Manage = () => {
               <NFT
                 key={tokenData?.tokenManager?.pubkey.toBase58()}
                 tokenData={tokenData}
+                hideQRCode={true}
               ></NFT>
               {
                 {
@@ -122,11 +124,12 @@ export const Manage = () => {
                       <Tag state={TokenManagerState.Claimed}>
                         Claimed by{' '}
                         {shortPubKey(
-                          tokenData.tokenManager?.parsed.receipientTokenAccount
+                          tokenData.tokenAccount?.account?.data?.parsed?.info
+                            .owner
                         )}{' '}
-                        {shortDateString(
+                        {/* {shortDateString(
                           tokenData.tokenManager?.parsed.claimedAt
-                        )}
+                        )} */}
                       </Tag>
                       {tokenData?.tokenManager?.parsed.invalidators &&
                         tokenData?.tokenManager?.parsed.invalidators

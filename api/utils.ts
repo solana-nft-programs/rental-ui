@@ -52,12 +52,12 @@ const airdropMetadata: SimpleMetadata[] = [
   {
     name: 'Hacker House',
     symbol: 'HH',
-    uri: '"https://arweave.net/DLDhnabWSXzAYktEhEKyukt3GIfagj2rPpWncw-KDQo"',
+    uri: 'https://arweave.net/DLDhnabWSXzAYktEhEKyukt3GIfagj2rPpWncw-KDQo',
   },
   {
     name: '21 Club',
     symbol: '21',
-    uri: '"https://bafkreicv3jj6oc53kid76mkk7hqsr6edrnhsydkw4do4vonq777sgfz3le.ipfs.dweb.link?ext=json"',
+    uri: 'https://bafkreicv3jj6oc53kid76mkk7hqsr6edrnhsydkw4do4vonq777sgfz3le.ipfs.dweb.link?ext=json',
   },
   {
     name: 'Ticket',

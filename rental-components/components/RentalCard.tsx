@@ -129,7 +129,7 @@ export const RentalCard = ({
       const rentalMint = new PublicKey(
         tokenAccount?.account.data.parsed.info.mint
       )
-      const [transaction, _tokenManagerId, otpKeypair] =
+      const [transaction, tokenManagerId, otpKeypair] =
         await rentals.createRental(connection, wallet, {
           rentalMint,
           issuerTokenAccountId: tokenAccount?.pubkey,
@@ -146,7 +146,7 @@ export const RentalCard = ({
         callback: refreshTokenAccounts,
       })
       const link = claimLinks.getLink(
-        rentalMint,
+        tokenManagerId,
         otpKeypair,
         cluster,
         `${process.env.BASE_URL}/claim`

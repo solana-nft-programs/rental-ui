@@ -17,6 +17,7 @@ import { AccountData } from '@cardinal/token-manager'
 import { TokenManagerData } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { TimeInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
 import { UseInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
+import { TokenAccountsProvider } from 'providers/TokenDataProvider'
 
 export async function findAssociatedTokenAddress(
   walletAddress: PublicKey,
@@ -62,6 +63,8 @@ export async function getTokenAccountsWithData(
         tokenAccount.account.data.parsed.info.tokenAmount.uiAmount > 0
     )
     .sort((a, b) => a.pubkey.toBase58().localeCompare(b.pubkey.toBase58()))
+
+  console.log(tokenAccounts)
 
   const metadataTuples: [
     PublicKey,
@@ -191,49 +194,60 @@ export async function getTokenDatas(
   connection: Connection,
   tokenManagerDatas: AccountData<TokenManagerData>[]
 ): Promise<TokenData[]> {
-  const metadataTuples: [PublicKey, PublicKey, PublicKey, PublicKey][] =
-    await Promise.all(
-      tokenManagerDatas.map(async (tokenManagerData) => {
-        const [[metadataId], [timeInvalidatorId], [useInvalidatorId]] =
-          await Promise.all([
-            PublicKey.findProgramAddress(
-              [
-                anchor.utils.bytes.utf8.encode(metaplex.MetadataProgram.PREFIX),
-                metaplex.MetadataProgram.PUBKEY.toBuffer(),
-                tokenManagerData.parsed.mint.toBuffer(),
-              ],
-              metaplex.MetadataProgram.PUBKEY
-            ),
-            timeInvalidator.pda.findTimeInvalidatorAddress(
-              tokenManagerData.pubkey
-            ),
-            useInvalidator.pda.findUseInvalidatorAddress(
-              tokenManagerData.pubkey
-            ),
-          ])
+  const metadataTuples: [
+    PublicKey,
+    PublicKey,
+    PublicKey,
+    PublicKey,
+    PublicKey
+  ][] = await Promise.all(
+    tokenManagerDatas.map(async (tokenManagerData) => {
+      const [[metadataId], [timeInvalidatorId], [useInvalidatorId]] =
+        await Promise.all([
+          PublicKey.findProgramAddress(
+            [
+              anchor.utils.bytes.utf8.encode(metaplex.MetadataProgram.PREFIX),
+              metaplex.MetadataProgram.PUBKEY.toBuffer(),
+              tokenManagerData.parsed.mint.toBuffer(),
+            ],
+            metaplex.MetadataProgram.PUBKEY
+          ),
+          timeInvalidator.pda.findTimeInvalidatorAddress(
+            tokenManagerData.pubkey
+          ),
+          useInvalidator.pda.findUseInvalidatorAddress(tokenManagerData.pubkey),
+        ])
 
-        return [
-          metadataId,
-          tokenManagerData.pubkey,
-          timeInvalidatorId,
-          useInvalidatorId,
-        ]
-      })
-    )
+      return [
+        metadataId,
+        tokenManagerData.pubkey,
+        timeInvalidatorId,
+        useInvalidatorId,
+        tokenManagerData.parsed.recipientTokenAccount as PublicKey,
+      ]
+    })
+  )
 
   // @ts-ignore
-  const metadataIds: [PublicKey[], PublicKey[], PublicKey[]] =
+  const metadataIds: [PublicKey[], PublicKey[], PublicKey[], PublicKey[]] =
     // @ts-ignore
     metadataTuples.reduce(
       (
         acc,
-        [metaplexId, _tokenManagerId, timeInvalidatorId, useInvalidatorId]
+        [
+          metaplexId,
+          _tokenManagerId,
+          timeInvalidatorId,
+          useInvalidatorId,
+          recipientTokenAccountId,
+        ]
       ) => [
         [...acc[0], metaplexId],
         [...acc[1], timeInvalidatorId],
         [...acc[2], useInvalidatorId],
+        [...acc[3], recipientTokenAccountId],
       ],
-      [[], [], []]
+      [[], [], [], []]
     )
 
   const metaplexData = await Promise.all(
@@ -259,12 +273,31 @@ export async function getTokenDatas(
     })
   )
 
+  const tokenAccounts = (await connection.getMultipleAccountsInfo(
+    metadataIds[3],
+    {
+      encoding: 'jsonParsed',
+    }
+  )) as (AccountInfo<ParsedAccountData> | null)[]
+
   const [timeInvalidators, useInvalidators] = await Promise.all([
     timeInvalidator.accounts.getTimeInvalidators(connection, metadataIds[1]),
     useInvalidator.accounts.getUseInvalidators(connection, metadataIds[2]),
   ])
   return metadataTuples.map(
-    ([metaplexId, tokenManagerId, timeInvalidatorId, useInvalidatorId]) => ({
+    (
+      [
+        metaplexId,
+        tokenManagerId,
+        timeInvalidatorId,
+        useInvalidatorId,
+        tokenAccountId,
+      ],
+      i
+    ) => ({
+      tokenAccount: tokenAccounts[i]
+        ? { pubkey: tokenAccountId, account: tokenAccounts[i]! }
+        : undefined,
       metaplexData: metaplexData.find((data) =>
         data ? data.pubkey.toBase58() === metaplexId.toBase58() : undefined
       ),

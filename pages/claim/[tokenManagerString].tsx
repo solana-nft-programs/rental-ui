@@ -9,7 +9,7 @@ import { useWallet } from '@solana/wallet-adapter-react'
 import { Header } from 'common/Header'
 import { notify } from 'common/Notification'
 import { useRouter } from 'next/router'
-import { claimLinks } from '@cardinal/token-manager'
+import { claimLinks, rentals } from '@cardinal/token-manager'
 import { asWallet } from 'common/Wallets'
 import { getTokenData, TokenData } from 'api/api'
 import {
@@ -377,28 +377,46 @@ function Claim() {
       setError(null)
       setTokenDataStatus(null)
       setLoadingClaim(true)
-      const [mintId, otpKeypair] = claimLinks.fromLink(
-        `${process.env.BASE_URL}/claim${
-          router.asPath.split('/claim')[1].split('&cluster')[0]
-        }`,
-        `${process.env.BASE_URL}/claim`
-      )
-      const transaction = await claimLinks.claimFromLink(
-        ctx.connection,
-        asWallet(wallet),
-        mintId,
-        otpKeypair
-      )
-      const txid = await executeTransaction(
-        ctx.connection,
-        asWallet(wallet),
-        transaction,
-        {
-          confirmOptions: { commitment: 'confirmed', maxRetries: 3 },
-          signers: [otpKeypair],
-        }
-      )
-      notify({ message: 'Succesfully claimed!', txid })
+      if (router.asPath.includes('otp=')) {
+        const [mintId, otpKeypair] = claimLinks.fromLink(
+          `${process.env.BASE_URL}/claim${
+            router.asPath.split('/claim')[1].split('&cluster')[0]
+          }`,
+          `${process.env.BASE_URL}/claim`
+        )
+
+        const transaction = await claimLinks.claimFromLink(
+          ctx.connection,
+          asWallet(wallet),
+          mintId,
+          otpKeypair
+        )
+        await executeTransaction(
+          ctx.connection,
+          asWallet(wallet),
+          transaction,
+          {
+            confirmOptions: { commitment: 'confirmed', maxRetries: 3 },
+            notificationConfig: {},
+            signers: [otpKeypair],
+          }
+        )
+      } else {
+        const transaction = await rentals.claimRental(
+          ctx.connection,
+          asWallet(wallet),
+          tokenManagerId!
+        )
+        await executeTransaction(
+          ctx.connection,
+          asWallet(wallet),
+          transaction,
+          {
+            confirmOptions: { commitment: 'confirmed', maxRetries: 3 },
+            notificationConfig: {},
+          }
+        )
+      }
       setClaimed(true)
       getMetadata()
     } catch (e: any) {

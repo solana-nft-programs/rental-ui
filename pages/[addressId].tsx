@@ -177,9 +177,7 @@ function Profile() {
                     tokenDatas.map((tokenData) => (
                       <NFT
                         key={tokenData?.tokenAccount?.pubkey.toBase58()}
-                        // @ts-ignore
                         tokenData={tokenData}
-                        setIssueId={setIssueId}
                       ></NFT>
                     ))
                   ) : loaded ? (
@@ -195,7 +193,7 @@ function Profile() {
                 </TokensOuter>
               ),
               manage: <Manage />,
-            }[tab]
+            }[tab || 'wallet']
           }
         </div>
       </StyledContainer>
