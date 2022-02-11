@@ -339,10 +339,10 @@
     "@solana/spl-token" "^0.1.8"
     typescript "^4.5.4"
 
-"@cardinal/token-manager@0.0.19":
-  version "0.0.19"
-  resolved "https://registry.yarnpkg.com/@cardinal/token-manager/-/token-manager-0.0.19.tgz#330046f2af131b53b4f485c7e79d9a802db06d6a"
-  integrity sha512-Rxli8A+MEpCbf4Ge+bcG7CtGy8LMXZEnnGTgZLNU94LhB+MqbI14YKRBhZb95RS79A6oytby9yaxW5/ZgqQcWg==
+"@cardinal/token-manager@0.0.21":
+  version "0.0.21"
+  resolved "https://registry.yarnpkg.com/@cardinal/token-manager/-/token-manager-0.0.21.tgz#61eeb006e75e7a34a4533a8d4caa40f4e6aa1f86"
+  integrity sha512-P/1JvP+0poPwoLUQF5Y7xiL6bCweOztvV69AW83VBkiRt1qn4oN6Xi+PPp5Km0ckY+KwG3lJPQTVc7TpSYTUQw==
   dependencies:
     "@metaplex-foundation/mpl-token-metadata" "^1.2.3"
     "@solana/spl-token" "^0.1.8"

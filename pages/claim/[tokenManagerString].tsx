@@ -378,17 +378,15 @@ function Claim() {
       setTokenDataStatus(null)
       setLoadingClaim(true)
       if (router.asPath.includes('otp=')) {
-        const [mintId, otpKeypair] = claimLinks.fromLink(
+        const [tokenManagerId, otpKeypair] = claimLinks.fromLink(
           `${process.env.BASE_URL}/claim${
             router.asPath.split('/claim')[1].split('&cluster')[0]
-          }`,
-          `${process.env.BASE_URL}/claim`
+          }`
         )
-
         const transaction = await claimLinks.claimFromLink(
           ctx.connection,
           asWallet(wallet),
-          mintId,
+          tokenManagerId,
           otpKeypair
         )
         await executeTransaction(

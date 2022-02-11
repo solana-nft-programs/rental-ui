@@ -193,7 +193,8 @@ function Scan() {
           setOwner(transaction.feePayer)
           const txid = await sendAndConfirmRawTransaction(
             ctx.connection,
-            transaction.serialize()
+            transaction.serialize(),
+            { commitment: 'singleGossip' }
           )
           console.log('TX: ', txid)
           return res({ status: VerificationStatus.SUCCESS })

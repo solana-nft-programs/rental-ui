@@ -67,6 +67,13 @@ function getEditionPill(editionInfo: EditionInfo) {
   )
 }
 
+const formatError = (error: string) => {
+  if (error.includes('0x1780')) {
+    return 'This mint is not elligible for rent'
+  }
+  return error
+}
+
 export type RentalCardProps = {
   dev?: boolean
   cluster?: string
@@ -103,7 +110,7 @@ export const RentalCard = ({
   const [editionInfo, setEditionInfo] = useState<EditionInfo>({})
   const getEdition = async () => {
     try {
-      const editionInfo = await getEditionInfo(metadata, connection)
+      const editionInfo = await getEditionInfo(metaplexData, connection)
       setEditionInfo(editionInfo)
     } catch (e) {
       console.log(e)
@@ -111,7 +118,7 @@ export const RentalCard = ({
   }
   useEffect(() => {
     getEdition()
-  }, [])
+  }, [metaplexData])
 
   // form
   const [price, setPrice] = useState(0)
@@ -137,7 +144,7 @@ export const RentalCard = ({
           kind:
             editionInfo.edition || editionInfo.masterEdition
               ? TokenManagerKind.Edition
-              : TokenManagerKind.Unmanaged,
+              : TokenManagerKind.Managed,
           invalidationType,
           visibility,
         })
@@ -156,7 +163,7 @@ export const RentalCard = ({
       console.log(link)
     } catch (e) {
       console.log('Error handling rental', e)
-      setError(`Error handling rental ${e}`)
+      setError(`Error handling rental: ${formatError(`${e}`)}`)
     } finally {
       setLoading(false)
     }

@@ -17,7 +17,6 @@ import { AccountData } from '@cardinal/token-manager'
 import { TokenManagerData } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { TimeInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
 import { UseInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
-import { TokenAccountsProvider } from 'providers/TokenDataProvider'
 
 export async function findAssociatedTokenAddress(
   walletAddress: PublicKey,
@@ -63,8 +62,6 @@ export async function getTokenAccountsWithData(
         tokenAccount.account.data.parsed.info.tokenAmount.uiAmount > 0
     )
     .sort((a, b) => a.pubkey.toBase58().localeCompare(b.pubkey.toBase58()))
-
-  console.log(tokenAccounts)
 
   const metadataTuples: [
     PublicKey,
@@ -149,6 +146,27 @@ export async function getTokenAccountsWithData(
     })
   )
 
+  // console.log('------->', metadataIds[1])
+  // for (let i = 0; i < metadataIds[1].length; i++) {
+  //   try {
+  //     const TKM = await tokenManager.accounts.getTokenManager(
+  //       connection,
+  //       metadataIds[1][i]
+  //     )
+  //     console.log('-->', i, TKM)
+  //   } catch (e) {
+  //     console.log(e)
+  //   }
+  // }
+  // try {
+  //   const TKMs = await tokenManager.accounts.getTokenManagers(
+  //     connection,
+  //     metadataIds[1]
+  //   )
+  //   console.log('--===>', TKMs)
+  // } catch (e) {
+  //   console.log(e)
+  // }
   const [tokenManagers, timeInvalidators, useInvalidators] = await Promise.all([
     tokenManager.accounts.getTokenManagers(connection, metadataIds[1]),
     timeInvalidator.accounts.getTimeInvalidators(connection, metadataIds[2]),

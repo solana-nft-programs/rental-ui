@@ -199,10 +199,10 @@ export function NFT({ tokenData, hideQRCode }: NFTProps) {
                         display: 'flex',
                         alignItems: 'center',
                         gap: '10px',
-                        opacity: '.5',
+                        opacity: ctx.environment.label === 'devnet' ? 1 : 0.5,
                       }}
                       onClick={() => {
-                        // return
+                        if (ctx.environment.label !== 'devnet') return
                         rentalModal.show(
                           asWallet(wallet),
                           ctx.connection,
