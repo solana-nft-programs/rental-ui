@@ -393,8 +393,10 @@ function Claim() {
         ctx.connection,
         asWallet(wallet),
         transaction,
-        [otpKeypair],
-        { commitment: 'confirmed', maxRetries: 3 }
+        {
+          confirmOptions: { commitment: 'confirmed', maxRetries: 3 },
+          signers: [otpKeypair],
+        }
       )
       notify({ message: 'Succesfully claimed!', txid })
       setClaimed(true)

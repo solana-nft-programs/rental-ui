@@ -6,27 +6,51 @@ import {
   ConfirmOptions,
 } from '@solana/web3.js'
 import { Wallet } from '@saberhq/solana-contrib'
+import { notify } from 'common/Notification'
 
 export const executeTransaction = async (
   connection: Connection,
   wallet: Wallet,
   transaction: Transaction,
-  signers?: Signer[],
-  confirmOptions?: ConfirmOptions
-): Promise<string> => {
-  transaction.feePayer = wallet.publicKey
-  transaction.recentBlockhash = (
-    await connection.getRecentBlockhash('max')
-  ).blockhash
-  await wallet.signTransaction(transaction)
-  if (signers) {
-    await transaction.partialSign(...signers)
+  config: {
+    silent?: boolean
+    signers?: Signer[]
+    confirmOptions?: ConfirmOptions
+    notificationConfig?: { message?: string; errorMessage?: string }
+    callback?: Function
   }
-  const txid = await sendAndConfirmRawTransaction(
-    connection,
-    transaction.serialize(),
-    confirmOptions
-  )
-  console.log('Successful tx', txid)
+): Promise<string> => {
+  let txid = ''
+  try {
+    transaction.feePayer = wallet.publicKey
+    transaction.recentBlockhash = (
+      await connection.getRecentBlockhash('max')
+    ).blockhash
+    await wallet.signTransaction(transaction)
+    if (config.signers && config.signers.length > 0) {
+      await transaction.partialSign(...config.signers)
+    }
+    txid = await sendAndConfirmRawTransaction(
+      connection,
+      transaction.serialize(),
+      config.confirmOptions
+    )
+    console.log('Successful tx', txid)
+    config.notificationConfig &&
+      notify({
+        message: config.notificationConfig.message ?? 'Succesful transaction',
+        txid,
+      })
+  } catch (e) {
+    console.log('Failed transaction: ', e)
+    config.notificationConfig &&
+      notify({
+        message: config.notificationConfig.errorMessage ?? 'Failed transaction',
+        txid,
+      })
+    if (!config.silent) throw new Error(`${e}`)
+  } finally {
+    config.callback && config.callback()
+  }
   return txid
 }

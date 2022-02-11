@@ -10,7 +10,7 @@ import { useEnvironmentCtx } from './EnvironmentProvider'
 
 export interface UserTokenDataValues {
   tokenDatas: TokenData[]
-  getTokenAccounts: Function
+  refreshTokenAccounts: Function
   setTokenDatas: (newEnvironment: TokenData[]) => void
   setAddress: (address: string) => void
   loaded: boolean
@@ -22,7 +22,7 @@ export interface UserTokenDataValues {
 const UserTokenData: React.Context<UserTokenDataValues> =
   React.createContext<UserTokenDataValues>({
     tokenDatas: [],
-    getTokenAccounts: () => {},
+    refreshTokenAccounts: () => {},
     setTokenDatas: () => {},
     setAddress: () => {},
     loaded: false,
@@ -39,7 +39,7 @@ export function TokenAccountsProvider({ children }: { children: ReactChild }) {
   const [refreshing, setRefreshing] = useState<boolean>(false)
   const [loaded, setLoaded] = useState<boolean>(false)
 
-  const getTokenAccounts = useCallback(() => {
+  const refreshTokenAccounts = useCallback(() => {
     if (!address) {
       setError(`Address not set please connect wallet to continue`)
       return
@@ -63,13 +63,13 @@ export function TokenAccountsProvider({ children }: { children: ReactChild }) {
   useEffect(() => {
     const interval = setInterval(
       (function getTokenAccountsInterval(): any {
-        getTokenAccounts()
+        refreshTokenAccounts()
         return getTokenAccountsInterval
       })(),
       10000
     )
     return () => clearInterval(interval)
-  }, [getTokenAccounts])
+  }, [refreshTokenAccounts])
 
   return (
     <UserTokenData.Provider
@@ -77,7 +77,7 @@ export function TokenAccountsProvider({ children }: { children: ReactChild }) {
         address,
         tokenDatas,
         loaded,
-        getTokenAccounts,
+        refreshTokenAccounts,
         setTokenDatas,
         setAddress,
         refreshing,

@@ -202,13 +202,13 @@ export function NFT({ tokenData, setIssueId }: NFTProps) {
                         opacity: '.5',
                       }}
                       onClick={() => {
-                        return
-                        // rentalModal.show(
-                        //   asWallet(wallet),
-                        //   ctx.connection,
-                        //   ctx.environment.label,
-                        //   tokenData
-                        // )
+                        // return
+                        rentalModal.show(
+                          asWallet(wallet),
+                          ctx.connection,
+                          ctx.environment.label,
+                          tokenData
+                        )
                       }}
                     >
                       Rent
@@ -252,7 +252,7 @@ export function NFT({ tokenData, setIssueId }: NFTProps) {
             expiration={timeInvalidator?.parsed.expiration}
             usages={useInvalidator?.parsed.usages}
             maxUsages={useInvalidator?.parsed.maxUsages}
-            lineHeight={20}
+            lineHeight={14}
           />
         )}
         {metadata &&

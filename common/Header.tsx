@@ -63,6 +63,9 @@ export const StyledHeader = styled.div<{ isTabletOrMobile: boolean }>`
   }
 
   .center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     color: rgba(255, 255, 255, 0.8);
     font-weight: 200;
     padding: 0px 20px;

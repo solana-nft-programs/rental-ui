@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
 import { DatePicker, Select } from 'antd'
 import { Connection, PublicKey } from '@solana/web3.js'
@@ -20,17 +20,17 @@ import { MintPriceSelector } from 'rental-components/common/MintPriceSelector'
 import { TokenData } from 'api/api'
 import { getQueryParam } from 'common/utils'
 import { NFTOverlay } from 'common/NFTOverlay'
-import { claimLinks } from '@cardinal/token-manager'
+import { claimLinks, rentals } from '@cardinal/token-manager'
 import { executeTransaction } from 'common/Transactions'
 import { notify } from 'common/Notification'
-import { FaLink } from 'react-icons/fa'
+import { FaLink, FaEye } from 'react-icons/fa'
 import { GrReturn } from 'react-icons/gr'
 import {
   InvalidationType,
   TokenManagerKind,
 } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import getEditionInfo, { EditionInfo } from 'api/editions'
-import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
+import { useUserTokenData } from 'providers/TokenDataProvider'
 const { Option } = Select
 
 const NFTOuter = styled.div`
@@ -93,6 +93,7 @@ export const RentalCard = ({
   const [error, setError] = useState<string>()
   const [loading, setLoading] = useState(false)
   const [link, setLink] = useState<string | null>(null)
+  const { refreshTokenAccounts } = useUserTokenData()
   const { tokenAccount, metaplexData, metadata, tokenManager } = tokenData
   const customImageUri = getQueryParam(metadata?.data?.image, 'uri')
   const [invalidationType, setInvalidationType] = useState(
@@ -111,13 +112,13 @@ export const RentalCard = ({
   useEffect(() => {
     getEdition()
   }, [])
-  console.log(editionInfo)
 
   // form
   const [price, setPrice] = useState(0)
   const [paymentMint, setPaymentMint] = useState(PAYMENT_MINTS[0].mint)
   const [expiration, setExpiration] = useState<number | null>(null)
   const [maxUsages, setMaxUsages] = useState<number | null>(null)
+  const [visibility, setVisibiliy] = useState<'private' | 'public'>('private')
 
   const handleRental = async () => {
     try {
@@ -129,14 +130,21 @@ export const RentalCard = ({
         tokenAccount?.account.data.parsed.info.mint
       )
       const [transaction, _tokenManagerId, otpKeypair] =
-        await claimLinks.issueToken(connection, wallet, {
+        await rentals.createRental(connection, wallet, {
           rentalMint,
           issuerTokenAccountId: tokenAccount?.pubkey,
           usages: maxUsages || undefined,
-          kind: TokenManagerKind.Unmanaged,
+          kind:
+            editionInfo.edition || editionInfo.masterEdition
+              ? TokenManagerKind.Edition
+              : TokenManagerKind.Unmanaged,
           invalidationType,
+          visibility,
         })
-      await executeTransaction(connection, wallet, transaction)
+      await executeTransaction(connection, wallet, transaction, {
+        silent: false,
+        callback: refreshTokenAccounts,
+      })
       const link = claimLinks.getLink(
         rentalMint,
         otpKeypair,
@@ -172,20 +180,6 @@ export const RentalCard = ({
             showIcon
           />
         )}
-        {/* <div
-            style={{ padding: '0px 80px' }}
-            className="flex items-center justify-center gap-10"
-          >
-            <BigIcon selected={rentalType === 'time'}>
-              <BiTimer />
-            </BigIcon>
-            <BigIcon selected={true}>
-              <BiQrScan />
-            </BigIcon>
-            <BigIcon selected={true}>
-              <ImPriceTags />
-            </BigIcon>
-          </div> */}
         <ImageWrapper>
           <NFTOuter>
             <NFTOverlay
@@ -290,6 +284,7 @@ export const RentalCard = ({
               description={
                 <>
                   <MintPriceSelector
+                    disabled={true}
                     price={price}
                     mint={paymentMint}
                     handlePrice={setPrice}
@@ -304,28 +299,64 @@ export const RentalCard = ({
               icon={<GrReturn />}
               title="Invalidation"
               description={
-                <>
-                  <Select
-                    style={{ width: '100%' }}
-                    onChange={(e) => setInvalidationType(e)}
-                    defaultValue={invalidationType}
-                  >
-                    {[
-                      {
-                        type: InvalidationType.Return,
-                        label: 'Return',
-                      },
-                      {
-                        type: InvalidationType.Invalidate,
-                        label: 'Invalidate',
-                      },
-                    ].map(({ label, type }) => (
-                      <Option key={type} value={type}>
-                        {label}
-                      </Option>
-                    ))}
-                  </Select>
-                </>
+                <Select
+                  style={{ width: '100%' }}
+                  onChange={(e) => setInvalidationType(e)}
+                  defaultValue={invalidationType}
+                >
+                  {[
+                    {
+                      type: InvalidationType.Return,
+                      label: 'Return',
+                    },
+                    {
+                      type: InvalidationType.Invalidate,
+                      label: 'Invalidate',
+                    },
+                  ].map(({ label, type }) => (
+                    <Option key={type} value={type}>
+                      {label}
+                    </Option>
+                  ))}
+                </Select>
+              }
+            />
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              width: '100%',
+              gap: '2%',
+              alignItems: 'flex-start',
+            }}
+          >
+            <StepDetail
+              width="49%"
+              disabled={false}
+              icon={<FaEye />}
+              title="Visibility"
+              description={
+                <Select
+                  style={{ width: '100%' }}
+                  onChange={(e) => setVisibiliy(e)}
+                  defaultValue={visibility}
+                >
+                  {[
+                    {
+                      type: 'public',
+                      label: 'Public',
+                    },
+                    {
+                      type: 'private',
+                      label: 'Private',
+                    },
+                  ].map(({ label, type }) => (
+                    <Option key={type} value={type}>
+                      {label}
+                    </Option>
+                  ))}
+                </Select>
               }
             />
           </div>
@@ -339,7 +370,6 @@ export const RentalCard = ({
               <StyledAlert>
                 <Alert
                   style={{
-                    marginTop: '10px',
                     height: 'auto',
                     cursor: 'pointer',
                   }}
@@ -360,21 +390,62 @@ export const RentalCard = ({
                   showIcon
                 />
               </StyledAlert>
+            ) : error ? (
+              <StyledAlert>
+                <Alert
+                  style={{ height: 'auto' }}
+                  message={
+                    <>
+                      <div>{error}</div>
+                    </>
+                  }
+                  type="error"
+                  showIcon
+                />
+              </StyledAlert>
             ) : (
-              error && (
-                <StyledAlert>
-                  <Alert
-                    style={{ marginTop: '10px', height: 'auto' }}
-                    message={
-                      <>
-                        <div>{error}</div>
-                      </>
-                    }
-                    type="error"
-                    showIcon
-                  />
-                </StyledAlert>
-              )
+              <StyledAlert>
+                <Alert
+                  style={{ height: 'auto' }}
+                  message={
+                    <>
+                      <div>
+                        Whoever claims this rental will own the asset{' '}
+                        {maxUsages && expiration
+                          ? `for either ${maxUsages} uses or until ${new Date(
+                              expiration * 1000
+                            ).toLocaleTimeString(['en-US'], {
+                              year: '2-digit',
+                              month: '2-digit',
+                              day: '2-digit',
+                              hour: '2-digit',
+                              minute: '2-digit',
+                              timeZoneName: 'short',
+                            })} and then it will be ${
+                              invalidationType === InvalidationType.Return
+                                ? 'securely returned to you.'
+                                : 'invalid forever..'
+                            }`
+                          : maxUsages
+                          ? `for ${maxUsages} uses and then it will be ${
+                              invalidationType === InvalidationType.Return
+                                ? 'securely returned to you.'
+                                : 'invalid forever'
+                            }`
+                          : expiration
+                          ? `until ${expiration} and then it will be ${
+                              invalidationType === InvalidationType.Return
+                                ? 'securely returned to you.'
+                                : 'invalid forever.'
+                            }`
+                          : 'forever'}
+                      </div>
+                    </>
+                  }
+                  type="info"
+                  showIcon
+                />
+              </StyledAlert>
             )
           }
           onClick={link ? () => handleCopy(link) : handleRental}
@@ -395,7 +466,7 @@ export const RentalCard = ({
               style={{ gap: '5px' }}
               className="flex items-center justify-center"
             >
-              Send
+              Send {visibility} link
               <FiSend />
             </div>
           )}

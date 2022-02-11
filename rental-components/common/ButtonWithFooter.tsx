@@ -35,7 +35,7 @@ export const ButtonWithFooter: React.FC<Props> = ({
 }
 
 export const BottomArea = styled.div`
-  margin-top: 40px;
+  margin-top: 20px;
   left: 28px;
   right: 28px;
   bottom: 28px;

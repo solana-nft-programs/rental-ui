@@ -7,11 +7,13 @@ import { notify } from 'common/Notification'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
+import { useRentalModal } from 'rental-components/RentalModalProvider'
 
 export const Airdrop = () => {
-  const ctx = useEnvironmentCtx()
+  const { connection, environment } = useEnvironmentCtx()
   const wallet = useWallet()
   const [loadingAirdrop, setLoadingAirdrop] = useState(false)
+  const { show } = useRentalModal()
 
   return (
     <Button
@@ -19,9 +21,10 @@ export const Airdrop = () => {
       disabled={!wallet.connected}
       onClick={async () => {
         if (!wallet.connected) return
+        show(asWallet(wallet), connection, environment.label, {})
         try {
           setLoadingAirdrop(true)
-          const txid = await airdropNFT(ctx.connection, asWallet(wallet))
+          const txid = await airdropNFT(connection, asWallet(wallet))
           notify({ message: 'Airdrop successful', txid })
         } catch (e) {
           console.log(e)

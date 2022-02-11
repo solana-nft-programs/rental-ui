@@ -7,6 +7,7 @@ import { useUTCNow } from 'providers/UTCNowProvider'
 import { PAYMENT_MINTS, usePaymentMints } from 'providers/PaymentMintsProvider'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { useEffect, useState } from 'react'
+import {} from 'react-icons/fa'
 
 const StyledOverlay = styled.div<{
   height?: string
@@ -88,6 +89,18 @@ interface NFTOverlayProps {
   lineHeight?: number
 }
 
+export const stateColor = (state: TokenManagerState, light = false): string => {
+  if (state === TokenManagerState.Invalidated) {
+    return 'rgba(125, 0, 0, 1)'
+  } else if (state === TokenManagerState.Issued) {
+    return light ? '#d89614' : '#593815'
+  } else if (state === TokenManagerState.Claimed) {
+    return '#274916'
+  } else {
+    return 'rgba(255, 255, 255, 0.3)`'
+  }
+}
+
 function getBoxShadow(
   state: TokenManagerState,
   expiration: number | undefined,
@@ -100,15 +113,21 @@ function getBoxShadow(
     (maxUsages && usages && usages >= maxUsages) ||
     (expiration && expiration <= Math.floor(Date.now() / 1000))
   ) {
-    return `0 0 ${0.4 * lineHeight}px ${0.4 * lineHeight}px rgba(125, 0, 0, 1)`
+    return `0 0 ${0.4 * lineHeight}px ${0.4 * lineHeight}px ${stateColor(
+      state
+    )}`
   } else if (state === TokenManagerState.Issued) {
-    return `0 0 ${0.4 * lineHeight}px ${0.4 * lineHeight}px #593815`
+    return `0 0 ${0.4 * lineHeight}px ${0.4 * lineHeight}px ${stateColor(
+      state
+    )}`
   } else if (state === TokenManagerState.Claimed) {
-    return `0 0 ${0.4 * lineHeight}px ${0.4 * lineHeight}px #274916`
+    return `0 0 ${0.4 * lineHeight}px ${0.4 * lineHeight}px ${stateColor(
+      state
+    )}`
   } else {
-    return `0 0 ${0.4 * lineHeight}px ${
-      0.4 * lineHeight
-    }px rgba(255, 255, 255, 0.3)`
+    return `0 0 ${0.4 * lineHeight}px ${0.4 * lineHeight}px ${stateColor(
+      state
+    )}`
   }
 }
 

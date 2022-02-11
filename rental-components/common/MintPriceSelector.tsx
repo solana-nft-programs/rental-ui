@@ -9,11 +9,13 @@ const { Option } = Select
 export const MintPriceSelector = ({
   price,
   mint,
+  disabled,
   handlePrice,
   handleMint,
 }: {
   price: number
   mint: string
+  disabled?: boolean
   handlePrice: (p: number) => void
   handleMint: (m: string) => void
 }) => {
@@ -25,6 +27,7 @@ export const MintPriceSelector = ({
         style={{ width: '100%' }}
         placeholder="Price"
         stringMode
+        disabled={disabled}
         value={
           paymentMintInfo ? fmtMintAmount(paymentMintInfo, new BN(price)) : '0'
         }
@@ -39,6 +42,7 @@ export const MintPriceSelector = ({
       <Select
         onChange={(e) => handleMint(e)}
         defaultValue={PAYMENT_MINTS[0].mint}
+        disabled={disabled}
       >
         {PAYMENT_MINTS.map(({ mint, symbol }) => (
           <Option key={mint} value={mint}>
