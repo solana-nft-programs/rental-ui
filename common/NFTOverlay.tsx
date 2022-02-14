@@ -114,15 +114,15 @@ function getBoxShadow(
     (expiration && expiration <= Math.floor(Date.now() / 1000))
   ) {
     return `0 0 ${0.4 * lineHeight}px ${0.4 * lineHeight}px ${stateColor(
-      state
+      TokenManagerState.Invalidated
     )}`
   } else if (state === TokenManagerState.Issued) {
     return `0 0 ${0.4 * lineHeight}px ${0.4 * lineHeight}px ${stateColor(
-      state
+      TokenManagerState.Issued
     )}`
   } else if (state === TokenManagerState.Claimed) {
     return `0 0 ${0.4 * lineHeight}px ${0.4 * lineHeight}px ${stateColor(
-      state
+      TokenManagerState.Claimed
     )}`
   } else {
     return `0 0 ${0.4 * lineHeight}px ${0.4 * lineHeight}px ${stateColor(

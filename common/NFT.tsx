@@ -162,6 +162,7 @@ export function NFT({ tokenData, hideQRCode }: NFTProps) {
 
   const elligibleForRent =
     !tokenManager && tokenAccount?.account.data.parsed.info.state !== 'frozen'
+
   return (
     <TokenMetadata>
       {wallet &&
@@ -251,7 +252,7 @@ export function NFT({ tokenData, hideQRCode }: NFTProps) {
         {tokenManager && (
           <NFTOverlay
             state={tokenManager?.parsed.state}
-            expiration={timeInvalidator?.parsed.expiration}
+            expiration={timeInvalidator?.parsed?.expiration?.toNumber()}
             usages={useInvalidator?.parsed.usages}
             maxUsages={useInvalidator?.parsed.maxUsages}
             lineHeight={14}

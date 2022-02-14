@@ -3,6 +3,7 @@ import {
   ParsedAccountData,
   PublicKey,
   Connection,
+  SystemProgram,
 } from '@solana/web3.js'
 import * as anchor from '@project-serum/anchor'
 import * as spl from '@solana/spl-token'
@@ -217,7 +218,7 @@ export async function getTokenDatas(
     PublicKey,
     PublicKey,
     PublicKey,
-    PublicKey
+    PublicKey | null
   ][] = await Promise.all(
     tokenManagerDatas.map(async (tokenManagerData) => {
       const [[metadataId], [timeInvalidatorId], [useInvalidatorId]] =
@@ -236,12 +237,17 @@ export async function getTokenDatas(
           useInvalidator.pda.findUseInvalidatorAddress(tokenManagerData.pubkey),
         ])
 
+      const recipientTokenAccountId =
+        tokenManagerData.parsed.recipientTokenAccount?.toString() !==
+        SystemProgram.programId.toString()
+          ? (tokenManagerData.parsed?.recipientTokenAccount as PublicKey)
+          : null
       return [
         metadataId,
         tokenManagerData.pubkey,
         timeInvalidatorId,
         useInvalidatorId,
-        tokenManagerData.parsed.recipientTokenAccount as PublicKey,
+        recipientTokenAccountId,
       ]
     })
   )
@@ -291,14 +297,18 @@ export async function getTokenDatas(
     })
   )
 
-  const tokenAccounts = (await connection.getMultipleAccountsInfo(
-    metadataIds[3],
-    {
-      encoding: 'jsonParsed',
-    }
-  )) as (AccountInfo<ParsedAccountData> | null)[]
-
-  const [timeInvalidators, useInvalidators] = await Promise.all([
+  const [tokenAccounts, timeInvalidators, useInvalidators] = await Promise.all([
+    connection
+      .getMultipleAccountsInfo(
+        metadataIds[3].filter((pk) => pk),
+        {
+          encoding: 'jsonParsed',
+        }
+      )
+      .catch((e) => {
+        console.log('Failed ot get token accounts', e)
+        return []
+      }) as Promise<(AccountInfo<ParsedAccountData> | null)[]>,
     timeInvalidator.accounts.getTimeInvalidators(connection, metadataIds[1]),
     useInvalidator.accounts.getUseInvalidators(connection, metadataIds[2]),
   ])
@@ -313,9 +323,10 @@ export async function getTokenDatas(
       ],
       i
     ) => ({
-      tokenAccount: tokenAccounts[i]
-        ? { pubkey: tokenAccountId, account: tokenAccounts[i]! }
-        : undefined,
+      tokenAccount:
+        tokenAccounts[i] && tokenAccountId
+          ? { pubkey: tokenAccountId, account: tokenAccounts[i]! }
+          : undefined,
       metaplexData: metaplexData.find((data) =>
         data ? data.pubkey.toBase58() === metaplexId.toBase58() : undefined
       ),

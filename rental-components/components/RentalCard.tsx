@@ -18,7 +18,7 @@ import { ImPriceTags } from 'react-icons/im'
 import { PAYMENT_MINTS } from 'rental-components/common/Constants'
 import { MintPriceSelector } from 'rental-components/common/MintPriceSelector'
 import { TokenData } from 'api/api'
-import { getQueryParam } from 'common/utils'
+import { getQueryParam, longDateString } from 'common/utils'
 import { NFTOverlay } from 'common/NFTOverlay'
 import { claimLinks, rentals } from '@cardinal/token-manager'
 import { executeTransaction } from 'common/Transactions'
@@ -141,6 +141,7 @@ export const RentalCard = ({
           rentalMint,
           issuerTokenAccountId: tokenAccount?.pubkey,
           usages: maxUsages || undefined,
+          expiration: expiration || undefined,
           kind:
             editionInfo.edition || editionInfo.masterEdition
               ? TokenManagerKind.Edition
@@ -419,16 +420,9 @@ export const RentalCard = ({
                       <div>
                         Whoever claims this rental will own the asset{' '}
                         {maxUsages && expiration
-                          ? `for either ${maxUsages} uses or until ${new Date(
-                              expiration * 1000
-                            ).toLocaleTimeString(['en-US'], {
-                              year: '2-digit',
-                              month: '2-digit',
-                              day: '2-digit',
-                              hour: '2-digit',
-                              minute: '2-digit',
-                              timeZoneName: 'short',
-                            })} and then it will be ${
+                          ? `for either ${maxUsages} uses or until ${longDateString(
+                              expiration
+                            )} and then it will be ${
                               invalidationType === InvalidationType.Return
                                 ? 'securely returned to you.'
                                 : 'invalid forever..'
@@ -440,7 +434,9 @@ export const RentalCard = ({
                                 : 'invalid forever'
                             }`
                           : expiration
-                          ? `until ${expiration} and then it will be ${
+                          ? `until ${longDateString(
+                              expiration
+                            )} and then it will be ${
                               invalidationType === InvalidationType.Return
                                 ? 'securely returned to you.'
                                 : 'invalid forever.'

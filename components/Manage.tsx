@@ -17,6 +17,8 @@ import { asWallet } from 'common/Wallets'
 import { executeTransaction } from 'common/Transactions'
 import { useUserTokenData } from 'providers/TokenDataProvider'
 import { NFTPlaceholder } from 'common/NFTPlaceholder'
+import { BN } from '@project-serum/anchor'
+import { List } from 'react-virtualized'
 
 const StyledTag = styled.span`
   text-align: center;
@@ -131,32 +133,52 @@ export const Manage = () => {
                           tokenData.tokenManager?.parsed.claimedAt
                         )} */}
                       </Tag>
-                      {tokenData?.tokenManager?.parsed.invalidators &&
+                      {((tokenData?.tokenManager?.parsed.invalidators &&
                         tokenData?.tokenManager?.parsed.invalidators
                           .map((i: PublicKey) => i.toString())
-                          .includes(wallet.publicKey?.toBase58()) && (
-                          <Button
-                            variant="primary"
-                            disabled={!wallet.connected}
-                            onClick={async () => {
-                              executeTransaction(
+                          .includes(wallet.publicKey?.toBase58())) ||
+                        (tokenData.timeInvalidator &&
+                          tokenData.timeInvalidator.parsed.expiration &&
+                          tokenData.timeInvalidator.parsed.expiration.lte(
+                            new BN(Date.now() / 1000)
+                          )) ||
+                        (tokenData.useInvalidator &&
+                          tokenData.useInvalidator.parsed.maxUsages &&
+                          tokenData.useInvalidator.parsed.usages.gte(
+                            tokenData.useInvalidator.parsed.maxUsages
+                          ))) && (
+                        <Button
+                          variant="primary"
+                          disabled={!wallet.connected}
+                          onClick={async () => {
+                            executeTransaction(
+                              connection,
+                              asWallet(wallet),
+                              await invalidate(
                                 connection,
                                 asWallet(wallet),
-                                await invalidate(
-                                  connection,
-                                  asWallet(wallet),
-                                  tokenData?.tokenManager?.parsed.mint
-                                ),
-                                { callback: refreshTokenAccounts, silent: true }
-                              )
-                            }}
-                          >
-                            Revoke
-                          </Button>
-                        )}
+                                tokenData?.tokenManager?.parsed.mint
+                              ),
+                              {
+                                callback: refreshTokenAccounts,
+                                silent: true,
+                              }
+                            )
+                          }}
+                        >
+                          Revoke
+                        </Button>
+                      )}
                     </StyledTag>
                   ),
-                  [TokenManagerState.Invalidated]: <>Invalidated</>,
+                  [TokenManagerState.Invalidated]: (
+                    <Tag state={TokenManagerState.Invalidated}>
+                      Invalidated
+                      {/* {shortDateString(
+                    tokenData.tokenManager?.parsed.claimedAt
+                  )} */}
+                    </Tag>
+                  ),
                 }[tokenData?.tokenManager?.parsed.state as TokenManagerState]
               }
             </>

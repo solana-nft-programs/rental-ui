@@ -38,6 +38,17 @@ export function shortDateString(utc_seconds: number) {
   })}`
 }
 
+export function longDateString(utcSeconds: number) {
+  return new Date(utcSeconds * 1000).toLocaleTimeString(['en-US'], {
+    year: '2-digit',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZoneName: 'short',
+  })
+}
+
 /**
  *
  * @param {string} name
