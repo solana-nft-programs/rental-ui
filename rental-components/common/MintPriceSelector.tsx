@@ -21,6 +21,7 @@ export const MintPriceSelector = ({
 }) => {
   const { paymentMintInfos } = usePaymentMints()
   const paymentMintInfo = paymentMintInfos[mint]
+  console.log(paymentMintInfos)
   return (
     <SelectorOuter>
       <InputNumber
@@ -44,11 +45,14 @@ export const MintPriceSelector = ({
         defaultValue={PAYMENT_MINTS[0].mint}
         disabled={disabled}
       >
-        {PAYMENT_MINTS.map(({ mint, symbol }) => (
-          <Option key={mint} value={mint}>
-            {symbol}
-          </Option>
-        ))}
+        {PAYMENT_MINTS.map(
+          ({ mint, symbol }) =>
+            paymentMintInfos[mint] && (
+              <Option key={mint} value={mint}>
+                {symbol}
+              </Option>
+            )
+        )}
       </Select>
     </SelectorOuter>
   )

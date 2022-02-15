@@ -126,7 +126,6 @@ export const RentalCard = ({
   const [expiration, setExpiration] = useState<number | null>(null)
   const [maxUsages, setMaxUsages] = useState<number | null>(null)
   const [visibility, setVisibiliy] = useState<'private' | 'public'>('public')
-
   const handleRental = async () => {
     try {
       if (!tokenAccount) {

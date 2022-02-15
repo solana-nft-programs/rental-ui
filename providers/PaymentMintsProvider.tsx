@@ -12,6 +12,7 @@ export const PAYMENT_MINTS = [
     mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
     symbol: 'USDC',
   },
+  { mint: '2tWC4JAdL4AxEFJySziYJfsAnW2MHKRo98vbAPiRDSk8', symbol: 'USDC' },
   {
     mint: 'Saber2gLauYim4Mvftnrasomsv6NvAuncvMEZwcLpD1',
     symbol: 'SBR',
