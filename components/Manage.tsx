@@ -54,6 +54,7 @@ export const Manage = () => {
   const wallet = useWallet()
   const { refreshTokenAccounts } = useUserTokenData()
   const { managedTokens, loaded } = useManagedTokens()
+  console.log(managedTokens)
   return (
     <TokensOuter>
       {managedTokens && managedTokens.length > 0 ? (
@@ -124,8 +125,7 @@ export const Manage = () => {
                       <Tag state={TokenManagerState.Claimed}>
                         Claimed by{' '}
                         {shortPubKey(
-                          tokenData.tokenAccount?.account?.data?.parsed?.info
-                            .owner
+                          tokenData.recipientTokenAccount?.owner || ''
                         )}{' '}
                         {/* {shortDateString(
                           tokenData.tokenManager?.parsed.claimedAt

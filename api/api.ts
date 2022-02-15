@@ -317,19 +317,25 @@ export async function getTokenDatas(
     await Promise.all([
       connection
         .getMultipleAccountsInfo(
-          metadataIds[3].filter((pk) => pk),
+          metadataIds[4].filter((pk) => pk),
           {
             encoding: 'jsonParsed',
           }
         )
+        .then((tokenAccounts) =>
+          tokenAccounts.map(
+            (acc) => (acc?.data as ParsedAccountData).parsed?.info
+          )
+        )
         .catch((e) => {
           console.log('Failed ot get token accounts', e)
           return []
-        }) as Promise<(AccountInfo<ParsedAccountData> | null)[]>,
+        }) as Promise<(spl.AccountInfo | null)[]>,
       claimApprover.accounts.getClaimApprovers(connection, metadataIds[1]),
       timeInvalidator.accounts.getTimeInvalidators(connection, metadataIds[2]),
       useInvalidator.accounts.getUseInvalidators(connection, metadataIds[3]),
     ])
+
   return metadataTuples.map(
     (
       [
@@ -342,10 +348,11 @@ export async function getTokenDatas(
       ],
       i
     ) => ({
-      tokenAccount:
-        tokenAccounts[i] && tokenAccountId
-          ? { pubkey: tokenAccountId, account: tokenAccounts[i]! }
-          : undefined,
+      recipientTokenAccount: tokenAccounts.find((data) =>
+        data
+          ? data.delegate?.toString() === tokenManagerId?.toString()
+          : undefined
+      ),
       metaplexData: metaplexData.find((data) =>
         data ? data.pubkey.toBase58() === metaplexId.toBase58() : undefined
       ),
