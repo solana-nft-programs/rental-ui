@@ -22,21 +22,21 @@ const App = ({ Component, pageProps }: AppProps) => (
   <EnvironmentProvider>
     <WalletProvider wallets={getWalletAdapters()}>
       <WalletIdentityProvider>
-        <RentalModalProvider>
-          <PaymentMintsProvider>
-            <QRCodeProvider>
-              <UTCNowProvider>
-                <TokenAccountsProvider>
-                  <ManagedTokensProvider>
+        <PaymentMintsProvider>
+          <QRCodeProvider>
+            <UTCNowProvider>
+              <TokenAccountsProvider>
+                <ManagedTokensProvider>
+                  <RentalModalProvider>
                     <WalletModalProvider>
                       <Component {...pageProps} />
                     </WalletModalProvider>
-                  </ManagedTokensProvider>
-                </TokenAccountsProvider>
-              </UTCNowProvider>
-            </QRCodeProvider>
-          </PaymentMintsProvider>
-        </RentalModalProvider>
+                  </RentalModalProvider>
+                </ManagedTokensProvider>
+              </TokenAccountsProvider>
+            </UTCNowProvider>
+          </QRCodeProvider>
+        </PaymentMintsProvider>
       </WalletIdentityProvider>
     </WalletProvider>
   </EnvironmentProvider>

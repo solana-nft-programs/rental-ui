@@ -18,6 +18,8 @@ export const PAYMENT_MINTS = [
   },
 ]
 
+export const WRAPPED_SOL_MINT = 'So11111111111111111111111111111111111111112'
+
 export interface PaymentMintsContextValues {
   paymentMintInfos: { [name: string]: splToken.MintInfo }
   refreshPaymentMints: Function

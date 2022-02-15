@@ -125,7 +125,7 @@ export const RentalCard = ({
   const [paymentMint, setPaymentMint] = useState(PAYMENT_MINTS[0].mint)
   const [expiration, setExpiration] = useState<number | null>(null)
   const [maxUsages, setMaxUsages] = useState<number | null>(null)
-  const [visibility, setVisibiliy] = useState<'private' | 'public'>('private')
+  const [visibility, setVisibiliy] = useState<'private' | 'public'>('public')
 
   const handleRental = async () => {
     try {
@@ -139,6 +139,8 @@ export const RentalCard = ({
       const [transaction, tokenManagerId, otpKeypair] =
         await rentals.createRental(connection, wallet, {
           rentalMint,
+          paymentAmount: price ?? undefined,
+          paymentMint: paymentMint ? new PublicKey(paymentMint) : undefined,
           issuerTokenAccountId: tokenAccount?.pubkey,
           usages: maxUsages || undefined,
           expiration: expiration || undefined,
@@ -169,6 +171,7 @@ export const RentalCard = ({
       setLoading(false)
     }
   }
+  console.log(paymentMint, price)
   return (
     <RentalCardOuter>
       <Wrapper>
@@ -192,8 +195,8 @@ export const RentalCard = ({
           <NFTOuter>
             <NFTOverlay
               state={tokenManager?.parsed.state}
-              paymentAmount={tokenManager?.parsed.paymentAmount}
-              paymentMint={tokenManager?.parsed.paymentMint}
+              paymentAmount={price || undefined}
+              paymentMint={paymentMint || undefined}
               expiration={expiration || undefined}
               usages={maxUsages ? 0 : undefined}
               maxUsages={maxUsages || undefined}
@@ -237,7 +240,6 @@ export const RentalCard = ({
           >
             <StepDetail
               width="49%"
-              disabled={false}
               icon={<BiTimer />}
               title="Duration"
               description={
@@ -257,14 +259,12 @@ export const RentalCard = ({
             />
             <StepDetail
               width="49%"
-              disabled={false}
               icon={<BiQrScan />}
               title="Uses"
               description={
                 <Fieldset>
                   <InputBorder>
                     <Input
-                      disabled={false}
                       name="tweet"
                       type="number"
                       onChange={(e) => setMaxUsages(parseInt(e.target.value))}
@@ -286,13 +286,12 @@ export const RentalCard = ({
           >
             <StepDetail
               width="49%"
-              disabled={false}
               icon={<ImPriceTags />}
               title="Pricing Details"
               description={
                 <>
                   <MintPriceSelector
-                    disabled={true}
+                    disabled={visibility === 'private'}
                     price={price}
                     mint={paymentMint}
                     handlePrice={setPrice}
@@ -303,7 +302,6 @@ export const RentalCard = ({
             />
             <StepDetail
               width="49%"
-              disabled={false}
               icon={<GrReturn />}
               title="Invalidation"
               description={
@@ -341,7 +339,6 @@ export const RentalCard = ({
           >
             <StepDetail
               width="49%"
-              disabled={false}
               icon={<FaEye />}
               title="Visibility"
               description={
@@ -372,7 +369,6 @@ export const RentalCard = ({
         <ButtonWithFooter
           loading={loading}
           complete={false}
-          disabled={false}
           message={
             link ? (
               <StyledAlert>

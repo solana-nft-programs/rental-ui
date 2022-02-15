@@ -144,19 +144,9 @@ export function NFTOverlay({
   returnable,
   lineHeight = 20,
 }: NFTOverlayProps) {
-  // const { UTCNow } = useUTCNow()
+  const { UTCNow } = useUTCNow()
   const { paymentMintInfos } = usePaymentMints()
-  const [UTCNow, setUTCNow] = useState(Date.now() / 1000)
-  useEffect(() => {
-    const interval = setInterval(
-      (function expirationStringUpdate() {
-        setUTCNow(Math.floor(Date.now() / 1000))
-        return expirationStringUpdate
-      })(),
-      1000
-    )
-    return () => clearInterval(interval)
-  })
+
   return (
     <StyledOverlay
       shadow={shadow}

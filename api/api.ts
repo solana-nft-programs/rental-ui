@@ -10,6 +10,7 @@ import * as spl from '@solana/spl-token'
 import * as metaplex from '@metaplex-foundation/mpl-token-metadata'
 import { tryTokenManagerAddressFromMint } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/pda'
 import {
+  claimApprover,
   timeInvalidator,
   tokenManager,
   useInvalidator,
@@ -18,6 +19,7 @@ import { AccountData } from '@cardinal/token-manager'
 import { TokenManagerData } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { TimeInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
 import { UseInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
+import { PaidClaimApproverData } from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
 
 export async function findAssociatedTokenAddress(
   walletAddress: PublicKey,
@@ -44,6 +46,7 @@ export type TokenData = {
   metaplexData?: metaplex.Metadata | null
   editionData?: metaplex.Edition
   metadata?: any
+  claimApprover?: AccountData<PaidClaimApproverData>
   useInvalidator?: AccountData<UseInvalidatorData>
   timeInvalidator?: AccountData<TimeInvalidatorData>
   recipientTokenAccount?: spl.AccountInfo | null
@@ -218,24 +221,28 @@ export async function getTokenDatas(
     PublicKey,
     PublicKey,
     PublicKey,
+    PublicKey,
     PublicKey | null
   ][] = await Promise.all(
     tokenManagerDatas.map(async (tokenManagerData) => {
-      const [[metadataId], [timeInvalidatorId], [useInvalidatorId]] =
-        await Promise.all([
-          PublicKey.findProgramAddress(
-            [
-              anchor.utils.bytes.utf8.encode(metaplex.MetadataProgram.PREFIX),
-              metaplex.MetadataProgram.PUBKEY.toBuffer(),
-              tokenManagerData.parsed.mint.toBuffer(),
-            ],
-            metaplex.MetadataProgram.PUBKEY
-          ),
-          timeInvalidator.pda.findTimeInvalidatorAddress(
-            tokenManagerData.pubkey
-          ),
-          useInvalidator.pda.findUseInvalidatorAddress(tokenManagerData.pubkey),
-        ])
+      const [
+        [metadataId],
+        [claimApproverId],
+        [timeInvalidatorId],
+        [useInvalidatorId],
+      ] = await Promise.all([
+        PublicKey.findProgramAddress(
+          [
+            anchor.utils.bytes.utf8.encode(metaplex.MetadataProgram.PREFIX),
+            metaplex.MetadataProgram.PUBKEY.toBuffer(),
+            tokenManagerData.parsed.mint.toBuffer(),
+          ],
+          metaplex.MetadataProgram.PUBKEY
+        ),
+        claimApprover.pda.findClaimApproverAddress(tokenManagerData.pubkey),
+        timeInvalidator.pda.findTimeInvalidatorAddress(tokenManagerData.pubkey),
+        useInvalidator.pda.findUseInvalidatorAddress(tokenManagerData.pubkey),
+      ])
 
       const recipientTokenAccountId =
         tokenManagerData.parsed.recipientTokenAccount?.toString() !==
@@ -245,6 +252,7 @@ export async function getTokenDatas(
       return [
         metadataId,
         tokenManagerData.pubkey,
+        claimApproverId,
         timeInvalidatorId,
         useInvalidatorId,
         recipientTokenAccountId,
@@ -253,7 +261,13 @@ export async function getTokenDatas(
   )
 
   // @ts-ignore
-  const metadataIds: [PublicKey[], PublicKey[], PublicKey[], PublicKey[]] =
+  const metadataIds: [
+    PublicKey[],
+    PublicKey[],
+    PublicKey[],
+    PublicKey[],
+    PublicKey[]
+  ] =
     // @ts-ignore
     metadataTuples.reduce(
       (
@@ -261,17 +275,19 @@ export async function getTokenDatas(
         [
           metaplexId,
           _tokenManagerId,
+          claimApproverId,
           timeInvalidatorId,
           useInvalidatorId,
           recipientTokenAccountId,
         ]
       ) => [
         [...acc[0], metaplexId],
-        [...acc[1], timeInvalidatorId],
-        [...acc[2], useInvalidatorId],
-        [...acc[3], recipientTokenAccountId],
+        [...acc[1], claimApproverId],
+        [...acc[2], timeInvalidatorId],
+        [...acc[3], useInvalidatorId],
+        [...acc[4], recipientTokenAccountId],
       ],
-      [[], [], [], []]
+      [[], [], [], [], []]
     )
 
   const metaplexData = await Promise.all(
@@ -297,26 +313,29 @@ export async function getTokenDatas(
     })
   )
 
-  const [tokenAccounts, timeInvalidators, useInvalidators] = await Promise.all([
-    connection
-      .getMultipleAccountsInfo(
-        metadataIds[3].filter((pk) => pk),
-        {
-          encoding: 'jsonParsed',
-        }
-      )
-      .catch((e) => {
-        console.log('Failed ot get token accounts', e)
-        return []
-      }) as Promise<(AccountInfo<ParsedAccountData> | null)[]>,
-    timeInvalidator.accounts.getTimeInvalidators(connection, metadataIds[1]),
-    useInvalidator.accounts.getUseInvalidators(connection, metadataIds[2]),
-  ])
+  const [tokenAccounts, claimApprovers, timeInvalidators, useInvalidators] =
+    await Promise.all([
+      connection
+        .getMultipleAccountsInfo(
+          metadataIds[3].filter((pk) => pk),
+          {
+            encoding: 'jsonParsed',
+          }
+        )
+        .catch((e) => {
+          console.log('Failed ot get token accounts', e)
+          return []
+        }) as Promise<(AccountInfo<ParsedAccountData> | null)[]>,
+      claimApprover.accounts.getClaimApprovers(connection, metadataIds[1]),
+      timeInvalidator.accounts.getTimeInvalidators(connection, metadataIds[2]),
+      useInvalidator.accounts.getUseInvalidators(connection, metadataIds[3]),
+    ])
   return metadataTuples.map(
     (
       [
         metaplexId,
         tokenManagerId,
+        claimApproverId,
         timeInvalidatorId,
         useInvalidatorId,
         tokenAccountId,
@@ -337,6 +356,11 @@ export async function getTokenDatas(
       ),
       metadata: metadata.find((data) =>
         data ? data.pubkey.toBase58() === metaplexId.toBase58() : undefined
+      ),
+      claimApprover: claimApprovers.find((data) =>
+        data?.parsed
+          ? data.pubkey.toBase58() === claimApproverId?.toBase58()
+          : undefined
       ),
       useInvalidator: useInvalidators.find((data) =>
         data?.parsed
@@ -380,6 +404,7 @@ export async function getTokenData(
 
   let metaplexData: metaplex.Metadata | null = null
   let metadata: any | null = null
+  let claimApproverData: PaidClaimApproverData | null = null
   let timeInvalidatorData: TimeInvalidatorData | null = null
   let useInvalidatorData: UseInvalidatorData | null = null
   let recipientTokenAccount: spl.AccountInfo | null = null
@@ -417,6 +442,15 @@ export async function getTokenData(
     console.log('Failed to get use invalidator data', e)
   }
 
+  try {
+    claimApproverData = await claimApprover.accounts.getClaimApprover(
+      connection,
+      tokenManagerId
+    )
+  } catch (e) {
+    console.log('Failed to get use invalidator data', e)
+  }
+
   if (tokenManagerData?.parsed.recipientTokenAccount) {
     try {
       const mint = new spl.Token(
@@ -437,6 +471,7 @@ export async function getTokenData(
   return {
     metaplexData,
     tokenManager: tokenManagerData,
+    claimApprover: claimApproverData,
     useInvalidator: useInvalidatorData,
     timeInvalidator: timeInvalidatorData,
     metadata,

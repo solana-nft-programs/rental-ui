@@ -1,13 +1,13 @@
 import React, { ReactElement } from 'react'
 import { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
-import { PublicKey } from '@solana/web3.js'
+import { PublicKey, Transaction } from '@solana/web3.js'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { LoadingPulse, LoadingPulseWrapped } from 'common/LoadingPulse'
 import { StyledBackground } from 'common/StyledBackground'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { Header } from 'common/Header'
-import { notify } from 'common/Notification'
+import * as splToken from '@solana/spl-token'
 import { useRouter } from 'next/router'
 import { claimLinks, rentals } from '@cardinal/token-manager'
 import { asWallet } from 'common/Wallets'
@@ -21,6 +21,14 @@ import { executeTransaction } from 'common/Transactions'
 import { pubKeyUrl, shortPubKey } from 'common/utils'
 import { FaQuestionCircle } from 'react-icons/fa'
 import { Button } from 'rental-components/common/Button'
+import {
+  PAYMENT_MINTS,
+  usePaymentMints,
+  WRAPPED_SOL_MINT,
+} from 'providers/PaymentMintsProvider'
+import { getATokenAccountInfo } from 'api/utils'
+import { BN } from '@project-serum/anchor'
+import { withWrapSol } from 'api/wrappedSol'
 
 type Hideable = {
   visible?: boolean
@@ -270,8 +278,8 @@ function Claim() {
   const ctx = useEnvironmentCtx()
   const wallet = useWallet()
   const [error, setError] = useState<ReactElement | null>(null)
+  const { paymentMintInfos } = usePaymentMints()
   const [loadingClaim, setLoadingClaim] = useState(false)
-  const [paymentTokenAccountError, setPaymentTokenAccountError] = useState(null)
 
   const [loadingImage, setLoadingImage] = useState(false)
   const [claimed, setClaimed] = useState(false)
@@ -282,6 +290,13 @@ function Claim() {
     status: VerificationStatus
     data?: TokenData
   } | null>(null)
+
+  const [userPaymentTokenAccount, setUserPaymentTokenAccount] =
+    useState<splToken.AccountInfo | null>(null)
+  const [paymentTokenAccountError, setPaymentTokenAccountError] = useState<
+    boolean | null
+  >(null)
+
   const { tokenManagerString } = router.query
   const tokenManagerId = tryPublicKey(tokenManagerString)
 
@@ -313,58 +328,55 @@ function Claim() {
     }
   }
 
+  async function getUserPaymentTokenAccount() {
+    if (wallet.publicKey && tokenData?.tokenManager?.parsed.paymentMint) {
+      try {
+        const userPaymentTokenAccountData = await getATokenAccountInfo(
+          ctx.connection,
+          tokenData?.tokenManager?.parsed.paymentMint,
+          wallet.publicKey
+        )
+        setUserPaymentTokenAccount(userPaymentTokenAccountData)
+      } catch (e) {
+        console.log(e)
+        setPaymentTokenAccountError(true)
+      }
+    }
+  }
+
   useEffect(() => {
     if (tokenManagerId) {
       getMetadata()
     }
   }, [ctx, setError, tokenManagerString])
 
-  //   async function getUserPaymentTokenAccount() {
-  //     if (
-  //       metadata?.certificateData?.parsed.paymentMint &&
-  //       wallet.publicKey &&
-  //       metadata?.certificateData?.parsed.paymentAmount > 0
-  //     ) {
-  //       try {
-  //         setLoadingClaim(true)
-  //         const userPaymentTokenAccount = await api.getATokenAccountInfo(
-  //           ctx,
-  //           // @ts-ignore
-  //           metadata?.certificateData?.parsed.paymentMint,
-  //           wallet.publicKey
-  //         )
-  //       } catch (e) {
-  //         console.log(e)
-  //         setPaymentTokenAccountError(true)
-  //       } finally {
-  //         setLoadingClaim(false)
-  //       }
-  //     }
-  //   }
-
-  //   useEffect(() => {
-  //     getUserPaymentTokenAccount()
-  //   }, [ctx, wallet])
-
-  //   const handleWrap = async () => {
-  //     try {
-  //       setError(null)
-  //       setLoadingClaim(true)
-  //       wrapSol(
-  //         ctx.connection,
-  //         wallet,
-  //         metadata.certificateData.parsed.paymentAmount
-  //       )
-  //     } catch (e) {
-  //       handleError(e)
-  //     }
-  //   }
+  useEffect(() => {
+    getUserPaymentTokenAccount()
+  }, [ctx, wallet, tokenData])
 
   const handleError = (e: Error) => {
     if (e.message.includes('0x1')) {
       setError(
-        <div>
-          <div>Insufficient balance of sol. Check funds and try again</div>
+        <div className="flex flex-col items-center justify-center">
+          <div>
+            Insufficient balance of{' '}
+            {PAYMENT_MINTS.find(
+              ({ mint }) =>
+                mint.toString() ===
+                tokenData?.tokenManager?.parsed.paymentMint.toString()
+            )?.symbol || tokenData?.tokenManager?.parsed.paymentMint.toString()}
+            . Check funds and try again
+          </div>
+          {tokenData?.tokenManager?.parsed.paymentMint.toString() !==
+            WRAPPED_SOL_MINT.toString() && (
+            <a
+              href={`https://app.saber.so/#/swap?from=So11111111111111111111111111111111111111112&to=${tokenData?.tokenManager?.parsed.paymentMint}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <div>Get Funds</div>
+            </a>
+          )}
         </div>
       )
     } else {
@@ -400,11 +412,35 @@ function Claim() {
           }
         )
       } else {
-        const transaction = await rentals.claimRental(
+        const transaction = new Transaction()
+        if (
+          tokenData?.claimApprover?.parsed.paymentAmount &&
+          tokenData?.tokenManager?.parsed.paymentMint.toString() ===
+            WRAPPED_SOL_MINT.toString() &&
+          tokenData?.claimApprover?.parsed.paymentAmount.gt(new BN(0))
+        ) {
+          const amountToWrap =
+            tokenData?.claimApprover?.parsed.paymentAmount.sub(
+              userPaymentTokenAccount?.amount || 0
+            )
+          if (amountToWrap.gt(new BN(0))) {
+            withWrapSol(
+              transaction,
+              ctx.connection,
+              asWallet(wallet),
+              amountToWrap
+            )
+          }
+        }
+        const claimTx = await rentals.claimRental(
           ctx.connection,
           asWallet(wallet),
           tokenManagerId!
         )
+        transaction.instructions = [
+          ...transaction.instructions,
+          ...claimTx.instructions,
+        ]
         await executeTransaction(
           ctx.connection,
           asWallet(wallet),
@@ -425,8 +461,7 @@ function Claim() {
     }
   }
 
-  console.log(tokenData)
-
+  console.log(tokenData, userPaymentTokenAccount)
   return (
     <>
       <Header />
@@ -466,6 +501,10 @@ function Claim() {
                         }
                         expiration={
                           tokenData.timeInvalidator?.parsed.expiration
+                        }
+                        paymentMint={tokenData.tokenManager?.parsed.paymentMint}
+                        paymentAmount={
+                          tokenData.claimApprover?.parsed.paymentAmount
                         }
                         usages={tokenData.useInvalidator?.parsed.usages}
                         maxUsages={tokenData.useInvalidator?.parsed.maxUsages}

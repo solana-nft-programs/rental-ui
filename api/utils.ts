@@ -144,3 +144,24 @@ export async function airdropNFT(
   )
   return pendingTX.signature
 }
+
+export async function getATokenAccountInfo(
+  connection: Connection,
+  mint: web3.PublicKey,
+  owner: web3.PublicKey
+): Promise<splToken.AccountInfo> {
+  const aTokenAccount = await splToken.Token.getAssociatedTokenAddress(
+    splToken.ASSOCIATED_TOKEN_PROGRAM_ID,
+    splToken.TOKEN_PROGRAM_ID,
+    mint,
+    owner
+  )
+  const token = new splToken.Token(
+    connection,
+    mint,
+    splToken.TOKEN_PROGRAM_ID,
+    // @ts-ignore
+    null
+  )
+  return token.getAccountInfo(aTokenAccount)
+}
