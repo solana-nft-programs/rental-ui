@@ -137,7 +137,7 @@ export const RentalCard = ({
       )
       const [transaction, tokenManagerId, otpKeypair] =
         await rentals.createRental(connection, wallet, {
-          mint: rentalMint,
+          rentalMint,
           paymentAmount: price ?? undefined,
           paymentMint: paymentMint ? new PublicKey(paymentMint) : undefined,
           issuerTokenAccountId: tokenAccount?.pubkey,
