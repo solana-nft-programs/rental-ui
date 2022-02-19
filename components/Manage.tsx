@@ -11,7 +11,7 @@ import { PublicKey } from '@solana/web3.js'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { stateColor } from 'common/NFTOverlay'
 import { FaLink } from 'react-icons/fa'
-import { invalidate, unissue } from '@cardinal/token-manager'
+import { invalidate, unissueToken } from '@cardinal/token-manager'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { asWallet } from 'common/Wallets'
 import { executeTransaction } from 'common/Transactions'
@@ -106,7 +106,7 @@ export const Manage = () => {
                             executeTransaction(
                               connection,
                               asWallet(wallet),
-                              await unissue(
+                              await unissueToken(
                                 connection,
                                 asWallet(wallet),
                                 tokenData?.tokenManager?.parsed.mint
