@@ -9,7 +9,7 @@ import { useWallet } from '@solana/wallet-adapter-react'
 import { Header } from 'common/Header'
 import * as splToken from '@solana/spl-token'
 import { useRouter } from 'next/router'
-import { claimLinks, rentals } from '@cardinal/token-manager'
+import { claimLinks, withClaimToken } from '@cardinal/token-manager'
 import { asWallet } from 'common/Wallets'
 import { getTokenData, TokenData } from 'api/api'
 import {
@@ -389,68 +389,50 @@ function Claim() {
       setError(null)
       setTokenDataStatus(null)
       setLoadingClaim(true)
+
+      // get otp if present
+      let otp
       if (router.asPath.includes('otp=')) {
         const [tokenManagerId, otpKeypair] = claimLinks.fromLink(
           `${process.env.BASE_URL}/claim${
             router.asPath.split('/claim')[1].split('&cluster')[0]
           }`
         )
-        const transaction = await claimLinks.claimFromLink(
-          ctx.connection,
-          asWallet(wallet),
-          tokenManagerId,
-          otpKeypair
-        )
-        await executeTransaction(
-          ctx.connection,
-          asWallet(wallet),
-          transaction,
-          {
-            confirmOptions: { commitment: 'confirmed', maxRetries: 3 },
-            notificationConfig: {},
-            signers: [otpKeypair],
-          }
-        )
-      } else {
-        const transaction = new Transaction()
-        if (
-          tokenData?.claimApprover?.parsed.paymentAmount &&
-          tokenData?.tokenManager?.parsed.paymentMint.toString() ===
-            WRAPPED_SOL_MINT.toString() &&
-          tokenData?.claimApprover?.parsed.paymentAmount.gt(new BN(0))
-        ) {
-          const amountToWrap =
-            tokenData?.claimApprover?.parsed.paymentAmount.sub(
-              userPaymentTokenAccount?.amount || 0
-            )
-          if (amountToWrap.gt(new BN(0))) {
-            withWrapSol(
-              transaction,
-              ctx.connection,
-              asWallet(wallet),
-              amountToWrap
-            )
-          }
-        }
-        const claimTx = await rentals.claimRental(
-          ctx.connection,
-          asWallet(wallet),
-          tokenManagerId!
-        )
-        transaction.instructions = [
-          ...transaction.instructions,
-          ...claimTx.instructions,
-        ]
-        await executeTransaction(
-          ctx.connection,
-          asWallet(wallet),
-          transaction,
-          {
-            confirmOptions: { commitment: 'confirmed', maxRetries: 3 },
-            notificationConfig: {},
-          }
-        )
+        otp = otpKeypair
       }
+
+      // wrap sol if there is payment required
+      const transaction = new Transaction()
+      if (
+        tokenData?.claimApprover?.parsed.paymentAmount &&
+        tokenData?.tokenManager?.parsed.paymentMint.toString() ===
+          WRAPPED_SOL_MINT.toString() &&
+        tokenData?.claimApprover?.parsed.paymentAmount.gt(new BN(0))
+      ) {
+        const amountToWrap = tokenData?.claimApprover?.parsed.paymentAmount.sub(
+          userPaymentTokenAccount?.amount || 0
+        )
+        if (amountToWrap.gt(new BN(0))) {
+          await withWrapSol(
+            transaction,
+            ctx.connection,
+            asWallet(wallet),
+            amountToWrap
+          )
+        }
+      }
+      await withClaimToken(
+        transaction,
+        ctx.connection,
+        asWallet(wallet),
+        tokenManagerId!,
+        otp
+      )
+      await executeTransaction(ctx.connection, asWallet(wallet), transaction, {
+        confirmOptions: { commitment: 'confirmed', maxRetries: 3 },
+        signers: otp ? [otp] : [],
+        notificationConfig: {},
+      })
       setClaimed(true)
       getMetadata()
     } catch (e: any) {

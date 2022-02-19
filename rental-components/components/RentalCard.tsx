@@ -20,7 +20,7 @@ import { MintPriceSelector } from 'rental-components/common/MintPriceSelector'
 import { TokenData } from 'api/api'
 import { getQueryParam, longDateString } from 'common/utils'
 import { NFTOverlay } from 'common/NFTOverlay'
-import { claimLinks, rentals } from '@cardinal/token-manager'
+import { claimLinks, issueToken } from '@cardinal/token-manager'
 import { executeTransaction } from 'common/Transactions'
 import { notify } from 'common/Notification'
 import { FaLink, FaEye } from 'react-icons/fa'
@@ -135,8 +135,10 @@ export const RentalCard = ({
       const rentalMint = new PublicKey(
         tokenAccount?.account.data.parsed.info.mint
       )
-      const [transaction, tokenManagerId, otpKeypair] =
-        await rentals.createRental(connection, wallet, {
+      const [transaction, tokenManagerId, otpKeypair] = await issueToken(
+        connection,
+        wallet,
+        {
           mint: rentalMint,
           paymentAmount: price ?? undefined,
           paymentMint: paymentMint ? new PublicKey(paymentMint) : undefined,
@@ -149,7 +151,8 @@ export const RentalCard = ({
               : TokenManagerKind.Managed,
           invalidationType,
           visibility,
-        })
+        }
+      )
       await executeTransaction(connection, wallet, transaction, {
         silent: false,
         callback: refreshTokenAccounts,

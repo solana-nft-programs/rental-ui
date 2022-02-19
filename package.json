@@ -8,7 +8,7 @@
   "dependencies": {
     "@babel/core": "^7.17.0",
     "@cardinal/namespaces-components": "^2.5.0",
-    "@cardinal/token-manager": "^0.1.5",
+    "@cardinal/token-manager": "^0.2.0",
     "@emotion/babel-plugin": "^11.7.2",
     "@emotion/babel-preset-css-prop": "^11.2.0",
     "@emotion/css": "^11.7.1",
@@ -17,7 +17,7 @@
     "@emotion/styled": "^11.6.0",
     "@google/model-viewer": "^1.10.1",
     "@metaplex-foundation/mpl-token-metadata": "^1.2.0",
-    "@project-serum/anchor": "^0.20.1",
+    "@project-serum/anchor": "^0.21.0",
     "@saberhq/solana-contrib": "^1.12.36",
     "@saberhq/token-utils": "^1.12.36",
     "@solana/buffer-layout": "^4.0.0",
