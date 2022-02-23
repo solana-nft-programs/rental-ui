@@ -339,7 +339,12 @@ function Claim() {
         setUserPaymentTokenAccount(userPaymentTokenAccountData)
       } catch (e) {
         console.log(e)
-        setPaymentTokenAccountError(true)
+        if (
+          tokenData?.tokenManager?.parsed.paymentMint.toString() !==
+          WRAPPED_SOL_MINT
+        ) {
+          setPaymentTokenAccountError(true)
+        }
       }
     }
   }
@@ -566,7 +571,7 @@ function Claim() {
                           </Button>
                         </div>
                       ) : paymentTokenAccountError ? (
-                        <div>Error</div>
+                        <div>No balance of payment mint</div>
                       ) : wallet.connected ? (
                         <div className="claim-icon" onClick={handleClaim}>
                           {loadingClaim ? (
