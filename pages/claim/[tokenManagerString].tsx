@@ -571,7 +571,7 @@ function Claim() {
                           </Button>
                         </div>
                       ) : paymentTokenAccountError ? (
-                        <div>No balance of payment mint</div>
+                        <div>No balance of required payment</div>
                       ) : wallet.connected ? (
                         <div className="claim-icon" onClick={handleClaim}>
                           {loadingClaim ? (

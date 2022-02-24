@@ -5,8 +5,6 @@ import { useRouter } from 'next/router'
 export interface Environment {
   label: string
   value: string
-  programId: PublicKey
-  utilityMint?: PublicKey
 }
 
 export interface EnvironmentContextValues {
@@ -18,26 +16,20 @@ export interface EnvironmentContextValues {
 export const ENVIRONMENTS: Environment[] = [
   {
     label: 'mainnet',
-    value: 'https://ssc-dao.genesysgo.net',
-    programId: new PublicKey('QtZ75QiTxebPVnZ5Wr181ZRrqcmiinpFem7oPpGbGxp'),
+    value:
+      'https://solana-api.syndica.io/access-token/V8plLDeUb6CirggrG585VAwEMT03zJuOnJUQInf6txxozYLFYqcl0EZVyU0CnQHL',
   },
   {
     label: 'testnet',
     value: 'https://api.testnet.solana.com',
-    programId: new PublicKey('QtZ75QiTxebPVnZ5Wr181ZRrqcmiinpFem7oPpGbGxp'),
-    utilityMint: new PublicKey('FSEuiPuTgqSbLbC89jgZ3umR6meYa69JwK7qVqayvjow'),
   },
   {
     label: 'devnet',
     value: 'https://api.devnet.solana.com',
-    programId: new PublicKey('QtZ75QiTxebPVnZ5Wr181ZRrqcmiinpFem7oPpGbGxp'),
-    utilityMint: new PublicKey('J68Fquq5EQ4hnYPEo68DWC6bbxBGPQUDqMFmFV5nhCrj'),
   },
   {
     label: 'localnet',
     value: 'http://127.0.0.1:8899',
-    programId: new PublicKey('QtZ75QiTxebPVnZ5Wr181ZRrqcmiinpFem7oPpGbGxp'),
-    utilityMint: new PublicKey('62JGbV4wX3EmKkSNDFiqq18bAMwzhG5VDrZVGZjwWwSP'),
   },
 ]
 
@@ -62,7 +54,7 @@ export function EnvironmentProvider({
   }, [cluster])
 
   const connection = useMemo(
-    () => new Connection(environment.value, 'recent'),
+    () => new Connection(environment.value, { commitment: 'recent' }),
     [environment]
   )
 
