@@ -17,32 +17,7 @@ import { asWallet } from 'common/Wallets'
 import { executeTransaction } from 'common/Transactions'
 import { useUserTokenData } from 'providers/TokenDataProvider'
 import { BN } from '@project-serum/anchor'
-
-const StyledTag = styled.span`
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  span {
-    border: none;
-    background: none;
-    display: block;
-  }
-  button {
-    margin: 5px 0px;
-  }
-`
-
-const Tag = styled.div<{ state: TokenManagerState }>`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 12px;
-  cursor: pointer;
-  color: ${({ state }) => stateColor(state, true)};
-`
+import { StyledTag, Tag } from 'common/Tags'
 
 const handleCopy = (shareUrl: string) => {
   navigator.clipboard.writeText(shareUrl)

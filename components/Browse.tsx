@@ -1,7 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { NFT, TokensOuter } from 'common/NFT'
-import styled from '@emotion/styled'
-import { useManagedTokens } from 'providers/ManagedTokensProvider'
 import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { Button } from 'rental-components/common/Button'
@@ -9,13 +7,11 @@ import { notify } from 'common/Notification'
 import { shortPubKey } from 'common/utils'
 import { PublicKey, Transaction } from '@solana/web3.js'
 import { useWallet } from '@solana/wallet-adapter-react'
-import { stateColor } from 'common/NFTOverlay'
 import { FaLink } from 'react-icons/fa'
 import { invalidate, unissueToken } from '@cardinal/token-manager'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { asWallet } from 'common/Wallets'
 import { executeTransaction } from 'common/Transactions'
-import { useUserTokenData } from 'providers/TokenDataProvider'
 import { BN } from '@project-serum/anchor'
 import { useIssuedTokens } from 'providers/IssuedTokensProvider'
 import { findClaimApproverAddress } from '@cardinal/token-manager/dist/cjs/programs/claimApprover/pda'
@@ -23,32 +19,8 @@ import { TokenData } from 'api/api'
 import { WRAPPED_SOL_MINT } from 'providers/PaymentMintsProvider'
 import * as splToken from '@solana/spl-token'
 import { withWrapSol } from 'api/wrappedSol'
-import { claimLinks, withClaimToken } from '@cardinal/token-manager'
-
-const StyledTag = styled.span`
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  span {
-    border: none;
-    background: none;
-    display: block;
-    width: 100%;
-  }
-  button {
-    margin: 5px 0px;
-  }
-`
-
-const Tag = styled.div<{ state: TokenManagerState }>`
-  display: flex;
-  color: white;
-  font-size: 12px;
-  cursor: pointer;
-  color: ${({ state }) => stateColor(state, true)};
-`
+import { withClaimToken } from '@cardinal/token-manager'
+import { StyledTag, Tag } from 'common/Tags'
 
 const handleCopy = (shareUrl: string) => {
   navigator.clipboard.writeText(shareUrl)
@@ -91,7 +63,6 @@ export const Browse = () => {
   const handleClaim = async (tokenData: TokenData) => {
     try {
       // wrap sol if there is payment required
-      let otp
       const transaction = new Transaction()
       if (
         tokenData?.claimApprover?.parsed.paymentAmount &&
@@ -115,18 +86,17 @@ export const Browse = () => {
         transaction,
         connection,
         asWallet(wallet),
-        tokenData.tokenManager?.pubkey!,
-        otp
+        tokenData.tokenManager?.pubkey!
       )
       await executeTransaction(connection, asWallet(wallet), transaction, {
         confirmOptions: { commitment: 'confirmed', maxRetries: 3 },
-        signers: otp ? [otp] : [],
+        signers: [],
         notificationConfig: {},
       })
       refreshIssuedTokens()
       alert('NFT has been claimed!')
     } catch (e: any) {
-    } finally {
+      console.log(e)
     }
   }
 
@@ -192,7 +162,7 @@ export const Browse = () => {
                           {tokenData.tokenManager?.parsed.issuer.toBase58() ===
                             wallet.publicKey?.toBase58() && (
                             <p
-                              className="text-xs float-right w-max text-gray-400 hover:cursor-pointer hover:text-gray-300"
+                              className="float-right w-max text-xs text-gray-400 hover:cursor-pointer hover:text-gray-300"
                               onClick={async () =>
                                 executeTransaction(
                                   connection,
