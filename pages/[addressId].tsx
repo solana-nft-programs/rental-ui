@@ -17,6 +17,7 @@ import { asWallet } from 'common/Wallets'
 import { Airdrop } from 'common/Airdrop'
 import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 import { Manage } from 'components/Manage'
+import { Browse } from 'components/Browse'
 
 export const TokensOuter = styled.div`
   display: flex;
@@ -163,7 +164,7 @@ function Profile() {
         tabs={[
           { name: 'Wallet', anchor: 'wallet' },
           { name: 'Manage', anchor: 'manage' },
-          { name: 'Browse', anchor: 'browse', disabled: true },
+          { name: 'Browse', anchor: 'browse'},
         ]}
       />
       <StyledContainer style={{ marginTop: '120px' }}>
@@ -193,6 +194,7 @@ function Profile() {
                 </TokensOuter>
               ),
               manage: <Manage />,
+              browse: <Browse />,
             }[tab || 'wallet']
           }
         </div>
