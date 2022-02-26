@@ -16,8 +16,7 @@ export interface EnvironmentContextValues {
 export const ENVIRONMENTS: Environment[] = [
   {
     label: 'mainnet',
-    value:
-      'https://solana-api.syndica.io/access-token/V8plLDeUb6CirggrG585VAwEMT03zJuOnJUQInf6txxozYLFYqcl0EZVyU0CnQHL',
+    value: 'https://ssc-dao.genesysgo.net',
   },
   {
     label: 'testnet',
