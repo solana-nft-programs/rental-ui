@@ -1,5 +1,6 @@
+import { MetadataData } from '@metaplex-foundation/mpl-token-metadata'
 import { programs } from '@metaplex/js'
-import { Connection } from '@solana/web3.js'
+import { Connection, PublicKey } from '@solana/web3.js'
 
 const {
   metadata: { Metadata, MasterEdition, MetadataKey },
@@ -16,7 +17,7 @@ export type EditionInfo = {
 }
 
 export default async function getEditionInfo(
-  metadata: programs.metadata.Metadata | null | undefined,
+  metadata: { pubkey: PublicKey; data: MetadataData } | null | undefined,
   connection: Connection
 ): Promise<EditionInfo> {
   if (!metadata) return {}

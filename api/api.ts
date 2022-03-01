@@ -43,7 +43,7 @@ export type TokenData = {
     account: AccountInfo<ParsedAccountData>
   }
   tokenManager?: AccountData<TokenManagerData>
-  metaplexData?: metaplex.Metadata | null
+  metaplexData?: { pubkey: PublicKey; data: metaplex.MetadataData } | null
   editionData?: metaplex.Edition
   metadata?: any
   claimApprover?: AccountData<PaidClaimApproverData>
@@ -127,22 +127,39 @@ export async function getTokenAccountsWithData(
       [[], [], [], []]
     )
 
-  const metaplexData = await Promise.all(
-    metadataIds[0].map(async (id) => {
-      try {
-        return await metaplex.Metadata.load(connection, id)
-      } catch (e) {
-        // console.log(e)
-        return null
+  const [
+    metaplexAccountInfos,
+    tokenManagers,
+    timeInvalidators,
+    useInvalidators,
+  ] = await Promise.all([
+    connection.getMultipleAccountsInfo(metadataIds[0]),
+    tokenManager.accounts.getTokenManagers(connection, metadataIds[1]),
+    timeInvalidator.accounts.getTimeInvalidators(connection, metadataIds[2]),
+    useInvalidator.accounts.getUseInvalidators(connection, metadataIds[3]),
+  ])
+
+  const metaplexData = metaplexAccountInfos.map((accountInfo, i) => {
+    let md
+    try {
+      md = {
+        pubkey: metadataIds[0][i],
+        ...accountInfo,
+        data: metaplex.MetadataData.deserialize(accountInfo?.data as Buffer),
       }
-    })
-  )
+    } catch (e) {}
+    return md
+  })
+
   const metadata = await Promise.all(
     metaplexData.map(async (md) => {
       try {
         if (!md?.data.data.uri) return null
         const json = await fetch(md.data.data.uri).then((r) => r.json())
-        return { pubkey: md.pubkey, data: json }
+        return {
+          pubkey: md.pubkey,
+          data: json,
+        }
       } catch (e) {
         // console.log(e)
         return null
@@ -150,32 +167,6 @@ export async function getTokenAccountsWithData(
     })
   )
 
-  // console.log('------->', metadataIds[1])
-  // for (let i = 0; i < metadataIds[1].length; i++) {
-  //   try {
-  //     const TKM = await tokenManager.accounts.getTokenManager(
-  //       connection,
-  //       metadataIds[1][i]
-  //     )
-  //     console.log('-->', i, TKM)
-  //   } catch (e) {
-  //     console.log(e)
-  //   }
-  // }
-  // try {
-  //   const TKMs = await tokenManager.accounts.getTokenManagers(
-  //     connection,
-  //     metadataIds[1]
-  //   )
-  //   console.log('--===>', TKMs)
-  // } catch (e) {
-  //   console.log(e)
-  // }
-  const [tokenManagers, timeInvalidators, useInvalidators] = await Promise.all([
-    tokenManager.accounts.getTokenManagers(connection, metadataIds[1]),
-    timeInvalidator.accounts.getTimeInvalidators(connection, metadataIds[2]),
-    useInvalidator.accounts.getUseInvalidators(connection, metadataIds[3]),
-  ])
   return metadataTuples.map(
     ([
       metaplexId,
@@ -290,51 +281,62 @@ export async function getTokenDatas(
       [[], [], [], [], []]
     )
 
-  const metaplexData = await Promise.all(
-    metadataIds[0].map(async (id) => {
-      try {
-        return await metaplex.Metadata.load(connection, id)
-      } catch (e) {
-        // console.log(e)
-        return null
+  const [
+    tokenAccounts,
+    metaplexAccountInfos,
+    claimApprovers,
+    timeInvalidators,
+    useInvalidators,
+  ] = await Promise.all([
+    connection
+      .getMultipleAccountsInfo(
+        metadataIds[4].filter((pk) => pk),
+        {
+          encoding: 'jsonParsed',
+        }
+      )
+      .then((tokenAccounts) =>
+        tokenAccounts.map(
+          (acc) => (acc?.data as ParsedAccountData).parsed?.info
+        )
+      )
+      .catch((e) => {
+        console.log('Failed ot get token accounts', e)
+        return []
+      }) as Promise<(spl.AccountInfo | null)[]>,
+    connection.getMultipleAccountsInfo(metadataIds[0]),
+    claimApprover.accounts.getClaimApprovers(connection, metadataIds[1]),
+    timeInvalidator.accounts.getTimeInvalidators(connection, metadataIds[2]),
+    useInvalidator.accounts.getUseInvalidators(connection, metadataIds[3]),
+  ])
+
+  const metaplexData = metaplexAccountInfos.map((accountInfo, i) => {
+    let md
+    try {
+      md = {
+        pubkey: metadataIds[0][i],
+        ...accountInfo,
+        data: metaplex.MetadataData.deserialize(accountInfo?.data as Buffer),
       }
-    })
-  )
+    } catch (e) {}
+    return md
+  })
+
   const metadata = await Promise.all(
     metaplexData.map(async (md) => {
       try {
         if (!md?.data.data.uri) return null
         const json = await fetch(md.data.data.uri).then((r) => r.json())
-        return { pubkey: md.pubkey, data: json }
+        return {
+          pubkey: md.pubkey,
+          data: json,
+        }
       } catch (e) {
         // console.log(e)
         return null
       }
     })
   )
-
-  const [tokenAccounts, claimApprovers, timeInvalidators, useInvalidators] =
-    await Promise.all([
-      connection
-        .getMultipleAccountsInfo(
-          metadataIds[4].filter((pk) => pk),
-          {
-            encoding: 'jsonParsed',
-          }
-        )
-        .then((tokenAccounts) =>
-          tokenAccounts.map(
-            (acc) => (acc?.data as ParsedAccountData).parsed?.info
-          )
-        )
-        .catch((e) => {
-          console.log('Failed ot get token accounts', e)
-          return []
-        }) as Promise<(spl.AccountInfo | null)[]>,
-      claimApprover.accounts.getClaimApprovers(connection, metadataIds[1]),
-      timeInvalidator.accounts.getTimeInvalidators(connection, metadataIds[2]),
-      useInvalidator.accounts.getUseInvalidators(connection, metadataIds[3]),
-    ])
 
   return metadataTuples.map(
     (
@@ -344,7 +346,7 @@ export async function getTokenDatas(
         claimApproverId,
         timeInvalidatorId,
         useInvalidatorId,
-        tokenAccountId,
+        _tokenAccountId,
       ],
       i
     ) => ({

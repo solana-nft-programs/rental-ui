@@ -1,6 +1,5 @@
 import React from 'react'
 import { NFT, TokensOuter } from 'common/NFT'
-import styled from '@emotion/styled'
 import { useManagedTokens } from 'providers/ManagedTokensProvider'
 import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
@@ -9,7 +8,6 @@ import { notify } from 'common/Notification'
 import { shortPubKey } from 'common/utils'
 import { PublicKey } from '@solana/web3.js'
 import { useWallet } from '@solana/wallet-adapter-react'
-import { stateColor } from 'common/NFTOverlay'
 import { FaLink } from 'react-icons/fa'
 import { invalidate, unissueToken } from '@cardinal/token-manager'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
@@ -17,32 +15,7 @@ import { asWallet } from 'common/Wallets'
 import { executeTransaction } from 'common/Transactions'
 import { useUserTokenData } from 'providers/TokenDataProvider'
 import { BN } from '@project-serum/anchor'
-
-const StyledTag = styled.span`
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  span {
-    border: none;
-    background: none;
-    display: block;
-  }
-  button {
-    margin: 5px 0px;
-  }
-`
-
-const Tag = styled.div<{ state: TokenManagerState }>`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 12px;
-  cursor: pointer;
-  color: ${({ state }) => stateColor(state, true)};
-`
+import { StyledTag, Tag } from 'common/Tags'
 
 const handleCopy = (shareUrl: string) => {
   navigator.clipboard.writeText(shareUrl)
@@ -54,7 +27,6 @@ export const Manage = () => {
   const wallet = useWallet()
   const { refreshTokenAccounts } = useUserTokenData()
   const { managedTokens, loaded } = useManagedTokens()
-  console.log(managedTokens)
   return (
     <TokensOuter>
       {managedTokens && managedTokens.length > 0 ? (
