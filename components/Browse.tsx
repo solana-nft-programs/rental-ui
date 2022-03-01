@@ -40,7 +40,7 @@ export const Browse = () => {
     async function filterIssuedTokens() {
       const tokens = []
       for (let token of issuedTokens) {
-        if (token.claimApprover?.pubkey === undefined) {
+        if (!token.claimApprover?.pubkey) {
           tokens.push(token)
         } else {
           let [tokenClaimApprover] = await findClaimApproverAddress(
