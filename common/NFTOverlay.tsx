@@ -81,12 +81,14 @@ interface NFTOverlayProps {
   paymentAmount?: number
   paymentMint?: string
   expiration?: number
+  durationSeconds?: number
   usages?: number
   maxUsages?: number
   revocable?: boolean
   extendable?: boolean
   returnable?: boolean
   lineHeight?: number
+  stateChangedAt?: number
 }
 
 export const stateColor = (state: TokenManagerState, light = false): string => {
@@ -131,21 +133,49 @@ function getBoxShadow(
   }
 }
 
+export function secondstoDuration(durationSeconds: number) {
+  const years = Math.floor(durationSeconds / 31536000)
+  const months = Math.floor((durationSeconds % 31536000) / 2592000)
+  const weeks = Math.floor((durationSeconds % 2592000) / 604800)
+  const days = Math.floor((durationSeconds % 604800) / 86400)
+  const hours = Math.floor((durationSeconds % 86400) / 3600)
+  const minutes = Math.floor((durationSeconds % 3600) / 60)
+  const seconds = durationSeconds % 60
+  let duration = 'Duration: '
+  const vals = [
+    `${years}y`,
+    `${months}m`,
+    `${weeks}w`,
+    `${days}d`,
+    `${hours}h`,
+    `${minutes}m`,
+    `${seconds}s`,
+  ]
+  for (const val of vals) {
+    if (parseInt(val.substring(0, val.length - 1)) > 0) {
+      duration += val + ' '
+    }
+  }
+  return duration
+}
+
 export function NFTOverlay({
   shadow = true,
   state = 0,
   paymentAmount,
   paymentMint,
   expiration,
+  durationSeconds,
   usages,
   maxUsages,
   revocable,
   extendable,
   returnable,
+  stateChangedAt,
   lineHeight = 20,
 }: NFTOverlayProps) {
   const { UTCNow } = useUTCNow()
-  const { paymentMintInfos } = usePaymentMints()
+  const { paymentMintInfos } = usePaymentMints()  
 
   return (
     <StyledOverlay
@@ -198,6 +228,17 @@ export function NFTOverlay({
         {expiration && (
           <div className="expiration">
             {utils.getExpirationString(expiration, UTCNow)}
+          </div>
+        )}
+        {!expiration && durationSeconds && state !== TokenManagerState.Claimed && (
+          <div className="expiration">{secondstoDuration(durationSeconds)}</div>
+        )}
+        {!expiration && durationSeconds && stateChangedAt && state == TokenManagerState.Claimed && (
+          <div className="expiration">
+            {utils.getExpirationString(
+              stateChangedAt + durationSeconds,
+              UTCNow
+            )}
           </div>
         )}
         {usages != undefined && (

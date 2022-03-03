@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
+import * as anchor from '@project-serum/anchor'
 import styled from '@emotion/styled'
-import { DatePicker, Select } from 'antd'
+import { DatePicker, InputNumber, Select } from 'antd'
 import { Connection, PublicKey } from '@solana/web3.js'
 import { Wallet } from '@saberhq/solana-contrib'
 import { ButtonWithFooter } from 'rental-components/common/ButtonWithFooter'
@@ -31,6 +32,8 @@ import {
 } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import getEditionInfo, { EditionInfo } from 'api/editions'
 import { useUserTokenData } from 'providers/TokenDataProvider'
+import { fmtMintAmount } from 'common/units'
+import { usePaymentMints } from 'providers/PaymentMintsProvider'
 const { Option } = Select
 
 const NFTOuter = styled.div`
@@ -120,38 +123,146 @@ export const RentalCard = ({
     getEdition()
   }, [metaplexData])
 
+  const durationData: { [key: string]: number } = {
+    Minutes: 60,
+    Hours: 3600,
+    Days: 86400,
+    Weeks: 604800,
+    Months: 2592000,
+    Years: 31104000,
+  }
+  const defaultDurationCategory = Object.keys(durationData)[2]
+  const { paymentMintInfos } = usePaymentMints()
+
   // form
   const [price, setPrice] = useState(0)
   const [paymentMint, setPaymentMint] = useState(PAYMENT_MINTS[0].mint)
   const [expiration, setExpiration] = useState<number | null>(null)
+  const [durationAmount, setDurationAmount] = useState<number | null>(null)
+  const [durationCategory, setDurationCategory] = useState<string | null>(
+    defaultDurationCategory
+  )
+  const [extensionPaymentAmount, setExtensionPaymentAmount] = useState(0)
+  const [extensionPaymentMint, setExtensionPaymentMint] = useState(
+    PAYMENT_MINTS[0].mint
+  )
+  const [extensionDurationAmount, setExtensionDurationAmount] = useState<
+    number | null
+  >(null)
+  const [extensionDurationCategory, setExtensionDurationCategory] = useState<
+    string | null
+  >(defaultDurationCategory)
+  const [extensionMaxExpiration, setExtensionMaxExpiration] = useState<
+    number | null
+  >(null)
+
   const [maxUsages, setMaxUsages] = useState<number | null>(null)
   const [visibility, setVisibiliy] = useState<'private' | 'public'>('public')
+
+  const [showAdditionalOptions, setShowAdditionalOptions] = useState(false)
+  const [showUsages, setShowUsages] = useState(false)
+  const [showExpiration, setShowExpiration] = useState(false)
+  const [showDuration, setShowDuration] = useState(false)
+  const [showExtendDuration, setShowExtendDuration] = useState(false)
+
+  const handleSelection = (value: string) => {
+    if (value == 'expiration') {
+      if (showDuration) {
+        setShowDuration(!showDuration)
+      }
+      setShowExpiration(!showExpiration)
+    } else if (value == 'duration') {
+      if (showExpiration) {
+        setShowExpiration(!showExpiration)
+      }
+      if (showDuration) {
+        setShowExtendDuration(false)
+      }
+      setShowDuration(!showDuration)
+    }
+
+    setExpiration(null)
+    setDurationAmount(null)
+    setDurationCategory(defaultDurationCategory)
+    nullExtensionProperties()
+  }
+
+  const nullExtensionProperties = () => {
+    setExtensionPaymentAmount(0)
+    setExtensionPaymentMint(PAYMENT_MINTS[0].mint)
+    setExtensionDurationAmount(null)
+    setExtensionDurationCategory(defaultDurationCategory)
+    setExtensionMaxExpiration(null)
+  }
+
+  const hasAllExtensionProperties = () => {
+    return (
+      extensionPaymentAmount &&
+      extensionDurationAmount &&
+      extensionPaymentMint &&
+      extensionDurationCategory
+    )
+  }
+
   const handleRental = async () => {
     try {
       if (!tokenAccount) {
         throw 'Token acount not found'
       }
+      if (showExtendDuration && !hasAllExtensionProperties()) {
+        throw 'Please fill out all extension time and price fields'
+      }
+
       setLoading(true)
       const rentalMint = new PublicKey(
         tokenAccount?.account.data.parsed.info.mint
       )
+
+      const issueParams = {
+        claimPayment:
+          price && paymentMint
+            ? {
+                paymentAmount: price,
+                paymentMint: new PublicKey(paymentMint),
+              }
+            : undefined,
+        timeInvalidation:
+          expiration || (durationAmount && durationCategory)
+            ? {
+                expiration: expiration || undefined,
+                durationSeconds:
+                  durationAmount && durationCategory
+                    ? durationAmount * durationData[durationCategory]
+                    : undefined,
+                extension: hasAllExtensionProperties()
+                  ? {
+                      extensionPaymentAmount: extensionPaymentAmount,
+                      extensionDurationSeconds:
+                        extensionDurationAmount! *
+                        durationData[extensionDurationCategory!],
+                      paymentMint: new PublicKey(extensionPaymentMint),
+                      maxExpiration: extensionMaxExpiration
+                        ? extensionMaxExpiration
+                        : undefined,
+                    }
+                  : undefined,
+              }
+            : undefined,
+        usages: maxUsages || undefined,
+        mint: rentalMint,
+        issuerTokenAccountId: tokenAccount?.pubkey,
+        kind:
+          editionInfo.edition || editionInfo.masterEdition
+            ? TokenManagerKind.Edition
+            : TokenManagerKind.Managed,
+        invalidationType,
+        visibility,
+      }
+      
       const [transaction, tokenManagerId, otpKeypair] = await issueToken(
         connection,
         wallet,
-        {
-          mint: rentalMint,
-          paymentAmount: price ?? undefined,
-          paymentMint: paymentMint ? new PublicKey(paymentMint) : undefined,
-          issuerTokenAccountId: tokenAccount?.pubkey,
-          usages: maxUsages || undefined,
-          expiration: expiration || undefined,
-          kind:
-            editionInfo.edition || editionInfo.masterEdition
-              ? TokenManagerKind.Edition
-              : TokenManagerKind.Managed,
-          invalidationType,
-          visibility,
-        }
+        issueParams
       )
       await executeTransaction(connection, wallet, transaction, {
         silent: false,
@@ -231,65 +342,58 @@ export const RentalCard = ({
           {editionInfo && getEditionPill(editionInfo)}
         </ImageWrapper>
         <DetailsWrapper>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              width: '100%',
-              gap: '2%',
-              alignItems: 'flex-start',
-            }}
-          >
-            <StepDetail
-              width="49%"
-              icon={<BiTimer />}
-              title="Duration"
-              description={
-                <div>
-                  <DatePicker
-                    style={{
-                      borderRadius: '4px',
-                      zIndex: 99999,
-                    }}
-                    showTime
-                    onChange={(e) =>
-                      setExpiration(e ? e.valueOf() / 1000 : null)
-                    }
-                  />
-                </div>
-              }
-            />
-            <StepDetail
-              width="49%"
-              icon={<BiQrScan />}
-              title="Uses"
-              description={
-                <Fieldset>
-                  <InputBorder>
-                    <Input
-                      name="tweet"
-                      type="number"
-                      onChange={(e) => setMaxUsages(parseInt(e.target.value))}
-                    />
-                  </InputBorder>
-                </Fieldset>
-              }
-            />
+          <div className="flex justify-center">
+            <div className="mr-4 flex">
+              <input
+                className="my-auto mr-1"
+                type="checkbox"
+                checked={showUsages}
+                onClick={() => setShowUsages(!showUsages)}
+              />
+              <span className="">Add Usages</span>
+            </div>
+            <div className="mr-4 flex">
+              <input
+                className="my-auto mr-1"
+                type="checkbox"
+                checked={showExpiration}
+                onClick={() => handleSelection('expiration')}
+              />
+              <span className="">Add Expiration</span>
+            </div>
+            <div className="mr-4 flex">
+              <input
+                className="my-auto mr-1"
+                type="checkbox"
+                checked={showDuration}
+                onClick={() => handleSelection('duration')}
+              />
+              <span className="">Add Duration</span>
+            </div>
+            <div className="mr-4 flex">
+              <input
+                disabled={showExpiration}
+                className="my-auto mr-1"
+                type="checkbox"
+                checked={showDuration && showExtendDuration}
+                onClick={() => {
+                  setShowExtendDuration(!showExtendDuration)
+                  setShowDuration(true)
+                }}
+              />
+              <span className="">
+                {showExpiration ? (
+                  <del>Extend Duration</del>
+                ) : (
+                  'Extend Duration'
+                )}
+              </span>
+            </div>
           </div>
-
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              width: '100%',
-              gap: '2%',
-              alignItems: 'flex-start',
-            }}
-          >
+          <div className="grid grid-cols-2 gap-4">
             <StepDetail
-              width="49%"
               icon={<ImPriceTags />}
-              title="Pricing Details"
+              title="Rental Price"
               description={
                 <>
                   <MintPriceSelector
@@ -302,70 +406,214 @@ export const RentalCard = ({
                 </>
               }
             />
-            <StepDetail
-              width="49%"
-              icon={<GrReturn />}
-              title="Invalidation"
-              description={
-                <Select
-                  style={{ width: '100%' }}
-                  onChange={(e) => setInvalidationType(e)}
-                  defaultValue={invalidationType}
-                >
-                  {[
-                    {
-                      type: InvalidationType.Return,
-                      label: 'Return',
-                    },
-                    {
-                      type: InvalidationType.Invalidate,
-                      label: 'Invalidate',
-                    },
-                  ].map(({ label, type }) => (
-                    <Option key={type} value={type}>
-                      {label}
-                    </Option>
-                  ))}
-                </Select>
-              }
-            />
+            {showUsages ? (
+              <StepDetail
+                icon={<BiQrScan />}
+                title="Uses"
+                description={
+                  <Fieldset>
+                    <InputBorder>
+                      <Input
+                        name="tweet"
+                        type="number"
+                        onChange={(e) => setMaxUsages(parseInt(e.target.value))}
+                      />
+                    </InputBorder>
+                  </Fieldset>
+                }
+              />
+            ) : null}
+            {showExpiration ? (
+              <StepDetail
+                icon={<BiTimer />}
+                title="Expiration"
+                description={
+                  <div>
+                    <DatePicker
+                      style={{
+                        borderRadius: '4px',
+                        zIndex: 99999,
+                      }}
+                      showTime
+                      onChange={(e) =>
+                        setExpiration(e ? e.valueOf() / 1000 : null)
+                      }
+                    />
+                  </div>
+                }
+              />
+            ) : null}
+
+            {showDuration ? (
+              <StepDetail
+                icon={<BiTimer />}
+                title="Rental Duration"
+                description={
+                  <div>
+                    <div className="flex gap-3 align-middle ">
+                      <InputNumber
+                        style={{ width: '100%' }}
+                        placeholder="# of..."
+                        min="0"
+                        step={1}
+                        onChange={(e) => setDurationAmount(parseInt(e))}
+                      />
+                      <Select
+                        className="w-max"
+                        onChange={(e) => setDurationCategory(e)}
+                        defaultValue={defaultDurationCategory}
+                      >
+                        {Object.keys(durationData).map((category) => (
+                          <Option key={category} value={category}>
+                            {durationAmount && durationAmount == 1
+                              ? category.substring(0, category.length - 1)
+                              : category}
+                          </Option>
+                        ))}
+                      </Select>
+                    </div>
+                  </div>
+                }
+              />
+            ) : null}
+            {showDuration && showExtendDuration ? (
+              <>
+                <StepDetail
+                  icon={<ImPriceTags />}
+                  title="Extension Price"
+                  description={
+                    <>
+                      <MintPriceSelector
+                        disabled={visibility === 'private'}
+                        price={extensionPaymentAmount}
+                        mint={extensionPaymentMint}
+                        handlePrice={setExtensionPaymentAmount}
+                        handleMint={setExtensionPaymentMint}
+                      />
+                    </>
+                  }
+                />
+                <StepDetail
+                  icon={<BiTimer />}
+                  title="Extension Duration"
+                  description={
+                    <div>
+                      <div className="flex gap-3 align-middle ">
+                        <InputNumber
+                          style={{ width: '100%' }}
+                          placeholder="# of..."
+                          min="0"
+                          step={1}
+                          onChange={(e) =>
+                            setExtensionDurationAmount(parseInt(e))
+                          }
+                        />
+                        <Select
+                          className="w-max"
+                          onChange={(e) => setExtensionDurationCategory(e)}
+                          defaultValue={defaultDurationCategory}
+                        >
+                          {Object.keys(durationData).map((category) => (
+                            <Option key={category} value={category}>
+                              {durationAmount && durationAmount == 1
+                                ? category.substring(0, category.length - 1)
+                                : category}
+                            </Option>
+                          ))}
+                        </Select>
+                      </div>
+                    </div>
+                  }
+                />
+              </>
+            ) : null}
+            {/* {showDuration && showExtendDuration ? (
+              
+            ) : null} */}
+            {showDuration && showExtendDuration ? (
+              <StepDetail
+                icon={<BiTimer />}
+                title="Max Expiration"
+                description={
+                  <div>
+                    <DatePicker
+                      style={{
+                        borderRadius: '4px',
+                        zIndex: 99999,
+                      }}
+                      showTime
+                      onChange={(e) =>
+                        setExtensionMaxExpiration(e ? e.valueOf() / 1000 : null)
+                      }
+                    />
+                  </div>
+                }
+              />
+            ) : null}
           </div>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              width: '100%',
-              gap: '2%',
-              alignItems: 'flex-start',
-            }}
-          >
-            <StepDetail
-              width="49%"
-              icon={<FaEye />}
-              title="Visibility"
-              description={
-                <Select
-                  style={{ width: '100%' }}
-                  onChange={(e) => setVisibiliy(e)}
-                  defaultValue={visibility}
-                >
-                  {[
-                    {
-                      type: 'public',
-                      label: 'Public',
-                    },
-                    {
-                      type: 'private',
-                      label: 'Private',
-                    },
-                  ].map(({ label, type }) => (
-                    <Option key={type} value={type}>
-                      {label}
-                    </Option>
-                  ))}
-                </Select>
-              }
-            />
+          <div>
+            <button
+              className="mb-2 text-blue-500"
+              onClick={() => setShowAdditionalOptions(!showAdditionalOptions)}
+            >
+              {showAdditionalOptions ? 'Hide' : 'Show'} Additional Options
+            </button>
+            {showAdditionalOptions ? (
+              <div className="flex justify-center">
+                <StepDetail
+                  icon={<GrReturn />}
+                  title="Invalidation"
+                  description={
+                    <Select
+                      style={{ width: '100%' }}
+                      onChange={(e) => setInvalidationType(e)}
+                      defaultValue={invalidationType}
+                    >
+                      {[
+                        {
+                          type: InvalidationType.Return,
+                          label: 'Return',
+                        },
+                        {
+                          type: InvalidationType.Invalidate,
+                          label: 'Invalidate',
+                        },
+                      ].map(({ label, type }) => (
+                        <Option key={type} value={type}>
+                          {label}
+                        </Option>
+                      ))}
+                    </Select>
+                  }
+                />
+                <StepDetail
+                  icon={<FaEye />}
+                  title="Visibility"
+                  description={
+                    <Select
+                      style={{ width: '100%' }}
+                      onChange={(e) => setVisibiliy(e)}
+                      defaultValue={visibility}
+                    >
+                      {[
+                        {
+                          type: 'public',
+                          label: 'Public',
+                        },
+                        {
+                          type: 'private',
+                          label: 'Private',
+                        },
+                      ].map(({ label, type }) => (
+                        <Option key={type} value={type}>
+                          {label}
+                        </Option>
+                      ))}
+                    </Select>
+                  }
+                />
+              </div>
+            ) : null}
           </div>
         </DetailsWrapper>
         <ButtonWithFooter
@@ -439,7 +687,48 @@ export const RentalCard = ({
                                 ? 'securely returned to you.'
                                 : 'invalid forever.'
                             }`
-                          : 'forever'}
+                          : durationAmount && durationCategory
+                          ? `
+                            for ${durationAmount} ${
+                              durationAmount !== 1
+                                ? durationCategory.toLocaleLowerCase()
+                                : durationCategory
+                                    .toLocaleLowerCase()
+                                    .substring(0, durationCategory.length - 1)
+                            } and then it will be ${
+                              invalidationType === InvalidationType.Return
+                                ? 'securely returned to you.'
+                                : 'invalid forever.'
+                            }`
+                          : 'forever.'}
+                        {showExtendDuration &&
+                        extensionPaymentAmount &&
+                        extensionDurationAmount &&
+                        extensionPaymentMint
+                          ? ` The claimer can choose to extend the rental at the rate of ${fmtMintAmount(
+                              paymentMintInfos[extensionPaymentMint.toString()],
+                              new anchor.BN(extensionPaymentAmount)
+                            )} ${
+                              PAYMENT_MINTS.filter(
+                                (obj) => obj.mint == extensionPaymentMint
+                              )[0].symbol
+                            } / ${extensionDurationAmount} ${
+                              extensionDurationAmount == 1
+                                ? extensionDurationCategory
+                                    ?.toLowerCase()
+                                    .substring(
+                                      0,
+                                      extensionDurationCategory.length - 1
+                                    )
+                                : extensionDurationCategory?.toLowerCase()
+                            }${
+                              extensionMaxExpiration
+                                ? ` up until ${new Date(
+                                    extensionMaxExpiration * 1000
+                                  ).toLocaleString('en-US')}.`
+                                : '.'
+                            } `
+                          : null}
                       </div>
                     </>
                   }

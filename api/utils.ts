@@ -49,21 +49,21 @@ const airdropMetadata: SimpleMetadata[] = [
     symbol: 'JAMB',
     uri: 'https://arweave.net/XBoDa9TqiOZeXW_6bV8wvieD8fMQS6IHxKipwdvduCo',
   },
-  {
-    name: 'Hacker House',
-    symbol: 'HH',
-    uri: 'https://arweave.net/DLDhnabWSXzAYktEhEKyukt3GIfagj2rPpWncw-KDQo',
-  },
-  {
-    name: '21 Club',
-    symbol: '21',
-    uri: 'https://bafkreicv3jj6oc53kid76mkk7hqsr6edrnhsydkw4do4vonq777sgfz3le.ipfs.dweb.link?ext=json',
-  },
-  {
-    name: 'Ticket',
-    symbol: 'TIX',
-    uri: 'https://arweave.net/fsepehu-6DtTorFJZfPLux-yu1XpMcAQKtiADk6zWXI',
-  },
+  // {
+  //   name: 'Hacker House',
+  //   symbol: 'HH',
+  //   uri: 'https://arweave.net/DLDhnabWSXzAYktEhEKyukt3GIfagj2rPpWncw-KDQo',
+  // },
+  // {
+  //   name: '21 Club',
+  //   symbol: '21',
+  //   uri: 'https://bafkreicv3jj6oc53kid76mkk7hqsr6edrnhsydkw4do4vonq777sgfz3le.ipfs.dweb.link?ext=json',
+  // },
+  // {
+  //   name: 'Ticket',
+  //   symbol: 'TIX',
+  //   uri: 'https://arweave.net/fsepehu-6DtTorFJZfPLux-yu1XpMcAQKtiADk6zWXI',
+  // },
 ]
 export async function airdropNFT(
   connection: Connection,

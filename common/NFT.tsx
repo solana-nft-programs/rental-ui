@@ -251,10 +251,12 @@ export function NFT({ tokenData, hideQRCode }: NFTProps) {
         {tokenManager && (
           <NFTOverlay
             state={tokenManager?.parsed.state}
-            expiration={timeInvalidator?.parsed?.expiration?.toNumber()}
+            expiration={timeInvalidator?.parsed?.expiration?.toNumber() || undefined}
+            durationSeconds={timeInvalidator?.parsed?.durationSeconds?.toNumber() || undefined}
             usages={useInvalidator?.parsed.usages}
             maxUsages={useInvalidator?.parsed.maxUsages}
             lineHeight={14}
+            stateChangedAt={tokenManager?.parsed.stateChangedAt?.toNumber() || undefined}
           />
         )}
         {metadata &&

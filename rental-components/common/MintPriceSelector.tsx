@@ -10,18 +10,20 @@ export const MintPriceSelector = ({
   price,
   mint,
   disabled,
+  mintDisabled,
   handlePrice,
   handleMint,
 }: {
   price: number
   mint: string
   disabled?: boolean
+  mintDisabled?:boolean
   handlePrice: (p: number) => void
   handleMint: (m: string) => void
 }) => {
   const { paymentMintInfos } = usePaymentMints()
   const paymentMintInfo = paymentMintInfos[mint]
-  console.log(paymentMintInfos)
+  
   return (
     <SelectorOuter>
       <InputNumber
@@ -33,7 +35,7 @@ export const MintPriceSelector = ({
           paymentMintInfo ? fmtMintAmount(paymentMintInfo, new BN(price)) : '0'
         }
         min="0"
-        step={1 / 10 ** (paymentMintInfo?.decimals || 1)}
+        step={1 / 10 ** 4}
         onChange={(e) =>
           handlePrice(
             parseMintNaturalAmountFromDecimal(e, paymentMintInfo?.decimals || 1)
@@ -43,7 +45,7 @@ export const MintPriceSelector = ({
       <Select
         onChange={(e) => handleMint(e)}
         defaultValue={PAYMENT_MINTS[0].mint}
-        disabled={disabled}
+        disabled={disabled || mintDisabled}
       >
         {PAYMENT_MINTS.map(
           ({ mint, symbol }) =>

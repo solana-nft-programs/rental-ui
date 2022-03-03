@@ -1,11 +1,11 @@
 import * as web3 from '@solana/web3.js'
 
 export function getExpirationString(expiration: number, UTCSecondsNow: number) {
-  return `${Math.round(
+  return `${Math.floor(
     (expiration - UTCSecondsNow) / 60 / 60 / 24
-  )}d ${Math.round(
+  )}d ${Math.floor(
     ((expiration - UTCSecondsNow) / 60 / 60) % 24
-  )}h ${Math.round(((expiration - UTCSecondsNow) / 60) % 60)}m ${Math.round(
+  )}h ${Math.floor(((expiration - UTCSecondsNow) / 60) % 60)}m ${Math.round(
     (expiration - UTCSecondsNow) % 60
   )}s`
 }
