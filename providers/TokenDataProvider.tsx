@@ -47,7 +47,7 @@ export function TokenAccountsProvider({ children }: { children: ReactChild }) {
     setRefreshing(true)
     setError(null)
     getTokenAccountsWithData(connection, address)
-      .then((tokenDatas) => {
+      .then((tokenDatas) => {        
         setTokenDatas(tokenDatas.filter((td) => td.metadata))
       })
       .catch((e) => {

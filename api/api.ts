@@ -100,7 +100,6 @@ export async function getTokenAccountsWithData(
           useInvalidator.pda.findUseInvalidatorAddress(tokenManagerId),
         ])
       }
-
       return [
         metadataId,
         tokenManagerId,
@@ -240,6 +239,7 @@ export async function getTokenDatas(
         SystemProgram.programId.toString()
           ? (tokenManagerData.parsed?.recipientTokenAccount as PublicKey)
           : null
+
       return [
         metadataId,
         tokenManagerData.pubkey,

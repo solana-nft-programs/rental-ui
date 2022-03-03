@@ -18,6 +18,7 @@ import { Airdrop } from 'common/Airdrop'
 import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 import { Manage } from 'components/Manage'
 import { Browse } from 'components/Browse'
+import { useRentalExtensionModal } from 'rental-components/RentalExtensionModalProvider'
 
 export const TokensOuter = styled.div`
   display: flex;
@@ -121,7 +122,7 @@ export const TokenMetadata = styled.div`
   }
 `
 
-function Profile() {
+function Profile() {  
   const [error, setError] = useError()
   const ctx = useEnvironmentCtx()
   const wallet = useWallet()
@@ -130,6 +131,7 @@ function Profile() {
   const [loading, setLoading] = useState(false)
   const [tab, setTab] = useState<string>('wallet')
   const [issueId, setIssueId] = useState(null)
+  const rentalExtensionModal = useRentalExtensionModal()
 
   useEffect(() => {
     const anchor = router.asPath.split('#')[1]
@@ -164,7 +166,7 @@ function Profile() {
         tabs={[
           { name: 'Wallet', anchor: 'wallet' },
           { name: 'Manage', anchor: 'manage' },
-          { name: 'Browse', anchor: 'browse'},
+          { name: 'Browse', anchor: 'browse' },
         ]}
       />
       <StyledContainer style={{ marginTop: '120px' }}>
@@ -176,10 +178,29 @@ function Profile() {
                 <TokensOuter>
                   {tokenDatas && tokenDatas.length > 0 ? (
                     tokenDatas.map((tokenData) => (
-                      <NFT
-                        key={tokenData?.tokenAccount?.pubkey.toBase58()}
-                        tokenData={tokenData}
-                      ></NFT>
+                      <div>
+                        <NFT
+                          key={tokenData?.tokenAccount?.pubkey.toBase58()}
+                          tokenData={tokenData}
+                        ></NFT>
+                        {tokenData.timeInvalidator?.parsed
+                          ?.extensionDurationSeconds ? (
+                          <Button
+                            variant="primary"
+                            className="mx-auto mt-4"
+                            onClick={() =>
+                              rentalExtensionModal.show(
+                                asWallet(wallet),
+                                ctx.connection,
+                                ctx.environment.label,
+                                tokenData
+                              )
+                            }
+                          >
+                            Increase Duration
+                          </Button>
+                        ) : null}
+                      </div>
                     ))
                   ) : loaded ? (
                     <div className="white flex w-full flex-col items-center justify-center gap-1">
