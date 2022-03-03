@@ -126,6 +126,7 @@ export const RentalExtensionCard = ({
     boolean | null
   >(null)
   const [editionInfo, setEditionInfo] = useState<EditionInfo>({})
+  const [extensionSuccess, setExtensionSuccess] = useState(false)
 
   const getEdition = async () => {
     try {
@@ -197,6 +198,7 @@ export const RentalExtensionCard = ({
       setError(`Error handling extension rental: ${formatError(`${e}`)}`)
     } finally {
       setLoading(false)
+      setExtensionSuccess(true)
     }
   }
 
@@ -397,7 +399,23 @@ export const RentalExtensionCard = ({
           disabled={exceedMaxExpiration() || paymentAmount == 0}
           message={
             !exceedMaxExpiration() ? (
-              error ? (
+              extensionSuccess ? (
+                <StyledAlert>
+                  <Alert
+                    style={{
+                      height: 'auto',
+                      cursor: 'pointer',
+                    }}
+                    message={
+                      <>
+                        <div>Duration successfully added to rental.</div>
+                      </>
+                    }
+                    type="success"
+                    showIcon
+                  />
+                </StyledAlert>
+              ) : error ? (
                 <StyledAlert>
                   <Alert
                     style={{ height: 'auto' }}
