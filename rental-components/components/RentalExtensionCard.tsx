@@ -167,6 +167,8 @@ export const RentalExtensionCard = ({
 
   const handleExtensionRental = async () => {
     try {
+      setError('')
+      setExtensionSuccess(false)
       if (!tokenAccount) {
         throw 'Token acount not found'
       }
@@ -193,12 +195,13 @@ export const RentalExtensionCard = ({
         silent: false,
         callback: refreshTokenAccounts,
       })
+      setExtensionSuccess(true)
     } catch (e) {
+      setExtensionSuccess(false)
       console.log('Error handling extension rental', e)
       setError(`Error handling extension rental: ${formatError(`${e}`)}`)
     } finally {
-      setLoading(false)
-      setExtensionSuccess(true)
+      setLoading(false)      
     }
   }
 
@@ -399,7 +402,7 @@ export const RentalExtensionCard = ({
           disabled={exceedMaxExpiration() || paymentAmount == 0}
           message={
             !exceedMaxExpiration() ? (
-              extensionSuccess ? (
+              extensionSuccess && !error ? (
                 <StyledAlert>
                   <Alert
                     style={{
