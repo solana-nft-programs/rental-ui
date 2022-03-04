@@ -155,7 +155,9 @@ export const RentalCard = ({
   const [extensionMaxExpiration, setExtensionMaxExpiration] = useState<
     number | null
   >(null)
-
+  const [disablePartialExtension, setDisablePartialExtension] = useState<
+    boolean | null
+  >(null)
   const [maxUsages, setMaxUsages] = useState<number | null>(null)
   const [visibility, setVisibiliy] = useState<'private' | 'public'>('public')
 
@@ -244,6 +246,9 @@ export const RentalCard = ({
                       maxExpiration: extensionMaxExpiration
                         ? extensionMaxExpiration
                         : undefined,
+                      disablePartialExtension: disablePartialExtension
+                        ? disablePartialExtension
+                        : undefined,
                     }
                   : undefined,
               }
@@ -258,7 +263,7 @@ export const RentalCard = ({
         invalidationType,
         visibility,
       }
-      
+
       const [transaction, tokenManagerId, otpKeypair] = await issueToken(
         connection,
         wallet,
@@ -549,6 +554,25 @@ export const RentalCard = ({
                   </div>
                 }
               />
+            ) : null}
+            {showDuration && showExtendDuration ? (
+              <div className="mt-1">
+                <input
+                  className="my-auto inline-block"
+                  type="checkbox"
+                  checked={disablePartialExtension || false}
+                  onClick={() =>
+                    setDisablePartialExtension(!disablePartialExtension)
+                  }
+                />
+                <p className="mb-1 ml-3 inline-block text-[14px] font-bold text-black">
+                  Disable Partial Extension
+                </p>
+                <p className="mb-2 ml-6 inline-block text-[12px] text-gray-700">
+                  If selected, rental extensions must occur in multiples of the
+                  extension duration.
+                </p>
+              </div>
             ) : null}
           </div>
           <div>
