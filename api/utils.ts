@@ -70,9 +70,9 @@ const airdropMetadata: SimpleMetadata[] = [
     uri: 'https://arweave.net/KKbhlHaPMOB9yMm9yG_i7PxzK0y24I5C7gNTaRDI9OE',
   },
   {
-    name: 'Almost Famous Pandas',
-    symbol: 'AFP',
-    uri: '8cs7hpBcuiRbzcdUY5BHpCFCgv1m8JhpZEVHUkYTmhnA',
+    name: 'Ghostz',
+    symbol: 'GSTZ',
+    uri: '"https://arweave.net/83xQ5R-M01o9FoW-EIembwEbwEmTv49HmO06lBsy4Lk"',
   },
   {
     name: 'Shi Guardians',
