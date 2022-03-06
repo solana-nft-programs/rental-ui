@@ -431,7 +431,9 @@ function Claim() {
         ctx.connection,
         asWallet(wallet),
         tokenManagerId!,
-        otp
+        {
+          otpKeypair: otp,
+        }
       )
       await executeTransaction(ctx.connection, asWallet(wallet), transaction, {
         confirmOptions: { commitment: 'confirmed', maxRetries: 3 },
