@@ -1,14 +1,10 @@
 import { Wallet } from '@saberhq/solana-contrib'
 import { Connection } from '@solana/web3.js'
 import { TokenData } from 'api/api'
+import { withSleep } from 'common/utils'
 import React, { useContext, useState } from 'react'
 import { RentalExtensionCard } from './components/RentalExtensionCard'
 import { Modal } from './modal'
-
-export const withSleep = async (fn: Function, sleep = 2000) => {
-  await new Promise((r) => setTimeout(r, sleep))
-  await fn()
-}
 interface RentalExtensionModal {
   show: (
     wallet: Wallet,
@@ -85,4 +81,3 @@ export const useRentalExtensionModal = (): RentalExtensionModal => {
   }
   return rentalExtensionModalContext
 }
-

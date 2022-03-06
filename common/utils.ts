@@ -49,6 +49,37 @@ export function longDateString(utcSeconds: number) {
   })
 }
 
+export function secondstoDuration(durationSeconds: number) {
+  const years = Math.floor(durationSeconds / 31536000)
+  const months = Math.floor((durationSeconds % 31536000) / 2592000)
+  const weeks = Math.floor((durationSeconds % 2592000) / 604800)
+  const days = Math.floor((durationSeconds % 604800) / 86400)
+  const hours = Math.floor((durationSeconds % 86400) / 3600)
+  const minutes = Math.floor((durationSeconds % 3600) / 60)
+  const seconds = durationSeconds % 60
+  let duration = 'Duration: '
+  const vals = [
+    `${years}y`,
+    `${months}m`,
+    `${weeks}w`,
+    `${days}d`,
+    `${hours}h`,
+    `${minutes}m`,
+    `${seconds}s`,
+  ]
+  for (const val of vals) {
+    if (parseInt(val.substring(0, val.length - 1)) > 0) {
+      duration += val + ' '
+    }
+  }
+  return duration
+}
+
+export const withSleep = async (fn: Function, sleep = 2000) => {
+  await new Promise((r) => setTimeout(r, sleep))
+  await fn()
+}
+
 /**
  *
  * @param {string} name
