@@ -7,14 +7,8 @@ import { Wallet } from '@saberhq/solana-contrib'
 import { ButtonWithFooter } from 'rental-components/common/ButtonWithFooter'
 import { Alert } from 'rental-components/common/Alert'
 import { StepDetail } from 'rental-components/common/StepDetail'
-import {
-  Fieldset,
-  Input,
-  InputBorder,
-} from 'rental-components/common/LabeledInput'
 import { PoweredByFooter } from 'rental-components/common/PoweredByFooter'
 import { FiSend } from 'react-icons/fi'
-import { BiTimer, BiQrScan } from 'react-icons/bi'
 import { ImPriceTags } from 'react-icons/im'
 import { PAYMENT_MINTS } from 'rental-components/common/Constants'
 import { MintPriceSelector } from 'rental-components/common/MintPriceSelector'
@@ -29,8 +23,6 @@ import {
 } from '@cardinal/token-manager'
 import { executeTransaction } from 'common/Transactions'
 import { notify } from 'common/Notification'
-import { FaLink, FaEye } from 'react-icons/fa'
-import { GrReturn } from 'react-icons/gr'
 import {
   InvalidationType,
   TokenManagerKind,
@@ -157,7 +149,7 @@ export const RentalExtensionCard = ({
   let {
     durationSeconds,
     extensionPaymentAmount,
-    paymentMint,
+    extensionPaymentMint,
     extensionDurationSeconds,
     maxExpiration,
   } = tokenData.timeInvalidator?.parsed
@@ -175,7 +167,7 @@ export const RentalExtensionCard = ({
 
       setLoading(true)
       const transaction = new Transaction()
-      if (paymentMint.toString() === WRAPPED_SOL_MINT.toString()) {
+      if (extensionPaymentMint.toString() === WRAPPED_SOL_MINT.toString()) {
         const amountToWrap =
           paymentAmount - (userPaymentTokenAccount?.amount.toNumber() || 0)
         if (amountToWrap > 0) {
@@ -201,7 +193,7 @@ export const RentalExtensionCard = ({
       console.log('Error handling extension rental', e)
       setError(`Error handling extension rental: ${formatError(`${e}`)}`)
     } finally {
-      setLoading(false)      
+      setLoading(false)
     }
   }
 
@@ -229,12 +221,13 @@ export const RentalExtensionCard = ({
 
   const loadRate = () => {
     return `${fmtMintAmount(
-      paymentMintInfos[paymentMint.toString()],
+      paymentMintInfos[extensionPaymentMint.toString()],
       new anchor.BN(extensionPaymentAmount)
     )}
     ${
-      PAYMENT_MINTS.filter((obj) => obj.mint == paymentMint.toString())[0]
-        .symbol
+      PAYMENT_MINTS.filter(
+        (obj) => obj.mint == extensionPaymentMint.toString()
+      )[0].symbol
     }
     / ${secondsToString(extensionDurationSeconds)}`
   }
@@ -356,7 +349,7 @@ export const RentalExtensionCard = ({
                   <MintPriceSelector
                     price={paymentAmount}
                     handlePrice={handlePaymentAmountChange}
-                    mint={paymentMint}
+                    mint={extensionPaymentMint}
                     handleMint={() => {}}
                     mintDisabled={true}
                   />
@@ -439,12 +432,12 @@ export const RentalExtensionCard = ({
                       <>
                         {paymentAmount !== 0
                           ? `Pay ${fmtMintAmount(
-                              paymentMintInfos[paymentMint.toString()],
+                              paymentMintInfos[extensionPaymentMint.toString()],
                               new anchor.BN(paymentAmount)
                             )}
                       ${
                         PAYMENT_MINTS.filter(
-                          (obj) => obj.mint == paymentMint.toString()
+                          (obj) => obj.mint == extensionPaymentMint.toString()
                         )[0].symbol
                       } to extend the duration of your rental by ${secondsToString(
                               paymentAmountToSeconds(paymentAmount)
