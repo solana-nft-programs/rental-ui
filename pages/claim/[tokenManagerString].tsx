@@ -450,7 +450,6 @@ function Claim() {
     }
   }
 
-  console.log(tokenData, userPaymentTokenAccount)
   return (
     <>
       <Header />

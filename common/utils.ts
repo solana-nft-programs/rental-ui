@@ -1,13 +1,16 @@
 import * as web3 from '@solana/web3.js'
 
 export function getExpirationString(expiration: number, UTCSecondsNow: number) {
-  return `${Math.floor(
-    (expiration - UTCSecondsNow) / 60 / 60 / 24
-  )}d ${Math.floor(
-    ((expiration - UTCSecondsNow) / 60 / 60) % 24
-  )}h ${Math.floor(((expiration - UTCSecondsNow) / 60) % 60)}m ${Math.round(
-    (expiration - UTCSecondsNow) % 60
-  )}s`
+  const day = (expiration - UTCSecondsNow) / 60 / 60 / 24
+  const hour = ((expiration - UTCSecondsNow) / 60 / 60) % 24
+  const minute = ((expiration - UTCSecondsNow) / 60) % 60
+  const second = (expiration - UTCSecondsNow) % 60
+  const floorOrCeil = (n: number) =>
+    expiration - UTCSecondsNow > 0 ? Math.floor(n) : Math.ceil(n)
+
+  return `${floorOrCeil(day)}d ${floorOrCeil(hour)}h ${floorOrCeil(
+    minute
+  )}m ${floorOrCeil(second)}s`
 }
 
 export function shortPubKey(pubkey: web3.PublicKey | string | null) {

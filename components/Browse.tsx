@@ -82,6 +82,7 @@ export const Browse = () => {
           )
         }
       }
+      console.log('Claiming token manager', tokenData)
       await withClaimToken(
         transaction,
         connection,
