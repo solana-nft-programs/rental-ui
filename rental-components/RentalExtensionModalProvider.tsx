@@ -3,10 +3,9 @@ import { Connection } from '@solana/web3.js'
 import { TokenData } from 'api/api'
 import { withSleep } from 'common/utils'
 import React, { useContext, useState } from 'react'
-import { RentalCard } from './components/RentalCard'
+import { RentalExtensionCard } from './components/RentalExtensionCard'
 import { Modal } from './modal'
-
-export interface RentalModal {
+interface RentalExtensionModal {
   show: (
     wallet: Wallet,
     connection: Connection,
@@ -14,32 +13,29 @@ export interface RentalModal {
     tokenData: TokenData,
     dev?: boolean
   ) => void
-  showRentalModal: boolean
+  showRentalExtensionModal: boolean
   tokenData: TokenData | undefined
 }
 
-export const RentalModalContext = React.createContext<RentalModal | null>(null)
-
+export const RentalExtensionModalContext =
+  React.createContext<RentalExtensionModal | null>(null)
 interface Props {
-  appName?: string
-  appTwitter?: string
   children: React.ReactNode
 }
 
-export const RentalModalProvider: React.FC<Props> = ({
-  appName,
-  appTwitter,
+export const RentalExtensionModalProvider: React.FC<Props> = ({
   children,
 }: Props) => {
   const [wallet, setWallet] = useState<Wallet | null>(null)
   const [connection, setConnection] = useState<Connection | null>(null)
   const [cluster, setCluster] = useState<string | undefined>(undefined)
   const [dev, setDev] = useState<boolean | undefined>(undefined)
-  const [showRentalModal, setShowRentalModal] = useState<boolean>(false)
+  const [showRentalExtensionModal, setShowRentalExtensionModal] =
+    useState<boolean>(false)
   const [tokenData, setTokenData] = useState<TokenData | undefined>(undefined)
 
   return (
-    <RentalModalContext.Provider
+    <RentalExtensionModalContext.Provider
       value={{
         show: (wallet, connection, cluster, tokenData, dev) => {
           setWallet(wallet)
@@ -47,43 +43,41 @@ export const RentalModalProvider: React.FC<Props> = ({
           setCluster(cluster)
           setTokenData(tokenData)
           setDev(dev)
-          setShowRentalModal(true)
+          setShowRentalExtensionModal(true)
         },
         tokenData,
-        showRentalModal,
+        showRentalExtensionModal,
       }}
     >
       <Modal
-        isOpen={showRentalModal}
-        onDismiss={() => setShowRentalModal(false)}
+        isOpen={showRentalExtensionModal}
+        onDismiss={() => setShowRentalExtensionModal(false)}
         darkenOverlay={true}
       >
         {wallet && connection && (
-          <RentalCard
+          <RentalExtensionCard
             dev={dev}
             cluster={cluster}
             wallet={wallet}
             connection={connection}
             tokenData={tokenData || {}}
-            appName={appName}
-            appTwitter={appTwitter}
             onComplete={() => {
               withSleep(() => {
-                setShowRentalModal(false)
+                setShowRentalExtensionModal(false)
               }, 1000)
             }}
           />
         )}
       </Modal>
       {children}
-    </RentalModalContext.Provider>
+    </RentalExtensionModalContext.Provider>
   )
 }
 
-export const useRentalModal = (): RentalModal => {
-  const rentalModalContext = useContext(RentalModalContext)
-  if (!rentalModalContext) {
-    throw new Error('Not in rentalModalContext context')
+export const useRentalExtensionModal = (): RentalExtensionModal => {
+  const rentalExtensionModalContext = useContext(RentalExtensionModalContext)
+  if (!rentalExtensionModalContext) {
+    throw new Error('Not in rentalExtensionModalContext context')
   }
-  return rentalModalContext
+  return rentalExtensionModalContext
 }

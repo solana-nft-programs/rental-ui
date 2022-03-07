@@ -81,12 +81,14 @@ interface NFTOverlayProps {
   paymentAmount?: number
   paymentMint?: string
   expiration?: number
+  durationSeconds?: number
   usages?: number
   maxUsages?: number
   revocable?: boolean
   extendable?: boolean
   returnable?: boolean
   lineHeight?: number
+  stateChangedAt?: number
 }
 
 export const stateColor = (state: TokenManagerState, light = false): string => {
@@ -137,11 +139,13 @@ export function NFTOverlay({
   paymentAmount,
   paymentMint,
   expiration,
+  durationSeconds,
   usages,
   maxUsages,
   revocable,
   extendable,
   returnable,
+  stateChangedAt,
   lineHeight = 20,
 }: NFTOverlayProps) {
   const { UTCNow } = useUTCNow()
@@ -154,7 +158,10 @@ export function NFTOverlay({
       style={{
         boxShadow: getBoxShadow(
           state,
-          expiration,
+          expiration ||
+            (durationSeconds && stateChangedAt
+              ? durationSeconds + stateChangedAt
+              : undefined),
           usages,
           maxUsages,
           lineHeight
@@ -200,6 +207,24 @@ export function NFTOverlay({
             {utils.getExpirationString(expiration, UTCNow)}
           </div>
         )}
+        {!expiration &&
+          durationSeconds &&
+          state !== TokenManagerState.Claimed && (
+            <div className="expiration">
+              {utils.secondstoDuration(durationSeconds)}
+            </div>
+          )}
+        {!expiration &&
+          durationSeconds &&
+          stateChangedAt &&
+          state == TokenManagerState.Claimed && (
+            <div className="expiration">
+              {utils.getExpirationString(
+                stateChangedAt + durationSeconds,
+                UTCNow
+              )}
+            </div>
+          )}
         {usages != undefined && (
           <div className="expiration">
             Used ({usages?.toString() || 0}

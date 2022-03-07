@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect, ReactChild } from 'react'
 import { useUserTokenData } from './TokenDataProvider'
 import { useEnvironmentCtx } from './EnvironmentProvider'
 import { getTokenDatas, TokenData } from 'api/api'
-import { getAllIssuedTokenManagersByState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/accounts'
+import { getTokenManagersByState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/accounts'
 import {
   TokenManagerState,
   TOKEN_MANAGER_ADDRESS,
@@ -37,7 +37,7 @@ export function IssuedTokensProvider({ children }: { children: ReactChild }) {
   const refreshIssuedTokens = async () => {
     try {
       setRefreshing(true)
-      const tokenManagerDatas = await getAllIssuedTokenManagersByState(
+      const tokenManagerDatas = await getTokenManagersByState(
         connection,
         TokenManagerState.Issued
       )

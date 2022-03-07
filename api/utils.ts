@@ -88,7 +88,7 @@ const airdropMetadata: SimpleMetadata[] = [
     name: '21 Club',
     symbol: '21',
     uri: 'https://bafkreicv3jj6oc53kid76mkk7hqsr6edrnhsydkw4do4vonq777sgfz3le.ipfs.dweb.link?ext=json',
-  },  
+  },
 ]
 export async function airdropNFT(
   connection: Connection,

@@ -431,7 +431,9 @@ function Claim() {
         ctx.connection,
         asWallet(wallet),
         tokenManagerId!,
-        otp
+        {
+          otpKeypair: otp,
+        }
       )
       await executeTransaction(ctx.connection, asWallet(wallet), transaction, {
         confirmOptions: { commitment: 'confirmed', maxRetries: 3 },
@@ -448,7 +450,6 @@ function Claim() {
     }
   }
 
-  console.log(tokenData, userPaymentTokenAccount)
   return (
     <>
       <Header />
@@ -488,6 +489,14 @@ function Claim() {
                         }
                         expiration={
                           tokenData.timeInvalidator?.parsed.expiration
+                        }
+                        durationSeconds={
+                          tokenData.timeInvalidator?.parsed?.durationSeconds?.toNumber() ||
+                          undefined
+                        }
+                        stateChangedAt={
+                          tokenData.tokenManager?.parsed.stateChangedAt?.toNumber() ||
+                          undefined
                         }
                         paymentMint={tokenData.tokenManager?.parsed.paymentMint}
                         paymentAmount={
