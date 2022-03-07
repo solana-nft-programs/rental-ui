@@ -2,8 +2,8 @@ import React, { useState, useContext, useEffect, ReactChild } from 'react'
 import { useUserTokenData } from './TokenDataProvider'
 import { useEnvironmentCtx } from './EnvironmentProvider'
 import { web3 } from '@project-serum/anchor'
-import { getTokenManagersForIssuerUnsafe } from '@cardinal/token-manager/dist/cjs/programs/receiptIndex'
 import { getTokenDatas, TokenData } from 'api/api'
+import { getTokenManagersForIssuer } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/accounts'
 
 export interface ManagedTokensContextValues {
   managedTokens: TokenData[]
@@ -37,11 +37,11 @@ export function ManagedTokensProvider({ children }: { children: ReactChild }) {
     }
     try {
       setRefreshing(true)
-      const tokenManagerDatas = await getTokenManagersForIssuerUnsafe(
+      const tokenManagerDatas = await getTokenManagersForIssuer(
         connection,
         new web3.PublicKey(address)
       )
-      const tokenDatas = await getTokenDatas(connection, tokenManagerDatas)      
+      const tokenDatas = await getTokenDatas(connection, tokenManagerDatas)
       setManagedTokens(tokenDatas)
     } catch (e) {
       console.log(e)
