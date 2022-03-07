@@ -242,7 +242,7 @@ export const RentalCard = ({
                       extensionDurationSeconds:
                         extensionDurationAmount! *
                         durationData[extensionDurationCategory!],
-                      paymentMint: new PublicKey(extensionPaymentMint),
+                      extensionPaymentMint: new PublicKey(extensionPaymentMint),
                       maxExpiration: extensionMaxExpiration
                         ? extensionMaxExpiration
                         : undefined,
