@@ -490,6 +490,14 @@ function Claim() {
                         expiration={
                           tokenData.timeInvalidator?.parsed.expiration
                         }
+                        durationSeconds={
+                          tokenData.timeInvalidator?.parsed?.durationSeconds?.toNumber() ||
+                          undefined
+                        }
+                        stateChangedAt={
+                          tokenData.tokenManager?.parsed.stateChangedAt?.toNumber() ||
+                          undefined
+                        }
                         paymentMint={tokenData.tokenManager?.parsed.paymentMint}
                         paymentAmount={
                           tokenData.claimApprover?.parsed.paymentAmount
