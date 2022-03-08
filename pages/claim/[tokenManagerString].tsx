@@ -279,6 +279,7 @@ function Claim() {
 
   const { tokenManagerString } = router.query
   const tokenManagerId = tryPublicKey(tokenManagerString)
+  console.log(tokenData)
 
   async function getMetadata() {
     try {

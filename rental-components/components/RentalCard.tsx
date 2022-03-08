@@ -21,7 +21,11 @@ import { MintPriceSelector } from 'rental-components/common/MintPriceSelector'
 import { TokenData } from 'api/api'
 import { getQueryParam, longDateString } from 'common/utils'
 import { NFTOverlay } from 'common/NFTOverlay'
-import { claimLinks, issueToken } from '@cardinal/token-manager'
+import {
+  claimLinks,
+  IssueParameters,
+  issueToken,
+} from '@cardinal/token-manager'
 import { executeTransaction } from 'common/Transactions'
 import { notify } from 'common/Notification'
 import { FaLink, FaEye } from 'react-icons/fa'
@@ -227,7 +231,7 @@ export const RentalCard = ({
         tokenAccount?.account.data.parsed.info.mint
       )
 
-      const issueParams = {
+      const issueParams: IssueParameters = {
         claimPayment:
           price && paymentMint
             ? {
@@ -261,7 +265,7 @@ export const RentalCard = ({
                   : undefined,
               }
             : undefined,
-        usages: maxUsages || undefined,
+        useInvalidation: maxUsages ? { totalUsages: maxUsages } : null,
         mint: rentalMint,
         issuerTokenAccountId: tokenAccount?.pubkey,
         kind:
@@ -355,43 +359,51 @@ export const RentalCard = ({
         </ImageWrapper>
         <DetailsWrapper>
           <div className="flex justify-center">
-            <div className="mr-4 flex">
+            <div
+              className="mr-4 flex cursor-pointer"
+              onClick={() => setShowUsages(!showUsages)}
+            >
               <input
                 className="my-auto mr-1"
                 type="checkbox"
                 checked={showUsages}
-                onClick={() => setShowUsages(!showUsages)}
               />
-              <span className="">Add Usages</span>
+              <span className="">Usages</span>
             </div>
-            <div className="mr-4 flex">
+            <div
+              className="mr-4 flex cursor-pointer"
+              onClick={() => handleSelection('expiration')}
+            >
               <input
                 className="my-auto mr-1"
                 type="checkbox"
                 checked={showExpiration}
-                onClick={() => handleSelection('expiration')}
               />
-              <span className="">Add Expiration</span>
+              <span className="">Expiration</span>
             </div>
-            <div className="mr-4 flex">
+            <div
+              className="mr-4 flex cursor-pointer"
+              onClick={() => handleSelection('duration')}
+            >
               <input
                 className="my-auto mr-1"
                 type="checkbox"
                 checked={showDuration}
-                onClick={() => handleSelection('duration')}
               />
-              <span className="">Add Duration</span>
+              <span className="">Duration</span>
             </div>
-            <div className="mr-4 flex">
+            <div
+              className="mr-4 flex cursor-pointer"
+              onClick={() => {
+                setShowExtendDuration(!showExtendDuration)
+                setShowDuration(true)
+              }}
+            >
               <input
                 disabled={showExpiration}
                 className="my-auto mr-1"
                 type="checkbox"
                 checked={showDuration && showExtendDuration}
-                onClick={() => {
-                  setShowExtendDuration(!showExtendDuration)
-                  setShowDuration(true)
-                }}
               />
               <span className="">
                 {showExpiration ? (

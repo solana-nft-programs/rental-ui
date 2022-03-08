@@ -469,7 +469,11 @@ export async function getTokenData(
   return {
     metaplexData,
     tokenManager: tokenManagerData,
-    claimApprover: claimApproverData,
+    claimApprover:
+      tokenManagerData.parsed.claimApprover?.toString() ===
+      claimApproverData?.pubkey?.toString()
+        ? claimApproverData
+        : undefined,
     useInvalidator: useInvalidatorData,
     timeInvalidator: timeInvalidatorData,
     metadata,
