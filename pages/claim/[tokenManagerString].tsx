@@ -9,7 +9,7 @@ import { useWallet } from '@solana/wallet-adapter-react'
 import { Header } from 'common/Header'
 import * as splToken from '@solana/spl-token'
 import { useRouter } from 'next/router'
-import { claimLinks, withClaimToken } from '@cardinal/token-manager'
+import { claimLinks, findAta, withClaimToken } from '@cardinal/token-manager'
 import { asWallet } from 'common/Wallets'
 import { getTokenData, TokenData } from 'api/api'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
@@ -372,6 +372,17 @@ function Claim() {
 
   const handleClaim = async () => {
     try {
+      const payerTokenAccountId = await findAta(
+        tokenData?.claimApprover.parsed.paymentMint,
+        wallet.publicKey
+      )
+      console.log(
+        tokenData,
+        tokenData?.claimApprover?.pubkey?.toString(),
+        tokenData?.recipientTokenAccount?.address.toString(),
+        payerTokenAccountId.toString()
+      )
+
       setError(null)
       setTokenDataStatus(null)
       setLoadingClaim(true)
@@ -391,12 +402,12 @@ function Claim() {
       // wrap sol if there is payment required
       const transaction = new Transaction()
       if (
-        tokenData?.claimApprover?.parsed.paymentAmount &&
-        tokenData?.claimApprover?.parsed.paymentMint.toString() ===
+        tokenData?.claimApprover.parsed.paymentAmount &&
+        tokenData?.claimApprover.parsed.paymentMint.toString() ===
           WRAPPED_SOL_MINT.toString() &&
-        tokenData?.claimApprover?.parsed.paymentAmount.gt(new BN(0))
+        tokenData?.claimApprover.parsed.paymentAmount.gt(new BN(0))
       ) {
-        const amountToWrap = tokenData?.claimApprover?.parsed.paymentAmount.sub(
+        const amountToWrap = tokenData?.claimApprover.parsed.paymentAmount.sub(
           userPaymentTokenAccount?.amount || new BN(0)
         )
         if (amountToWrap.gt(new BN(0))) {
