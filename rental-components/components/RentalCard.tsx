@@ -364,7 +364,7 @@ export const RentalCard = ({
               onClick={() => setShowUsages(!showUsages)}
             >
               <input
-                className="my-auto mr-1"
+                className="my-auto mr-1 cursor-pointer"
                 type="checkbox"
                 checked={showUsages}
               />
@@ -375,7 +375,7 @@ export const RentalCard = ({
               onClick={() => handleSelection('expiration')}
             >
               <input
-                className="my-auto mr-1"
+                className="my-auto mr-1 cursor-pointer"
                 type="checkbox"
                 checked={showExpiration}
               />
@@ -386,7 +386,7 @@ export const RentalCard = ({
               onClick={() => handleSelection('duration')}
             >
               <input
-                className="my-auto mr-1"
+                className="my-auto mr-1 cursor-pointer"
                 type="checkbox"
                 checked={showDuration}
               />
@@ -401,7 +401,7 @@ export const RentalCard = ({
             >
               <input
                 disabled={showExpiration}
-                className="my-auto mr-1"
+                className="my-auto mr-1 cursor-pointer"
                 type="checkbox"
                 checked={showDuration && showExtendDuration}
               />
@@ -576,17 +576,21 @@ export const RentalCard = ({
             ) : null}
             {showDuration && showExtendDuration ? (
               <div className="mt-1">
-                <input
-                  className="my-auto inline-block"
-                  type="checkbox"
-                  checked={disablePartialExtension || false}
+                <span
+                  className="cursor-pointer"
                   onClick={() =>
                     setDisablePartialExtension(!disablePartialExtension)
                   }
-                />
-                <p className="mb-1 ml-3 inline-block text-[14px] font-bold text-black">
-                  Disable Partial Extension
-                </p>
+                >
+                  <input
+                    className="my-auto inline-block cursor-pointer"
+                    type="checkbox"
+                    checked={disablePartialExtension || false}
+                  />
+                  <p className="mb-1 ml-3 inline-block text-[14px] font-bold text-black">
+                    Disable Partial Extension
+                  </p>
+                </span>
                 <p className="mb-2 ml-6 inline-block text-[12px] text-gray-700">
                   If selected, rental extensions must occur in multiples of the
                   extension duration.
