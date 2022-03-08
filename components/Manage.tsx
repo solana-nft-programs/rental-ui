@@ -75,6 +75,7 @@ export const Manage = () => {
                           variant="primary"
                           disabled={!wallet.connected}
                           onClick={async () =>
+                            tokenData?.tokenManager &&
                             executeTransaction(
                               connection,
                               asWallet(wallet),
@@ -103,10 +104,11 @@ export const Manage = () => {
                           tokenData.tokenManager?.parsed.claimedAt
                         )} */}
                       </Tag>
-                      {((tokenData?.tokenManager?.parsed.invalidators &&
+                      {((wallet.publicKey &&
+                        tokenData?.tokenManager?.parsed.invalidators &&
                         tokenData?.tokenManager?.parsed.invalidators
                           .map((i: PublicKey) => i.toString())
-                          .includes(wallet.publicKey?.toBase58())) ||
+                          .includes(wallet.publicKey?.toString())) ||
                         (tokenData.timeInvalidator &&
                           tokenData.timeInvalidator.parsed.expiration &&
                           tokenData.timeInvalidator.parsed.expiration.lte(
@@ -121,19 +123,20 @@ export const Manage = () => {
                           variant="primary"
                           disabled={!wallet.connected}
                           onClick={async () => {
-                            executeTransaction(
-                              connection,
-                              asWallet(wallet),
-                              await invalidate(
+                            tokenData?.tokenManager &&
+                              executeTransaction(
                                 connection,
                                 asWallet(wallet),
-                                tokenData?.tokenManager?.parsed.mint
-                              ),
-                              {
-                                callback: refreshTokenAccounts,
-                                silent: true,
-                              }
-                            )
+                                await invalidate(
+                                  connection,
+                                  asWallet(wallet),
+                                  tokenData?.tokenManager?.parsed.mint
+                                ),
+                                {
+                                  callback: refreshTokenAccounts,
+                                  silent: true,
+                                }
+                              )
                           }}
                         >
                           Revoke

@@ -5,14 +5,13 @@ import { StyledContainer } from 'common/StyledContainer'
 import { useError } from 'providers/ErrorProvider'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useWallet } from '@solana/wallet-adapter-react'
-import { Header, StyledTab } from 'common/Header'
+import { Header } from 'common/Header'
 import { useUserTokenData } from 'providers/TokenDataProvider'
 import { useRouter } from 'next/router'
 import Colors from 'common/colors'
 import { NFT } from 'common/NFT'
 import { firstParam } from 'common/utils'
 import { Button } from 'rental-components/common/Button'
-import { airdropNFT } from 'api/utils'
 import { asWallet } from 'common/Wallets'
 import { Airdrop } from 'common/Airdrop'
 import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
@@ -122,15 +121,14 @@ export const TokenMetadata = styled.div`
   }
 `
 
-function Profile() {  
-  const [error, setError] = useError()
+function Profile() {
+  const [error, _setError] = useError()
   const ctx = useEnvironmentCtx()
   const wallet = useWallet()
   const router = useRouter()
   const { addressId } = router.query
-  const [loading, setLoading] = useState(false)
+  const [loading, _setLoading] = useState(false)
   const [tab, setTab] = useState<string>('wallet')
-  const [issueId, setIssueId] = useState(null)
   const rentalExtensionModal = useRentalExtensionModal()
 
   useEffect(() => {
@@ -138,8 +136,7 @@ function Profile() {
     if (anchor != tab) setTab(anchor)
   }, [router.asPath])
 
-  const { tokenDatas, address, setAddress, loaded, refreshing } =
-    useUserTokenData()
+  const { tokenDatas, setAddress, loaded, refreshing } = useUserTokenData()
   useEffect(() => {
     if (addressId) {
       setAddress(firstParam(addressId))

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { NFT, TokensOuter } from 'common/NFT'
 import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
@@ -33,7 +33,7 @@ export const Browse = () => {
   let { issuedTokens, loaded, refreshIssuedTokens } = useIssuedTokens()
   let [filteredIssuedTokens, setFilteredIssuedTokens] =
     useState<TokenData[]>(issuedTokens)
-  const [userPaymentTokenAccount, setUserPaymentTokenAccount] =
+  const [userPaymentTokenAccount, _setUserPaymentTokenAccount] =
     useState<splToken.AccountInfo | null>(null)
 
   useEffect(() => {
@@ -66,19 +66,19 @@ export const Browse = () => {
       const transaction = new Transaction()
       if (
         tokenData?.claimApprover?.parsed.paymentAmount &&
-        tokenData?.tokenManager?.parsed.paymentMint.toString() ===
+        tokenData?.claimApprover?.parsed.paymentMint.toString() ===
           WRAPPED_SOL_MINT.toString() &&
         tokenData?.claimApprover?.parsed.paymentAmount.gt(new BN(0))
       ) {
         const amountToWrap = tokenData?.claimApprover?.parsed.paymentAmount.sub(
-          userPaymentTokenAccount?.amount || 0
+          userPaymentTokenAccount?.amount || new BN(0)
         )
         if (amountToWrap.gt(new BN(0))) {
           await withWrapSol(
             transaction,
             connection,
             asWallet(wallet),
-            amountToWrap
+            amountToWrap.toNumber()
           )
         }
       }
@@ -165,6 +165,7 @@ export const Browse = () => {
                             <p
                               className="float-right w-max text-xs text-gray-400 hover:cursor-pointer hover:text-gray-300"
                               onClick={async () =>
+                                tokenData?.tokenManager &&
                                 executeTransaction(
                                   connection,
                                   asWallet(wallet),
@@ -192,7 +193,7 @@ export const Browse = () => {
                           onClick={() => handleClaim(tokenData)}
                         >
                           Claim{' '}
-                          {(tokenData.claimApprover?.parsed?.paymentAmount ??
+                          {(tokenData.claimApprover?.parsed?.paymentAmount.toNumber() ??
                             0) / 1000000000}{' '}
                           ◎
                         </Button>
@@ -223,10 +224,11 @@ export const Browse = () => {
                           tokenData.tokenManager?.parsed.claimedAt
                         )} */}
                       </Tag>
-                      {((tokenData?.tokenManager?.parsed.invalidators &&
+                      {((wallet.publicKey &&
+                        tokenData?.tokenManager?.parsed.invalidators &&
                         tokenData?.tokenManager?.parsed.invalidators
                           .map((i: PublicKey) => i.toString())
-                          .includes(wallet.publicKey?.toBase58())) ||
+                          .includes(wallet.publicKey?.toString())) ||
                         (tokenData.timeInvalidator &&
                           tokenData.timeInvalidator.parsed.expiration &&
                           tokenData.timeInvalidator.parsed.expiration.lte(
@@ -241,19 +243,20 @@ export const Browse = () => {
                           variant="primary"
                           disabled={!wallet.connected}
                           onClick={async () => {
-                            executeTransaction(
-                              connection,
-                              asWallet(wallet),
-                              await invalidate(
+                            tokenData?.tokenManager &&
+                              executeTransaction(
                                 connection,
                                 asWallet(wallet),
-                                tokenData?.tokenManager?.parsed.mint
-                              ),
-                              {
-                                callback: refreshIssuedTokens,
-                                silent: true,
-                              }
-                            )
+                                await invalidate(
+                                  connection,
+                                  asWallet(wallet),
+                                  tokenData?.tokenManager?.parsed.mint
+                                ),
+                                {
+                                  callback: refreshIssuedTokens,
+                                  silent: true,
+                                }
+                              )
                           }}
                         >
                           Revoke

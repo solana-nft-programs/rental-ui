@@ -21,7 +21,11 @@ import { MintPriceSelector } from 'rental-components/common/MintPriceSelector'
 import { TokenData } from 'api/api'
 import { getQueryParam, longDateString } from 'common/utils'
 import { NFTOverlay } from 'common/NFTOverlay'
-import { claimLinks, issueToken } from '@cardinal/token-manager'
+import {
+  claimLinks,
+  IssueParameters,
+  issueToken,
+} from '@cardinal/token-manager'
 import { executeTransaction } from 'common/Transactions'
 import { notify } from 'common/Notification'
 import { FaLink, FaEye } from 'react-icons/fa'
@@ -34,6 +38,7 @@ import getEditionInfo, { EditionInfo } from 'api/editions'
 import { useUserTokenData } from 'providers/TokenDataProvider'
 import { fmtMintAmount } from 'common/units'
 import { usePaymentMints } from 'providers/PaymentMintsProvider'
+import { tryPublicKey } from 'api/utils'
 const { Option } = Select
 
 const NFTOuter = styled.div`
@@ -131,34 +136,36 @@ export const RentalCard = ({
     Months: 2592000,
     Years: 31104000,
   }
-  const defaultDurationCategory = Object.keys(durationData)[2]
+  const defaultDurationCategory = Object.keys(durationData)[2]!
   const { paymentMintInfos } = usePaymentMints()
+  const defaultPaymentMint = PAYMENT_MINTS[0]!
 
   // form
   const [price, setPrice] = useState(0)
-  const [paymentMint, setPaymentMint] = useState(PAYMENT_MINTS[0].mint)
+  const [paymentMint, setPaymentMint] = useState<string>(
+    defaultPaymentMint.mint
+  )
   const [expiration, setExpiration] = useState<number | null>(null)
   const [durationAmount, setDurationAmount] = useState<number | null>(null)
-  const [durationCategory, setDurationCategory] = useState<string | null>(
+  const [durationCategory, setDurationCategory] = useState<string | undefined>(
     defaultDurationCategory
   )
   const [extensionPaymentAmount, setExtensionPaymentAmount] = useState(0)
   const [extensionPaymentMint, setExtensionPaymentMint] = useState(
-    PAYMENT_MINTS[0].mint
+    defaultPaymentMint.mint
   )
   const [extensionDurationAmount, setExtensionDurationAmount] = useState<
     number | null
   >(null)
-  const [extensionDurationCategory, setExtensionDurationCategory] = useState<
-    string | null
-  >(defaultDurationCategory)
+  const [extensionDurationCategory, setExtensionDurationCategory] =
+    useState<string>(defaultDurationCategory)
   const [extensionMaxExpiration, setExtensionMaxExpiration] = useState<
     number | null
   >(null)
   const [disablePartialExtension, setDisablePartialExtension] = useState<
     boolean | null
   >(null)
-  const [maxUsages, setMaxUsages] = useState<number | null>(null)
+  const [totalUsages, setTotalUsages] = useState<number | null>(null)
   const [visibility, setVisibiliy] = useState<'private' | 'public'>('public')
 
   const [showAdditionalOptions, setShowAdditionalOptions] = useState(false)
@@ -191,22 +198,23 @@ export const RentalCard = ({
 
   const nullExtensionProperties = () => {
     setExtensionPaymentAmount(0)
-    setExtensionPaymentMint(PAYMENT_MINTS[0].mint)
+    setExtensionPaymentMint(defaultPaymentMint?.mint)
     setExtensionDurationAmount(null)
     setExtensionDurationCategory(defaultDurationCategory)
     setExtensionMaxExpiration(null)
   }
 
-  const hasAllExtensionProperties = () => {
-    return (
-      extensionPaymentAmount &&
+  const hasAllExtensionProperties = (): boolean => {
+    return extensionPaymentAmount &&
       extensionDurationAmount &&
       extensionPaymentMint &&
       extensionDurationCategory
-    )
+      ? true
+      : false
   }
 
   const handleRental = async () => {
+    let extensionPaymentMintPublicKey = tryPublicKey(extensionPaymentMint)
     try {
       if (!tokenAccount) {
         throw 'Token acount not found'
@@ -214,13 +222,16 @@ export const RentalCard = ({
       if (showExtendDuration && !hasAllExtensionProperties()) {
         throw 'Please fill out all extension time and price fields'
       }
+      if (!extensionPaymentMintPublicKey) {
+        throw 'Invalid payment mint'
+      }
 
       setLoading(true)
       const rentalMint = new PublicKey(
         tokenAccount?.account.data.parsed.info.mint
       )
 
-      const issueParams = {
+      const issueParams: IssueParameters = {
         claimPayment:
           price && paymentMint
             ? {
@@ -234,15 +245,16 @@ export const RentalCard = ({
                 expiration: expiration || undefined,
                 durationSeconds:
                   durationAmount && durationCategory
-                    ? durationAmount * durationData[durationCategory]
+                    ? durationAmount * (durationData[durationCategory] || 0)
                     : undefined,
                 extension: hasAllExtensionProperties()
                   ? {
                       extensionPaymentAmount: extensionPaymentAmount,
                       extensionDurationSeconds:
                         extensionDurationAmount! *
-                        durationData[extensionDurationCategory!],
-                      extensionPaymentMint: new PublicKey(extensionPaymentMint),
+                        (durationData[extensionDurationCategory || 'Minutes'] ||
+                          0),
+                      extensionPaymentMint: extensionPaymentMintPublicKey,
                       maxExpiration: extensionMaxExpiration
                         ? extensionMaxExpiration
                         : undefined,
@@ -253,7 +265,7 @@ export const RentalCard = ({
                   : undefined,
               }
             : undefined,
-        usages: maxUsages || undefined,
+        useInvalidation: totalUsages ? { totalUsages: totalUsages } : null,
         mint: rentalMint,
         issuerTokenAccountId: tokenAccount?.pubkey,
         kind:
@@ -316,10 +328,14 @@ export const RentalCard = ({
               paymentAmount={price || undefined}
               paymentMint={paymentMint || undefined}
               expiration={expiration || undefined}
-              usages={maxUsages ? 0 : undefined}
-              maxUsages={maxUsages || undefined}
-              revocable={tokenManager?.parsed.revokeAuthority != null}
-              extendable={tokenManager?.parsed.isExtendable}
+              durationSeconds={
+                durationAmount && durationCategory
+                  ? durationAmount * (durationData[durationCategory] || 0)
+                  : undefined
+              }
+              usages={totalUsages ? 0 : undefined}
+              totalUsages={totalUsages || undefined}
+              extendable={hasAllExtensionProperties()}
               returnable={invalidationType === InvalidationType.Return}
               lineHeight={12}
             />
@@ -348,43 +364,51 @@ export const RentalCard = ({
         </ImageWrapper>
         <DetailsWrapper>
           <div className="flex justify-center">
-            <div className="mr-4 flex">
+            <div
+              className="mr-4 flex cursor-pointer"
+              onClick={() => setShowUsages(!showUsages)}
+            >
               <input
-                className="my-auto mr-1"
+                className="my-auto mr-1 cursor-pointer"
                 type="checkbox"
                 checked={showUsages}
-                onClick={() => setShowUsages(!showUsages)}
               />
-              <span className="">Add Usages</span>
+              <span className="">Usages</span>
             </div>
-            <div className="mr-4 flex">
+            <div
+              className="mr-4 flex cursor-pointer"
+              onClick={() => handleSelection('expiration')}
+            >
               <input
-                className="my-auto mr-1"
+                className="my-auto mr-1 cursor-pointer"
                 type="checkbox"
                 checked={showExpiration}
-                onClick={() => handleSelection('expiration')}
               />
-              <span className="">Add Expiration</span>
+              <span className="">Expiration</span>
             </div>
-            <div className="mr-4 flex">
+            <div
+              className="mr-4 flex cursor-pointer"
+              onClick={() => handleSelection('duration')}
+            >
               <input
-                className="my-auto mr-1"
+                className="my-auto mr-1 cursor-pointer"
                 type="checkbox"
                 checked={showDuration}
-                onClick={() => handleSelection('duration')}
               />
-              <span className="">Add Duration</span>
+              <span className="">Duration</span>
             </div>
-            <div className="mr-4 flex">
+            <div
+              className="mr-4 flex cursor-pointer"
+              onClick={() => {
+                setShowExtendDuration(!showExtendDuration)
+                setShowDuration(true)
+              }}
+            >
               <input
                 disabled={showExpiration}
-                className="my-auto mr-1"
+                className="my-auto mr-1 cursor-pointer"
                 type="checkbox"
                 checked={showDuration && showExtendDuration}
-                onClick={() => {
-                  setShowExtendDuration(!showExtendDuration)
-                  setShowDuration(true)
-                }}
               />
               <span className="">
                 {showExpiration ? (
@@ -400,15 +424,13 @@ export const RentalCard = ({
               icon={<ImPriceTags />}
               title="Rental Price"
               description={
-                <>
-                  <MintPriceSelector
-                    disabled={visibility === 'private'}
-                    price={price}
-                    mint={paymentMint}
-                    handlePrice={setPrice}
-                    handleMint={setPaymentMint}
-                  />
-                </>
+                <MintPriceSelector
+                  disabled={visibility === 'private'}
+                  price={price}
+                  mint={paymentMint}
+                  handlePrice={setPrice}
+                  handleMint={setPaymentMint}
+                />
               }
             />
             {showUsages ? (
@@ -421,7 +443,9 @@ export const RentalCard = ({
                       <Input
                         name="tweet"
                         type="number"
-                        onChange={(e) => setMaxUsages(parseInt(e.target.value))}
+                        onChange={(e) =>
+                          setTotalUsages(parseInt(e.target.value))
+                        }
                       />
                     </InputBorder>
                   </Fieldset>
@@ -557,17 +581,21 @@ export const RentalCard = ({
             ) : null}
             {showDuration && showExtendDuration ? (
               <div className="mt-1">
-                <input
-                  className="my-auto inline-block"
-                  type="checkbox"
-                  checked={disablePartialExtension || false}
+                <span
+                  className="cursor-pointer"
                   onClick={() =>
                     setDisablePartialExtension(!disablePartialExtension)
                   }
-                />
-                <p className="mb-1 ml-3 inline-block text-[14px] font-bold text-black">
-                  Disable Partial Extension
-                </p>
+                >
+                  <input
+                    className="my-auto inline-block cursor-pointer"
+                    type="checkbox"
+                    checked={disablePartialExtension || false}
+                  />
+                  <p className="mb-1 ml-3 inline-block text-[14px] font-bold text-black">
+                    Disable Partial Extension
+                  </p>
+                </span>
                 <p className="mb-2 ml-6 inline-block text-[12px] text-gray-700">
                   If selected, rental extensions must occur in multiples of the
                   extension duration.
@@ -602,6 +630,10 @@ export const RentalCard = ({
                           type: InvalidationType.Invalidate,
                           label: 'Invalidate',
                         },
+                        {
+                          type: InvalidationType.Release,
+                          label: 'Release',
+                        },
                       ].map(({ label, type }) => (
                         <Option key={type} value={type}>
                           {label}
@@ -616,7 +648,10 @@ export const RentalCard = ({
                   description={
                     <Select
                       style={{ width: '100%' }}
-                      onChange={(e) => setVisibiliy(e)}
+                      onChange={(e) => {
+                        setVisibiliy(e)
+                        if (e === 'private') setPrice(0)
+                      }}
                       defaultValue={visibility}
                     >
                       {[
@@ -689,18 +724,22 @@ export const RentalCard = ({
                     <>
                       <div>
                         Whoever claims this rental will own the asset{' '}
-                        {maxUsages && expiration
-                          ? `for either ${maxUsages} uses or until ${longDateString(
+                        {totalUsages && expiration
+                          ? `for either ${totalUsages} uses or until ${longDateString(
                               expiration
                             )} and then it will be ${
                               invalidationType === InvalidationType.Return
                                 ? 'securely returned to you.'
+                                : invalidationType === InvalidationType.Release
+                                ? 'released to whoever claims it.'
                                 : 'invalid forever..'
                             }`
-                          : maxUsages
-                          ? `for ${maxUsages} uses and then it will be ${
+                          : totalUsages
+                          ? `for ${totalUsages} uses and then it will be ${
                               invalidationType === InvalidationType.Return
                                 ? 'securely returned to you.'
+                                : invalidationType === InvalidationType.Release
+                                ? 'released to whoever claims it.'
                                 : 'invalid forever'
                             }`
                           : expiration
@@ -709,6 +748,8 @@ export const RentalCard = ({
                             )} and then it will be ${
                               invalidationType === InvalidationType.Return
                                 ? 'securely returned to you.'
+                                : invalidationType === InvalidationType.Release
+                                ? 'released to whoever claims it.'
                                 : 'invalid forever.'
                             }`
                           : durationAmount && durationCategory
@@ -722,6 +763,8 @@ export const RentalCard = ({
                             } and then it will be ${
                               invalidationType === InvalidationType.Return
                                 ? 'securely returned to you.'
+                                : invalidationType === InvalidationType.Release
+                                ? 'released to whoever claims it.'
                                 : 'invalid forever.'
                             }`
                           : 'forever.'}
@@ -733,9 +776,9 @@ export const RentalCard = ({
                               paymentMintInfos[extensionPaymentMint.toString()],
                               new anchor.BN(extensionPaymentAmount)
                             )} ${
-                              PAYMENT_MINTS.filter(
+                              PAYMENT_MINTS.find(
                                 (obj) => obj.mint == extensionPaymentMint
-                              )[0].symbol
+                              )?.symbol
                             } / ${extensionDurationAmount} ${
                               extensionDurationAmount == 1
                                 ? extensionDurationCategory
@@ -807,25 +850,6 @@ const BigIcon = styled.div<{ selected: boolean }>`
 
   &:hover {
     transform: scale(1.05);
-  }
-`
-
-const ButtonWrapper = styled.div`
-  display: flex;
-  margin-top: 5px;
-  justify-content: center;
-`
-
-const ButtonLight = styled.div`
-  border-radius: 5px;
-  padding: 5px 8px;
-  border: none;
-  background: #eee;
-  color: #777;
-  cursor: pointer;
-  transition: 0.1s all;
-  &:hover {
-    background: #ddd;
   }
 `
 

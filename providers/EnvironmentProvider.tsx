@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useContext } from 'react'
-import { Connection, PublicKey } from '@solana/web3.js'
+import { Connection } from '@solana/web3.js'
 import { useRouter } from 'next/router'
 
 export interface Environment {
@@ -43,13 +43,13 @@ export function EnvironmentProvider({
   const router = useRouter()
   const cluster = router.query.cluster || process.env.BASE_CLUSTER
   const foundEnvironment = ENVIRONMENTS.find((e) => e.label === cluster)
-  const [environment, setEnvironment] = useState(
-    foundEnvironment ?? ENVIRONMENTS[0]
+  const [environment, setEnvironment] = useState<Environment>(
+    foundEnvironment ?? ENVIRONMENTS[0]!
   )
 
   useMemo(() => {
     const foundEnvironment = ENVIRONMENTS.find((e) => e.label === cluster)
-    setEnvironment(foundEnvironment ?? ENVIRONMENTS[2])
+    setEnvironment(foundEnvironment ?? ENVIRONMENTS[2]!)
   }, [cluster])
 
   const connection = useMemo(

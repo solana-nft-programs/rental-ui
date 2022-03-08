@@ -3,11 +3,7 @@ import { useUserTokenData } from './TokenDataProvider'
 import { useEnvironmentCtx } from './EnvironmentProvider'
 import { getTokenDatas, TokenData } from 'api/api'
 import { getTokenManagersByState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/accounts'
-import {
-  TokenManagerState,
-  TOKEN_MANAGER_ADDRESS,
-} from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
-import { BN, utils } from '@project-serum/anchor'
+import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 
 export interface IssuedTokensContextValues {
   issuedTokens: TokenData[]

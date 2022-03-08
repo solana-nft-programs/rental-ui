@@ -13,7 +13,9 @@ export function getExpirationString(expiration: number, UTCSecondsNow: number) {
   )}m ${floorOrCeil(second)}s`
 }
 
-export function shortPubKey(pubkey: web3.PublicKey | string | null) {
+export function shortPubKey(
+  pubkey: web3.PublicKey | string | null | undefined
+) {
   if (!pubkey) return ''
   return `${pubkey?.toString().substring(0, 4)}..${pubkey
     ?.toString()
@@ -60,20 +62,16 @@ export function secondstoDuration(durationSeconds: number) {
   const hours = Math.floor((durationSeconds % 86400) / 3600)
   const minutes = Math.floor((durationSeconds % 3600) / 60)
   const seconds = durationSeconds % 60
-  let duration = 'Duration: '
-  const vals = [
-    `${years}y`,
-    `${months}m`,
-    `${weeks}w`,
-    `${days}d`,
-    `${hours}h`,
-    `${minutes}m`,
-    `${seconds}s`,
-  ]
-  for (const val of vals) {
+  let duration = ''
+  const optionalVals = [`${years}Y`, `${months}M`, `${weeks}w`, `${days}d`]
+  const vals = [`${hours}h`, `${minutes}m`, `${seconds}s`]
+  for (const val of optionalVals) {
     if (parseInt(val.substring(0, val.length - 1)) > 0) {
       duration += val + ' '
     }
+  }
+  for (const val of vals) {
+    duration += val + ' '
   }
   return duration
 }
@@ -96,5 +94,5 @@ export function getQueryParam(url: string, name: string) {
 
 export const firstParam = (param: string | string[] | undefined): string => {
   if (!param) return ''
-  return typeof param === 'string' ? param : param[0]
+  return typeof param === 'string' ? param : param[0] || ''
 }

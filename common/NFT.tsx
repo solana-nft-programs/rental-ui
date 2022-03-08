@@ -151,7 +151,6 @@ export function NFT({ tokenData, hideQRCode }: NFTProps) {
   const rentalModal = useRentalModal()
   const {
     tokenAccount,
-    metaplexData,
     metadata,
     tokenManager,
     timeInvalidator,
@@ -251,12 +250,18 @@ export function NFT({ tokenData, hideQRCode }: NFTProps) {
         {tokenManager && (
           <NFTOverlay
             state={tokenManager?.parsed.state}
-            expiration={timeInvalidator?.parsed?.expiration?.toNumber() || undefined}
-            durationSeconds={timeInvalidator?.parsed?.durationSeconds?.toNumber() || undefined}
-            usages={useInvalidator?.parsed.usages}
-            maxUsages={useInvalidator?.parsed.maxUsages}
+            expiration={
+              timeInvalidator?.parsed?.expiration?.toNumber() || undefined
+            }
+            durationSeconds={
+              timeInvalidator?.parsed?.durationSeconds?.toNumber() || undefined
+            }
+            usages={useInvalidator?.parsed.usages.toNumber()}
+            totalUsages={useInvalidator?.parsed.totalUsages?.toNumber()}
             lineHeight={14}
-            stateChangedAt={tokenManager?.parsed.stateChangedAt?.toNumber() || undefined}
+            stateChangedAt={
+              tokenManager?.parsed.stateChangedAt?.toNumber() || undefined
+            }
           />
         )}
         {metadata &&

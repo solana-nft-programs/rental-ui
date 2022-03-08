@@ -13,7 +13,7 @@ import {
   Wallet,
 } from '@saberhq/solana-contrib'
 import * as splToken from '@solana/spl-token'
-import type * as web3 from '@solana/web3.js'
+import * as web3 from '@solana/web3.js'
 import { Connection, Keypair, LAMPORTS_PER_SOL } from '@solana/web3.js'
 
 /**
@@ -95,7 +95,7 @@ export async function airdropNFT(
   wallet: Wallet
 ): Promise<string> {
   const randInt = Math.round(Math.random() * (airdropMetadata.length - 1))
-  const metadata: SimpleMetadata = airdropMetadata[randInt]
+  const metadata: SimpleMetadata = airdropMetadata[randInt]!
   const tokenCreator = Keypair.generate()
   const fromAirdropSignature = await connection.requestAirdrop(
     tokenCreator.publicKey,
@@ -103,7 +103,7 @@ export async function airdropNFT(
   )
   await connection.confirmTransaction(fromAirdropSignature)
 
-  const [masterEditionTokenAccountId, masterEditionMint] = await createMint(
+  const [_masterEditionTokenAccountId, masterEditionMint] = await createMint(
     connection,
     tokenCreator,
     wallet.publicKey,
@@ -189,4 +189,15 @@ export async function getATokenAccountInfo(
     null
   )
   return token.getAccountInfo(aTokenAccount)
+}
+
+export const tryPublicKey = (
+  publicKeyString: string | string[] | undefined
+): web3.PublicKey | null => {
+  if (!publicKeyString) return null
+  try {
+    return new web3.PublicKey(publicKeyString)
+  } catch (e) {
+    return null
+  }
 }
