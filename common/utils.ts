@@ -62,20 +62,16 @@ export function secondstoDuration(durationSeconds: number) {
   const hours = Math.floor((durationSeconds % 86400) / 3600)
   const minutes = Math.floor((durationSeconds % 3600) / 60)
   const seconds = durationSeconds % 60
-  let duration = 'Duration: '
-  const vals = [
-    `${years}y`,
-    `${months}m`,
-    `${weeks}w`,
-    `${days}d`,
-    `${hours}h`,
-    `${minutes}m`,
-    `${seconds}s`,
-  ]
-  for (const val of vals) {
+  let duration = ''
+  const optionalVals = [`${years}Y`, `${months}M`, `${weeks}w`, `${days}d`]
+  const vals = [`${hours}h`, `${minutes}m`, `${seconds}s`]
+  for (const val of optionalVals) {
     if (parseInt(val.substring(0, val.length - 1)) > 0) {
       duration += val + ' '
     }
+  }
+  for (const val of vals) {
+    duration += val + ' '
   }
   return duration
 }

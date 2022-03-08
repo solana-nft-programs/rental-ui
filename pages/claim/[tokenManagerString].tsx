@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react'
 import { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
-import { PublicKey, Transaction } from '@solana/web3.js'
+import { Transaction } from '@solana/web3.js'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { LoadingPulse, LoadingPulseWrapped } from 'common/LoadingPulse'
 import { StyledBackground } from 'common/StyledBackground'
@@ -559,7 +559,7 @@ function Claim() {
                           )}
                         </div>
                       ) : (
-                        <div>Connect wallet to claim</div>
+                        <div className="uppercase">Connect wallet to claim</div>
                       )}
                     </div>
                   </>
