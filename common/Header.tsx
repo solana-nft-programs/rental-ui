@@ -9,11 +9,7 @@ import { useEffect, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
-import {
-  AddressImage,
-  DisplayAddress,
-  useAddressName,
-} from '@cardinal/namespaces-components'
+import { AddressImage, DisplayAddress } from '@cardinal/namespaces-components'
 import { shortPubKey } from './utils'
 import { HiUserCircle } from 'react-icons/hi'
 import { Airdrop } from './Airdrop'
@@ -257,11 +253,6 @@ export const Header = ({
     const anchor = router.asPath.split('#')[1]
     if (anchor != tab) setTab(anchor || 'wallet')
   }, [router.asPath])
-
-  const { displayName } = useAddressName(
-    ctx.connection,
-    wallet?.publicKey || undefined
-  )
 
   const walletAddressFormatted = wallet?.publicKey
     ? shortPubKey(wallet?.publicKey)
