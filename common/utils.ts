@@ -13,7 +13,9 @@ export function getExpirationString(expiration: number, UTCSecondsNow: number) {
   )}m ${floorOrCeil(second)}s`
 }
 
-export function shortPubKey(pubkey: web3.PublicKey | string | null) {
+export function shortPubKey(
+  pubkey: web3.PublicKey | string | null | undefined
+) {
   if (!pubkey) return ''
   return `${pubkey?.toString().substring(0, 4)}..${pubkey
     ?.toString()
@@ -96,5 +98,5 @@ export function getQueryParam(url: string, name: string) {
 
 export const firstParam = (param: string | string[] | undefined): string => {
   if (!param) return ''
-  return typeof param === 'string' ? param : param[0]
+  return typeof param === 'string' ? param : param[0] || ''
 }

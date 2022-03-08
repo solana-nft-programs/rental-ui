@@ -12,21 +12,14 @@ import { useRouter } from 'next/router'
 import { claimLinks, withClaimToken } from '@cardinal/token-manager'
 import { asWallet } from 'common/Wallets'
 import { getTokenData, TokenData } from 'api/api'
-import {
-  InvalidationType,
-  TokenManagerState,
-} from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
-import { NFTOverlay } from 'common/NFTOverlay'
+import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
+import { TokenDataOverlay } from 'common/NFTOverlay'
 import { executeTransaction } from 'common/Transactions'
 import { pubKeyUrl, shortPubKey } from 'common/utils'
 import { FaQuestionCircle } from 'react-icons/fa'
 import { Button } from 'rental-components/common/Button'
-import {
-  PAYMENT_MINTS,
-  usePaymentMints,
-  WRAPPED_SOL_MINT,
-} from 'providers/PaymentMintsProvider'
-import { getATokenAccountInfo } from 'api/utils'
+import { PAYMENT_MINTS, WRAPPED_SOL_MINT } from 'providers/PaymentMintsProvider'
+import { getATokenAccountInfo, tryPublicKey } from 'api/utils'
 import { BN } from '@project-serum/anchor'
 import { withWrapSol } from 'api/wrappedSol'
 
@@ -42,7 +35,6 @@ const VerificationStepsOuter = styled.div`
   width: 90%;
   margin: 0px auto;
   font-weight: 200;
-  text-transform: uppercase;
   font-family: Oswald, sans-serif;
 `
 
@@ -262,23 +254,11 @@ const NFTOuter = styled.div`
   }
 `
 
-const tryPublicKey = (
-  publicKeyString: string | string[] | undefined
-): PublicKey | null => {
-  if (!publicKeyString) return null
-  try {
-    return new PublicKey(publicKeyString)
-  } catch (e) {
-    return null
-  }
-}
-
 function Claim() {
   const router = useRouter()
   const ctx = useEnvironmentCtx()
   const wallet = useWallet()
   const [error, setError] = useState<ReactElement | null>(null)
-  const { paymentMintInfos } = usePaymentMints()
   const [loadingClaim, setLoadingClaim] = useState(false)
 
   const [loadingImage, setLoadingImage] = useState(false)
@@ -329,18 +309,18 @@ function Claim() {
   }
 
   async function getUserPaymentTokenAccount() {
-    if (wallet.publicKey && tokenData?.tokenManager?.parsed.paymentMint) {
+    if (wallet.publicKey && tokenData?.claimApprover?.parsed.paymentMint) {
       try {
         const userPaymentTokenAccountData = await getATokenAccountInfo(
           ctx.connection,
-          tokenData?.tokenManager?.parsed.paymentMint,
+          tokenData?.claimApprover?.parsed.paymentMint,
           wallet.publicKey
         )
         setUserPaymentTokenAccount(userPaymentTokenAccountData)
       } catch (e) {
         console.log(e)
         if (
-          tokenData?.tokenManager?.parsed.paymentMint.toString() !==
+          tokenData?.claimApprover?.parsed.paymentMint.toString() !==
           WRAPPED_SOL_MINT
         ) {
           setPaymentTokenAccountError(true)
@@ -368,14 +348,15 @@ function Claim() {
             {PAYMENT_MINTS.find(
               ({ mint }) =>
                 mint.toString() ===
-                tokenData?.tokenManager?.parsed.paymentMint.toString()
-            )?.symbol || tokenData?.tokenManager?.parsed.paymentMint.toString()}
+                tokenData?.claimApprover?.parsed.paymentMint.toString()
+            )?.symbol ||
+              tokenData?.claimApprover?.parsed.paymentMint.toString()}
             . Check funds and try again
           </div>
-          {tokenData?.tokenManager?.parsed.paymentMint.toString() !==
+          {tokenData?.claimApprover?.parsed.paymentMint.toString() !==
             WRAPPED_SOL_MINT.toString() && (
             <a
-              href={`https://app.saber.so/#/swap?from=So11111111111111111111111111111111111111112&to=${tokenData?.tokenManager?.parsed.paymentMint}`}
+              href={`https://app.saber.so/#/swap?from=So11111111111111111111111111111111111111112&to=${tokenData?.claimApprover?.parsed.paymentMint.toString()}`}
               target="_blank"
               rel="noreferrer"
             >
@@ -398,31 +379,32 @@ function Claim() {
       // get otp if present
       let otp
       if (router.asPath.includes('otp=')) {
-        const [tokenManagerId, otpKeypair] = claimLinks.fromLink(
-          `${process.env.BASE_URL}/claim${
-            router.asPath.split('/claim')[1].split('&cluster')[0]
-          }`
-        )
-        otp = otpKeypair
+        const split = router.asPath.split('/claim')
+        if (split && split[1]) {
+          const [_tokenManagerId, otpKeypair] = claimLinks.fromLink(
+            `${process.env.BASE_URL}/claim${split[1].split('&cluster')[0]}`
+          )
+          otp = otpKeypair
+        }
       }
 
       // wrap sol if there is payment required
       const transaction = new Transaction()
       if (
         tokenData?.claimApprover?.parsed.paymentAmount &&
-        tokenData?.tokenManager?.parsed.paymentMint.toString() ===
+        tokenData?.claimApprover?.parsed.paymentMint.toString() ===
           WRAPPED_SOL_MINT.toString() &&
         tokenData?.claimApprover?.parsed.paymentAmount.gt(new BN(0))
       ) {
         const amountToWrap = tokenData?.claimApprover?.parsed.paymentAmount.sub(
-          userPaymentTokenAccount?.amount || 0
+          userPaymentTokenAccount?.amount || new BN(0)
         )
         if (amountToWrap.gt(new BN(0))) {
           await withWrapSol(
             transaction,
             ctx.connection,
             asWallet(wallet),
-            amountToWrap
+            amountToWrap.toNumber()
           )
         }
       }
@@ -456,7 +438,7 @@ function Claim() {
       <VerificationStepsOuter>
         <VerificationStep visible={true} status={tokenDataStatus?.status}>
           <div className="header">
-            <div className="step-name">Claim Asset</div>
+            <div className="step-name uppercase">Claim Asset</div>
             {tokenManagerId && tokenData?.tokenManager?.parsed.mint && (
               <div className="addresses">
                 <a
@@ -481,31 +463,7 @@ function Claim() {
                 {tokenData ? (
                   <>
                     <NFTOuter>
-                      <NFTOverlay
-                        state={tokenData.tokenManager?.parsed.state}
-                        returnable={
-                          tokenData.tokenManager?.parsed.invalidationType ===
-                          InvalidationType.Return
-                        }
-                        expiration={
-                          tokenData.timeInvalidator?.parsed.expiration
-                        }
-                        durationSeconds={
-                          tokenData.timeInvalidator?.parsed?.durationSeconds?.toNumber() ||
-                          undefined
-                        }
-                        stateChangedAt={
-                          tokenData.tokenManager?.parsed.stateChangedAt?.toNumber() ||
-                          undefined
-                        }
-                        paymentMint={tokenData.tokenManager?.parsed.paymentMint}
-                        paymentAmount={
-                          tokenData.claimApprover?.parsed.paymentAmount
-                        }
-                        usages={tokenData.useInvalidator?.parsed.usages}
-                        maxUsages={tokenData.useInvalidator?.parsed.maxUsages}
-                        lineHeight={14}
-                      />
+                      <TokenDataOverlay tokenData={tokenData} lineHeight={14} />
                       {tokenData?.metadata?.data &&
                         (tokenData.metadata.data.animation_url ? (
                           // @ts-ignore
@@ -582,7 +540,10 @@ function Claim() {
                       ) : paymentTokenAccountError ? (
                         <div>No balance of required payment</div>
                       ) : wallet.connected ? (
-                        <div className="claim-icon" onClick={handleClaim}>
+                        <div
+                          className="claim-icon uppercase"
+                          onClick={handleClaim}
+                        >
                           {loadingClaim ? (
                             <div
                               style={{

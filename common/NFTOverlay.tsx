@@ -1,13 +1,15 @@
 import * as anchor from '@project-serum/anchor'
+import * as utils from 'common/utils'
 import styled from '@emotion/styled'
 import { Extendable, Returnable, Revocable } from 'common/icons'
 import { fmtMintAmount } from 'common/units'
-import * as utils from 'common/utils'
 import { useUTCNow } from 'providers/UTCNowProvider'
 import { PAYMENT_MINTS, usePaymentMints } from 'providers/PaymentMintsProvider'
-import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
-import { useEffect, useState } from 'react'
-import {} from 'react-icons/fa'
+import {
+  InvalidationType,
+  TokenManagerState,
+} from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
+import { TokenData } from 'api/api'
 
 const StyledOverlay = styled.div<{
   height?: string
@@ -75,22 +77,6 @@ const StyledOverlay = styled.div<{
   }
 `
 
-interface NFTOverlayProps {
-  shadow?: boolean
-  state?: TokenManagerState
-  paymentAmount?: number
-  paymentMint?: string
-  expiration?: number
-  durationSeconds?: number
-  usages?: number
-  maxUsages?: number
-  revocable?: boolean
-  extendable?: boolean
-  returnable?: boolean
-  lineHeight?: number
-  stateChangedAt?: number
-}
-
 export const stateColor = (state: TokenManagerState, light = false): string => {
   if (state === TokenManagerState.Invalidated) {
     return 'rgba(125, 0, 0, 1)'
@@ -133,6 +119,55 @@ function getBoxShadow(
   }
 }
 
+export function TokenDataOverlay({
+  tokenData,
+  lineHeight,
+}: {
+  tokenData: TokenData
+  lineHeight: number
+}) {
+  return (
+    <NFTOverlay
+      state={tokenData.tokenManager?.parsed.state}
+      returnable={
+        tokenData.tokenManager?.parsed.invalidationType ===
+        InvalidationType.Return
+      }
+      expiration={
+        tokenData.timeInvalidator?.parsed.expiration?.toNumber() || undefined
+      }
+      durationSeconds={
+        tokenData.timeInvalidator?.parsed?.durationSeconds?.toNumber() ||
+        undefined
+      }
+      stateChangedAt={
+        tokenData.tokenManager?.parsed.stateChangedAt?.toNumber() || undefined
+      }
+      paymentMint={tokenData.claimApprover?.parsed.paymentMint.toString()}
+      paymentAmount={tokenData.claimApprover?.parsed.paymentAmount.toNumber()}
+      usages={tokenData.useInvalidator?.parsed.usages.toNumber()}
+      maxUsages={tokenData.useInvalidator?.parsed.maxUsages?.toNumber()}
+      lineHeight={lineHeight}
+    />
+  )
+}
+
+interface NFTOverlayProps {
+  shadow?: boolean
+  state?: TokenManagerState
+  paymentAmount?: number
+  paymentMint?: string
+  expiration?: number
+  durationSeconds?: number
+  usages?: number
+  maxUsages?: number
+  revocable?: boolean
+  extendable?: boolean
+  returnable?: boolean
+  lineHeight?: number
+  stateChangedAt?: number
+}
+
 export function NFTOverlay({
   shadow = true,
   state = 0,
@@ -159,7 +194,9 @@ export function NFTOverlay({
         boxShadow: getBoxShadow(
           state,
           expiration ||
-            (durationSeconds && stateChangedAt
+            (durationSeconds &&
+            stateChangedAt &&
+            state === TokenManagerState.Claimed
               ? durationSeconds + stateChangedAt
               : undefined),
           usages,

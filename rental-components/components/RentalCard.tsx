@@ -34,6 +34,7 @@ import getEditionInfo, { EditionInfo } from 'api/editions'
 import { useUserTokenData } from 'providers/TokenDataProvider'
 import { fmtMintAmount } from 'common/units'
 import { usePaymentMints } from 'providers/PaymentMintsProvider'
+import { tryPublicKey } from 'api/utils'
 const { Option } = Select
 
 const NFTOuter = styled.div`
@@ -131,27 +132,29 @@ export const RentalCard = ({
     Months: 2592000,
     Years: 31104000,
   }
-  const defaultDurationCategory = Object.keys(durationData)[2]
+  const defaultDurationCategory = Object.keys(durationData)[2]!
   const { paymentMintInfos } = usePaymentMints()
+  const defaultPaymentMint = PAYMENT_MINTS[0]!
 
   // form
   const [price, setPrice] = useState(0)
-  const [paymentMint, setPaymentMint] = useState(PAYMENT_MINTS[0].mint)
+  const [paymentMint, setPaymentMint] = useState<string>(
+    defaultPaymentMint.mint
+  )
   const [expiration, setExpiration] = useState<number | null>(null)
   const [durationAmount, setDurationAmount] = useState<number | null>(null)
-  const [durationCategory, setDurationCategory] = useState<string | null>(
+  const [durationCategory, setDurationCategory] = useState<string | undefined>(
     defaultDurationCategory
   )
   const [extensionPaymentAmount, setExtensionPaymentAmount] = useState(0)
   const [extensionPaymentMint, setExtensionPaymentMint] = useState(
-    PAYMENT_MINTS[0].mint
+    defaultPaymentMint.mint
   )
   const [extensionDurationAmount, setExtensionDurationAmount] = useState<
     number | null
   >(null)
-  const [extensionDurationCategory, setExtensionDurationCategory] = useState<
-    string | null
-  >(defaultDurationCategory)
+  const [extensionDurationCategory, setExtensionDurationCategory] =
+    useState<string>(defaultDurationCategory)
   const [extensionMaxExpiration, setExtensionMaxExpiration] = useState<
     number | null
   >(null)
@@ -191,28 +194,32 @@ export const RentalCard = ({
 
   const nullExtensionProperties = () => {
     setExtensionPaymentAmount(0)
-    setExtensionPaymentMint(PAYMENT_MINTS[0].mint)
+    setExtensionPaymentMint(defaultPaymentMint?.mint)
     setExtensionDurationAmount(null)
     setExtensionDurationCategory(defaultDurationCategory)
     setExtensionMaxExpiration(null)
   }
 
-  const hasAllExtensionProperties = () => {
-    return (
-      extensionPaymentAmount &&
+  const hasAllExtensionProperties = (): boolean => {
+    return extensionPaymentAmount &&
       extensionDurationAmount &&
       extensionPaymentMint &&
       extensionDurationCategory
-    )
+      ? true
+      : false
   }
 
   const handleRental = async () => {
+    let extensionPaymentMintPublicKey = tryPublicKey(extensionPaymentMint)
     try {
       if (!tokenAccount) {
         throw 'Token acount not found'
       }
       if (showExtendDuration && !hasAllExtensionProperties()) {
         throw 'Please fill out all extension time and price fields'
+      }
+      if (!extensionPaymentMintPublicKey) {
+        throw 'Invalid payment mint'
       }
 
       setLoading(true)
@@ -234,15 +241,16 @@ export const RentalCard = ({
                 expiration: expiration || undefined,
                 durationSeconds:
                   durationAmount && durationCategory
-                    ? durationAmount * durationData[durationCategory]
+                    ? durationAmount * (durationData[durationCategory] || 0)
                     : undefined,
                 extension: hasAllExtensionProperties()
                   ? {
                       extensionPaymentAmount: extensionPaymentAmount,
                       extensionDurationSeconds:
                         extensionDurationAmount! *
-                        durationData[extensionDurationCategory!],
-                      extensionPaymentMint: new PublicKey(extensionPaymentMint),
+                        (durationData[extensionDurationCategory || 'Minutes'] ||
+                          0),
+                      extensionPaymentMint: extensionPaymentMintPublicKey,
                       maxExpiration: extensionMaxExpiration
                         ? extensionMaxExpiration
                         : undefined,
@@ -318,8 +326,7 @@ export const RentalCard = ({
               expiration={expiration || undefined}
               usages={maxUsages ? 0 : undefined}
               maxUsages={maxUsages || undefined}
-              revocable={tokenManager?.parsed.revokeAuthority != null}
-              extendable={tokenManager?.parsed.isExtendable}
+              extendable={hasAllExtensionProperties()}
               returnable={invalidationType === InvalidationType.Return}
               lineHeight={12}
             />
@@ -400,15 +407,13 @@ export const RentalCard = ({
               icon={<ImPriceTags />}
               title="Rental Price"
               description={
-                <>
-                  <MintPriceSelector
-                    disabled={visibility === 'private'}
-                    price={price}
-                    mint={paymentMint}
-                    handlePrice={setPrice}
-                    handleMint={setPaymentMint}
-                  />
-                </>
+                <MintPriceSelector
+                  disabled={visibility === 'private'}
+                  price={price}
+                  mint={paymentMint}
+                  handlePrice={setPrice}
+                  handleMint={setPaymentMint}
+                />
               }
             />
             {showUsages ? (
@@ -733,9 +738,9 @@ export const RentalCard = ({
                               paymentMintInfos[extensionPaymentMint.toString()],
                               new anchor.BN(extensionPaymentAmount)
                             )} ${
-                              PAYMENT_MINTS.filter(
+                              PAYMENT_MINTS.find(
                                 (obj) => obj.mint == extensionPaymentMint
-                              )[0].symbol
+                              )?.symbol
                             } / ${extensionDurationAmount} ${
                               extensionDurationAmount == 1
                                 ? extensionDurationCategory
@@ -807,25 +812,6 @@ const BigIcon = styled.div<{ selected: boolean }>`
 
   &:hover {
     transform: scale(1.05);
-  }
-`
-
-const ButtonWrapper = styled.div`
-  display: flex;
-  margin-top: 5px;
-  justify-content: center;
-`
-
-const ButtonLight = styled.div`
-  border-radius: 5px;
-  padding: 5px 8px;
-  border: none;
-  background: #eee;
-  color: #777;
-  cursor: pointer;
-  transition: 0.1s all;
-  &:hover {
-    background: #ddd;
   }
 `
 
