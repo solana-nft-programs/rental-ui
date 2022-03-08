@@ -339,17 +339,14 @@ export async function getTokenDatas(
   )
 
   return metadataTuples.map(
-    (
-      [
-        metaplexId,
-        tokenManagerId,
-        claimApproverId,
-        timeInvalidatorId,
-        useInvalidatorId,
-        _tokenAccountId,
-      ],
-      i
-    ) => ({
+    ([
+      metaplexId,
+      tokenManagerId,
+      claimApproverId,
+      timeInvalidatorId,
+      useInvalidatorId,
+      _tokenAccountId,
+    ]) => ({
       recipientTokenAccount: tokenAccounts.find((data) =>
         data
           ? data.delegate?.toString() === tokenManagerId?.toString()
