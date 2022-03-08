@@ -621,6 +621,10 @@ export const RentalCard = ({
                           type: InvalidationType.Invalidate,
                           label: 'Invalidate',
                         },
+                        {
+                          type: InvalidationType.Release,
+                          label: 'Release',
+                        },
                       ].map(({ label, type }) => (
                         <Option key={type} value={type}>
                           {label}
@@ -714,12 +718,16 @@ export const RentalCard = ({
                             )} and then it will be ${
                               invalidationType === InvalidationType.Return
                                 ? 'securely returned to you.'
+                                : invalidationType === InvalidationType.Release
+                                ? 'released to whoever claims it.'
                                 : 'invalid forever..'
                             }`
                           : totalUsages
                           ? `for ${totalUsages} uses and then it will be ${
                               invalidationType === InvalidationType.Return
                                 ? 'securely returned to you.'
+                                : invalidationType === InvalidationType.Release
+                                ? 'released to whoever claims it.'
                                 : 'invalid forever'
                             }`
                           : expiration
@@ -728,6 +736,8 @@ export const RentalCard = ({
                             )} and then it will be ${
                               invalidationType === InvalidationType.Return
                                 ? 'securely returned to you.'
+                                : invalidationType === InvalidationType.Release
+                                ? 'released to whoever claims it.'
                                 : 'invalid forever.'
                             }`
                           : durationAmount && durationCategory
@@ -741,6 +751,8 @@ export const RentalCard = ({
                             } and then it will be ${
                               invalidationType === InvalidationType.Return
                                 ? 'securely returned to you.'
+                                : invalidationType === InvalidationType.Release
+                                ? 'released to whoever claims it.'
                                 : 'invalid forever.'
                             }`
                           : 'forever.'}
