@@ -165,7 +165,7 @@ export const RentalCard = ({
   const [disablePartialExtension, setDisablePartialExtension] = useState<
     boolean | null
   >(null)
-  const [maxUsages, setMaxUsages] = useState<number | null>(null)
+  const [totalUsages, setTotalUsages] = useState<number | null>(null)
   const [visibility, setVisibiliy] = useState<'private' | 'public'>('public')
 
   const [showAdditionalOptions, setShowAdditionalOptions] = useState(false)
@@ -265,7 +265,7 @@ export const RentalCard = ({
                   : undefined,
               }
             : undefined,
-        useInvalidation: maxUsages ? { totalUsages: maxUsages } : null,
+        useInvalidation: totalUsages ? { totalUsages: totalUsages } : null,
         mint: rentalMint,
         issuerTokenAccountId: tokenAccount?.pubkey,
         kind:
@@ -328,8 +328,8 @@ export const RentalCard = ({
               paymentAmount={price || undefined}
               paymentMint={paymentMint || undefined}
               expiration={expiration || undefined}
-              usages={maxUsages ? 0 : undefined}
-              maxUsages={maxUsages || undefined}
+              usages={totalUsages ? 0 : undefined}
+              totalUsages={totalUsages || undefined}
               extendable={hasAllExtensionProperties()}
               returnable={invalidationType === InvalidationType.Return}
               lineHeight={12}
@@ -438,7 +438,9 @@ export const RentalCard = ({
                       <Input
                         name="tweet"
                         type="number"
-                        onChange={(e) => setMaxUsages(parseInt(e.target.value))}
+                        onChange={(e) =>
+                          setTotalUsages(parseInt(e.target.value))
+                        }
                       />
                     </InputBorder>
                   </Fieldset>
@@ -706,16 +708,16 @@ export const RentalCard = ({
                     <>
                       <div>
                         Whoever claims this rental will own the asset{' '}
-                        {maxUsages && expiration
-                          ? `for either ${maxUsages} uses or until ${longDateString(
+                        {totalUsages && expiration
+                          ? `for either ${totalUsages} uses or until ${longDateString(
                               expiration
                             )} and then it will be ${
                               invalidationType === InvalidationType.Return
                                 ? 'securely returned to you.'
                                 : 'invalid forever..'
                             }`
-                          : maxUsages
-                          ? `for ${maxUsages} uses and then it will be ${
+                          : totalUsages
+                          ? `for ${totalUsages} uses and then it will be ${
                               invalidationType === InvalidationType.Return
                                 ? 'securely returned to you.'
                                 : 'invalid forever'

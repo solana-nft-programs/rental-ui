@@ -93,12 +93,12 @@ function getBoxShadow(
   state: TokenManagerState,
   expiration: number | undefined,
   usages: number | undefined,
-  maxUsages: number | undefined,
+  totalUsages: number | undefined,
   lineHeight: number
 ) {
   if (
     state === TokenManagerState.Invalidated ||
-    (maxUsages && usages && usages >= maxUsages) ||
+    (totalUsages && usages && usages >= totalUsages) ||
     (expiration && expiration <= Math.floor(Date.now() / 1000))
   ) {
     return `0 0 ${0.4 * lineHeight}px ${0.4 * lineHeight}px ${stateColor(
@@ -146,7 +146,7 @@ export function TokenDataOverlay({
       paymentMint={tokenData.claimApprover?.parsed.paymentMint.toString()}
       paymentAmount={tokenData.claimApprover?.parsed.paymentAmount.toNumber()}
       usages={tokenData.useInvalidator?.parsed.usages.toNumber()}
-      maxUsages={tokenData.useInvalidator?.parsed.maxUsages?.toNumber()}
+      totalUsages={tokenData.useInvalidator?.parsed.totalUsages?.toNumber()}
       lineHeight={lineHeight}
     />
   )
@@ -160,7 +160,7 @@ interface NFTOverlayProps {
   expiration?: number
   durationSeconds?: number
   usages?: number
-  maxUsages?: number
+  totalUsages?: number
   revocable?: boolean
   extendable?: boolean
   returnable?: boolean
@@ -176,7 +176,7 @@ export function NFTOverlay({
   expiration,
   durationSeconds,
   usages,
-  maxUsages,
+  totalUsages,
   revocable,
   extendable,
   returnable,
@@ -200,7 +200,7 @@ export function NFTOverlay({
               ? durationSeconds + stateChangedAt
               : undefined),
           usages,
-          maxUsages,
+          totalUsages,
           lineHeight
         ),
       }}
@@ -265,7 +265,7 @@ export function NFTOverlay({
         {usages != undefined && (
           <div className="expiration">
             Used ({usages?.toString() || 0}
-            {maxUsages && ` / ${maxUsages.toString()}`})
+            {totalUsages && ` / ${totalUsages.toString()}`})
           </div>
         )}
       </div>

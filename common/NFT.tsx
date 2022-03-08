@@ -257,7 +257,7 @@ export function NFT({ tokenData, hideQRCode }: NFTProps) {
               timeInvalidator?.parsed?.durationSeconds?.toNumber() || undefined
             }
             usages={useInvalidator?.parsed.usages.toNumber()}
-            maxUsages={useInvalidator?.parsed.maxUsages?.toNumber()}
+            totalUsages={useInvalidator?.parsed.totalUsages?.toNumber()}
             lineHeight={14}
             stateChangedAt={
               tokenManager?.parsed.stateChangedAt?.toNumber() || undefined
