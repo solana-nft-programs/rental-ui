@@ -431,7 +431,7 @@ export async function getTokenData(
         return null
       }),
     claimApprover.accounts
-      .getClaimApprover(connection, useInvalidatorId)
+      .getClaimApprover(connection, tokenManagerId)
       .catch((e) => {
         console.log('Failed to get use invalidator data', e)
         return null
