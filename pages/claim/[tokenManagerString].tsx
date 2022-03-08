@@ -373,17 +373,6 @@ function Claim() {
 
   const handleClaim = async () => {
     try {
-      const payerTokenAccountId = await findAta(
-        tokenData?.claimApprover.parsed.paymentMint,
-        wallet.publicKey
-      )
-      console.log(
-        tokenData,
-        tokenData?.claimApprover?.pubkey?.toString(),
-        tokenData?.recipientTokenAccount?.address.toString(),
-        payerTokenAccountId.toString()
-      )
-
       setError(null)
       setTokenDataStatus(null)
       setLoadingClaim(true)
@@ -403,7 +392,7 @@ function Claim() {
       // wrap sol if there is payment required
       const transaction = new Transaction()
       if (
-        tokenData?.claimApprover.parsed.paymentAmount &&
+        tokenData?.claimApprover?.parsed.paymentAmount &&
         tokenData?.claimApprover.parsed.paymentMint.toString() ===
           WRAPPED_SOL_MINT.toString() &&
         tokenData?.claimApprover.parsed.paymentAmount.gt(new BN(0))
