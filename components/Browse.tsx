@@ -33,7 +33,7 @@ export const Browse = () => {
   let { issuedTokens, loaded, refreshIssuedTokens } = useIssuedTokens()
   let [filteredIssuedTokens, setFilteredIssuedTokens] =
     useState<TokenData[]>(issuedTokens)
-  const [userPaymentTokenAccount, setUserPaymentTokenAccount] =
+  const [userPaymentTokenAccount, _setUserPaymentTokenAccount] =
     useState<splToken.AccountInfo | null>(null)
 
   useEffect(() => {

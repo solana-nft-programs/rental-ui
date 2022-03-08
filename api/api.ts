@@ -408,32 +408,35 @@ export async function getTokenData(
     useInvalidator.pda.findUseInvalidatorAddress(tokenManagerId),
   ])
 
-  let claimApproverData: PaidClaimApproverData | null = null
-  const [metaplexData, timeInvalidatorData, useInvalidatorData] =
-    await Promise.all([
-      metaplex.Metadata.load(connection, metaplexId).catch((e) => {
-        console.log('Failed to get metaplex data', e)
+  const [
+    metaplexData,
+    timeInvalidatorData,
+    useInvalidatorData,
+    claimApproverData,
+  ] = await Promise.all([
+    metaplex.Metadata.load(connection, metaplexId).catch((e) => {
+      console.log('Failed to get metaplex data', e)
+      return null
+    }),
+    timeInvalidator.accounts
+      .getTimeInvalidator(connection, timeInvalidatorId)
+      .catch((e) => {
+        console.log('Failed to get time invalidator data', e)
         return null
       }),
-      timeInvalidator.accounts
-        .getTimeInvalidator(connection, timeInvalidatorId)
-        .catch((e) => {
-          console.log('Failed to get time invalidator data', e)
-          return null
-        }),
-      useInvalidator.accounts
-        .getUseInvalidator(connection, useInvalidatorId)
-        .catch((e) => {
-          console.log('Failed to get use invalidator data', e)
-          return null
-        }),
-      claimApprover.accounts
-        .getClaimApprover(connection, useInvalidatorId)
-        .catch((e) => {
-          console.log('Failed to get use invalidator data', e)
-          return null
-        }),
-    ])
+    useInvalidator.accounts
+      .getUseInvalidator(connection, useInvalidatorId)
+      .catch((e) => {
+        console.log('Failed to get use invalidator data', e)
+        return null
+      }),
+    claimApprover.accounts
+      .getClaimApprover(connection, useInvalidatorId)
+      .catch((e) => {
+        console.log('Failed to get use invalidator data', e)
+        return null
+      }),
+  ])
 
   let metadata: any | null = null
   if (metaplexData) {

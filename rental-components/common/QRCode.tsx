@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react'
-import { PublicKey, Connection } from '@solana/web3.js'
+import { Connection } from '@solana/web3.js'
 import styled from '@emotion/styled'
 import { AwesomeQR } from 'awesome-qr'
 import { useTransaction } from '@cardinal/token-manager'

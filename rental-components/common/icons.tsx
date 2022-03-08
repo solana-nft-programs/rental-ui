@@ -168,7 +168,7 @@ export const Megaphone: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
   </svg>
 )
 
-export const Link: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+export const Link: React.FC<React.SVGProps<SVGSVGElement>> = () => (
   <svg
     width="18"
     height="18"

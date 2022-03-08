@@ -151,7 +151,6 @@ export function NFT({ tokenData, hideQRCode }: NFTProps) {
   const rentalModal = useRentalModal()
   const {
     tokenAccount,
-    metaplexData,
     metadata,
     tokenManager,
     timeInvalidator,
