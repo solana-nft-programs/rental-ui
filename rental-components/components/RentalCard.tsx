@@ -639,7 +639,10 @@ export const RentalCard = ({
                   description={
                     <Select
                       style={{ width: '100%' }}
-                      onChange={(e) => setVisibiliy(e)}
+                      onChange={(e) => {
+                        setVisibiliy(e)
+                        if (e === 'private') setPrice(0)
+                      }}
                       defaultValue={visibility}
                     >
                       {[
