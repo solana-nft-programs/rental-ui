@@ -328,6 +328,11 @@ export const RentalCard = ({
               paymentAmount={price || undefined}
               paymentMint={paymentMint || undefined}
               expiration={expiration || undefined}
+              durationSeconds={
+                durationAmount && durationCategory
+                  ? durationAmount * (durationData[durationCategory] || 0)
+                  : undefined
+              }
               usages={totalUsages ? 0 : undefined}
               totalUsages={totalUsages || undefined}
               extendable={hasAllExtensionProperties()}
