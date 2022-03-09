@@ -7,7 +7,7 @@
   },
   "dependencies": {
     "@babel/core": "^7.17.0",
-    "@cardinal/common": "^1.0.1",
+    "@cardinal/common": "^1.0.3",
     "@cardinal/namespaces-components": "^2.5.0",
     "@cardinal/token-manager": "^0.1.5",
     "@emotion/babel-plugin": "^11.7.2",
