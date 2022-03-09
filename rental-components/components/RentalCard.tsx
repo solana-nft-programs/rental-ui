@@ -7,6 +7,7 @@ import { Wallet } from '@saberhq/solana-contrib'
 import { ButtonWithFooter } from 'rental-components/common/ButtonWithFooter'
 import { Alert } from 'rental-components/common/Alert'
 import { StepDetail } from 'rental-components/common/StepDetail'
+import { Button } from 'rental-components/common/Button'
 import {
   Fieldset,
   Input,
@@ -15,11 +16,12 @@ import {
 import { PoweredByFooter } from 'rental-components/common/PoweredByFooter'
 import { FiSend } from 'react-icons/fi'
 import { BiTimer, BiQrScan } from 'react-icons/bi'
+import { GiRobotGrab } from 'react-icons/gi'
 import { ImPriceTags } from 'react-icons/im'
 import { PAYMENT_MINTS } from 'rental-components/common/Constants'
 import { MintPriceSelector } from 'rental-components/common/MintPriceSelector'
 import { TokenData } from 'api/api'
-import { getQueryParam, longDateString } from 'common/utils'
+import { getQueryParam, longDateString, shortPubKey } from 'common/utils'
 import { NFTOverlay } from 'common/NFTOverlay'
 import {
   claimLinks,
@@ -167,6 +169,9 @@ export const RentalCard = ({
   >(null)
   const [totalUsages, setTotalUsages] = useState<number | null>(null)
   const [visibility, setVisibiliy] = useState<'private' | 'public'>('public')
+  const [customInvalidator, setCustomInvalidator] = useState<string | null>(
+    null
+  )
 
   const [showAdditionalOptions, setShowAdditionalOptions] = useState(false)
   const [showUsages, setShowUsages] = useState(false)
@@ -274,6 +279,9 @@ export const RentalCard = ({
             : TokenManagerKind.Managed,
         invalidationType,
         visibility,
+        customInvalidators: customInvalidator
+          ? [new PublicKey(customInvalidator)]
+          : undefined,
       }
 
       const [transaction, tokenManagerId, otpKeypair] = await issueToken(
@@ -281,6 +289,7 @@ export const RentalCard = ({
         wallet,
         issueParams
       )
+
       await executeTransaction(connection, wallet, transaction, {
         silent: false,
         callback: refreshTokenAccounts,
@@ -611,7 +620,38 @@ export const RentalCard = ({
               {showAdditionalOptions ? 'Hide' : 'Show'} Additional Options
             </button>
             {showAdditionalOptions ? (
-              <div className="flex justify-center">
+              <div className="grid grid-cols-2 gap-4">
+                <StepDetail
+                  icon={<GiRobotGrab />}
+                  title="Manual Revocation"
+                  description={
+                    <div className="flex">
+                      <Fieldset>
+                        <InputBorder>
+                          <Input
+                            className="overflow-ellipsis"
+                            name="tweet"
+                            value={customInvalidator}
+                            placeholder={shortPubKey(wallet.publicKey)}
+                            onChange={(e) =>
+                              setCustomInvalidator(e.target.value)
+                            }
+                          />
+                        </InputBorder>
+                      </Fieldset>
+                      <Button
+                        variant={'primary'}
+                        className="ml-2 mt-0.5 inline-block flex-none"
+                        onClick={() =>
+                          setCustomInvalidator(wallet.publicKey.toString())
+                        }
+                      >
+                        {' '}
+                        Me{' '}
+                      </Button>
+                    </div>
+                  }
+                />
                 <StepDetail
                   icon={<GrReturn />}
                   title="Invalidation"
@@ -642,6 +682,7 @@ export const RentalCard = ({
                     </Select>
                   }
                 />
+
                 <StepDetail
                   icon={<FaEye />}
                   title="Visibility"
