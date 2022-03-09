@@ -378,7 +378,8 @@ export const RentalCard = ({
               className="mr-4 flex cursor-pointer"
               onClick={() => {
                 !showUsages ? setShowCustom(false) : null,
-                setShowUsages(!showUsages)}}
+                  setShowUsages(!showUsages)
+              }}
             >
               <input
                 className="my-auto mr-1 cursor-pointer"
@@ -434,19 +435,21 @@ export const RentalCard = ({
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <StepDetail
-              icon={<ImPriceTags />}
-              title="Rental Price"
-              description={
-                <MintPriceSelector
-                  disabled={visibility === 'private'}
-                  price={price}
-                  mint={paymentMint}
-                  handlePrice={setPrice}
-                  handleMint={setPaymentMint}
-                />
-              }
-            />
+            {!showCustom ? (
+              <StepDetail
+                icon={<ImPriceTags />}
+                title="Rental Price"
+                description={
+                  <MintPriceSelector
+                    disabled={visibility === 'private'}
+                    price={price}
+                    mint={paymentMint}
+                    handlePrice={setPrice}
+                    handleMint={setPaymentMint}
+                  />
+                }
+              />
+            ) : null}
             {showCustom ? (
               <StepDetail
                 icon={<GiRobotGrab />}
@@ -525,6 +528,7 @@ export const RentalCard = ({
                   <div>
                     <div className="flex gap-3 align-middle ">
                       <InputNumber
+                        className="rounded-[4px]"
                         style={{ width: '100%' }}
                         placeholder="# of..."
                         min="0"
@@ -532,7 +536,7 @@ export const RentalCard = ({
                         onChange={(e) => setDurationAmount(parseInt(e))}
                       />
                       <Select
-                        className="w-max"
+                        className="w-max rounded-[4px]"
                         onChange={(e) => setDurationCategory(e)}
                         defaultValue={defaultDurationCategory}
                       >
@@ -556,7 +560,7 @@ export const RentalCard = ({
                 className="mb-2 text-blue-500"
                 onClick={() => setShowExtendDuration(!showExtendDuration)}
               >
-                {showExtendDuration ? 'Hide' : 'Show'} Extend Duration
+                  {showExtendDuration ? '[-]' : '[+]'} Extendability
               </button>
             ) : null}
             <div className="grid grid-cols-2 gap-4">
@@ -567,7 +571,7 @@ export const RentalCard = ({
                     title="Extension Price"
                     description={
                       <>
-                        <MintPriceSelector
+                        <MintPriceSelector                          
                           disabled={visibility === 'private'}
                           price={extensionPaymentAmount}
                           mint={extensionPaymentMint}
@@ -584,6 +588,7 @@ export const RentalCard = ({
                       <div>
                         <div className="flex gap-3 align-middle ">
                           <InputNumber
+                            className="rounded-[4px]"
                             style={{ width: '100%' }}
                             placeholder="# of..."
                             min="0"
@@ -593,7 +598,7 @@ export const RentalCard = ({
                             }
                           />
                           <Select
-                            className="w-max"
+                            className="w-max rounded-[4px]"
                             onChange={(e) => setExtensionDurationCategory(e)}
                             defaultValue={defaultDurationCategory}
                           >
@@ -621,8 +626,8 @@ export const RentalCard = ({
                   description={
                     <div>
                       <DatePicker
-                        style={{
-                          borderRadius: '4px',
+                      className="rounded-[4px]"
+                        style={{                          
                           zIndex: 99999,
                         }}
                         showTime
@@ -661,7 +666,7 @@ export const RentalCard = ({
               ) : null}
             </div>
             <button
-              className="mt-3 mb-2 text-blue-500"
+              className="-mt-3 mb-2 text-blue-500"
               onClick={() => setShowAdditionalOptions(!showAdditionalOptions)}
             >
               {showAdditionalOptions ? 'Hide' : 'Show'} Additional Options

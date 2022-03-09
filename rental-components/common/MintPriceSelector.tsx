@@ -17,16 +17,17 @@ export const MintPriceSelector = ({
   price: number
   mint: string
   disabled?: boolean
-  mintDisabled?:boolean
+  mintDisabled?: boolean
   handlePrice: (p: number) => void
   handleMint: (m: string) => void
 }) => {
   const { paymentMintInfos } = usePaymentMints()
   const paymentMintInfo = paymentMintInfos[mint]
-  
+
   return (
     <SelectorOuter>
       <InputNumber
+        className="rounded-[4px]"
         style={{ width: '100%' }}
         placeholder="Price"
         stringMode
@@ -43,6 +44,7 @@ export const MintPriceSelector = ({
         }
       />
       <Select
+        style={{ borderRadius: '100px', zIndex: 99990 }}
         onChange={(e) => handleMint(e)}
         defaultValue={PAYMENT_MINTS[0].mint}
         disabled={disabled || mintDisabled}
@@ -64,9 +66,4 @@ const SelectorOuter = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
-
-  div,
-  .ant-select-selector {
-    border-radius: 4px !important;
-  }
 `
