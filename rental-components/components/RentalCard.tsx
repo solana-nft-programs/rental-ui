@@ -411,7 +411,7 @@ export const RentalCard = ({
               <span className="">Duration</span>
             </div>
             <div
-              className="mr-4 flex cursor-pointer"
+              className=" flex cursor-pointer"
               onClick={() => {
                 setShowExtendDuration(!showExtendDuration)
                 setShowDuration(true)
