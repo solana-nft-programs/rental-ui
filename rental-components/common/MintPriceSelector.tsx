@@ -43,8 +43,7 @@ export const MintPriceSelector = ({
           )
         }
       />
-      <Select
-        style={{ borderRadius: '100px', zIndex: 99990 }}
+      <Select        
         onChange={(e) => handleMint(e)}
         defaultValue={PAYMENT_MINTS[0].mint}
         disabled={disabled || mintDisabled}
@@ -66,4 +65,8 @@ const SelectorOuter = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
+
+  .ant-select-selector {
+    border-radius: 4px;
+  }
 `

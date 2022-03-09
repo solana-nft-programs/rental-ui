@@ -521,7 +521,7 @@ export const RentalCard = ({
               />
             ) : null}
             {showDuration ? (
-              <StepDetail
+              <StepDetail                
                 icon={<BiTimer />}
                 title="Rental Duration"
                 description={
@@ -535,7 +535,7 @@ export const RentalCard = ({
                         step={1}
                         onChange={(e) => setDurationAmount(parseInt(e))}
                       />
-                      <Select
+                      <Select                        
                         className="w-max rounded-[4px]"
                         onChange={(e) => setDurationCategory(e)}
                         defaultValue={defaultDurationCategory}
