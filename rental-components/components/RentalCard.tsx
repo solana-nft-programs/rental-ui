@@ -7,6 +7,7 @@ import { Wallet } from '@saberhq/solana-contrib'
 import { ButtonWithFooter } from 'rental-components/common/ButtonWithFooter'
 import { Alert } from 'rental-components/common/Alert'
 import { StepDetail } from 'rental-components/common/StepDetail'
+import { Button } from 'rental-components/common/Button'
 import {
   Fieldset,
   Input,
@@ -15,11 +16,12 @@ import {
 import { PoweredByFooter } from 'rental-components/common/PoweredByFooter'
 import { FiSend } from 'react-icons/fi'
 import { BiTimer, BiQrScan } from 'react-icons/bi'
+import { GiRobotGrab } from 'react-icons/gi'
 import { ImPriceTags } from 'react-icons/im'
 import { PAYMENT_MINTS } from 'rental-components/common/Constants'
 import { MintPriceSelector } from 'rental-components/common/MintPriceSelector'
 import { TokenData } from 'api/api'
-import { getQueryParam, longDateString } from 'common/utils'
+import { getQueryParam, longDateString, shortPubKey } from 'common/utils'
 import { NFTOverlay } from 'common/NFTOverlay'
 import {
   claimLinks,
@@ -167,12 +169,16 @@ export const RentalCard = ({
   >(null)
   const [totalUsages, setTotalUsages] = useState<number | null>(null)
   const [visibility, setVisibiliy] = useState<'private' | 'public'>('public')
+  const [customInvalidator, setCustomInvalidator] = useState<string | null>(
+    null
+  )
 
   const [showAdditionalOptions, setShowAdditionalOptions] = useState(false)
   const [showUsages, setShowUsages] = useState(false)
   const [showExpiration, setShowExpiration] = useState(false)
   const [showDuration, setShowDuration] = useState(false)
   const [showExtendDuration, setShowExtendDuration] = useState(false)
+  const [showCustom, setShowCustom] = useState(false)
 
   const handleSelection = (value: string) => {
     if (value == 'expiration') {
@@ -189,7 +195,7 @@ export const RentalCard = ({
       }
       setShowDuration(!showDuration)
     }
-
+    setShowCustom(false)
     setExpiration(null)
     setDurationAmount(null)
     setDurationCategory(defaultDurationCategory)
@@ -274,6 +280,9 @@ export const RentalCard = ({
             : TokenManagerKind.Managed,
         invalidationType,
         visibility,
+        customInvalidators: customInvalidator
+          ? [new PublicKey(customInvalidator)]
+          : undefined,
       }
 
       const [transaction, tokenManagerId, otpKeypair] = await issueToken(
@@ -281,6 +290,7 @@ export const RentalCard = ({
         wallet,
         issueParams
       )
+
       await executeTransaction(connection, wallet, transaction, {
         silent: false,
         callback: refreshTokenAccounts,
@@ -366,7 +376,10 @@ export const RentalCard = ({
           <div className="flex justify-center">
             <div
               className="mr-4 flex cursor-pointer"
-              onClick={() => setShowUsages(!showUsages)}
+              onClick={() => {
+                !showUsages ? setShowCustom(false) : null,
+                  setShowUsages(!showUsages)
+              }}
             >
               <input
                 className="my-auto mr-1 cursor-pointer"
@@ -398,41 +411,76 @@ export const RentalCard = ({
               <span className="">Duration</span>
             </div>
             <div
-              className="mr-4 flex cursor-pointer"
+              className=" flex cursor-pointer"
               onClick={() => {
                 setShowExtendDuration(!showExtendDuration)
                 setShowDuration(true)
               }}
+            ></div>
+            <div
+              className="mr-4 flex cursor-pointer"
+              onClick={() => {
+                setShowCustom(!showCustom)
+                setShowDuration(false)
+                setShowExpiration(false)
+                setShowUsages(false)
+              }}
             >
               <input
-                disabled={showExpiration}
                 className="my-auto mr-1 cursor-pointer"
                 type="checkbox"
-                checked={showDuration && showExtendDuration}
+                checked={showCustom}
               />
-              <span className="">
-                {showExpiration ? (
-                  <del>Extend Duration</del>
-                ) : (
-                  'Extend Duration'
-                )}
-              </span>
+              <span className="">Custom</span>
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <StepDetail
-              icon={<ImPriceTags />}
-              title="Rental Price"
-              description={
-                <MintPriceSelector
-                  disabled={visibility === 'private'}
-                  price={price}
-                  mint={paymentMint}
-                  handlePrice={setPrice}
-                  handleMint={setPaymentMint}
-                />
-              }
-            />
+            {!showCustom ? (
+              <StepDetail
+                icon={<ImPriceTags />}
+                title="Rental Price"
+                description={
+                  <MintPriceSelector
+                    disabled={visibility === 'private'}
+                    price={price}
+                    mint={paymentMint}
+                    handlePrice={setPrice}
+                    handleMint={setPaymentMint}
+                  />
+                }
+              />
+            ) : null}
+            {showCustom ? (
+              <StepDetail
+                icon={<GiRobotGrab />}
+                title="Custom Revocation"
+                description={
+                  <div className="flex">
+                    <Fieldset>
+                      <InputBorder>
+                        <Input
+                          className="overflow-ellipsis"
+                          name="tweet"
+                          value={customInvalidator}
+                          placeholder={shortPubKey(wallet.publicKey)}
+                          onChange={(e) => setCustomInvalidator(e.target.value)}
+                        />
+                      </InputBorder>
+                    </Fieldset>
+                    <Button
+                      variant={'primary'}
+                      className="ml-2 mt-0.5 inline-block flex-none"
+                      onClick={() =>
+                        setCustomInvalidator(wallet.publicKey.toString())
+                      }
+                    >
+                      {' '}
+                      Me{' '}
+                    </Button>
+                  </div>
+                }
+              />
+            ) : null}
             {showUsages ? (
               <StepDetail
                 icon={<BiQrScan />}
@@ -472,23 +520,23 @@ export const RentalCard = ({
                 }
               />
             ) : null}
-
             {showDuration ? (
-              <StepDetail
+              <StepDetail                
                 icon={<BiTimer />}
                 title="Rental Duration"
                 description={
                   <div>
                     <div className="flex gap-3 align-middle ">
                       <InputNumber
+                        className="rounded-[4px]"
                         style={{ width: '100%' }}
                         placeholder="# of..."
                         min="0"
                         step={1}
                         onChange={(e) => setDurationAmount(parseInt(e))}
                       />
-                      <Select
-                        className="w-max"
+                      <Select                        
+                        className="w-max rounded-[4px]"
                         onChange={(e) => setDurationCategory(e)}
                         defaultValue={defaultDurationCategory}
                       >
@@ -505,113 +553,126 @@ export const RentalCard = ({
                 }
               />
             ) : null}
-            {showDuration && showExtendDuration ? (
-              <>
-                <StepDetail
-                  icon={<ImPriceTags />}
-                  title="Extension Price"
-                  description={
-                    <>
-                      <MintPriceSelector
-                        disabled={visibility === 'private'}
-                        price={extensionPaymentAmount}
-                        mint={extensionPaymentMint}
-                        handlePrice={setExtensionPaymentAmount}
-                        handleMint={setExtensionPaymentMint}
-                      />
-                    </>
-                  }
-                />
+          </div>
+          <div>
+            {showDuration ? (
+              <button
+                className="mb-2 text-blue-500"
+                onClick={() => setShowExtendDuration(!showExtendDuration)}
+              >
+                  {showExtendDuration ? '[-]' : '[+]'} Extendability
+              </button>
+            ) : null}
+            <div className="grid grid-cols-2 gap-4">
+              {showDuration && showExtendDuration ? (
+                <>
+                  <StepDetail
+                    icon={<ImPriceTags />}
+                    title="Extension Price"
+                    description={
+                      <>
+                        <MintPriceSelector                          
+                          disabled={visibility === 'private'}
+                          price={extensionPaymentAmount}
+                          mint={extensionPaymentMint}
+                          handlePrice={setExtensionPaymentAmount}
+                          handleMint={setExtensionPaymentMint}
+                        />
+                      </>
+                    }
+                  />
+                  <StepDetail
+                    icon={<BiTimer />}
+                    title="Extension Duration"
+                    description={
+                      <div>
+                        <div className="flex gap-3 align-middle ">
+                          <InputNumber
+                            className="rounded-[4px]"
+                            style={{ width: '100%' }}
+                            placeholder="# of..."
+                            min="0"
+                            step={1}
+                            onChange={(e) =>
+                              setExtensionDurationAmount(parseInt(e))
+                            }
+                          />
+                          <Select
+                            className="w-max rounded-[4px]"
+                            onChange={(e) => setExtensionDurationCategory(e)}
+                            defaultValue={defaultDurationCategory}
+                          >
+                            {Object.keys(durationData).map((category) => (
+                              <Option key={category} value={category}>
+                                {durationAmount && durationAmount == 1
+                                  ? category.substring(0, category.length - 1)
+                                  : category}
+                              </Option>
+                            ))}
+                          </Select>
+                        </div>
+                      </div>
+                    }
+                  />
+                </>
+              ) : null}
+              {/* {showDuration && showExtendDuration ? (
+              
+            ) : null} */}
+              {showDuration && showExtendDuration ? (
                 <StepDetail
                   icon={<BiTimer />}
-                  title="Extension Duration"
+                  title="Max Expiration"
                   description={
                     <div>
-                      <div className="flex gap-3 align-middle ">
-                        <InputNumber
-                          style={{ width: '100%' }}
-                          placeholder="# of..."
-                          min="0"
-                          step={1}
-                          onChange={(e) =>
-                            setExtensionDurationAmount(parseInt(e))
-                          }
-                        />
-                        <Select
-                          className="w-max"
-                          onChange={(e) => setExtensionDurationCategory(e)}
-                          defaultValue={defaultDurationCategory}
-                        >
-                          {Object.keys(durationData).map((category) => (
-                            <Option key={category} value={category}>
-                              {durationAmount && durationAmount == 1
-                                ? category.substring(0, category.length - 1)
-                                : category}
-                            </Option>
-                          ))}
-                        </Select>
-                      </div>
+                      <DatePicker
+                      className="rounded-[4px]"
+                        style={{                          
+                          zIndex: 99999,
+                        }}
+                        showTime
+                        onChange={(e) =>
+                          setExtensionMaxExpiration(
+                            e ? e.valueOf() / 1000 : null
+                          )
+                        }
+                      />
                     </div>
                   }
                 />
-              </>
-            ) : null}
-            {/* {showDuration && showExtendDuration ? (
-              
-            ) : null} */}
-            {showDuration && showExtendDuration ? (
-              <StepDetail
-                icon={<BiTimer />}
-                title="Max Expiration"
-                description={
-                  <div>
-                    <DatePicker
-                      style={{
-                        borderRadius: '4px',
-                        zIndex: 99999,
-                      }}
-                      showTime
-                      onChange={(e) =>
-                        setExtensionMaxExpiration(e ? e.valueOf() / 1000 : null)
-                      }
+              ) : null}
+              {showDuration && showExtendDuration ? (
+                <div className="mt-1">
+                  <span
+                    className="cursor-pointer"
+                    onClick={() =>
+                      setDisablePartialExtension(!disablePartialExtension)
+                    }
+                  >
+                    <input
+                      className="my-auto inline-block cursor-pointer"
+                      type="checkbox"
+                      checked={disablePartialExtension || false}
                     />
-                  </div>
-                }
-              />
-            ) : null}
-            {showDuration && showExtendDuration ? (
-              <div className="mt-1">
-                <span
-                  className="cursor-pointer"
-                  onClick={() =>
-                    setDisablePartialExtension(!disablePartialExtension)
-                  }
-                >
-                  <input
-                    className="my-auto inline-block cursor-pointer"
-                    type="checkbox"
-                    checked={disablePartialExtension || false}
-                  />
-                  <p className="mb-1 ml-3 inline-block text-[14px] font-bold text-black">
-                    Disable Partial Extension
+                    <p className="mb-1 ml-3 inline-block text-[14px] font-bold text-black">
+                      Disable Partial Extension
+                    </p>
+                  </span>
+                  <p className="mb-2 ml-6 inline-block text-[12px] text-gray-700">
+                    If selected, rental extensions must occur in multiples of
+                    the extension duration.
                   </p>
-                </span>
-                <p className="mb-2 ml-6 inline-block text-[12px] text-gray-700">
-                  If selected, rental extensions must occur in multiples of the
-                  extension duration.
-                </p>
-              </div>
-            ) : null}
-          </div>
-          <div>
+                </div>
+              ) : null}
+            </div>
             <button
-              className="mb-2 text-blue-500"
+              className="-mt-3 mb-2 text-blue-500"
               onClick={() => setShowAdditionalOptions(!showAdditionalOptions)}
             >
               {showAdditionalOptions ? 'Hide' : 'Show'} Additional Options
             </button>
             {showAdditionalOptions ? (
-              <div className="flex justify-center">
+              <div className="grid grid-cols-2 gap-4">
                 <StepDetail
                   icon={<GrReturn />}
                   title="Invalidation"
@@ -642,6 +703,7 @@ export const RentalCard = ({
                     </Select>
                   }
                 />
+
                 <StepDetail
                   icon={<FaEye />}
                   title="Visibility"
