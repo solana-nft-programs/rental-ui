@@ -20,6 +20,7 @@ import { TokenManagerData } from '@cardinal/token-manager/dist/cjs/programs/toke
 import { TimeInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
 import { UseInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
 import { PaidClaimApproverData } from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
+import { getBatchedMultiplAccounts } from '@cardinal/common'
 
 export async function findAssociatedTokenAddress(
   walletAddress: PublicKey,
@@ -288,13 +289,13 @@ export async function getTokenDatas(
     timeInvalidators,
     useInvalidators,
   ] = await Promise.all([
-    connection
-      .getMultipleAccountsInfo(
-        metadataIds[4].filter((pk) => pk),
-        {
-          encoding: 'jsonParsed',
-        }
-      )
+    getBatchedMultiplAccounts(
+      connection,
+      metadataIds[4].filter((pk) => pk),
+      {
+        encoding: 'jsonParsed',
+      }
+    )
       .then((tokenAccounts) =>
         tokenAccounts.map(
           (acc) => (acc?.data as ParsedAccountData).parsed?.info
