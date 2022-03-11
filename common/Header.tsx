@@ -14,6 +14,7 @@ import { shortPubKey } from './utils'
 import { HiUserCircle } from 'react-icons/hi'
 import { Airdrop } from './Airdrop'
 import { useRouter } from 'next/router'
+import { useProjectConfigData } from 'providers/ProjectConfigProvider'
 
 export const StyledHeader = styled.div<{ isTabletOrMobile: boolean }>`
   z-index: 100;
@@ -248,6 +249,9 @@ export const Header = ({
   const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' })
   const [showTabs, setShowTabs] = useState(false)
   const [tab, setTab] = useState<string>('wallet')
+  const config = useProjectConfigData()
+
+  console.log(config && config.logoImage)
 
   useEffect(() => {
     const anchor = router.asPath.split('#')[1]
@@ -262,7 +266,7 @@ export const Header = ({
     <StyledHeader isTabletOrMobile={isTabletOrMobile}>
       <div className="left">
         <div className="title">
-          <img src="/assets/cardinal-titled.png" />
+          <img src={config && config.logoImage} />
           <div className="subscript">
             {ctx.environment.label === 'devnet' ? 'DEV' : 'alpha'}
           </div>

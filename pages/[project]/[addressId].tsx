@@ -18,6 +18,7 @@ import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 import { Manage } from 'components/Manage'
 import { Browse } from 'components/Browse'
 import { useRentalExtensionModal } from 'rental-components/RentalExtensionModalProvider'
+import { useProjectConfigData } from 'providers/ProjectConfigProvider'
 
 export const TokensOuter = styled.div`
   display: flex;
@@ -130,6 +131,9 @@ function Profile() {
   const [loading, _setLoading] = useState(false)
   const [tab, setTab] = useState<string>('wallet')
   const rentalExtensionModal = useRentalExtensionModal()
+  const config = useProjectConfigData()
+
+  console.log(config);
 
   useEffect(() => {
     const anchor = router.asPath.split('#')[1]
@@ -144,7 +148,7 @@ function Profile() {
     if (wallet && wallet.connected && wallet.publicKey) {
       setAddress(wallet.publicKey.toBase58())
       router.push(
-        `/${wallet.publicKey.toBase58()}${
+        `/wallet/${wallet.publicKey.toBase58()}${
           new URLSearchParams(window.location.search).get('cluster')
             ? `?cluster=${new URLSearchParams(window.location.search).get(
                 'cluster'
