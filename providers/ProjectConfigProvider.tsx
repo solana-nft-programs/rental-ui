@@ -67,18 +67,9 @@ export function ProjectConfigProvider({ children }: { children: ReactChild }) {
         `https://api.cardinal.so/config/${project}`
       ).then(async (r) => JSON.parse(await r.json()))
       setLogoImage(jsonData.logoImage)
-      // setColors(jsonData.colors)
-      setColors({
-        main: '#000',
-        secondary: '#80DDEF',
-      })
-      setFilters([
-        {
-          type: 'creators',
-          publicKey: 'GdtkQajEADGbfSUEBS5zctYrhemXYQkqnrMiGY7n7vAw',
-        },
-      ])
-      setProjectName('portals')
+      setColors(jsonData.colors)
+      setFilters(jsonData.filters)      
+      setProjectName(jsonData.projectName)
     } catch (e) {
       console.log('ERROR', e)
     }
