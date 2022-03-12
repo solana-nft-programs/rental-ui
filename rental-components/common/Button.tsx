@@ -62,7 +62,7 @@ export const Button = styled.button<{
   }
 `
 
-const getColorByBgColor = (bgColor) => {
+export const getColorByBgColor = (bgColor) => {
   if (!bgColor) {
     return ''
   }

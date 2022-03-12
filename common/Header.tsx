@@ -15,6 +15,8 @@ import { HiUserCircle } from 'react-icons/hi'
 import { Airdrop } from './Airdrop'
 import { useRouter } from 'next/router'
 import { useProjectConfigData } from 'providers/ProjectConfigProvider'
+import lighten from 'polished/lib/color/lighten'
+import { getColorByBgColor } from 'rental-components/common/Button'
 
 export const StyledHeader = styled.div<{ isTabletOrMobile: boolean }>`
   z-index: 100;
@@ -178,7 +180,7 @@ export const StyledTabs = styled.div<{ show: boolean }>`
     padding: 5px;
     position: relative;
     max-width: 600px;
-    background-color: ${Colors.navBg};
+    background-color: ${lighten(0.1, Colors.navBg)};
     border-radius: 20px;
     align-items: center;
     gap: 5px;
@@ -213,16 +215,20 @@ export const StyledTab = styled.div<{
   disabled: boolean | undefined
 }>`
   border-radius: 20px;
-  background: ${({ selected }) => (selected ? Colors.lightGrayBg : 'none')};
+  background: ${({ selected }) => (selected ? Colors.secondary : 'none')};
   opacity: ${({ disabled }) => (disabled ? 0.25 : 1)};
-  color: ${({ disabled }) => (disabled ? Colors.white : Colors.white)};
+  color: ${({ selected }) =>
+    selected
+      ? getColorByBgColor(Colors.secondary)
+      : getColorByBgColor(Colors.navBg)};
   text-align: center;
   width: 150px;
   padding: 10px 20px;
   cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
   transition: 0.3s all;
   &:hover {
-    background: ${({ disabled }) => (disabled ? '' : Colors.darkGrayBg)};
+    background: ${({ disabled }) =>
+      disabled ? '' : lighten(0.1, Colors.secondary)};
   }
 `
 
@@ -253,7 +259,8 @@ export const Header = ({
 
   useEffect(() => {
     if (colors) {
-      Colors.navBg = colors.main      
+      Colors.navBg = colors.main
+      Colors.secondary = colors.secondary
     }
   }, [colors])
 
@@ -267,7 +274,10 @@ export const Header = ({
     : ''
 
   return (
-    <StyledHeader style={{backgroundColor: Colors.navBg}} isTabletOrMobile={isTabletOrMobile}>
+    <StyledHeader
+      style={{ backgroundColor: Colors.navBg }}
+      isTabletOrMobile={isTabletOrMobile}
+    >
       <div className="left">
         <div className="title">
           <img src={logoImage} />
