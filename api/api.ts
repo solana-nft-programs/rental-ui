@@ -20,7 +20,14 @@ import { TokenManagerData } from '@cardinal/token-manager/dist/cjs/programs/toke
 import { TimeInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
 import { UseInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
 import { PaidClaimApproverData } from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
-import { getBatchedMultiplAccounts } from '@cardinal/common'
+import { getBatchedMultiplAccounts as getBatchedMultipleAccounts } from '@cardinal/common'
+import {
+  Edition,
+  EditionData,
+  MasterEdition,
+  MasterEditionV2Data,
+  MetadataKey,
+} from '@metaplex-foundation/mpl-token-metadata'
 
 export async function findAssociatedTokenAddress(
   walletAddress: PublicKey,
@@ -70,13 +77,14 @@ export async function getTokenAccountsWithData(
 
   const metadataTuples: [
     PublicKey,
+    PublicKey,
     PublicKey | null,
     PublicKey | null,
     PublicKey | null,
     PublicKey
   ][] = await Promise.all(
     tokenAccounts.map(async (tokenAccount) => {
-      const [[metadataId], tokenManagerId] = await Promise.all([
+      const [[metadataId], editionId, tokenManagerId] = await Promise.all([
         PublicKey.findProgramAddress(
           [
             anchor.utils.bytes.utf8.encode(metaplex.MetadataProgram.PREFIX),
@@ -87,6 +95,7 @@ export async function getTokenAccountsWithData(
           ],
           metaplex.MetadataProgram.PUBKEY
         ),
+        Edition.getPDA(tokenAccount.account.data.parsed.info.mint),
         tryTokenManagerAddressFromMint(
           connection,
           new PublicKey(tokenAccount.account.data.parsed.info.mint)
@@ -103,6 +112,7 @@ export async function getTokenAccountsWithData(
       }
       return [
         metadataId,
+        editionId,
         tokenManagerId,
         timeInvalidatorId,
         useInvalidatorId,
@@ -112,31 +122,46 @@ export async function getTokenAccountsWithData(
   )
 
   // @ts-ignore
-  const metadataIds: [PublicKey[], PublicKey[], PublicKey[], PublicKey[]] =
+  const metadataIds: [
+    PublicKey[],
+    PublicKey[],
+    PublicKey[],
+    PublicKey[],
+    PublicKey[]
+  ] =
     // @ts-ignore
     metadataTuples.reduce(
       (
         acc,
-        [metaplexId, tokenManagerId, timeInvalidatorId, useInvalidatorId]
+        [
+          metaplexId,
+          editionId,
+          tokenManagerId,
+          timeInvalidatorId,
+          useInvalidatorId,
+        ]
       ) => [
         [...acc[0], metaplexId],
-        [...acc[1], tokenManagerId],
-        [...acc[2], timeInvalidatorId],
-        [...acc[3], useInvalidatorId],
+        [...acc[1], editionId],
+        [...acc[2], tokenManagerId],
+        [...acc[3], timeInvalidatorId],
+        [...acc[4], useInvalidatorId],
       ],
-      [[], [], [], []]
+      [[], [], [], [], []]
     )
 
   const [
     metaplexAccountInfos,
+    editionInfos,
     tokenManagers,
     timeInvalidators,
     useInvalidators,
   ] = await Promise.all([
-    connection.getMultipleAccountsInfo(metadataIds[0]),
-    tokenManager.accounts.getTokenManagers(connection, metadataIds[1]),
-    timeInvalidator.accounts.getTimeInvalidators(connection, metadataIds[2]),
-    useInvalidator.accounts.getUseInvalidators(connection, metadataIds[3]),
+    getBatchedMultipleAccounts(connection, metadataIds[0]),
+    getBatchedMultipleAccounts(connection, metadataIds[1]),
+    tokenManager.accounts.getTokenManagers(connection, metadataIds[2]),
+    timeInvalidator.accounts.getTimeInvalidators(connection, metadataIds[3]),
+    useInvalidator.accounts.getUseInvalidators(connection, metadataIds[4]),
   ])
 
   const metaplexData = metaplexAccountInfos.map((accountInfo, i) => {
@@ -148,6 +173,36 @@ export async function getTokenAccountsWithData(
         data: metaplex.MetadataData.deserialize(accountInfo?.data as Buffer),
       }
     } catch (e) {}
+    return md
+  })
+
+  const editionData = editionInfos.map((accountInfo, i) => {
+    let md
+    try {
+      const key =
+        accountInfo === null || accountInfo === void 0
+          ? void 0
+          : accountInfo.data[0]
+      let parsed
+      if (key === MetadataKey.EditionV1) {
+        parsed = EditionData.deserialize(accountInfo?.data as Buffer)
+      } else if (
+        key === MetadataKey.MasterEditionV1 ||
+        key === MetadataKey.MasterEditionV2
+      ) {
+        parsed = MasterEditionV2Data.deserialize(accountInfo?.data as Buffer)
+      }
+
+      if (parsed) {
+        md = {
+          pubkey: metadataIds[1][i]!,
+          ...accountInfo,
+          data: parsed,
+        }
+      }
+    } catch (e) {
+      console.log(e)
+    }
     return md
   })
 
@@ -170,6 +225,7 @@ export async function getTokenAccountsWithData(
   return metadataTuples.map(
     ([
       metaplexId,
+      editionId,
       tokenManagerId,
       timeInvalidatorId,
       useInvalidatorId,
@@ -180,6 +236,9 @@ export async function getTokenAccountsWithData(
       ),
       metaplexData: metaplexData.find((data) =>
         data ? data.pubkey.toBase58() === metaplexId.toBase58() : undefined
+      ),
+      editionData: editionData.find((data) =>
+        data ? data.pubkey.toBase58() === editionId.toBase58() : undefined
       ),
       tokenManager: tokenManagers.find((tkm) =>
         tkm?.parsed
@@ -289,7 +348,7 @@ export async function getTokenDatas(
     timeInvalidators,
     useInvalidators,
   ] = await Promise.all([
-    getBatchedMultiplAccounts(
+    getBatchedMultipleAccounts(
       connection,
       metadataIds[4].filter((pk) => pk),
       {
@@ -305,7 +364,7 @@ export async function getTokenDatas(
         console.log('Failed ot get token accounts', e)
         return []
       }) as Promise<(spl.AccountInfo | null)[]>,
-    connection.getMultipleAccountsInfo(metadataIds[0]),
+    getBatchedMultipleAccounts(connection, metadataIds[0]),
     claimApprover.accounts.getClaimApprovers(connection, metadataIds[1]),
     timeInvalidator.accounts.getTimeInvalidators(connection, metadataIds[2]),
     useInvalidator.accounts.getUseInvalidators(connection, metadataIds[3]),
