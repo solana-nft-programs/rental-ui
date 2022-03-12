@@ -32,8 +32,6 @@ export const filterTokens = (
   if (filters.length == 0) {
     // console.log('No filters')
   } else {
-    // console.log("Got filters!")
-    // console.log(filters)
     for (const configFilter of filters) {
       if (configFilter.type === 'creators') {
         tokens = tokens.filter(
@@ -46,7 +44,6 @@ export const filterTokens = (
       }
     }
   }
-  console.log(tokens)
   return tokens
 }
 
@@ -68,7 +65,7 @@ export function ProjectConfigProvider({ children }: { children: ReactChild }) {
       ).then(async (r) => JSON.parse(await r.json()))
       setLogoImage(jsonData.logoImage)
       setColors(jsonData.colors)
-      setFilters(jsonData.filters)      
+      setFilters(jsonData.filters)
       setProjectName(jsonData.projectName)
     } catch (e) {
       console.log('ERROR', e)
@@ -78,8 +75,6 @@ export function ProjectConfigProvider({ children }: { children: ReactChild }) {
   useEffect(() => {
     loadConfig()
   }, [asPath])
-
-  console.log(filters)
 
   return (
     <ProjectConfigValues.Provider

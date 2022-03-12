@@ -170,6 +170,7 @@ export const Hamburger = styled.div`
   }
 `
 
+// background-color: ${lighten(0.1, Colors.navBg)};
 export const StyledTabs = styled.div<{ show: boolean }>`
   font-size: 13px;
 
@@ -180,7 +181,7 @@ export const StyledTabs = styled.div<{ show: boolean }>`
     padding: 5px;
     position: relative;
     max-width: 600px;
-    background-color: ${lighten(0.1, Colors.navBg)};
+    background-color: ${Colors.navBg};
     border-radius: 20px;
     align-items: center;
     gap: 5px;

@@ -38,7 +38,7 @@ export default function Home() {
   useEffect(() => {
     if (wallet && wallet.connected && wallet.publicKey) {
       router.push(
-        `/${projectName ?? 'wallet'}/${wallet.publicKey.toBase58()}${
+        `/${projectName}/${wallet.publicKey.toBase58()}${
           new URLSearchParams(window.location.search).get('cluster')
             ? `?cluster=${new URLSearchParams(window.location.search).get(
                 'cluster'
@@ -73,7 +73,7 @@ export default function Home() {
         <link
           href="https://fonts.googleapis.com/css2?family=Karla:wght@600&display=swap"
           rel="stylesheet"
-        />  
+        />
       </Head>
       <StyledSplash>
         <div className="title">

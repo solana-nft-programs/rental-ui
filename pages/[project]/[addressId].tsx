@@ -139,9 +139,8 @@ function Profile() {
   }, [router.asPath])
 
   useEffect(() => {
-    console.log(colors)
     if (colors) {
-      Colors.background = colors.main    
+      Colors.background = colors.main
     }
   }, [colors])
 
@@ -153,7 +152,7 @@ function Profile() {
     if (wallet && wallet.connected && wallet.publicKey) {
       setAddress(wallet.publicKey.toBase58())
       router.push(
-        `/${projectName ?? 'wallet'}/${wallet.publicKey.toBase58()}${
+        `/${projectName}/${wallet.publicKey.toBase58()}${
           new URLSearchParams(window.location.search).get('cluster')
             ? `?cluster=${new URLSearchParams(window.location.search).get(
                 'cluster'
