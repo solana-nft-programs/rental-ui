@@ -14,6 +14,9 @@ import { shortPubKey } from './utils'
 import { HiUserCircle } from 'react-icons/hi'
 import { Airdrop } from './Airdrop'
 import { useRouter } from 'next/router'
+import { useProjectConfigData } from 'providers/ProjectConfigProvider'
+import lighten from 'polished/lib/color/lighten'
+import { getColorByBgColor } from 'rental-components/common/Button'
 
 export const StyledHeader = styled.div<{ isTabletOrMobile: boolean }>`
   z-index: 100;
@@ -167,6 +170,7 @@ export const Hamburger = styled.div`
   }
 `
 
+// background-color: ${lighten(0.1, Colors.navBg)};
 export const StyledTabs = styled.div<{ show: boolean }>`
   font-size: 13px;
 
@@ -212,16 +216,20 @@ export const StyledTab = styled.div<{
   disabled: boolean | undefined
 }>`
   border-radius: 20px;
-  background: ${({ selected }) => (selected ? Colors.lightGrayBg : 'none')};
+  background: ${({ selected }) => (selected ? Colors.secondary : 'none')};
   opacity: ${({ disabled }) => (disabled ? 0.25 : 1)};
-  color: ${({ disabled }) => (disabled ? Colors.white : Colors.white)};
+  color: ${({ selected }) =>
+    selected
+      ? getColorByBgColor(Colors.secondary)
+      : getColorByBgColor(Colors.navBg)};
   text-align: center;
   width: 150px;
   padding: 10px 20px;
   cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
   transition: 0.3s all;
   &:hover {
-    background: ${({ disabled }) => (disabled ? '' : Colors.darkGrayBg)};
+    background: ${({ disabled }) =>
+      disabled ? '' : lighten(0.1, Colors.secondary)};
   }
 `
 
@@ -248,6 +256,14 @@ export const Header = ({
   const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' })
   const [showTabs, setShowTabs] = useState(false)
   const [tab, setTab] = useState<string>('wallet')
+  const { logoImage, colors } = useProjectConfigData()
+
+  useEffect(() => {
+    if (colors) {
+      Colors.navBg = colors.main
+      Colors.secondary = colors.secondary
+    }
+  }, [colors])
 
   useEffect(() => {
     const anchor = router.asPath.split('#')[1]
@@ -259,10 +275,13 @@ export const Header = ({
     : ''
 
   return (
-    <StyledHeader isTabletOrMobile={isTabletOrMobile}>
+    <StyledHeader
+      style={{ backgroundColor: Colors.navBg }}
+      isTabletOrMobile={isTabletOrMobile}
+    >
       <div className="left">
         <div className="title">
-          <img src="/assets/cardinal-titled.png" />
+          <img src={logoImage} />
           <div className="subscript">
             {ctx.environment.label === 'devnet' ? 'DEV' : 'alpha'}
           </div>

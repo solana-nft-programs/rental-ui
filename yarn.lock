@@ -394,6 +394,7 @@
   version "0.2.20"
   resolved "https://registry.yarnpkg.com/@cardinal/token-manager/-/token-manager-0.2.20.tgz#ba30c723ffaf3f2045ebf621b933b0f3481ef00f"
   integrity sha512-NO6Bp79FOo6yF+1RRRK/I3KatP+Ih0v2H58JcfmG+K+COmiTfsTGyIqMgne3Af3F/UfZSxaC3G6y3QITagZ68g==
+  
   dependencies:
     "@metaplex-foundation/mpl-token-metadata" "^1.2.3"
     "@solana/buffer-layout" "^4.0.0"

@@ -16,6 +16,7 @@ import { executeTransaction } from 'common/Transactions'
 import { useUserTokenData } from 'providers/TokenDataProvider'
 import { BN } from '@project-serum/anchor'
 import { StyledTag, Tag } from 'common/Tags'
+import { useProjectConfigData } from 'providers/ProjectConfigProvider'
 
 const handleCopy = (shareUrl: string) => {
   navigator.clipboard.writeText(shareUrl)
@@ -27,6 +28,8 @@ export const Manage = () => {
   const wallet = useWallet()
   const { refreshTokenAccounts } = useUserTokenData()
   const { managedTokens, loaded } = useManagedTokens()
+  const { colors } = useProjectConfigData()
+
   return (
     <TokensOuter>
       {managedTokens && managedTokens.length > 0 ? (
@@ -72,6 +75,7 @@ export const Manage = () => {
                       {tokenData.tokenManager?.parsed.issuer.toBase58() ===
                         wallet.publicKey?.toBase58() && (
                         <Button
+                          bgColor={colors.secondary}
                           variant="primary"
                           disabled={!wallet.connected}
                           onClick={async () =>

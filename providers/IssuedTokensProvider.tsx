@@ -4,6 +4,7 @@ import { useEnvironmentCtx } from './EnvironmentProvider'
 import { getTokenDatas, TokenData } from 'api/api'
 import { getTokenManagersByState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/accounts'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
+import { filterTokens, useProjectConfigData } from './ProjectConfigProvider'
 
 export interface IssuedTokensContextValues {
   issuedTokens: TokenData[]
@@ -29,6 +30,7 @@ export function IssuedTokensProvider({ children }: { children: ReactChild }) {
   const [refreshing, setRefreshing] = useState<Boolean>(false)
   const [loaded, setLoaded] = useState<Boolean>(false)
   const [error, setError] = useState<string | null>(null)
+  const { filters } = useProjectConfigData()
 
   const refreshIssuedTokens = async () => {
     try {
@@ -37,7 +39,8 @@ export function IssuedTokensProvider({ children }: { children: ReactChild }) {
         connection,
         TokenManagerState.Issued
       )
-      const tokenDatas = await getTokenDatas(connection, tokenManagerDatas)
+      let tokenDatas = await getTokenDatas(connection, tokenManagerDatas)
+      tokenDatas = filterTokens(filters, tokenDatas)
       setIssuedTokens(tokenDatas)
     } catch (e) {
       console.log(e)
@@ -50,7 +53,7 @@ export function IssuedTokensProvider({ children }: { children: ReactChild }) {
 
   useEffect(() => {
     refreshIssuedTokens()
-  }, [connection, setError, setRefreshing, tokenDatas])
+  }, [connection, setError, setRefreshing, tokenDatas, filters])
 
   return (
     <IssuedTokensContext.Provider

@@ -17,6 +17,7 @@ import { QRCodeProvider } from 'rental-components/QRCodeProvider'
 import { ManagedTokensProvider } from 'providers/ManagedTokensProvider'
 import { IssuedTokensProvider } from 'providers/IssuedTokensProvider'
 import { RentalExtensionModalProvider } from 'rental-components/RentalExtensionModalProvider'
+import { ProjectConfigProvider } from 'providers/ProjectConfigProvider'
 
 require('@solana/wallet-adapter-react-ui/styles.css')
 
@@ -24,25 +25,27 @@ const App = ({ Component, pageProps }: AppProps) => (
   <EnvironmentProvider>
     <WalletProvider wallets={getWalletAdapters()}>
       <WalletIdentityProvider>
-        <PaymentMintsProvider>
-          <QRCodeProvider>
-            <UTCNowProvider>
-              <TokenAccountsProvider>
-                <ManagedTokensProvider>
-                  <IssuedTokensProvider>
-                    <RentalModalProvider>
-                      <RentalExtensionModalProvider>
-                        <WalletModalProvider>
-                          <Component {...pageProps} />
-                        </WalletModalProvider>
-                      </RentalExtensionModalProvider>
-                    </RentalModalProvider>
-                  </IssuedTokensProvider>
-                </ManagedTokensProvider>
-              </TokenAccountsProvider>
-            </UTCNowProvider>
-          </QRCodeProvider>
-        </PaymentMintsProvider>
+        <ProjectConfigProvider>
+          <PaymentMintsProvider>
+            <QRCodeProvider>
+              <UTCNowProvider>
+                <TokenAccountsProvider>
+                  <ManagedTokensProvider>
+                    <IssuedTokensProvider>
+                      <RentalModalProvider>
+                        <RentalExtensionModalProvider>
+                          <WalletModalProvider>
+                            <Component {...pageProps} />
+                          </WalletModalProvider>
+                        </RentalExtensionModalProvider>
+                      </RentalModalProvider>
+                    </IssuedTokensProvider>
+                  </ManagedTokensProvider>
+                </TokenAccountsProvider>
+              </UTCNowProvider>
+            </QRCodeProvider>
+          </PaymentMintsProvider>
+        </ProjectConfigProvider>
       </WalletIdentityProvider>
     </WalletProvider>
   </EnvironmentProvider>
