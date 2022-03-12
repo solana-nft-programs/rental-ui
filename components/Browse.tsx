@@ -95,7 +95,6 @@ export const Browse = () => {
         notificationConfig: {},
       })
       refreshIssuedTokens()
-      alert('NFT has been claimed!')
     } catch (e: any) {
       console.log(e)
     }
