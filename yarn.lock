@@ -390,10 +390,10 @@
     tiny-invariant "^1.2.0"
     tslib "^2.3.1"
 
-"@cardinal/token-manager@^0.2.19":
-  version "0.2.19"
-  resolved "https://registry.yarnpkg.com/@cardinal/token-manager/-/token-manager-0.2.19.tgz#c4b359432ff40432bb6a9c098170c57efc3e537a"
-  integrity sha512-X2vtzuqQX/gYR26tIxgHpw3Q1vqwMJdkUfReKm/yz175k0Lhu84fdrICUI5RdAp+PkqCv2YdEI67iL/Nzr1i6g==
+"@cardinal/token-manager@^0.2.20":
+  version "0.2.20"
+  resolved "https://registry.yarnpkg.com/@cardinal/token-manager/-/token-manager-0.2.20.tgz#ba30c723ffaf3f2045ebf621b933b0f3481ef00f"
+  integrity sha512-NO6Bp79FOo6yF+1RRRK/I3KatP+Ih0v2H58JcfmG+K+COmiTfsTGyIqMgne3Af3F/UfZSxaC3G6y3QITagZ68g==
   dependencies:
     "@metaplex-foundation/mpl-token-metadata" "^1.2.3"
     "@solana/buffer-layout" "^4.0.0"
