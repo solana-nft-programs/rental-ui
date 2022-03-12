@@ -10,7 +10,7 @@ import { useUserTokenData } from 'providers/TokenDataProvider'
 import { useRouter } from 'next/router'
 import Colors from 'common/colors'
 import { NFT } from 'common/NFT'
-import { firstParam } from 'common/utils'
+import { firstParam, camelCase } from 'common/utils'
 import { Button } from 'rental-components/common/Button'
 import { asWallet } from 'common/Wallets'
 import { Airdrop } from 'common/Airdrop'
@@ -19,6 +19,7 @@ import { Manage } from 'components/Manage'
 import { Browse } from 'components/Browse'
 import { useRentalExtensionModal } from 'rental-components/RentalExtensionModalProvider'
 import { useProjectConfigData } from 'providers/ProjectConfigProvider'
+import Head from 'next/head'
 
 export const TokensOuter = styled.div`
   display: flex;
@@ -166,6 +167,9 @@ function Profile() {
 
   return (
     <div className="h-screen" style={{ backgroundColor: Colors.background }}>
+      <Head>
+        <title>{camelCase(projectName)}</title>
+      </Head>
       <Header
         loading={loading || refreshing || false}
         tabs={[

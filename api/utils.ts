@@ -59,62 +59,6 @@ const airdropMetadata: SimpleMetadata[] = [
     symbol: 'PRTL',
     uri: 'https://arweave.net/6ZcTxyREtg0WsOSGSBq-CSyQ3DPlU1k4R_A7mrgehRE',
   },
-  // {
-  //   name: 'Origin Jambo',
-  //   symbol: 'JAMB',
-  //   uri: 'https://arweave.net/XBoDa9TqiOZeXW_6bV8wvieD8fMQS6IHxKipwdvduCo',
-  // },
-  // {
-  //   name: 'Solana Monkey Business',
-  //   symbol: 'SMB',
-  //   uri: 'https://arweave.net/VjfB54_BbELJ5bc1kH-kddrXfq5noloSjkcvK2Odhh0',
-  // },
-  // {
-  //   name: 'Degen Ape',
-  //   symbol: 'DAPE',
-  //   uri: 'https://arweave.net/mWra8rTxavmbCnqxs6KoWwa0gC9uM8NMeOsyVhDy0-E',
-  // },
-  // {
-  //   name: 'Degen Ape',
-  //   symbol: 'DAPE',
-  //   uri: 'https://arweave.net/s32upFrSiC1aQsEJ1QJev6pglLw0T2r6XTR3CtRAQ00',
-  // },
-  // {
-  //   name: 'Degen Ape',
-  //   symbol: 'DAPE',
-  //   uri: 'https://arweave.net/nw6rAQZx5n1rfZDMlk-Mn9iA4-ZBJdVuU6Els3B6LUA'
-  // },
-  // {
-  //   name: 'Thugbirdz',
-  //   symbol: 'THUG',
-  //   uri: 'https://arweave.net/l9VXqVWCsiKW-R8ShX8jknFPgBibrhQI1JRgUI9uvbw',
-  // },
-  // {
-  //   name: 'Turtles',
-  //   symbol: 'TRTL',
-  //   uri: 'https://arweave.net/KKbhlHaPMOB9yMm9yG_i7PxzK0y24I5C7gNTaRDI9OE',
-  // },
-  // {
-  //   name: 'Ghostz',
-  //   symbol: 'GSTZ',
-  //   uri: '"https://arweave.net/83xQ5R-M01o9FoW-EIembwEbwEmTv49HmO06lBsy4Lk"',
-  // },
-  // {
-  //   name: 'Shi Guardians',
-  //   symbol: 'SHI',
-  //   uri: 'https://arweave.net/hSI4WIsX10yRWnzgXP8oqwSCaSgPfGU5nSN-Pxjslao',
-  // },
-  // {
-  //   name: 'Hacker House',
-  //   symbol: 'HH',
-  //   uri: 'https://arweave.net/DLDhnabWSXzAYktEhEKyukt3GIfagj2rPpWncw-KDQo',
-  // },
-  // {
-  //   name: '21 Club',
-  //   symbol: '21',
-  //   uri: 'https://bafkreicv3jj6oc53kid76mkk7hqsr6edrnhsydkw4do4vonq777sgfz3le.ipfs.dweb.link?ext=json',
-  // },
-  // {
 ]
 export async function airdropNFT(
   connection: Connection,

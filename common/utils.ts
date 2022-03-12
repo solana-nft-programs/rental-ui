@@ -96,3 +96,10 @@ export const firstParam = (param: string | string[] | undefined): string => {
   if (!param) return ''
   return typeof param === 'string' ? param : param[0] || ''
 }
+
+export const camelCase = (str) => {
+  return str
+    .split(' ')
+    .map((x) => x.charAt(0).toUpperCase() + x.slice(1))
+    .join('')
+}
