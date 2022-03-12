@@ -163,7 +163,9 @@ export function NFT({ tokenData, hideQRCode }: NFTProps) {
     tokenManager && getQueryParam(metadata?.data?.image, 'uri')
 
   const elligibleForRent =
-    !tokenManager && tokenAccount?.account.data.parsed.info.state !== 'frozen'
+    !tokenManager &&
+    tokenAccount?.account.data.parsed.info.state !== 'frozen' &&
+    tokenData.editionData
 
   return (
     <TokenMetadata>
