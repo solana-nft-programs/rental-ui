@@ -377,10 +377,23 @@
     "@solana/spl-token" "^0.1.8"
     typescript "^4.5.4"
 
-"@cardinal/token-manager@^0.2.11", "@cardinal/token-manager@^0.2.17":
+"@cardinal/token-manager@^0.2.11":
   version "0.2.17"
   resolved "https://registry.yarnpkg.com/@cardinal/token-manager/-/token-manager-0.2.17.tgz#9352ed285c242d52b04fe0dfc7d1a258e7b05e47"
   integrity sha512-ZTtoOz+vlx7ZDffCjG5H1hiJyjYOnZeNHojVCJ9wQK/7UyKSOxbnJsKbzMKoYweHW8ubSkTC+y+n5SWafRLcFQ==
+  dependencies:
+    "@metaplex-foundation/mpl-token-metadata" "^1.2.3"
+    "@solana/buffer-layout" "^4.0.0"
+    "@solana/spl-token" "^0.1.8"
+    borsh "^0.7.0"
+    bs58 "^4.0.1"
+    tiny-invariant "^1.2.0"
+    tslib "^2.3.1"
+
+"@cardinal/token-manager@^0.2.19":
+  version "0.2.19"
+  resolved "https://registry.yarnpkg.com/@cardinal/token-manager/-/token-manager-0.2.19.tgz#c4b359432ff40432bb6a9c098170c57efc3e537a"
+  integrity sha512-X2vtzuqQX/gYR26tIxgHpw3Q1vqwMJdkUfReKm/yz175k0Lhu84fdrICUI5RdAp+PkqCv2YdEI67iL/Nzr1i6g==
   dependencies:
     "@metaplex-foundation/mpl-token-metadata" "^1.2.3"
     "@solana/buffer-layout" "^4.0.0"

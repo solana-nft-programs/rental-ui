@@ -7,6 +7,7 @@ import React, {
   ReactChild,
 } from 'react'
 import { useEnvironmentCtx } from './EnvironmentProvider'
+import { filterTokens, useProjectConfigData } from './ProjectConfigProvider'
 
 export interface UserTokenDataValues {
   tokenDatas: TokenData[]
@@ -38,6 +39,7 @@ export function TokenAccountsProvider({ children }: { children: ReactChild }) {
   const [tokenDatas, setTokenDatas] = useState<TokenData[]>([])
   const [refreshing, setRefreshing] = useState<boolean>(false)
   const [loaded, setLoaded] = useState<boolean>(false)
+  const { filters } = useProjectConfigData()
 
   const refreshTokenAccounts = useCallback(() => {
     if (!address) {
@@ -48,7 +50,9 @@ export function TokenAccountsProvider({ children }: { children: ReactChild }) {
     setError(null)
     getTokenAccountsWithData(connection, address)
       .then((tokenDatas) => {
-        setTokenDatas(tokenDatas.filter((td) => td.metadata))
+        let tokensWithMetadata = tokenDatas.filter((td) => td.metadata)
+        tokensWithMetadata = filterTokens(filters, tokensWithMetadata)        
+        setTokenDatas(tokensWithMetadata)
       })
       .catch((e) => {
         console.log(e)
@@ -58,7 +62,7 @@ export function TokenAccountsProvider({ children }: { children: ReactChild }) {
         setLoaded(true)
         setRefreshing(false)
       })
-  }, [connection, setError, address, setRefreshing])
+  }, [connection, setError, address, setRefreshing, filters])
 
   useEffect(() => {
     const interval = setInterval(

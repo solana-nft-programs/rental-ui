@@ -4,6 +4,7 @@ import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
+import { useProjectConfigData } from 'providers/ProjectConfigProvider'
 
 const StyledSplash = styled.div`
   margin-top: 30vh;
@@ -32,11 +33,12 @@ const StyledSplash = styled.div`
 export default function Home() {
   const wallet = useWallet()
   const router = useRouter()
+  const { projectName } = useProjectConfigData()
 
   useEffect(() => {
     if (wallet && wallet.connected && wallet.publicKey) {
       router.push(
-        `/wallet/${wallet.publicKey.toBase58()}${
+        `/${projectName ?? 'wallet'}/${wallet.publicKey.toBase58()}${
           new URLSearchParams(window.location.search).get('cluster')
             ? `?cluster=${new URLSearchParams(window.location.search).get(
                 'cluster'
@@ -71,7 +73,7 @@ export default function Home() {
         <link
           href="https://fonts.googleapis.com/css2?family=Karla:wght@600&display=swap"
           rel="stylesheet"
-        />
+        />  
       </Head>
       <StyledSplash>
         <div className="title">

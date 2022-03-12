@@ -36,6 +36,7 @@ const Colors = {
   background: 'rgba(0, 0, 0, 0.15)',
   lightGrayBg: '#282A2E',
   darkGrayBg: '#222428',
+  secondary: 'rgb(29, 155, 240)',
 }
 
 export default Colors

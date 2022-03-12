@@ -468,15 +468,15 @@ function Claim() {
                       {tokenData?.metadata?.data &&
                         (tokenData.metadata.data.animation_url ? (
                           // @ts-ignore
-                          <model-viewer
+                          <video
                             className="media"
                             auto-rotate-delay="0"
                             auto-rotate="true"
                             auto-play="true"
                             src={tokenData.metadata.data.animation_url}
-                            arStatus="not-presenting"
+                            // arStatus="not-presenting"
                             // @ts-ignore
-                          ></model-viewer>
+                          ></video>
                         ) : (
                           <img
                             className="media"

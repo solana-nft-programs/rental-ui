@@ -6,6 +6,7 @@ export const Button = styled.button<{
   variant: 'primary' | 'secondary' | 'tertiary'
   boxShadow?: boolean
   disabled?: boolean
+  bgColor?: string
 }>`
   display: flex;
   align-items: center;
@@ -22,9 +23,17 @@ export const Button = styled.button<{
   border-radius: 4px;
   padding: 0 12px;
   transition: 0.2s background;
-  ${({ variant = 'primary', disabled }) => {
+  ${({ variant = 'primary', disabled, bgColor = undefined }) => {
     if (disabled) return
-    return variant === 'primary'
+    return bgColor
+      ? css`
+          background: ${bgColor};
+          color: ${getColorByBgColor(bgColor)};
+          &:hover {
+            background: ${lighten(0.1, bgColor)}};
+          }
+        `
+      : variant === 'primary'
       ? css`
           background: rgb(29, 155, 240);
           color: #fff;
@@ -41,7 +50,7 @@ export const Button = styled.button<{
           }
         `
       : css`
-          background: rgb(255,255,255,0.15);
+          background: rgb(255, 255, 255, 0.15);
           color: #fff;
           &:hover {
             background: ${lighten(0.05, '#000')};
@@ -52,3 +61,10 @@ export const Button = styled.button<{
     font-size: 14px;
   }
 `
+
+const getColorByBgColor = (bgColor) => {
+  if (!bgColor) {
+    return ''
+  }
+  return parseInt(bgColor.replace('#', ''), 16) > 0xffffff / 2 ? '#000' : '#fff'
+}

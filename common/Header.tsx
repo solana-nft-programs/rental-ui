@@ -249,9 +249,13 @@ export const Header = ({
   const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' })
   const [showTabs, setShowTabs] = useState(false)
   const [tab, setTab] = useState<string>('wallet')
-  const config = useProjectConfigData()
+  const { logoImage, colors } = useProjectConfigData()
 
-  console.log(config && config.logoImage)
+  useEffect(() => {
+    if (colors) {
+      Colors.navBg = colors.main      
+    }
+  }, [colors])
 
   useEffect(() => {
     const anchor = router.asPath.split('#')[1]
@@ -263,10 +267,10 @@ export const Header = ({
     : ''
 
   return (
-    <StyledHeader isTabletOrMobile={isTabletOrMobile}>
+    <StyledHeader style={{backgroundColor: Colors.navBg}} isTabletOrMobile={isTabletOrMobile}>
       <div className="left">
         <div className="title">
-          <img src={config && config.logoImage} />
+          <img src={logoImage} />
           <div className="subscript">
             {ctx.environment.label === 'devnet' ? 'DEV' : 'alpha'}
           </div>

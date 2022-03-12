@@ -131,14 +131,19 @@ function Profile() {
   const [loading, _setLoading] = useState(false)
   const [tab, setTab] = useState<string>('wallet')
   const rentalExtensionModal = useRentalExtensionModal()
-  const config = useProjectConfigData()
-
-  console.log(config);
+  const { projectName, colors } = useProjectConfigData()
 
   useEffect(() => {
     const anchor = router.asPath.split('#')[1]
     if (anchor != tab) setTab(anchor)
   }, [router.asPath])
+
+  useEffect(() => {
+    console.log(colors)
+    if (colors) {
+      Colors.background = colors.main    
+    }
+  }, [colors])
 
   const { tokenDatas, setAddress, loaded, refreshing } = useUserTokenData()
   useEffect(() => {
@@ -148,7 +153,7 @@ function Profile() {
     if (wallet && wallet.connected && wallet.publicKey) {
       setAddress(wallet.publicKey.toBase58())
       router.push(
-        `/wallet/${wallet.publicKey.toBase58()}${
+        `/${projectName ?? 'wallet'}/${wallet.publicKey.toBase58()}${
           new URLSearchParams(window.location.search).get('cluster')
             ? `?cluster=${new URLSearchParams(window.location.search).get(
                 'cluster'
@@ -161,7 +166,7 @@ function Profile() {
   }, [wallet.connected, addressId])
 
   return (
-    <>
+    <div className="h-screen" style={{ backgroundColor: Colors.background }}>
       <Header
         loading={loading || refreshing || false}
         tabs={[
@@ -170,7 +175,7 @@ function Profile() {
           { name: 'Browse', anchor: 'browse' },
         ]}
       />
-      <StyledContainer style={{ marginTop: '120px' }}>
+      <StyledContainer style={{ paddingTop: '120px' }}>
         <div style={{ position: 'relative' }}>
           {error}
           {
@@ -222,7 +227,7 @@ function Profile() {
         </div>
       </StyledContainer>
       <div style={{ marginTop: '100px' }} />
-    </>
+    </div>
   )
 }
 

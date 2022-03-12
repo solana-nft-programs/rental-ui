@@ -8,49 +8,97 @@ import React, {
 } from 'react'
 import { useRouter } from 'next/router'
 import { useEnvironmentCtx } from './EnvironmentProvider'
+import Colors from 'common/colors'
 
 export interface ProjectConfigValues {
   logoImage: string
-  colors: {}
-  filters: {}[]
+  colors: { main: string; secondary: string }
+  filters: { type: string; publicKey: string }[]
+  projectName: string
 }
 
 const ProjectConfigValues: React.Context<ProjectConfigValues> =
   React.createContext<ProjectConfigValues>({
     logoImage: '',
-    colors: {},
+    colors: { main: '', secondary: '' },
     filters: [],
+    projectName: '',
   })
 
+export const filterTokens = (
+  filters: { type: string; publicKey: string }[],
+  tokens: TokenData[]
+): TokenData[] => {
+  if (filters.length == 0) {
+    // console.log('No filters')
+  } else {
+    // console.log("Got filters!")
+    // console.log(filters)
+    for (const configFilter of filters) {
+      if (configFilter.type === 'creators') {
+        tokens = tokens.filter(
+          (token) =>
+            token.metadata.data.properties &&
+            token.metadata.data.properties.creators.some(
+              (creator) => creator.address === configFilter.publicKey
+            )
+        )
+      }
+    }
+  }
+  console.log(tokens)
+  return tokens
+}
+
 export function ProjectConfigProvider({ children }: { children: ReactChild }) {
-  const [config, setConfig] = useState<ProjectConfigValues | null>(null)
-  const { connection } = useEnvironmentCtx()
-  const [address] = useState<string | null>(null)
+  const [logoImage, setLogoImage] = useState<string>('')
+  const [colors, setColors] = useState<{ main: string; secondary: string }>()
+  const [filters, setFilters] = useState<{ type: string; publicKey: string }[]>(
+    []
+  )
+  const [projectName, setProjectName] = useState<string>('')
 
   const { asPath } = useRouter()
-  const project = asPath.split('/')[1] ?? 'default'  
+  const project = asPath.split('/')[1] ?? 'default'
 
   const loadConfig = async () => {
     try {
       const jsonData = await fetch(
         `https://api.cardinal.so/config/${project}`
       ).then(async (r) => JSON.parse(await r.json()))
-
-      const config = {
-        logoImage: jsonData.logoImage,
-        colors: jsonData.colors,
-        filters: jsonData.filters,
-      }
-      setConfig(config)
-    } catch (e) {}
+      setLogoImage(jsonData.logoImage)
+      // setColors(jsonData.colors)
+      setColors({
+        main: '#000',
+        secondary: '#80DDEF',
+      })
+      setFilters([
+        {
+          type: 'creators',
+          publicKey: 'GdtkQajEADGbfSUEBS5zctYrhemXYQkqnrMiGY7n7vAw',
+        },
+      ])
+      setProjectName('portals')
+    } catch (e) {
+      console.log('ERROR', e)
+    }
   }
 
   useEffect(() => {
     loadConfig()
   }, [asPath])
 
+  console.log(filters)
+
   return (
-    <ProjectConfigValues.Provider value={config}>
+    <ProjectConfigValues.Provider
+      value={{
+        logoImage,
+        colors,
+        filters,
+        projectName,
+      }}
+    >
       {children}
     </ProjectConfigValues.Provider>
   )
