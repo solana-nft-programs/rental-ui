@@ -132,7 +132,7 @@ function Profile() {
   const [loading, _setLoading] = useState(false)
   const [tab, setTab] = useState<string>('wallet')
   const rentalExtensionModal = useRentalExtensionModal()
-  const { projectName, colors } = useProjectConfigData()
+  const { projectName, colors, configLoaded } = useProjectConfigData()
 
   useEffect(() => {
     const anchor = router.asPath.split('#')[1]
@@ -187,7 +187,7 @@ function Profile() {
                 <TokensOuter>
                   {tokenDatas && tokenDatas.length > 0 ? (
                     tokenDatas.map((tokenData) => (
-                      <div>
+                      <div key={tokenData.metaplexData.data.mint}>
                         <NFT
                           key={tokenData?.tokenAccount?.pubkey.toBase58()}
                           tokenData={tokenData}
@@ -211,7 +211,7 @@ function Profile() {
                         ) : null}
                       </div>
                     ))
-                  ) : loaded ? (
+                  ) : loaded && configLoaded ? (
                     <div className="white flex w-full flex-col items-center justify-center gap-1">
                       <div className="text-white">Wallet empty!</div>
                       {ctx.environment.label === 'devnet' && <Airdrop />}

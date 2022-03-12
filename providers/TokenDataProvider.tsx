@@ -39,7 +39,7 @@ export function TokenAccountsProvider({ children }: { children: ReactChild }) {
   const [tokenDatas, setTokenDatas] = useState<TokenData[]>([])
   const [refreshing, setRefreshing] = useState<boolean>(false)
   const [loaded, setLoaded] = useState<boolean>(false)
-  const { filters } = useProjectConfigData()
+  const { filters, projectName } = useProjectConfigData()
 
   const refreshTokenAccounts = useCallback(() => {
     if (!address) {
@@ -51,8 +51,8 @@ export function TokenAccountsProvider({ children }: { children: ReactChild }) {
     getTokenAccountsWithData(connection, address)
       .then((tokenDatas) => {
         let tokensWithMetadata = tokenDatas.filter((td) => td.metadata)
-        tokensWithMetadata = filterTokens(filters, tokensWithMetadata)        
-        setTokenDatas(tokensWithMetadata)
+        tokensWithMetadata = filterTokens(filters, tokensWithMetadata)
+        if (projectName) setTokenDatas(tokensWithMetadata)
       })
       .catch((e) => {
         console.log(e)
@@ -62,7 +62,7 @@ export function TokenAccountsProvider({ children }: { children: ReactChild }) {
         setLoaded(true)
         setRefreshing(false)
       })
-  }, [connection, setError, address, setRefreshing, filters])
+  }, [connection, setError, address, setRefreshing, filters, projectName])
 
   useEffect(() => {
     const interval = setInterval(
