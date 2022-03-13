@@ -405,6 +405,7 @@ export const RentalCard = ({
               totalUsages={totalUsages || undefined}
               extendable={hasAllExtensionProperties()}
               returnable={invalidationType === InvalidationType.Return}
+              revocable={customInvalidator ? true : false}
               lineHeight={12}
             />
             {metadata &&
