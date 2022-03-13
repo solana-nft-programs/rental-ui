@@ -41,6 +41,7 @@ import { useUserTokenData } from 'providers/TokenDataProvider'
 import { fmtMintAmount } from 'common/units'
 import { usePaymentMints } from 'providers/PaymentMintsProvider'
 import { tryPublicKey } from 'api/utils'
+import { useProjectConfigData } from 'providers/ProjectConfigProvider'
 const { Option } = Select
 
 const NFTOuter = styled.div`
@@ -116,6 +117,7 @@ export const RentalCard = ({
   const [invalidationType, setInvalidationType] = useState(
     InvalidationType.Return
   )
+  const { rentalCard } = useProjectConfigData()
 
   const [editionInfo, setEditionInfo] = useState<EditionInfo>({})
   const getEdition = async () => {
@@ -130,7 +132,7 @@ export const RentalCard = ({
     getEdition()
   }, [metaplexData])
 
-  const durationData: { [key: string]: number } = {
+  let durationData: { [key: string]: number } = {
     Minutes: 60,
     Hours: 3600,
     Days: 86400,
@@ -138,9 +140,27 @@ export const RentalCard = ({
     Months: 2592000,
     Years: 31104000,
   }
+
+  let invalidationTypes = [
+    {
+      type: InvalidationType.Return,
+      label: 'Return',
+    },
+    {
+      type: InvalidationType.Invalidate,
+      label: 'Invalidate',
+    },
+    {
+      type: InvalidationType.Release,
+      label: 'Release',
+    },
+  ]
+
+  let paymentMintData = PAYMENT_MINTS
+
   const defaultDurationCategory = Object.keys(durationData)[2]!
   const { paymentMintInfos } = usePaymentMints()
-  const defaultPaymentMint = PAYMENT_MINTS[0]!
+  const defaultPaymentMint = paymentMintData[0]!
 
   // form
   const [price, setPrice] = useState(0)
@@ -180,6 +200,39 @@ export const RentalCard = ({
   const [showDuration, setShowDuration] = useState(false)
   const [showExtendDuration, setShowExtendDuration] = useState(false)
   const [showCustom, setShowCustom] = useState(false)
+
+  // Apply Rental Card settings from the project config
+  const {
+    showUsagesOption,
+    showExpirationOption,
+    showDurationOption,
+    showManualOption,
+  } = rentalCard.invalidations
+  const showClaimRentalReceipt =
+    rentalCard.invalidationOptions?.showClaimRentalReceipt ?? true
+
+  if (rentalCard.invalidationOptions) {
+    if (rentalCard.invalidationOptions.durationCategories) {
+      durationData = Object.keys(durationData)
+        .filter((key) =>
+          rentalCard.invalidationOptions.durationCategories.includes(key)
+        )
+        .reduce((obj, key) => {
+          obj[key] = durationData[key]
+          return obj
+        }, {})
+    }
+    if (rentalCard.invalidationOptions.invalidationCategories) {
+      invalidationTypes = invalidationTypes.filter(({ label }) =>
+        rentalCard.invalidationOptions.invalidationCategories.includes(label)
+      )
+    }
+    if (rentalCard.invalidationOptions.paymentMints) {
+      paymentMintData = paymentMintData.filter(({ mint }) =>
+        rentalCard.invalidationOptions.paymentMints.includes(mint)
+      )
+    }
+  }
 
   const handleSelection = (value: string) => {
     if (value == 'expiration') {
@@ -379,65 +432,66 @@ export const RentalCard = ({
         </ImageWrapper>
         <DetailsWrapper>
           <div className="flex justify-center">
-            <div
-              className="mr-4 flex cursor-pointer"
-              onClick={() => {
-                !showUsages ? setShowCustom(false) : null,
-                  setShowUsages(!showUsages)
-              }}
-            >
-              <input
-                className="my-auto mr-1 cursor-pointer"
-                type="checkbox"
-                checked={showUsages}
-              />
-              <span className="">Usages</span>
-            </div>
-            <div
-              className="mr-4 flex cursor-pointer"
-              onClick={() => handleSelection('expiration')}
-            >
-              <input
-                className="my-auto mr-1 cursor-pointer"
-                type="checkbox"
-                checked={showExpiration}
-              />
-              <span className="">Expiration</span>
-            </div>
-            <div
-              className="mr-4 flex cursor-pointer"
-              onClick={() => handleSelection('duration')}
-            >
-              <input
-                className="my-auto mr-1 cursor-pointer"
-                type="checkbox"
-                checked={showDuration}
-              />
-              <span className="">Duration</span>
-            </div>
-            <div
-              className=" flex cursor-pointer"
-              onClick={() => {
-                setShowExtendDuration(!showExtendDuration)
-                setShowDuration(true)
-              }}
-            ></div>
-            <div
-              className="mr-4 flex cursor-pointer"
-              onClick={() => {
-                setShowCustom(!showCustom)
-                setShowDuration(false)
-                setShowExpiration(false)
-                setShowUsages(false)
-              }}
-            >
-              <input
-                className="my-auto mr-1 cursor-pointer"
-                type="checkbox"
-                checked={showCustom}
-              />
-              <span className="">Custom</span>
-            </div>
+            {showUsagesOption ? (
+              <div
+                className="mr-4 flex cursor-pointer"
+                onClick={() => {
+                  !showUsages ? setShowCustom(false) : null,
+                    setShowUsages(!showUsages)
+                }}
+              >
+                <input
+                  className="my-auto mr-1 cursor-pointer"
+                  type="checkbox"
+                  checked={showUsages}
+                />
+                <span className="">Usages</span>
+              </div>
+            ) : null}
+            {showExpirationOption ? (
+              <div
+                className="mr-4 flex cursor-pointer"
+                onClick={() => handleSelection('expiration')}
+              >
+                <input
+                  className="my-auto mr-1 cursor-pointer"
+                  type="checkbox"
+                  checked={showExpiration}
+                />
+                <span className="">Expiration</span>
+              </div>
+            ) : null}
+            {showDurationOption ? (
+              <div
+                className="mr-4 flex cursor-pointer"
+                onClick={() => handleSelection('duration')}
+              >
+                <input
+                  className="my-auto mr-1 cursor-pointer"
+                  type="checkbox"
+                  checked={showDuration}
+                />
+                <span className="">Duration</span>
+              </div>
+            ) : null}
+            {showManualOption ? (
+              <div
+                className="mr-4 flex cursor-pointer"
+                onClick={() => {
+                  setShowCustom(!showCustom)
+                  setShowDuration(false)
+                  setShowExpiration(false)
+                  setShowUsages(false)
+                }}
+              >
+                <input
+                  className="my-auto mr-1 cursor-pointer"
+                  type="checkbox"
+                  checked={showCustom}
+                />
+                <span className="">Manual</span>
+              </div>
+            ) : null}
           </div>
           <div className="grid grid-cols-2 gap-4">
             {!showCustom ? (
@@ -449,6 +503,7 @@ export const RentalCard = ({
                     disabled={visibility === 'private'}
                     price={price}
                     mint={paymentMint}
+                    mintDisabled={paymentMintData.length === 1}
                     handlePrice={setPrice}
                     handleMint={setPaymentMint}
                   />
@@ -458,7 +513,7 @@ export const RentalCard = ({
             {showCustom ? (
               <StepDetail
                 icon={<GiRobotGrab />}
-                title="Custom Revocation"
+                title="Manual Revocation Pubkey"
                 description={
                   <div className="flex">
                     <Fieldset>
@@ -580,6 +635,7 @@ export const RentalCard = ({
                           disabled={visibility === 'private'}
                           price={extensionPaymentAmount}
                           mint={extensionPaymentMint}
+                          mintDisabled={paymentMintData.length === 1}
                           handlePrice={setExtensionPaymentAmount}
                           handleMint={setExtensionPaymentMint}
                         />
@@ -668,7 +724,7 @@ export const RentalCard = ({
               ) : null}
             </div>
             <button
-              className="mt-3 mb-2 text-blue-500"
+              className="-mt-7 mb-2 text-blue-500"
               onClick={() => setShowAdditionalOptions(!showAdditionalOptions)}
             >
               {showAdditionalOptions ? '[-]' : '[+]'} Additional Options
@@ -680,24 +736,12 @@ export const RentalCard = ({
                   title="Invalidation"
                   description={
                     <Select
+                      disabled={invalidationTypes.length === 1}
                       style={{ width: '100%' }}
                       onChange={(e) => setInvalidationType(e)}
                       defaultValue={invalidationType}
                     >
-                      {[
-                        {
-                          type: InvalidationType.Return,
-                          label: 'Return',
-                        },
-                        {
-                          type: InvalidationType.Invalidate,
-                          label: 'Invalidate',
-                        },
-                        {
-                          type: InvalidationType.Release,
-                          label: 'Release',
-                        },
-                      ].map(({ label, type }) => (
+                      {invalidationTypes.map(({ label, type }) => (
                         <Option key={type} value={type}>
                           {label}
                         </Option>
@@ -736,26 +780,28 @@ export const RentalCard = ({
                   }
                 />
 
-                <div className="mt-1">
-                  <span
-                    className="cursor-pointer"
-                    onClick={() => setClaimRentalReceipt(!claimRentalReceipt)}
-                  >
-                    <input
-                      className="my-auto inline-block cursor-pointer"
-                      type="checkbox"
-                      checked={claimRentalReceipt}
-                    />
-                    <p className="mb-1 ml-3 inline-block text-[14px] font-bold text-black">
-                      Claim Rental Receipt
+                {showClaimRentalReceipt ? (
+                  <div className="mt-1">
+                    <span
+                      className="cursor-pointer"
+                      onClick={() => setClaimRentalReceipt(!claimRentalReceipt)}
+                    >
+                      <input
+                        className="my-auto inline-block cursor-pointer"
+                        type="checkbox"
+                        checked={claimRentalReceipt}
+                      />
+                      <p className="mb-1 ml-3 inline-block text-[14px] font-bold text-black">
+                        Claim Rental Receipt
+                      </p>
+                    </span>
+                    <p className="mb-2 ml-6 inline-block text-[12px] text-gray-700">
+                      If selected, a receipt mint will be generated for the
+                      rental. The owner of the receipt mint will act as the
+                      issuer.
                     </p>
-                  </span>
-                  <p className="mb-2 ml-6 inline-block text-[12px] text-gray-700">
-                    If selected, a receipt mint will be generated for the
-                    rental. The owner of the receipt mint will act as the
-                    issuer.
-                  </p>
-                </div>
+                  </div>
+                ) : null}
               </div>
             ) : null}
           </div>
@@ -861,7 +907,7 @@ export const RentalCard = ({
                               paymentMintInfos[extensionPaymentMint.toString()],
                               new anchor.BN(extensionPaymentAmount)
                             )} ${
-                              PAYMENT_MINTS.find(
+                              paymentMintData.find(
                                 (obj) => obj.mint == extensionPaymentMint
                               )?.symbol
                             } / ${extensionDurationAmount} ${
