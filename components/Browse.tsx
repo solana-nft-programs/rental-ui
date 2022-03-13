@@ -21,6 +21,7 @@ import * as splToken from '@solana/spl-token'
 import { withWrapSol } from 'api/wrappedSol'
 import { withClaimToken } from '@cardinal/token-manager'
 import { StyledTag, Tag } from 'common/Tags'
+import { useProjectConfigData } from 'providers/ProjectConfigProvider'
 
 const handleCopy = (shareUrl: string) => {
   navigator.clipboard.writeText(shareUrl)
@@ -35,6 +36,7 @@ export const Browse = () => {
     useState<TokenData[]>(issuedTokens)
   const [userPaymentTokenAccount, _setUserPaymentTokenAccount] =
     useState<splToken.AccountInfo | null>(null)
+  const { colors } = useProjectConfigData()
 
   useEffect(() => {
     async function filterIssuedTokens() {
@@ -187,6 +189,7 @@ export const Browse = () => {
                       </StyledTag>
                       <div className="flex w-max">
                         <Button
+                          bgColor={colors.secondary}
                           variant="primary"
                           className="mr-1 inline-block flex-none"
                           onClick={() => handleClaim(tokenData)}

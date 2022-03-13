@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import * as anchor from '@project-serum/anchor'
 import styled from '@emotion/styled'
 import { DatePicker, InputNumber, Select } from 'antd'
-import { Connection, PublicKey } from '@solana/web3.js'
+import { Connection, Keypair, PublicKey } from '@solana/web3.js'
 import { Wallet } from '@saberhq/solana-contrib'
 import { ButtonWithFooter } from 'rental-components/common/ButtonWithFooter'
 import { Alert } from 'rental-components/common/Alert'
@@ -172,6 +172,7 @@ export const RentalCard = ({
   const [customInvalidator, setCustomInvalidator] = useState<string | null>(
     null
   )
+  const [claimRentalReceipt, setClaimRentalReceipt] = useState(false)
 
   const [showAdditionalOptions, setShowAdditionalOptions] = useState(false)
   const [showUsages, setShowUsages] = useState(false)
@@ -237,6 +238,7 @@ export const RentalCard = ({
         tokenAccount?.account.data.parsed.info.mint
       )
 
+      const receiptMintKeypair = Keypair.generate()
       const issueParams: IssueParameters = {
         claimPayment:
           price && paymentMint
@@ -283,6 +285,7 @@ export const RentalCard = ({
         customInvalidators: customInvalidator
           ? [new PublicKey(customInvalidator)]
           : undefined,
+        receiptOptions: claimRentalReceipt ? { receiptMintKeypair } : undefined,
       }
 
       const [transaction, tokenManagerId, otpKeypair] = await issueToken(
@@ -290,10 +293,12 @@ export const RentalCard = ({
         wallet,
         issueParams
       )
-
+      let signers = []
+      if (claimRentalReceipt) signers.push(receiptMintKeypair)
       await executeTransaction(connection, wallet, transaction, {
         silent: false,
         callback: refreshTokenAccounts,
+        signers,
       })
       const link = claimLinks.getLink(
         tokenManagerId,
@@ -353,15 +358,15 @@ export const RentalCard = ({
               metadata.data &&
               (metadata.data.animation_url ? (
                 // @ts-ignore
-                <model-viewer
+                <video
                   className="media"
                   auto-rotate-delay="0"
                   auto-rotate="true"
                   auto-play="true"
                   src={metadata.data.animation_url}
-                  arStatus="not-presenting"
+                  // arStatus="not-presenting"
                   // @ts-ignore
-                ></model-viewer>
+                ></video>
               ) : (
                 <img
                   className="media"
@@ -521,7 +526,7 @@ export const RentalCard = ({
               />
             ) : null}
             {showDuration ? (
-              <StepDetail                
+              <StepDetail
                 icon={<BiTimer />}
                 title="Rental Duration"
                 description={
@@ -535,7 +540,7 @@ export const RentalCard = ({
                         step={1}
                         onChange={(e) => setDurationAmount(parseInt(e))}
                       />
-                      <Select                        
+                      <Select
                         className="w-max rounded-[4px]"
                         onChange={(e) => setDurationCategory(e)}
                         defaultValue={defaultDurationCategory}
@@ -560,7 +565,7 @@ export const RentalCard = ({
                 className="mb-2 text-blue-500"
                 onClick={() => setShowExtendDuration(!showExtendDuration)}
               >
-                  {showExtendDuration ? '[-]' : '[+]'} Extendability
+                {showExtendDuration ? '[-]' : '[+]'} Extendability
               </button>
             ) : null}
             <div className="grid grid-cols-2 gap-4">
@@ -571,7 +576,7 @@ export const RentalCard = ({
                     title="Extension Price"
                     description={
                       <>
-                        <MintPriceSelector                          
+                        <MintPriceSelector
                           disabled={visibility === 'private'}
                           price={extensionPaymentAmount}
                           mint={extensionPaymentMint}
@@ -616,9 +621,6 @@ export const RentalCard = ({
                   />
                 </>
               ) : null}
-              {/* {showDuration && showExtendDuration ? (
-              
-            ) : null} */}
               {showDuration && showExtendDuration ? (
                 <StepDetail
                   icon={<BiTimer />}
@@ -626,8 +628,8 @@ export const RentalCard = ({
                   description={
                     <div>
                       <DatePicker
-                      className="rounded-[4px]"
-                        style={{                          
+                        className="rounded-[4px]"
+                        style={{
                           zIndex: 99999,
                         }}
                         showTime
@@ -666,10 +668,10 @@ export const RentalCard = ({
               ) : null}
             </div>
             <button
-              className="-mt-3 mb-2 text-blue-500"
+              className="mt-3 mb-2 text-blue-500"
               onClick={() => setShowAdditionalOptions(!showAdditionalOptions)}
             >
-              {showAdditionalOptions ? 'Hide' : 'Show'} Additional Options
+              {showAdditionalOptions ? '[-]' : '[+]'} Additional Options
             </button>
             {showAdditionalOptions ? (
               <div className="grid grid-cols-2 gap-4">
@@ -733,6 +735,27 @@ export const RentalCard = ({
                     </Select>
                   }
                 />
+
+                <div className="mt-1">
+                  <span
+                    className="cursor-pointer"
+                    onClick={() => setClaimRentalReceipt(!claimRentalReceipt)}
+                  >
+                    <input
+                      className="my-auto inline-block cursor-pointer"
+                      type="checkbox"
+                      checked={claimRentalReceipt}
+                    />
+                    <p className="mb-1 ml-3 inline-block text-[14px] font-bold text-black">
+                      Claim Rental Receipt
+                    </p>
+                  </span>
+                  <p className="mb-2 ml-6 inline-block text-[12px] text-gray-700">
+                    If selected, a receipt mint will be generated for the
+                    rental. The owner of the receipt mint will act as the
+                    issuer.
+                  </p>
+                </div>
               </div>
             ) : null}
           </div>

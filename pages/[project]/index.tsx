@@ -33,7 +33,7 @@ const StyledSplash = styled.div`
 export default function Home() {
   const wallet = useWallet()
   const router = useRouter()
-  const { projectName } = useProjectConfigData()
+  const { logoImage, projectName } = useProjectConfigData()
 
   useEffect(() => {
     if (wallet && wallet.connected && wallet.publicKey) {
@@ -54,7 +54,7 @@ export default function Home() {
       <Head>
         <title>Cardinal</title>
         <link rel="icon" href="/favicon.ico" />
-        <link href="/globals.css" rel="stylesheet" />
+        
 
         <link
           href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"
@@ -77,7 +77,9 @@ export default function Home() {
       </Head>
       <StyledSplash>
         <div className="title">
-          <img src="/assets/cardinal-titled.png" />
+          <img className="mx-auto w-24" src={logoImage} />
+          <p className="text-2xl mt-3">{projectName.charAt(0).toUpperCase() + projectName.substring(1, projectName.length)}</p>
+          <p className="text-md mt-3">The Rental Marketplace for all {projectName.charAt(0).toUpperCase() + projectName.substring(1, projectName.length)} NFTs</p>
         </div>
         <div className="mt-5 flex items-center justify-center">
           <WalletMultiButton
