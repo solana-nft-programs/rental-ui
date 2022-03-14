@@ -67,7 +67,7 @@ export function ProjectConfigProvider({ children }: { children: ReactChild }) {
       const jsonData = await fetch(`https://api.cardinal.so/config/${project}`)
         .then(async (r) => JSON.parse(await r.json()))
         .finally(() => {
-          if (projectName) setConfigLoaded(true)
+          setConfigLoaded(true)
         })
       setLogoImage(jsonData.logoImage)
       setColors(jsonData.colors)
