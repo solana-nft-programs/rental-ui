@@ -2,10 +2,25 @@ import { TokenData } from 'api/api'
 import React, { useState, useContext, useEffect, ReactChild } from 'react'
 import { useRouter } from 'next/router'
 
+export interface RentalCardOptions {
+  invalidations: {
+    showUsagesOption: boolean
+    showExpirationOption: boolean
+    showDurationOption: boolean
+    showManualOption: boolean
+  }
+  invalidationOptions?: {
+    durationCategories?: string[]
+    invalidationCategories?: string[]
+    paymentMints?: string[]
+    showClaimRentalReceipt?: boolean
+  }
+}
 export interface ProjectConfigValues {
   logoImage: string
   colors: { main: string; secondary: string }
   filters: { type: string; value: string }[]
+  rentalCard: RentalCardOptions
   projectName: string
   configLoaded: boolean
 }
@@ -20,6 +35,14 @@ const ProjectConfigValues: React.Context<ProjectConfigValues> =
     filters: [],
     projectName: '',
     configLoaded: false,
+    rentalCard: {
+      invalidations: {
+        showUsagesOption: true,
+        showExpirationOption: true,
+        showDurationOption: true,
+        showManualOption: true,
+      },
+    },
   })
 
 export const filterTokens = (
@@ -56,6 +79,14 @@ export function ProjectConfigProvider({ children }: { children: ReactChild }) {
   })
   const [filters, setFilters] = useState<{ type: string; value: string }[]>([])
   const [projectName, setProjectName] = useState<string>('')
+  const [rentalCard, setRentalCard] = useState<RentalCardOptions>({
+    invalidations: {
+      showUsagesOption: true,
+      showExpirationOption: true,
+      showDurationOption: true,
+      showManualOption: true,
+    },
+  })
   const [configLoaded, setConfigLoaded] = useState<boolean>(false)
 
   const { asPath } = useRouter()
@@ -73,6 +104,7 @@ export function ProjectConfigProvider({ children }: { children: ReactChild }) {
       setColors(jsonData.colors)
       setFilters(jsonData.filters)
       setProjectName(jsonData.projectName)
+      setRentalCard(jsonData.rentalCard)
     } catch (e) {
       console.log('ERROR', e)
     }
@@ -90,6 +122,7 @@ export function ProjectConfigProvider({ children }: { children: ReactChild }) {
         filters,
         projectName,
         configLoaded,
+        rentalCard,
       }}
     >
       {children}
