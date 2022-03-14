@@ -20,6 +20,13 @@ import { Browse } from 'components/Browse'
 import { useRentalExtensionModal } from 'rental-components/RentalExtensionModalProvider'
 import { useProjectConfigData } from 'providers/ProjectConfigProvider'
 import Head from 'next/head'
+import { Transaction } from '@solana/web3.js'
+import { withFindOrInitAssociatedTokenAccount } from '@cardinal/token-manager'
+import { TokenData } from 'api/api'
+import { tokenManager } from '@cardinal/token-manager/dist/cjs/programs'
+import { withRemainingAccountsForReturn } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
+import { executeTransaction } from 'common/Transactions'
+import { tokenManagerAddressFromMint } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/pda'
 
 export const TokensOuter = styled.div`
   display: flex;
@@ -145,7 +152,7 @@ function Profile() {
     }
   }, [colors])
 
-  const { tokenDatas, setAddress, loaded, refreshing } = useUserTokenData()
+  const { tokenDatas, setAddress, loaded, refreshing, refreshTokenAccounts } = useUserTokenData()
   useEffect(() => {
     if (addressId) {
       setAddress(firstParam(addressId))
@@ -164,6 +171,46 @@ function Profile() {
       setTab('wallet')
     }
   }, [wallet.connected, addressId])
+
+  const revokeRental = async (tokenData: TokenData) => {
+    let transaction = new Transaction()
+    const tokenManagerId = await tokenManagerAddressFromMint(ctx.connection, tokenData.tokenManager?.parsed.mint);
+
+    const tokenManagerTokenAccountId = await withFindOrInitAssociatedTokenAccount(
+      transaction,
+      ctx.connection,
+      tokenData.tokenManager?.parsed.mint,
+      tokenManagerId,
+      wallet.publicKey,
+      true
+    );
+
+    const remainingAccountsForReturn = await withRemainingAccountsForReturn(
+      transaction,
+      ctx.connection,
+      wallet,
+      tokenData.tokenManager
+    );
+
+    transaction.add(
+      await tokenManager.instruction.invalidate(
+        ctx.connection,
+        wallet,
+        tokenData.tokenManager?.parsed.mint,
+        tokenManagerId,
+        tokenData.tokenManager.parsed.kind,
+        tokenData.tokenManager.parsed.state,
+        tokenManagerTokenAccountId,
+        tokenData.tokenManager?.parsed.recipientTokenAccount,
+        remainingAccountsForReturn
+      )
+    );
+
+    await executeTransaction(ctx.connection, wallet, transaction, {
+      silent: false,
+      callback: refreshTokenAccounts,
+    })
+  }
 
   return (
     <div className="h-screen" style={{ backgroundColor: Colors.background }}>
@@ -207,6 +254,18 @@ function Profile() {
                             }
                           >
                             Increase Duration
+                          </Button>
+                        ) : null}
+                        {tokenData.tokenManager?.parsed
+                          ? (
+                          <Button
+                            variant="primary"
+                            className="mx-auto mt-4"
+                            onClick={() =>
+                              revokeRental(tokenData)
+                            }
+                          >
+                            Revoke
                           </Button>
                         ) : null}
                       </div>
