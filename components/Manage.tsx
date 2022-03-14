@@ -1,4 +1,5 @@
 import React from 'react'
+import { useState } from 'react'
 import { NFT, TokensOuter } from 'common/NFT'
 import { useManagedTokens } from 'providers/ManagedTokensProvider'
 import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
@@ -29,6 +30,7 @@ export const Manage = () => {
   const { refreshTokenAccounts } = useUserTokenData()
   const { managedTokens, loaded } = useManagedTokens()
   const { colors } = useProjectConfigData()
+  const [loadingUnissue, setLoadingUnissue] = useState(false)
 
   return (
     <TokensOuter>
@@ -78,21 +80,40 @@ export const Manage = () => {
                           bgColor={colors.secondary}
                           variant="primary"
                           disabled={!wallet.connected}
-                          onClick={async () =>
-                            tokenData?.tokenManager &&
-                            executeTransaction(
-                              connection,
-                              asWallet(wallet),
-                              await unissueToken(
-                                connection,
-                                asWallet(wallet),
-                                tokenData?.tokenManager?.parsed.mint
-                              ),
-                              { callback: refreshTokenAccounts, silent: true }
-                            )
-                          }
+                          onClick={async () => {
+                            try {
+                              setLoadingUnissue(true)
+                              if (tokenData?.tokenManager) {
+                                await executeTransaction(
+                                  connection,
+                                  asWallet(wallet),
+                                  await unissueToken(
+                                    connection,
+                                    asWallet(wallet),
+                                    tokenData?.tokenManager?.parsed.mint
+                                  ),
+                                  {
+                                    callback: refreshTokenAccounts,
+                                    silent: true,
+                                  }
+                                )
+                              }
+                            } catch (e) {
+                              notify({
+                                message: 'Unissue failed',
+                                type: 'error',
+                              })
+                              console.log(e)
+                            } finally {
+                              setLoadingUnissue(false)
+                            }
+                          }}
                         >
-                          Unissue
+                          {loadingUnissue ? (
+                            <LoadingSpinner height="25px" />
+                          ) : (
+                            'Unissue'
+                          )}
                         </Button>
                       )}
                     </StyledTag>
