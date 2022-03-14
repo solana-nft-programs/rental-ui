@@ -54,10 +54,8 @@ export const TokenMetadata = styled.div`
     justify-content: center;
 
     transition: 0.2s all;
-    // background: rgba(100, 100, 100);
     background: ${Colors.navBg};
     &:hover {
-      // background: rgba(120, 120, 120);
       background: ${Colors.background};
     }
   }
@@ -150,8 +148,8 @@ export function NFT({ tokenData, hideQRCode }: NFTProps) {
   const wallet = useWallet()
   const { show } = useQRCode()
   const rentalModal = useRentalModal()
-  const { colors } = useProjectConfigData()  
-  
+  const { colors } = useProjectConfigData()
+
   const {
     tokenAccount,
     metadata,
@@ -159,8 +157,8 @@ export function NFT({ tokenData, hideQRCode }: NFTProps) {
     timeInvalidator,
     useInvalidator,
   } = tokenData
-  const customImageUri =
-    tokenManager && getQueryParam(metadata?.data?.image, 'uri')
+  // const customImageUri =
+  //   tokenManager && getQueryParam(metadata?.data?.image, 'uri')
 
   const elligibleForRent =
     !tokenManager &&
@@ -269,25 +267,14 @@ export function NFT({ tokenData, hideQRCode }: NFTProps) {
             }
           />
         )}
-        {metadata &&
-          metadata.data &&
-          (metadata.data.animation_url ? (
-            // @ts-ignore
-            <video
-              id="media"
-              auto-rotate-delay="0"
-              auto-rotate="true"
-              auto-play="true"
-              src={metadata.data.animation_url}
-              // @ts-ignore
-            />
-          ) : (
-            <img
-              id="media"
-              src={customImageUri || metadata.data.image}
-              alt={metadata.data.name}
-            />
-          ))}
+        {metadata && metadata.data && (
+          <img
+            id="media"
+            src={metadata.data.image}
+            // src={customImageUri || metadata.data.image}
+            alt={metadata.data.name}
+          />
+        )}
       </div>
     </TokenMetadata>
   )

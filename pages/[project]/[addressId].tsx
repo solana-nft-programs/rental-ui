@@ -232,7 +232,11 @@ function Profile() {
             {
               wallet: (
                 <TokensOuter>
-                  {tokenDatas && tokenDatas.length > 0 ? (
+                  {!loaded || !configLoaded ? (
+                    <div className="flex w-full items-center justify-center">
+                      <LoadingSpinner />
+                    </div>
+                  ) : tokenDatas && tokenDatas.length > 0 ? (
                     tokenDatas.map((tokenData) => (
                       <div key={tokenData.metaplexData.data.mint}>
                         <NFT
@@ -270,14 +274,10 @@ function Profile() {
                         ) : null}
                       </div>
                     ))
-                  ) : loaded && configLoaded ? (
+                  ) : (
                     <div className="white flex w-full flex-col items-center justify-center gap-1">
                       <div className="text-white">Wallet empty!</div>
                       {ctx.environment.label === 'devnet' && <Airdrop />}
-                    </div>
-                  ) : (
-                    <div className="flex w-full items-center justify-center">
-                      <LoadingSpinner />
                     </div>
                   )}
                 </TokensOuter>
