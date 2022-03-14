@@ -159,8 +159,8 @@ export function NFT({ tokenData, hideQRCode }: NFTProps) {
     timeInvalidator,
     useInvalidator,
   } = tokenData
-  const customImageUri =
-    tokenManager && getQueryParam(metadata?.data?.image, 'uri')
+  // const customImageUri =
+  //   tokenManager && getQueryParam(metadata?.data?.image, 'uri')
 
   const elligibleForRent =
     !tokenManager &&
@@ -284,7 +284,8 @@ export function NFT({ tokenData, hideQRCode }: NFTProps) {
           ) : (
             <img
               id="media"
-              src={customImageUri || metadata.data.image}
+              src={metadata.data.image}
+              // src={customImageUri || metadata.data.image}
               alt={metadata.data.name}
             />
           ))}
