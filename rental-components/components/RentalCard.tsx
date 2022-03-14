@@ -316,7 +316,6 @@ export const RentalCard = ({
       setLoading(false)
     }
   }
-  console.log(paymentMint, price)
   return (
     <RentalCardOuter>
       <Wrapper>
