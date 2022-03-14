@@ -265,7 +265,7 @@ function Profile() {
                               revokeRental(tokenData)
                             }
                           >
-                            Revoke
+                            Return
                           </Button>
                         ) : null}
                       </div>
