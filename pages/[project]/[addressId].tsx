@@ -9,14 +9,10 @@ import { Header } from 'common/Header'
 import { useUserTokenData } from 'providers/TokenDataProvider'
 import { useRouter } from 'next/router'
 import Colors from 'common/colors'
-import { NFT } from 'common/NFT'
 import { firstParam, camelCase } from 'common/utils'
-import { Button } from 'rental-components/common/Button'
-import { asWallet } from 'common/Wallets'
-import { Airdrop } from 'common/Airdrop'
-import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 import { Manage } from 'components/Manage'
 import { Browse } from 'components/Browse'
+import { Wallet } from 'components/Wallet'
 import { useRentalExtensionModal } from 'rental-components/RentalExtensionModalProvider'
 import { useProjectConfigData } from 'providers/ProjectConfigProvider'
 import Head from 'next/head'
@@ -125,14 +121,12 @@ export const TokenMetadata = styled.div`
 
 function Profile() {
   const [error, _setError] = useError()
-  const ctx = useEnvironmentCtx()
   const wallet = useWallet()
   const router = useRouter()
   const { addressId } = router.query
   const [loading, _setLoading] = useState(false)
   const [tab, setTab] = useState<string>('wallet')
-  const rentalExtensionModal = useRentalExtensionModal()
-  const { projectName, colors, configLoaded } = useProjectConfigData()
+  const { projectName, colors } = useProjectConfigData()
 
   useEffect(() => {
     const anchor = router.asPath.split('#')[1]
@@ -145,7 +139,8 @@ function Profile() {
     }
   }, [colors])
 
-  const { tokenDatas, setAddress, loaded, refreshing } = useUserTokenData()
+  const { tokenDatas, setAddress, loaded, refreshing, refreshTokenAccounts } =
+    useUserTokenData()
   useEffect(() => {
     if (addressId) {
       setAddress(firstParam(addressId))
@@ -183,46 +178,7 @@ function Profile() {
           {error}
           {
             {
-              wallet: (
-                <TokensOuter>
-                  {!loaded || !configLoaded ? (
-                    <div className="flex w-full items-center justify-center">
-                      <LoadingSpinner />
-                    </div>
-                  ) : tokenDatas && tokenDatas.length > 0 ? (
-                    tokenDatas.map((tokenData) => (
-                      <div key={tokenData.metaplexData.data.mint}>
-                        <NFT
-                          key={tokenData?.tokenAccount?.pubkey.toBase58()}
-                          tokenData={tokenData}
-                        ></NFT>
-                        {tokenData.timeInvalidator?.parsed
-                          ?.extensionDurationSeconds ? (
-                          <Button
-                            variant="primary"
-                            className="mx-auto mt-4"
-                            onClick={() =>
-                              rentalExtensionModal.show(
-                                asWallet(wallet),
-                                ctx.connection,
-                                ctx.environment.label,
-                                tokenData
-                              )
-                            }
-                          >
-                            Increase Duration
-                          </Button>
-                        ) : null}
-                      </div>
-                    ))
-                  ) : (
-                    <div className="white flex w-full flex-col items-center justify-center gap-1">
-                      <div className="text-white">Wallet empty!</div>
-                      {ctx.environment.label === 'devnet' && <Airdrop />}
-                    </div>
-                  )}
-                </TokensOuter>
-              ),
+              wallet: <Wallet />,
               manage: <Manage />,
               browse: <Browse />,
             }[tab || 'wallet']
