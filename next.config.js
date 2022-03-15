@@ -12,6 +12,14 @@ if (
 
 /** @type {import('next').NextConfig} */
 module.exports = {
+  async rewrites() {
+    return [
+      {
+        source: '/:path*',
+        destination: `${process.env.BASE_PATH || ''}/:path*`,
+      },
+    ]
+  },
   reactStrictMode: true,
   env: {
     BASE_URL: process.env.BASE_URL || 'http://localhost:3000',
