@@ -46,13 +46,17 @@ export function TokenAccountsProvider({ children }: { children: ReactChild }) {
       setError(`Address not set please connect wallet to continue`)
       return
     }
+    if (!projectName) {
+      setError(`No project config found`)
+      return
+    }
     setRefreshing(true)
     setError(null)
     getTokenAccountsWithData(connection, address)
       .then((tokenDatas) => {
         let tokensWithMetadata = tokenDatas.filter((td) => td.metadata)
         tokensWithMetadata = filterTokens(filters, tokensWithMetadata)
-        if (projectName) setTokenDatas(tokensWithMetadata)
+        setTokenDatas(tokensWithMetadata)
       })
       .catch((e) => {
         console.log(e)
@@ -70,7 +74,7 @@ export function TokenAccountsProvider({ children }: { children: ReactChild }) {
         refreshTokenAccounts()
         return getTokenAccountsInterval
       })(),
-      5000
+      10000
     )
     return () => clearInterval(interval)
   }, [refreshTokenAccounts])
@@ -94,6 +98,5 @@ export function TokenAccountsProvider({ children }: { children: ReactChild }) {
 }
 
 export function useUserTokenData(): UserTokenDataValues {
-  const context = useContext(UserTokenData)
-  return context
+  return useContext(UserTokenData)
 }

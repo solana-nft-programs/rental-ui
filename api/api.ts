@@ -52,7 +52,10 @@ export type TokenData = {
   }
   tokenManager?: AccountData<TokenManagerData>
   metaplexData?: { pubkey: PublicKey; data: metaplex.MetadataData } | null
-  editionData?: metaplex.Edition
+  editionData?: {
+    pubkey: PublicKey
+    data: metaplex.EditionData | metaplex.MasterEditionData
+  } | null
   metadata?: any
   claimApprover?: AccountData<PaidClaimApproverData> | null
   useInvalidator?: AccountData<UseInvalidatorData> | null
@@ -182,7 +185,7 @@ export async function getTokenAccountsWithData(
       const key =
         accountInfo === null || accountInfo === void 0
           ? void 0
-          : accountInfo.data[0]
+          : (accountInfo.data as Buffer)[0]
       let parsed
       if (key === MetadataKey.EditionV1) {
         parsed = EditionData.deserialize(accountInfo?.data as Buffer)

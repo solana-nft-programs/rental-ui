@@ -58,7 +58,8 @@ export const filterTokens = (
           (token) =>
             token.metadata.data.properties &&
             token.metadata.data.properties.creators.some(
-              (creator) => creator.address === configFilter.value
+              (creator: { address: string }) =>
+                creator.address === configFilter.value
             )
         )
       } else if (configFilter.type == 'symbol') {
@@ -89,12 +90,12 @@ export function ProjectConfigProvider({ children }: { children: ReactChild }) {
   })
   const [configLoaded, setConfigLoaded] = useState<boolean>(false)
 
-  const { asPath } = useRouter()
-  const project = asPath.split('/')[1] ?? 'default'
+  const { query } = useRouter()
+  const project = query.project || process.env.BASE_PROJECT
 
   const loadConfig = async () => {
     try {
-      if (project == '[project]') return
+      if (!project) return
       const jsonData = await fetch(`https://api.cardinal.so/config/${project}`)
         .then(async (r) => JSON.parse(await r.json()))
         .finally(() => {
@@ -106,13 +107,13 @@ export function ProjectConfigProvider({ children }: { children: ReactChild }) {
       setProjectName(jsonData.projectName)
       setRentalCard(jsonData.rentalCard)
     } catch (e) {
-      console.log('ERROR', e)
+      console.log('Error fetching project config', e)
     }
   }
 
   useEffect(() => {
     loadConfig()
-  }, [asPath])
+  }, [project])
 
   return (
     <ProjectConfigValues.Provider
@@ -131,6 +132,5 @@ export function ProjectConfigProvider({ children }: { children: ReactChild }) {
 }
 
 export function useProjectConfigData(): ProjectConfigValues {
-  const context = useContext(ProjectConfigValues)
-  return context
+  return useContext(ProjectConfigValues)
 }

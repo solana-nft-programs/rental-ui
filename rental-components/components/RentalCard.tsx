@@ -112,7 +112,8 @@ export const RentalCard = ({
   const [loading, setLoading] = useState(false)
   const [link, setLink] = useState<string | null>(null)
   const { refreshTokenAccounts } = useUserTokenData()
-  const { tokenAccount, metaplexData, metadata, tokenManager } = tokenData
+  const { tokenAccount, metaplexData, editionData, metadata, tokenManager } =
+    tokenData
   const customImageUri = getQueryParam(metadata?.data?.image, 'uri')
   const [invalidationType, setInvalidationType] = useState(
     InvalidationType.Return
@@ -189,9 +190,9 @@ export const RentalCard = ({
   >(null)
   const [totalUsages, setTotalUsages] = useState<number | null>(null)
   const [visibility, setVisibiliy] = useState<'private' | 'public'>('public')
-  const [customInvalidator, setCustomInvalidator] = useState<string | null>(
-    null
-  )
+  const [customInvalidator, setCustomInvalidator] = useState<
+    string | undefined
+  >(undefined)
   const [claimRentalReceipt, setClaimRentalReceipt] = useState(false)
 
   const [showAdditionalOptions, setShowAdditionalOptions] = useState(false)
@@ -215,21 +216,24 @@ export const RentalCard = ({
     if (rentalCard.invalidationOptions.durationCategories) {
       durationData = Object.keys(durationData)
         .filter((key) =>
-          rentalCard.invalidationOptions.durationCategories.includes(key)
+          rentalCard.invalidationOptions?.durationCategories?.includes(key)
         )
-        .reduce((obj, key) => {
-          obj[key] = durationData[key]
+        .reduce((obj: { [key: string]: number }, key: string) => {
+          const d = durationData[key]
+          if (d) {
+            obj[key] = d
+          }
           return obj
         }, {})
     }
     if (rentalCard.invalidationOptions.invalidationCategories) {
       invalidationTypes = invalidationTypes.filter(({ label }) =>
-        rentalCard.invalidationOptions.invalidationCategories.includes(label)
+        rentalCard.invalidationOptions?.invalidationCategories?.includes(label)
       )
     }
     if (rentalCard.invalidationOptions.paymentMints) {
       paymentMintData = paymentMintData.filter(({ mint }) =>
-        rentalCard.invalidationOptions.paymentMints.includes(mint)
+        rentalCard.invalidationOptions?.paymentMints?.includes(mint)
       )
     }
   }
@@ -326,7 +330,7 @@ export const RentalCard = ({
                   : undefined,
               }
             : undefined,
-        useInvalidation: totalUsages ? { totalUsages: totalUsages } : null,
+        useInvalidation: totalUsages ? { totalUsages: totalUsages } : undefined,
         mint: rentalMint,
         issuerTokenAccountId: tokenAccount?.pubkey,
         kind:
@@ -407,26 +411,25 @@ export const RentalCard = ({
               revocable={customInvalidator ? true : false}
               lineHeight={12}
             />
-            {metadata &&
-              metadata.data &&
-              (metadata.data.animation_url ? (
-                // @ts-ignore
-                <video
-                  className="media"
-                  auto-rotate-delay="0"
-                  auto-rotate="true"
-                  auto-play="true"
-                  src={metadata.data.animation_url}
-                  // arStatus="not-presenting"
-                  // @ts-ignore
-                ></video>
-              ) : (
-                <img
-                  className="media"
-                  src={customImageUri || metadata.data.image}
-                  alt={metadata.data.name}
-                />
-              ))}
+            {metadata && metadata.data && (
+              // (metadata.data.animation_url ? (
+              //   // @ts-ignore
+              //   <video
+              //     className="media"
+              //     auto-rotate-delay="0"
+              //     auto-rotate="true"
+              //     auto-play="true"
+              //     src={metadata.data.animation_url}
+              //     // arStatus="not-presenting"
+              //     // @ts-ignore
+              //   ></video>
+              // ) : (
+              <img
+                className="media"
+                src={customImageUri || metadata.data.image}
+                alt={metadata.data.name}
+              />
+            )}
           </NFTOuter>
           {editionInfo && getEditionPill(editionInfo)}
         </ImageWrapper>

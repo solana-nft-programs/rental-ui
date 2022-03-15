@@ -22,10 +22,6 @@ export const StyledHeader = styled.div<{ isTabletOrMobile: boolean }>`
   z-index: 100;
   position: fixed;
   transition-delay: 10s;
-  padding: 0px 3%;
-  @media (max-width: 500px) {
-    padding: 0px 20px;
-  }
   justify-content: space-between;
   display: flex;
   transition: 2s;
@@ -67,7 +63,9 @@ export const StyledHeader = styled.div<{ isTabletOrMobile: boolean }>`
     transform: translateX(-50%);
     color: rgba(255, 255, 255, 0.8);
     font-weight: 200;
-    padding: 0px 20px;
+    @media (max-width: 1224px) {
+      width: 100vw;
+    }
   }
 
   .title {
@@ -136,6 +134,10 @@ export const StyledHeader = styled.div<{ isTabletOrMobile: boolean }>`
       }
     }
   }
+
+  .wallet-adapter-button {
+    padding: 0px;
+  }
 `
 
 export const Hamburger = styled.div`
@@ -177,11 +179,9 @@ export const StyledTabs = styled.div<{ show: boolean }>`
   @media (min-width: 1224px) {
     display: flex;
     margin: 30px auto;
-    top: 20px;
     padding: 5px;
     position: relative;
-    max-width: 600px;
-    background-color: ${Colors.navBg};
+    background-color: ${Colors.tabsBg};
     border-radius: 20px;
     align-items: center;
     gap: 5px;
@@ -200,13 +200,12 @@ export const StyledTabs = styled.div<{ show: boolean }>`
     width: 100vw;
     position: absolute;
     gap: 10px;
-    left: 0;
-    top: ${({ show }) => (show ? '0' : '-40vh')};
+    top: ${({ show }) => (show ? '-50px' : '-60vh')};
     text-align: center;
     align-items: center;
     flex-direction: column;
     justify-content: space-around;
-    padding: 30% 0px;
+    padding: 20% 0px;
     background-color: ${Colors.navBg};
   }
 `
@@ -279,7 +278,7 @@ export const Header = ({
       style={{ backgroundColor: Colors.navBg }}
       isTabletOrMobile={isTabletOrMobile}
     >
-      <div className="left">
+      <div className="left pl-8">
         <div className="title">
           <img src={logoImage} />
           <div className="subscript">
@@ -332,7 +331,7 @@ export const Header = ({
           </StyledTabs>
         )}
       </div>
-      <div className="right">
+      <div className="right pr-8">
         {/* <div
           style={{
             position: 'absolute',

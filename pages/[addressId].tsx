@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
 import { StyledContainer } from 'common/StyledContainer'
 import { useError } from 'providers/ErrorProvider'
-import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { Header } from 'common/Header'
 import { useUserTokenData } from 'providers/TokenDataProvider'
@@ -13,7 +12,6 @@ import { firstParam, camelCase } from 'common/utils'
 import { Manage } from 'components/Manage'
 import { Browse } from 'components/Browse'
 import { Wallet } from 'components/Wallet'
-import { useRentalExtensionModal } from 'rental-components/RentalExtensionModalProvider'
 import { useProjectConfigData } from 'providers/ProjectConfigProvider'
 import Head from 'next/head'
 
@@ -130,7 +128,7 @@ function Profile() {
 
   useEffect(() => {
     const anchor = router.asPath.split('#')[1]
-    if (anchor != tab) setTab(anchor)
+    if (anchor != tab) setTab(anchor || 'wallet')
   }, [router.asPath])
 
   useEffect(() => {
@@ -148,20 +146,17 @@ function Profile() {
     if (wallet && wallet.connected && wallet.publicKey) {
       setAddress(wallet.publicKey.toBase58())
       router.push(
-        `/${projectName}/${wallet.publicKey.toBase58()}${
-          new URLSearchParams(window.location.search).get('cluster')
-            ? `?cluster=${new URLSearchParams(window.location.search).get(
-                'cluster'
-              )}`
-            : ''
-        }`
+        `/${wallet.publicKey.toBase58()}${window.location.search ?? ''}`
       )
       setTab('wallet')
     }
   }, [wallet.connected, addressId])
 
   return (
-    <div className="h-screen" style={{ backgroundColor: Colors.background }}>
+    <div
+      className="min-h-screen"
+      style={{ backgroundColor: Colors.background }}
+    >
       <Head>
         <title>{camelCase(projectName)}</title>
       </Head>
