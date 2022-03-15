@@ -97,7 +97,7 @@ export function ProjectConfigProvider({ children }: { children: ReactChild }) {
     try {
       if (!project) return
       const jsonData = await fetch(`https://api.cardinal.so/config/${project}`)
-        .then(async (r) => JSON.parse(await r.json()))
+        .then(async (r) => await r.json())
         .finally(() => {
           setConfigLoaded(true)
         })
