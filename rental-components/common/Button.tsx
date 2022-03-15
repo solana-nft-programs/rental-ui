@@ -1,6 +1,9 @@
 import styled from '@emotion/styled'
 import { css } from '@emotion/react'
 import lighten from 'polished/lib/color/lighten'
+import { useState } from 'react'
+import { LoadingSpinner } from './LoadingSpinner'
+import { notify } from 'common/Notification'
 
 export const Button = styled.button<{
   variant: 'primary' | 'secondary' | 'tertiary'
@@ -67,4 +70,45 @@ export const getColorByBgColor = (bgColor: string) => {
     return ''
   }
   return parseInt(bgColor.replace('#', ''), 16) > 0xffffff / 2 ? '#000' : '#fff'
+}
+
+export const AsyncButton = ({
+  text,
+  variant,
+  boxShadow,
+  disabled,
+  bgColor,
+  handleClick,
+}: {
+  text: string
+  loading: boolean
+  variant: 'primary' | 'secondary' | 'tertiary'
+  boxShadow?: boolean
+  disabled?: boolean
+  bgColor?: string
+  handleClick: Function
+}) => {
+  const [loading, setLoading] = useState(false)
+
+  return (
+    <Button
+      variant="primary"
+      className="mx-auto mt-4"
+      onClick={async () => {
+        try {
+          setLoading(true)
+          await handleClick()
+        } catch (e) {
+          notify({
+            message: `${e}`,
+            type: 'error',
+          })
+        } finally {
+          setLoading(false)
+        }
+      }}
+    >
+      {loading ? <LoadingSpinner height="25px" /> : text}
+    </Button>
+  )
 }
