@@ -199,7 +199,8 @@ export const RentalExtensionCard = ({
     return (
       extensionDurationSeconds &&
       extensionPaymentAmount &&
-      extensionDurationSeconds.div(extensionPaymentAmount).toNumber() *
+      (extensionDurationSeconds.toNumber() /
+        extensionPaymentAmount.toNumber()) *
         paymentAmount
     )
   }
@@ -328,11 +329,12 @@ export const RentalExtensionCard = ({
             </p>
             <p className="ml-3 mt-2 text-[12px] text-gray-800">
               <span className="font-bold ">Max Expiration: </span>
-              {maxExpiration &&
-                `${new Date(maxExpiration?.toNumber() * 1000).toLocaleString(
-                  'en-US'
-                )}
-              `}
+              {maxExpiration
+                ? `${new Date(maxExpiration?.toNumber() * 1000).toLocaleString(
+                    'en-US'
+                  )}
+              `
+                : 'N/A'}
             </p>
           </div>
         </DetailsWrapper>
