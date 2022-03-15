@@ -97,7 +97,7 @@ export const firstParam = (param: string | string[] | undefined): string => {
   return typeof param === 'string' ? param : param[0] || ''
 }
 
-export const camelCase = (str) => {
+export const camelCase = (str: string) => {
   return str
     .split(' ')
     .map((x) => x.charAt(0).toUpperCase() + x.slice(1))

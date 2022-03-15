@@ -49,13 +49,13 @@ export function PaymentMintsProvider({ children }: { children: ReactChild }) {
       try {
         const paymentToken = new splToken.Token(
           ctx.connection,
-          new web3.PublicKey(PAYMENT_MINTS[i].mint),
+          new web3.PublicKey(PAYMENT_MINTS[i]!.mint),
           splToken.TOKEN_PROGRAM_ID,
           // @ts-ignore
           null
         )
         const mintInfo = await paymentToken.getMintInfo()
-        paymentMintInfoMap[PAYMENT_MINTS[i].mint] = mintInfo
+        paymentMintInfoMap[PAYMENT_MINTS[i]!.mint] = mintInfo
       } catch (e: any) {
         setError(`${e}`)
       }

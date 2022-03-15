@@ -14,7 +14,7 @@
     "incremental": true,
     "baseUrl": ".",
     //
-    "strict": false,
+    "strict": true,
     "noImplicitOverride": true,
     "noUncheckedIndexedAccess": true,
     "noFallthroughCasesInSwitch": true,

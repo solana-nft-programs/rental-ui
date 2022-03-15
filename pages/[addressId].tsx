@@ -128,7 +128,7 @@ function Profile() {
 
   useEffect(() => {
     const anchor = router.asPath.split('#')[1]
-    if (anchor != tab) setTab(anchor)
+    if (anchor != tab) setTab(anchor || 'wallet')
   }, [router.asPath])
 
   useEffect(() => {

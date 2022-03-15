@@ -58,7 +58,8 @@ export const filterTokens = (
           (token) =>
             token.metadata.data.properties &&
             token.metadata.data.properties.creators.some(
-              (creator) => creator.address === configFilter.value
+              (creator: { address: string }) =>
+                creator.address === configFilter.value
             )
         )
       } else if (configFilter.type == 'symbol') {

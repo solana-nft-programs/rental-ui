@@ -31,7 +31,7 @@ export const QRCode = ({
         const transaction = await useTransaction(
           connection,
           wallet,
-          tokenData?.tokenManager?.parsed.mint,
+          tokenData?.tokenManager?.parsed.mint!,
           1
         )
         transaction.feePayer = wallet.publicKey

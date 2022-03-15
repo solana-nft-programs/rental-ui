@@ -28,6 +28,9 @@ export const Wallet = () => {
   const [loadingReturn, setLoadingReturn] = useState(false)
 
   const revokeRental = async (tokenData: TokenData) => {
+    if (!tokenData.tokenManager) throw new Error('Invalid token manager')
+    if (!wallet.publicKey) throw new Error('Wallet not connected')
+
     let transaction = new Transaction()
     const tokenManagerId = await tokenManagerAddressFromMint(
       ctx.connection,
@@ -47,14 +50,14 @@ export const Wallet = () => {
     const remainingAccountsForReturn = await withRemainingAccountsForReturn(
       transaction,
       ctx.connection,
-      wallet,
+      asWallet(wallet),
       tokenData.tokenManager
     )
 
     transaction.add(
       await tokenManager.instruction.invalidate(
         ctx.connection,
-        wallet,
+        asWallet(wallet),
         tokenData.tokenManager?.parsed.mint,
         tokenManagerId,
         tokenData.tokenManager.parsed.kind,
@@ -65,7 +68,7 @@ export const Wallet = () => {
       )
     )
 
-    await executeTransaction(ctx.connection, wallet, transaction, {
+    await executeTransaction(ctx.connection, asWallet(wallet), transaction, {
       silent: false,
       callback: refreshTokenAccounts,
     })
@@ -79,7 +82,7 @@ export const Wallet = () => {
         </div>
       ) : tokenDatas && tokenDatas.length > 0 ? (
         tokenDatas.map((tokenData) => (
-          <div key={tokenData.metaplexData.data.mint}>
+          <div key={tokenData.tokenAccount?.pubkey.toString()}>
             <NFT
               key={tokenData?.tokenAccount?.pubkey.toBase58()}
               tokenData={tokenData}

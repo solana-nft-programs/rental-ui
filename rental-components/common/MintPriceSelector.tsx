@@ -43,9 +43,9 @@ export const MintPriceSelector = ({
           )
         }
       />
-      <Select        
+      <Select
         onChange={(e) => handleMint(e)}
-        defaultValue={PAYMENT_MINTS[0].mint}
+        defaultValue={PAYMENT_MINTS[0]!.mint}
         disabled={disabled || mintDisabled}
       >
         {PAYMENT_MINTS.map(
