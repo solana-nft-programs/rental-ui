@@ -112,7 +112,8 @@ export const RentalCard = ({
   const [loading, setLoading] = useState(false)
   const [link, setLink] = useState<string | null>(null)
   const { refreshTokenAccounts } = useUserTokenData()
-  const { tokenAccount, metaplexData, metadata, tokenManager } = tokenData
+  const { tokenAccount, metaplexData, editionData, metadata, tokenManager } =
+    tokenData
   const customImageUri = getQueryParam(metadata?.data?.image, 'uri')
   const [invalidationType, setInvalidationType] = useState(
     InvalidationType.Return
@@ -407,26 +408,25 @@ export const RentalCard = ({
               revocable={customInvalidator ? true : false}
               lineHeight={12}
             />
-            {metadata &&
-              metadata.data &&
-              (metadata.data.animation_url ? (
-                // @ts-ignore
-                <video
-                  className="media"
-                  auto-rotate-delay="0"
-                  auto-rotate="true"
-                  auto-play="true"
-                  src={metadata.data.animation_url}
-                  // arStatus="not-presenting"
-                  // @ts-ignore
-                ></video>
-              ) : (
-                <img
-                  className="media"
-                  src={customImageUri || metadata.data.image}
-                  alt={metadata.data.name}
-                />
-              ))}
+            {metadata && metadata.data && (
+              // (metadata.data.animation_url ? (
+              //   // @ts-ignore
+              //   <video
+              //     className="media"
+              //     auto-rotate-delay="0"
+              //     auto-rotate="true"
+              //     auto-play="true"
+              //     src={metadata.data.animation_url}
+              //     // arStatus="not-presenting"
+              //     // @ts-ignore
+              //   ></video>
+              // ) : (
+              <img
+                className="media"
+                src={customImageUri || metadata.data.image}
+                alt={metadata.data.name}
+              />
+            )}
           </NFTOuter>
           {editionInfo && getEditionPill(editionInfo)}
         </ImageWrapper>
