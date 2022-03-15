@@ -100,7 +100,7 @@ export const Manage = () => {
                               }
                             } catch (e) {
                               notify({
-                                message: 'Unissue failed',
+                                message: `Unissue failed: ${e}`,
                                 type: 'error',
                               })
                               console.log(e)

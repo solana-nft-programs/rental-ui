@@ -112,7 +112,7 @@ export const Wallet = () => {
                     }
                   } catch (e) {
                     notify({
-                      message: 'Return failed',
+                      message: `Return failed: ${e}`,
                       type: 'error',
                     })
                   } finally {
