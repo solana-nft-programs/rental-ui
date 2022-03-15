@@ -209,8 +209,19 @@ export const RentalCard = ({
     showDurationOption,
     showManualOption,
   } = rentalCard.invalidations
-  const showClaimRentalReceipt =
-    rentalCard.invalidationOptions?.showClaimRentalReceipt ?? true
+
+  let showClaimRentalReceipt = true
+  if (rentalCard.invalidationOptions?.setClaimRentalReceipt !== undefined) {
+    if (
+      claimRentalReceipt !==
+      rentalCard.invalidationOptions?.setClaimRentalReceipt
+    ) {
+      setClaimRentalReceipt(
+        rentalCard.invalidationOptions?.setClaimRentalReceipt
+      )
+    }
+    showClaimRentalReceipt = false
+  }
 
   if (rentalCard.invalidationOptions) {
     if (rentalCard.invalidationOptions.durationCategories) {
@@ -734,24 +745,26 @@ export const RentalCard = ({
             </button>
             {showAdditionalOptions ? (
               <div className="grid grid-cols-2 gap-4">
-                <StepDetail
-                  icon={<GrReturn />}
-                  title="Invalidation"
-                  description={
-                    <Select
-                      disabled={invalidationTypes.length === 1}
-                      style={{ width: '100%' }}
-                      onChange={(e) => setInvalidationType(e)}
-                      defaultValue={invalidationType}
-                    >
-                      {invalidationTypes.map(({ label, type }) => (
-                        <Option key={type} value={type}>
-                          {label}
-                        </Option>
-                      ))}
-                    </Select>
-                  }
-                />
+                {invalidationTypes.length !== 1 ? (
+                  <StepDetail
+                    icon={<GrReturn />}
+                    title="Invalidation"
+                    description={
+                      <Select
+                        disabled={invalidationTypes.length === 1}
+                        style={{ width: '100%' }}
+                        onChange={(e) => setInvalidationType(e)}
+                        defaultValue={invalidationType}
+                      >
+                        {invalidationTypes.map(({ label, type }) => (
+                          <Option key={type} value={type}>
+                            {label}
+                          </Option>
+                        ))}
+                      </Select>
+                    }
+                  />
+                ) : null}
 
                 <StepDetail
                   icon={<FaEye />}
