@@ -13,7 +13,7 @@ export interface RentalCardOptions {
     durationCategories?: string[]
     invalidationCategories?: string[]
     paymentMints?: string[]
-    showClaimRentalReceipt?: boolean
+    setClaimRentalReceipt?: boolean
   }
 }
 export interface ProjectConfigValues {
