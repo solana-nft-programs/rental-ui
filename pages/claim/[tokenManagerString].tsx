@@ -22,6 +22,7 @@ import { PAYMENT_MINTS, WRAPPED_SOL_MINT } from 'providers/PaymentMintsProvider'
 import { getATokenAccountInfo, tryPublicKey } from 'api/utils'
 import { BN } from '@project-serum/anchor'
 import { withWrapSol } from 'api/wrappedSol'
+import { useProjectConfigData } from 'providers/ProjectConfigProvider'
 
 type Hideable = {
   visible?: boolean
@@ -46,6 +47,7 @@ enum VerificationStatus {
 
 interface Verifiable extends Hideable {
   status?: VerificationStatus
+  colors: { main: string; secondary: string }
   scanning?: boolean
 }
 
@@ -225,10 +227,15 @@ const VerificationStep = styled.div<Verifiable>`
     background: rgba(255, 255, 255, 0.13);
     background: linear-gradient(
       to right,
-      rgba(255, 255, 255, 0.13) 0%,
-      rgba(255, 255, 255, 0.13) 77%,
-      rgba(255, 255, 255, 0.5) 92%,
-      rgba(255, 255, 255, 0) 100%
+      ${(props) =>
+        props.colors
+          ? props.colors.main + ', ' + props.colors.secondary
+          : `
+        rgba(255, 255, 255, 0.13) 0%,
+        rgba(255, 255, 255, 0.13) 77%,
+        rgba(255, 255, 255, 0.5) 92%,
+        rgba(255, 255, 255, 0) 100%
+      `}
     );
 
     &:hover {
@@ -276,6 +283,8 @@ function Claim() {
   const [paymentTokenAccountError, setPaymentTokenAccountError] = useState<
     boolean | null
   >(null)
+
+  const { colors } = useProjectConfigData()
 
   const { tokenManagerString } = router.query
   const tokenManagerId = tryPublicKey(tokenManagerString)
@@ -437,7 +446,11 @@ function Claim() {
     <>
       <Header />
       <VerificationStepsOuter>
-        <VerificationStep visible={true} status={tokenDataStatus?.status}>
+        <VerificationStep
+          visible={true}
+          status={tokenDataStatus?.status}
+          colors={colors}
+        >
           <div className="header">
             <div className="step-name uppercase">Claim Asset</div>
             {tokenManagerId && tokenData?.tokenManager?.parsed.mint && (
