@@ -99,20 +99,21 @@ export const Browse = () => {
           }
         }
       }
-      setFilteredIssuedTokens(tokens)
-      handleOrderCategoryChange()
+            
+      handleOrderCategoryChange(selectedOrderCategory, tokens)
     }
 
     filterIssuedTokens()
   }, [issuedTokens])
 
   const handleOrderCategoryChange = (
-    value: OrderCategories = selectedOrderCategory
+    value: OrderCategories = selectedOrderCategory,
+    tokens: TokenData[] = filteredIssuedTokens
   ) => {
     switch (value) {
       case OrderCategories.RecentlyListed:
         setFilteredIssuedTokens(
-          filteredIssuedTokens.sort((a, b) => {
+          tokens.sort((a, b) => {
             return (
               (a.tokenManager?.parsed.stateChangedAt.toNumber() ?? 0) -
               (b.tokenManager?.parsed.stateChangedAt.toNumber() ?? 0)
@@ -122,7 +123,7 @@ export const Browse = () => {
         break
       case OrderCategories.PriceLowToHigh:
         setFilteredIssuedTokens(
-          filteredIssuedTokens.sort((a, b) => {
+          tokens.sort((a, b) => {
             return (
               (a.claimApprover?.parsed.paymentAmount.toNumber() ?? 0) -
               (b.claimApprover?.parsed.paymentAmount.toNumber() ?? 0)
@@ -132,7 +133,7 @@ export const Browse = () => {
         break
       case OrderCategories.PriceHighToLow:
         setFilteredIssuedTokens(
-          filteredIssuedTokens.sort((a, b) => {
+          tokens.sort((a, b) => {
             return (
               (b.claimApprover?.parsed.paymentAmount.toNumber() ?? 0) -
               (a.claimApprover?.parsed.paymentAmount.toNumber() ?? 0)
@@ -142,14 +143,14 @@ export const Browse = () => {
         break
       case OrderCategories.RateLowToHigh:
         setFilteredIssuedTokens(
-          filteredIssuedTokens.sort((a, b) => {
+          tokens.sort((a, b) => {
             return calculateRateFromTokenData(a) - calculateRateFromTokenData(b)
           })
         )
         break
       case OrderCategories.RateHighToLow:
         setFilteredIssuedTokens(
-          filteredIssuedTokens.sort((a, b) => {
+          tokens.sort((a, b) => {
             return calculateRateFromTokenData(b) - calculateRateFromTokenData(a)
           })
         )
