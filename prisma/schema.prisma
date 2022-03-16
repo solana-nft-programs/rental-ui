@@ -1,0 +1,24 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
+}
+
+datasource db {
+  provider             = "postgresql"
+  url                  = env("DATABASE_URL")
+  referentialIntegrity = "prisma"
+}
+
+model Claim {
+  id             Int      @id @default(autoincrement())
+  uid            String   @unique @default(uuid()) @map("uid") @db.Uuid
+  tokenManagerId String?  @map("token_manager_id")
+  email          String?  @map("email")
+  link           String?  @map("link")
+  nftMintId      String?  @map("nft_mint_id")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  @@unique([tokenManagerId, email, nftMintId])
+  @@map("claims")
+}

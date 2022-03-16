@@ -96,11 +96,29 @@ export function ProjectConfigProvider({ children }: { children: ReactChild }) {
   const loadConfig = async () => {
     try {
       if (!project) return
-      const jsonData = await fetch(`https://api.cardinal.so/config/${project}`)
-        .then(async (r) => await r.json())
-        .finally(() => {
-          setConfigLoaded(true)
-        })
+      // const jsonData = await fetch(`https://api.cardinal.so/config/${project}`)
+      //   .then(async (r) => await r.json())
+      //   .finally(() => {
+      //     setConfigLoaded(true)
+      //   })
+      const jsonData = {
+        logoImage: '', // https://main.cardinal.so/assets/cardinal-titled.png
+        colors: {
+          main: 'rgba(0, 0, 0, 0.15)',
+          secondary: 'rgb(29, 155, 240)',
+        },
+        filters: [],
+        projectName: 'remi',
+        rentalCard: {
+          invalidations: {
+            showUsagesOption: true,
+            showExpirationOption: true,
+            showDurationOption: true,
+            showManualOption: true,
+          },
+        },
+      }
+      setConfigLoaded(true)
       setLogoImage(jsonData.logoImage)
       setColors(jsonData.colors)
       setFilters(jsonData.filters)

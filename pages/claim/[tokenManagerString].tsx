@@ -27,6 +27,10 @@ type Hideable = {
   visible?: boolean
 }
 
+const StepOne = styled.div`
+  text-align: center;
+`
+
 const VerificationStepsOuter = styled.div`
   display: flex;
   flex-direction: column;
@@ -279,7 +283,6 @@ function Claim() {
 
   const { tokenManagerString } = router.query
   const tokenManagerId = tryPublicKey(tokenManagerString)
-  console.log(tokenData)
 
   async function getMetadata() {
     try {
@@ -437,6 +440,12 @@ function Claim() {
     <>
       <Header />
       <VerificationStepsOuter>
+        {!wallet?.connected && (
+          <StepOne>
+            Don't have a wallet yet? Click here to learn how to set one up. Then
+            come back here, connect, and click "Claim".
+          </StepOne>
+        )}
         <VerificationStep visible={true} status={tokenDataStatus?.status}>
           <div className="header">
             <div className="step-name uppercase">Claim Asset</div>
@@ -504,15 +513,18 @@ function Claim() {
                               target="_blank"
                               rel="noreferrer"
                             >
-                              {shortPubKey(
-                                tokenData.recipientTokenAccount?.owner ||
-                                  wallet.publicKey
-                              )}
+                              {wallet?.publicKey?.toString() ===
+                              tokenData.recipientTokenAccount?.owner.toString()
+                                ? 'You'
+                                : shortPubKey(
+                                    tokenData.recipientTokenAccount?.owner ||
+                                      wallet.publicKey
+                                  )}
                             </a>
                           </div>
-                          <div>
+                          {/* <div>
                             This is a cardinal-powered non-transferable NFT
-                          </div>
+                          </div> */}
                           <Button
                             className="mx-auto mt-2"
                             variant="primary"

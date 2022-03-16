@@ -75,12 +75,12 @@ export default function Home() {
             {projectName.charAt(0).toUpperCase() +
               projectName.substring(1, projectName.length)}
           </p>
-          <p className="text-md mt-3">
+          {/* <p className="text-md mt-3">
             The Rental Marketplace for all{' '}
             {projectName.charAt(0).toUpperCase() +
               projectName.substring(1, projectName.length)}{' '}
             NFTs
-          </p>
+          </p> */}
         </div>
         <div className="mt-5 flex items-center justify-center">
           <WalletMultiButton

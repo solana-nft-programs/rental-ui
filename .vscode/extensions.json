@@ -1,0 +1,11 @@
+{
+	// List of extensions which should be recommended for users of this workspace.
+	"recommendations": [
+		"dbaeumer.vscode-eslint",
+		"mikestead.dotenv",
+		"graphql.vscode-graphql",
+		"christian-kohler.npm-intellisense",
+		"esbenp.prettier-vscode",
+		"prisma.prisma"
+	],
+}

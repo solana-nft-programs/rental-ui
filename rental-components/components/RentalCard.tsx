@@ -8,6 +8,7 @@ import { ButtonWithFooter } from 'rental-components/common/ButtonWithFooter'
 import { Alert } from 'rental-components/common/Alert'
 import { StepDetail } from 'rental-components/common/StepDetail'
 import { Button } from 'rental-components/common/Button'
+import axios from 'axios'
 import {
   Fieldset,
   Input,
@@ -189,6 +190,7 @@ export const RentalCard = ({
     boolean | null
   >(null)
   const [totalUsages, setTotalUsages] = useState<number | null>(null)
+  const [recipientEmail, setRecipientEmail] = useState<string | null>(null)
   const [visibility, setVisibiliy] = useState<'private' | 'public'>('public')
   const [customInvalidator, setCustomInvalidator] = useState<
     string | undefined
@@ -374,6 +376,12 @@ export const RentalCard = ({
         cluster,
         `${process.env.BASE_URL}/claim`
       )
+      await axios.post('/api/claims/create', {
+        tokenManagerId,
+        link,
+        email: recipientEmail,
+        nftMintId: tokenData?.metaplexData?.data.mint,
+      })
       setLink(link)
       handleCopy(link)
       console.log(link)
@@ -736,6 +744,21 @@ export const RentalCard = ({
                   </p>
                 </div>
               ) : null}
+              <StepDetail
+                icon={<BiQrScan />}
+                title="Email"
+                description={
+                  <Fieldset>
+                    <InputBorder>
+                      <Input
+                        name="email"
+                        type="email"
+                        onChange={(e) => setRecipientEmail(e.target.value)}
+                      />
+                    </InputBorder>
+                  </Fieldset>
+                }
+              />
             </div>
             <button
               className="-mt-7 mb-2 text-blue-500"
@@ -824,7 +847,8 @@ export const RentalCard = ({
         </DetailsWrapper>
         <ButtonWithFooter
           loading={loading}
-          complete={false}
+          complete={link ? true : false}
+          disabled={link ? true : false}
           message={
             link ? (
               <StyledAlert>
@@ -836,13 +860,14 @@ export const RentalCard = ({
                   message={
                     <>
                       <div>
-                        Link created {link.substring(0, 20)}
+                        Notification sent to {recipientEmail}
+                        {/* Link created {link.substring(0, 20)}
                         ...
                         {link.substring(link.length - 5)}
                         <div>
                           This link can only be used once and cannot be
                           regenerated
-                        </div>
+                        </div> */}
                       </div>
                     </>
                   }
@@ -960,10 +985,11 @@ export const RentalCard = ({
               style={{ gap: '5px', fontWeight: '300' }}
               className="flex items-center justify-center"
             >
-              <FaLink />
+              Notification sent to recipient
+              {/* <FaLink />
               {link.substring(0, 40)}
               ...
-              {link.substring(link.length - 10)}
+              {link.substring(link.length - 10)} */}
             </div>
           ) : (
             <div

@@ -28,7 +28,7 @@ export const Manage = () => {
   const { connection } = useEnvironmentCtx()
   const wallet = useWallet()
   const { refreshTokenAccounts } = useUserTokenData()
-  const { managedTokens, loaded } = useManagedTokens()
+  const { managedTokens, loaded, internalClaims } = useManagedTokens()
   const { colors } = useProjectConfigData()
   const [loadingUnissue, setLoadingUnissue] = useState(false)
 
@@ -69,8 +69,18 @@ export const Manage = () => {
                         }
                         color="warning"
                       >
-                        Issued by{' '}
-                        {shortPubKey(tokenData.tokenManager?.parsed.issuer)}{' '}
+                        {tokenData?.tokenManager?.pubkey?.toString() &&
+                        internalClaims[
+                          tokenData?.tokenManager?.pubkey.toString()
+                        ]
+                          ? `Issued to ${
+                              internalClaims[
+                                tokenData?.tokenManager?.pubkey.toString()
+                              ]
+                            }`
+                          : ''}
+                        {/* Issued by{' '}
+                        {shortPubKey(tokenData.tokenManager?.parsed.issuer)}{' '} */}
                         {/* {shortDateString(tokenData.tokenManager?.parsed.issuedAt)} */}
                         <FaLink className="ml-1" />
                       </Tag>
@@ -121,10 +131,20 @@ export const Manage = () => {
                   [TokenManagerState.Claimed]: (
                     <StyledTag>
                       <Tag state={TokenManagerState.Claimed}>
-                        Claimed by{' '}
+                        {tokenData?.tokenManager?.pubkey?.toString() &&
+                        internalClaims[
+                          tokenData?.tokenManager?.pubkey.toString()
+                        ]
+                          ? `Claimed by ${
+                              internalClaims[
+                                tokenData?.tokenManager?.pubkey.toString()
+                              ]
+                            }`
+                          : ''}
+                        {/* Claimed by{' '}
                         {shortPubKey(
                           tokenData.recipientTokenAccount?.owner || ''
-                        )}{' '}
+                        )}{' '} */}
                         {/* {shortDateString(
                           tokenData.tokenManager?.parsed.claimedAt
                         )} */}
