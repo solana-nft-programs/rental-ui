@@ -23,6 +23,7 @@ import { getATokenAccountInfo, tryPublicKey } from 'api/utils'
 import { BN } from '@project-serum/anchor'
 import { withWrapSol } from 'api/wrappedSol'
 import { useProjectConfigData } from 'providers/ProjectConfigProvider'
+import { Connection } from '@solana/web3.js'
 
 type Hideable = {
   visible?: boolean
@@ -412,7 +413,9 @@ function Claim() {
       }
       await withClaimToken(
         transaction,
-        ctx.connection,
+        ctx.environment.ovverride
+          ? new Connection(ctx.environment.ovverride)
+          : ctx.connection,
         asWallet(wallet),
         tokenManagerId!,
         {
