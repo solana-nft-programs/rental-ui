@@ -239,7 +239,7 @@ export const Browse = () => {
     return (price / duration) * rate
   }
 
-  const calculateFloorPrice = (tokenDatas: TokenData[]) => {
+  const calculateFloorPrice = (tokenDatas: TokenData[]): number => {
     const rentalPrices = tokenDatas
       .filter((tokenData) => tokenData.timeInvalidator?.parsed)
       .map((tokenData) => {
@@ -268,7 +268,7 @@ export const Browse = () => {
         }
         return (price / duration) * globalRate
       })
-
+    if (rentalPrices.length == 0) return 0
     return Math.min(...rentalPrices)
   }
 
