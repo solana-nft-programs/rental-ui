@@ -25,6 +25,7 @@ export const TokensOuter = styled.div`
   flex-wrap: wrap;
   max-width: 880px;
   margin: 10px auto;
+  padding-bottom: 60px;
   gap: 20px;
 
   @media (max-width: 1224px) {
