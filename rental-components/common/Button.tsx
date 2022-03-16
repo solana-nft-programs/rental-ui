@@ -33,7 +33,7 @@ export const Button = styled.button<{
           background: ${bgColor};
           color: ${getColorByBgColor(bgColor)};
           &:hover {
-            background: ${lighten(0.1, bgColor)}};
+            background: ${bgColor}};
           }
         `
       : variant === 'primary'
@@ -41,7 +41,7 @@ export const Button = styled.button<{
           background: rgb(29, 155, 240);
           color: #fff;
           &:hover {
-            background: ${lighten(0.1, 'rgb(29, 155, 240)')}};
+            background: ${'rgb(29, 155, 240)'}};
           }
         `
       : variant === 'secondary'
@@ -49,14 +49,14 @@ export const Button = styled.button<{
           background: #000;
           color: #fff;
           &:hover {
-            background: ${lighten(0.1, '#000')};
+            background: ${'#000'};
           }
         `
       : css`
           background: rgb(255, 255, 255, 0.15);
           color: #fff;
           &:hover {
-            background: ${lighten(0.05, '#000')};
+            background: ${'#000'};
           }
         `
   }}

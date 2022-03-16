@@ -22,6 +22,7 @@ import { PAYMENT_MINTS, WRAPPED_SOL_MINT } from 'providers/PaymentMintsProvider'
 import { getATokenAccountInfo, tryPublicKey } from 'api/utils'
 import { BN } from '@project-serum/anchor'
 import { withWrapSol } from 'api/wrappedSol'
+import { useProjectConfigData } from 'providers/ProjectConfigProvider'
 
 type Hideable = {
   visible?: boolean
@@ -51,7 +52,6 @@ interface Verifiable extends Hideable {
 
 const VerificationStep = styled.div<Verifiable>`
   text-align: center;
-  // background-color: rgba(50,50,50,0.2);
   transition: height 0.3s;
   height: ${(props) => (props.visible ? '550px' : '0px')};
   border-radius: 10px;
@@ -277,9 +277,10 @@ function Claim() {
     boolean | null
   >(null)
 
+  const { colors } = useProjectConfigData()
+
   const { tokenManagerString } = router.query
   const tokenManagerId = tryPublicKey(tokenManagerString)
-  console.log(tokenData)
 
   async function getMetadata() {
     try {
@@ -591,7 +592,7 @@ function Claim() {
           {error}
         </div>
       </VerificationStepsOuter>
-      <StyledBackground />
+      <StyledBackground colors={colors} />
     </>
   )
 }
