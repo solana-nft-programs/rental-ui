@@ -153,24 +153,20 @@ export const Browse = () => {
                                   minute: '2-digit',
                                 })}
                               </p>
-                              <br />
-                              <p className="float-left inline-block">
-                                {' '}
-                                <DisplayAddress
-                                  style={{ pointerEvents: 'none' }}
-                                  connection={connection}
-                                  address={
-                                    tokenData.tokenManager?.parsed.issuer ||
-                                    undefined
-                                  }
-                                  height="12px"
-                                  width="100px"
-                                  dark={true}
-                                />
-                                {/* {shortPubKey(
+                              <br />{' '}
+                              <DisplayAddress
+                                connection={connection}
+                                address={
+                                  tokenData.tokenManager?.parsed.issuer ||
+                                  undefined
+                                }
+                                height="12px"
+                                width="100px"
+                                dark={true}
+                              />
+                              {/* {shortPubKey(
                                   tokenData.tokenManager?.parsed.issuer
                                 )} */}{' '}
-                              </p>
                             </div>
                           </Tag>
                         </div>

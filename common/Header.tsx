@@ -380,7 +380,6 @@ export const Header = ({
               <div className="info">
                 <div>
                   <DisplayAddress
-                    style={{ pointerEvents: 'none' }}
                     connection={ctx.connection}
                     address={wallet.publicKey || undefined}
                     height="12px"
