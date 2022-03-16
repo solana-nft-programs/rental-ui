@@ -465,26 +465,26 @@ function Claim() {
                   <>
                     <NFTOuter>
                       <TokenDataOverlay tokenData={tokenData} lineHeight={14} />
-                      {tokenData?.metadata?.data &&
-                        (tokenData.metadata.data.animation_url ? (
-                          // @ts-ignore
-                          <video
-                            className="media"
-                            auto-rotate-delay="0"
-                            auto-rotate="true"
-                            auto-play="true"
-                            src={tokenData.metadata.data.animation_url}
-                            // arStatus="not-presenting"
-                            // @ts-ignore
-                          ></video>
-                        ) : (
-                          <img
-                            className="media"
-                            src={tokenData.metadata.data.image}
-                            alt={tokenData.metadata.data.name}
-                            onLoad={() => setLoadingImage(false)}
-                          />
-                        ))}
+                      {tokenData?.metadata?.data && (
+                        // (tokenData.metadata.data.animation_url ? (
+                        //   // @ts-ignore
+                        //   <video
+                        //     className="media"
+                        //     auto-rotate-delay="0"
+                        //     auto-rotate="true"
+                        //     auto-play="true"
+                        //     src={tokenData.metadata.data.animation_url}
+                        //     // arStatus="not-presenting"
+                        //     // @ts-ignore
+                        //   ></video>
+                        // ) : (
+                        <img
+                          className="media"
+                          src={tokenData.metadata.data.image}
+                          alt={tokenData.metadata.data.name}
+                          onLoad={() => setLoadingImage(false)}
+                        />
+                      )}
                     </NFTOuter>
                     <div className="footer">
                       {(claimed && wallet.publicKey) ||
