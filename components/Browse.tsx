@@ -26,7 +26,8 @@ import { withWrapSol } from 'api/wrappedSol'
 import { withClaimToken } from '@cardinal/token-manager'
 import { StyledTag, Tag } from 'common/Tags'
 import { useProjectConfigData } from 'providers/ProjectConfigProvider'
-import { fmtMintAmount, getMintDecimalAmount } from 'common/units'
+import { DisplayAddress } from '@cardinal/namespaces-components'
+import { getMintDecimalAmount } from 'common/units'
 import { Select } from 'antd'
 import styled from '@emotion/styled'
 import lighten from 'polished/lib/color/lighten'
@@ -97,15 +98,17 @@ export const Browse = () => {
             tokens.push(token)
           }
         }
-      }    
+      }
       setFilteredIssuedTokens(tokens)
-      handleOrderCategoryChange()      
+      handleOrderCategoryChange()
     }
 
     filterIssuedTokens()
   }, [issuedTokens])
 
-  const handleOrderCategoryChange = (value: OrderCategories = selectedOrderCategory) => {
+  const handleOrderCategoryChange = (
+    value: OrderCategories = selectedOrderCategory
+  ) => {
     switch (value) {
       case OrderCategories.RecentlyListed:
         setFilteredIssuedTokens(
@@ -144,13 +147,13 @@ export const Browse = () => {
           })
         )
         break
-        case OrderCategories.RateHighToLow:
-          setFilteredIssuedTokens(
-            filteredIssuedTokens.sort((a, b) => {
-              return calculateRateFromTokenData(b) - calculateRateFromTokenData(a)
-            })
-          )
-          break
+      case OrderCategories.RateHighToLow:
+        setFilteredIssuedTokens(
+          filteredIssuedTokens.sort((a, b) => {
+            return calculateRateFromTokenData(b) - calculateRateFromTokenData(a)
+          })
+        )
+        break
       default:
         break
     }
@@ -363,39 +366,19 @@ export const Browse = () => {
                                     minute: '2-digit',
                                   })}
                                 </p>
-                                <br />
-                                <p className="float-left inline-block">
-                                  {' '}
-                                  {shortPubKey(
-                                    tokenData.tokenManager?.parsed.issuer
-                                  )}{' '}
-                                </p>
+                                <br />{' '}
+                                <DisplayAddress
+                                  connection={connection}
+                                  address={
+                                    tokenData.tokenManager?.parsed.issuer ||
+                                    undefined
+                                  }
+                                  height="12px"
+                                  width="100px"
+                                  dark={true}
+                                />{' '}
                               </div>
                             </Tag>
-                            {tokenData.tokenManager?.parsed.issuer.toBase58() ===
-                              wallet.publicKey?.toBase58() && (
-                              <p
-                                className="float-right w-max text-xs text-gray-400 hover:cursor-pointer hover:text-gray-300"
-                                onClick={async () =>
-                                  tokenData?.tokenManager &&
-                                  executeTransaction(
-                                    connection,
-                                    asWallet(wallet),
-                                    await unissueToken(
-                                      connection,
-                                      asWallet(wallet),
-                                      tokenData?.tokenManager?.parsed.mint
-                                    ),
-                                    {
-                                      callback: refreshIssuedTokens,
-                                      silent: true,
-                                    }
-                                  )
-                                }
-                              >
-                                Unissue
-                              </p>
-                            )}
                           </div>
                         </StyledTag>
                         <div className="flex w-max">
