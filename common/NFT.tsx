@@ -10,11 +10,14 @@ import { useRentalModal } from 'rental-components/RentalModalProvider'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { asWallet } from './Wallets'
-import { IoQrCodeOutline } from 'react-icons/io5'
+import { IoQrCodeOutline, IoClose } from 'react-icons/io5'
 import { FiExternalLink } from 'react-icons/fi'
 import { useQRCode } from 'rental-components/QRCodeProvider'
 import { NFTOverlay } from './NFTOverlay'
 import { useProjectConfigData } from 'providers/ProjectConfigProvider'
+import { executeTransaction } from 'common/Transactions'
+import { unissueToken } from '@cardinal/token-manager'
+import { useIssuedTokens } from 'providers/IssuedTokensProvider'
 
 export const TokensOuter = styled.div`
   display: flex;
@@ -86,6 +89,29 @@ export const TokenMetadata = styled.div`
     right: 10px;
     position: absolute;
     font-size: 15px;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: 0.2s all;
+    // background: rgba(100, 100, 100);
+    background: ${Colors.navBg};
+    &:hover {
+      // background: rgba(120, 120, 120);
+      background: ${Colors.background};
+    }
+  }
+
+  .unissue {
+    color: white;
+    z-index: 5;
+    top: 5px;
+    right: 5px;
+    position: absolute;
+    font-size: 18px;
     border-radius: 50%;
     width: 35px;
     height: 35px;
@@ -232,6 +258,28 @@ export function NFT({ tokenData, hideQRCode }: NFTProps) {
               </div>
             </Tooltip>
           )
+        ) : tokenManager.parsed.issuer.toString() ==
+          wallet.publicKey?.toString() ? (
+          <div
+            className="unissue"
+            onClick={async () =>
+              tokenData?.tokenManager &&
+              executeTransaction(
+                ctx.connection,
+                asWallet(wallet),
+                await unissueToken(
+                  ctx.connection,
+                  asWallet(wallet),
+                  tokenData?.tokenManager?.parsed.mint
+                ),
+                {
+                  silent: true,
+                }
+              )
+            }
+          >
+            <IoClose />
+          </div>
         ) : (
           !hideQRCode && (
             <div

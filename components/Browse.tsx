@@ -22,6 +22,7 @@ import { withWrapSol } from 'api/wrappedSol'
 import { withClaimToken } from '@cardinal/token-manager'
 import { StyledTag, Tag } from 'common/Tags'
 import { useProjectConfigData } from 'providers/ProjectConfigProvider'
+import { DisplayAddress } from '@cardinal/namespaces-components'
 
 const handleCopy = (shareUrl: string) => {
   navigator.clipboard.writeText(shareUrl)
@@ -155,36 +156,23 @@ export const Browse = () => {
                               <br />
                               <p className="float-left inline-block">
                                 {' '}
-                                {shortPubKey(
+                                <DisplayAddress
+                                  style={{ pointerEvents: 'none' }}
+                                  connection={connection}
+                                  address={
+                                    tokenData.tokenManager?.parsed.issuer ||
+                                    undefined
+                                  }
+                                  height="12px"
+                                  width="100px"
+                                  dark={true}
+                                />
+                                {/* {shortPubKey(
                                   tokenData.tokenManager?.parsed.issuer
-                                )}{' '}
+                                )} */}{' '}
                               </p>
                             </div>
                           </Tag>
-                          {tokenData.tokenManager?.parsed.issuer.toBase58() ===
-                            wallet.publicKey?.toBase58() && (
-                            <p
-                              className="float-right w-max text-xs text-gray-400 hover:cursor-pointer hover:text-gray-300"
-                              onClick={async () =>
-                                tokenData?.tokenManager &&
-                                executeTransaction(
-                                  connection,
-                                  asWallet(wallet),
-                                  await unissueToken(
-                                    connection,
-                                    asWallet(wallet),
-                                    tokenData?.tokenManager?.parsed.mint
-                                  ),
-                                  {
-                                    callback: refreshIssuedTokens,
-                                    silent: true,
-                                  }
-                                )
-                              }
-                            >
-                              Unissue
-                            </p>
-                          )}
                         </div>
                       </StyledTag>
                       <div className="flex w-max">
