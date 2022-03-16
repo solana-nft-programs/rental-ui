@@ -266,7 +266,6 @@ export const Browse = () => {
               Date.now() / 1000
           }
         }
-        console.log(price, duration, globalRate)
         return (price / duration) * globalRate
       })
 
