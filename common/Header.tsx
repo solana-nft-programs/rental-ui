@@ -227,8 +227,7 @@ export const StyledTab = styled.div<{
   cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
   transition: 0.3s all;
   &:hover {
-    background: ${({ disabled }) =>
-      disabled ? '' : lighten(0.1, Colors.secondary)};
+    background: ${({ disabled }) => (disabled ? '' : Colors.secondary)};
   }
 `
 

@@ -72,8 +72,8 @@ export const Browse = () => {
   const StyledSelect = styled.div`
     .ant-select-selector {
       min-width: 180px;
-      border: 1px solid ${lighten(0.3, colors.main)} !important;
-      background-color: ${lighten(0.1, colors.main)} !important;
+      border: 1px solid ${colors.main} !important;
+      background-color: ${colors.main} !important;
       color: ${colors.secondary} !important;
     }
     .ant-select-arrow {
@@ -99,7 +99,7 @@ export const Browse = () => {
           }
         }
       }
-            
+
       handleOrderCategoryChange(selectedOrderCategory, tokens)
     }
 

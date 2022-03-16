@@ -47,13 +47,11 @@ enum VerificationStatus {
 
 interface Verifiable extends Hideable {
   status?: VerificationStatus
-  colors: { main: string; secondary: string }
   scanning?: boolean
 }
 
 const VerificationStep = styled.div<Verifiable>`
   text-align: center;
-  // background-color: rgba(50,50,50,0.2);
   transition: height 0.3s;
   height: ${(props) => (props.visible ? '550px' : '0px')};
   border-radius: 10px;
@@ -227,15 +225,10 @@ const VerificationStep = styled.div<Verifiable>`
     background: rgba(255, 255, 255, 0.13);
     background: linear-gradient(
       to right,
-      ${(props) =>
-        props.colors
-          ? props.colors.main + ', ' + props.colors.secondary
-          : `
-        rgba(255, 255, 255, 0.13) 0%,
-        rgba(255, 255, 255, 0.13) 77%,
-        rgba(255, 255, 255, 0.5) 92%,
-        rgba(255, 255, 255, 0) 100%
-      `}
+      rgba(255, 255, 255, 0.13) 0%,
+      rgba(255, 255, 255, 0.13) 77%,
+      rgba(255, 255, 255, 0.5) 92%,
+      rgba(255, 255, 255, 0) 100%
     );
 
     &:hover {
@@ -288,7 +281,6 @@ function Claim() {
 
   const { tokenManagerString } = router.query
   const tokenManagerId = tryPublicKey(tokenManagerString)
-  console.log(tokenData)
 
   async function getMetadata() {
     try {
@@ -446,11 +438,7 @@ function Claim() {
     <>
       <Header />
       <VerificationStepsOuter>
-        <VerificationStep
-          visible={true}
-          status={tokenDataStatus?.status}
-          colors={colors}
-        >
+        <VerificationStep visible={true} status={tokenDataStatus?.status}>
           <div className="header">
             <div className="step-name uppercase">Claim Asset</div>
             {tokenManagerId && tokenData?.tokenManager?.parsed.mint && (
@@ -604,7 +592,7 @@ function Claim() {
           {error}
         </div>
       </VerificationStepsOuter>
-      <StyledBackground />
+      <StyledBackground colors={colors} />
     </>
   )
 }

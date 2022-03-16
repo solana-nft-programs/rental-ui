@@ -75,9 +75,9 @@ export const BigButton = styled.button`
 
   opacity: ${({ disabled }) => (disabled ? 0.3 : 1)};
   &:hover {
-    background: ${({ disabled }) => (disabled ? '' : lighten(0.133, '#000'))};
+    background: ${({ disabled }) => (disabled ? '' : '#000')};
   }
   &:active {
-    background: ${({ disabled }) => (disabled ? '' : lighten(0.212, '#000'))};
+    background: ${({ disabled }) => (disabled ? '' : '#000')};
   }
 `
