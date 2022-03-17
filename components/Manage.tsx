@@ -4,7 +4,7 @@ import { NFT, TokensOuter } from 'common/NFT'
 import { useManagedTokens } from 'providers/ManagedTokensProvider'
 import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
-import { Button } from 'rental-components/common/Button'
+import { AsyncButton } from 'rental-components/common/Button'
 import { notify } from 'common/Notification'
 import { shortPubKey } from 'common/utils'
 import { PublicKey } from '@solana/web3.js'
@@ -18,7 +18,6 @@ import { useUserTokenData } from 'providers/TokenDataProvider'
 import { BN } from '@project-serum/anchor'
 import { StyledTag, Tag } from 'common/Tags'
 import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
-import { Colors } from 'config/config'
 
 const handleCopy = (shareUrl: string) => {
   navigator.clipboard.writeText(shareUrl)
@@ -77,11 +76,11 @@ export const Manage = () => {
                       </Tag>
                       {tokenData.tokenManager?.parsed.issuer.toBase58() ===
                         wallet.publicKey?.toBase58() && (
-                        <Button
+                        <AsyncButton
                           bgColor={config.colors.secondary}
                           variant="primary"
                           disabled={!wallet.connected}
-                          onClick={async () => {
+                          handleClick={async () => {
                             try {
                               setLoadingUnissue(true)
                               if (tokenData?.tokenManager) {
@@ -95,6 +94,7 @@ export const Manage = () => {
                                   ),
                                   {
                                     callback: refreshTokenAccounts,
+                                    notificationConfig: {},
                                     silent: true,
                                   }
                                 )
@@ -110,12 +110,8 @@ export const Manage = () => {
                             }
                           }}
                         >
-                          {loadingUnissue ? (
-                            <LoadingSpinner height="25px" />
-                          ) : (
-                            'Unissue'
-                          )}
-                        </Button>
+                          <>Unissue</>
+                        </AsyncButton>
                       )}
                     </StyledTag>
                   ),
@@ -145,10 +141,10 @@ export const Manage = () => {
                           tokenData.useInvalidator.parsed.usages.gte(
                             tokenData.useInvalidator.parsed.maxUsages
                           ))) && (
-                        <Button
+                        <AsyncButton
                           variant="primary"
                           disabled={!wallet.connected}
-                          onClick={async () => {
+                          handleClick={async () => {
                             tokenData?.tokenManager &&
                               executeTransaction(
                                 connection,
@@ -161,12 +157,13 @@ export const Manage = () => {
                                 {
                                   callback: refreshTokenAccounts,
                                   silent: true,
+                                  notificationConfig: {},
                                 }
                               )
                           }}
                         >
-                          Revoke
-                        </Button>
+                          <>Revoke</>
+                        </AsyncButton>
                       )}
                     </StyledTag>
                   ),

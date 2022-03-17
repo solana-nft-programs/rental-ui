@@ -45,8 +45,10 @@ export const executeTransaction = async (
     console.log('Failed transaction: ', e)
     config.notificationConfig &&
       notify({
-        message: config.notificationConfig.errorMessage ?? 'Failed transaction',
+        message:
+          config.notificationConfig.errorMessage ?? `Failed transaction: ${e}`,
         txid,
+        type: 'error',
       })
     if (!config.silent) throw new Error(`${e}`)
   } finally {

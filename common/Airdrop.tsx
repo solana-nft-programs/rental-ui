@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState } from 'react'
-import { Button } from 'rental-components/common/Button'
+import { AsyncButton, Button } from 'rental-components/common/Button'
 import { airdropNFT } from 'api/utils'
 import { asWallet } from 'common/Wallets'
 import { notify } from 'common/Notification'
@@ -18,11 +18,11 @@ export const Airdrop = () => {
   const { config } = useProjectConfig()
 
   return (
-    <Button
+    <AsyncButton
       bgColor={config.colors.secondary}
       variant="primary"
       disabled={!wallet.connected}
-      onClick={async () => {
+      handleClick={async () => {
         if (!wallet.connected) return
         try {
           setLoadingAirdrop(true)
@@ -37,7 +37,7 @@ export const Airdrop = () => {
         }
       }}
     >
-      {loadingAirdrop ? <LoadingSpinner height="25px" /> : 'Airdrop'}
-    </Button>
+      Airdrop
+    </AsyncButton>
   )
 }
