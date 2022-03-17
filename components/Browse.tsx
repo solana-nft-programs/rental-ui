@@ -389,23 +389,57 @@ export const Browse = () => {
   }
 
   return (
-    <div className="w-max">
-      <div className="d-block mx-auto">
-        <div className="flex justify-center"></div>
+    <div className="w-max container mx-auto">     
+      <div className="flex justify-between mb-4 ">
+        <div className="flex">
+          <div className="d-block flex-col  border-2 border-gray-600 py-3 px-5">
+            <p className="text-gray-400">FLOOR PRICE / WEEK</p>
+            <h2 className="text-center font-bold text-gray-100">
+              {calculateFloorPrice(filteredIssuedTokens).toFixed(2)}{' '}
+              {filteredIssuedTokens.length > 0
+                ? getSymbolFromTokenData(filteredIssuedTokens[0]!)
+                : '◎'}
+            </h2>
+          </div>
+          <div className="d-block -ml-[2px] flex-col border-2 border-gray-600  py-3 px-5">
+            <p className="text-gray-400">TOTAL LISTED</p>
+            <h2 className="text-center font-bold text-gray-100">
+              {filteredIssuedTokens.length}
+            </h2>
+          </div>
+        </div>
+        
+        <StyledSelect>
+          <Select
+            className="m-[10px] h-[30px] w-max rounded-[4px] bg-black text-gray-700"
+            onChange={(e) => {
+              setSelectedOrderCategory(e)
+              handleOrderCategoryChange(e)
+            }}
+            defaultValue={selectedOrderCategory}
+          >
+            {allOrderCategories.map((category) => (              
+              <Option key={category} value={category}>
+                {category}
+              </Option>
+            ))}
+          </Select>
+          
+        </StyledSelect>
       </div>
-      <div className="flex">
+      <div className="block lg:flex">
         <div
           className={
-            'd-block mr-10 px-3 py-4' +
+            ' xl:absolute xl:-left-[200px] mr-3 px-3 py-4' +
             `bg-current` +
             `${showFilters ? 'w-[200px]' : 'w-min'}`
           }
         >
           <p
             onClick={() => setShowFilters(!showFilters)}
-            className="mb-3 mt-24 text-lg text-gray-300 hover:cursor-pointer hover:text-gray-100"
+            className="mb-3 mt-4 text-lg text-gray-300 hover:cursor-pointer hover:text-gray-100"
           >
-            Filters {showFilters ? '[-]' : '[+]'}
+            {showFilters ? 'Filters [-]' : '→'}
           </p>
           {showFilters ? (
             <div className="flex flex-col">
@@ -437,42 +471,7 @@ export const Browse = () => {
           ) : null}
         </div>
         <div>
-          <div className="flex w-full justify-between">
-            <div className="flex">
-              <div className="d-block flex-col  border-2 border-gray-600 py-3 px-5">
-                <p className="text-gray-400">FLOOR PRICE / WEEK</p>
-                <h2 className="text-center font-bold text-gray-100">
-                  {calculateFloorPrice(filteredIssuedTokens).toFixed(2)}{' '}
-                  {filteredIssuedTokens.length > 0
-                    ? getSymbolFromTokenData(filteredIssuedTokens[0]!)
-                    : '◎'}
-                </h2>
-              </div>
-              <div className="d-block -ml-[2px] flex-col border-2 border-gray-600  py-3 px-5">
-                <p className="text-gray-400">TOTAL LISTED</p>
-                <h2 className="text-center font-bold text-gray-100">
-                  {filteredIssuedTokens.length}
-                </h2>
-              </div>
-            </div>
-            <StyledSelect>
-              <Select
-                className="m-[10px] h-[30px] w-max rounded-[4px] bg-black text-gray-700"
-                onChange={(e) => {
-                  setSelectedOrderCategory(e)
-                  handleOrderCategoryChange(e)
-                }}
-                defaultValue={selectedOrderCategory}
-              >
-                {allOrderCategories.map((category) => (
-                  <Option key={category} value={category}>
-                    {category}
-                  </Option>
-                ))}
-              </Select>
-            </StyledSelect>
-          </div>
-          <TokensOuter className="grid grid-cols-3">
+          <div className="grid lg:grid-cols-3 grid-cols-2 gap-x-10 gap-y-6 pb-[60px] mx-4 my-auto ">
             {filteredAndSortedTokens && filteredAndSortedTokens.length > 0 ? (
               filteredAndSortedTokens.map((tokenData) => (
                 <div
@@ -484,6 +483,7 @@ export const Browse = () => {
                     flexDirection: 'column',
                     justifyContent: 'center',
                     alignItems: 'center',
+                    width: '100%',
                   }}
                 >
                   <>
@@ -511,7 +511,7 @@ export const Browse = () => {
                                   color="warning"
                                 >
                                   <div className="float-left">
-                                    <p className="float-left inline-block">
+                                    <p className="float-left inline-block whitespace-nowrap text-ellipsis">
                                       {new Date(
                                         Number(
                                           tokenData.tokenManager?.parsed.stateChangedAt.toString()
@@ -543,7 +543,7 @@ export const Browse = () => {
                               <Button
                                 bgColor={config.colors.secondary}
                                 variant="primary"
-                                className="mr-1 inline-block flex-none"
+                                className="ml-5 mr-1 inline-block flex-none"
                                 onClick={() => handleClaim(tokenData)}
                               >
                                 Claim{' '}
@@ -643,7 +643,7 @@ export const Browse = () => {
                 <LoadingSpinner />
               </div>
             )}
-          </TokensOuter>
+          </div>
         </div>
       </div>
     </div>

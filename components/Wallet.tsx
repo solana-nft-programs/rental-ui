@@ -79,7 +79,7 @@ export const Wallet = () => {
       ) : tokenDatas && tokenDatas.length > 0 ? (
         tokenDatas.map((tokenData) => (
           <div key={tokenData.tokenAccount?.pubkey.toString()}>
-            <NFT              
+            <NFT
               key={tokenData?.tokenAccount?.pubkey.toBase58()}
               tokenData={tokenData}
             ></NFT>
