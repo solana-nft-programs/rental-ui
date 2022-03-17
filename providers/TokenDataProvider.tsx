@@ -39,14 +39,14 @@ export function TokenAccountsProvider({ children }: { children: ReactChild }) {
   const [tokenDatas, setTokenDatas] = useState<TokenData[]>([])
   const [refreshing, setRefreshing] = useState<boolean>(false)
   const [loaded, setLoaded] = useState<boolean>(false)
-  const { filters, projectName } = useProjectConfigData()
+  const { filters, configLoaded } = useProjectConfigData()
 
   const refreshTokenAccounts = useCallback(() => {
     if (!address) {
       setError(`Address not set please connect wallet to continue`)
       return
     }
-    if (!projectName) {
+    if (!configLoaded) {
       setError(`No project config found`)
       return
     }
@@ -66,7 +66,7 @@ export function TokenAccountsProvider({ children }: { children: ReactChild }) {
         setLoaded(true)
         setRefreshing(false)
       })
-  }, [connection, setError, address, setRefreshing, filters, projectName])
+  }, [connection, setError, address, setRefreshing, filters, configLoaded])
 
   useEffect(() => {
     const interval = setInterval(

@@ -260,7 +260,7 @@ export function NFT({ tokenData, hideQRCode }: NFTProps) {
             </Tooltip>
           )
         ) : tokenManager.parsed.issuer.toString() ==
-          wallet.publicKey?.toString() ? (
+            wallet.publicKey?.toString() && hideQRCode ? (
           <div
             className="unissue"
             onClick={async () =>

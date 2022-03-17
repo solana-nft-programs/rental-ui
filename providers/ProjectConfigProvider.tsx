@@ -72,6 +72,16 @@ export const filterTokens = (
   return tokens
 }
 
+export function getLink(path: string, withParams = true) {
+  return `${window.location.origin}${path}${
+    withParams
+      ? path.includes('?') && window.location.search
+        ? `${window.location.search.replace('?', '&')}`
+        : window.location.search ?? ''
+      : ''
+  }`
+}
+
 export function ProjectConfigProvider({ children }: { children: ReactChild }) {
   const [logoImage, setLogoImage] = useState<string>('')
   const [colors, setColors] = useState<{ main: string; secondary: string }>({
@@ -91,11 +101,17 @@ export function ProjectConfigProvider({ children }: { children: ReactChild }) {
   const [configLoaded, setConfigLoaded] = useState<boolean>(false)
 
   const { query } = useRouter()
-  const project = query.project || process.env.BASE_PROJECT
+  const projectParams = query.project || query.host
+  const project =
+    projectParams &&
+    (typeof projectParams == 'string' ? projectParams : projectParams[0])
+      ?.split('.')[0]
+      ?.replace('dev-', '')
 
   const loadConfig = async () => {
     try {
       if (!project) return
+      console.log(`Loading project config for ${project}`)
       // const jsonData = await fetch(`https://api.cardinal.so/config/${project}`)
       //   .then(async (r) => await r.json())
       //   .finally(() => {
@@ -119,11 +135,14 @@ export function ProjectConfigProvider({ children }: { children: ReactChild }) {
         },
       }
       setConfigLoaded(true)
+      // const response = await fetch(`https://api.cardinal.so/config/${project}`)
+      // const jsonData = await response.json()
       setLogoImage(jsonData.logoImage)
       setColors(jsonData.colors)
       setFilters(jsonData.filters)
       setProjectName(jsonData.projectName)
       setRentalCard(jsonData.rentalCard)
+      setConfigLoaded(true)
     } catch (e) {
       console.log('Error fetching project config', e)
     }

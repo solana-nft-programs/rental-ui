@@ -34,7 +34,7 @@ export function ManagedTokensProvider({ children }: { children: ReactChild }) {
   const [refreshing, setRefreshing] = useState<Boolean>(false)
   const [loaded, setLoaded] = useState<Boolean>(false)
   const [error, setError] = useState<string | null>(null)
-  const { filters } = useProjectConfigData()
+  const { filters, configLoaded } = useProjectConfigData()
 
   const refreshManagedTokens = async () => {
     if (!address) {
@@ -42,6 +42,7 @@ export function ManagedTokensProvider({ children }: { children: ReactChild }) {
       return
     }
     try {
+      if (!configLoaded) return
       setRefreshing(true)
 
       const { data } = await axios.get(`/api/claims`, {
@@ -78,7 +79,7 @@ export function ManagedTokensProvider({ children }: { children: ReactChild }) {
 
   useEffect(() => {
     refreshManagedTokens()
-  }, [connection, setError, address, tokenDatas, setRefreshing, filters])
+  }, [connection, setError, address, tokenDatas, setRefreshing, filters, configLoaded])
 
   return (
     <ManagedTokensContext.Provider

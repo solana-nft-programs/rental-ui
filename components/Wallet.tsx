@@ -23,7 +23,6 @@ export const Wallet = () => {
   const wallet = useWallet()
   const { tokenDatas, setAddress, loaded, refreshing, refreshTokenAccounts } =
     useUserTokenData()
-  const { configLoaded } = useProjectConfigData()
   const rentalExtensionModal = useRentalExtensionModal()
   const [loadingReturn, setLoadingReturn] = useState(false)
 
@@ -76,7 +75,7 @@ export const Wallet = () => {
 
   return (
     <TokensOuter>
-      {!loaded || !configLoaded ? (
+      {!loaded ? (
         <div className="flex w-full items-center justify-center">
           <LoadingSpinner />
         </div>
