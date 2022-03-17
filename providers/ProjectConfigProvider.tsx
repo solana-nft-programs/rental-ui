@@ -91,8 +91,7 @@ export function ProjectConfigProvider({ children }: { children: ReactChild }) {
   const [configLoaded, setConfigLoaded] = useState<boolean>(false)
 
   const { query } = useRouter()
-  const project = query.project || process.env.BASE_PROJECT
-
+  const project = query.project || query.config || process.env.BASE_PROJECT
   const loadConfig = async () => {
     try {
       if (!project) return
