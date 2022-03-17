@@ -2,24 +2,12 @@ import { TokenData } from 'api/api'
 import React, { useState, useContext, useEffect, ReactChild } from 'react'
 import { useRouter } from 'next/router'
 import { ProjectConfig, projectConfigs } from 'config/config'
-export interface ProjectConfigValues {
-  config: ProjectConfig
-  setConfig: Function
-}
-
-const ProjectConfigValues: React.Context<ProjectConfigValues> =
-  React.createContext<ProjectConfigValues>({
-    config: projectConfigs['default']!,
-    setConfig: () => {},
-  })
 
 export const filterTokens = (
   filters: { type: string; value: string }[],
   tokens: TokenData[]
 ): TokenData[] => {
-  if (filters.length == 0) {
-    // console.log('No filters')
-  } else {
+  if (filters.length > 0) {
     filters.forEach((configFilter) => {
       if (configFilter.type === 'creators') {
         tokens = tokens.filter(
@@ -50,15 +38,16 @@ export function getLink(path: string, withParams = true) {
   }`
 }
 
-export function ProjectConfigProvider({
-  defaultConfig,
-  children,
-}: {
-  children: ReactChild
-  defaultConfig: ProjectConfig
-}) {
-  const [config, setConfig] = useState<ProjectConfig>(defaultConfig)
+export interface ProjectConfigValues {
+  config: ProjectConfig
+}
 
+const ProjectConfigValues: React.Context<ProjectConfigValues> =
+  React.createContext<ProjectConfigValues>({
+    config: projectConfigs['default']!,
+  })
+
+export function ProjectConfigProvider({ children }: { children: ReactChild }) {
   const { query } = useRouter()
   const projectParams = query.project || query.host
   const project =
@@ -66,27 +55,13 @@ export function ProjectConfigProvider({
     (typeof projectParams == 'string' ? projectParams : projectParams[0])
       ?.split('.')[0]
       ?.replace('dev-', '')
-
-  const loadConfig = async () => {
-    try {
-      if (!project) return
-      console.log(`Loading project config for ${project}`)
-      const config = projectConfigs[project] || projectConfigs['default']!
-      setConfig(config)
-    } catch (e) {
-      console.log('Error fetching project config', e)
-    }
-  }
-
-  useEffect(() => {
-    loadConfig()
-  }, [project])
+  const config =
+    (project && projectConfigs[project]) || projectConfigs['default']!
 
   return (
     <ProjectConfigValues.Provider
       value={{
-        config,
-        setConfig,
+        config: config,
       }}
     >
       {children}

@@ -17,4 +17,18 @@ module.exports = {
     BASE_URL: process.env.BASE_URL || 'http://localhost:3000',
     BASE_CLUSTER: process.env.BASE_CLUSTER || 'devnet',
   },
+  async rewrites() {
+    return [
+      {
+        source: '/:path*{/}?',
+        has: [
+          {
+            type: 'host',
+            value: '(?<hostName>.*)',
+          },
+        ],
+        destination: '/:hostName/:path*',
+      },
+    ]
+  },
 }

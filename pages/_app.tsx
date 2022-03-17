@@ -7,7 +7,6 @@ import { WalletProvider } from '@solana/wallet-adapter-react'
 import { WalletModalProvider } from '@solana/wallet-adapter-react-ui'
 import { TokenAccountsProvider } from 'providers/TokenDataProvider'
 import { WalletIdentityProvider } from '@cardinal/namespaces-components'
-import { NextPageContext } from 'next'
 
 import 'tailwindcss/tailwind.css'
 import { EnvironmentProvider } from 'providers/EnvironmentProvider'
@@ -19,19 +18,18 @@ import { ManagedTokensProvider } from 'providers/ManagedTokensProvider'
 import { IssuedTokensProvider } from 'providers/IssuedTokensProvider'
 import { RentalExtensionModalProvider } from 'rental-components/RentalExtensionModalProvider'
 import { ProjectConfigProvider } from 'providers/ProjectConfigProvider'
-import { ProjectConfig, projectConfigs } from 'config/config'
+import { ProjectConfig } from 'config/config'
 
 require('@solana/wallet-adapter-react-ui/styles.css')
 
 const App = ({
   Component,
   pageProps,
-  config,
 }: AppProps & { config: ProjectConfig }) => (
   <EnvironmentProvider>
     <WalletProvider wallets={getWalletAdapters()}>
       <WalletIdentityProvider>
-        <ProjectConfigProvider defaultConfig={config}>
+        <ProjectConfigProvider>
           <PaymentMintsProvider>
             <QRCodeProvider>
               <UTCNowProvider>
@@ -56,19 +54,5 @@ const App = ({
     </WalletProvider>
   </EnvironmentProvider>
 )
-
-App.getInitialProps = async ({ ctx }: { ctx: NextPageContext }) => {
-  const projectParams = ctx.query.project || ctx.req?.headers.host
-  const project =
-    projectParams &&
-    (typeof projectParams == 'string' ? projectParams : projectParams[0])
-      ?.split('.')[0]
-      ?.replace('dev-', '')
-
-  const config = project ? projectConfigs[project] : projectConfigs['default']!
-  return {
-    config: config,
-  }
-}
 
 export default App
