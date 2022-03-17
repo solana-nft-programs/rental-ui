@@ -22,7 +22,8 @@ import { useIssuedTokens } from 'providers/IssuedTokensProvider'
 export const TokensOuter = styled.div`
   display: flex;
   align-items: flex-start;
-  max-width: 100%;
+  max-width: 880px;
+  flex-wrap: wrap;
   margin: 10px auto;
   padding-bottom: 60px;
   gap: 20px;
@@ -153,8 +154,8 @@ export const TokenMetadata = styled.div`
   #media-outer {
     display: flex;
     align-items: center;
-    justify-content: center;
-    height: 280px;
+    justify-content: center;  
+    margin: auto 10px;
     #media {
       object-fit: contain;
       max-width: 250px;

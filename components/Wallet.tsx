@@ -83,49 +83,51 @@ export const Wallet = () => {
       ) : tokenDatas && tokenDatas.length > 0 ? (
         tokenDatas.map((tokenData) => (
           <div key={tokenData.tokenAccount?.pubkey.toString()}>
-            <NFT
+            <NFT              
               key={tokenData?.tokenAccount?.pubkey.toBase58()}
               tokenData={tokenData}
             ></NFT>
-            {tokenData.timeInvalidator?.parsed?.extensionDurationSeconds ? (
-              <Button
-                variant="primary"
-                className="mx-auto mt-4"
-                onClick={() =>
-                  rentalExtensionModal.show(
-                    asWallet(wallet),
-                    ctx.connection,
-                    ctx.environment.label,
-                    tokenData
-                  )
-                }
-              >
-                Increase Duration
-              </Button>
-            ) : null}
-            {tokenData.tokenManager?.parsed ? (
-              <Button
-                variant="primary"
-                className="mx-auto mt-4"
-                onClick={async () => {
-                  try {
-                    setLoadingReturn(true)
-                    if (tokenData) {
-                      await revokeRental(tokenData)
-                    }
-                  } catch (e) {
-                    notify({
-                      message: `Return failed: ${e}`,
-                      type: 'error',
-                    })
-                  } finally {
-                    setLoadingReturn(false)
+            <div className="flex justify-center">
+              {tokenData.timeInvalidator?.parsed?.extensionDurationSeconds ? (
+                <Button
+                  variant="primary"
+                  className="mx-auto mt-4 inline-block"
+                  onClick={() =>
+                    rentalExtensionModal.show(
+                      asWallet(wallet),
+                      ctx.connection,
+                      ctx.environment.label,
+                      tokenData
+                    )
                   }
-                }}
-              >
-                {loadingReturn ? <LoadingSpinner height="25px" /> : 'Return'}
-              </Button>
-            ) : null}
+                >
+                  Increase Duration
+                </Button>
+              ) : null}
+              {tokenData.tokenManager?.parsed ? (
+                <Button
+                  variant="primary"
+                  className="mx-auto mt-4 "
+                  onClick={async () => {
+                    try {
+                      setLoadingReturn(true)
+                      if (tokenData) {
+                        await revokeRental(tokenData)
+                      }
+                    } catch (e) {
+                      notify({
+                        message: `Return failed: ${e}`,
+                        type: 'error',
+                      })
+                    } finally {
+                      setLoadingReturn(false)
+                    }
+                  }}
+                >
+                  {loadingReturn ? <LoadingSpinner height="25px" /> : 'Return'}
+                </Button>
+              ) : null}
+            </div>
           </div>
         ))
       ) : (
