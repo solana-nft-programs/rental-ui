@@ -14,7 +14,7 @@ import { shortPubKey } from './utils'
 import { HiUserCircle } from 'react-icons/hi'
 import { Airdrop } from './Airdrop'
 import { useRouter } from 'next/router'
-import { useProjectConfigData } from 'providers/ProjectConfigProvider'
+import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { lighten } from 'polished'
 import { getColorByBgColor } from 'rental-components/common/Button'
 
@@ -62,7 +62,6 @@ export const StyledHeader = styled.div<{ isTabletOrMobile: boolean }>`
     left: 50%;
     transform: translateX(-50%);
     color: rgba(255, 255, 255, 0.8);
-    font-weight: 200;
     @media (max-width: 1224px) {
       width: 100vw;
     }
@@ -87,51 +86,6 @@ export const StyledHeader = styled.div<{ isTabletOrMobile: boolean }>`
     img {
       width: auto;
       max-width: none;
-    }
-  }
-
-  .vote {
-    border-radius: 5px;
-    border: 1px solid rgba(255, 255, 255, 0.8);
-    padding: 4px 10px;
-    color: rgba(255, 255, 255, 0.8);
-    cursor: pointer;
-    transition: 0.3s;
-    margin-top: 10px;
-    display: inline-block;
-
-    &:hover {
-      background: rgba(255, 255, 255, 0.2);
-      color: rgba(255, 255, 255, 1);
-    }
-  }
-
-  .back {
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: 0.3s;
-    font-size: 20px;
-
-    i {
-      transition: 0.3s;
-      color: rgba(255, 255, 255, 0.8);
-      margin-right: 5px;
-      margin-top: 3px;
-    }
-    span {
-      font-size: 24px;
-      color: rgba(255, 255, 255, 0.8);
-    }
-    &:hover {
-      i {
-        margin-right: 7px;
-        color: rgba(255, 255, 255, 0.8);
-      }
-      span {
-        color: rgba(255, 255, 255, 0.8);
-      }
     }
   }
 
@@ -193,6 +147,7 @@ export const StyledTabs = styled.div<{ show: boolean }>`
       opacity: 0;
     }
   }
+
   @media (max-width: 1224px) {
     transition: 0.2s all;
     display: flex;
@@ -255,14 +210,14 @@ export const Header = ({
   const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' })
   const [showTabs, setShowTabs] = useState(false)
   const [tab, setTab] = useState<string>('wallet')
-  const { logoImage, colors } = useProjectConfigData()
+  const { config } = useProjectConfig()
 
   useEffect(() => {
-    if (colors) {
-      Colors.navBg = colors.main
-      Colors.secondary = colors.secondary
+    if (config.colors) {
+      Colors.navBg = config.colors.main
+      Colors.secondary = config.colors.secondary
     }
-  }, [colors])
+  }, [config])
 
   useEffect(() => {
     const anchor = router.asPath.split('#')[1]
@@ -280,7 +235,7 @@ export const Header = ({
     >
       <div className="left pl-8">
         <div className="title">
-          <img src={logoImage} />
+          <img src={config.logoImage} />
           <div className="subscript">
             {ctx.environment.label === 'devnet' ? 'DEV' : 'alpha'}
           </div>

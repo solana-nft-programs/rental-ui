@@ -14,8 +14,21 @@ if (
 module.exports = {
   reactStrictMode: true,
   env: {
-    BASE_PROJECT: process.env.BASE_PROJECT || 'cardinal',
     BASE_URL: process.env.BASE_URL || 'http://localhost:3000',
     BASE_CLUSTER: process.env.BASE_CLUSTER || 'devnet',
+  },
+  async rewrites() {
+    return [
+      {
+        source: '/:path*{/}?',
+        has: [
+          {
+            type: 'host',
+            value: '(?<hostName>.*)',
+          },
+        ],
+        destination: '/:hostName/:path*',
+      },
+    ]
   },
 }

@@ -41,7 +41,7 @@ import { useUserTokenData } from 'providers/TokenDataProvider'
 import { fmtMintAmount } from 'common/units'
 import { usePaymentMints } from 'providers/PaymentMintsProvider'
 import { tryPublicKey } from 'api/utils'
-import { useProjectConfigData } from 'providers/ProjectConfigProvider'
+import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
 const { Option } = Select
 
 const NFTOuter = styled.div`
@@ -85,6 +85,22 @@ const formatError = (error: string) => {
   return error
 }
 
+export type RentalCardConfig = {
+  invalidations?: {
+    showUsagesOption: boolean
+    showExpirationOption: boolean
+    showDurationOption: boolean
+    showManualOption: boolean
+  }
+  invalidationOptions?: {
+    durationCategories: string[]
+    invalidationCategories: string[]
+    paymentMints: string[]
+    setClaimRentalReceipt: true
+    showClaimRentalReceipt: boolean
+  }
+}
+
 export type RentalCardProps = {
   dev?: boolean
   cluster?: string
@@ -93,6 +109,7 @@ export type RentalCardProps = {
   tokenData: TokenData
   appName?: string
   appTwitter?: string
+  rentalCardConfig: RentalCardConfig
   notify?: Function
   onComplete?: (asrg0: string) => void
 }
@@ -105,6 +122,7 @@ export const RentalCard = ({
   connection,
   wallet,
   tokenData,
+  rentalCardConfig,
   notify,
   onComplete,
 }: RentalCardProps) => {
@@ -118,7 +136,6 @@ export const RentalCard = ({
   const [invalidationType, setInvalidationType] = useState(
     InvalidationType.Return
   )
-  const { rentalCard } = useProjectConfigData()
 
   const [editionInfo, setEditionInfo] = useState<EditionInfo>({})
   const getEdition = async () => {
@@ -208,26 +225,30 @@ export const RentalCard = ({
     showExpirationOption,
     showDurationOption,
     showManualOption,
-  } = rentalCard.invalidations
+  } = rentalCardConfig.invalidations || {}
 
   let showClaimRentalReceipt = true
-  if (rentalCard.invalidationOptions?.setClaimRentalReceipt !== undefined) {
+  if (
+    rentalCardConfig.invalidationOptions?.setClaimRentalReceipt !== undefined
+  ) {
     if (
       claimRentalReceipt !==
-      rentalCard.invalidationOptions?.setClaimRentalReceipt
+      rentalCardConfig.invalidationOptions?.setClaimRentalReceipt
     ) {
       setClaimRentalReceipt(
-        rentalCard.invalidationOptions?.setClaimRentalReceipt
+        rentalCardConfig.invalidationOptions?.setClaimRentalReceipt
       )
     }
     showClaimRentalReceipt = false
   }
 
-  if (rentalCard.invalidationOptions) {
-    if (rentalCard.invalidationOptions.durationCategories) {
+  if (rentalCardConfig.invalidationOptions) {
+    if (rentalCardConfig.invalidationOptions.durationCategories) {
       durationData = Object.keys(durationData)
         .filter((key) =>
-          rentalCard.invalidationOptions?.durationCategories?.includes(key)
+          rentalCardConfig.invalidationOptions?.durationCategories?.includes(
+            key
+          )
         )
         .reduce((obj: { [key: string]: number }, key: string) => {
           const d = durationData[key]
@@ -237,14 +258,16 @@ export const RentalCard = ({
           return obj
         }, {})
     }
-    if (rentalCard.invalidationOptions.invalidationCategories) {
+    if (rentalCardConfig.invalidationOptions.invalidationCategories) {
       invalidationTypes = invalidationTypes.filter(({ label }) =>
-        rentalCard.invalidationOptions?.invalidationCategories?.includes(label)
+        rentalCardConfig.invalidationOptions?.invalidationCategories?.includes(
+          label
+        )
       )
     }
-    if (rentalCard.invalidationOptions.paymentMints) {
+    if (rentalCardConfig.invalidationOptions.paymentMints) {
       paymentMintData = paymentMintData.filter(({ mint }) =>
-        rentalCard.invalidationOptions?.paymentMints?.includes(mint)
+        rentalCardConfig.invalidationOptions?.paymentMints?.includes(mint)
       )
     }
   }
@@ -372,7 +395,7 @@ export const RentalCard = ({
         tokenManagerId,
         otpKeypair,
         cluster,
-        `${process.env.BASE_URL}/claim`
+        getLink('/claim', false)
       )
       setLink(link)
       handleCopy(link)

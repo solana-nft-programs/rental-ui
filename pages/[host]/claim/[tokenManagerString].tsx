@@ -22,7 +22,7 @@ import { PAYMENT_MINTS, WRAPPED_SOL_MINT } from 'providers/PaymentMintsProvider'
 import { getATokenAccountInfo, tryPublicKey } from 'api/utils'
 import { BN } from '@project-serum/anchor'
 import { withWrapSol } from 'api/wrappedSol'
-import { useProjectConfigData } from 'providers/ProjectConfigProvider'
+import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { Connection } from '@solana/web3.js'
 
 type Hideable = {
@@ -256,6 +256,7 @@ const NFTOuter = styled.div`
 `
 
 function Claim() {
+  const { config } = useProjectConfig()
   const router = useRouter()
   const ctx = useEnvironmentCtx()
   const wallet = useWallet()
@@ -277,8 +278,6 @@ function Claim() {
   const [paymentTokenAccountError, setPaymentTokenAccountError] = useState<
     boolean | null
   >(null)
-
-  const { colors } = useProjectConfigData()
 
   const { tokenManagerString } = router.query
   const tokenManagerId = tryPublicKey(tokenManagerString)
@@ -385,7 +384,7 @@ function Claim() {
         const split = router.asPath.split('/claim')
         if (split && split[1]) {
           const [_tokenManagerId, otpKeypair] = claimLinks.fromLink(
-            `${process.env.BASE_URL}/claim${split[1].split('&cluster')[0]}`
+            getLink(`/claim${split[1].split('&cluster')[0]}`)
           )
           otp = otpKeypair
         }
@@ -413,8 +412,8 @@ function Claim() {
       }
       await withClaimToken(
         transaction,
-        ctx.environment.ovverride
-          ? new Connection(ctx.environment.ovverride)
+        ctx.environment.override
+          ? new Connection(ctx.environment.override)
           : ctx.connection,
         asWallet(wallet),
         tokenManagerId!,
@@ -595,7 +594,7 @@ function Claim() {
           {error}
         </div>
       </VerificationStepsOuter>
-      <StyledBackground colors={colors} />
+      <StyledBackground colors={config.colors} />
     </>
   )
 }

@@ -3,14 +3,15 @@ import { css } from '@emotion/react'
 import { lighten } from 'polished'
 import { useState } from 'react'
 import { LoadingSpinner } from './LoadingSpinner'
-import { notify } from 'common/Notification'
 
-export const Button = styled.button<{
+export type ButtonProps = {
   variant: 'primary' | 'secondary' | 'tertiary'
   boxShadow?: boolean
   disabled?: boolean
   bgColor?: string
-}>`
+}
+
+export const Button = styled.button<ButtonProps>`
   display: flex;
   align-items: center;
   gap: 5px;
@@ -64,51 +65,60 @@ export const Button = styled.button<{
     font-size: 14px;
   }
 `
+export const hexColor = (colorString: string): string => {
+  if (colorString.includes('#')) return colorString
+  const [r, g, b] = colorString
+    .replace('rgb(', '')
+    .replace('rgba(', '')
+    .replace(')', '')
+    .replace(' ', '')
+    .split(',')
+  return (
+    '#' +
+    [r, g, b]
+      .map((x) => {
+        const hex = parseInt(x || '').toString(16)
+        return hex.length === 1 ? '0' + hex : hex
+      })
+      .join('')
+  )
+}
 
 export const getColorByBgColor = (bgColor: string) => {
   if (!bgColor) {
     return ''
   }
-  return parseInt(bgColor.replace('#', ''), 16) > 0xffffff / 2 ? '#000' : '#fff'
+  return parseInt(hexColor(bgColor).replace('#', ''), 16) > 0xffffff / 2
+    ? '#000'
+    : '#fff'
 }
 
 export const AsyncButton = ({
-  text,
-  variant,
-  boxShadow,
-  disabled,
-  bgColor,
+  children,
   handleClick,
+  className,
+  ...buttonProps
 }: {
-  text: string
-  loading: boolean
-  variant: 'primary' | 'secondary' | 'tertiary'
-  boxShadow?: boolean
-  disabled?: boolean
-  bgColor?: string
+  children: JSX.Element | JSX.Element[] | string
+  className?: string
   handleClick: Function
-}) => {
+} & ButtonProps) => {
   const [loading, setLoading] = useState(false)
 
   return (
     <Button
-      variant="primary"
-      className="mx-auto mt-4"
+      {...buttonProps}
+      className={className}
       onClick={async () => {
         try {
           setLoading(true)
           await handleClick()
-        } catch (e) {
-          notify({
-            message: `${e}`,
-            type: 'error',
-          })
         } finally {
           setLoading(false)
         }
       }}
     >
-      {loading ? <LoadingSpinner height="25px" /> : text}
+      {loading ? <LoadingSpinner height="25px" /> : children}
     </Button>
   )
 }

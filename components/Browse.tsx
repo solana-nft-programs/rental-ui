@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { NFT, TokensOuter } from 'common/NFT'
 import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
-import { Button } from 'rental-components/common/Button'
+import { AsyncButton, Button } from 'rental-components/common/Button'
 import { notify } from 'common/Notification'
 import { shortPubKey } from 'common/utils'
 import { Connection, PublicKey, Transaction } from '@solana/web3.js'
@@ -25,12 +25,13 @@ import * as splToken from '@solana/spl-token'
 import { withWrapSol } from 'api/wrappedSol'
 import { withClaimToken } from '@cardinal/token-manager'
 import { StyledTag, Tag } from 'common/Tags'
-import { useProjectConfigData } from 'providers/ProjectConfigProvider'
+import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { DisplayAddress } from '@cardinal/namespaces-components'
 import { getMintDecimalAmount } from 'common/units'
 import { Select } from 'antd'
 import styled from '@emotion/styled'
 import { lighten } from 'polished'
+import { Colors } from 'config/config'
 const { Option } = Select
 
 const handleCopy = (shareUrl: string) => {
@@ -57,8 +58,10 @@ const allOrderCategories = [
 const globalRate = 604800
 
 export const Browse = () => {
+  const { config } = useProjectConfig()
   const { connection, environment } = useEnvironmentCtx()
   const wallet = useWallet()
+
   let { issuedTokens, loaded, refreshIssuedTokens } = useIssuedTokens()
   let [filteredIssuedTokens, setFilteredIssuedTokens] =
     useState<TokenData[]>(issuedTokens)
@@ -66,7 +69,6 @@ export const Browse = () => {
     useState<TokenData[]>(issuedTokens)
   const [userPaymentTokenAccount, _setUserPaymentTokenAccount] =
     useState<splToken.AccountInfo | null>(null)
-  const { colors } = useProjectConfigData()
   const { paymentMintInfos } = usePaymentMints()
   const [selectedOrderCategory, setSelectedOrderCategory] =
     useState<OrderCategories>(OrderCategories.PriceLowToHigh)
@@ -82,36 +84,36 @@ export const Browse = () => {
     .ant-select-selector {
       height: 40px;
       min-width: 180px;
-      border: 1px solid ${lighten(0.3, colors.main)} !important;
-      background-color: ${lighten(0.1, colors.main)} !important;
-      color: ${colors.secondary} !important;
+      border: 1px solid ${lighten(0.3, config.colors.main)} !important;
+      background-color: ${lighten(0.1, config.colors.main)} !important;
+      color: ${config.colors.secondary} !important;
     }
     .ant-select-arrow {
-      color: ${colors.secondary} !important;
+      color: ${config.colors.secondary} !important;
     }
   `
 
   const StyledSelectMultiple = styled.div`
     .ant-select-selector {
       min-width: 180px;
-      border: 1px solid ${lighten(0.8, colors.main)} !important;
-      background-color: ${lighten(0.5, colors.main)} !important;
-      color: ${colors.secondary} !important;
+      border: 1px solid ${lighten(0.8, config.colors.main)} !important;
+      background-color: ${lighten(0.5, config.colors.main)} !important;
+      color: ${config.colors.secondary} !important;
     }
 
     .ant-select-selection-item {
-      background-color: ${lighten(0.1, colors.main)} !important;
-      border: 1px solid ${lighten(0.3, colors.main)} !important;
+      background-color: ${lighten(0.1, config.colors.main)} !important;
+      border: 1px solid ${lighten(0.3, config.colors.main)} !important;
     }
 
     .ant-select-selection-item-remove {
-      color: ${lighten(0.1, colors.secondary)} !important;
+      color: ${lighten(0.1, config.colors.secondary)} !important;
       margin-top: -2px;
       margin-left: 3px;
     }
 
     .ant-select-arrow {
-      color: ${colors.secondary} !important;
+      color: ${config.colors.secondary} !important;
     }
   `
 
@@ -254,8 +256,8 @@ export const Browse = () => {
       console.log('Claiming token manager', tokenData)
       await withClaimToken(
         transaction,
-        environment.ovverride
-          ? new Connection(environment.ovverride)
+        environment.override
+          ? new Connection(environment.override)
           : connection,
         asWallet(wallet),
         tokenData.tokenManager?.pubkey!
@@ -539,7 +541,7 @@ export const Browse = () => {
                             </StyledTag>
                             <div className="flex w-max">
                               <Button
-                                bgColor={colors.secondary}
+                                bgColor={config.colors.secondary}
                                 variant="primary"
                                 className="mr-1 inline-block flex-none"
                                 onClick={() => handleClaim(tokenData)}

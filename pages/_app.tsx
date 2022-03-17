@@ -18,10 +18,14 @@ import { ManagedTokensProvider } from 'providers/ManagedTokensProvider'
 import { IssuedTokensProvider } from 'providers/IssuedTokensProvider'
 import { RentalExtensionModalProvider } from 'rental-components/RentalExtensionModalProvider'
 import { ProjectConfigProvider } from 'providers/ProjectConfigProvider'
+import { ProjectConfig } from 'config/config'
 
 require('@solana/wallet-adapter-react-ui/styles.css')
 
-const App = ({ Component, pageProps }: AppProps) => (
+const App = ({
+  Component,
+  pageProps,
+}: AppProps & { config: ProjectConfig }) => (
   <EnvironmentProvider>
     <WalletProvider wallets={getWalletAdapters()}>
       <WalletIdentityProvider>
