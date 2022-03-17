@@ -1,23 +1,21 @@
-import React from 'react'
-import { useState } from 'react'
-import { NFT, TokensOuter } from 'common/NFT'
-import { useManagedTokens } from 'providers/ManagedTokensProvider'
-import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
-import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
-import { AsyncButton } from 'rental-components/common/Button'
-import { notify } from 'common/Notification'
-import { shortPubKey } from 'common/utils'
-import { PublicKey } from '@solana/web3.js'
-import { useWallet } from '@solana/wallet-adapter-react'
-import { FaLink } from 'react-icons/fa'
 import { invalidate, unissueToken } from '@cardinal/token-manager'
-import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
-import { asWallet } from 'common/Wallets'
-import { executeTransaction } from 'common/Transactions'
-import { useUserTokenData } from 'providers/TokenDataProvider'
+import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { BN } from '@project-serum/anchor'
+import { useWallet } from '@solana/wallet-adapter-react'
+import type { PublicKey } from '@solana/web3.js'
+import { NFT, TokensOuter } from 'common/NFT'
+import { notify } from 'common/Notification'
 import { StyledTag, Tag } from 'common/Tags'
+import { executeTransaction } from 'common/Transactions'
+import { shortPubKey } from 'common/utils'
+import { asWallet } from 'common/Wallets'
+import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
+import { useManagedTokens } from 'providers/ManagedTokensProvider'
 import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
+import { useUserTokenData } from 'providers/TokenDataProvider'
+import { FaLink } from 'react-icons/fa'
+import { AsyncButton } from 'rental-components/common/Button'
+import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 
 const handleCopy = (shareUrl: string) => {
   navigator.clipboard.writeText(shareUrl)
@@ -30,7 +28,6 @@ export const Manage = () => {
   const wallet = useWallet()
   const { refreshTokenAccounts } = useUserTokenData()
   const { managedTokens, loaded } = useManagedTokens()
-  const [loadingUnissue, setLoadingUnissue] = useState(false)
 
   return (
     <TokensOuter>
@@ -82,7 +79,6 @@ export const Manage = () => {
                           disabled={!wallet.connected}
                           handleClick={async () => {
                             try {
-                              setLoadingUnissue(true)
                               if (tokenData?.tokenManager) {
                                 await executeTransaction(
                                   connection,
@@ -105,12 +101,10 @@ export const Manage = () => {
                                 type: 'error',
                               })
                               console.log(e)
-                            } finally {
-                              setLoadingUnissue(false)
                             }
                           }}
                         >
-                          <>Unissue</>
+                          Unissue
                         </AsyncButton>
                       )}
                     </StyledTag>

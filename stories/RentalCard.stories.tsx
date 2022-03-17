@@ -1,11 +1,12 @@
-import React from 'react'
-import { ComponentStory, ComponentMeta } from '@storybook/react'
-
-import { RentalCard } from '../rental-components/components/RentalCard'
 import 'antd/dist/antd.css'
 import '../styles/globals.css'
-import { Connection, PublicKey, Transaction } from '@solana/web3.js'
+
 import { BN } from '@project-serum/anchor'
+import { Connection, PublicKey, Transaction } from '@solana/web3.js'
+import type { ComponentMeta,ComponentStory } from '@storybook/react'
+import React from 'react'
+
+import { RentalCard } from '../rental-components/components/RentalCard'
 
 const connection = new Connection('https://api.devnet.solana.com')
 

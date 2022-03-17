@@ -1,22 +1,23 @@
-import {
-  WalletMultiButton,
-  useWalletModal,
-} from '@solana/wallet-adapter-react-ui'
-import styled from '@emotion/styled'
-import Colors from 'common/colors'
-import { LoadingPulse } from './LoadingPulse'
-import { useEffect, useState } from 'react'
-import { useMediaQuery } from 'react-responsive'
-import { useWallet } from '@solana/wallet-adapter-react'
-import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { AddressImage, DisplayAddress } from '@cardinal/namespaces-components'
-import { shortPubKey } from './utils'
-import { HiUserCircle } from 'react-icons/hi'
-import { Airdrop } from './Airdrop'
+import styled from '@emotion/styled'
+import { useWallet } from '@solana/wallet-adapter-react'
+import {
+  useWalletModal,
+  WalletMultiButton,
+} from '@solana/wallet-adapter-react-ui'
+import Colors from 'common/colors'
 import { useRouter } from 'next/router'
-import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { lighten } from 'polished'
+import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
+import { useProjectConfig } from 'providers/ProjectConfigProvider'
+import { useEffect, useState } from 'react'
+import { HiUserCircle } from 'react-icons/hi'
+import { useMediaQuery } from 'react-responsive'
 import { getColorByBgColor } from 'rental-components/common/Button'
+
+import { Airdrop } from './Airdrop'
+import { LoadingPulse } from './LoadingPulse'
+import { shortPubKey } from './utils'
 
 export const StyledHeader = styled.div<{ isTabletOrMobile: boolean }>`
   z-index: 100;
@@ -221,8 +222,8 @@ export const Header = ({
 
   useEffect(() => {
     const anchor = router.asPath.split('#')[1]
-    if (anchor != tab) setTab(anchor || 'wallet')
-  }, [router.asPath])
+    if (anchor !== tab) setTab(anchor || 'wallet')
+  }, [router.asPath, tab])
 
   const walletAddressFormatted = wallet?.publicKey
     ? shortPubKey(wallet?.publicKey)

@@ -1,10 +1,10 @@
-import Head from 'next/head'
 import styled from '@emotion/styled'
-import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
 import { useWallet } from '@solana/wallet-adapter-react'
-import { useEffect } from 'react'
+import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
+import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
+import { useEffect } from 'react'
 
 const StyledSplash = styled.div`
   margin-top: 30vh;
@@ -41,7 +41,7 @@ export default function Home() {
         `/${wallet.publicKey.toBase58()}${window.location.search ?? ''}`
       )
     }
-  }, [wallet.connected])
+  }, [wallet, router])
 
   return (
     <div className="flex min-h-screen flex-col items-center">

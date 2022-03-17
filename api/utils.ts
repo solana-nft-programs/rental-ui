@@ -6,15 +6,17 @@ import {
   Metadata,
 } from '@metaplex-foundation/mpl-token-metadata'
 import { BN } from '@project-serum/anchor'
+import type {
+  Wallet} from '@saberhq/solana-contrib';
 import {
   SignerWallet,
   SolanaProvider,
-  TransactionEnvelope,
-  Wallet,
+  TransactionEnvelope
 } from '@saberhq/solana-contrib'
 import * as splToken from '@solana/spl-token'
+import type { Connection} from '@solana/web3.js';
 import * as web3 from '@solana/web3.js'
-import { Connection, Keypair, LAMPORTS_PER_SOL } from '@solana/web3.js'
+import { Keypair, LAMPORTS_PER_SOL } from '@solana/web3.js'
 
 /**
  * Pay and create mint and token account

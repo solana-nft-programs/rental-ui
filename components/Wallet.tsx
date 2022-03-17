@@ -1,33 +1,32 @@
-import { NFT, TokensOuter } from 'common/NFT'
-import { asWallet } from 'common/Wallets'
-import { useWallet } from '@solana/wallet-adapter-react'
-import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
-import { useUserTokenData } from 'providers/TokenDataProvider'
-import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
-import { AsyncButton, Button } from 'rental-components/common/Button'
-import { useRentalExtensionModal } from 'rental-components/RentalExtensionModalProvider'
 import { withFindOrInitAssociatedTokenAccount } from '@cardinal/token-manager'
+import { tokenManager } from '@cardinal/token-manager/dist/cjs/programs'
 import { withRemainingAccountsForReturn } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { tokenManagerAddressFromMint } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/pda'
-import { tokenManager } from '@cardinal/token-manager/dist/cjs/programs'
-import { executeTransaction } from 'common/Transactions'
-import { notify } from 'common/Notification'
+import { useWallet } from '@solana/wallet-adapter-react'
 import { Transaction } from '@solana/web3.js'
+import type { TokenData } from 'api/api'
 import { Airdrop } from 'common/Airdrop'
-import { TokenData } from 'api/api'
+import { NFT, TokensOuter } from 'common/NFT'
+import { notify } from 'common/Notification'
+import { executeTransaction } from 'common/Transactions'
+import { asWallet } from 'common/Wallets'
+import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
+import { useUserTokenData } from 'providers/TokenDataProvider'
+import { AsyncButton, Button } from 'rental-components/common/Button'
+import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
+import { useRentalExtensionModal } from 'rental-components/RentalExtensionModalProvider'
 
 export const Wallet = () => {
   const ctx = useEnvironmentCtx()
   const wallet = useWallet()
-  const { tokenDatas, setAddress, loaded, refreshing, refreshTokenAccounts } =
-    useUserTokenData()
+  const { tokenDatas, loaded, refreshTokenAccounts } = useUserTokenData()
   const rentalExtensionModal = useRentalExtensionModal()
 
   const revokeRental = async (tokenData: TokenData) => {
     if (!tokenData.tokenManager) throw new Error('Invalid token manager')
     if (!wallet.publicKey) throw new Error('Wallet not connected')
 
-    let transaction = new Transaction()
+    const transaction = new Transaction()
     const tokenManagerId = await tokenManagerAddressFromMint(
       ctx.connection,
       tokenData.tokenManager?.parsed.mint

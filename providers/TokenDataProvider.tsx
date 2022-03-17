@@ -1,23 +1,20 @@
-import { getTokenAccountsWithData, TokenData } from 'api/api'
-import React, {
-  useState,
-  useContext,
-  useCallback,
-  useEffect,
-  ReactChild,
-} from 'react'
+import type { TokenData } from 'api/api'
+import { getTokenAccountsWithData } from 'api/api'
+import type { ReactChild } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
+
 import { useEnvironmentCtx } from './EnvironmentProvider'
 import { filterTokens, useProjectConfig } from './ProjectConfigProvider'
 
 export interface UserTokenDataValues {
   tokenDatas: TokenData[]
-  refreshTokenAccounts: Function
+  refreshTokenAccounts: () => void
   setTokenDatas: (newEnvironment: TokenData[]) => void
   setAddress: (address: string) => void
   loaded: boolean
   refreshing: boolean
-  address: String | null
-  error: String | null
+  address: string | null
+  error: string | null
 }
 
 const UserTokenData: React.Context<UserTokenDataValues> =

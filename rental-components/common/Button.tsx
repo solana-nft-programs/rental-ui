@@ -1,7 +1,8 @@
-import styled from '@emotion/styled'
 import { css } from '@emotion/react'
+import styled from '@emotion/styled'
 import { lighten } from 'polished'
 import { useState } from 'react'
+
 import { LoadingSpinner } from './LoadingSpinner'
 
 export type ButtonProps = {
@@ -101,7 +102,7 @@ export const AsyncButton = ({
 }: {
   children: JSX.Element | JSX.Element[] | string
   className?: string
-  handleClick: Function
+  handleClick: () => void
 } & ButtonProps) => {
   const [loading, setLoading] = useState(false)
 

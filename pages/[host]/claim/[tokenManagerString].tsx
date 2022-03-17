@@ -1,29 +1,29 @@
-import React, { ReactElement } from 'react'
-import { useEffect, useState } from 'react'
-import styled from '@emotion/styled'
-import { Transaction } from '@solana/web3.js'
-import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
-import { LoadingPulse, LoadingPulseWrapped } from 'common/LoadingPulse'
-import { StyledBackground } from 'common/StyledBackground'
-import { useWallet } from '@solana/wallet-adapter-react'
-import { Header } from 'common/Header'
-import * as splToken from '@solana/spl-token'
-import { useRouter } from 'next/router'
 import { claimLinks, withClaimToken } from '@cardinal/token-manager'
-import { asWallet } from 'common/Wallets'
-import { getTokenData, TokenData } from 'api/api'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
+import styled from '@emotion/styled'
+import { BN } from '@project-serum/anchor'
+import type * as splToken from '@solana/spl-token'
+import { useWallet } from '@solana/wallet-adapter-react'
+import { Connection, Transaction } from '@solana/web3.js'
+import type { TokenData } from 'api/api'
+import { getTokenData } from 'api/api'
+import { getATokenAccountInfo, tryPublicKey } from 'api/utils'
+import { withWrapSol } from 'api/wrappedSol'
+import { Header } from 'common/Header'
+import { LoadingPulse, LoadingPulseWrapped } from 'common/LoadingPulse'
 import { TokenDataOverlay } from 'common/NFTOverlay'
+import { StyledBackground } from 'common/StyledBackground'
 import { executeTransaction } from 'common/Transactions'
 import { pubKeyUrl, shortPubKey } from 'common/utils'
+import { asWallet } from 'common/Wallets'
+import { useRouter } from 'next/router'
+import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
+import { PAYMENT_MINTS, WRAPPED_SOL_MINT } from 'providers/PaymentMintsProvider'
+import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
+import type { ReactElement } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FaQuestionCircle } from 'react-icons/fa'
 import { Button } from 'rental-components/common/Button'
-import { PAYMENT_MINTS, WRAPPED_SOL_MINT } from 'providers/PaymentMintsProvider'
-import { getATokenAccountInfo, tryPublicKey } from 'api/utils'
-import { BN } from '@project-serum/anchor'
-import { withWrapSol } from 'api/wrappedSol'
-import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
-import { Connection } from '@solana/web3.js'
 
 type Hideable = {
   visible?: boolean
@@ -335,7 +335,7 @@ function Claim() {
     if (tokenManagerId) {
       getMetadata()
     }
-  }, [ctx, setError, tokenManagerString])
+  }, [ctx, setError, tokenManagerId])
 
   useEffect(() => {
     getUserPaymentTokenAccount()

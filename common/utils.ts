@@ -1,11 +1,11 @@
-import * as web3 from '@solana/web3.js'
+import type * as web3 from '@solana/web3.js'
 
 export function getExpirationString(expiration: number, UTCSecondsNow: number) {
   let day = (expiration - UTCSecondsNow) / 60 / 60 / 24
   let hour = ((expiration - UTCSecondsNow) / 60 / 60) % 24
   let minute = ((expiration - UTCSecondsNow) / 60) % 60
   let second = (expiration - UTCSecondsNow) % 60
-  let floorOrCeil = (n: number) =>
+  const floorOrCeil = (n: number) =>
     expiration - UTCSecondsNow > 0 ? Math.floor(n) : Math.ceil(n)
 
   day = day < 0 ? 0 : day
@@ -81,6 +81,7 @@ export function secondstoDuration(durationSeconds: number) {
   return duration
 }
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 export const withSleep = async (fn: Function, sleep = 2000) => {
   await new Promise((r) => setTimeout(r, sleep))
   await fn()
@@ -93,7 +94,7 @@ export const withSleep = async (fn: Function, sleep = 2000) => {
  */
 export function getQueryParam(url: string, name: string) {
   if (!url || !name) return null
-  var q = url.match(new RegExp('[?&]' + name + '=([^&#]*)'))
+  const q = url.match(new RegExp('[?&]' + name + '=([^&#]*)'))
   return q && q[1]
 }
 

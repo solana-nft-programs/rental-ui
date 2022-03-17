@@ -1,5 +1,6 @@
-import React, { useState, useContext, useEffect, ReactChild } from 'react'
 import { Alert } from 'antd'
+import type { ReactChild } from 'react';
+import React, { useContext, useEffect,useState } from 'react'
 
 const ErrorContext: React.Context<null | any> = React.createContext<null | any>(
   null

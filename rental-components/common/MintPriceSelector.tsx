@@ -1,9 +1,10 @@
-import React from 'react'
 import styled from '@emotion/styled'
 import { BN } from '@project-serum/anchor'
 import { InputNumber, Select } from 'antd'
 import { fmtMintAmount, parseMintNaturalAmountFromDecimal } from 'common/units'
-import { usePaymentMints, PAYMENT_MINTS } from 'providers/PaymentMintsProvider'
+import { PAYMENT_MINTS,usePaymentMints } from 'providers/PaymentMintsProvider'
+import React from 'react'
+
 const { Option } = Select
 
 export const MintPriceSelector = ({

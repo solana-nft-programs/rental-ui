@@ -1,6 +1,6 @@
-import React from 'react'
-import { ReactChild } from 'react'
 import styled from '@emotion/styled'
+import type { ReactChild } from 'react';
+import React from 'react'
 
 export const StyledPulse = styled.div`
   position: absolute;

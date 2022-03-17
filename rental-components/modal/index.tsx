@@ -6,7 +6,6 @@ import darken from 'polished/lib/color/darken'
 import React from 'react'
 import { isMobile } from 'react-device-detect'
 import { useGesture } from 'react-use-gesture'
-import Colors from 'common/colors'
 
 import { BackIcon, CloseIcon } from '../common/icons'
 
@@ -95,6 +94,7 @@ export const Modal: React.FC<ModalProps> = ({
           item && (
             <StyledDialogOverlay
               style={props}
+              // eslint-disable-next-line react/prop-types
               isOpen={isOpen || props.opacity.get() !== 0}
               onDismiss={onDismiss}
               darkenOverlay={darkenOverlay}

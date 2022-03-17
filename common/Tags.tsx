@@ -1,5 +1,5 @@
+import type { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import styled from '@emotion/styled'
-import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { stateColor } from 'common/NFTOverlay'
 
 export const StyledTag = styled.span`

@@ -1,37 +1,37 @@
-import React, { useEffect, useState } from 'react'
-import { NFT, TokensOuter } from 'common/NFT'
-import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
-import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
-import { AsyncButton, Button } from 'rental-components/common/Button'
-import { notify } from 'common/Notification'
-import { shortPubKey } from 'common/utils'
-import { Connection, PublicKey, Transaction } from '@solana/web3.js'
-import { useWallet } from '@solana/wallet-adapter-react'
-import { FaLink } from 'react-icons/fa'
-import { invalidate, unissueToken } from '@cardinal/token-manager'
-import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
-import { asWallet } from 'common/Wallets'
-import { executeTransaction } from 'common/Transactions'
-import { BN } from '@project-serum/anchor'
-import { useIssuedTokens } from 'providers/IssuedTokensProvider'
+import { DisplayAddress } from '@cardinal/namespaces-components'
+import { invalidate, withClaimToken } from '@cardinal/token-manager'
 import { findClaimApproverAddress } from '@cardinal/token-manager/dist/cjs/programs/claimApprover/pda'
-import { TokenData } from 'api/api'
+import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
+import styled from '@emotion/styled'
+import { BN } from '@project-serum/anchor'
+import type * as splToken from '@solana/spl-token'
+import { useWallet } from '@solana/wallet-adapter-react'
+import type { PublicKey } from '@solana/web3.js'
+import { Connection, Transaction } from '@solana/web3.js'
+import { Select } from 'antd'
+import type { TokenData } from 'api/api'
+import { withWrapSol } from 'api/wrappedSol'
+import { NFT, TokensOuter } from 'common/NFT'
+import { notify } from 'common/Notification'
+import { StyledTag, Tag } from 'common/Tags'
+import { executeTransaction } from 'common/Transactions'
+import { getMintDecimalAmount } from 'common/units'
+import { shortPubKey } from 'common/utils'
+import { asWallet } from 'common/Wallets'
+import { lighten } from 'polished'
+import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
+import { useIssuedTokens } from 'providers/IssuedTokensProvider'
 import {
   PAYMENT_MINTS,
   usePaymentMints,
   WRAPPED_SOL_MINT,
 } from 'providers/PaymentMintsProvider'
-import * as splToken from '@solana/spl-token'
-import { withWrapSol } from 'api/wrappedSol'
-import { withClaimToken } from '@cardinal/token-manager'
-import { StyledTag, Tag } from 'common/Tags'
 import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
-import { DisplayAddress } from '@cardinal/namespaces-components'
-import { getMintDecimalAmount } from 'common/units'
-import { Select } from 'antd'
-import styled from '@emotion/styled'
-import { lighten } from 'polished'
-import { Colors } from 'config/config'
+import React, { useEffect, useState } from 'react'
+import { FaLink } from 'react-icons/fa'
+import { AsyncButton, Button } from 'rental-components/common/Button'
+import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
+
 const { Option } = Select
 
 const handleCopy = (shareUrl: string) => {
@@ -62,8 +62,8 @@ export const Browse = () => {
   const { connection, environment } = useEnvironmentCtx()
   const wallet = useWallet()
 
-  let { issuedTokens, loaded, refreshIssuedTokens } = useIssuedTokens()
-  let [filteredIssuedTokens, setFilteredIssuedTokens] =
+  const { issuedTokens, loaded, refreshIssuedTokens } = useIssuedTokens()
+  const [filteredIssuedTokens, setFilteredIssuedTokens] =
     useState<TokenData[]>(issuedTokens)
   const [userPaymentTokenAccount, _setUserPaymentTokenAccount] =
     useState<splToken.AccountInfo | null>(null)
@@ -86,12 +86,12 @@ export const Browse = () => {
   useEffect(() => {
     async function filterIssuedTokens() {
       const tokens = []
-      for (let token of issuedTokens) {
+      for (const token of issuedTokens) {
         if (!token.claimApprover?.pubkey) {
           tokens.push(token)
-        } else {
-          let [tokenClaimApprover] = await findClaimApproverAddress(
-            token.tokenManager?.pubkey!
+        } else if (token.tokenManager?.pubkey) {
+          const [tokenClaimApprover] = await findClaimApproverAddress(
+            token.tokenManager?.pubkey
           )
           if (
             tokenClaimApprover.toString() ===
@@ -164,6 +164,7 @@ export const Browse = () => {
 
   const handleClaim = async (tokenData: TokenData) => {
     try {
+      if (!tokenData.tokenManager) throw new Error('No token manager data')
       // wrap sol if there is payment required
       const transaction = new Transaction()
       if (
@@ -191,7 +192,7 @@ export const Browse = () => {
           ? new Connection(environment.override)
           : connection,
         asWallet(wallet),
-        tokenData.tokenManager?.pubkey!
+        tokenData.tokenManager?.pubkey
       )
       await executeTransaction(connection, asWallet(wallet), transaction, {
         confirmOptions: { commitment: 'confirmed', maxRetries: 3 },
@@ -207,9 +208,9 @@ export const Browse = () => {
   const getSymbolFromTokenData = (tokenData: TokenData) => {
     const symbol = PAYMENT_MINTS.find(
       (mint) =>
-        mint.mint == tokenData.claimApprover?.parsed?.paymentMint.toString()
+        mint.mint === tokenData.claimApprover?.parsed?.paymentMint.toString()
     )?.symbol
-    if (!symbol || symbol == 'SOL') {
+    if (!symbol || symbol === 'SOL') {
       return '◎'
     } else {
       return symbol
@@ -234,7 +235,7 @@ export const Browse = () => {
     rate: number = globalRate
   ) => {
     const price = getPriceFromTokenData(tokenData)
-    if (price == 0) return 0
+    if (price === 0) return 0
     let duration = 0
     if (tokenData.timeInvalidator?.parsed.durationSeconds) {
       duration = tokenData.timeInvalidator.parsed.durationSeconds.toNumber()
@@ -276,7 +277,7 @@ export const Browse = () => {
         }
         return (price / duration) * globalRate
       })
-    if (rentalPrices.length == 0) return 0
+    if (rentalPrices.length === 0) return 0
     return Math.min(...rentalPrices)
   }
 

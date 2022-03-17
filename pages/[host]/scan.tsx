@@ -1,15 +1,14 @@
-import React from 'react'
-import { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
-import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
+import type { PublicKey } from '@solana/web3.js'
+import { sendAndConfirmRawTransaction, Transaction } from '@solana/web3.js'
+import { Header } from 'common/Header'
 import { LoadingPulseWrapped } from 'common/LoadingPulse'
 import { StyledBackground } from 'common/StyledBackground'
-import { Header } from 'common/Header'
-import { useRouter } from 'next/router'
-import { Transaction, sendAndConfirmRawTransaction } from '@solana/web3.js'
-import { FaCheckCircle, FaQuestionCircle } from 'react-icons/fa'
-import { PublicKey } from '@solana/web3.js'
 import { firstParam, pubKeyUrl } from 'common/utils'
+import { useRouter } from 'next/router'
+import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
+import React, { useEffect, useState } from 'react'
+import { FaCheckCircle, FaQuestionCircle } from 'react-icons/fa'
 
 type Hideable = {
   visible?: boolean
@@ -223,7 +222,7 @@ function Scan() {
           </div>
           <div className="content">
             <LoadingPulseWrapped loading={!executeResult}>
-              {executeResult?.status == VerificationStatus.SUCCESS ? (
+              {executeResult?.status === VerificationStatus.SUCCESS ? (
                 <>
                   <div
                     style={{

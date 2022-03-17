@@ -1,9 +1,11 @@
-import { Wallet } from '@saberhq/solana-contrib'
-import { Connection } from '@solana/web3.js'
-import { TokenData } from 'api/api'
+import type { Wallet } from '@saberhq/solana-contrib'
+import type { Connection } from '@solana/web3.js'
+import type { TokenData } from 'api/api'
 import { withSleep } from 'common/utils'
 import React, { useContext, useState } from 'react'
-import { RentalCard, RentalCardConfig } from './components/RentalCard'
+
+import type { RentalCardConfig } from './components/RentalCard';
+import { RentalCard } from './components/RentalCard'
 import { Modal } from './modal'
 
 export interface RentalModal {
