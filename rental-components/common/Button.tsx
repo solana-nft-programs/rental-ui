@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { css } from '@emotion/react'
-import lighten from 'polished/lib/color/lighten'
+import { lighten } from 'polished'
 import { useState } from 'react'
 import { LoadingSpinner } from './LoadingSpinner'
 import { notify } from 'common/Notification'
@@ -33,7 +33,7 @@ export const Button = styled.button<{
           background: ${bgColor};
           color: ${getColorByBgColor(bgColor)};
           &:hover {
-            background: ${bgColor}};
+            background: ${lighten(0.1, bgColor)}};
           }
         `
       : variant === 'primary'
@@ -41,7 +41,7 @@ export const Button = styled.button<{
           background: rgb(29, 155, 240);
           color: #fff;
           &:hover {
-            background: ${'rgb(29, 155, 240)'}};
+            background: ${lighten(0.1, 'rgb(29, 155, 240)')}};
           }
         `
       : variant === 'secondary'
@@ -49,14 +49,14 @@ export const Button = styled.button<{
           background: #000;
           color: #fff;
           &:hover {
-            background: ${'#000'};
+            background: ${lighten(0.1, '#000')};
           }
         `
       : css`
           background: rgb(255, 255, 255, 0.15);
           color: #fff;
           &:hover {
-            background: ${'#000'};
+            background: ${lighten(0.05, '#000')};
           }
         `
   }}

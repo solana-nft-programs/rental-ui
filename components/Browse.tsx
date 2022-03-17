@@ -30,7 +30,7 @@ import { DisplayAddress } from '@cardinal/namespaces-components'
 import { getMintDecimalAmount } from 'common/units'
 import { Select } from 'antd'
 import styled from '@emotion/styled'
-import lighten from 'polished/lib/color/lighten'
+import { lighten } from 'polished'
 const { Option } = Select
 
 const handleCopy = (shareUrl: string) => {
@@ -72,8 +72,8 @@ export const Browse = () => {
   const StyledSelect = styled.div`
     .ant-select-selector {
       min-width: 180px;
-      border: 1px solid ${colors.main} !important;
-      background-color: ${colors.main} !important;
+      border: 1px solid ${lighten(0.3, colors.main)} !important;
+      background-color: ${lighten(0.1, colors.main)} !important;
       color: ${colors.secondary} !important;
     }
     .ant-select-arrow {

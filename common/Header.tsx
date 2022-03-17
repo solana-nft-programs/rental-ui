@@ -15,7 +15,7 @@ import { HiUserCircle } from 'react-icons/hi'
 import { Airdrop } from './Airdrop'
 import { useRouter } from 'next/router'
 import { useProjectConfigData } from 'providers/ProjectConfigProvider'
-import lighten from 'polished/lib/color/lighten'
+import { lighten } from 'polished'
 import { getColorByBgColor } from 'rental-components/common/Button'
 
 export const StyledHeader = styled.div<{ isTabletOrMobile: boolean }>`
@@ -227,7 +227,8 @@ export const StyledTab = styled.div<{
   cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
   transition: 0.3s all;
   &:hover {
-    background: ${({ disabled }) => (disabled ? '' : Colors.secondary)};
+    background: ${({ disabled }) =>
+      disabled ? '' : lighten(0.1, Colors.secondary)};
   }
 `
 
