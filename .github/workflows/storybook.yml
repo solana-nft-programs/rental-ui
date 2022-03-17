@@ -2,6 +2,7 @@ name: Build Storybook
 on:
   workflow_dispatch: {}
   push:
+    branches: [main]
     paths: ['stories/**', 'rental-components/**'] # Trigger the action only when files change in the folders defined here
 jobs:
   build-and-deploy:

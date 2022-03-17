@@ -15,7 +15,7 @@ import { HiUserCircle } from 'react-icons/hi'
 import { Airdrop } from './Airdrop'
 import { useRouter } from 'next/router'
 import { useProjectConfigData } from 'providers/ProjectConfigProvider'
-import lighten from 'polished/lib/color/lighten'
+import { lighten } from 'polished'
 import { getColorByBgColor } from 'rental-components/common/Button'
 
 export const StyledHeader = styled.div<{ isTabletOrMobile: boolean }>`

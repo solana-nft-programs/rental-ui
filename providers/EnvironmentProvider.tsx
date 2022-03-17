@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 export interface Environment {
   label: string
   value: string
+  ovverride?: string
 }
 
 export interface EnvironmentContextValues {
@@ -16,7 +17,9 @@ export interface EnvironmentContextValues {
 export const ENVIRONMENTS: Environment[] = [
   {
     label: 'mainnet',
-    value: 'https://ssc-dao.genesysgo.net',
+    value:
+      'https://solana-api.syndica.io/access-token/bkBr4li7aGVa3euVG0q4iSI6uuMiEo2jYQD35r8ytGZrksM7pdJi2a57pmlYRqCw',
+    ovverride: 'https://ssc-dao.genesysgo.net',
   },
   {
     label: 'testnet',
