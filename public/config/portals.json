@@ -1,0 +1,40 @@
+{
+  "logoImage": "https://pbs.twimg.com/profile_images/1496665887041994755/GlWexgQC_400x400.jpg",
+  "colors": {
+    "main": "rgb(0,0,0)",
+    "secondary": "rgb(128,221,239)"
+  },
+  "filters": [
+    {
+      "type": "creators",
+      "value": "GdtkQajEADGbfSUEBS5zctYrhemXYQkqnrMiGY7n7vAw"
+    },
+    {
+      "type": "symbol",
+      "value": "PRTL"
+    }
+  ],
+  "projectName": "portals",
+  "rentalCard": {
+    "invalidations": {
+      "showUsagesOption": false,
+      "showExpirationOption": true,
+      "showDurationOption": true,
+      "showManualOption": true
+    },
+    "invalidationOptions": {
+      "durationCategories": [
+        "Minutes",
+        "Hours",
+        "Days",
+        "Weeks",
+        "Months",
+        "Years"
+      ],
+      "invalidationCategories": ["Return"],
+      "paymentMints": ["So11111111111111111111111111111111111111112"],
+      "setClaimRentalReceipt": true,
+      "showClaimRentalReceipt": true
+    }
+  }
+}

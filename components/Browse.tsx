@@ -25,12 +25,13 @@ import * as splToken from '@solana/spl-token'
 import { withWrapSol } from 'api/wrappedSol'
 import { withClaimToken } from '@cardinal/token-manager'
 import { StyledTag, Tag } from 'common/Tags'
-import { getLink, useProjectConfigData } from 'providers/ProjectConfigProvider'
+import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { DisplayAddress } from '@cardinal/namespaces-components'
 import { getMintDecimalAmount } from 'common/units'
 import { Select } from 'antd'
 import styled from '@emotion/styled'
 import { lighten } from 'polished'
+import { Colors } from 'config/config'
 const { Option } = Select
 
 const handleCopy = (shareUrl: string) => {
@@ -57,6 +58,7 @@ const allOrderCategories = [
 const globalRate = 604800
 
 export const Browse = () => {
+  const { config } = useProjectConfig()
   const { connection, environment } = useEnvironmentCtx()
   const wallet = useWallet()
 
@@ -65,7 +67,6 @@ export const Browse = () => {
     useState<TokenData[]>(issuedTokens)
   const [userPaymentTokenAccount, _setUserPaymentTokenAccount] =
     useState<splToken.AccountInfo | null>(null)
-  const { colors } = useProjectConfigData()
   const { paymentMintInfos } = usePaymentMints()
   const [selectedOrderCategory, setSelectedOrderCategory] =
     useState<OrderCategories>(OrderCategories.PriceLowToHigh)
@@ -73,12 +74,12 @@ export const Browse = () => {
   const StyledSelect = styled.div`
     .ant-select-selector {
       min-width: 180px;
-      border: 1px solid ${lighten(0.3, colors.main)} !important;
-      background-color: ${lighten(0.1, colors.main)} !important;
-      color: ${colors.secondary} !important;
+      border: 1px solid ${lighten(0.3, config.colors.main)} !important;
+      background-color: ${lighten(0.1, config.colors.main)} !important;
+      color: ${config.colors.secondary} !important;
     }
     .ant-select-arrow {
-      color: ${colors.secondary} !important;
+      color: ${config.colors.secondary} !important;
     }
   `
 
@@ -387,7 +388,7 @@ export const Browse = () => {
                         </StyledTag>
                         <div className="flex w-max">
                           <Button
-                            bgColor={colors.secondary}
+                            bgColor={config.colors.secondary}
                             variant="primary"
                             className="mr-1 inline-block flex-none"
                             onClick={() => handleClaim(tokenData)}

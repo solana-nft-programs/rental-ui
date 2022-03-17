@@ -8,18 +8,18 @@ import { useWallet } from '@solana/wallet-adapter-react'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 import { useUserTokenData } from 'providers/TokenDataProvider'
-import { useProjectConfigData } from 'providers/ProjectConfigProvider'
+import { useProjectConfig } from 'providers/ProjectConfigProvider'
 
 export const Airdrop = () => {
   const { connection } = useEnvironmentCtx()
   const wallet = useWallet()
   const { refreshTokenAccounts } = useUserTokenData()
   const [loadingAirdrop, setLoadingAirdrop] = useState(false)
-  const { colors } = useProjectConfigData()
+  const { config } = useProjectConfig()
 
   return (
     <Button
-      bgColor={colors.secondary}
+      bgColor={config.colors.secondary}
       variant="primary"
       disabled={!wallet.connected}
       onClick={async () => {

@@ -24,10 +24,10 @@ module.exports = {
         has: [
           {
             type: 'host',
-            value: '(?<configName>.*)',
+            value: '(?<hostName>.*)',
           },
         ],
-        destination: '/:configName/:path*',
+        destination: '/:hostName/:path*',
       },
     ]
   },

@@ -4,7 +4,7 @@ import { useEnvironmentCtx } from './EnvironmentProvider'
 import { web3 } from '@project-serum/anchor'
 import { getTokenDatas, TokenData } from 'api/api'
 import { getTokenManagersForIssuer } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/accounts'
-import { filterTokens, useProjectConfigData } from './ProjectConfigProvider'
+import { filterTokens, useProjectConfig } from './ProjectConfigProvider'
 
 export interface ManagedTokensContextValues {
   managedTokens: TokenData[]
@@ -30,7 +30,7 @@ export function ManagedTokensProvider({ children }: { children: ReactChild }) {
   const [refreshing, setRefreshing] = useState<Boolean>(false)
   const [loaded, setLoaded] = useState<Boolean>(false)
   const [error, setError] = useState<string | null>(null)
-  const { filters, configLoaded } = useProjectConfigData()
+  const { config } = useProjectConfig()
 
   const refreshManagedTokens = async () => {
     if (!address) {
@@ -38,14 +38,14 @@ export function ManagedTokensProvider({ children }: { children: ReactChild }) {
       return
     }
     try {
-      if (!configLoaded) return
+      if (!config) return
       setRefreshing(true)
       const tokenManagerDatas = await getTokenManagersForIssuer(
         connection,
         new web3.PublicKey(address)
       )
       let tokenDatas = await getTokenDatas(connection, tokenManagerDatas)
-      tokenDatas = filterTokens(filters, tokenDatas)
+      tokenDatas = filterTokens(config.filters, tokenDatas)
       setManagedTokens(tokenDatas)
     } catch (e) {
       console.log(e)
@@ -58,7 +58,7 @@ export function ManagedTokensProvider({ children }: { children: ReactChild }) {
 
   useEffect(() => {
     refreshManagedTokens()
-  }, [connection, setError, address, tokenDatas, setRefreshing, filters, configLoaded])
+  }, [connection, setError, address, tokenDatas, setRefreshing])
 
   return (
     <ManagedTokensContext.Provider

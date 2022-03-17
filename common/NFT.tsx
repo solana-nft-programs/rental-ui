@@ -14,10 +14,9 @@ import { IoQrCodeOutline, IoClose } from 'react-icons/io5'
 import { FiExternalLink } from 'react-icons/fi'
 import { useQRCode } from 'rental-components/QRCodeProvider'
 import { NFTOverlay } from './NFTOverlay'
-import { useProjectConfigData } from 'providers/ProjectConfigProvider'
+import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { executeTransaction } from 'common/Transactions'
 import { unissueToken } from '@cardinal/token-manager'
-import { useIssuedTokens } from 'providers/IssuedTokensProvider'
 
 export const TokensOuter = styled.div`
   display: flex;
@@ -175,7 +174,7 @@ export function NFT({ tokenData, hideQRCode }: NFTProps) {
   const wallet = useWallet()
   const { show } = useQRCode()
   const rentalModal = useRentalModal()
-  const { colors } = useProjectConfigData()
+  const { config } = useProjectConfig()
 
   const {
     tokenAccount,
@@ -236,7 +235,8 @@ export function NFT({ tokenData, hideQRCode }: NFTProps) {
                           asWallet(wallet),
                           ctx.connection,
                           ctx.environment.label,
-                          tokenData
+                          tokenData,
+                          config.rentalCard
                         )
                       }}
                     >

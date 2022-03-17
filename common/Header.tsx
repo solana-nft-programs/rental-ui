@@ -14,7 +14,7 @@ import { shortPubKey } from './utils'
 import { HiUserCircle } from 'react-icons/hi'
 import { Airdrop } from './Airdrop'
 import { useRouter } from 'next/router'
-import { useProjectConfigData } from 'providers/ProjectConfigProvider'
+import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { lighten } from 'polished'
 import { getColorByBgColor } from 'rental-components/common/Button'
 
@@ -210,14 +210,14 @@ export const Header = ({
   const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' })
   const [showTabs, setShowTabs] = useState(false)
   const [tab, setTab] = useState<string>('wallet')
-  const { logoImage, colors } = useProjectConfigData()
+  const { config } = useProjectConfig()
 
   useEffect(() => {
-    if (colors) {
-      Colors.navBg = colors.main
-      Colors.secondary = colors.secondary
+    if (config.colors) {
+      Colors.navBg = config.colors.main
+      Colors.secondary = config.colors.secondary
     }
-  }, [colors])
+  }, [config])
 
   useEffect(() => {
     const anchor = router.asPath.split('#')[1]
@@ -235,7 +235,7 @@ export const Header = ({
     >
       <div className="left pl-8">
         <div className="title">
-          <img src={logoImage} />
+          <img src={config.logoImage} />
           <div className="subscript">
             {ctx.environment.label === 'devnet' ? 'DEV' : 'alpha'}
           </div>

@@ -9,7 +9,7 @@ import { Wallet } from '@saberhq/solana-contrib'
 import { getLink } from 'providers/ProjectConfigProvider'
 import { useRouter } from 'next/router'
 
-export const QRCode = ({
+const QRCode = ({
   connection,
   wallet,
   tokenData,
@@ -105,3 +105,5 @@ const QRCodeOuter = styled.div`
     bottom: -40px;
   }
 `
+
+export default QRCode
