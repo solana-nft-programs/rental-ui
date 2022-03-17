@@ -73,7 +73,6 @@ export const filterTokens = (
 }
 
 export function getLink(path: string, withParams = true) {
-  console.log(window.location.protocol)
   return `${window.location.origin}${path}${
     withParams
       ? path.includes('?') && window.location.search
@@ -113,16 +112,14 @@ export function ProjectConfigProvider({ children }: { children: ReactChild }) {
     try {
       if (!project) return
       console.log(`Loading project config for ${project}`)
-      const jsonData = await fetch(`https://api.cardinal.so/config/${project}`)
-        .then(async (r) => await r.json())
-        .finally(() => {
-          setConfigLoaded(true)
-        })
+      const response = await fetch(`https://api.cardinal.so/config/${project}`)
+      const jsonData = await response.json()
       setLogoImage(jsonData.logoImage)
       setColors(jsonData.colors)
       setFilters(jsonData.filters)
       setProjectName(jsonData.projectName)
       setRentalCard(jsonData.rentalCard)
+      setConfigLoaded(true)
     } catch (e) {
       console.log('Error fetching project config', e)
     }

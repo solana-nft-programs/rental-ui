@@ -30,10 +30,11 @@ export function IssuedTokensProvider({ children }: { children: ReactChild }) {
   const [refreshing, setRefreshing] = useState<Boolean>(false)
   const [loaded, setLoaded] = useState<Boolean>(false)
   const [error, setError] = useState<string | null>(null)
-  const { filters } = useProjectConfigData()
+  const { filters, configLoaded } = useProjectConfigData()
 
   const refreshIssuedTokens = async () => {
     try {
+      if (!configLoaded) return
       setRefreshing(true)
       const tokenManagerDatas = await getTokenManagersByState(
         connection,
@@ -53,7 +54,7 @@ export function IssuedTokensProvider({ children }: { children: ReactChild }) {
 
   useEffect(() => {
     refreshIssuedTokens()
-  }, [connection, setError, setRefreshing, tokenDatas, filters])
+  }, [connection, setError, setRefreshing, tokenDatas, filters, configLoaded])
 
   return (
     <IssuedTokensContext.Provider
