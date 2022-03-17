@@ -3,7 +3,7 @@ import { Connection } from '@solana/web3.js'
 import { TokenData } from 'api/api'
 import { withSleep } from 'common/utils'
 import React, { useContext, useState } from 'react'
-import { RentalCard } from './components/RentalCard'
+import { RentalCard, RentalCardConfig } from './components/RentalCard'
 import { Modal } from './modal'
 
 export interface RentalModal {
@@ -12,6 +12,7 @@ export interface RentalModal {
     connection: Connection,
     cluster: string,
     tokenData: TokenData,
+    rentalCardConfig: RentalCardConfig | undefined,
     dev?: boolean
   ) => void
   showRentalModal: boolean
@@ -37,17 +38,28 @@ export const RentalModalProvider: React.FC<Props> = ({
   const [dev, setDev] = useState<boolean | undefined>(undefined)
   const [showRentalModal, setShowRentalModal] = useState<boolean>(false)
   const [tokenData, setTokenData] = useState<TokenData | undefined>(undefined)
+  const [rentalCardConfig, setRentalCardConfig] = useState<
+    RentalCardConfig | undefined
+  >(undefined)
 
   return (
     <RentalModalContext.Provider
       value={{
-        show: (wallet, connection, cluster, tokenData, dev) => {
+        show: (
+          wallet,
+          connection,
+          cluster,
+          tokenData,
+          rentalCardConfig,
+          dev
+        ) => {
           setWallet(wallet)
           setConnection(connection)
           setCluster(cluster)
           setTokenData(tokenData)
           setDev(dev)
           setShowRentalModal(true)
+          setRentalCardConfig(rentalCardConfig)
         },
         tokenData,
         showRentalModal,
@@ -65,6 +77,7 @@ export const RentalModalProvider: React.FC<Props> = ({
             wallet={wallet}
             connection={connection}
             tokenData={tokenData || {}}
+            rentalCardConfig={rentalCardConfig || {}}
             appName={appName}
             appTwitter={appTwitter}
             onComplete={() => {

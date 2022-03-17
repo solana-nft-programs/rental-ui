@@ -31,6 +31,7 @@ import { getMintDecimalAmount } from 'common/units'
 import { Select } from 'antd'
 import styled from '@emotion/styled'
 import { lighten } from 'polished'
+import { Colors } from 'config/config'
 const { Option } = Select
 
 const handleCopy = (shareUrl: string) => {
@@ -56,7 +57,7 @@ const allOrderCategories = [
 
 const globalRate = 604800
 
-export const Browse = () => {
+export const Browse = ({ colors }: { colors: Colors }) => {
   const { connection, environment } = useEnvironmentCtx()
   const wallet = useWallet()
 
@@ -65,7 +66,6 @@ export const Browse = () => {
     useState<TokenData[]>(issuedTokens)
   const [userPaymentTokenAccount, _setUserPaymentTokenAccount] =
     useState<splToken.AccountInfo | null>(null)
-  const { colors } = useProjectConfigData()
   const { paymentMintInfos } = usePaymentMints()
   const [selectedOrderCategory, setSelectedOrderCategory] =
     useState<OrderCategories>(OrderCategories.PriceLowToHigh)

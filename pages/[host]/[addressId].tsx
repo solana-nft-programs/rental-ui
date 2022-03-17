@@ -1,6 +1,5 @@
 import React from 'react'
 import { useEffect, useState } from 'react'
-import styled from '@emotion/styled'
 import { StyledContainer } from 'common/StyledContainer'
 import { useError } from 'providers/ErrorProvider'
 import { useWallet } from '@solana/wallet-adapter-react'
@@ -12,16 +11,17 @@ import { firstParam, camelCase } from 'common/utils'
 import { Manage } from 'components/Manage'
 import { Browse } from 'components/Browse'
 import { Wallet } from 'components/Wallet'
-import { useProjectConfigData } from 'providers/ProjectConfigProvider'
 import Head from 'next/head'
+import { getProjectConfig, ProjectConfig } from 'config/config'
 
-function Profile() {
+export const getServerSideProps = getProjectConfig
+
+function Profile({ config }: { config: ProjectConfig }) {
   const [error, _setError] = useError()
   const wallet = useWallet()
   const router = useRouter()
   const { addressId } = router.query
   const [tab, setTab] = useState<string>('wallet')
-  const { projectName, colors } = useProjectConfigData()
 
   useEffect(() => {
     const anchor = router.asPath.split('#')[1]
@@ -29,10 +29,10 @@ function Profile() {
   }, [router.asPath])
 
   useEffect(() => {
-    if (colors) {
-      Colors.background = colors.main
+    if (config.colors) {
+      Colors.background = config.colors.main
     }
-  }, [colors])
+  }, [config])
 
   const { setAddress, loaded, refreshing } = useUserTokenData()
   useEffect(() => {
@@ -54,7 +54,7 @@ function Profile() {
       style={{ backgroundColor: Colors.background }}
     >
       <Head>
-        <title>{camelCase(projectName)}</title>
+        <title>{camelCase(config.name)}</title>
       </Head>
       <Header
         loading={!loaded && refreshing}
@@ -70,8 +70,8 @@ function Profile() {
           {
             {
               wallet: <Wallet />,
-              manage: <Manage />,
-              browse: <Browse />,
+              manage: <Manage colors={config.colors} />,
+              browse: <Browse colors={config.colors} />,
             }[tab || 'wallet']
           }
         </div>

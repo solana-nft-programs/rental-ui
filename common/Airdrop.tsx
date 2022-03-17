@@ -15,11 +15,11 @@ export const Airdrop = () => {
   const wallet = useWallet()
   const { refreshTokenAccounts } = useUserTokenData()
   const [loadingAirdrop, setLoadingAirdrop] = useState(false)
-  const { colors } = useProjectConfigData()
+  const { config } = useProjectConfigData()
 
   return (
     <Button
-      bgColor={colors.secondary}
+      bgColor={config?.colors.secondary}
       variant="primary"
       disabled={!wallet.connected}
       onClick={async () => {

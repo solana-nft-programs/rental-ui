@@ -24,6 +24,8 @@ import { BN } from '@project-serum/anchor'
 import { withWrapSol } from 'api/wrappedSol'
 import { getLink, useProjectConfigData } from 'providers/ProjectConfigProvider'
 import { Connection } from '@solana/web3.js'
+import { getProjectConfig, ProjectConfig, projectConfigs } from 'config/config'
+import { GetServerSideProps } from 'next'
 
 type Hideable = {
   visible?: boolean
@@ -255,7 +257,9 @@ const NFTOuter = styled.div`
   }
 `
 
-function Claim() {
+export const getServerSideProps = getProjectConfig
+
+function Claim({ config }: { config: ProjectConfig }) {
   const router = useRouter()
   const ctx = useEnvironmentCtx()
   const wallet = useWallet()
@@ -277,8 +281,6 @@ function Claim() {
   const [paymentTokenAccountError, setPaymentTokenAccountError] = useState<
     boolean | null
   >(null)
-
-  const { colors } = useProjectConfigData()
 
   const { tokenManagerString } = router.query
   const tokenManagerId = tryPublicKey(tokenManagerString)
@@ -595,7 +597,7 @@ function Claim() {
           {error}
         </div>
       </VerificationStepsOuter>
-      <StyledBackground colors={colors} />
+      <StyledBackground colors={config.colors} />
     </>
   )
 }

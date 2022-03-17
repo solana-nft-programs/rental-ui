@@ -68,6 +68,7 @@ export const hexColor = (colorString: string): string => {
   if (colorString.includes('#')) return colorString
   const [r, g, b] = colorString
     .replace('rgb(', '')
+    .replace('rgba(', '')
     .replace(')', '')
     .replace(' ', '')
     .split(',')

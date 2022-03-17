@@ -39,14 +39,14 @@ export function TokenAccountsProvider({ children }: { children: ReactChild }) {
   const [tokenDatas, setTokenDatas] = useState<TokenData[]>([])
   const [refreshing, setRefreshing] = useState<boolean>(false)
   const [loaded, setLoaded] = useState<boolean>(false)
-  const { filters, configLoaded } = useProjectConfigData()
+  const { config } = useProjectConfigData()
 
   const refreshTokenAccounts = useCallback(() => {
     if (!address) {
       setError(`Address not set please connect wallet to continue`)
       return
     }
-    if (!configLoaded) {
+    if (!config) {
       setError(`No project config found`)
       return
     }
@@ -55,7 +55,7 @@ export function TokenAccountsProvider({ children }: { children: ReactChild }) {
     getTokenAccountsWithData(connection, address)
       .then((tokenDatas) => {
         let tokensWithMetadata = tokenDatas.filter((td) => td.metadata)
-        tokensWithMetadata = filterTokens(filters, tokensWithMetadata)
+        tokensWithMetadata = filterTokens(config.filters, tokensWithMetadata)
         setTokenDatas(tokensWithMetadata)
       })
       .catch((e) => {
@@ -66,7 +66,7 @@ export function TokenAccountsProvider({ children }: { children: ReactChild }) {
         setLoaded(true)
         setRefreshing(false)
       })
-  }, [connection, setError, address, setRefreshing, filters, configLoaded])
+  }, [connection, setError, address, setRefreshing, config])
 
   useEffect(() => {
     const interval = setInterval(

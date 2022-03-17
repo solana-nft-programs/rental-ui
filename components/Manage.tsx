@@ -18,19 +18,18 @@ import { useUserTokenData } from 'providers/TokenDataProvider'
 import { BN } from '@project-serum/anchor'
 import { StyledTag, Tag } from 'common/Tags'
 import { getLink, useProjectConfigData } from 'providers/ProjectConfigProvider'
+import { Colors } from 'config/config'
 
 const handleCopy = (shareUrl: string) => {
   navigator.clipboard.writeText(shareUrl)
   notify({ message: 'Share link copied' })
 }
 
-export const Manage = () => {
+export const Manage = ({ colors }: { colors: Colors }) => {
   const { connection } = useEnvironmentCtx()
   const wallet = useWallet()
-
   const { refreshTokenAccounts } = useUserTokenData()
   const { managedTokens, loaded } = useManagedTokens()
-  const { colors } = useProjectConfigData()
   const [loadingUnissue, setLoadingUnissue] = useState(false)
 
   return (

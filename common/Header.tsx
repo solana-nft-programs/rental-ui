@@ -210,14 +210,14 @@ export const Header = ({
   const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' })
   const [showTabs, setShowTabs] = useState(false)
   const [tab, setTab] = useState<string>('wallet')
-  const { logoImage, colors } = useProjectConfigData()
+  const { config } = useProjectConfigData()
 
   useEffect(() => {
-    if (colors) {
-      Colors.navBg = colors.main
-      Colors.secondary = colors.secondary
+    if (config?.colors) {
+      Colors.navBg = config.colors.main
+      Colors.secondary = config.colors.secondary
     }
-  }, [colors])
+  }, [config])
 
   useEffect(() => {
     const anchor = router.asPath.split('#')[1]
@@ -235,7 +235,7 @@ export const Header = ({
     >
       <div className="left pl-8">
         <div className="title">
-          <img src={logoImage} />
+          <img src={config?.logoImage} />
           <div className="subscript">
             {ctx.environment.label === 'devnet' ? 'DEV' : 'alpha'}
           </div>
