@@ -1,6 +1,6 @@
 import { TokenData } from 'api/api'
 import React, { useState, useContext, useEffect, ReactChild } from 'react'
-import { NextRouter, useRouter } from 'next/router'
+import { useRouter } from 'next/router'
 
 export interface RentalCardOptions {
   invalidations: {
@@ -102,7 +102,7 @@ export function ProjectConfigProvider({ children }: { children: ReactChild }) {
   const [configLoaded, setConfigLoaded] = useState<boolean>(false)
 
   const { query } = useRouter()
-  const projectParams = query.project || query.host || process.env.BASE_PROJECT
+  const projectParams = query.project || query.host
   const project =
     projectParams &&
     (typeof projectParams == 'string' ? projectParams : projectParams[0])
@@ -112,6 +112,7 @@ export function ProjectConfigProvider({ children }: { children: ReactChild }) {
   const loadConfig = async () => {
     try {
       if (!project) return
+      console.log(`Loading project config for ${project}`)
       const jsonData = await fetch(`https://api.cardinal.so/config/${project}`)
         .then(async (r) => await r.json())
         .finally(() => {
