@@ -129,13 +129,14 @@ export const RentalExtensionCard = ({
     maxExpiration,
   } = tokenData.timeInvalidator?.parsed || {}
 
-  if (!extensionPaymentAmount || !extensionPaymentMint || !durationSeconds) {
-    return <>Incorrect extension parameters</>
-  }
   const [paymentAmount, setPaymentAmount] = useState<number>(0)
   const [currentExtensionSeconds, setCurrentExtensionSeconds] = useState<
     number | undefined | null
   >(0)
+
+  useEffect(() => {
+    getUserPaymentTokenAccount()
+  }, [connection, wallet, tokenData])
 
   const handleExtensionRental = async () => {
     try {
@@ -205,6 +206,10 @@ export const RentalExtensionCard = ({
     )
   }
 
+  if (!extensionPaymentAmount || !extensionPaymentMint || !durationSeconds) {
+    return <>Incorrect extension parameters</>
+  }
+
   const loadRate = () => {
     return `${fmtMintAmount(
       paymentMintInfos[extensionPaymentMint.toString()],
@@ -228,10 +233,6 @@ export const RentalExtensionCard = ({
           currentExtensionSeconds
     )
   }
-
-  useEffect(() => {
-    getUserPaymentTokenAccount()
-  }, [connection, wallet, tokenData])
 
   async function getUserPaymentTokenAccount() {
     if (

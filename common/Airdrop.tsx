@@ -6,7 +6,6 @@ import { asWallet } from 'common/Wallets'
 import { notify } from 'common/Notification'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
-import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 import { useUserTokenData } from 'providers/TokenDataProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 

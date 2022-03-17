@@ -270,7 +270,7 @@ export function NFTOverlay({
         )}
       </div>
       <div className="logo">
-        <img src="/assets/cardinal-crosshair.svg"></img>
+        <img src="/assets/cardinal-crosshair.svg" alt="crosshair"></img>
       </div>
     </StyledOverlay>
   )

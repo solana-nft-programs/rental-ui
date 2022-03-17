@@ -1,0 +1,21 @@
+{
+  "env": {
+    "browser": true
+  },
+  "parser": "@babel/eslint-parser",
+  "extends": [
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:jsx-a11y/recommended"
+  ],
+  "ignorePatterns": ["*.js"],
+  "parserOptions": {
+    "project": "tsconfig.json"
+  },
+  "settings": { "react": { "version": "detect" } },
+  "rules": {
+    "react/react-in-jsx-scope": "off",
+    "jsx-a11y/click-events-have-key-events": "off",
+    "jsx-a11y/no-static-element-interactions": "off"
+  }
+}

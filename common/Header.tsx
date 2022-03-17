@@ -235,7 +235,7 @@ export const Header = ({
     >
       <div className="left pl-8">
         <div className="title">
-          <img src={config.logoImage} />
+          <img src={config.logoImage} alt="logo" />
           <div className="subscript">
             {ctx.environment.label === 'devnet' ? 'DEV' : 'alpha'}
           </div>

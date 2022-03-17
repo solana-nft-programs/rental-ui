@@ -25,6 +25,7 @@ const QRCode = ({
   const getQRCode = useCallback(async () => {
     if (wallet && connection) {
       try {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
         const transaction = await useTransaction(
           connection,
           wallet,

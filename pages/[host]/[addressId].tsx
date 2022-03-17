@@ -6,7 +6,6 @@ import { useWallet } from '@solana/wallet-adapter-react'
 import { Header } from 'common/Header'
 import { useUserTokenData } from 'providers/TokenDataProvider'
 import { useRouter } from 'next/router'
-import Colors from 'common/colors'
 import { firstParam, camelCase } from 'common/utils'
 import { Manage } from 'components/Manage'
 import { Browse } from 'components/Browse'
@@ -27,12 +26,6 @@ function Profile() {
     if (anchor != tab) setTab(anchor || 'wallet')
   }, [router.asPath])
 
-  useEffect(() => {
-    if (config.colors) {
-      Colors.background = config.colors.main
-    }
-  }, [config])
-
   const { setAddress, loaded, refreshing } = useUserTokenData()
   useEffect(() => {
     if (addressId) {
@@ -50,7 +43,7 @@ function Profile() {
   return (
     <div
       className="min-h-screen"
-      style={{ backgroundColor: Colors.background }}
+      style={{ backgroundColor: config.colors.main }}
     >
       <Head>
         <title>{camelCase(config.name)}</title>

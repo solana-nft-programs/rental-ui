@@ -1,8 +1,8 @@
 import {
   AccountInfo,
+  Connection,
   ParsedAccountData,
   PublicKey,
-  Connection,
   SystemProgram,
 } from '@solana/web3.js'
 import * as anchor from '@project-serum/anchor'
@@ -24,7 +24,6 @@ import { getBatchedMultiplAccounts as getBatchedMultipleAccounts } from '@cardin
 import {
   Edition,
   EditionData,
-  MasterEdition,
   MasterEditionV2Data,
   MetadataKey,
 } from '@metaplex-foundation/mpl-token-metadata'
