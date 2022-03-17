@@ -17,7 +17,7 @@ import { executeTransaction } from 'common/Transactions'
 import { useUserTokenData } from 'providers/TokenDataProvider'
 import { BN } from '@project-serum/anchor'
 import { StyledTag, Tag } from 'common/Tags'
-import { useProjectConfigData } from 'providers/ProjectConfigProvider'
+import { getLink, useProjectConfigData } from 'providers/ProjectConfigProvider'
 
 const handleCopy = (shareUrl: string) => {
   navigator.clipboard.writeText(shareUrl)
@@ -27,6 +27,7 @@ const handleCopy = (shareUrl: string) => {
 export const Manage = () => {
   const { connection } = useEnvironmentCtx()
   const wallet = useWallet()
+
   const { refreshTokenAccounts } = useUserTokenData()
   const { managedTokens, loaded } = useManagedTokens()
   const { colors } = useProjectConfigData()
@@ -62,9 +63,9 @@ export const Manage = () => {
                         state={TokenManagerState.Issued}
                         onClick={() =>
                           handleCopy(
-                            `${
-                              process.env.BASE_URL
-                            }/claim/${tokenData.tokenManager?.pubkey.toBase58()}`
+                            getLink(
+                              `/claim/${tokenData.tokenManager?.pubkey.toBase58()}`
+                            )
                           )
                         }
                         color="warning"

@@ -6,12 +6,8 @@ import { useTransaction } from '@cardinal/token-manager'
 import { TokenData } from 'api/api'
 import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 import { Wallet } from '@saberhq/solana-contrib'
-
-const getLink = (serializedUsage: string, cluster: string | undefined) => {
-  return `${process.env.BASE_URL}/scan?tx=${encodeURIComponent(
-    serializedUsage
-  )}${cluster === 'devnet' ? `&cluster=devnet` : ''}`
-}
+import { getLink } from 'providers/ProjectConfigProvider'
+import { useRouter } from 'next/router'
 
 export const QRCode = ({
   connection,
@@ -24,6 +20,7 @@ export const QRCode = ({
   tokenData?: TokenData
   cluster?: string
 }) => {
+  const router = useRouter()
   const [qrCode, setQrCode] = useState<any | null>(null)
   const getQRCode = useCallback(async () => {
     if (wallet && connection) {
@@ -40,9 +37,9 @@ export const QRCode = ({
         ).blockhash
         await wallet.signTransaction(transaction)
         const serializedUsage = transaction.serialize().toString('base64')
-        console.log(getLink(serializedUsage, cluster))
+        console.log(getLink(`/scan?tx=${encodeURIComponent(serializedUsage)}`))
         const qrbuffer = await new AwesomeQR({
-          text: getLink(serializedUsage, cluster),
+          text: getLink(`/scan?tx=${encodeURIComponent(serializedUsage)}`),
           colorDark: '#000000',
           colorLight: '#555555',
           backgroundDimming: 'rgba(0, 0, 0, 4)',

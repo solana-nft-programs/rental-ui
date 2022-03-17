@@ -1,6 +1,6 @@
 import { TokenData } from 'api/api'
 import React, { useState, useContext, useEffect, ReactChild } from 'react'
-import { useRouter } from 'next/router'
+import { NextRouter, useRouter } from 'next/router'
 
 export interface RentalCardOptions {
   invalidations: {
@@ -72,6 +72,17 @@ export const filterTokens = (
   return tokens
 }
 
+export function getLink(path: string, withParams = true) {
+  console.log(window.location.protocol)
+  return `${window.location.origin}${path}${
+    withParams
+      ? path.includes('?') && window.location.search
+        ? `${window.location.search.replace('?', '&')}`
+        : window.location.search ?? ''
+      : ''
+  }`
+}
+
 export function ProjectConfigProvider({ children }: { children: ReactChild }) {
   const [logoImage, setLogoImage] = useState<string>('')
   const [colors, setColors] = useState<{ main: string; secondary: string }>({
@@ -91,7 +102,12 @@ export function ProjectConfigProvider({ children }: { children: ReactChild }) {
   const [configLoaded, setConfigLoaded] = useState<boolean>(false)
 
   const { query } = useRouter()
-  const project = query.project || process.env.BASE_PROJECT
+  const projectParams = query.project || query.host || process.env.BASE_PROJECT
+  const project =
+    projectParams &&
+    (typeof projectParams == 'string' ? projectParams : projectParams[0])
+      ?.split('.')[0]
+      ?.replace('dev-', '')
 
   const loadConfig = async () => {
     try {

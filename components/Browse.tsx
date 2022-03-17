@@ -25,7 +25,7 @@ import * as splToken from '@solana/spl-token'
 import { withWrapSol } from 'api/wrappedSol'
 import { withClaimToken } from '@cardinal/token-manager'
 import { StyledTag, Tag } from 'common/Tags'
-import { useProjectConfigData } from 'providers/ProjectConfigProvider'
+import { getLink, useProjectConfigData } from 'providers/ProjectConfigProvider'
 import { DisplayAddress } from '@cardinal/namespaces-components'
 import { getMintDecimalAmount } from 'common/units'
 import { Select } from 'antd'
@@ -59,6 +59,7 @@ const globalRate = 604800
 export const Browse = () => {
   const { connection, environment } = useEnvironmentCtx()
   const wallet = useWallet()
+
   let { issuedTokens, loaded, refreshIssuedTokens } = useIssuedTokens()
   let [filteredIssuedTokens, setFilteredIssuedTokens] =
     useState<TokenData[]>(issuedTokens)
@@ -185,8 +186,8 @@ export const Browse = () => {
       console.log('Claiming token manager', tokenData)
       await withClaimToken(
         transaction,
-        environment.ovverride
-          ? new Connection(environment.ovverride)
+        environment.override
+          ? new Connection(environment.override)
           : connection,
         asWallet(wallet),
         tokenData.tokenManager?.pubkey!
@@ -401,9 +402,9 @@ export const Browse = () => {
                             className="mr-1 inline-block flex-none"
                             onClick={() =>
                               handleCopy(
-                                `${
-                                  process.env.BASE_URL
-                                }/claim/${tokenData.tokenManager?.pubkey.toBase58()}`
+                                getLink(
+                                  `/claim/${tokenData.tokenManager?.pubkey.toBase58()}`
+                                )
                               )
                             }
                           >
