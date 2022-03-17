@@ -59,7 +59,7 @@ const NFTOuter = styled.div`
 
 const handleCopy = (shareUrl: string) => {
   navigator.clipboard.writeText(shareUrl)
-  notify({ message: 'Share link copied' })
+  notify({ message: 'Notification sent' })
 }
 
 function getEditionPill(editionInfo: EditionInfo) {
