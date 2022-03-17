@@ -22,7 +22,7 @@ import { PAYMENT_MINTS, WRAPPED_SOL_MINT } from 'providers/PaymentMintsProvider'
 import { getATokenAccountInfo, tryPublicKey } from 'api/utils'
 import { BN } from '@project-serum/anchor'
 import { withWrapSol } from 'api/wrappedSol'
-import { useProjectConfigData } from 'providers/ProjectConfigProvider'
+import { getLink, useProjectConfigData } from 'providers/ProjectConfigProvider'
 import { Connection } from '@solana/web3.js'
 
 type Hideable = {
@@ -385,7 +385,7 @@ function Claim() {
         const split = router.asPath.split('/claim')
         if (split && split[1]) {
           const [_tokenManagerId, otpKeypair] = claimLinks.fromLink(
-            `${process.env.BASE_URL}/claim${split[1].split('&cluster')[0]}`
+            getLink(`/claim${split[1].split('&cluster')[0]}`)
           )
           otp = otpKeypair
         }
@@ -413,8 +413,8 @@ function Claim() {
       }
       await withClaimToken(
         transaction,
-        ctx.environment.ovverride
-          ? new Connection(ctx.environment.ovverride)
+        ctx.environment.override
+          ? new Connection(ctx.environment.override)
           : ctx.connection,
         asWallet(wallet),
         tokenManagerId!,

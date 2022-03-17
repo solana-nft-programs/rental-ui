@@ -41,7 +41,7 @@ import { useUserTokenData } from 'providers/TokenDataProvider'
 import { fmtMintAmount } from 'common/units'
 import { usePaymentMints } from 'providers/PaymentMintsProvider'
 import { tryPublicKey } from 'api/utils'
-import { useProjectConfigData } from 'providers/ProjectConfigProvider'
+import { getLink, useProjectConfigData } from 'providers/ProjectConfigProvider'
 const { Option } = Select
 
 const NFTOuter = styled.div`
@@ -372,7 +372,7 @@ export const RentalCard = ({
         tokenManagerId,
         otpKeypair,
         cluster,
-        `${process.env.BASE_URL}/claim`
+        getLink('/claim', false)
       )
       setLink(link)
       handleCopy(link)
