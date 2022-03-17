@@ -1,12 +1,10 @@
 import { NFT, TokensOuter } from 'common/NFT'
 import { asWallet } from 'common/Wallets'
-import { useState } from 'react'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 import { useUserTokenData } from 'providers/TokenDataProvider'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
-import { useProjectConfig } from 'providers/ProjectConfigProvider'
-import { Button } from 'rental-components/common/Button'
+import { AsyncButton, Button } from 'rental-components/common/Button'
 import { useRentalExtensionModal } from 'rental-components/RentalExtensionModalProvider'
 import { withFindOrInitAssociatedTokenAccount } from '@cardinal/token-manager'
 import { withRemainingAccountsForReturn } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
@@ -24,7 +22,6 @@ export const Wallet = () => {
   const { tokenDatas, setAddress, loaded, refreshing, refreshTokenAccounts } =
     useUserTokenData()
   const rentalExtensionModal = useRentalExtensionModal()
-  const [loadingReturn, setLoadingReturn] = useState(false)
 
   const revokeRental = async (tokenData: TokenData) => {
     if (!tokenData.tokenManager) throw new Error('Invalid token manager')
@@ -103,27 +100,22 @@ export const Wallet = () => {
               </Button>
             ) : null}
             {tokenData.tokenManager?.parsed ? (
-              <Button
+              <AsyncButton
                 variant="primary"
                 className="mx-auto mt-4"
-                onClick={async () => {
+                handleClick={async () => {
                   try {
-                    setLoadingReturn(true)
-                    if (tokenData) {
-                      await revokeRental(tokenData)
-                    }
+                    await revokeRental(tokenData)
                   } catch (e) {
                     notify({
                       message: `Return failed: ${e}`,
                       type: 'error',
                     })
-                  } finally {
-                    setLoadingReturn(false)
                   }
                 }}
               >
-                {loadingReturn ? <LoadingSpinner height="25px" /> : 'Return'}
-              </Button>
+                Return
+              </AsyncButton>
             ) : null}
           </div>
         ))

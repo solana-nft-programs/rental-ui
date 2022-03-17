@@ -3,14 +3,15 @@ import { css } from '@emotion/react'
 import { lighten } from 'polished'
 import { useState } from 'react'
 import { LoadingSpinner } from './LoadingSpinner'
-import { notify } from 'common/Notification'
 
-export const Button = styled.button<{
+export type ButtonProps = {
   variant: 'primary' | 'secondary' | 'tertiary'
   boxShadow?: boolean
   disabled?: boolean
   bgColor?: string
-}>`
+}
+
+export const Button = styled.button<ButtonProps>`
   display: flex;
   align-items: center;
   gap: 5px;
@@ -93,42 +94,31 @@ export const getColorByBgColor = (bgColor: string) => {
 }
 
 export const AsyncButton = ({
-  text,
-  variant,
-  boxShadow,
-  disabled,
-  bgColor,
+  children,
   handleClick,
+  className,
+  ...buttonProps
 }: {
-  text: string
-  loading: boolean
-  variant: 'primary' | 'secondary' | 'tertiary'
-  boxShadow?: boolean
-  disabled?: boolean
-  bgColor?: string
+  children: JSX.Element | JSX.Element[] | string
+  className?: string
   handleClick: Function
-}) => {
+} & ButtonProps) => {
   const [loading, setLoading] = useState(false)
 
   return (
     <Button
-      variant="primary"
-      className="mx-auto mt-4"
+      {...buttonProps}
+      className={className}
       onClick={async () => {
         try {
           setLoading(true)
           await handleClick()
-        } catch (e) {
-          notify({
-            message: `${e}`,
-            type: 'error',
-          })
         } finally {
           setLoading(false)
         }
       }}
     >
-      {loading ? <LoadingSpinner height="25px" /> : text}
+      {loading ? <LoadingSpinner height="25px" /> : children}
     </Button>
   )
 }

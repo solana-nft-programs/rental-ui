@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { NFT, TokensOuter } from 'common/NFT'
 import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
-import { Button } from 'rental-components/common/Button'
+import { AsyncButton, Button } from 'rental-components/common/Button'
 import { notify } from 'common/Notification'
 import { shortPubKey } from 'common/utils'
 import { Connection, PublicKey, Transaction } from '@solana/web3.js'
@@ -387,17 +387,19 @@ export const Browse = () => {
                           </div>
                         </StyledTag>
                         <div className="flex w-max">
-                          <Button
+                          <AsyncButton
                             bgColor={config.colors.secondary}
                             variant="primary"
                             className="mr-1 inline-block flex-none"
-                            onClick={() => handleClaim(tokenData)}
+                            handleClick={() => handleClaim(tokenData)}
                           >
-                            Claim{' '}
-                            {(tokenData.claimApprover?.parsed?.paymentAmount.toNumber() ??
-                              0) / 1000000000}{' '}
-                            {getSymbolFromTokenData(tokenData)}{' '}
-                          </Button>
+                            <>
+                              Claim{' '}
+                              {(tokenData.claimApprover?.parsed?.paymentAmount.toNumber() ??
+                                0) / 1000000000}{' '}
+                              {getSymbolFromTokenData(tokenData)}{' '}
+                            </>
+                          </AsyncButton>
                           <Button
                             variant="tertiary"
                             className="mr-1 inline-block flex-none"
