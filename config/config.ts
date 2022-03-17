@@ -1,21 +1,4 @@
-import { GetServerSideProps } from 'next'
 import { RentalCardConfig } from 'rental-components/components/RentalCard'
-
-export const getProjectConfig: GetServerSideProps = async (context) => {
-  const projectParams = context.query.project || context.req.headers.host
-  const project =
-    projectParams &&
-    (typeof projectParams == 'string' ? projectParams : projectParams[0])
-      ?.split('.')[0]
-      ?.replace('dev-', '')
-
-  const config = project ? projectConfigs[project] : projectConfigs['default']!
-  return {
-    props: {
-      config: config,
-    },
-  }
-}
 
 export type Colors = {
   main: string

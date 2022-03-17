@@ -22,10 +22,8 @@ import { PAYMENT_MINTS, WRAPPED_SOL_MINT } from 'providers/PaymentMintsProvider'
 import { getATokenAccountInfo, tryPublicKey } from 'api/utils'
 import { BN } from '@project-serum/anchor'
 import { withWrapSol } from 'api/wrappedSol'
-import { getLink, useProjectConfigData } from 'providers/ProjectConfigProvider'
+import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { Connection } from '@solana/web3.js'
-import { getProjectConfig, ProjectConfig, projectConfigs } from 'config/config'
-import { GetServerSideProps } from 'next'
 
 type Hideable = {
   visible?: boolean
@@ -257,9 +255,8 @@ const NFTOuter = styled.div`
   }
 `
 
-export const getServerSideProps = getProjectConfig
-
-function Claim({ config }: { config: ProjectConfig }) {
+function Claim() {
+  const { config } = useProjectConfig()
   const router = useRouter()
   const ctx = useEnvironmentCtx()
   const wallet = useWallet()

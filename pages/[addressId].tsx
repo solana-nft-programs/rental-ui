@@ -12,11 +12,10 @@ import { Manage } from 'components/Manage'
 import { Browse } from 'components/Browse'
 import { Wallet } from 'components/Wallet'
 import Head from 'next/head'
-import { getProjectConfig, ProjectConfig } from 'config/config'
+import { useProjectConfig } from 'providers/ProjectConfigProvider'
 
-export const getServerSideProps = getProjectConfig
-
-function Profile({ config }: { config: ProjectConfig }) {
+function Profile() {
+  const { config } = useProjectConfig()
   const [error, _setError] = useError()
   const wallet = useWallet()
   const router = useRouter()
@@ -70,8 +69,8 @@ function Profile({ config }: { config: ProjectConfig }) {
           {
             {
               wallet: <Wallet />,
-              manage: <Manage colors={config.colors} />,
-              browse: <Browse colors={config.colors} />,
+              manage: <Manage />,
+              browse: <Browse />,
             }[tab || 'wallet']
           }
         </div>

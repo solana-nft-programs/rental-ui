@@ -7,7 +7,7 @@ import React, {
   ReactChild,
 } from 'react'
 import { useEnvironmentCtx } from './EnvironmentProvider'
-import { filterTokens, useProjectConfigData } from './ProjectConfigProvider'
+import { filterTokens, useProjectConfig } from './ProjectConfigProvider'
 
 export interface UserTokenDataValues {
   tokenDatas: TokenData[]
@@ -39,7 +39,7 @@ export function TokenAccountsProvider({ children }: { children: ReactChild }) {
   const [tokenDatas, setTokenDatas] = useState<TokenData[]>([])
   const [refreshing, setRefreshing] = useState<boolean>(false)
   const [loaded, setLoaded] = useState<boolean>(false)
-  const { config } = useProjectConfigData()
+  const { config } = useProjectConfig()
 
   const refreshTokenAccounts = useCallback(() => {
     if (!address) {

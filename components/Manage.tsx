@@ -17,7 +17,7 @@ import { executeTransaction } from 'common/Transactions'
 import { useUserTokenData } from 'providers/TokenDataProvider'
 import { BN } from '@project-serum/anchor'
 import { StyledTag, Tag } from 'common/Tags'
-import { getLink, useProjectConfigData } from 'providers/ProjectConfigProvider'
+import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { Colors } from 'config/config'
 
 const handleCopy = (shareUrl: string) => {
@@ -25,7 +25,8 @@ const handleCopy = (shareUrl: string) => {
   notify({ message: 'Share link copied' })
 }
 
-export const Manage = ({ colors }: { colors: Colors }) => {
+export const Manage = () => {
+  const { config } = useProjectConfig()
   const { connection } = useEnvironmentCtx()
   const wallet = useWallet()
   const { refreshTokenAccounts } = useUserTokenData()
@@ -77,7 +78,7 @@ export const Manage = ({ colors }: { colors: Colors }) => {
                       {tokenData.tokenManager?.parsed.issuer.toBase58() ===
                         wallet.publicKey?.toBase58() && (
                         <Button
-                          bgColor={colors.secondary}
+                          bgColor={config.colors.secondary}
                           variant="primary"
                           disabled={!wallet.connected}
                           onClick={async () => {

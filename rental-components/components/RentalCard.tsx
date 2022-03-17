@@ -41,7 +41,7 @@ import { useUserTokenData } from 'providers/TokenDataProvider'
 import { fmtMintAmount } from 'common/units'
 import { usePaymentMints } from 'providers/PaymentMintsProvider'
 import { tryPublicKey } from 'api/utils'
-import { getLink, useProjectConfigData } from 'providers/ProjectConfigProvider'
+import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
 const { Option } = Select
 
 const NFTOuter = styled.div`

@@ -4,8 +4,7 @@ import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
-import { useProjectConfigData } from 'providers/ProjectConfigProvider'
-import { getProjectConfig, ProjectConfig } from 'config/config'
+import { useProjectConfig } from 'providers/ProjectConfigProvider'
 
 const StyledSplash = styled.div`
   margin-top: 30vh;
@@ -30,9 +29,9 @@ const StyledSplash = styled.div`
     padding: 3px 5px;
   }
 `
-export const getServerSideProps = getProjectConfig
 
-export default function Home({ config }: { config: ProjectConfig }) {
+export default function Home() {
+  const { config } = useProjectConfig()
   const wallet = useWallet()
   const router = useRouter()
 

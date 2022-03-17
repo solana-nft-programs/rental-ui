@@ -3,13 +3,13 @@ import React, { useState, useContext, useEffect, ReactChild } from 'react'
 import { useRouter } from 'next/router'
 import { ProjectConfig, projectConfigs } from 'config/config'
 export interface ProjectConfigValues {
-  config: ProjectConfig | null
+  config: ProjectConfig
   setConfig: Function
 }
 
 const ProjectConfigValues: React.Context<ProjectConfigValues> =
   React.createContext<ProjectConfigValues>({
-    config: null,
+    config: projectConfigs['default']!,
     setConfig: () => {},
   })
 
@@ -50,8 +50,14 @@ export function getLink(path: string, withParams = true) {
   }`
 }
 
-export function ProjectConfigProvider({ children }: { children: ReactChild }) {
-  const [config, setConfig] = useState<ProjectConfig | null>(null)
+export function ProjectConfigProvider({
+  defaultConfig,
+  children,
+}: {
+  children: ReactChild
+  defaultConfig: ProjectConfig
+}) {
+  const [config, setConfig] = useState<ProjectConfig>(defaultConfig)
 
   const { query } = useRouter()
   const projectParams = query.project || query.host
@@ -88,6 +94,6 @@ export function ProjectConfigProvider({ children }: { children: ReactChild }) {
   )
 }
 
-export function useProjectConfigData(): ProjectConfigValues {
+export function useProjectConfig(): ProjectConfigValues {
   return useContext(ProjectConfigValues)
 }
