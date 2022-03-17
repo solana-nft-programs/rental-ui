@@ -38,6 +38,7 @@ export const TokenMetadata = styled.div`
   display: inline-block;
   border-radius: 10px;
   width: 100%;
+  min-width: 280px;
   background-color: ${Colors.tokenBackground};
   padding: 15px 0px;
   z-index: 0;
@@ -154,7 +155,8 @@ export const TokenMetadata = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;  
-    margin: auto 10px;
+    height: 280px;
+    max-width: 100%;        
     #media {
       object-fit: contain;
       max-width: 250px;
