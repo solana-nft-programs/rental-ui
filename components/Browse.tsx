@@ -5,7 +5,7 @@ import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tok
 import { Button } from 'rental-components/common/Button'
 import { notify } from 'common/Notification'
 import { shortPubKey } from 'common/utils'
-import { PublicKey, Transaction } from '@solana/web3.js'
+import { Connection, PublicKey, Transaction } from '@solana/web3.js'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { FaLink } from 'react-icons/fa'
 import { invalidate, unissueToken } from '@cardinal/token-manager'
@@ -30,7 +30,7 @@ import { DisplayAddress } from '@cardinal/namespaces-components'
 import { getMintDecimalAmount } from 'common/units'
 import { Select } from 'antd'
 import styled from '@emotion/styled'
-import lighten from 'polished/lib/color/lighten'
+import { lighten } from 'polished'
 const { Option } = Select
 
 const handleCopy = (shareUrl: string) => {
@@ -57,7 +57,7 @@ const allOrderCategories = [
 const globalRate = 604800
 
 export const Browse = () => {
-  const { connection } = useEnvironmentCtx()
+  const { connection, environment } = useEnvironmentCtx()
   const wallet = useWallet()
   let { issuedTokens, loaded, refreshIssuedTokens } = useIssuedTokens()
   let [filteredIssuedTokens, setFilteredIssuedTokens] =
@@ -130,7 +130,7 @@ export const Browse = () => {
         }
       }
 
-      filterAndSortTokens(selectedOrderCategory, tokens)
+      handleOrderCategoryChange(selectedOrderCategory, tokens)
     }
 
     filterIssuedTokens()
@@ -228,7 +228,9 @@ export const Browse = () => {
       console.log('Claiming token manager', tokenData)
       await withClaimToken(
         transaction,
-        connection,
+        environment.ovverride
+          ? new Connection(environment.ovverride)
+          : connection,
         asWallet(wallet),
         tokenData.tokenManager?.pubkey!
       )
@@ -351,10 +353,10 @@ export const Browse = () => {
       filters[traitType] = []
     } else {
       filters[traitType] = value
-    }    
-    console.log("setting selected filters");
+    }
+    console.log('setting selected filters')
     setSelectedFilters(filters)
-    console.log("finished setting filters");
+    console.log('finished setting filters')
   }
 
   return (
@@ -402,7 +404,8 @@ export const Browse = () => {
           <div className="flex flex-col">
             {Object.keys(attributeCategories).map((traitType) => (
               <>
-                {selectedFilters[traitType] !== undefined && selectedFilters[traitType]!.length > 0 ? (
+                {selectedFilters[traitType] !== undefined &&
+                selectedFilters[traitType]!.length > 0 ? (
                   <p className="mb-1 text-gray-100">{traitType}</p>
                 ) : null}
                 <StyledSelectMultiple className="mb-5">
@@ -410,9 +413,9 @@ export const Browse = () => {
                     mode="multiple"
                     allowClear
                     style={{ width: '100%' }}
-                    placeholder={traitType}                    
+                    placeholder={traitType}
                     defaultValue={selectedFilters[traitType] ?? []}
-                    onChange={(e) => {                      
+                    onChange={(e) => {
                       updateFilters(traitType, e)
                     }}
                   >
