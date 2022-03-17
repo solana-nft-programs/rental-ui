@@ -5,7 +5,7 @@ import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tok
 import { Button } from 'rental-components/common/Button'
 import { notify } from 'common/Notification'
 import { shortPubKey } from 'common/utils'
-import { PublicKey, Transaction } from '@solana/web3.js'
+import { Connection, PublicKey, Transaction } from '@solana/web3.js'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { FaLink } from 'react-icons/fa'
 import { invalidate, unissueToken } from '@cardinal/token-manager'
@@ -57,7 +57,7 @@ const allOrderCategories = [
 const globalRate = 604800
 
 export const Browse = () => {
-  const { connection } = useEnvironmentCtx()
+  const { connection, environment } = useEnvironmentCtx()
   const wallet = useWallet()
   let { issuedTokens, loaded, refreshIssuedTokens } = useIssuedTokens()
   let [filteredIssuedTokens, setFilteredIssuedTokens] =
@@ -185,7 +185,9 @@ export const Browse = () => {
       console.log('Claiming token manager', tokenData)
       await withClaimToken(
         transaction,
-        connection,
+        environment.ovverride
+          ? new Connection(environment.ovverride)
+          : connection,
         asWallet(wallet),
         tokenData.tokenManager?.pubkey!
       )
