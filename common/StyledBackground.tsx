@@ -1,13 +1,20 @@
 import styled from '@emotion/styled'
 
-export const StyledBackground = styled.div<{ dark?: boolean }>`
+type BkgProps = {
+  dark?: boolean
+  colors?: { main: string; secondary: string }
+}
+
+export const StyledBackground = styled.div<BkgProps>`
   z-index: -1;
   top: 0;
   width: 100%;
   height: 100%;
   position: fixed;
   background: ${(props) =>
-    props.dark
+    props.colors
+      ? `linear-gradient(-45deg, ${props.colors.main}, ${props.colors.secondary})`
+      : props.dark
       ? 'linear-gradient(-45deg, #200028, #000000, #002e38)'
       : 'linear-gradient(-45deg, #ee7752, #e7cae4, #23a6d5, #23d5ab)'};
   // background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
