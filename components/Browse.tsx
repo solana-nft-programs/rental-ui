@@ -11,7 +11,7 @@ import { Connection, Transaction } from '@solana/web3.js'
 import { Select } from 'antd'
 import type { TokenData } from 'api/api'
 import { withWrapSol } from 'api/wrappedSol'
-import { NFT, TokensOuter } from 'common/NFT'
+import { NFT } from 'common/NFT'
 import { NFTPlaceholder } from 'common/NFTPlaceholder'
 import { notify } from 'common/Notification'
 import { StyledTag, Tag } from 'common/Tags'
@@ -96,8 +96,8 @@ export const Browse = () => {
   const StyledSelectMultiple = styled.div`
     .ant-select-selector {
       min-width: 180px;
-      border: 1px solid ${lighten(0.8, config.colors.main)} !important;
-      background-color: ${lighten(0.5, config.colors.main)} !important;
+      border: 1px solid ${lighten(0.6, config.colors.main)} !important;
+      background-color: ${lighten(0.3, config.colors.main)} !important;
       color: ${config.colors.secondary} !important;
     }
 
@@ -167,13 +167,16 @@ export const Browse = () => {
             })
           }
         })
-        if (addToken) attributeFilteredTokens.push(token)
+        if (addToken) {
+          attributeFilteredTokens.push(token)
+        }
       })
       console.log('ATR FILTERED TOKENS', attributeFilteredTokens)
     } else {
       console.log('defualt set')
       attributeFilteredTokens = filteredIssuedTokens
     }
+    // alert(`${attributeFilteredTokens.length}, ${filteredAndSortedTokens.length}`  )
     handleOrderCategoryChange(selectedOrderCategory, attributeFilteredTokens)
   }
 
@@ -427,11 +430,10 @@ export const Browse = () => {
           </Select>
         </StyledSelect>
       </div>
-      <div className="block lg:flex">
+      <div className="flex-col xl:flex">
         <div
           className={
-            ' mr-3 px-3 py-4 xl:absolute xl:-left-[200px]' +
-            `bg-current` +
+            'd-block mr-3 block px-3 py-4 xl:absolute xl:-left-[200px]' +
             `${showFilters ? 'w-[200px]' : 'w-min'}`
           }
         >
@@ -439,7 +441,7 @@ export const Browse = () => {
             onClick={() => setShowFilters(!showFilters)}
             className="mb-3 mt-4 text-lg text-gray-300 hover:cursor-pointer hover:text-gray-100"
           >
-            {showFilters ? 'Filters [-]' : '→'}
+            {showFilters ? 'Filters [-]' : 'Filters [+]'}
           </p>
           {showFilters ? (
             <div className="flex flex-col">
@@ -453,7 +455,7 @@ export const Browse = () => {
                     <Select
                       mode="multiple"
                       allowClear
-                      style={{ width: '100%' }}
+                      style={{ width: '100%', maxWidth: '200px' }}
                       placeholder={traitType}
                       defaultValue={selectedFilters[traitType] ?? []}
                       onChange={(e) => {
@@ -472,8 +474,9 @@ export const Browse = () => {
             </div>
           ) : null}
         </div>
+
         <div>
-          <div className="mx-4 my-auto grid grid-cols-2 gap-x-10 gap-y-6 pb-[60px] lg:grid-cols-3 ">
+          <div className="w-max-content my-auto mx-auto grid grid-cols-1 gap-x-10 gap-y-6 pb-[60px] sm:mx-4 sm:w-full sm:grid-cols-2 lg:grid-cols-3">
             {!loaded ? (
               <>
                 <NFTPlaceholder />

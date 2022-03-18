@@ -154,9 +154,9 @@ export const TokenMetadata = styled.div`
   #media-outer {
     display: flex;
     align-items: center;
-    justify-content: center;  
+    justify-content: center;
     height: 280px;
-    max-width: 100%;        
+    max-width: 100%;
     #media {
       object-fit: contain;
       max-width: 250px;
