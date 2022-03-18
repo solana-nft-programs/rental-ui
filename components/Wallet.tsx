@@ -7,13 +7,13 @@ import { Transaction } from '@solana/web3.js'
 import type { TokenData } from 'api/api'
 import { Airdrop } from 'common/Airdrop'
 import { NFT, TokensOuter } from 'common/NFT'
+import { NFTPlaceholder } from 'common/NFTPlaceholder'
 import { notify } from 'common/Notification'
 import { executeTransaction } from 'common/Transactions'
 import { asWallet } from 'common/Wallets'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useUserTokenData } from 'providers/TokenDataProvider'
 import { AsyncButton, Button } from 'rental-components/common/Button'
-import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 import { useRentalExtensionModal } from 'rental-components/RentalExtensionModalProvider'
 
 export const Wallet = () => {
@@ -72,9 +72,14 @@ export const Wallet = () => {
   return (
     <TokensOuter>
       {!loaded ? (
-        <div className="flex w-full items-center justify-center">
-          <LoadingSpinner />
-        </div>
+        <>
+          <NFTPlaceholder />
+          <NFTPlaceholder />
+          <NFTPlaceholder />
+          <NFTPlaceholder />
+          <NFTPlaceholder />
+          <NFTPlaceholder />
+        </>
       ) : tokenDatas && tokenDatas.length > 0 ? (
         tokenDatas.map((tokenData) => (
           <div key={tokenData.tokenAccount?.pubkey.toString()}>

@@ -22,7 +22,6 @@ function Profile() {
 
   useEffect(() => {
     const anchor = router.asPath.split('#')[1]
-    console.log(anchor)
     if (anchor !== tab) setTab(anchor || 'wallet')
   }, [router, tab])
 
@@ -37,8 +36,6 @@ function Profile() {
       setTab('wallet')
     }
   }, [wallet.publicKey, addressId])
-
-  console.log(tab)
 
   return (
     <div

@@ -4,6 +4,7 @@ import { BN } from '@project-serum/anchor'
 import { useWallet } from '@solana/wallet-adapter-react'
 import type { PublicKey } from '@solana/web3.js'
 import { NFT, TokensOuter } from 'common/NFT'
+import { NFTPlaceholder } from 'common/NFTPlaceholder'
 import { notify } from 'common/Notification'
 import { StyledTag, Tag } from 'common/Tags'
 import { executeTransaction } from 'common/Transactions'
@@ -15,7 +16,6 @@ import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useUserTokenData } from 'providers/TokenDataProvider'
 import { FaLink } from 'react-icons/fa'
 import { AsyncButton } from 'rental-components/common/Button'
-import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 
 const handleCopy = (shareUrl: string) => {
   navigator.clipboard.writeText(shareUrl)
@@ -31,7 +31,16 @@ export const Manage = () => {
 
   return (
     <TokensOuter>
-      {managedTokens && managedTokens.length > 0 ? (
+      {!loaded ? (
+        <>
+          <NFTPlaceholder />
+          <NFTPlaceholder />
+          <NFTPlaceholder />
+          <NFTPlaceholder />
+          <NFTPlaceholder />
+          <NFTPlaceholder />
+        </>
+      ) : managedTokens && managedTokens.length > 0 ? (
         managedTokens.map((tokenData) => (
           <div
             key={tokenData.tokenManager?.pubkey.toString()}
@@ -174,13 +183,9 @@ export const Manage = () => {
             </>
           </div>
         ))
-      ) : loaded ? (
+      ) : (
         <div className="white flex w-full flex-col items-center justify-center gap-1">
           <div className="text-white">No outstanding tokens!</div>
-        </div>
-      ) : (
-        <div className="flex w-full items-center justify-center">
-          <LoadingSpinner />
         </div>
       )}
     </TokensOuter>

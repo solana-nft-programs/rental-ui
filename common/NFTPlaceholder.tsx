@@ -15,13 +15,15 @@ export const TokensOuter = styled.div`
   }
 `
 
-export function NFTPlaceholder({}) {
+export function NFTPlaceholder() {
   return (
-    <TokenMetadata>
+    <TokenMetadata className="animate-pulse">
       <div id="media-outer">
-        <div className="flex h-full w-full animate-pulse space-x-4 px-5">
-          <div className="radius-100 h-full w-full rounded-md bg-gray-700"></div>
-        </div>
+        {/* <div className="flex h-full w-full animate-pulse space-x-4 px-5">
+          <div
+            className={`radius-100 h-full w-full rounded-md bg-[#131417]`}
+          ></div>
+        </div> */}
       </div>
     </TokenMetadata>
   )

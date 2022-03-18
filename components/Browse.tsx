@@ -12,6 +12,7 @@ import { Select } from 'antd'
 import type { TokenData } from 'api/api'
 import { withWrapSol } from 'api/wrappedSol'
 import { NFT, TokensOuter } from 'common/NFT'
+import { NFTPlaceholder } from 'common/NFTPlaceholder'
 import { notify } from 'common/Notification'
 import { StyledTag, Tag } from 'common/Tags'
 import { executeTransaction } from 'common/Transactions'
@@ -321,7 +322,16 @@ export const Browse = () => {
         </StyledSelect>
       </div>
       <TokensOuter>
-        {filteredIssuedTokens && filteredIssuedTokens.length > 0 ? (
+        {!loaded ? (
+          <>
+            <NFTPlaceholder />
+            <NFTPlaceholder />
+            <NFTPlaceholder />
+            <NFTPlaceholder />
+            <NFTPlaceholder />
+            <NFTPlaceholder />
+          </>
+        ) : filteredIssuedTokens && filteredIssuedTokens.length > 0 ? (
           filteredIssuedTokens.map((tokenData) => (
             <div
               key={tokenData.tokenManager?.pubkey.toString()}
@@ -481,13 +491,9 @@ export const Browse = () => {
               </>
             </div>
           ))
-        ) : loaded ? (
+        ) : (
           <div className="white flex w-full flex-col items-center justify-center gap-1">
             <div className="text-white">No outstanding tokens!</div>
-          </div>
-        ) : (
-          <div className="flex w-full items-center justify-center">
-            <LoadingSpinner />
           </div>
         )}
       </TokensOuter>
