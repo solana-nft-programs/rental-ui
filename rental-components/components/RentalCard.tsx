@@ -85,13 +85,10 @@ const formatError = (error: string) => {
   return error
 }
 
+export type InvalidatorOption = 'usages' | 'expiration' | 'duration' | 'manual'
+
 export type RentalCardConfig = {
-  invalidations?: {
-    showUsagesOption: boolean
-    showExpirationOption: boolean
-    showDurationOption: boolean
-    showManualOption: boolean
-  }
+  invalidators: InvalidatorOption[]
   invalidationOptions?: {
     durationCategories: string[]
     invalidationCategories: string[]
@@ -212,20 +209,11 @@ export const RentalCard = ({
   >(undefined)
   const [claimRentalReceipt, setClaimRentalReceipt] = useState(false)
 
+  const [selectedInvalidators, setSelectedInvalidators] = useState<
+    InvalidatorOption[]
+  >(rentalCardConfig.invalidators[0] ? [rentalCardConfig.invalidators[0]] : [])
   const [showAdditionalOptions, setShowAdditionalOptions] = useState(false)
-  const [showUsages, setShowUsages] = useState(false)
-  const [showExpiration, setShowExpiration] = useState(false)
-  const [showDuration, setShowDuration] = useState(false)
   const [showExtendDuration, setShowExtendDuration] = useState(false)
-  const [showCustom, setShowCustom] = useState(false)
-
-  // Apply Rental Card settings from the project config
-  const {
-    showUsagesOption,
-    showExpirationOption,
-    showDurationOption,
-    showManualOption,
-  } = rentalCardConfig.invalidations || {}
 
   let showClaimRentalReceipt = true
   if (
@@ -272,27 +260,28 @@ export const RentalCard = ({
     }
   }
 
-  const handleSelection = (value: string) => {
-    if (value === 'expiration') {
-      if (showDuration) {
-        setShowDuration(!showDuration)
-      }
-      setShowExpiration(!showExpiration)
-    } else if (value === 'duration') {
-      if (showExpiration) {
-        setShowExpiration(!showExpiration)
-      }
-      if (showDuration) {
-        setShowExtendDuration(false)
-      }
-      setShowDuration(!showDuration)
-    }
-    setShowCustom(false)
-    setExpiration(null)
-    setDurationAmount(null)
-    setDurationCategory(defaultDurationCategory)
-    nullExtensionProperties()
-  }
+  // const handleSelection = (value: string) => {
+  //   if (value === 'expiration') {
+  //     if (showDuration) {
+  //       setShowDuration(!showDuration)
+  //     }
+  //     setShowExpiration(!showExpiration)
+  //   } else if (value === 'duration') {
+  //     if (showExpiration) {
+  //       setShowExpiration(!showExpiration)
+  //     }
+  //     if (showDuration) {
+  //       setShowExtendDuration(false)
+  //     }
+  //     setShowDuration(!showDuration)
+  //   }
+  //   setShowCustom(false)
+  //   setCustomInvalidator(undefined)
+  //   setExpiration(null)
+  //   setDurationAmount(null)
+  //   setDurationCategory(defaultDurationCategory)
+  //   nullExtensionProperties()
+  // }
 
   const nullExtensionProperties = () => {
     setExtensionPaymentAmount(0)
@@ -384,12 +373,10 @@ export const RentalCard = ({
         wallet,
         issueParams
       )
-      const signers = []
-      if (claimRentalReceipt) signers.push(receiptMintKeypair)
       await executeTransaction(connection, wallet, transaction, {
         silent: false,
         callback: refreshTokenAccounts,
-        signers,
+        signers: claimRentalReceipt ? [receiptMintKeypair] : [],
       })
       const link = claimLinks.getLink(
         tokenManagerId,
@@ -468,70 +455,85 @@ export const RentalCard = ({
           {editionInfo && getEditionPill(editionInfo)}
         </ImageWrapper>
         <DetailsWrapper>
-          <div className="flex justify-center">
-            {showUsagesOption ? (
-              <div
-                className="mr-4 flex cursor-pointer"
-                onClick={() => {
-                  !showUsages ? setShowCustom(false) : null,
-                    setShowUsages(!showUsages)
-                }}
-              >
-                <input
-                  className="my-auto mr-1 cursor-pointer"
-                  type="checkbox"
-                  checked={showUsages}
-                />
-                <span className="">Usages</span>
-              </div>
-            ) : null}
-            {showExpirationOption ? (
-              <div
-                className="mr-4 flex cursor-pointer"
-                onClick={() => handleSelection('expiration')}
-              >
-                <input
-                  className="my-auto mr-1 cursor-pointer"
-                  type="checkbox"
-                  checked={showExpiration}
-                />
-                <span className="">Expiration</span>
-              </div>
-            ) : null}
-            {showDurationOption ? (
-              <div
-                className="mr-4 flex cursor-pointer"
-                onClick={() => handleSelection('duration')}
-              >
-                <input
-                  className="my-auto mr-1 cursor-pointer"
-                  type="checkbox"
-                  checked={showDuration}
-                />
-                <span className="">Duration</span>
-              </div>
-            ) : null}
-            {showManualOption ? (
-              <div
-                className="mr-4 flex cursor-pointer"
-                onClick={() => {
-                  setShowCustom(!showCustom)
-                  setShowDuration(false)
-                  setShowExpiration(false)
-                  setShowUsages(false)
-                }}
-              >
-                <input
-                  className="my-auto mr-1 cursor-pointer"
-                  type="checkbox"
-                  checked={showCustom}
-                />
-                <span className="">Manual</span>
-              </div>
-            ) : null}
-          </div>
+          {rentalCardConfig.invalidators.length > 1 &&
+            rentalCardConfig.invalidators.map(
+              (invalidator) =>
+                ({
+                  usages: (
+                    <div
+                      className="mr-4 flex cursor-pointer"
+                      onClick={() =>
+                        setSelectedInvalidators([
+                          ...selectedInvalidators.filter((o) => o !== 'manual'),
+                          'usages',
+                        ])
+                      }
+                    >
+                      <input
+                        className="my-auto mr-1 cursor-pointer"
+                        type="checkbox"
+                        checked={selectedInvalidators.includes('usages')}
+                      />
+                      <span className="">Usages</span>
+                    </div>
+                  ),
+                  expiration: (
+                    <div
+                      className="mr-4 flex cursor-pointer"
+                      onClick={() =>
+                        setSelectedInvalidators([
+                          ...selectedInvalidators.filter(
+                            (o) => o !== 'manual' || 'duration'
+                          ),
+                          'expiration',
+                        ])
+                      }
+                    >
+                      <input
+                        className="my-auto mr-1 cursor-pointer"
+                        type="checkbox"
+                        checked={selectedInvalidators.includes('expiration')}
+                      />
+                      <span className="">Expiration</span>
+                    </div>
+                  ),
+                  duration: (
+                    <div
+                      className="mr-4 flex cursor-pointer"
+                      onClick={() =>
+                        setSelectedInvalidators([
+                          ...selectedInvalidators.filter(
+                            (o) => o !== 'manual' || 'expiration'
+                          ),
+                          'duration',
+                        ])
+                      }
+                    >
+                      <input
+                        className="my-auto mr-1 cursor-pointer"
+                        type="checkbox"
+                        checked={selectedInvalidators.includes('duration')}
+                      />
+                      <span className="">Duration</span>
+                    </div>
+                  ),
+                  manual: (
+                    <div
+                      className="mr-4 flex cursor-pointer"
+                      onClick={() => setSelectedInvalidators(['manual'])}
+                    >
+                      <input
+                        className="my-auto mr-1 cursor-pointer"
+                        type="checkbox"
+                        checked={selectedInvalidators.includes('manual')}
+                      />
+                      <span className="">Manual</span>
+                    </div>
+                  ),
+                }[invalidator])
+            )}
           <div className="grid grid-cols-2 gap-4">
-            {!showCustom ? (
+            {!selectedInvalidators.includes('manual') && (
               <StepDetail
                 icon={<ImPriceTags />}
                 title="Rental Price"
@@ -546,8 +548,8 @@ export const RentalCard = ({
                   />
                 }
               />
-            ) : null}
-            {showCustom ? (
+            )}
+            {selectedInvalidators.includes('manual') && (
               <StepDetail
                 icon={<GiRobotGrab />}
                 title="Manual Revocation Pubkey"
@@ -571,14 +573,13 @@ export const RentalCard = ({
                         setCustomInvalidator(wallet.publicKey.toString())
                       }
                     >
-                      {' '}
-                      Me{' '}
+                      Me
                     </Button>
                   </div>
                 }
               />
-            ) : null}
-            {showUsages ? (
+            )}
+            {selectedInvalidators.includes('usages') ? (
               <StepDetail
                 icon={<BiQrScan />}
                 title="Uses"
@@ -597,7 +598,7 @@ export const RentalCard = ({
                 }
               />
             ) : null}
-            {showExpiration ? (
+            {selectedInvalidators.includes('expiration') && (
               <StepDetail
                 icon={<BiTimer />}
                 title="Expiration"
@@ -616,8 +617,8 @@ export const RentalCard = ({
                   </div>
                 }
               />
-            ) : null}
-            {showDuration ? (
+            )}
+            {selectedInvalidators.includes('duration') && (
               <StepDetail
                 icon={<BiTimer />}
                 title="Rental Duration"
@@ -649,10 +650,10 @@ export const RentalCard = ({
                   </div>
                 }
               />
-            ) : null}
+            )}
           </div>
           <div>
-            {showDuration ? (
+            {selectedInvalidators.includes('duration') ? (
               <button
                 className="mb-2 text-blue-500"
                 onClick={() => setShowExtendDuration(!showExtendDuration)}
@@ -661,7 +662,8 @@ export const RentalCard = ({
               </button>
             ) : null}
             <div className="grid grid-cols-2 gap-4">
-              {showDuration && showExtendDuration ? (
+              {selectedInvalidators.includes('duration') &&
+              showExtendDuration ? (
                 <>
                   <StepDetail
                     icon={<ImPriceTags />}
@@ -714,7 +716,8 @@ export const RentalCard = ({
                   />
                 </>
               ) : null}
-              {showDuration && showExtendDuration ? (
+              {selectedInvalidators.includes('duration') &&
+              showExtendDuration ? (
                 <StepDetail
                   icon={<BiTimer />}
                   title="Max Expiration"
@@ -736,7 +739,8 @@ export const RentalCard = ({
                   }
                 />
               ) : null}
-              {showDuration && showExtendDuration ? (
+              {selectedInvalidators.includes('duration') &&
+              showExtendDuration ? (
                 <div className="mt-1">
                   <span
                     className="cursor-pointer"
@@ -768,7 +772,7 @@ export const RentalCard = ({
             </button>
             {showAdditionalOptions ? (
               <div className="grid grid-cols-2 gap-4">
-                {invalidationTypes.length !== 1 ? (
+                {invalidationTypes.length !== 1 && (
                   <StepDetail
                     icon={<GrReturn />}
                     title="Invalidation"
@@ -787,8 +791,7 @@ export const RentalCard = ({
                       </Select>
                     }
                   />
-                ) : null}
-
+                )}
                 <StepDetail
                   icon={<FaEye />}
                   title="Visibility"

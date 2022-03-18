@@ -4,7 +4,7 @@ import type { TokenData } from 'api/api'
 import { withSleep } from 'common/utils'
 import React, { useContext, useState } from 'react'
 
-import type { RentalCardConfig } from './components/RentalCard';
+import type { RentalCardConfig } from './components/RentalCard'
 import { RentalCard } from './components/RentalCard'
 import { Modal } from './modal'
 
@@ -79,7 +79,7 @@ export const RentalModalProvider: React.FC<Props> = ({
             wallet={wallet}
             connection={connection}
             tokenData={tokenData || {}}
-            rentalCardConfig={rentalCardConfig || {}}
+            rentalCardConfig={rentalCardConfig || { invalidators: [] }}
             appName={appName}
             appTwitter={appTwitter}
             onComplete={() => {
