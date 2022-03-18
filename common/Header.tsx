@@ -236,7 +236,14 @@ export const Header = ({
     >
       <div className="left pl-8">
         <div className="title">
-          <img src={config.logoImage} alt="logo" />
+          <a
+            className="cursor-pointer"
+            rel="noreferrer"
+            target="_blank"
+            href={config.websiteUrl}
+          >
+            <img src={config.logoImage} alt="logo" />
+          </a>
           <div className="subscript">
             {ctx.environment.label === 'devnet' ? 'DEV' : 'alpha'}
           </div>
