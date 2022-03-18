@@ -99,6 +99,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     rentalCard: {
       invalidators: ['duration'],
       invalidationOptions: {
+        visibilities: ['public'],
         durationCategories: [
           'Minutes',
           'Hours',

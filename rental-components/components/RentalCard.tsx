@@ -86,6 +86,8 @@ const formatError = (error: string) => {
 }
 
 export type InvalidatorOption = 'usages' | 'expiration' | 'duration' | 'manual'
+const visibilityOptions = ['public', 'private'] as const
+export type VisibilityOption = typeof visibilityOptions[number]
 
 export type RentalCardConfig = {
   invalidators: InvalidatorOption[]
@@ -93,6 +95,7 @@ export type RentalCardConfig = {
     durationCategories: string[]
     invalidationCategories: string[]
     paymentMints: string[]
+    visibilities?: VisibilityOption[]
     setClaimRentalReceipt: true
     showClaimRentalReceipt: boolean
   }
@@ -203,7 +206,9 @@ export const RentalCard = ({
     boolean | null
   >(null)
   const [totalUsages, setTotalUsages] = useState<number | null>(null)
-  const [visibility, setVisibiliy] = useState<'private' | 'public'>('public')
+  const [visibility, setVisibiliy] = useState<VisibilityOption>(
+    (rentalCardConfig.invalidationOptions?.visibilities || visibilityOptions)[0]
+  )
   const [customInvalidator, setCustomInvalidator] = useState<
     string | undefined
   >(undefined)
@@ -230,6 +235,8 @@ export const RentalCard = ({
     showClaimRentalReceipt = false
   }
 
+  const visibilities =
+    rentalCardConfig.invalidationOptions?.visibilities || visibilityOptions
   if (rentalCardConfig.invalidationOptions) {
     if (rentalCardConfig.invalidationOptions.durationCategories) {
       durationData = Object.keys(durationData)
@@ -772,7 +779,7 @@ export const RentalCard = ({
             </button>
             {showAdditionalOptions ? (
               <div className="grid grid-cols-2 gap-4">
-                {invalidationTypes.length !== 1 && (
+                {invalidationTypes.length > 1 && (
                   <StepDetail
                     icon={<GrReturn />}
                     title="Invalidation"
@@ -792,36 +799,30 @@ export const RentalCard = ({
                     }
                   />
                 )}
-                <StepDetail
-                  icon={<FaEye />}
-                  title="Visibility"
-                  description={
-                    <Select
-                      style={{ width: '100%' }}
-                      onChange={(e) => {
-                        setVisibiliy(e)
-                        if (e === 'private') setPrice(0)
-                      }}
-                      defaultValue={visibility}
-                    >
-                      {[
-                        {
-                          type: 'public',
-                          label: 'Public',
-                        },
-                        {
-                          type: 'private',
-                          label: 'Private',
-                        },
-                      ].map(({ label, type }) => (
-                        <Option key={type} value={type}>
-                          {label}
-                        </Option>
-                      ))}
-                    </Select>
-                  }
-                />
-
+                {visibilities.length > 1 && (
+                  <StepDetail
+                    icon={<FaEye />}
+                    title="Visibility"
+                    description={
+                      <Select
+                        style={{ width: '100%' }}
+                        onChange={(v) => {
+                          setVisibiliy(v)
+                          if (v === 'private') setPrice(0)
+                        }}
+                        defaultValue={visibility}
+                      >
+                        {visibilities.map((value) => (
+                          <Option key={value} value={value}>
+                            {value[0]
+                              ? value[0].toUpperCase() + value.slice(1)
+                              : ''}
+                          </Option>
+                        ))}
+                      </Select>
+                    }
+                  />
+                )}
                 {showClaimRentalReceipt ? (
                   <div className="mt-1">
                     <span
