@@ -96,8 +96,8 @@ export const Browse = () => {
   const StyledSelectMultiple = styled.div`
     .ant-select-selector {
       min-width: 180px;
-      border: 1px solid ${lighten(0.8, config.colors.main)} !important;
-      background-color: ${lighten(0.5, config.colors.main)} !important;
+      border: 1px solid ${lighten(0.6, config.colors.main)} !important;
+      background-color: ${lighten(0.3, config.colors.main)} !important;
       color: ${config.colors.secondary} !important;
     }
 
@@ -167,13 +167,16 @@ export const Browse = () => {
             })
           }
         })
-        if (addToken) attributeFilteredTokens.push(token)
+        if (addToken) {
+          attributeFilteredTokens.push(token)
+        }
       })
       console.log('ATR FILTERED TOKENS', attributeFilteredTokens)
     } else {
       console.log('defualt set')
       attributeFilteredTokens = filteredIssuedTokens
     }
+    // alert(`${attributeFilteredTokens.length}, ${filteredAndSortedTokens.length}`  )
     handleOrderCategoryChange(selectedOrderCategory, attributeFilteredTokens)
   }
 
@@ -389,8 +392,8 @@ export const Browse = () => {
   }
 
   return (
-    <div className="w-max container mx-auto">     
-      <div className="flex justify-between mb-4 ">
+    <div className="container mx-auto w-max">
+      <div className="mb-4 flex justify-between ">
         <div className="flex">
           <div className="d-block flex-col  border-2 border-gray-600 py-3 px-5">
             <p className="text-gray-400">FLOOR PRICE / WEEK</p>
@@ -408,7 +411,7 @@ export const Browse = () => {
             </h2>
           </div>
         </div>
-        
+
         <StyledSelect>
           <Select
             className="m-[10px] h-[30px] w-max rounded-[4px] bg-black text-gray-700"
@@ -418,20 +421,18 @@ export const Browse = () => {
             }}
             defaultValue={selectedOrderCategory}
           >
-            {allOrderCategories.map((category) => (              
+            {allOrderCategories.map((category) => (
               <Option key={category} value={category}>
                 {category}
               </Option>
             ))}
           </Select>
-          
         </StyledSelect>
       </div>
-      <div className="block lg:flex">
+      <div className="flex-col xl:flex">
         <div
           className={
-            ' xl:absolute xl:-left-[200px] mr-3 px-3 py-4' +
-            `bg-current` +
+            'mr-3 block px-3 py-4 xl:absolute xl:-left-[200px] d-block' +
             `${showFilters ? 'w-[200px]' : 'w-min'}`
           }
         >
@@ -439,7 +440,7 @@ export const Browse = () => {
             onClick={() => setShowFilters(!showFilters)}
             className="mb-3 mt-4 text-lg text-gray-300 hover:cursor-pointer hover:text-gray-100"
           >
-            {showFilters ? 'Filters [-]' : '→'}
+            {showFilters ? 'Filters [-]' : 'Filters [+]'}
           </p>
           {showFilters ? (
             <div className="flex flex-col">
@@ -453,7 +454,7 @@ export const Browse = () => {
                     <Select
                       mode="multiple"
                       allowClear
-                      style={{ width: '100%' }}
+                      style={{ width: '100%', maxWidth: '200px' }}
                       placeholder={traitType}
                       defaultValue={selectedFilters[traitType] ?? []}
                       onChange={(e) => {
@@ -470,8 +471,9 @@ export const Browse = () => {
             </div>
           ) : null}
         </div>
+        
         <div>
-          <div className="grid lg:grid-cols-3 grid-cols-2 gap-x-10 gap-y-6 pb-[60px] mx-4 my-auto ">
+          <div className="sm:mx-4 sm:w-full w-max-content my-auto grid grid-cols-1 mx-auto gap-x-10 gap-y-6 pb-[60px] sm:grid-cols-2 lg:grid-cols-3 ">
             {filteredAndSortedTokens && filteredAndSortedTokens.length > 0 ? (
               filteredAndSortedTokens.map((tokenData) => (
                 <div
@@ -511,7 +513,7 @@ export const Browse = () => {
                                   color="warning"
                                 >
                                   <div className="float-left">
-                                    <p className="float-left inline-block whitespace-nowrap text-ellipsis">
+                                    <p className="float-left inline-block text-ellipsis whitespace-nowrap">
                                       {new Date(
                                         Number(
                                           tokenData.tokenManager?.parsed.stateChangedAt.toString()
@@ -635,8 +637,8 @@ export const Browse = () => {
                 </div>
               ))
             ) : loaded ? (
-              <div className="white flex w-full flex-col items-center justify-center gap-1">
-                <div className="text-white">No outstanding tokens!</div>
+              <div className="white h-full  d-block items-center justify-center gap-1">
+                <div className="text-white mt-6 h-full">No outstanding tokens!</div>
               </div>
             ) : (
               <div className="flex w-full items-center justify-center">

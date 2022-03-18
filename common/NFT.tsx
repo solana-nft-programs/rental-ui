@@ -1,6 +1,6 @@
 import React from 'react'
 import Colors from 'common/colors'
-import { getQueryParam, pubKeyUrl } from 'common/utils'
+import { pubKeyUrl } from 'common/utils'
 import styled from '@emotion/styled'
 import { TokenData } from 'api/api'
 import { Popover, Tooltip } from 'antd'
