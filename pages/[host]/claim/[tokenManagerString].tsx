@@ -335,11 +335,11 @@ function Claim() {
     if (tokenManagerId) {
       getMetadata()
     }
-  }, [ctx, setError, tokenManagerId])
+  }, [ctx.connection, tokenManagerString])
 
   useEffect(() => {
     getUserPaymentTokenAccount()
-  }, [ctx, wallet.publicKey, tokenData])
+  }, [ctx.connection, wallet.publicKey, tokenData])
 
   const handleError = (e: Error) => {
     if (e.message.includes('0x1')) {
