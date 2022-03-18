@@ -1,3 +1,4 @@
+import type { AirdropMetadata } from 'common/Airdrop'
 import type { RentalCardConfig } from 'rental-components/components/RentalCard'
 
 export type Colors = {
@@ -12,6 +13,7 @@ export type ProjectConfig = {
   colors: Colors
   filters: { type: string; value: string }[]
   rentalCard: RentalCardConfig
+  airdrops?: AirdropMetadata[]
 }
 
 export const projectConfigs: { [key: string]: ProjectConfig } = {
@@ -32,6 +34,53 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         showManualOption: true,
       },
     },
+    airdrops: [
+      {
+        name: 'Origin Jambo',
+        symbol: 'JAMB',
+        uri: 'https://arweave.net/XBoDa9TqiOZeXW_6bV8wvieD8fMQS6IHxKipwdvduCo',
+      },
+      {
+        name: 'Solana Monkey Business',
+        symbol: 'SMB',
+        uri: 'https://arweave.net/VjfB54_BbELJ5bc1kH-kddrXfq5noloSjkcvK2Odhh0',
+      },
+      {
+        name: 'Degen Ape',
+        symbol: 'DAPE',
+        uri: 'https://arweave.net/mWra8rTxavmbCnqxs6KoWwa0gC9uM8NMeOsyVhDy0-E',
+      },
+      {
+        name: 'Thugbirdz',
+        symbol: 'THUG',
+        uri: 'https://arweave.net/l9VXqVWCsiKW-R8ShX8jknFPgBibrhQI1JRgUI9uvbw',
+      },
+      {
+        name: 'Turtles',
+        symbol: 'TRTL',
+        uri: 'https://arweave.net/KKbhlHaPMOB9yMm9yG_i7PxzK0y24I5C7gNTaRDI9OE',
+      },
+      {
+        name: 'Almost Famous Pandas',
+        symbol: 'AFP',
+        uri: '8cs7hpBcuiRbzcdUY5BHpCFCgv1m8JhpZEVHUkYTmhnA',
+      },
+      {
+        name: 'Shi Guardians',
+        symbol: 'SHI',
+        uri: 'https://arweave.net/hSI4WIsX10yRWnzgXP8oqwSCaSgPfGU5nSN-Pxjslao',
+      },
+      {
+        name: 'Hacker House',
+        symbol: 'HH',
+        uri: 'https://arweave.net/DLDhnabWSXzAYktEhEKyukt3GIfagj2rPpWncw-KDQo',
+      },
+      {
+        name: '21 Club',
+        symbol: '21',
+        uri: 'https://bafkreicv3jj6oc53kid76mkk7hqsr6edrnhsydkw4do4vonq777sgfz3le.ipfs.dweb.link?ext=json',
+      },
+    ],
   },
   portals: {
     name: 'portals',
@@ -74,6 +123,23 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         showClaimRentalReceipt: true,
       },
     },
+    airdrops: [
+      {
+        name: 'Portals',
+        symbol: 'PRTL',
+        uri: 'https://arweave.net/-QsrbBfmFy4Fxp-BtSnSFiajm_KECo5ctRXR6uSBS5k',
+      },
+      {
+        name: 'Portals',
+        symbol: 'PRTL',
+        uri: 'https://arweave.net/RewRYM3lf-1Ry1hitgsiXuqsuERSujlTAChgl9S483c',
+      },
+      {
+        name: 'Portals',
+        symbol: 'PRTL',
+        uri: 'https://arweave.net/6ZcTxyREtg0WsOSGSBq-CSyQ3DPlU1k4R_A7mrgehRE',
+      },
+    ],
   },
   br1: {
     name: 'br1',

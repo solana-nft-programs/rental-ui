@@ -31,7 +31,6 @@ import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
 import React, { useEffect, useState } from 'react'
 import { FaLink } from 'react-icons/fa'
 import { AsyncButton, Button } from 'rental-components/common/Button'
-import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 
 const { Option } = Select
 
