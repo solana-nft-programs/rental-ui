@@ -1,6 +1,6 @@
-import { MetadataData } from '@metaplex-foundation/mpl-token-metadata'
 import { programs } from '@metaplex/js'
-import { Connection, PublicKey } from '@solana/web3.js'
+import type { MetadataData } from '@metaplex-foundation/mpl-token-metadata'
+import type { Connection, PublicKey } from '@solana/web3.js'
 
 const {
   metadata: { Metadata, MasterEdition, MetadataKey },

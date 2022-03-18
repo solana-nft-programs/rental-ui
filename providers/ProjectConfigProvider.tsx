@@ -1,7 +1,9 @@
-import { TokenData } from 'api/api'
-import React, { useState, useContext, useEffect, ReactChild } from 'react'
+import type { TokenData } from 'api/api'
+import type { ProjectConfig } from 'config/config'
+import { projectConfigs } from 'config/config'
 import { useRouter } from 'next/router'
-import { ProjectConfig, projectConfigs } from 'config/config'
+import type { ReactChild } from 'react'
+import React, { useContext } from 'react'
 
 export const filterTokens = (
   filters: { type: string; value: string }[],
@@ -18,9 +20,9 @@ export const filterTokens = (
                 creator.address === configFilter.value
             )
         )
-      } else if (configFilter.type == 'symbol') {
+      } else if (configFilter.type === 'symbol') {
         tokens = tokens.filter(
-          (token) => token.metadata.data.symbol == configFilter.value
+          (token) => token.metadata.data.symbol === configFilter.value
         )
       }
     })
@@ -52,7 +54,7 @@ export function ProjectConfigProvider({ children }: { children: ReactChild }) {
   const projectParams = query.project || query.host
   const project =
     projectParams &&
-    (typeof projectParams == 'string' ? projectParams : projectParams[0])
+    (typeof projectParams === 'string' ? projectParams : projectParams[0])
       ?.split('.')[0]
       ?.replace('dev-', '')
   const config =

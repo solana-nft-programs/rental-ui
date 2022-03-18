@@ -1,8 +1,8 @@
-import * as web3 from '@solana/web3.js'
-import * as splToken from '@solana/spl-token'
-import * as BufferLayout from '@solana/buffer-layout'
-import { Wallet } from '@saberhq/solana-contrib'
 import { withFindOrInitAssociatedTokenAccount } from '@cardinal/certificates'
+import type { Wallet } from '@saberhq/solana-contrib'
+import * as BufferLayout from '@solana/buffer-layout'
+import * as splToken from '@solana/spl-token'
+import * as web3 from '@solana/web3.js'
 
 export async function withWrapSol(
   transaction: web3.Transaction,
@@ -43,7 +43,7 @@ export function createSyncNativeInstruction(
     data
   )
 
-  let keys = [{ pubkey: nativeAccount, isSigner: false, isWritable: true }]
+  const keys = [{ pubkey: nativeAccount, isSigner: false, isWritable: true }]
   return new web3.TransactionInstruction({
     keys,
     programId: splToken.TOKEN_PROGRAM_ID,

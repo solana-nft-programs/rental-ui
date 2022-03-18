@@ -1,13 +1,12 @@
-import { useEffect, useState, useCallback } from 'react'
-import { Connection } from '@solana/web3.js'
-import styled from '@emotion/styled'
-import { AwesomeQR } from 'awesome-qr'
 import { useTransaction } from '@cardinal/token-manager'
-import { TokenData } from 'api/api'
-import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
-import { Wallet } from '@saberhq/solana-contrib'
+import styled from '@emotion/styled'
+import type { Wallet } from '@saberhq/solana-contrib'
+import type { Connection } from '@solana/web3.js'
+import type { TokenData } from 'api/api'
+import { AwesomeQR } from 'awesome-qr'
 import { getLink } from 'providers/ProjectConfigProvider'
-import { useRouter } from 'next/router'
+import { useCallback, useEffect, useState } from 'react'
+import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 
 const QRCode = ({
   connection,
@@ -20,15 +19,16 @@ const QRCode = ({
   tokenData?: TokenData
   cluster?: string
 }) => {
-  const router = useRouter()
   const [qrCode, setQrCode] = useState<any | null>(null)
   const getQRCode = useCallback(async () => {
     if (wallet && connection) {
       try {
+        if (!tokenData?.tokenManager) throw new Error('No token manager found')
+        // eslint-disable-next-line react-hooks/rules-of-hooks
         const transaction = await useTransaction(
           connection,
           wallet,
-          tokenData?.tokenManager?.parsed.mint!,
+          tokenData.tokenManager.parsed.mint,
           1
         )
         transaction.feePayer = wallet.publicKey

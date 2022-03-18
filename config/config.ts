@@ -1,4 +1,4 @@
-import { RentalCardConfig } from 'rental-components/components/RentalCard'
+import type { RentalCardConfig } from 'rental-components/components/RentalCard'
 
 export type Colors = {
   main: string

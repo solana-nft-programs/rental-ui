@@ -1,10 +1,10 @@
-import styled from '@emotion/styled'
 import { css } from '@emotion/react'
+import styled from '@emotion/styled'
 import {
-  AiFillInfoCircle,
-  AiFillWarning,
   AiFillCheckCircle,
   AiFillExclamationCircle,
+  AiFillInfoCircle,
+  AiFillWarning,
 } from 'react-icons/ai'
 
 export const Alert = ({

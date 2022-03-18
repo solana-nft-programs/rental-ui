@@ -1,5 +1,6 @@
-import React from 'react'
 import styled from '@emotion/styled'
+import React from 'react'
+
 import { TokenMetadata } from './NFT'
 
 export const TokensOuter = styled.div`
@@ -14,9 +15,7 @@ export const TokensOuter = styled.div`
   }
 `
 
-interface NFTPlaceholderProps {}
-
-export function NFTPlaceholder({}: NFTPlaceholderProps) {
+export function NFTPlaceholder({}) {
   return (
     <TokenMetadata>
       <div id="media-outer">

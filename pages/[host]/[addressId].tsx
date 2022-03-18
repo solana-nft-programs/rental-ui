@@ -1,18 +1,16 @@
-import React from 'react'
-import { useEffect, useState } from 'react'
-import { StyledContainer } from 'common/StyledContainer'
-import { useError } from 'providers/ErrorProvider'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { Header } from 'common/Header'
-import { useUserTokenData } from 'providers/TokenDataProvider'
-import { useRouter } from 'next/router'
-import Colors from 'common/colors'
-import { firstParam, camelCase } from 'common/utils'
-import { Manage } from 'components/Manage'
+import { StyledContainer } from 'common/StyledContainer'
+import { camelCase, firstParam } from 'common/utils'
 import { Browse } from 'components/Browse'
+import { Manage } from 'components/Manage'
 import { Wallet } from 'components/Wallet'
 import Head from 'next/head'
+import { useRouter } from 'next/router'
+import { useError } from 'providers/ErrorProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
+import { useUserTokenData } from 'providers/TokenDataProvider'
+import React, { useEffect, useState } from 'react'
 
 function Profile() {
   const { config } = useProjectConfig()
@@ -24,14 +22,8 @@ function Profile() {
 
   useEffect(() => {
     const anchor = router.asPath.split('#')[1]
-    if (anchor != tab) setTab(anchor || 'wallet')
-  }, [router.asPath])
-
-  useEffect(() => {
-    if (config.colors) {
-      Colors.background = config.colors.main
-    }
-  }, [config])
+    if (anchor !== tab) setTab(anchor || 'wallet')
+  }, [router, tab])
 
   const { setAddress, loaded, refreshing } = useUserTokenData()
   useEffect(() => {
@@ -45,12 +37,12 @@ function Profile() {
       )
       setTab('wallet')
     }
-  }, [wallet.connected, addressId])
+  }, [wallet, router, addressId, setAddress])
 
   return (
     <div
       className="min-h-screen"
-      style={{ backgroundColor: Colors.background }}
+      style={{ backgroundColor: config.colors.main }}
     >
       <Head>
         <title>{camelCase(config.name)}</title>

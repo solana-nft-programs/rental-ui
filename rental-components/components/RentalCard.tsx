@@ -1,47 +1,47 @@
-import React, { useEffect, useState } from 'react'
-import * as anchor from '@project-serum/anchor'
+import type { IssueParameters } from '@cardinal/token-manager'
+import { claimLinks, issueToken } from '@cardinal/token-manager'
+import {
+  InvalidationType,
+  TokenManagerKind,
+} from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import styled from '@emotion/styled'
+import * as anchor from '@project-serum/anchor'
+import type { Wallet } from '@saberhq/solana-contrib'
+import type { Connection } from '@solana/web3.js'
+import { Keypair, PublicKey } from '@solana/web3.js'
 import { DatePicker, InputNumber, Select } from 'antd'
-import { Connection, Keypair, PublicKey } from '@solana/web3.js'
-import { Wallet } from '@saberhq/solana-contrib'
-import { ButtonWithFooter } from 'rental-components/common/ButtonWithFooter'
+import type { TokenData } from 'api/api'
+import type { EditionInfo } from 'api/editions'
+import getEditionInfo from 'api/editions'
+import { tryPublicKey } from 'api/utils'
+import { NFTOverlay } from 'common/NFTOverlay'
+import { notify } from 'common/Notification'
+import { executeTransaction } from 'common/Transactions'
+import { fmtMintAmount } from 'common/units'
+import { getQueryParam, longDateString, shortPubKey } from 'common/utils'
+import { usePaymentMints } from 'providers/PaymentMintsProvider'
+import { getLink } from 'providers/ProjectConfigProvider'
+import { useUserTokenData } from 'providers/TokenDataProvider'
+import React, { useEffect, useState } from 'react'
+import { BiQrScan, BiTimer } from 'react-icons/bi'
+import { FaEye, FaLink } from 'react-icons/fa'
+import { FiSend } from 'react-icons/fi'
+import { GiRobotGrab } from 'react-icons/gi'
+import { GrReturn } from 'react-icons/gr'
+import { ImPriceTags } from 'react-icons/im'
 import { Alert } from 'rental-components/common/Alert'
-import { StepDetail } from 'rental-components/common/StepDetail'
 import { Button } from 'rental-components/common/Button'
+import { ButtonWithFooter } from 'rental-components/common/ButtonWithFooter'
+import { PAYMENT_MINTS } from 'rental-components/common/Constants'
 import {
   Fieldset,
   Input,
   InputBorder,
 } from 'rental-components/common/LabeledInput'
-import { PoweredByFooter } from 'rental-components/common/PoweredByFooter'
-import { FiSend } from 'react-icons/fi'
-import { BiTimer, BiQrScan } from 'react-icons/bi'
-import { GiRobotGrab } from 'react-icons/gi'
-import { ImPriceTags } from 'react-icons/im'
-import { PAYMENT_MINTS } from 'rental-components/common/Constants'
 import { MintPriceSelector } from 'rental-components/common/MintPriceSelector'
-import { TokenData } from 'api/api'
-import { getQueryParam, longDateString, shortPubKey } from 'common/utils'
-import { NFTOverlay } from 'common/NFTOverlay'
-import {
-  claimLinks,
-  IssueParameters,
-  issueToken,
-} from '@cardinal/token-manager'
-import { executeTransaction } from 'common/Transactions'
-import { notify } from 'common/Notification'
-import { FaLink, FaEye } from 'react-icons/fa'
-import { GrReturn } from 'react-icons/gr'
-import {
-  InvalidationType,
-  TokenManagerKind,
-} from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
-import getEditionInfo, { EditionInfo } from 'api/editions'
-import { useUserTokenData } from 'providers/TokenDataProvider'
-import { fmtMintAmount } from 'common/units'
-import { usePaymentMints } from 'providers/PaymentMintsProvider'
-import { tryPublicKey } from 'api/utils'
-import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
+import { PoweredByFooter } from 'rental-components/common/PoweredByFooter'
+import { StepDetail } from 'rental-components/common/StepDetail'
+
 const { Option } = Select
 
 const NFTOuter = styled.div`
@@ -110,7 +110,7 @@ export type RentalCardProps = {
   appName?: string
   appTwitter?: string
   rentalCardConfig: RentalCardConfig
-  notify?: Function
+  notify?: () => void
   onComplete?: (asrg0: string) => void
 }
 
@@ -273,12 +273,12 @@ export const RentalCard = ({
   }
 
   const handleSelection = (value: string) => {
-    if (value == 'expiration') {
+    if (value === 'expiration') {
       if (showDuration) {
         setShowDuration(!showDuration)
       }
       setShowExpiration(!showExpiration)
-    } else if (value == 'duration') {
+    } else if (value === 'duration') {
       if (showExpiration) {
         setShowExpiration(!showExpiration)
       }
@@ -312,7 +312,7 @@ export const RentalCard = ({
   }
 
   const handleRental = async () => {
-    let extensionPaymentMintPublicKey = tryPublicKey(extensionPaymentMint)
+    const extensionPaymentMintPublicKey = tryPublicKey(extensionPaymentMint)
     try {
       if (!tokenAccount) {
         throw 'Token acount not found'
@@ -384,7 +384,7 @@ export const RentalCard = ({
         wallet,
         issueParams
       )
-      let signers = []
+      const signers = []
       if (claimRentalReceipt) signers.push(receiptMintKeypair)
       await executeTransaction(connection, wallet, transaction, {
         silent: false,
@@ -639,7 +639,7 @@ export const RentalCard = ({
                       >
                         {Object.keys(durationData).map((category) => (
                           <Option key={category} value={category}>
-                            {durationAmount && durationAmount == 1
+                            {durationAmount && durationAmount === 1
                               ? category.substring(0, category.length - 1)
                               : category}
                           </Option>
@@ -702,7 +702,7 @@ export const RentalCard = ({
                           >
                             {Object.keys(durationData).map((category) => (
                               <Option key={category} value={category}>
-                                {durationAmount && durationAmount == 1
+                                {durationAmount && durationAmount === 1
                                   ? category.substring(0, category.length - 1)
                                   : category}
                               </Option>
@@ -947,10 +947,10 @@ export const RentalCard = ({
                               new anchor.BN(extensionPaymentAmount)
                             )} ${
                               paymentMintData.find(
-                                (obj) => obj.mint == extensionPaymentMint
+                                (obj) => obj.mint === extensionPaymentMint
                               )?.symbol
                             } / ${extensionDurationAmount} ${
-                              extensionDurationAmount == 1
+                              extensionDurationAmount === 1
                                 ? extensionDurationCategory
                                     ?.toLowerCase()
                                     .substring(

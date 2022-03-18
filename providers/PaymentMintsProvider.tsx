@@ -1,7 +1,9 @@
-import React, { useState, useContext, useEffect, ReactChild } from 'react'
-import { useEnvironmentCtx } from './EnvironmentProvider'
-import * as splToken from '@solana/spl-token'
 import { web3 } from '@project-serum/anchor'
+import * as splToken from '@solana/spl-token'
+import type { ReactChild } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+
+import { useEnvironmentCtx } from './EnvironmentProvider'
 
 export const PAYMENT_MINTS = [
   {
@@ -23,7 +25,7 @@ export const WRAPPED_SOL_MINT = 'So11111111111111111111111111111111111111112'
 
 export interface PaymentMintsContextValues {
   paymentMintInfos: { [name: string]: splToken.MintInfo }
-  refreshPaymentMints: Function
+  refreshPaymentMints: () => void
   refreshing: boolean
   error: string | null
 }

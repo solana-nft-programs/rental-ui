@@ -1,14 +1,10 @@
-import { Wallet } from '@saberhq/solana-contrib'
-import { Connection } from '@solana/web3.js'
-import { TokenData } from 'api/api'
+import type { Wallet } from '@saberhq/solana-contrib'
+import type { Connection } from '@solana/web3.js'
+import type { TokenData } from 'api/api'
 import React, { useContext, useState } from 'react'
 import QRCode from 'rental-components/common/QRCode'
-import { Modal } from './modal'
 
-export const withSleep = async (fn: Function, sleep = 2000) => {
-  await new Promise((r) => setTimeout(r, sleep))
-  await fn()
-}
+import { Modal } from './modal'
 
 export interface QRCode {
   show: (

@@ -5,11 +5,14 @@
     "build": "next build",
     "start": "next start",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook -o docs-build"
+    "build-storybook": "build-storybook -o docs-build",
+    "lint": "eslint '**/*.{ts,tsx}' --cache",
+    "lint:fix": "eslint --fix --cache '**/*.{ts,tsx}'"
   },
   "dependencies": {
     "@babel/core": "^7.17.0",
     "@cardinal/common": "^1.0.3",
+    "@cardinal/eslint-config-react": "^1.0.10",
     "@cardinal/namespaces-components": "^2.5.0",
     "@cardinal/token-manager": "^0.2.21",
     "@emotion/babel-plugin": "^11.7.2",
@@ -49,8 +52,11 @@
     "@storybook/testing-library": "^0.0.9",
     "@types/node": "17.0.4",
     "@types/react": "17.0.38",
+    "@typescript-eslint/parser": "^5.15.0",
     "autoprefixer": "^10.4.0",
     "babel-loader": "^8.2.3",
+    "eslint": "^8.11.0",
+    "eslint-plugin-react": "^7.29.4",
     "postcss": "^8.4.5",
     "prettier": "^2.5.1",
     "prettier-plugin-tailwindcss": "^0.1.1",

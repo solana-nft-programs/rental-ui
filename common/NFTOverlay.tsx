@@ -1,15 +1,15 @@
-import * as anchor from '@project-serum/anchor'
-import * as utils from 'common/utils'
-import styled from '@emotion/styled'
-import { Extendable, Returnable, Revocable } from 'common/icons'
-import { fmtMintAmount } from 'common/units'
-import { useUTCNow } from 'providers/UTCNowProvider'
-import { PAYMENT_MINTS, usePaymentMints } from 'providers/PaymentMintsProvider'
 import {
   InvalidationType,
   TokenManagerState,
 } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
-import { TokenData } from 'api/api'
+import styled from '@emotion/styled'
+import * as anchor from '@project-serum/anchor'
+import type { TokenData } from 'api/api'
+import { Extendable, Returnable, Revocable } from 'common/icons'
+import { fmtMintAmount } from 'common/units'
+import * as utils from 'common/utils'
+import { PAYMENT_MINTS, usePaymentMints } from 'providers/PaymentMintsProvider'
+import { useUTCNow } from 'providers/UTCNowProvider'
 
 const StyledOverlay = styled.div<{
   height?: string
@@ -254,7 +254,7 @@ export function NFTOverlay({
         {!expiration &&
           durationSeconds &&
           stateChangedAt &&
-          state == TokenManagerState.Claimed && (
+          state === TokenManagerState.Claimed && (
             <div className="expiration">
               {utils.getExpirationString(
                 stateChangedAt + durationSeconds,
@@ -262,7 +262,7 @@ export function NFTOverlay({
               )}
             </div>
           )}
-        {usages != undefined && (
+        {usages !== undefined && (
           <div className="expiration">
             Used ({usages?.toString() || 0}
             {totalUsages && ` / ${totalUsages.toString()}`})
@@ -270,7 +270,7 @@ export function NFTOverlay({
         )}
       </div>
       <div className="logo">
-        <img src="/assets/cardinal-crosshair.svg"></img>
+        <img src="/assets/cardinal-crosshair.svg" alt="crosshair"></img>
       </div>
     </StyledOverlay>
   )
