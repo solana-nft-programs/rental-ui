@@ -32,7 +32,7 @@ function Profile() {
     }
     if (wallet && wallet.connected && wallet.publicKey) {
       setAddress(wallet.publicKey.toBase58())
-      router.push(`/${wallet.publicKey.toBase58()}`)
+      router.push(`/${wallet.publicKey.toBase58()}${window.location.search}`)
       setTab('wallet')
     }
   }, [wallet.publicKey, addressId])
