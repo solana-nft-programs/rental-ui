@@ -35,11 +35,6 @@ export const StyledHeader = styled.div<{ isTabletOrMobile: boolean }>`
     display: flex;
     align-items: center;
     gap: 18px;
-
-    img {
-      height: 35px;
-      width: auto;
-    }
   }
 
   .right {
@@ -83,11 +78,6 @@ export const StyledHeader = styled.div<{ isTabletOrMobile: boolean }>`
       border-radius: 6px;
       padding: 3px 5px;
     }
-
-    img {
-      width: auto;
-      max-width: none;
-    }
   }
 
   .wallet-adapter-button {
@@ -127,7 +117,6 @@ export const Hamburger = styled.div`
   }
 `
 
-// background-color: ${lighten(0.1, Colors.navBg)};
 export const StyledTabs = styled.div<{ show: boolean }>`
   font-size: 13px;
 
@@ -188,15 +177,6 @@ export const StyledTab = styled.div<{
   }
 `
 
-const StyledProfile = styled.div`
-  display: flex;
-  gap: 10px;
-  .info {
-    color: white;
-    font-size: 14px;
-  }
-`
-
 export const Header = ({
   tabs,
   loading,
@@ -242,7 +222,7 @@ export const Header = ({
             target="_blank"
             href={config.websiteUrl}
           >
-            <img src={config.logoImage} alt="logo" />
+            <img className="h-9 w-auto" src={config.logoImage} alt="logo" />
           </a>
           <div className="subscript">
             {ctx.environment.label === 'devnet' ? 'DEV' : 'alpha'}
@@ -313,8 +293,8 @@ export const Header = ({
               <span className="hamb-line"></span>
             </Hamburger>
           ) : (
-            <StyledProfile
-              style={{ cursor: 'pointer' }}
+            <div
+              className="flex cursor-pointer gap-2"
               onClick={() => setVisible(true)}
             >
               <AddressImage
@@ -340,8 +320,8 @@ export const Header = ({
                   </div>
                 }
               />
-              <div className="info">
-                <div>
+              <div>
+                <div className="text-white">
                   <DisplayAddress
                     style={{ pointerEvents: 'none' }}
                     connection={ctx.connection}
@@ -355,7 +335,7 @@ export const Header = ({
                   {walletAddressFormatted}
                 </div>
               </div>
-            </StyledProfile>
+            </div>
           )
         ) : (
           <WalletMultiButton
