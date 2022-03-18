@@ -111,7 +111,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         invalidationCategories: ['Return'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         setClaimRentalReceipt: true,
-        showClaimRentalReceipt: true,
       },
     },
     airdrops: [
