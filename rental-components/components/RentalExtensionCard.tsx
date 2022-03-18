@@ -138,7 +138,7 @@ export const RentalExtensionCard = ({
 
   useEffect(() => {
     getUserPaymentTokenAccount()
-  }, [connection, wallet, tokenData, getUserPaymentTokenAccount])
+  }, [connection, wallet.publicKey, tokenData, getUserPaymentTokenAccount])
 
   const handleExtensionRental = async () => {
     try {

@@ -339,7 +339,7 @@ function Claim() {
 
   useEffect(() => {
     getUserPaymentTokenAccount()
-  }, [ctx, wallet, tokenData])
+  }, [ctx, wallet.publicKey, tokenData])
 
   const handleError = (e: Error) => {
     if (e.message.includes('0x1')) {
