@@ -27,12 +27,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     },
     filters: [],
     rentalCard: {
-      invalidations: {
-        showUsagesOption: true,
-        showExpirationOption: true,
-        showDurationOption: true,
-        showManualOption: true,
-      },
+      invalidators: ['usages', 'expiration', 'duration', 'manual'],
     },
     airdrops: [
       {
@@ -102,13 +97,9 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       },
     ],
     rentalCard: {
-      invalidations: {
-        showUsagesOption: false,
-        showExpirationOption: true,
-        showDurationOption: true,
-        showManualOption: true,
-      },
+      invalidators: ['duration'],
       invalidationOptions: {
+        visibilities: ['public'],
         durationCategories: [
           'Minutes',
           'Hours',
@@ -120,7 +111,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         invalidationCategories: ['Return'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         setClaimRentalReceipt: true,
-        showClaimRentalReceipt: true,
       },
     },
     airdrops: [
@@ -161,12 +151,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       },
     ],
     rentalCard: {
-      invalidations: {
-        showUsagesOption: false,
-        showExpirationOption: true,
-        showDurationOption: true,
-        showManualOption: true,
-      },
+      invalidators: ['duration'],
       invalidationOptions: {
         durationCategories: ['Hours', 'Days', 'Weeks', 'Years'],
         invalidationCategories: ['Return'],
