@@ -41,7 +41,7 @@ export default function Home() {
         `/${wallet.publicKey.toBase58()}${window.location.search ?? ''}`
       )
     }
-  }, [wallet, router])
+  }, [wallet.publicKey, router])
 
   return (
     <div className="flex min-h-screen flex-col items-center">

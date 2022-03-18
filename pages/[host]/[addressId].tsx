@@ -22,6 +22,7 @@ function Profile() {
 
   useEffect(() => {
     const anchor = router.asPath.split('#')[1]
+    console.log(anchor)
     if (anchor !== tab) setTab(anchor || 'wallet')
   }, [router, tab])
 
@@ -32,12 +33,12 @@ function Profile() {
     }
     if (wallet && wallet.connected && wallet.publicKey) {
       setAddress(wallet.publicKey.toBase58())
-      router.push(
-        `/${wallet.publicKey.toBase58()}${window.location.search ?? ''}`
-      )
+      router.push(`/${wallet.publicKey.toBase58()}`)
       setTab('wallet')
     }
-  }, [wallet, router, addressId, setAddress])
+  }, [wallet.publicKey, addressId])
+
+  console.log(tab)
 
   return (
     <div
