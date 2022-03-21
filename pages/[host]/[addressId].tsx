@@ -46,7 +46,7 @@ function Profile() {
         <title>{camelCase(config.name)}</title>
       </Head>
       <Header
-        loading={!loaded && refreshing}
+        loading={loaded && refreshing}
         tabs={[
           { name: 'Wallet', anchor: 'wallet' },
           { name: 'Manage', anchor: 'manage' },
