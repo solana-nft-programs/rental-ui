@@ -27,7 +27,10 @@ export const filterTokens = (
       }
     })
   }
-  return tokens
+  return tokens.filter(
+    (token) =>
+      token.metadata.data && Object.keys(token.metadata.data).length > 0
+  )
 }
 
 export function getLink(path: string, withParams = true) {
