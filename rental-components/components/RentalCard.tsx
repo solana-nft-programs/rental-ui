@@ -226,6 +226,9 @@ export const RentalCard = ({
       )
     : PAYMENT_MINTS
 
+  const showClaimRentalReceipt =
+    rentalCardConfig.invalidationOptions?.showClaimRentalReceipt || true
+
   // defaults
   const defaultVisibility = visibilities[0]
   const defaultDurationOption = Object.keys(durationData)[2]! as DurationOption
@@ -807,7 +810,7 @@ export const RentalCard = ({
               )}
             {(invalidationTypes.length > 1 ||
               visibilities.length > 1 ||
-              rentalCardConfig.invalidationOptions?.showClaimRentalReceipt) && (
+              showClaimRentalReceipt) && (
               <>
                 <button
                   className="mb-2 block text-blue-500"
@@ -861,8 +864,7 @@ export const RentalCard = ({
                         }
                       />
                     )}
-                    {rentalCardConfig.invalidationOptions
-                      ?.showClaimRentalReceipt && (
+                    {showClaimRentalReceipt && (
                       <div className="mt-1">
                         <span
                           className="cursor-pointer"
