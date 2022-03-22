@@ -500,10 +500,10 @@ export const Browse = () => {
                             bgColor={config.colors.secondary}
                             variant="primary"
                             disabled={!wallet.publicKey}
-                            className="ml-5 mr-1 inline-block flex-none"
-                            handleClick={() => {
+                            className="mr-1 inline-block flex-none"
+                            handleClick={async () => {
                               if (wallet.publicKey) {
-                                handleClaim(tokenData)
+                                await handleClaim(tokenData)
                               }
                             }}
                           >
