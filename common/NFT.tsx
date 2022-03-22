@@ -21,8 +21,8 @@ import { asWallet } from './Wallets'
 export const TokensOuter = styled.div`
   display: flex;
   align-items: flex-start;
-  flex-wrap: wrap;
   max-width: 880px;
+  flex-wrap: wrap;
   margin: 10px auto;
   padding-bottom: 60px;
   gap: 20px;
@@ -155,6 +155,7 @@ export const TokenMetadata = styled.div`
     align-items: center;
     justify-content: center;
     height: 280px;
+    max-width: 100%;
     #media {
       object-fit: contain;
       max-width: 250px;
