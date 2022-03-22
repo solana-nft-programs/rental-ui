@@ -37,8 +37,7 @@ export const TokenMetadata = styled.div`
   position: relative;
   display: inline-block;
   border-radius: 10px;
-  width: 100%;
-  min-width: 280px;
+  width: 280px;
   background-color: ${Colors.tokenBackground};
   padding: 15px 0px;
   z-index: 0;
