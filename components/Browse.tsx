@@ -1,6 +1,5 @@
 import { DisplayAddress } from '@cardinal/namespaces-components'
 import { invalidate, withClaimToken } from '@cardinal/token-manager'
-import { findClaimApproverAddress } from '@cardinal/token-manager/dist/cjs/programs/claimApprover/pda'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import styled from '@emotion/styled'
 import { BN } from '@project-serum/anchor'
@@ -11,7 +10,7 @@ import { Connection, Transaction } from '@solana/web3.js'
 import { Select } from 'antd'
 import type { TokenData } from 'api/api'
 import { withWrapSol } from 'api/wrappedSol'
-import { NFT } from 'common/NFT'
+import { NFT, TokensOuter } from 'common/NFT'
 import { NFTPlaceholder } from 'common/NFTPlaceholder'
 import { notify } from 'common/Notification'
 import { StyledTag, Tag } from 'common/Tags'
@@ -28,7 +27,7 @@ import {
   WRAPPED_SOL_MINT,
 } from 'providers/PaymentMintsProvider'
 import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { FaLink } from 'react-icons/fa'
 import { AsyncButton, Button } from 'rental-components/common/Button'
 
@@ -57,24 +56,40 @@ const allOrderCategories = [
 
 const globalRate = 604800
 
+const getAllAttributes = (tokens: TokenData[]) => {
+  const allAttributes: { [traitType: string]: Set<any> } = {}
+  tokens.forEach((tokenData) => {
+    if (tokenData.metadata.data?.attributes) {
+      tokenData.metadata.data?.attributes.forEach(
+        (attribute: { trait_type: string; value: any }) => {
+          if (attribute.trait_type in allAttributes) {
+            allAttributes[attribute.trait_type]!.add(attribute.value)
+          } else {
+            allAttributes[attribute.trait_type] = new Set([attribute.value])
+          }
+        }
+      )
+    }
+  })
+
+  const sortedAttributes: { [traitType: string]: any[] } = {}
+  Object.keys(allAttributes).forEach((traitType) => {
+    sortedAttributes[traitType] = Array.from(allAttributes[traitType] ?? [])
+  })
+  return sortedAttributes
+}
+
 export const Browse = () => {
   const { config } = useProjectConfig()
   const { connection, environment } = useEnvironmentCtx()
   const wallet = useWallet()
 
   const { issuedTokens, loaded, refreshIssuedTokens } = useIssuedTokens()
-  const [filteredIssuedTokens, setFilteredIssuedTokens] =
-    useState<TokenData[]>(issuedTokens)
-  const [filteredAndSortedTokens, setFilteredAndSortedTokens] =
-    useState<TokenData[]>(issuedTokens)
   const [userPaymentTokenAccount, _setUserPaymentTokenAccount] =
     useState<splToken.AccountInfo | null>(null)
   const { paymentMintInfos } = usePaymentMints()
   const [selectedOrderCategory, setSelectedOrderCategory] =
     useState<OrderCategories>(OrderCategories.PriceLowToHigh)
-  const [attributeCategories, setAttributeCategories] = useState<{
-    [traitType: string]: any[]
-  }>({})
   const [selectedFilters, setSelectedFilters] = useState<{
     [filterName: string]: any[]
   }>({})
@@ -115,128 +130,113 @@ export const Browse = () => {
     .ant-select-arrow {
       color: ${config.colors.secondary} !important;
     }
+
+    .ant-select-clear {
+      background: none;
+    }
   `
 
-  useEffect(() => {
-    async function filterIssuedTokens() {
-      const tokens = []
-      for (const token of issuedTokens) {
-        if (!token.claimApprover?.pubkey) {
-          tokens.push(token)
-        } else if (token.tokenManager?.pubkey) {
-          const [tokenClaimApprover] = await findClaimApproverAddress(
-            token.tokenManager?.pubkey
-          )
-          if (
-            tokenClaimApprover.toString() ===
-            token.claimApprover?.pubkey.toString()
-          ) {
-            tokens.push(token)
-          }
-        }
-      }
-
-      setFilteredIssuedTokens(tokens)
-      getAllAttributes(tokens)
+  const getPriceFromTokenData = (tokenData: TokenData) => {
+    if (tokenData.claimApprover?.parsed) {
+      return getMintDecimalAmount(
+        paymentMintInfos[
+          tokenData.claimApprover?.parsed?.paymentMint.toString()
+        ]!,
+        tokenData.claimApprover?.parsed?.paymentAmount
+      ).toNumber()
+    } else {
+      return 0
     }
+  }
 
-    filterIssuedTokens()
-  }, [issuedTokens])
+  const calculateRateFromTokenData = (
+    tokenData: TokenData,
+    rate: number = globalRate
+  ) => {
+    const price = getPriceFromTokenData(tokenData)
+    if (price === 0) return 0
+    let duration = 0
+    if (tokenData.timeInvalidator?.parsed.durationSeconds) {
+      duration = tokenData.timeInvalidator.parsed.durationSeconds.toNumber()
+    }
+    if (tokenData.timeInvalidator?.parsed.expiration) {
+      duration =
+        tokenData.timeInvalidator.parsed.expiration.toNumber() -
+        Date.now() / 1000
+    }
+    return (price / duration) * rate
+  }
 
-  useEffect(() => {
-    filterByAttributeAndSort()
-  }, [filteredIssuedTokens])
-
-  const filterByAttributeAndSort = () => {
-    let attributeFilteredTokens: TokenData[] = []
-    console.log(selectedFilters)
-    if (Object.keys(selectedFilters).length > 0) {
-      filteredIssuedTokens.forEach((token) => {
-        let addToken = false
-        Object.keys(selectedFilters).forEach((filterName) => {
-          if (selectedFilters[filterName]!.length > 0) {
-            selectedFilters[filterName]!.forEach((val) => {
-              if (
-                token.metadata?.data.attributes.filter(
-                  (a: { trait_type: string; value: any }) =>
-                    a.trait_type === filterName && a.value === val
-                ).length > 0
-              ) {
-                addToken = true
-              }
-            })
-          }
+  const sortTokens = (tokens: TokenData[]): TokenData[] => {
+    switch (selectedOrderCategory) {
+      case OrderCategories.RecentlyListed:
+        return tokens.sort((a, b) => {
+          return (
+            (a.tokenManager?.parsed.stateChangedAt.toNumber() ?? 0) -
+            (b.tokenManager?.parsed.stateChangedAt.toNumber() ?? 0)
+          )
         })
-        if (addToken) {
-          attributeFilteredTokens.push(token)
+      case OrderCategories.PriceLowToHigh:
+        return tokens.sort((a, b) => {
+          return (
+            (a.claimApprover?.parsed.paymentAmount.toNumber() ?? 0) -
+            (b.claimApprover?.parsed.paymentAmount.toNumber() ?? 0)
+          )
+        })
+      case OrderCategories.PriceHighToLow:
+        return tokens.sort((a, b) => {
+          return (
+            (b.claimApprover?.parsed.paymentAmount.toNumber() ?? 0) -
+            (a.claimApprover?.parsed.paymentAmount.toNumber() ?? 0)
+          )
+        })
+      case OrderCategories.RateLowToHigh:
+        return tokens.sort((a, b) => {
+          return calculateRateFromTokenData(a) - calculateRateFromTokenData(b)
+        })
+      case OrderCategories.RateHighToLow:
+        return tokens.sort((a, b) => {
+          return calculateRateFromTokenData(b) - calculateRateFromTokenData(a)
+        })
+      default:
+        return []
+    }
+  }
+
+  const filterTokens = (tokens: TokenData[]): TokenData[] => {
+    if (Object.keys(selectedFilters).length <= 0) return tokens
+    const attributeFilteredTokens: TokenData[] = []
+    tokens.forEach((token) => {
+      let addToken = false
+      Object.keys(selectedFilters).forEach((filterName) => {
+        if (selectedFilters[filterName]!.length > 0) {
+          selectedFilters[filterName]!.forEach((val) => {
+            if (
+              token.metadata?.data.attributes.filter(
+                (a: { trait_type: string; value: any }) =>
+                  a.trait_type === filterName && a.value === val
+              ).length > 0
+            ) {
+              addToken = true
+            }
+          })
         }
       })
-      console.log('ATR FILTERED TOKENS', attributeFilteredTokens)
-    } else {
-      console.log('defualt set')
-      attributeFilteredTokens = filteredIssuedTokens
-    }
-    // alert(`${attributeFilteredTokens.length}, ${filteredAndSortedTokens.length}`  )
-    handleOrderCategoryChange(selectedOrderCategory, attributeFilteredTokens)
+      if (addToken) {
+        attributeFilteredTokens.push(token)
+      }
+    })
+    return attributeFilteredTokens
   }
 
-  const handleOrderCategoryChange = (
-    value: OrderCategories = selectedOrderCategory,
-    tokens: TokenData[] = filteredAndSortedTokens
-  ) => {
-    switch (value) {
-      case OrderCategories.RecentlyListed:
-        setFilteredAndSortedTokens(
-          tokens.sort((a, b) => {
-            return (
-              (a.tokenManager?.parsed.stateChangedAt.toNumber() ?? 0) -
-              (b.tokenManager?.parsed.stateChangedAt.toNumber() ?? 0)
-            )
-          })
-        )
-        break
-      case OrderCategories.PriceLowToHigh:
-        setFilteredAndSortedTokens(
-          tokens.sort((a, b) => {
-            return (
-              (a.claimApprover?.parsed.paymentAmount.toNumber() ?? 0) -
-              (b.claimApprover?.parsed.paymentAmount.toNumber() ?? 0)
-            )
-          })
-        )
-        break
-      case OrderCategories.PriceHighToLow:
-        setFilteredAndSortedTokens(
-          tokens.sort((a, b) => {
-            return (
-              (b.claimApprover?.parsed.paymentAmount.toNumber() ?? 0) -
-              (a.claimApprover?.parsed.paymentAmount.toNumber() ?? 0)
-            )
-          })
-        )
-        break
-      case OrderCategories.RateLowToHigh:
-        setFilteredAndSortedTokens(
-          tokens.sort((a, b) => {
-            return calculateRateFromTokenData(a) - calculateRateFromTokenData(b)
-          })
-        )
-        break
-      case OrderCategories.RateHighToLow:
-        setFilteredAndSortedTokens(
-          tokens.sort((a, b) => {
-            return calculateRateFromTokenData(b) - calculateRateFromTokenData(a)
-          })
-        )
-        break
-      default:
-        break
-    }
-  }
+  const filteredAndSortedTokens: TokenData[] = sortTokens(
+    filterTokens(issuedTokens)
+  )
 
   const handleClaim = async (tokenData: TokenData) => {
     try {
       if (!tokenData.tokenManager) throw new Error('No token manager data')
+      if (!wallet.publicKey) throw new Error('Wallet not connected')
       // wrap sol if there is payment required
       const transaction = new Transaction()
       if (
@@ -273,6 +273,9 @@ export const Browse = () => {
       })
       refreshIssuedTokens()
     } catch (e: any) {
+      notify({
+        message: e.toString(),
+      })
       console.log(e)
     }
   }
@@ -287,37 +290,6 @@ export const Browse = () => {
     } else {
       return symbol
     }
-  }
-
-  const getPriceFromTokenData = (tokenData: TokenData) => {
-    if (tokenData.claimApprover?.parsed) {
-      return getMintDecimalAmount(
-        paymentMintInfos[
-          tokenData.claimApprover?.parsed?.paymentMint.toString()
-        ]!,
-        tokenData.claimApprover?.parsed?.paymentAmount
-      ).toNumber()
-    } else {
-      return 0
-    }
-  }
-
-  const calculateRateFromTokenData = (
-    tokenData: TokenData,
-    rate: number = globalRate
-  ) => {
-    const price = getPriceFromTokenData(tokenData)
-    if (price === 0) return 0
-    let duration = 0
-    if (tokenData.timeInvalidator?.parsed.durationSeconds) {
-      duration = tokenData.timeInvalidator.parsed.durationSeconds.toNumber()
-    }
-    if (tokenData.timeInvalidator?.parsed.expiration) {
-      duration =
-        tokenData.timeInvalidator.parsed.expiration.toNumber() -
-        Date.now() / 1000
-    }
-    return (price / duration) * rate
   }
 
   const calculateFloorPrice = (tokenDatas: TokenData[]): number => {
@@ -353,43 +325,17 @@ export const Browse = () => {
     return Math.min(...rentalPrices)
   }
 
-  const getAllAttributes = (tokens: TokenData[]) => {
-    const allAttributes: { [traitType: string]: Set<any> } = {}
-    if (tokens) {
-      tokens.forEach((tokenData) => {
-        if (tokenData.metadata.data?.attributes) {
-          tokenData.metadata.data?.attributes.forEach(
-            (attribute: { trait_type: string; value: any }) => {
-              if (attribute.trait_type in allAttributes) {
-                allAttributes[attribute.trait_type]!.add(attribute.value)
-              } else {
-                allAttributes[attribute.trait_type] = new Set([attribute.value])
-              }
-            }
-          )
-        }
-      })
-    }
-
-    const sortedAttributes: { [traitType: string]: any[] } = {}
-    Object.keys(allAttributes).forEach((traitType) => {
-      sortedAttributes[traitType] = Array.from(allAttributes[traitType] ?? [])
-    })
-
-    setAttributeCategories(sortedAttributes)
-  }
-
   const updateFilters = (traitType: string, value: any[]) => {
-    const filters = selectedFilters
+    const filters = { ...selectedFilters }
     if (value.length === 0 && traitType in filters) {
       delete filters[traitType]
     } else {
       filters[traitType] = value
     }
     setSelectedFilters(filters)
-    filterByAttributeAndSort()
   }
 
+  const sortedAttributes = getAllAttributes(issuedTokens)
   return (
     <div className="container mx-auto">
       <div className="mb-4 flex flex-wrap justify-center md:justify-between">
@@ -397,16 +343,16 @@ export const Browse = () => {
           <div className="d-block flex-col  border-2 border-gray-600 py-3 px-5">
             <p className="text-gray-400">FLOOR PRICE / WEEK</p>
             <h2 className="text-center font-bold text-gray-100">
-              {calculateFloorPrice(filteredIssuedTokens).toFixed(2)}{' '}
-              {filteredIssuedTokens.length > 0
-                ? getSymbolFromTokenData(filteredIssuedTokens[0]!)
+              {calculateFloorPrice(filteredAndSortedTokens).toFixed(2)}{' '}
+              {filteredAndSortedTokens.length > 0
+                ? getSymbolFromTokenData(filteredAndSortedTokens[0]!)
                 : '◎'}
             </h2>
           </div>
-          <div className="d-block -ml-[2px] flex-col border-2 border-gray-600  py-3 px-5">
+          <div className="d-block flex-col border-2 border-gray-600  py-3 px-5">
             <p className="text-gray-400">TOTAL LISTED</p>
             <h2 className="text-center font-bold text-gray-100">
-              {filteredIssuedTokens.length}
+              {filteredAndSortedTokens.length}
             </h2>
           </div>
         </div>
@@ -416,7 +362,6 @@ export const Browse = () => {
             className="m-[10px] h-[30px] w-max rounded-[4px] bg-black text-gray-700"
             onChange={(e) => {
               setSelectedOrderCategory(e)
-              handleOrderCategoryChange(e)
             }}
             defaultValue={selectedOrderCategory}
           >
@@ -428,20 +373,22 @@ export const Browse = () => {
           </Select>
         </StyledSelect>
       </div>
-      <div className="flex-col">
+      {!config.browse?.hideFilters && (
         <div
-          className={'w-280px mx-auto text-center md:absolute md:-left-[280px]'}
+          className={
+            'mx-auto w-[220px] text-center md:absolute md:-left-[220px]'
+          }
         >
           <div
             onClick={() => setShowFilters(!showFilters)}
-            className="mb-3 mt-4 w-[280px] text-center text-lg text-gray-300 hover:cursor-pointer hover:text-gray-100"
+            className="my-3 text-center text-lg text-gray-300 hover:cursor-pointer hover:text-gray-100"
           >
             {showFilters ? 'Filters [-]' : 'Filters [+]'}
           </div>
           {showFilters && (
             <div className="flex flex-col">
-              {Object.keys(attributeCategories).map((traitType) => (
-                <>
+              {Object.keys(sortedAttributes).map((traitType) => (
+                <div key={traitType}>
                   {selectedFilters[traitType] !== undefined &&
                     selectedFilters[traitType]!.length > 0 && (
                       <p className="mb-1 text-gray-100">{traitType}</p>
@@ -457,200 +404,202 @@ export const Browse = () => {
                         updateFilters(traitType, e)
                       }}
                     >
-                      {attributeCategories[traitType]!.map((value) => (
+                      {sortedAttributes[traitType]!.map((value) => (
                         <Option key={value} value={value}>
                           {value}
                         </Option>
                       ))}
                     </Select>
                   </StyledSelectMultiple>
-                </>
+                </div>
               ))}
             </div>
           )}
         </div>
+      )}
 
-        <div className="w-max-content my-auto mx-auto grid grid-cols-1 gap-x-10 gap-y-6 pb-[60px] sm:w-full sm:grid-cols-2 lg:grid-cols-3">
-          {!loaded ? (
-            <>
-              <NFTPlaceholder />
-              <NFTPlaceholder />
-              <NFTPlaceholder />
-              <NFTPlaceholder />
-              <NFTPlaceholder />
-              <NFTPlaceholder />
-            </>
-          ) : filteredIssuedTokens && filteredIssuedTokens.length > 0 ? (
-            filteredIssuedTokens.map((tokenData) => (
-              <div
-                key={tokenData.tokenManager?.pubkey.toString()}
-                style={{
-                  paddingTop: '10px',
-                  display: 'flex',
-                  gap: '10px',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  width: '100%',
-                }}
-              >
-                <>
-                  <NFT
-                    key={tokenData?.tokenManager?.pubkey.toBase58()}
-                    tokenData={tokenData}
-                    hideQRCode={true}
-                  ></NFT>
+      <TokensOuter>
+        {!loaded ? (
+          <>
+            <NFTPlaceholder />
+            <NFTPlaceholder />
+            <NFTPlaceholder />
+            <NFTPlaceholder />
+            <NFTPlaceholder />
+            <NFTPlaceholder />
+          </>
+        ) : filteredAndSortedTokens && filteredAndSortedTokens.length > 0 ? (
+          filteredAndSortedTokens.map((tokenData) => (
+            <div
+              key={tokenData.tokenManager?.pubkey.toString()}
+              style={{
+                paddingTop: '10px',
+                display: 'flex',
+                gap: '10px',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <>
+                <NFT
+                  key={tokenData?.tokenManager?.pubkey.toBase58()}
+                  tokenData={tokenData}
+                  hideQRCode={true}
+                ></NFT>
+                {
                   {
-                    {
-                      [TokenManagerState.Initialized]: <>Initiliazed</>,
-                      [TokenManagerState.Issued]: (
-                        <div className="flex w-full justify-between">
-                          <StyledTag>
-                            <div
-                              style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'space-between',
-                                width: '100%',
-                              }}
-                            >
-                              <Tag
-                                state={TokenManagerState.Issued}
-                                color="warning"
-                              >
-                                <div className="float-left">
-                                  <p className="float-left inline-block text-ellipsis whitespace-nowrap">
-                                    {new Date(
-                                      Number(
-                                        tokenData.tokenManager?.parsed.stateChangedAt.toString()
-                                      ) * 1000
-                                    ).toLocaleString('en-US', {
-                                      year: 'numeric',
-                                      month: 'numeric',
-                                      day: 'numeric',
-                                      hour: 'numeric',
-                                      minute: '2-digit',
-                                    })}
-                                  </p>
-                                  <br />{' '}
-                                  <DisplayAddress
-                                    connection={connection}
-                                    address={
-                                      tokenData.tokenManager?.parsed.issuer ||
-                                      undefined
-                                    }
-                                    height="18px"
-                                    width="100px"
-                                    dark={true}
-                                  />{' '}
-                                </div>
-                              </Tag>
-                            </div>
-                          </StyledTag>
-
-                          <div className="flex w-max">
-                            <AsyncButton
-                              bgColor={config.colors.secondary}
-                              variant="primary"
-                              className="ml-5 mr-1 inline-block flex-none"
-                              handleClick={() => handleClaim(tokenData)}
-                            >
-                              <>
-                                Claim{' '}
-                                {(tokenData.claimApprover?.parsed?.paymentAmount.toNumber() ??
-                                  0) / 1000000000}{' '}
-                                {getSymbolFromTokenData(tokenData)}{' '}
-                              </>
-                            </AsyncButton>
-                            <Button
-                              variant="tertiary"
-                              className="mr-1 inline-block flex-none"
-                              onClick={() =>
-                                handleCopy(
-                                  getLink(
-                                    `/claim/${tokenData.tokenManager?.pubkey.toBase58()}`
-                                  )
-                                )
-                              }
-                            >
-                              <FaLink />
-                            </Button>
-                          </div>
-                        </div>
-                      ),
-                      [TokenManagerState.Claimed]: (
+                    [TokenManagerState.Initialized]: <>Initiliazed</>,
+                    [TokenManagerState.Issued]: (
+                      <div className="flex w-full justify-between">
                         <StyledTag>
-                          <Tag state={TokenManagerState.Claimed}>
-                            Claimed by{' '}
-                            {shortPubKey(
-                              tokenData.recipientTokenAccount?.owner || ''
-                            )}{' '}
-                            {/* {shortDateString(
+                          <div
+                            style={{
+                              display: 'flex',
+                              flexDirection: 'column',
+                              justifyContent: 'space-between',
+                              width: '100%',
+                            }}
+                          >
+                            <Tag
+                              state={TokenManagerState.Issued}
+                              color="warning"
+                            >
+                              <div className="float-left">
+                                <p className="float-left inline-block text-ellipsis whitespace-nowrap">
+                                  {new Date(
+                                    Number(
+                                      tokenData.tokenManager?.parsed.stateChangedAt.toString()
+                                    ) * 1000
+                                  ).toLocaleString('en-US', {
+                                    year: 'numeric',
+                                    month: 'numeric',
+                                    day: 'numeric',
+                                    hour: 'numeric',
+                                    minute: '2-digit',
+                                  })}
+                                </p>
+                                <br />{' '}
+                                <DisplayAddress
+                                  connection={connection}
+                                  address={
+                                    tokenData.tokenManager?.parsed.issuer ||
+                                    undefined
+                                  }
+                                  height="18px"
+                                  width="100px"
+                                  dark={true}
+                                />{' '}
+                              </div>
+                            </Tag>
+                          </div>
+                        </StyledTag>
+
+                        <div className="flex w-max">
+                          <AsyncButton
+                            bgColor={config.colors.secondary}
+                            variant="primary"
+                            disabled={!wallet.publicKey}
+                            className="ml-5 mr-1 inline-block flex-none"
+                            handleClick={() => {
+                              if (wallet.publicKey) {
+                                handleClaim(tokenData)
+                              }
+                            }}
+                          >
+                            <>
+                              Claim{' '}
+                              {(tokenData.claimApprover?.parsed?.paymentAmount.toNumber() ??
+                                0) / 1000000000}{' '}
+                              {getSymbolFromTokenData(tokenData)}{' '}
+                            </>
+                          </AsyncButton>
+                          <Button
+                            variant="tertiary"
+                            className="mr-1 inline-block flex-none"
+                            onClick={() =>
+                              handleCopy(
+                                getLink(
+                                  `/claim/${tokenData.tokenManager?.pubkey.toBase58()}`
+                                )
+                              )
+                            }
+                          >
+                            <FaLink />
+                          </Button>
+                        </div>
+                      </div>
+                    ),
+                    [TokenManagerState.Claimed]: (
+                      <StyledTag>
+                        <Tag state={TokenManagerState.Claimed}>
+                          Claimed by{' '}
+                          {shortPubKey(
+                            tokenData.recipientTokenAccount?.owner || ''
+                          )}{' '}
+                          {/* {shortDateString(
                           tokenData.tokenManager?.parsed.claimedAt
                         )} */}
-                          </Tag>
-                          {((wallet.publicKey &&
-                            tokenData?.tokenManager?.parsed.invalidators &&
-                            tokenData?.tokenManager?.parsed.invalidators
-                              .map((i: PublicKey) => i.toString())
-                              .includes(wallet.publicKey?.toString())) ||
-                            (tokenData.timeInvalidator &&
-                              tokenData.timeInvalidator.parsed.expiration &&
-                              tokenData.timeInvalidator.parsed.expiration.lte(
-                                new BN(Date.now() / 1000)
-                              )) ||
-                            (tokenData.useInvalidator &&
-                              tokenData.useInvalidator.parsed.maxUsages &&
-                              tokenData.useInvalidator.parsed.usages.gte(
-                                tokenData.useInvalidator.parsed.maxUsages
-                              ))) && (
-                            <Button
-                              variant="primary"
-                              disabled={!wallet.connected}
-                              onClick={async () => {
-                                tokenData?.tokenManager &&
-                                  executeTransaction(
+                        </Tag>
+                        {((wallet.publicKey &&
+                          tokenData?.tokenManager?.parsed.invalidators &&
+                          tokenData?.tokenManager?.parsed.invalidators
+                            .map((i: PublicKey) => i.toString())
+                            .includes(wallet.publicKey?.toString())) ||
+                          (tokenData.timeInvalidator &&
+                            tokenData.timeInvalidator.parsed.expiration &&
+                            tokenData.timeInvalidator.parsed.expiration.lte(
+                              new BN(Date.now() / 1000)
+                            )) ||
+                          (tokenData.useInvalidator &&
+                            tokenData.useInvalidator.parsed.maxUsages &&
+                            tokenData.useInvalidator.parsed.usages.gte(
+                              tokenData.useInvalidator.parsed.maxUsages
+                            ))) && (
+                          <Button
+                            variant="primary"
+                            disabled={!wallet.connected}
+                            onClick={async () => {
+                              tokenData?.tokenManager &&
+                                executeTransaction(
+                                  connection,
+                                  asWallet(wallet),
+                                  await invalidate(
                                     connection,
                                     asWallet(wallet),
-                                    await invalidate(
-                                      connection,
-                                      asWallet(wallet),
-                                      tokenData?.tokenManager?.parsed.mint
-                                    ),
-                                    {
-                                      callback: refreshIssuedTokens,
-                                      silent: true,
-                                    }
-                                  )
-                              }}
-                            >
-                              Revoke
-                            </Button>
-                          )}
-                        </StyledTag>
-                      ),
-                      [TokenManagerState.Invalidated]: (
-                        <Tag state={TokenManagerState.Invalidated}>
-                          Invalidated
-                          {/* {shortDateString(
+                                    tokenData?.tokenManager?.parsed.mint
+                                  ),
+                                  {
+                                    callback: refreshIssuedTokens,
+                                    silent: true,
+                                  }
+                                )
+                            }}
+                          >
+                            Revoke
+                          </Button>
+                        )}
+                      </StyledTag>
+                    ),
+                    [TokenManagerState.Invalidated]: (
+                      <Tag state={TokenManagerState.Invalidated}>
+                        Invalidated
+                        {/* {shortDateString(
                     tokenData.tokenManager?.parsed.claimedAt
                   )} */}
-                        </Tag>
-                      ),
-                    }[
-                      tokenData?.tokenManager?.parsed.state as TokenManagerState
-                    ]
-                  }
-                </>
-              </div>
-            ))
-          ) : (
-            <div className="white flex w-full flex-col items-center justify-center gap-1">
-              <div className="text-white">No outstanding tokens!</div>
+                      </Tag>
+                    ),
+                  }[tokenData?.tokenManager?.parsed.state as TokenManagerState]
+                }
+              </>
             </div>
-          )}
-        </div>
-      </div>
+          ))
+        ) : (
+          <div className="white flex w-full flex-col items-center justify-center gap-1">
+            <div className="text-white">No outstanding tokens!</div>
+          </div>
+        )}
+      </TokensOuter>
     </div>
   )
 }

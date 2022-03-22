@@ -14,6 +14,9 @@ export type ProjectConfig = {
   filters: { type: string; value: string }[]
   rentalCard: RentalCardConfig
   airdrops?: AirdropMetadata[]
+  browse?: {
+    hideFilters?: boolean
+  }
 }
 
 export const projectConfigs: { [key: string]: ProjectConfig } = {
@@ -30,6 +33,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidators: ['usages', 'expiration', 'duration', 'manual'],
       extensionOptions: { showDisablePartialExtension: true },
     },
+    browse: { hideFilters: true },
     airdrops: [
       {
         name: 'Origin Jambo',

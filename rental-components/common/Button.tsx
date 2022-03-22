@@ -29,13 +29,12 @@ export const Button = styled.button<ButtonProps>`
   padding: 0 12px;
   transition: 0.2s background;
   ${({ variant = 'primary', disabled, bgColor = undefined }) => {
-    if (disabled) return
     return bgColor
       ? css`
           background: ${bgColor};
           color: ${getColorByBgColor(bgColor)};
           &:hover {
-            background: ${lighten(0.1, bgColor)}};
+            background: ${!disabled && lighten(0.1, bgColor)}};
           }
         `
       : variant === 'primary'
@@ -43,7 +42,7 @@ export const Button = styled.button<ButtonProps>`
           background: rgb(29, 155, 240);
           color: #fff;
           &:hover {
-            background: ${lighten(0.1, 'rgb(29, 155, 240)')}};
+            background: ${!disabled && lighten(0.1, 'rgb(29, 155, 240)')}};
           }
         `
       : variant === 'secondary'
@@ -51,14 +50,14 @@ export const Button = styled.button<ButtonProps>`
           background: #000;
           color: #fff;
           &:hover {
-            background: ${lighten(0.1, '#000')};
+            background: ${!disabled && lighten(0.1, '#000')};
           }
         `
       : css`
           background: rgb(255, 255, 255, 0.15);
           color: #fff;
           &:hover {
-            background: ${lighten(0.05, '#000')};
+            background: ${!disabled && lighten(0.05, '#000')};
           }
         `
   }}

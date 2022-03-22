@@ -67,7 +67,7 @@ export function TokenAccountsProvider({ children }: { children: ReactChild }) {
 
   useEffect(() => {
     const interval = setInterval(
-      (function getTokenAccountsInterval(): any {
+      (function getTokenAccountsInterval(): () => void {
         refreshTokenAccounts()
         return getTokenAccountsInterval
       })(),
