@@ -131,3 +131,30 @@ export const Airdrop = () => {
     </AsyncButton>
   )
 }
+
+export const AirdropSol = () => {
+  const { connection } = useEnvironmentCtx()
+  const wallet = useWallet()
+  const { refreshTokenAccounts } = useUserTokenData()
+  const { config } = useProjectConfig()
+
+  return (
+    <AsyncButton
+      bgColor={config.colors.secondary}
+      variant="primary"
+      disabled={!wallet.connected}
+      handleClick={async () => {
+        if (!wallet.connected) return
+        try {
+          await connection.requestAirdrop(wallet.publicKey!, LAMPORTS_PER_SOL)
+          notify({ message: 'Airdropped 1 sol successfully' })
+          await refreshTokenAccounts()
+        } catch (e) {
+          notify({ message: `Airdrop failed: ${e}`, type: 'error' })
+        }
+      }}
+    >
+      Faucet
+    </AsyncButton>
+  )
+}

@@ -15,7 +15,7 @@ import { HiUserCircle } from 'react-icons/hi'
 import { useMediaQuery } from 'react-responsive'
 import { getColorByBgColor } from 'rental-components/common/Button'
 
-import { Airdrop } from './Airdrop'
+import { Airdrop, AirdropSol } from './Airdrop'
 import { LoadingPulse } from './LoadingPulse'
 import { shortPubKey } from './utils'
 
@@ -231,8 +231,9 @@ export const Header = ({
         {wallet.connected &&
           ctx.environment.label === 'devnet' &&
           !isTabletOrMobile && (
-            <div style={{ marginLeft: '40px' }}>
+            <div className="flex gap-2" style={{ marginLeft: '40px' }}>
               <Airdrop />
+              <AirdropSol />
             </div>
           )}
       </div>
