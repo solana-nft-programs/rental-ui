@@ -1,38 +1,29 @@
-import React from 'react'
-import { useEffect, useState } from 'react'
-import styled from '@emotion/styled'
-import { StyledContainer } from 'common/StyledContainer'
-import { useError } from 'providers/ErrorProvider'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { Header } from 'common/Header'
-import { useUserTokenData } from 'providers/TokenDataProvider'
-import { useRouter } from 'next/router'
-import Colors from 'common/colors'
-import { firstParam, camelCase } from 'common/utils'
-import { Manage } from 'components/Manage'
+import { StyledContainer } from 'common/StyledContainer'
+import { camelCase, firstParam } from 'common/utils'
 import { Browse } from 'components/Browse'
+import { Manage } from 'components/Manage'
 import { Wallet } from 'components/Wallet'
-import { useProjectConfigData } from 'providers/ProjectConfigProvider'
 import Head from 'next/head'
+import { useRouter } from 'next/router'
+import { useError } from 'providers/ErrorProvider'
+import { useProjectConfig } from 'providers/ProjectConfigProvider'
+import { useUserTokenData } from 'providers/TokenDataProvider'
+import React, { useEffect, useState } from 'react'
 
 function Profile() {
+  const { config } = useProjectConfig()
   const [error, _setError] = useError()
   const wallet = useWallet()
   const router = useRouter()
   const { addressId } = router.query
   const [tab, setTab] = useState<string>('wallet')
-  const { projectName, colors } = useProjectConfigData()
 
   useEffect(() => {
     const anchor = router.asPath.split('#')[1]
-    if (anchor != tab) setTab(anchor || 'wallet')
-  }, [router.asPath])
-
-  useEffect(() => {
-    if (colors) {
-      Colors.background = colors.main
-    }
-  }, [colors])
+    if (anchor !== tab) setTab(anchor || 'wallet')
+  }, [router, tab])
 
   const { setAddress, loaded, refreshing } = useUserTokenData()
   useEffect(() => {
@@ -41,23 +32,21 @@ function Profile() {
     }
     if (wallet && wallet.connected && wallet.publicKey) {
       setAddress(wallet.publicKey.toBase58())
-      router.push(
-        `/${wallet.publicKey.toBase58()}${window.location.search ?? ''}`
-      )
+      router.push(`/${wallet.publicKey.toBase58()}${window.location.search}`)
       setTab('wallet')
     }
-  }, [wallet.connected, addressId])
+  }, [wallet.publicKey, addressId])
 
   return (
     <div
       className="min-h-screen"
-      style={{ backgroundColor: Colors.background }}
+      style={{ backgroundColor: config.colors.main }}
     >
       <Head>
-        <title>{camelCase(projectName)}</title>
+        <title>{camelCase(config.name)}</title>
       </Head>
       <Header
-        loading={!loaded && refreshing}
+        loading={loaded && refreshing}
         tabs={[
           { name: 'Wallet', anchor: 'wallet' },
           { name: 'Manage', anchor: 'manage' },

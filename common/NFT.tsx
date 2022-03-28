@@ -1,29 +1,28 @@
-import React from 'react'
-import Colors from 'common/colors'
-import { getQueryParam, pubKeyUrl } from 'common/utils'
-import styled from '@emotion/styled'
-import { TokenData } from 'api/api'
-import { Popover, Tooltip } from 'antd'
-import { FaEllipsisH } from 'react-icons/fa'
-import { FiSend } from 'react-icons/fi'
-import { useRentalModal } from 'rental-components/RentalModalProvider'
-import { useWallet } from '@solana/wallet-adapter-react'
-import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
-import { asWallet } from './Wallets'
-import { IoQrCodeOutline, IoClose } from 'react-icons/io5'
-import { FiExternalLink } from 'react-icons/fi'
-import { useQRCode } from 'rental-components/QRCodeProvider'
-import { NFTOverlay } from './NFTOverlay'
-import { useProjectConfigData } from 'providers/ProjectConfigProvider'
-import { executeTransaction } from 'common/Transactions'
 import { unissueToken } from '@cardinal/token-manager'
-import { useIssuedTokens } from 'providers/IssuedTokensProvider'
+import styled from '@emotion/styled'
+import { useWallet } from '@solana/wallet-adapter-react'
+import { Popover, Tooltip } from 'antd'
+import type { TokenData } from 'api/api'
+import Colors from 'common/colors'
+import { executeTransaction } from 'common/Transactions'
+import { pubKeyUrl } from 'common/utils'
+import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
+import { useProjectConfig } from 'providers/ProjectConfigProvider'
+import React from 'react'
+import { FaEllipsisH } from 'react-icons/fa'
+import { FiExternalLink, FiSend } from 'react-icons/fi'
+import { IoClose, IoQrCodeOutline } from 'react-icons/io5'
+import { useQRCode } from 'rental-components/QRCodeProvider'
+import { useRentalModal } from 'rental-components/RentalModalProvider'
+
+import { NFTOverlay } from './NFTOverlay'
+import { asWallet } from './Wallets'
 
 export const TokensOuter = styled.div`
   display: flex;
   align-items: flex-start;
-  flex-wrap: wrap;
   max-width: 880px;
+  flex-wrap: wrap;
   margin: 10px auto;
   padding-bottom: 60px;
   gap: 20px;
@@ -156,6 +155,7 @@ export const TokenMetadata = styled.div`
     align-items: center;
     justify-content: center;
     height: 280px;
+    max-width: 100%;
     #media {
       object-fit: contain;
       max-width: 250px;
@@ -175,7 +175,7 @@ export function NFT({ tokenData, hideQRCode }: NFTProps) {
   const wallet = useWallet()
   const { show } = useQRCode()
   const rentalModal = useRentalModal()
-  const { colors } = useProjectConfigData()
+  const { config } = useProjectConfig()
 
   const {
     tokenAccount,
@@ -236,7 +236,8 @@ export function NFT({ tokenData, hideQRCode }: NFTProps) {
                           asWallet(wallet),
                           ctx.connection,
                           ctx.environment.label,
-                          tokenData
+                          tokenData,
+                          config.rentalCard
                         )
                       }}
                     >
@@ -259,7 +260,7 @@ export function NFT({ tokenData, hideQRCode }: NFTProps) {
               </div>
             </Tooltip>
           )
-        ) : tokenManager.parsed.issuer.toString() ==
+        ) : tokenManager.parsed.issuer.toString() ===
             wallet.publicKey?.toString() && hideQRCode ? (
           <div
             className="unissue"

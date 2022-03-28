@@ -1,23 +1,20 @@
-import { getTokenAccountsWithData, TokenData } from 'api/api'
-import React, {
-  useState,
-  useContext,
-  useCallback,
-  useEffect,
-  ReactChild,
-} from 'react'
+import type { TokenData } from 'api/api'
+import { getTokenAccountsWithData } from 'api/api'
+import type { ReactChild } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
+
 import { useEnvironmentCtx } from './EnvironmentProvider'
-import { filterTokens, useProjectConfigData } from './ProjectConfigProvider'
+import { filterTokens, useProjectConfig } from './ProjectConfigProvider'
 
 export interface UserTokenDataValues {
   tokenDatas: TokenData[]
-  refreshTokenAccounts: Function
+  refreshTokenAccounts: () => void
   setTokenDatas: (newEnvironment: TokenData[]) => void
   setAddress: (address: string) => void
   loaded: boolean
   refreshing: boolean
-  address: String | null
-  error: String | null
+  address: string | null
+  error: string | null
 }
 
 const UserTokenData: React.Context<UserTokenDataValues> =
@@ -39,14 +36,14 @@ export function TokenAccountsProvider({ children }: { children: ReactChild }) {
   const [tokenDatas, setTokenDatas] = useState<TokenData[]>([])
   const [refreshing, setRefreshing] = useState<boolean>(false)
   const [loaded, setLoaded] = useState<boolean>(false)
-  const { filters, configLoaded } = useProjectConfigData()
+  const { config } = useProjectConfig()
 
   const refreshTokenAccounts = useCallback(() => {
     if (!address) {
       setError(`Address not set please connect wallet to continue`)
       return
     }
-    if (!configLoaded) {
+    if (!config) {
       setError(`No project config found`)
       return
     }
@@ -55,7 +52,7 @@ export function TokenAccountsProvider({ children }: { children: ReactChild }) {
     getTokenAccountsWithData(connection, address)
       .then((tokenDatas) => {
         let tokensWithMetadata = tokenDatas.filter((td) => td.metadata)
-        tokensWithMetadata = filterTokens(filters, tokensWithMetadata)
+        tokensWithMetadata = filterTokens(config.filters, tokensWithMetadata)
         setTokenDatas(tokensWithMetadata)
       })
       .catch((e) => {
@@ -66,11 +63,11 @@ export function TokenAccountsProvider({ children }: { children: ReactChild }) {
         setLoaded(true)
         setRefreshing(false)
       })
-  }, [connection, setError, address, setRefreshing, filters, configLoaded])
+  }, [connection, setError, address, setRefreshing, config])
 
   useEffect(() => {
     const interval = setInterval(
-      (function getTokenAccountsInterval(): any {
+      (function getTokenAccountsInterval(): () => void {
         refreshTokenAccounts()
         return getTokenAccountsInterval
       })(),

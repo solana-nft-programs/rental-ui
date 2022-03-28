@@ -1,17 +1,20 @@
-import React, { useState, useContext, useEffect, ReactChild } from 'react'
-import { useUserTokenData } from './TokenDataProvider'
-import { useEnvironmentCtx } from './EnvironmentProvider'
-import { getTokenDatas, TokenData } from 'api/api'
-import { getTokenManagersByState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/accounts'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
-import { filterTokens, useProjectConfigData } from './ProjectConfigProvider'
+import { getTokenManagersByState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/accounts'
+import type { TokenData } from 'api/api'
+import { getTokenDatas } from 'api/api'
+import type { ReactChild } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+
+import { useEnvironmentCtx } from './EnvironmentProvider'
+import { filterTokens, useProjectConfig } from './ProjectConfigProvider'
+import { useUserTokenData } from './TokenDataProvider'
 
 export interface IssuedTokensContextValues {
   issuedTokens: TokenData[]
-  refreshIssuedTokens: Function
-  refreshing: Boolean
-  loaded: Boolean
-  error: String | null
+  refreshIssuedTokens: () => void
+  refreshing: boolean
+  loaded: boolean
+  error: string | null
 }
 
 const IssuedTokensContext: React.Context<IssuedTokensContextValues> =
@@ -24,24 +27,24 @@ const IssuedTokensContext: React.Context<IssuedTokensContextValues> =
   })
 
 export function IssuedTokensProvider({ children }: { children: ReactChild }) {
+  const { config } = useProjectConfig()
   const { connection } = useEnvironmentCtx()
   const { tokenDatas } = useUserTokenData()
   const [issuedTokens, setIssuedTokens] = useState<TokenData[]>([])
-  const [refreshing, setRefreshing] = useState<Boolean>(false)
-  const [loaded, setLoaded] = useState<Boolean>(false)
+  const [refreshing, setRefreshing] = useState<boolean>(false)
+  const [loaded, setLoaded] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
-  const { filters, configLoaded } = useProjectConfigData()
 
   const refreshIssuedTokens = async () => {
     try {
-      if (!configLoaded) return
+      if (!config) return
       setRefreshing(true)
       const tokenManagerDatas = await getTokenManagersByState(
         connection,
         TokenManagerState.Issued
       )
       let tokenDatas = await getTokenDatas(connection, tokenManagerDatas)
-      tokenDatas = filterTokens(filters, tokenDatas)
+      tokenDatas = filterTokens(config.filters, tokenDatas)
       setIssuedTokens(tokenDatas)
     } catch (e) {
       console.log(e)
@@ -54,7 +57,7 @@ export function IssuedTokensProvider({ children }: { children: ReactChild }) {
 
   useEffect(() => {
     refreshIssuedTokens()
-  }, [connection, setError, setRefreshing, tokenDatas, filters, configLoaded])
+  }, [connection, setError, setRefreshing, tokenDatas, config])
 
   return (
     <IssuedTokensContext.Provider

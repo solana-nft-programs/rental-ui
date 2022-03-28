@@ -1,36 +1,36 @@
-import React, { useEffect, useState } from 'react'
-import { NFT, TokensOuter } from 'common/NFT'
-import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
+import { DisplayAddress } from '@cardinal/namespaces-components'
+import { invalidate, withClaimToken } from '@cardinal/token-manager'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
-import { Button } from 'rental-components/common/Button'
-import { notify } from 'common/Notification'
-import { shortPubKey } from 'common/utils'
-import { Connection, PublicKey, Transaction } from '@solana/web3.js'
-import { useWallet } from '@solana/wallet-adapter-react'
-import { FaLink } from 'react-icons/fa'
-import { invalidate, unissueToken } from '@cardinal/token-manager'
-import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
-import { asWallet } from 'common/Wallets'
-import { executeTransaction } from 'common/Transactions'
+import styled from '@emotion/styled'
 import { BN } from '@project-serum/anchor'
+import type * as splToken from '@solana/spl-token'
+import { useWallet } from '@solana/wallet-adapter-react'
+import type { PublicKey } from '@solana/web3.js'
+import { Connection, Transaction } from '@solana/web3.js'
+import { Select } from 'antd'
+import type { TokenData } from 'api/api'
+import { withWrapSol } from 'api/wrappedSol'
+import { NFT, TokensOuter } from 'common/NFT'
+import { NFTPlaceholder } from 'common/NFTPlaceholder'
+import { notify } from 'common/Notification'
+import { StyledTag, Tag } from 'common/Tags'
+import { executeTransaction } from 'common/Transactions'
+import { getMintDecimalAmount } from 'common/units'
+import { shortPubKey } from 'common/utils'
+import { asWallet } from 'common/Wallets'
+import { lighten } from 'polished'
+import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useIssuedTokens } from 'providers/IssuedTokensProvider'
-import { findClaimApproverAddress } from '@cardinal/token-manager/dist/cjs/programs/claimApprover/pda'
-import { TokenData } from 'api/api'
 import {
   PAYMENT_MINTS,
   usePaymentMints,
   WRAPPED_SOL_MINT,
 } from 'providers/PaymentMintsProvider'
-import * as splToken from '@solana/spl-token'
-import { withWrapSol } from 'api/wrappedSol'
-import { withClaimToken } from '@cardinal/token-manager'
-import { StyledTag, Tag } from 'common/Tags'
-import { getLink, useProjectConfigData } from 'providers/ProjectConfigProvider'
-import { DisplayAddress } from '@cardinal/namespaces-components'
-import { getMintDecimalAmount } from 'common/units'
-import { Select } from 'antd'
-import styled from '@emotion/styled'
-import { lighten } from 'polished'
+import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
+import React, { useState } from 'react'
+import { FaLink } from 'react-icons/fa'
+import { AsyncButton, Button } from 'rental-components/common/Button'
+
 const { Option } = Select
 
 const handleCopy = (shareUrl: string) => {
@@ -56,113 +56,187 @@ const allOrderCategories = [
 
 const globalRate = 604800
 
+const getAllAttributes = (tokens: TokenData[]) => {
+  const allAttributes: { [traitType: string]: Set<any> } = {}
+  tokens.forEach((tokenData) => {
+    if (tokenData.metadata.data?.attributes) {
+      tokenData.metadata.data?.attributes.forEach(
+        (attribute: { trait_type: string; value: any }) => {
+          if (attribute.trait_type in allAttributes) {
+            allAttributes[attribute.trait_type]!.add(attribute.value)
+          } else {
+            allAttributes[attribute.trait_type] = new Set([attribute.value])
+          }
+        }
+      )
+    }
+  })
+
+  const sortedAttributes: { [traitType: string]: any[] } = {}
+  Object.keys(allAttributes).forEach((traitType) => {
+    sortedAttributes[traitType] = Array.from(allAttributes[traitType] ?? [])
+  })
+  return sortedAttributes
+}
+
 export const Browse = () => {
+  const { config } = useProjectConfig()
   const { connection, environment } = useEnvironmentCtx()
   const wallet = useWallet()
 
-  let { issuedTokens, loaded, refreshIssuedTokens } = useIssuedTokens()
-  let [filteredIssuedTokens, setFilteredIssuedTokens] =
-    useState<TokenData[]>(issuedTokens)
+  const { issuedTokens, loaded, refreshIssuedTokens } = useIssuedTokens()
   const [userPaymentTokenAccount, _setUserPaymentTokenAccount] =
     useState<splToken.AccountInfo | null>(null)
-  const { colors } = useProjectConfigData()
   const { paymentMintInfos } = usePaymentMints()
   const [selectedOrderCategory, setSelectedOrderCategory] =
     useState<OrderCategories>(OrderCategories.PriceLowToHigh)
+  const [selectedFilters, setSelectedFilters] = useState<{
+    [filterName: string]: any[]
+  }>({})
+  const [showFilters, setShowFilters] = useState<boolean>(true)
 
   const StyledSelect = styled.div`
     .ant-select-selector {
+      height: 40px;
       min-width: 180px;
-      border: 1px solid ${lighten(0.3, colors.main)} !important;
-      background-color: ${lighten(0.1, colors.main)} !important;
-      color: ${colors.secondary} !important;
+      border: 1px solid ${lighten(0.3, config.colors.main)} !important;
+      background-color: ${lighten(0.1, config.colors.main)} !important;
+      color: ${config.colors.secondary} !important;
     }
     .ant-select-arrow {
-      color: ${colors.secondary} !important;
+      color: ${config.colors.secondary} !important;
     }
   `
 
-  useEffect(() => {
-    async function filterIssuedTokens() {
-      const tokens = []
-      for (let token of issuedTokens) {
-        if (!token.claimApprover?.pubkey) {
-          tokens.push(token)
-        } else {
-          let [tokenClaimApprover] = await findClaimApproverAddress(
-            token.tokenManager?.pubkey!
-          )
-          if (
-            tokenClaimApprover.toString() ===
-            token.claimApprover?.pubkey.toString()
-          ) {
-            tokens.push(token)
-          }
-        }
-      }
-
-      handleOrderCategoryChange(selectedOrderCategory, tokens)
+  const StyledSelectMultiple = styled.div`
+    .ant-select-selector {
+      min-width: 180px;
+      border: 1px solid ${lighten(0.6, config.colors.main)} !important;
+      background-color: ${lighten(0.3, config.colors.main)} !important;
+      color: ${config.colors.secondary} !important;
     }
 
-    filterIssuedTokens()
-  }, [issuedTokens])
+    .ant-select-selection-item {
+      background-color: ${lighten(0.1, config.colors.main)} !important;
+      border: 1px solid ${lighten(0.3, config.colors.main)} !important;
+    }
 
-  const handleOrderCategoryChange = (
-    value: OrderCategories = selectedOrderCategory,
-    tokens: TokenData[] = filteredIssuedTokens
-  ) => {
-    switch (value) {
-      case OrderCategories.RecentlyListed:
-        setFilteredIssuedTokens(
-          tokens.sort((a, b) => {
-            return (
-              (a.tokenManager?.parsed.stateChangedAt.toNumber() ?? 0) -
-              (b.tokenManager?.parsed.stateChangedAt.toNumber() ?? 0)
-            )
-          })
-        )
-        break
-      case OrderCategories.PriceLowToHigh:
-        setFilteredIssuedTokens(
-          tokens.sort((a, b) => {
-            return (
-              (a.claimApprover?.parsed.paymentAmount.toNumber() ?? 0) -
-              (b.claimApprover?.parsed.paymentAmount.toNumber() ?? 0)
-            )
-          })
-        )
-        break
-      case OrderCategories.PriceHighToLow:
-        setFilteredIssuedTokens(
-          tokens.sort((a, b) => {
-            return (
-              (b.claimApprover?.parsed.paymentAmount.toNumber() ?? 0) -
-              (a.claimApprover?.parsed.paymentAmount.toNumber() ?? 0)
-            )
-          })
-        )
-        break
-      case OrderCategories.RateLowToHigh:
-        setFilteredIssuedTokens(
-          tokens.sort((a, b) => {
-            return calculateRateFromTokenData(a) - calculateRateFromTokenData(b)
-          })
-        )
-        break
-      case OrderCategories.RateHighToLow:
-        setFilteredIssuedTokens(
-          tokens.sort((a, b) => {
-            return calculateRateFromTokenData(b) - calculateRateFromTokenData(a)
-          })
-        )
-        break
-      default:
-        break
+    .ant-select-selection-item-remove {
+      color: ${lighten(0.1, config.colors.secondary)} !important;
+      margin-top: -2px;
+      margin-left: 3px;
+    }
+
+    .ant-select-arrow {
+      color: ${config.colors.secondary} !important;
+    }
+
+    .ant-select-clear {
+      background: none;
+    }
+  `
+
+  const getPriceFromTokenData = (tokenData: TokenData) => {
+    if (tokenData.claimApprover?.parsed) {
+      return getMintDecimalAmount(
+        paymentMintInfos[
+          tokenData.claimApprover?.parsed?.paymentMint.toString()
+        ]!,
+        tokenData.claimApprover?.parsed?.paymentAmount
+      ).toNumber()
+    } else {
+      return 0
     }
   }
 
+  const calculateRateFromTokenData = (
+    tokenData: TokenData,
+    rate: number = globalRate
+  ) => {
+    const price = getPriceFromTokenData(tokenData)
+    if (price === 0) return 0
+    let duration = 0
+    if (tokenData.timeInvalidator?.parsed.durationSeconds) {
+      duration = tokenData.timeInvalidator.parsed.durationSeconds.toNumber()
+    }
+    if (tokenData.timeInvalidator?.parsed.expiration) {
+      duration =
+        tokenData.timeInvalidator.parsed.expiration.toNumber() -
+        Date.now() / 1000
+    }
+    return (price / duration) * rate
+  }
+
+  const sortTokens = (tokens: TokenData[]): TokenData[] => {
+    switch (selectedOrderCategory) {
+      case OrderCategories.RecentlyListed:
+        return tokens.sort((a, b) => {
+          return (
+            (a.tokenManager?.parsed.stateChangedAt.toNumber() ?? 0) -
+            (b.tokenManager?.parsed.stateChangedAt.toNumber() ?? 0)
+          )
+        })
+      case OrderCategories.PriceLowToHigh:
+        return tokens.sort((a, b) => {
+          return (
+            (a.claimApprover?.parsed.paymentAmount.toNumber() ?? 0) -
+            (b.claimApprover?.parsed.paymentAmount.toNumber() ?? 0)
+          )
+        })
+      case OrderCategories.PriceHighToLow:
+        return tokens.sort((a, b) => {
+          return (
+            (b.claimApprover?.parsed.paymentAmount.toNumber() ?? 0) -
+            (a.claimApprover?.parsed.paymentAmount.toNumber() ?? 0)
+          )
+        })
+      case OrderCategories.RateLowToHigh:
+        return tokens.sort((a, b) => {
+          return calculateRateFromTokenData(a) - calculateRateFromTokenData(b)
+        })
+      case OrderCategories.RateHighToLow:
+        return tokens.sort((a, b) => {
+          return calculateRateFromTokenData(b) - calculateRateFromTokenData(a)
+        })
+      default:
+        return []
+    }
+  }
+
+  const filterTokens = (tokens: TokenData[]): TokenData[] => {
+    if (Object.keys(selectedFilters).length <= 0) return tokens
+    const attributeFilteredTokens: TokenData[] = []
+    tokens.forEach((token) => {
+      let addToken = false
+      Object.keys(selectedFilters).forEach((filterName) => {
+        if (selectedFilters[filterName]!.length > 0) {
+          selectedFilters[filterName]!.forEach((val) => {
+            if (
+              token.metadata?.data.attributes.filter(
+                (a: { trait_type: string; value: any }) =>
+                  a.trait_type === filterName && a.value === val
+              ).length > 0
+            ) {
+              addToken = true
+            }
+          })
+        }
+      })
+      if (addToken) {
+        attributeFilteredTokens.push(token)
+      }
+    })
+    return attributeFilteredTokens
+  }
+
+  const filteredAndSortedTokens: TokenData[] = sortTokens(
+    filterTokens(issuedTokens)
+  )
+
   const handleClaim = async (tokenData: TokenData) => {
     try {
+      if (!tokenData.tokenManager) throw new Error('No token manager data')
+      if (!wallet.publicKey) throw new Error('Wallet not connected')
       // wrap sol if there is payment required
       const transaction = new Transaction()
       if (
@@ -190,7 +264,7 @@ export const Browse = () => {
           ? new Connection(environment.override)
           : connection,
         asWallet(wallet),
-        tokenData.tokenManager?.pubkey!
+        tokenData.tokenManager?.pubkey
       )
       await executeTransaction(connection, asWallet(wallet), transaction, {
         confirmOptions: { commitment: 'confirmed', maxRetries: 3 },
@@ -199,6 +273,9 @@ export const Browse = () => {
       })
       refreshIssuedTokens()
     } catch (e: any) {
+      notify({
+        message: e.toString(),
+      })
       console.log(e)
     }
   }
@@ -206,44 +283,13 @@ export const Browse = () => {
   const getSymbolFromTokenData = (tokenData: TokenData) => {
     const symbol = PAYMENT_MINTS.find(
       (mint) =>
-        mint.mint == tokenData.claimApprover?.parsed?.paymentMint.toString()
+        mint.mint === tokenData.claimApprover?.parsed?.paymentMint.toString()
     )?.symbol
-    if (!symbol || symbol == 'SOL') {
+    if (!symbol || symbol === 'SOL') {
       return '◎'
     } else {
       return symbol
     }
-  }
-
-  const getPriceFromTokenData = (tokenData: TokenData) => {
-    if (tokenData.claimApprover?.parsed) {
-      return getMintDecimalAmount(
-        paymentMintInfos[
-          tokenData.claimApprover?.parsed?.paymentMint.toString()
-        ]!,
-        tokenData.claimApprover?.parsed?.paymentAmount
-      ).toNumber()
-    } else {
-      return 0
-    }
-  }
-
-  const calculateRateFromTokenData = (
-    tokenData: TokenData,
-    rate: number = globalRate
-  ) => {
-    const price = getPriceFromTokenData(tokenData)
-    if (price == 0) return 0
-    let duration = 0
-    if (tokenData.timeInvalidator?.parsed.durationSeconds) {
-      duration = tokenData.timeInvalidator.parsed.durationSeconds.toNumber()
-    }
-    if (tokenData.timeInvalidator?.parsed.expiration) {
-      duration =
-        tokenData.timeInvalidator.parsed.expiration.toNumber() -
-        Date.now() / 1000
-    }
-    return (price / duration) * rate
   }
 
   const calculateFloorPrice = (tokenDatas: TokenData[]): number => {
@@ -275,38 +321,47 @@ export const Browse = () => {
         }
         return (price / duration) * globalRate
       })
-    if (rentalPrices.length == 0) return 0
+    if (rentalPrices.length === 0) return 0
     return Math.min(...rentalPrices)
   }
 
+  const updateFilters = (traitType: string, value: any[]) => {
+    const filters = { ...selectedFilters }
+    if (value.length === 0 && traitType in filters) {
+      delete filters[traitType]
+    } else {
+      filters[traitType] = value
+    }
+    setSelectedFilters(filters)
+  }
+
+  const sortedAttributes = getAllAttributes(issuedTokens)
   return (
-    <div>
-      <div className="d-block mx-auto">
-        <div className="flex justify-center">
-          <div className="d-block flex-col  border-r-2 border-gray-400 py-3 px-5">
+    <div className="container mx-auto">
+      <div className="mb-4 flex flex-wrap justify-center md:justify-between">
+        <div className="flex">
+          <div className="d-block flex-col  border-2 border-gray-600 py-3 px-5">
             <p className="text-gray-400">FLOOR PRICE / WEEK</p>
             <h2 className="text-center font-bold text-gray-100">
-              {calculateFloorPrice(filteredIssuedTokens).toFixed(2)}{' '}
-              {filteredIssuedTokens.length > 0
-                ? getSymbolFromTokenData(filteredIssuedTokens[0]!)
+              {calculateFloorPrice(filteredAndSortedTokens).toFixed(2)}{' '}
+              {filteredAndSortedTokens.length > 0
+                ? getSymbolFromTokenData(filteredAndSortedTokens[0]!)
                 : '◎'}
             </h2>
           </div>
-          <div className="d-block flex-col  py-3 px-5">
+          <div className="d-block flex-col border-2 border-gray-600  py-3 px-5">
             <p className="text-gray-400">TOTAL LISTED</p>
             <h2 className="text-center font-bold text-gray-100">
-              {filteredIssuedTokens.length}
+              {filteredAndSortedTokens.length}
             </h2>
           </div>
         </div>
-      </div>
-      <div className="flex max-w-[940px] flex-row-reverse">
+
         <StyledSelect>
           <Select
-            className="m-[10px] w-max rounded-[4px] bg-black text-gray-700"
+            className="m-[10px] h-[30px] w-max rounded-[4px] bg-black text-gray-700"
             onChange={(e) => {
               setSelectedOrderCategory(e)
-              handleOrderCategoryChange(e)
             }}
             defaultValue={selectedOrderCategory}
           >
@@ -318,9 +373,63 @@ export const Browse = () => {
           </Select>
         </StyledSelect>
       </div>
+      {!config.browse?.hideFilters && (
+        <div
+          className={
+            'mx-auto w-[220px] text-center md:absolute md:-left-[220px]'
+          }
+        >
+          <div
+            onClick={() => setShowFilters(!showFilters)}
+            className="my-3 text-center text-lg text-gray-300 hover:cursor-pointer hover:text-gray-100"
+          >
+            {showFilters ? 'Filters [-]' : 'Filters [+]'}
+          </div>
+          {showFilters && (
+            <div className="flex flex-col">
+              {Object.keys(sortedAttributes).map((traitType) => (
+                <div key={traitType}>
+                  {selectedFilters[traitType] !== undefined &&
+                    selectedFilters[traitType]!.length > 0 && (
+                      <p className="mb-1 text-gray-100">{traitType}</p>
+                    )}
+                  <StyledSelectMultiple className="mb-5">
+                    <Select
+                      mode="multiple"
+                      allowClear
+                      style={{ width: '100%', maxWidth: '200px' }}
+                      placeholder={traitType}
+                      defaultValue={selectedFilters[traitType] ?? []}
+                      onChange={(e) => {
+                        updateFilters(traitType, e)
+                      }}
+                    >
+                      {sortedAttributes[traitType]!.map((value) => (
+                        <Option key={value} value={value}>
+                          {value}
+                        </Option>
+                      ))}
+                    </Select>
+                  </StyledSelectMultiple>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
       <TokensOuter>
-        {filteredIssuedTokens && filteredIssuedTokens.length > 0 ? (
-          filteredIssuedTokens.map((tokenData) => (
+        {!loaded ? (
+          <>
+            <NFTPlaceholder />
+            <NFTPlaceholder />
+            <NFTPlaceholder />
+            <NFTPlaceholder />
+            <NFTPlaceholder />
+            <NFTPlaceholder />
+          </>
+        ) : filteredAndSortedTokens && filteredAndSortedTokens.length > 0 ? (
+          filteredAndSortedTokens.map((tokenData) => (
             <div
               key={tokenData.tokenManager?.pubkey.toString()}
               style={{
@@ -357,7 +466,7 @@ export const Browse = () => {
                               color="warning"
                             >
                               <div className="float-left">
-                                <p className="float-left inline-block">
+                                <p className="float-left inline-block text-ellipsis whitespace-nowrap">
                                   {new Date(
                                     Number(
                                       tokenData.tokenManager?.parsed.stateChangedAt.toString()
@@ -377,7 +486,7 @@ export const Browse = () => {
                                     tokenData.tokenManager?.parsed.issuer ||
                                     undefined
                                   }
-                                  height="12px"
+                                  height="18px"
                                   width="100px"
                                   dark={true}
                                 />{' '}
@@ -385,18 +494,26 @@ export const Browse = () => {
                             </Tag>
                           </div>
                         </StyledTag>
+
                         <div className="flex w-max">
-                          <Button
-                            bgColor={colors.secondary}
+                          <AsyncButton
+                            bgColor={config.colors.secondary}
                             variant="primary"
+                            disabled={!wallet.publicKey}
                             className="mr-1 inline-block flex-none"
-                            onClick={() => handleClaim(tokenData)}
+                            handleClick={async () => {
+                              if (wallet.publicKey) {
+                                await handleClaim(tokenData)
+                              }
+                            }}
                           >
-                            Claim{' '}
-                            {(tokenData.claimApprover?.parsed?.paymentAmount.toNumber() ??
-                              0) / 1000000000}{' '}
-                            {getSymbolFromTokenData(tokenData)}{' '}
-                          </Button>
+                            <>
+                              Claim{' '}
+                              {(tokenData.claimApprover?.parsed?.paymentAmount.toNumber() ??
+                                0) / 1000000000}{' '}
+                              {getSymbolFromTokenData(tokenData)}{' '}
+                            </>
+                          </AsyncButton>
                           <Button
                             variant="tertiary"
                             className="mr-1 inline-block flex-none"
@@ -477,13 +594,9 @@ export const Browse = () => {
               </>
             </div>
           ))
-        ) : loaded ? (
+        ) : (
           <div className="white flex w-full flex-col items-center justify-center gap-1">
             <div className="text-white">No outstanding tokens!</div>
-          </div>
-        ) : (
-          <div className="flex w-full items-center justify-center">
-            <LoadingSpinner />
           </div>
         )}
       </TokensOuter>

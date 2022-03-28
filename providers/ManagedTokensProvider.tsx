@@ -1,19 +1,22 @@
-import React, { useState, useContext, useEffect, ReactChild } from 'react'
-import { useUserTokenData } from './TokenDataProvider'
-import { useEnvironmentCtx } from './EnvironmentProvider'
-import { web3 } from '@project-serum/anchor'
-import { getTokenDatas, TokenData } from 'api/api'
 import { getTokenManagersForIssuer } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/accounts'
-import { filterTokens, useProjectConfigData } from './ProjectConfigProvider'
 import axios from 'axios'
+import { web3 } from '@project-serum/anchor'
+import type { TokenData } from 'api/api'
+import { getTokenDatas } from 'api/api'
+import type { ReactChild } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+
+import { useEnvironmentCtx } from './EnvironmentProvider'
+import { filterTokens, useProjectConfig } from './ProjectConfigProvider'
+import { useUserTokenData } from './TokenDataProvider'
 
 export interface ManagedTokensContextValues {
   internalClaims: { [k: string]: string }
   managedTokens: TokenData[]
-  refreshManagedTokens: Function
-  refreshing: Boolean
-  loaded: Boolean
-  error: String | null
+  refreshManagedTokens: () => void
+  refreshing: boolean
+  loaded: boolean
+  error: string | null
 }
 
 const ManagedTokensContext: React.Context<ManagedTokensContextValues> =
@@ -31,10 +34,10 @@ export function ManagedTokensProvider({ children }: { children: ReactChild }) {
   const { address, tokenDatas } = useUserTokenData()
   const [internalClaims, setInternalClaims] = useState<any>({})
   const [managedTokens, setManagedTokens] = useState<TokenData[]>([])
-  const [refreshing, setRefreshing] = useState<Boolean>(false)
-  const [loaded, setLoaded] = useState<Boolean>(false)
+  const [refreshing, setRefreshing] = useState<boolean>(false)
+  const [loaded, setLoaded] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
-  const { filters, configLoaded } = useProjectConfigData()
+  const { config } = useProjectConfig()
 
   const refreshManagedTokens = async () => {
     if (!address) {
@@ -42,7 +45,7 @@ export function ManagedTokensProvider({ children }: { children: ReactChild }) {
       return
     }
     try {
-      if (!configLoaded) return
+      if (!config) return
       setRefreshing(true)
 
       const { data } = await axios.get(`/api/claims`, {
@@ -58,7 +61,7 @@ export function ManagedTokensProvider({ children }: { children: ReactChild }) {
         new web3.PublicKey(address)
       )
       let tokenDatas = await getTokenDatas(connection, tokenManagerDatas)
-      tokenDatas = filterTokens(filters, tokenDatas)
+      tokenDatas = filterTokens(config.filters, tokenDatas)
       setManagedTokens(tokenDatas)
 
       if (data?.claims.length)
@@ -79,7 +82,7 @@ export function ManagedTokensProvider({ children }: { children: ReactChild }) {
 
   useEffect(() => {
     refreshManagedTokens()
-  }, [connection, setError, address, tokenDatas, setRefreshing, filters, configLoaded])
+  }, [connection, setError, address, tokenDatas, setRefreshing])
 
   return (
     <ManagedTokensContext.Provider

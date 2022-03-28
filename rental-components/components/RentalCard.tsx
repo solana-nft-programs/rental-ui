@@ -1,48 +1,50 @@
-import React, { useEffect, useState } from 'react'
-import * as anchor from '@project-serum/anchor'
+import type { IssueParameters } from '@cardinal/token-manager'
+import { claimLinks, issueToken } from '@cardinal/token-manager'
+import {
+  InvalidationType,
+  TokenManagerKind,
+} from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
+
 import styled from '@emotion/styled'
+import * as anchor from '@project-serum/anchor'
+import type { Wallet } from '@saberhq/solana-contrib'
+import type { Connection } from '@solana/web3.js'
+import { Keypair, PublicKey } from '@solana/web3.js'
 import { DatePicker, InputNumber, Select } from 'antd'
-import { Connection, Keypair, PublicKey } from '@solana/web3.js'
-import { Wallet } from '@saberhq/solana-contrib'
-import { ButtonWithFooter } from 'rental-components/common/ButtonWithFooter'
+import type { TokenData } from 'api/api'
+import type { EditionInfo } from 'api/editions'
+import getEditionInfo from 'api/editions'
+import { tryPublicKey } from 'api/utils'
+import { NFTOverlay } from 'common/NFTOverlay'
+import { notify } from 'common/Notification'
+import { executeTransaction } from 'common/Transactions'
+import { fmtMintAmount } from 'common/units'
+import { getQueryParam, longDateString, shortPubKey } from 'common/utils'
+import { usePaymentMints } from 'providers/PaymentMintsProvider'
+import { getLink } from 'providers/ProjectConfigProvider'
+import { useUserTokenData } from 'providers/TokenDataProvider'
+import React, { useEffect, useState } from 'react'
+import { BiQrScan, BiTimer } from 'react-icons/bi'
+import { MdAlternateEmail } from 'react-icons/md'
+import { FaEye, FaLink } from 'react-icons/fa'
+import { FiSend } from 'react-icons/fi'
+import { GiRobotGrab } from 'react-icons/gi'
+import { GrReturn } from 'react-icons/gr'
+import { ImPriceTags } from 'react-icons/im'
 import { Alert } from 'rental-components/common/Alert'
-import { StepDetail } from 'rental-components/common/StepDetail'
 import { Button } from 'rental-components/common/Button'
 import axios from 'axios'
+import { ButtonWithFooter } from 'rental-components/common/ButtonWithFooter'
+import { PAYMENT_MINTS } from 'rental-components/common/Constants'
 import {
   Fieldset,
   Input,
   InputBorder,
 } from 'rental-components/common/LabeledInput'
-import { PoweredByFooter } from 'rental-components/common/PoweredByFooter'
-import { FiSend } from 'react-icons/fi'
-import { BiTimer, BiQrScan } from 'react-icons/bi'
-import { GiRobotGrab } from 'react-icons/gi'
-import { ImPriceTags } from 'react-icons/im'
-import { PAYMENT_MINTS } from 'rental-components/common/Constants'
 import { MintPriceSelector } from 'rental-components/common/MintPriceSelector'
-import { TokenData } from 'api/api'
-import { getQueryParam, longDateString, shortPubKey } from 'common/utils'
-import { NFTOverlay } from 'common/NFTOverlay'
-import {
-  claimLinks,
-  IssueParameters,
-  issueToken,
-} from '@cardinal/token-manager'
-import { executeTransaction } from 'common/Transactions'
-import { notify } from 'common/Notification'
-import { FaLink, FaEye } from 'react-icons/fa'
-import { GrReturn } from 'react-icons/gr'
-import {
-  InvalidationType,
-  TokenManagerKind,
-} from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
-import getEditionInfo, { EditionInfo } from 'api/editions'
-import { useUserTokenData } from 'providers/TokenDataProvider'
-import { fmtMintAmount } from 'common/units'
-import { usePaymentMints } from 'providers/PaymentMintsProvider'
-import { tryPublicKey } from 'api/utils'
-import { getLink, useProjectConfigData } from 'providers/ProjectConfigProvider'
+import { PoweredByFooter } from 'rental-components/common/PoweredByFooter'
+import { StepDetail } from 'rental-components/common/StepDetail'
+
 const { Option } = Select
 
 const NFTOuter = styled.div`
@@ -86,6 +88,66 @@ const formatError = (error: string) => {
   return error
 }
 
+const capitalizeFirstLetter = (value: string) => {
+  return value[0] ? value[0].toUpperCase() + value.slice(1) : ''
+}
+
+export type InvalidatorOption = 'usages' | 'expiration' | 'duration' | 'manual'
+
+const VISIBILITY_OPTIONS = ['public', 'private'] as const
+export type VisibilityOption = typeof VISIBILITY_OPTIONS[number]
+
+export type InvalidationTypeOption = 'return' | 'invalidate' | 'release'
+const INVALIDATION_TYPES: {
+  type: InvalidationType
+  label: InvalidationTypeOption
+}[] = [
+  {
+    type: InvalidationType.Return,
+    label: 'return',
+  },
+  {
+    type: InvalidationType.Invalidate,
+    label: 'invalidate',
+  },
+  {
+    type: InvalidationType.Release,
+    label: 'release',
+  },
+]
+
+export type DurationOption =
+  | 'minutes'
+  | 'hours'
+  | 'days'
+  | 'weeks'
+  | 'months'
+  | 'years'
+const DURATION_DATA: { [key in DurationOption]: number } = {
+  minutes: 60,
+  hours: 3600,
+  days: 86400,
+  weeks: 604800,
+  months: 2592000,
+  years: 31104000,
+}
+
+export type RentalCardConfig = {
+  invalidators: InvalidatorOption[]
+  invalidationOptions?: {
+    durationOptions: DurationOption[]
+    invalidationTypes: InvalidationTypeOption[]
+    paymentMints: string[]
+    visibilities?: VisibilityOption[]
+    setClaimRentalReceipt: boolean
+    showClaimRentalReceipt?: boolean
+  }
+  extensionOptions?: {
+    setDisablePartialExtension?: boolean
+    showDisablePartialExtension?: boolean
+  }
+}
+
 export type RentalCardProps = {
   dev?: boolean
   cluster?: string
@@ -94,7 +156,8 @@ export type RentalCardProps = {
   tokenData: TokenData
   appName?: string
   appTwitter?: string
-  notify?: Function
+  rentalCardConfig: RentalCardConfig
+  notify?: () => void
   onComplete?: (asrg0: string) => void
 }
 
@@ -106,6 +169,7 @@ export const RentalCard = ({
   connection,
   wallet,
   tokenData,
+  rentalCardConfig,
   notify,
   onComplete,
 }: RentalCardProps) => {
@@ -113,14 +177,12 @@ export const RentalCard = ({
   const [loading, setLoading] = useState(false)
   const [link, setLink] = useState<string | null>(null)
   const { refreshTokenAccounts } = useUserTokenData()
+  const { paymentMintInfos } = usePaymentMints()
   const { tokenAccount, metaplexData, editionData, metadata, tokenManager } =
     tokenData
   const customImageUri = getQueryParam(metadata?.data?.image, 'uri')
-  const [invalidationType, setInvalidationType] = useState(
-    InvalidationType.Return
-  )
-  const { rentalCard } = useProjectConfigData()
 
+  // TODO get this from tokenData
   const [editionInfo, setEditionInfo] = useState<EditionInfo>({})
   const getEdition = async () => {
     try {
@@ -134,45 +196,57 @@ export const RentalCard = ({
     getEdition()
   }, [metaplexData])
 
-  let durationData: { [key: string]: number } = {
-    Minutes: 60,
-    Hours: 3600,
-    Days: 86400,
-    Weeks: 604800,
-    Months: 2592000,
-    Years: 31104000,
-  }
+  // Pull overrides from config
+  const visibilities =
+    rentalCardConfig.invalidationOptions?.visibilities || VISIBILITY_OPTIONS
 
-  let invalidationTypes = [
-    {
-      type: InvalidationType.Return,
-      label: 'Return',
-    },
-    {
-      type: InvalidationType.Invalidate,
-      label: 'Invalidate',
-    },
-    {
-      type: InvalidationType.Release,
-      label: 'Release',
-    },
-  ]
+  const invalidationTypes = rentalCardConfig.invalidationOptions
+    ?.invalidationTypes
+    ? INVALIDATION_TYPES.filter(({ label }) =>
+        rentalCardConfig.invalidationOptions?.invalidationTypes?.includes(label)
+      )
+    : INVALIDATION_TYPES
 
-  let paymentMintData = PAYMENT_MINTS
+  const durationData = rentalCardConfig.invalidationOptions?.durationOptions
+    ? Object.keys(DURATION_DATA)
+        .filter((key) =>
+          rentalCardConfig.invalidationOptions?.durationOptions?.includes(
+            key as DurationOption
+          )
+        )
+        .reduce((obj: { [key: string]: number }, key: string) => {
+          const d = DURATION_DATA[key as DurationOption]
+          if (d) {
+            obj[key] = d
+          }
+          return obj
+        }, {})
+    : DURATION_DATA
 
-  const defaultDurationCategory = Object.keys(durationData)[2]!
-  const { paymentMintInfos } = usePaymentMints()
+  const paymentMintData = rentalCardConfig.invalidationOptions?.paymentMints
+    ? PAYMENT_MINTS.filter(({ mint }) =>
+        rentalCardConfig.invalidationOptions?.paymentMints?.includes(mint)
+      )
+    : PAYMENT_MINTS
+
+  const showClaimRentalReceipt =
+    rentalCardConfig.invalidationOptions?.showClaimRentalReceipt || true
+
+  // defaults
+  const defaultVisibility = visibilities[0]
+  const defaultDurationOption = Object.keys(durationData)[2]! as DurationOption
   const defaultPaymentMint = paymentMintData[0]!
+  const defaultInvalidationType = invalidationTypes[0]!.type
 
-  // form
+  // state
   const [price, setPrice] = useState(0)
   const [paymentMint, setPaymentMint] = useState<string>(
     defaultPaymentMint.mint
   )
   const [expiration, setExpiration] = useState<number | null>(null)
   const [durationAmount, setDurationAmount] = useState<number | null>(null)
-  const [durationCategory, setDurationCategory] = useState<string | undefined>(
-    defaultDurationCategory
+  const [durationOption, setDurationOption] = useState<DurationOption>(
+    defaultDurationOption
   )
   const [extensionPaymentAmount, setExtensionPaymentAmount] = useState(0)
   const [extensionPaymentMint, setExtensionPaymentMint] = useState(
@@ -181,8 +255,8 @@ export const RentalCard = ({
   const [extensionDurationAmount, setExtensionDurationAmount] = useState<
     number | null
   >(null)
-  const [extensionDurationCategory, setExtensionDurationCategory] =
-    useState<string>(defaultDurationCategory)
+  const [extensionDurationOption, setExtensionDurationOption] =
+    useState<DurationOption>(defaultDurationOption)
   const [extensionMaxExpiration, setExtensionMaxExpiration] = useState<
     number | null
   >(null)
@@ -191,107 +265,52 @@ export const RentalCard = ({
   >(null)
   const [totalUsages, setTotalUsages] = useState<number | null>(null)
   const [recipientEmail, setRecipientEmail] = useState<string | null>(null)
-  const [visibility, setVisibiliy] = useState<'private' | 'public'>('public')
+  const [visibility, setVisibiliy] =
+    useState<VisibilityOption>(defaultVisibility)
+  const [invalidationType, setInvalidationType] = useState(
+    defaultInvalidationType
+  )
   const [customInvalidator, setCustomInvalidator] = useState<
     string | undefined
   >(undefined)
-  const [claimRentalReceipt, setClaimRentalReceipt] = useState(false)
+  const [claimRentalReceipt, setClaimRentalReceipt] = useState(
+    rentalCardConfig.invalidationOptions?.setClaimRentalReceipt || false
+  )
 
+  const [selectedInvalidators, setSelectedInvalidators] = useState<
+    InvalidatorOption[]
+  >(rentalCardConfig.invalidators[0] ? [rentalCardConfig.invalidators[0]] : [])
   const [showAdditionalOptions, setShowAdditionalOptions] = useState(false)
-  const [showUsages, setShowUsages] = useState(false)
-  const [showExpiration, setShowExpiration] = useState(false)
-  const [showDuration, setShowDuration] = useState(false)
   const [showExtendDuration, setShowExtendDuration] = useState(false)
-  const [showCustom, setShowCustom] = useState(false)
 
-  // Apply Rental Card settings from the project config
-  const {
-    showUsagesOption,
-    showExpirationOption,
-    showDurationOption,
-    showManualOption,
-  } = rentalCard.invalidations
-
-  let showClaimRentalReceipt = true
-  if (rentalCard.invalidationOptions?.setClaimRentalReceipt !== undefined) {
-    if (
-      claimRentalReceipt !==
-      rentalCard.invalidationOptions?.setClaimRentalReceipt
-    ) {
-      setClaimRentalReceipt(
-        rentalCard.invalidationOptions?.setClaimRentalReceipt
-      )
+  // reset
+  useEffect(() => {
+    if (!selectedInvalidators.includes('duration')) {
+      setExtensionDurationAmount(null)
+      setExtensionDurationOption(defaultDurationOption)
     }
-    showClaimRentalReceipt = false
-  }
-
-  if (rentalCard.invalidationOptions) {
-    if (rentalCard.invalidationOptions.durationCategories) {
-      durationData = Object.keys(durationData)
-        .filter((key) =>
-          rentalCard.invalidationOptions?.durationCategories?.includes(key)
-        )
-        .reduce((obj: { [key: string]: number }, key: string) => {
-          const d = durationData[key]
-          if (d) {
-            obj[key] = d
-          }
-          return obj
-        }, {})
+    if (!selectedInvalidators.includes('expiration')) {
+      setExpiration(null)
     }
-    if (rentalCard.invalidationOptions.invalidationCategories) {
-      invalidationTypes = invalidationTypes.filter(({ label }) =>
-        rentalCard.invalidationOptions?.invalidationCategories?.includes(label)
-      )
+    if (!selectedInvalidators.includes('manual')) {
+      setCustomInvalidator(undefined)
     }
-    if (rentalCard.invalidationOptions.paymentMints) {
-      paymentMintData = paymentMintData.filter(({ mint }) =>
-        rentalCard.invalidationOptions?.paymentMints?.includes(mint)
-      )
+    if (!selectedInvalidators.includes('usages')) {
+      setTotalUsages(null)
     }
-  }
-
-  const handleSelection = (value: string) => {
-    if (value == 'expiration') {
-      if (showDuration) {
-        setShowDuration(!showDuration)
-      }
-      setShowExpiration(!showExpiration)
-    } else if (value == 'duration') {
-      if (showExpiration) {
-        setShowExpiration(!showExpiration)
-      }
-      if (showDuration) {
-        setShowExtendDuration(false)
-      }
-      setShowDuration(!showDuration)
-    }
-    setShowCustom(false)
-    setExpiration(null)
-    setDurationAmount(null)
-    setDurationCategory(defaultDurationCategory)
-    nullExtensionProperties()
-  }
-
-  const nullExtensionProperties = () => {
-    setExtensionPaymentAmount(0)
-    setExtensionPaymentMint(defaultPaymentMint?.mint)
-    setExtensionDurationAmount(null)
-    setExtensionDurationCategory(defaultDurationCategory)
-    setExtensionMaxExpiration(null)
-  }
+  }, [selectedInvalidators])
 
   const hasAllExtensionProperties = (): boolean => {
     return extensionPaymentAmount &&
       extensionDurationAmount &&
       extensionPaymentMint &&
-      extensionDurationCategory
+      extensionDurationOption
       ? true
       : false
   }
 
   const handleRental = async () => {
-    let extensionPaymentMintPublicKey = tryPublicKey(extensionPaymentMint)
+    const extensionPaymentMintPublicKey = tryPublicKey(extensionPaymentMint)
     try {
       if (!tokenAccount) {
         throw 'Token acount not found'
@@ -318,20 +337,19 @@ export const RentalCard = ({
               }
             : undefined,
         timeInvalidation:
-          expiration || (durationAmount && durationCategory)
+          expiration || (durationAmount && durationOption)
             ? {
                 expiration: expiration || undefined,
                 durationSeconds:
-                  durationAmount && durationCategory
-                    ? durationAmount * (durationData[durationCategory] || 0)
+                  durationAmount && durationOption
+                    ? durationAmount * (durationData[durationOption] || 0)
                     : undefined,
                 extension: hasAllExtensionProperties()
                   ? {
                       extensionPaymentAmount: extensionPaymentAmount,
                       extensionDurationSeconds:
                         extensionDurationAmount! *
-                        (durationData[extensionDurationCategory || 'Minutes'] ||
-                          0),
+                        (durationData[extensionDurationOption] || 0),
                       extensionPaymentMint: extensionPaymentMintPublicKey,
                       maxExpiration: extensionMaxExpiration
                         ? extensionMaxExpiration
@@ -363,12 +381,10 @@ export const RentalCard = ({
         wallet,
         issueParams
       )
-      let signers = []
-      if (claimRentalReceipt) signers.push(receiptMintKeypair)
       await executeTransaction(connection, wallet, transaction, {
         silent: false,
         callback: refreshTokenAccounts,
-        signers,
+        signers: claimRentalReceipt ? [receiptMintKeypair] : [],
       })
       const link = claimLinks.getLink(
         tokenManagerId,
@@ -419,8 +435,8 @@ export const RentalCard = ({
               paymentMint={paymentMint || undefined}
               expiration={expiration || undefined}
               durationSeconds={
-                durationAmount && durationCategory
-                  ? durationAmount * (durationData[durationCategory] || 0)
+                durationAmount && durationOption
+                  ? durationAmount * (durationData[durationOption] || 0)
                   : undefined
               }
               usages={totalUsages ? 0 : undefined}
@@ -453,70 +469,137 @@ export const RentalCard = ({
           {editionInfo && getEditionPill(editionInfo)}
         </ImageWrapper>
         <DetailsWrapper>
+          {rentalCardConfig.invalidators.length > 1 && (
+            <div className="flex justify-center">
+              {rentalCardConfig.invalidators.map(
+                (invalidator) =>
+                  ({
+                    usages: (
+                      <div
+                        className="mr-4 flex cursor-pointer"
+                        onClick={() => {
+                          if (selectedInvalidators.includes('usages')) {
+                            setSelectedInvalidators(
+                              selectedInvalidators.filter((o) => o !== 'usages')
+                            )
+                          } else {
+                            setSelectedInvalidators([
+                              ...selectedInvalidators.filter(
+                                (o) => o !== 'manual'
+                              ),
+                              'usages',
+                            ])
+                          }
+                        }}
+                      >
+                        <input
+                          className="my-auto mr-1 cursor-pointer"
+                          type="checkbox"
+                          checked={selectedInvalidators.includes('usages')}
+                        />
+                        <span className="">Usages</span>
+                      </div>
+                    ),
+                    expiration: (
+                      <div
+                        className="mr-4 flex cursor-pointer"
+                        onClick={() => {
+                          if (selectedInvalidators.includes('expiration')) {
+                            setSelectedInvalidators(
+                              selectedInvalidators.filter(
+                                (o) => o !== 'expiration'
+                              )
+                            )
+                          } else {
+                            setSelectedInvalidators([
+                              ...selectedInvalidators.filter(
+                                (o) => o !== 'manual' && o !== 'duration'
+                              ),
+                              'expiration',
+                            ])
+                          }
+                        }}
+                      >
+                        <input
+                          className="my-auto mr-1 cursor-pointer"
+                          type="checkbox"
+                          checked={selectedInvalidators.includes('expiration')}
+                        />
+                        <span className="">Expiration</span>
+                      </div>
+                    ),
+                    duration: (
+                      <div
+                        className="mr-4 flex cursor-pointer"
+                        onClick={() => {
+                          if (selectedInvalidators.includes('duration')) {
+                            setSelectedInvalidators(
+                              selectedInvalidators.filter(
+                                (o) => o !== 'duration'
+                              )
+                            )
+                          } else {
+                            setSelectedInvalidators([
+                              ...selectedInvalidators.filter(
+                                (o) => o !== 'manual' && o !== 'expiration'
+                              ),
+                              'duration',
+                            ])
+                          }
+                        }}
+                      >
+                        <input
+                          className="my-auto mr-1 cursor-pointer"
+                          type="checkbox"
+                          checked={selectedInvalidators.includes('duration')}
+                        />
+                        <span className="">Duration</span>
+                      </div>
+                    ),
+                    manual: (
+                      <div
+                        className="mr-4 flex cursor-pointer"
+                        onClick={() => {
+                          if (selectedInvalidators.includes('manual')) {
+                            setSelectedInvalidators(
+                              selectedInvalidators.filter((o) => o !== 'manual')
+                            )
+                          } else {
+                            setSelectedInvalidators(['manual'])
+                          }
+                        }}
+                      >
+                        <input
+                          className="my-auto mr-1 cursor-pointer"
+                          type="checkbox"
+                          checked={selectedInvalidators.includes('manual')}
+                        />
+                        <span className="">Manual</span>
+                      </div>
+                    ),
+                  }[invalidator])
+              )}
+            </div>
+          )}
           <div className="flex justify-center">
-            {showUsagesOption ? (
-              <div
-                className="mr-4 flex cursor-pointer"
-                onClick={() => {
-                  !showUsages ? setShowCustom(false) : null,
-                    setShowUsages(!showUsages)
-                }}
-              >
-                <input
-                  className="my-auto mr-1 cursor-pointer"
-                  type="checkbox"
-                  checked={showUsages}
-                />
-                <span className="">Usages</span>
-              </div>
-            ) : null}
-            {showExpirationOption ? (
-              <div
-                className="mr-4 flex cursor-pointer"
-                onClick={() => handleSelection('expiration')}
-              >
-                <input
-                  className="my-auto mr-1 cursor-pointer"
-                  type="checkbox"
-                  checked={showExpiration}
-                />
-                <span className="">Expiration</span>
-              </div>
-            ) : null}
-            {showDurationOption ? (
-              <div
-                className="mr-4 flex cursor-pointer"
-                onClick={() => handleSelection('duration')}
-              >
-                <input
-                  className="my-auto mr-1 cursor-pointer"
-                  type="checkbox"
-                  checked={showDuration}
-                />
-                <span className="">Duration</span>
-              </div>
-            ) : null}
-            {showManualOption ? (
-              <div
-                className="mr-4 flex cursor-pointer"
-                onClick={() => {
-                  setShowCustom(!showCustom)
-                  setShowDuration(false)
-                  setShowExpiration(false)
-                  setShowUsages(false)
-                }}
-              >
-                <input
-                  className="my-auto mr-1 cursor-pointer"
-                  type="checkbox"
-                  checked={showCustom}
-                />
-                <span className="">Manual</span>
-              </div>
-            ) : null}
+            <StepDetail
+              icon={<MdAlternateEmail />}
+              title="Email"
+              description={
+                <Fieldset>
+                  <InputBorder>
+                    <Input
+                      name="email"
+                      type="email"
+                      onChange={(e) => setRecipientEmail(e.target.value)}
+                    />
+                  </InputBorder>
+                </Fieldset>
+              }
+            />
           </div>
           <div className="grid grid-cols-2 gap-4">
-            {!showCustom ? (
+            {!selectedInvalidators.includes('manual') && (
               <StepDetail
                 icon={<ImPriceTags />}
                 title="Rental Price"
@@ -531,8 +614,8 @@ export const RentalCard = ({
                   />
                 }
               />
-            ) : null}
-            {showCustom ? (
+            )}
+            {selectedInvalidators.includes('manual') && (
               <StepDetail
                 icon={<GiRobotGrab />}
                 title="Manual Revocation Pubkey"
@@ -556,14 +639,13 @@ export const RentalCard = ({
                         setCustomInvalidator(wallet.publicKey.toString())
                       }
                     >
-                      {' '}
-                      Me{' '}
+                      Me
                     </Button>
                   </div>
                 }
               />
-            ) : null}
-            {showUsages ? (
+            )}
+            {selectedInvalidators.includes('usages') ? (
               <StepDetail
                 icon={<BiQrScan />}
                 title="Uses"
@@ -582,7 +664,7 @@ export const RentalCard = ({
                 }
               />
             ) : null}
-            {showExpiration ? (
+            {selectedInvalidators.includes('expiration') && (
               <StepDetail
                 icon={<BiTimer />}
                 title="Expiration"
@@ -601,8 +683,8 @@ export const RentalCard = ({
                   </div>
                 }
               />
-            ) : null}
-            {showDuration ? (
+            )}
+            {selectedInvalidators.includes('duration') && (
               <StepDetail
                 icon={<BiTimer />}
                 title="Rental Duration"
@@ -619,14 +701,17 @@ export const RentalCard = ({
                       />
                       <Select
                         className="w-max rounded-[4px]"
-                        onChange={(e) => setDurationCategory(e)}
-                        defaultValue={defaultDurationCategory}
+                        onChange={(e) => setDurationOption(e)}
+                        defaultValue={defaultDurationOption}
                       >
-                        {Object.keys(durationData).map((category) => (
-                          <Option key={category} value={category}>
-                            {durationAmount && durationAmount == 1
-                              ? category.substring(0, category.length - 1)
-                              : category}
+                        {Object.keys(durationData).map((option) => (
+                          <Option key={option} value={option}>
+                            {durationAmount && durationAmount === 1
+                              ? capitalizeFirstLetter(option).substring(
+                                  0,
+                                  option.length - 1
+                                )
+                              : capitalizeFirstLetter(option)}
                           </Option>
                         ))}
                       </Select>
@@ -634,215 +719,207 @@ export const RentalCard = ({
                   </div>
                 }
               />
-            ) : null}
+            )}
           </div>
           <div>
-            {showDuration ? (
-              <button
-                className="mb-2 text-blue-500"
-                onClick={() => setShowExtendDuration(!showExtendDuration)}
-              >
-                {showExtendDuration ? '[-]' : '[+]'} Extendability
-              </button>
-            ) : null}
-            <div className="grid grid-cols-2 gap-4">
-              {showDuration && showExtendDuration ? (
+            {selectedInvalidators.includes('duration') &&
+              rentalCardConfig.extensionOptions && (
                 <>
-                  <StepDetail
-                    icon={<ImPriceTags />}
-                    title="Extension Price"
-                    description={
-                      <>
-                        <MintPriceSelector
-                          disabled={visibility === 'private'}
-                          price={extensionPaymentAmount}
-                          mint={extensionPaymentMint}
-                          mintDisabled={paymentMintData.length === 1}
-                          handlePrice={setExtensionPaymentAmount}
-                          handleMint={setExtensionPaymentMint}
-                        />
-                      </>
-                    }
-                  />
-                  <StepDetail
-                    icon={<BiTimer />}
-                    title="Extension Duration"
-                    description={
-                      <div>
-                        <div className="flex gap-3 align-middle ">
-                          <InputNumber
-                            className="rounded-[4px]"
-                            style={{ width: '100%' }}
-                            placeholder="# of..."
-                            min="0"
-                            step={1}
-                            onChange={(e) =>
-                              setExtensionDurationAmount(parseInt(e))
+                  <button
+                    className="mb-2 block text-blue-500"
+                    onClick={() => setShowExtendDuration(!showExtendDuration)}
+                  >
+                    {showExtendDuration ? '[-]' : '[+]'} Extendability
+                  </button>
+                  {showExtendDuration && (
+                    <div className="grid grid-cols-2 gap-4 py-2">
+                      <StepDetail
+                        icon={<ImPriceTags />}
+                        title="Extension Price"
+                        description={
+                          <>
+                            <MintPriceSelector
+                              disabled={visibility === 'private'}
+                              price={extensionPaymentAmount}
+                              mint={extensionPaymentMint}
+                              mintDisabled={paymentMintData.length === 1}
+                              handlePrice={setExtensionPaymentAmount}
+                              handleMint={setExtensionPaymentMint}
+                            />
+                          </>
+                        }
+                      />
+                      <StepDetail
+                        icon={<BiTimer />}
+                        title="Extension Duration"
+                        description={
+                          <div>
+                            <div className="flex gap-3 align-middle ">
+                              <InputNumber
+                                className="rounded-[4px]"
+                                style={{ width: '100%' }}
+                                placeholder="# of..."
+                                min="0"
+                                step={1}
+                                onChange={(e) =>
+                                  setExtensionDurationAmount(parseInt(e))
+                                }
+                              />
+                              <Select
+                                className="w-max rounded-[4px]"
+                                onChange={(e) => setExtensionDurationOption(e)}
+                                defaultValue={defaultDurationOption}
+                              >
+                                {Object.keys(durationData).map((option) => (
+                                  <Option key={option} value={option}>
+                                    {durationAmount && durationAmount === 1
+                                      ? capitalizeFirstLetter(option).substring(
+                                          0,
+                                          option.length - 1
+                                        )
+                                      : capitalizeFirstLetter(option)}
+                                  </Option>
+                                ))}
+                              </Select>
+                            </div>
+                          </div>
+                        }
+                      />
+                      <StepDetail
+                        icon={<BiTimer />}
+                        title="Max Expiration"
+                        description={
+                          <div>
+                            <DatePicker
+                              className="rounded-[4px]"
+                              style={{
+                                zIndex: 99999,
+                              }}
+                              showTime
+                              onChange={(e) =>
+                                setExtensionMaxExpiration(
+                                  e ? e.valueOf() / 1000 : null
+                                )
+                              }
+                            />
+                          </div>
+                        }
+                      />
+
+                      {rentalCardConfig.extensionOptions
+                        ?.showDisablePartialExtension && (
+                        <div className="mt-1">
+                          <span
+                            className="cursor-pointer"
+                            onClick={() =>
+                              setDisablePartialExtension(
+                                !disablePartialExtension
+                              )
                             }
-                          />
-                          <Select
-                            className="w-max rounded-[4px]"
-                            onChange={(e) => setExtensionDurationCategory(e)}
-                            defaultValue={defaultDurationCategory}
                           >
-                            {Object.keys(durationData).map((category) => (
-                              <Option key={category} value={category}>
-                                {durationAmount && durationAmount == 1
-                                  ? category.substring(0, category.length - 1)
-                                  : category}
+                            <input
+                              className="my-auto inline-block cursor-pointer"
+                              type="checkbox"
+                              checked={disablePartialExtension || false}
+                            />
+                            <p className="mb-1 ml-3 inline-block text-[14px] font-bold text-black">
+                              Disable Partial Extension
+                            </p>
+                          </span>
+                          <p className="mb-2 ml-6 inline-block text-[12px] text-gray-700">
+                            If selected, rental extensions must occur in
+                            multiples of the extension duration.
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </>
+              )}
+            {(invalidationTypes.length > 1 ||
+              visibilities.length > 1 ||
+              showClaimRentalReceipt) && (
+              <>
+                <button
+                  className="mb-2 block text-blue-500"
+                  onClick={() =>
+                    setShowAdditionalOptions(!showAdditionalOptions)
+                  }
+                >
+                  {showAdditionalOptions ? '[-]' : '[+]'} Additional Options
+                </button>
+                {showAdditionalOptions && (
+                  <div className="grid grid-cols-2 gap-4 py-2">
+                    {invalidationTypes.length > 1 && (
+                      <StepDetail
+                        icon={<GrReturn />}
+                        title="Invalidation"
+                        description={
+                          <Select
+                            disabled={invalidationTypes.length === 1}
+                            style={{ width: '100%' }}
+                            onChange={(e) => setInvalidationType(e)}
+                            defaultValue={invalidationType}
+                          >
+                            {invalidationTypes.map(({ label, type }) => (
+                              <Option key={type} value={type}>
+                                {capitalizeFirstLetter(label)}
                               </Option>
                             ))}
                           </Select>
-                        </div>
-                      </div>
-                    }
-                  />
-                </>
-              ) : null}
-              {showDuration && showExtendDuration ? (
-                <StepDetail
-                  icon={<BiTimer />}
-                  title="Max Expiration"
-                  description={
-                    <div>
-                      <DatePicker
-                        className="rounded-[4px]"
-                        style={{
-                          zIndex: 99999,
-                        }}
-                        showTime
-                        onChange={(e) =>
-                          setExtensionMaxExpiration(
-                            e ? e.valueOf() / 1000 : null
-                          )
                         }
                       />
-                    </div>
-                  }
-                />
-              ) : null}
-              {showDuration && showExtendDuration ? (
-                <div className="mt-1">
-                  <span
-                    className="cursor-pointer"
-                    onClick={() =>
-                      setDisablePartialExtension(!disablePartialExtension)
-                    }
-                  >
-                    <input
-                      className="my-auto inline-block cursor-pointer"
-                      type="checkbox"
-                      checked={disablePartialExtension || false}
-                    />
-                    <p className="mb-1 ml-3 inline-block text-[14px] font-bold text-black">
-                      Disable Partial Extension
-                    </p>
-                  </span>
-                  <p className="mb-2 ml-6 inline-block text-[12px] text-gray-700">
-                    If selected, rental extensions must occur in multiples of
-                    the extension duration.
-                  </p>
-                </div>
-              ) : null}
-              <StepDetail
-                icon={<BiQrScan />}
-                title="Email"
-                description={
-                  <Fieldset>
-                    <InputBorder>
-                      <Input
-                        name="email"
-                        type="email"
-                        onChange={(e) => setRecipientEmail(e.target.value)}
+                    )}
+                    {visibilities.length > 1 && (
+                      <StepDetail
+                        icon={<FaEye />}
+                        title="Visibility"
+                        description={
+                          <Select
+                            style={{ width: '100%' }}
+                            onChange={(v) => {
+                              setVisibiliy(v)
+                              if (v === 'private') setPrice(0)
+                            }}
+                            defaultValue={visibility}
+                          >
+                            {visibilities.map((value) => (
+                              <Option key={value} value={value}>
+                                {capitalizeFirstLetter(value)}
+                              </Option>
+                            ))}
+                          </Select>
+                        }
                       />
-                    </InputBorder>
-                  </Fieldset>
-                }
-              />
-            </div>
-            <button
-              className="-mt-7 mb-2 text-blue-500"
-              onClick={() => setShowAdditionalOptions(!showAdditionalOptions)}
-            >
-              {showAdditionalOptions ? '[-]' : '[+]'} Additional Options
-            </button>
-            {showAdditionalOptions ? (
-              <div className="grid grid-cols-2 gap-4">
-                {invalidationTypes.length !== 1 ? (
-                  <StepDetail
-                    icon={<GrReturn />}
-                    title="Invalidation"
-                    description={
-                      <Select
-                        disabled={invalidationTypes.length === 1}
-                        style={{ width: '100%' }}
-                        onChange={(e) => setInvalidationType(e)}
-                        defaultValue={invalidationType}
-                      >
-                        {invalidationTypes.map(({ label, type }) => (
-                          <Option key={type} value={type}>
-                            {label}
-                          </Option>
-                        ))}
-                      </Select>
-                    }
-                  />
-                ) : null}
-
-                <StepDetail
-                  icon={<FaEye />}
-                  title="Visibility"
-                  description={
-                    <Select
-                      style={{ width: '100%' }}
-                      onChange={(e) => {
-                        setVisibiliy(e)
-                        if (e === 'private') setPrice(0)
-                      }}
-                      defaultValue={visibility}
-                    >
-                      {[
-                        {
-                          type: 'public',
-                          label: 'Public',
-                        },
-                        {
-                          type: 'private',
-                          label: 'Private',
-                        },
-                      ].map(({ label, type }) => (
-                        <Option key={type} value={type}>
-                          {label}
-                        </Option>
-                      ))}
-                    </Select>
-                  }
-                />
-
-                {showClaimRentalReceipt ? (
-                  <div className="mt-1">
-                    <span
-                      className="cursor-pointer"
-                      onClick={() => setClaimRentalReceipt(!claimRentalReceipt)}
-                    >
-                      <input
-                        className="my-auto inline-block cursor-pointer"
-                        type="checkbox"
-                        checked={claimRentalReceipt}
-                      />
-                      <p className="mb-1 ml-3 inline-block text-[14px] font-bold text-black">
-                        Claim Rental Receipt
-                      </p>
-                    </span>
-                    <p className="mb-2 ml-6 inline-block text-[12px] text-gray-700">
-                      If selected, a receipt mint will be generated for the
-                      rental. The owner of the receipt mint will act as the
-                      issuer.
-                    </p>
+                    )}
+                    {showClaimRentalReceipt && (
+                      <div className="mt-1">
+                        <span
+                          className="cursor-pointer"
+                          onClick={() =>
+                            setClaimRentalReceipt(!claimRentalReceipt)
+                          }
+                        >
+                          <input
+                            className="my-auto inline-block cursor-pointer"
+                            type="checkbox"
+                            checked={claimRentalReceipt}
+                          />
+                          <p className="mb-1 ml-3 inline-block text-[14px] font-bold text-black">
+                            Claim Rental Receipt
+                          </p>
+                        </span>
+                        <p className="mb-2 ml-6 inline-block text-[12px] text-gray-700">
+                          If selected, a receipt mint will be generated for the
+                          rental. The owner of the receipt mint will act as the
+                          issuer.
+                        </p>
+                      </div>
+                    )}
                   </div>
-                ) : null}
-              </div>
-            ) : null}
+                )}
+              </>
+            )}
           </div>
         </DetailsWrapper>
         <ButtonWithFooter
@@ -924,14 +1001,14 @@ export const RentalCard = ({
                                 ? 'released to whoever claims it.'
                                 : 'invalid forever.'
                             }`
-                          : durationAmount && durationCategory
+                          : durationAmount && durationOption
                           ? `
                             for ${durationAmount} ${
                               durationAmount !== 1
-                                ? durationCategory.toLocaleLowerCase()
-                                : durationCategory
+                                ? durationOption.toLocaleLowerCase()
+                                : durationOption
                                     .toLocaleLowerCase()
-                                    .substring(0, durationCategory.length - 1)
+                                    .substring(0, durationOption.length - 1)
                             } and then it will be ${
                               invalidationType === InvalidationType.Return
                                 ? 'securely returned to you.'
@@ -949,17 +1026,17 @@ export const RentalCard = ({
                               new anchor.BN(extensionPaymentAmount)
                             )} ${
                               paymentMintData.find(
-                                (obj) => obj.mint == extensionPaymentMint
+                                (obj) => obj.mint === extensionPaymentMint
                               )?.symbol
                             } / ${extensionDurationAmount} ${
-                              extensionDurationAmount == 1
-                                ? extensionDurationCategory
+                              extensionDurationAmount === 1
+                                ? extensionDurationOption
                                     ?.toLowerCase()
                                     .substring(
                                       0,
-                                      extensionDurationCategory.length - 1
+                                      extensionDurationOption.length - 1
                                     )
-                                : extensionDurationCategory?.toLowerCase()
+                                : extensionDurationOption?.toLowerCase()
                             }${
                               extensionMaxExpiration
                                 ? ` up until ${new Date(

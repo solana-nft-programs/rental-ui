@@ -1,11 +1,11 @@
-import {
-  Transaction,
-  Connection,
-  sendAndConfirmRawTransaction,
-  Signer,
+import type { Wallet } from '@saberhq/solana-contrib'
+import type {
   ConfirmOptions,
+  Connection,
+  Signer,
+  Transaction,
 } from '@solana/web3.js'
-import { Wallet } from '@saberhq/solana-contrib'
+import { sendAndConfirmRawTransaction } from '@solana/web3.js'
 import { notify } from 'common/Notification'
 
 export const executeTransaction = async (
@@ -17,7 +17,7 @@ export const executeTransaction = async (
     signers?: Signer[]
     confirmOptions?: ConfirmOptions
     notificationConfig?: { message?: string; errorMessage?: string }
-    callback?: Function
+    callback?: () => void
   }
 ): Promise<string> => {
   let txid = ''
@@ -45,8 +45,10 @@ export const executeTransaction = async (
     console.log('Failed transaction: ', e)
     config.notificationConfig &&
       notify({
-        message: config.notificationConfig.errorMessage ?? 'Failed transaction',
+        message:
+          config.notificationConfig.errorMessage ?? `Failed transaction: ${e}`,
         txid,
+        type: 'error',
       })
     if (!config.silent) throw new Error(`${e}`)
   } finally {

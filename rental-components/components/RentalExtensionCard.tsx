@@ -1,32 +1,34 @@
-import React, { useEffect, useState } from 'react'
-import * as anchor from '@project-serum/anchor'
-import styled from '@emotion/styled'
-import { Connection, Transaction } from '@solana/web3.js'
-import { Wallet } from '@saberhq/solana-contrib'
-import { ButtonWithFooter } from 'rental-components/common/ButtonWithFooter'
-import { Alert } from 'rental-components/common/Alert'
-import { StepDetail } from 'rental-components/common/StepDetail'
-import { PoweredByFooter } from 'rental-components/common/PoweredByFooter'
-import { FiSend } from 'react-icons/fi'
-import { ImPriceTags } from 'react-icons/im'
-import { PAYMENT_MINTS } from 'rental-components/common/Constants'
-import { MintPriceSelector } from 'rental-components/common/MintPriceSelector'
-import { TokenData } from 'api/api'
-import { getQueryParam } from 'common/utils'
-import { TokenDataOverlay } from 'common/NFTOverlay'
 import { withExtendExpiration } from '@cardinal/token-manager'
-import { executeTransaction } from 'common/Transactions'
+import { withWrapSol } from '@cardinal/token-manager/dist/cjs/wrappedSol'
+import styled from '@emotion/styled'
+import * as anchor from '@project-serum/anchor'
+import type { Wallet } from '@saberhq/solana-contrib'
+import type * as splToken from '@solana/spl-token'
+import type { Connection } from '@solana/web3.js'
+import { Transaction } from '@solana/web3.js'
+import type { TokenData } from 'api/api'
+import type { EditionInfo } from 'api/editions'
+import getEditionInfo from 'api/editions'
+import { getATokenAccountInfo } from 'api/utils'
+import { TokenDataOverlay } from 'common/NFTOverlay'
 import { notify } from 'common/Notification'
-import getEditionInfo, { EditionInfo } from 'api/editions'
-import { useUserTokenData } from 'providers/TokenDataProvider'
+import { executeTransaction } from 'common/Transactions'
 import { fmtMintAmount } from 'common/units'
+import { getQueryParam } from 'common/utils'
 import {
   usePaymentMints,
   WRAPPED_SOL_MINT,
 } from 'providers/PaymentMintsProvider'
-import { withWrapSol } from '@cardinal/token-manager/dist/cjs/wrappedSol'
-import * as splToken from '@solana/spl-token'
-import { getATokenAccountInfo } from 'api/utils'
+import { useUserTokenData } from 'providers/TokenDataProvider'
+import React, { useEffect, useState } from 'react'
+import { FiSend } from 'react-icons/fi'
+import { ImPriceTags } from 'react-icons/im'
+import { Alert } from 'rental-components/common/Alert'
+import { ButtonWithFooter } from 'rental-components/common/ButtonWithFooter'
+import { PAYMENT_MINTS } from 'rental-components/common/Constants'
+import { MintPriceSelector } from 'rental-components/common/MintPriceSelector'
+import { PoweredByFooter } from 'rental-components/common/PoweredByFooter'
+import { StepDetail } from 'rental-components/common/StepDetail'
 
 const NFTOuter = styled.div`
   margin: 20px auto 0px auto;
@@ -77,7 +79,7 @@ export type RentalCardProps = {
   tokenData: TokenData
   appName?: string
   appTwitter?: string
-  notify?: Function
+  notify?: () => void
   onComplete?: (asrg0: string) => void
 }
 
@@ -129,21 +131,21 @@ export const RentalExtensionCard = ({
     maxExpiration,
   } = tokenData.timeInvalidator?.parsed || {}
 
-  if (!extensionPaymentAmount || !extensionPaymentMint || !durationSeconds) {
-    return <>Incorrect extension parameters</>
-  }
   const [paymentAmount, setPaymentAmount] = useState<number>(0)
   const [currentExtensionSeconds, setCurrentExtensionSeconds] = useState<
     number | undefined | null
   >(0)
 
+  useEffect(() => {
+    getUserPaymentTokenAccount()
+  }, [connection, wallet.publicKey, tokenData, getUserPaymentTokenAccount])
+
   const handleExtensionRental = async () => {
     try {
       setError('')
       setExtensionSuccess(false)
-      if (!tokenAccount) {
-        throw 'Token acount not found'
-      }
+      if (!tokenAccount) throw 'Token acount not found'
+      if (!tokenData.tokenManager) throw 'Token manager not found'
 
       setLoading(true)
       const transaction = new Transaction()
@@ -159,7 +161,7 @@ export const RentalExtensionCard = ({
         transaction,
         connection,
         wallet,
-        tokenData.tokenManager?.pubkey!,
+        tokenData.tokenManager?.pubkey,
         paymentAmount
       )
 
@@ -178,7 +180,7 @@ export const RentalExtensionCard = ({
   }
 
   const secondsToString = (requiredSeconds: number | undefined | null) => {
-    if (!requiredSeconds || requiredSeconds == 0) return '0'
+    if (!requiredSeconds || requiredSeconds === 0) return '0'
     const days = Math.floor(requiredSeconds / 60 / 60 / 24)
     const hours = Math.floor((requiredSeconds / 60 / 60) % 24)
     const minutes = Math.floor((requiredSeconds / 60) % 60)
@@ -205,13 +207,17 @@ export const RentalExtensionCard = ({
     )
   }
 
+  if (!extensionPaymentAmount || !extensionPaymentMint || !durationSeconds) {
+    return <>Incorrect extension parameters</>
+  }
+
   const loadRate = () => {
     return `${fmtMintAmount(
       paymentMintInfos[extensionPaymentMint.toString()],
       new anchor.BN(extensionPaymentAmount)
     )}
     ${
-      PAYMENT_MINTS.find((obj) => obj.mint == extensionPaymentMint.toString())
+      PAYMENT_MINTS.find((obj) => obj.mint === extensionPaymentMint.toString())
         ?.symbol
     }
     / ${secondsToString(extensionDurationSeconds?.toNumber())}`
@@ -228,10 +234,6 @@ export const RentalExtensionCard = ({
           currentExtensionSeconds
     )
   }
-
-  useEffect(() => {
-    getUserPaymentTokenAccount()
-  }, [connection, wallet, tokenData])
 
   async function getUserPaymentTokenAccount() {
     if (
@@ -358,7 +360,7 @@ export const RentalExtensionCard = ({
         <ButtonWithFooter
           loading={loading}
           complete={false}
-          disabled={exceedMaxExpiration() || paymentAmount == 0}
+          disabled={exceedMaxExpiration() || paymentAmount === 0}
           message={
             !exceedMaxExpiration() ? (
               extensionSuccess && !error ? (
@@ -403,7 +405,7 @@ export const RentalExtensionCard = ({
                             )}
                       ${
                         PAYMENT_MINTS.find(
-                          (obj) => obj.mint == extensionPaymentMint.toString()
+                          (obj) => obj.mint === extensionPaymentMint.toString()
                         )?.symbol
                       } to extend the duration of your rental by ${secondsToString(
                               paymentAmountToSeconds(paymentAmount)

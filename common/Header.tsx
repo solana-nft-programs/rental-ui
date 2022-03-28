@@ -1,22 +1,23 @@
-import {
-  WalletMultiButton,
-  useWalletModal,
-} from '@solana/wallet-adapter-react-ui'
-import styled from '@emotion/styled'
-import Colors from 'common/colors'
-import { LoadingPulse } from './LoadingPulse'
-import { useEffect, useState } from 'react'
-import { useMediaQuery } from 'react-responsive'
-import { useWallet } from '@solana/wallet-adapter-react'
-import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { AddressImage, DisplayAddress } from '@cardinal/namespaces-components'
-import { shortPubKey } from './utils'
-import { HiUserCircle } from 'react-icons/hi'
-import { Airdrop } from './Airdrop'
+import styled from '@emotion/styled'
+import { useWallet } from '@solana/wallet-adapter-react'
+import {
+  useWalletModal,
+  WalletMultiButton,
+} from '@solana/wallet-adapter-react-ui'
+import Colors from 'common/colors'
 import { useRouter } from 'next/router'
-import { useProjectConfigData } from 'providers/ProjectConfigProvider'
 import { lighten } from 'polished'
+import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
+import { useProjectConfig } from 'providers/ProjectConfigProvider'
+import { useEffect, useState } from 'react'
+import { HiUserCircle } from 'react-icons/hi'
+import { useMediaQuery } from 'react-responsive'
 import { getColorByBgColor } from 'rental-components/common/Button'
+
+import { Airdrop, AirdropSol } from './Airdrop'
+import { LoadingPulse } from './LoadingPulse'
+import { shortPubKey } from './utils'
 
 export const StyledHeader = styled.div<{ isTabletOrMobile: boolean }>`
   z-index: 100;
@@ -34,11 +35,6 @@ export const StyledHeader = styled.div<{ isTabletOrMobile: boolean }>`
     display: flex;
     align-items: center;
     gap: 18px;
-
-    img {
-      height: 35px;
-      width: auto;
-    }
   }
 
   .right {
@@ -82,11 +78,6 @@ export const StyledHeader = styled.div<{ isTabletOrMobile: boolean }>`
       border-radius: 6px;
       padding: 3px 5px;
     }
-
-    img {
-      width: auto;
-      max-width: none;
-    }
   }
 
   .wallet-adapter-button {
@@ -126,7 +117,6 @@ export const Hamburger = styled.div`
   }
 `
 
-// background-color: ${lighten(0.1, Colors.navBg)};
 export const StyledTabs = styled.div<{ show: boolean }>`
   font-size: 13px;
 
@@ -187,15 +177,6 @@ export const StyledTab = styled.div<{
   }
 `
 
-const StyledProfile = styled.div`
-  display: flex;
-  gap: 10px;
-  .info {
-    color: white;
-    font-size: 14px;
-  }
-`
-
 export const Header = ({
   tabs,
   loading,
@@ -210,19 +191,19 @@ export const Header = ({
   const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' })
   const [showTabs, setShowTabs] = useState(false)
   const [tab, setTab] = useState<string>('wallet')
-  const { logoImage, colors } = useProjectConfigData()
+  const { config } = useProjectConfig()
 
   useEffect(() => {
-    if (colors) {
-      Colors.navBg = colors.main
-      Colors.secondary = colors.secondary
+    if (config.colors) {
+      Colors.navBg = config.colors.main
+      Colors.secondary = config.colors.secondary
     }
-  }, [colors])
+  }, [config])
 
   useEffect(() => {
     const anchor = router.asPath.split('#')[1]
-    if (anchor != tab) setTab(anchor || 'wallet')
-  }, [router.asPath])
+    if (anchor !== tab) setTab(anchor || 'wallet')
+  }, [router.asPath, tab])
 
   const walletAddressFormatted = wallet?.publicKey
     ? shortPubKey(wallet?.publicKey)
@@ -235,7 +216,14 @@ export const Header = ({
     >
       <div className="left pl-8">
         <div className="title">
-          <img src={logoImage} />
+          <a
+            className="cursor-pointer"
+            rel="noreferrer"
+            target="_blank"
+            href={config.websiteUrl}
+          >
+            <img className="h-9 w-auto" src={config.logoImage} alt="logo" />
+          </a>
           <div className="subscript">
             {ctx.environment.label === 'devnet' ? 'DEV' : 'alpha'}
           </div>
@@ -243,8 +231,9 @@ export const Header = ({
         {wallet.connected &&
           ctx.environment.label === 'devnet' &&
           !isTabletOrMobile && (
-            <div style={{ marginLeft: '40px' }}>
+            <div className="flex gap-2" style={{ marginLeft: '40px' }}>
               <Airdrop />
+              <AirdropSol />
             </div>
           )}
       </div>
@@ -305,8 +294,8 @@ export const Header = ({
               <span className="hamb-line"></span>
             </Hamburger>
           ) : (
-            <StyledProfile
-              style={{ cursor: 'pointer' }}
+            <div
+              className="flex cursor-pointer gap-2"
               onClick={() => setVisible(true)}
             >
               <AddressImage
@@ -332,8 +321,8 @@ export const Header = ({
                   </div>
                 }
               />
-              <div className="info">
-                <div>
+              <div>
+                <div className="text-white">
                   <DisplayAddress
                     style={{ pointerEvents: 'none' }}
                     connection={ctx.connection}
@@ -347,7 +336,7 @@ export const Header = ({
                   {walletAddressFormatted}
                 </div>
               </div>
-            </StyledProfile>
+            </div>
           )
         ) : (
           <WalletMultiButton

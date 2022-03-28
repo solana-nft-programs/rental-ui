@@ -1,10 +1,10 @@
-import Head from 'next/head'
 import styled from '@emotion/styled'
-import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
 import { useWallet } from '@solana/wallet-adapter-react'
-import { useEffect } from 'react'
+import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
+import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { useProjectConfigData } from 'providers/ProjectConfigProvider'
+import { useProjectConfig } from 'providers/ProjectConfigProvider'
+import { useEffect } from 'react'
 
 const StyledSplash = styled.div`
   margin-top: 30vh;
@@ -31,9 +31,9 @@ const StyledSplash = styled.div`
 `
 
 export default function Home() {
+  const { config } = useProjectConfig()
   const wallet = useWallet()
   const router = useRouter()
-  const { logoImage, projectName } = useProjectConfigData()
 
   useEffect(() => {
     if (wallet && wallet.connected && wallet.publicKey) {
@@ -41,7 +41,7 @@ export default function Home() {
         `/${wallet.publicKey.toBase58()}${window.location.search ?? ''}`
       )
     }
-  }, [wallet.connected])
+  }, [wallet.publicKey, router])
 
   return (
     <div className="flex min-h-screen flex-col items-center">
@@ -70,15 +70,15 @@ export default function Home() {
       </Head>
       <StyledSplash>
         <div className="title">
-          <img className="mx-auto w-24" src={logoImage} />
+          <img className="mx-auto w-24" src={config.logoImage} alt="logo" />
           <p className="mt-3 text-2xl">
-            {projectName.charAt(0).toUpperCase() +
-              projectName.substring(1, projectName.length)}
+            {config.name.charAt(0).toUpperCase() +
+              config.name.substring(1, config.name.length)}
           </p>
           {/* <p className="text-md mt-3">
             The Rental Marketplace for all{' '}
-            {projectName.charAt(0).toUpperCase() +
-              projectName.substring(1, projectName.length)}{' '}
+            {config.name.charAt(0).toUpperCase() +
+              config.name.substring(1, config.name.length)}{' '}
             NFTs
           </p> */}
         </div>

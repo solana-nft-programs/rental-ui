@@ -1,16 +1,18 @@
-import styled from '@emotion/styled'
 import { css } from '@emotion/react'
+import styled from '@emotion/styled'
 import { lighten } from 'polished'
 import { useState } from 'react'
-import { LoadingSpinner } from './LoadingSpinner'
-import { notify } from 'common/Notification'
 
-export const Button = styled.button<{
+import { LoadingSpinner } from './LoadingSpinner'
+
+export type ButtonProps = {
   variant: 'primary' | 'secondary' | 'tertiary'
   boxShadow?: boolean
   disabled?: boolean
   bgColor?: string
-}>`
+}
+
+export const Button = styled.button<ButtonProps>`
   display: flex;
   align-items: center;
   gap: 5px;
@@ -27,13 +29,12 @@ export const Button = styled.button<{
   padding: 0 12px;
   transition: 0.2s background;
   ${({ variant = 'primary', disabled, bgColor = undefined }) => {
-    if (disabled) return
     return bgColor
       ? css`
           background: ${bgColor};
           color: ${getColorByBgColor(bgColor)};
           &:hover {
-            background: ${lighten(0.1, bgColor)}};
+            background: ${!disabled && lighten(0.1, bgColor)}};
           }
         `
       : variant === 'primary'
@@ -41,7 +42,7 @@ export const Button = styled.button<{
           background: rgb(29, 155, 240);
           color: #fff;
           &:hover {
-            background: ${lighten(0.1, 'rgb(29, 155, 240)')}};
+            background: ${!disabled && lighten(0.1, 'rgb(29, 155, 240)')}};
           }
         `
       : variant === 'secondary'
@@ -49,14 +50,14 @@ export const Button = styled.button<{
           background: #000;
           color: #fff;
           &:hover {
-            background: ${lighten(0.1, '#000')};
+            background: ${!disabled && lighten(0.1, '#000')};
           }
         `
       : css`
           background: rgb(255, 255, 255, 0.15);
           color: #fff;
           &:hover {
-            background: ${lighten(0.05, '#000')};
+            background: ${!disabled && lighten(0.05, '#000')};
           }
         `
   }}
@@ -68,6 +69,7 @@ export const hexColor = (colorString: string): string => {
   if (colorString.includes('#')) return colorString
   const [r, g, b] = colorString
     .replace('rgb(', '')
+    .replace('rgba(', '')
     .replace(')', '')
     .replace(' ', '')
     .split(',')
@@ -92,42 +94,31 @@ export const getColorByBgColor = (bgColor: string) => {
 }
 
 export const AsyncButton = ({
-  text,
-  variant,
-  boxShadow,
-  disabled,
-  bgColor,
+  children,
   handleClick,
+  className,
+  ...buttonProps
 }: {
-  text: string
-  loading: boolean
-  variant: 'primary' | 'secondary' | 'tertiary'
-  boxShadow?: boolean
-  disabled?: boolean
-  bgColor?: string
-  handleClick: Function
-}) => {
+  children: JSX.Element | JSX.Element[] | string
+  className?: string
+  handleClick: () => void
+} & ButtonProps) => {
   const [loading, setLoading] = useState(false)
 
   return (
     <Button
-      variant="primary"
-      className="mx-auto mt-4"
+      {...buttonProps}
+      className={className}
       onClick={async () => {
         try {
           setLoading(true)
           await handleClick()
-        } catch (e) {
-          notify({
-            message: `${e}`,
-            type: 'error',
-          })
         } finally {
           setLoading(false)
         }
       }}
     >
-      {loading ? <LoadingSpinner height="25px" /> : text}
+      {loading ? <LoadingSpinner height="25px" /> : children}
     </Button>
   )
 }
