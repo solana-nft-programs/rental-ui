@@ -46,7 +46,7 @@ export default function Home() {
   return (
     <div className="flex min-h-screen flex-col items-center">
       <Head>
-        <title>Cardinal</title>
+        <title>Remi</title>
         <link rel="icon" href="/favicon.ico" />
 
         <link
@@ -70,11 +70,11 @@ export default function Home() {
       </Head>
       <StyledSplash>
         <div className="title">
-          <img className="mx-auto w-24" src={config.logoImage} alt="logo" />
-          <p className="mt-3 text-2xl">
+          {/* <img className="mx-auto w-24" src={config.logoImage} alt="logo" /> */}
+          {/* <p className="mt-3 text-2xl">
             {config.name.charAt(0).toUpperCase() +
               config.name.substring(1, config.name.length)}
-          </p>
+          </p> */}
           {/* <p className="text-md mt-3">
             The Rental Marketplace for all{' '}
             {config.name.charAt(0).toUpperCase() +

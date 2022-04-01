@@ -19,6 +19,5 @@ model Claim {
   createdAt      DateTime @default(now()) @map("created_at")
   updatedAt      DateTime @updatedAt @map("updated_at")
 
-  @@unique([tokenManagerId, email, nftMintId])
   @@map("claims")
 }

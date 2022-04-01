@@ -215,7 +215,7 @@ export const Header = ({
       isTabletOrMobile={isTabletOrMobile}
     >
       <div className="left pl-8">
-        <div className="title">
+        {/* <div className="title">
           <a
             className="cursor-pointer"
             rel="noreferrer"
@@ -227,15 +227,15 @@ export const Header = ({
           <div className="subscript">
             {ctx.environment.label === 'devnet' ? 'DEV' : 'alpha'}
           </div>
-        </div>
-        {wallet.connected &&
+        </div> */}
+        {/* {wallet.connected &&
           ctx.environment.label === 'devnet' &&
           !isTabletOrMobile && (
             <div className="flex gap-2" style={{ marginLeft: '40px' }}>
               <Airdrop />
               <AirdropSol />
             </div>
-          )}
+          )} */}
       </div>
       <div className="center">
         {tabs && (
