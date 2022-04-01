@@ -1,4 +1,4 @@
-import { getBatchedMultiplAccounts as getBatchedMultipleAccounts } from '@cardinal/common'
+import { getBatchedMultipleAccounts } from '@cardinal/common'
 import type { AccountData } from '@cardinal/token-manager'
 import {
   claimApprover,
@@ -23,11 +23,9 @@ import * as spl from '@solana/spl-token'
 import type {
   AccountInfo,
   Connection,
-  ParsedAccountData} from '@solana/web3.js';
-import {
-  PublicKey,
-  SystemProgram,
+  ParsedAccountData,
 } from '@solana/web3.js'
+import { PublicKey, SystemProgram } from '@solana/web3.js'
 
 export async function findAssociatedTokenAddress(
   walletAddress: PublicKey,
@@ -108,7 +106,7 @@ export async function getTokenAccountsWithData(
       let timeInvalidatorId = null
       let useInvalidatorId = null
       if (tokenManagerId) {
-        [[timeInvalidatorId], [useInvalidatorId]] = await Promise.all([
+        ;[[timeInvalidatorId], [useInvalidatorId]] = await Promise.all([
           timeInvalidator.pda.findTimeInvalidatorAddress(tokenManagerId),
           useInvalidator.pda.findUseInvalidatorAddress(tokenManagerId),
         ])
