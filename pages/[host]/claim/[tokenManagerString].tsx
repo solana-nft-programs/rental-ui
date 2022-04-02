@@ -444,12 +444,12 @@ function Claim() {
     <>
       <Header />
       <VerificationStepsOuter>
-        {!wallet?.connected && (
+        {/* {!wallet?.connected && (
           <StepOne>
             Don't have a wallet yet? Click here to learn how to set one up. Then
             come back here, connect, and click "Claim".
           </StepOne>
-        )}
+        )} */}
         <VerificationStep visible={true} status={tokenDataStatus?.status}>
           <div className="header">
             <div className="step-name uppercase">Claim Asset</div>
