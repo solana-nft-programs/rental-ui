@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-// import db from '../../../prisma/prisma'
-// import { sendEmailWithTemplate } from '../../../api/sendEmail'
+
+import { sendEmailWithTemplate } from '../../../api/sendEmail'
+import db from '../../../prisma/prisma'
 
 export default async function handler(
   req: NextApiRequest,
@@ -8,22 +9,22 @@ export default async function handler(
 ) {
   try {
     const { tokenManagerId, email, nftMintId, link } = req.body
-    // const created = await db.claim.create({
-    //   data: {
-    //     tokenManagerId: tokenManagerId as string,
-    //     email: email as string,
-    //     nftMintId: nftMintId as string,
-    //     link: link as string,
-    //   },
-    // })
-    // await sendEmailWithTemplate({
-    //   to: email,
-    //   templateAlias: 'welcome',
-    //   payload: {
-    //     actionUrl: link,
-    //   },
-    // })
-    res.status(201).json({}) //...created
+    const created = await db.claim.create({
+      data: {
+        tokenManagerId: tokenManagerId as string,
+        email: email as string,
+        nftMintId: nftMintId as string,
+        link: link as string,
+      },
+    })
+    await sendEmailWithTemplate({
+      to: email,
+      templateAlias: 'welcome',
+      payload: {
+        actionUrl: link,
+      },
+    })
+    res.status(201).json({ ...created }) //...created
   } catch (error) {
     console.log(
       'Error ocurred trying to create claim within db:',
