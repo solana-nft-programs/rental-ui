@@ -23,7 +23,6 @@
     "@emotion/styled": "^11.6.0",
     "@google/model-viewer": "^1.10.1",
     "@metaplex-foundation/mpl-token-metadata": "^1.2.0",
-    "@prisma/client": "^3.0.2",
     "@project-serum/anchor": "0.22.0",
     "@saberhq/anchor-contrib": "^1.12.48",
     "@saberhq/solana-contrib": "^1.12.36",
@@ -38,7 +37,6 @@
     "change-case": "^4.1.2",
     "jsbi": "^4.1.0",
     "next": "latest",
-    "postmark": "^3.0.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-responsive": "^9.0.0-beta.6"
@@ -63,7 +61,6 @@
     "postcss": "^8.4.5",
     "prettier": "^2.5.1",
     "prettier-plugin-tailwindcss": "^0.1.1",
-    "prisma": "^3.0.2",
     "tailwindcss": "^3.0.7",
     "typescript": "4.5.4",
     "webpack": "^5.70.0"

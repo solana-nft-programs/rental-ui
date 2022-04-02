@@ -4,7 +4,6 @@ import {
   InvalidationType,
   TokenManagerKind,
 } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
-
 import styled from '@emotion/styled'
 import * as anchor from '@project-serum/anchor'
 import type { Wallet } from '@saberhq/solana-contrib'
@@ -15,6 +14,7 @@ import type { TokenData } from 'api/api'
 import type { EditionInfo } from 'api/editions'
 import getEditionInfo from 'api/editions'
 import { tryPublicKey } from 'api/utils'
+import axios from 'axios'
 import { NFTOverlay } from 'common/NFTOverlay'
 import { notify } from 'common/Notification'
 import { executeTransaction } from 'common/Transactions'
@@ -25,15 +25,14 @@ import { getLink } from 'providers/ProjectConfigProvider'
 import { useUserTokenData } from 'providers/TokenDataProvider'
 import React, { useEffect, useState } from 'react'
 import { BiQrScan, BiTimer } from 'react-icons/bi'
-import { MdAlternateEmail } from 'react-icons/md'
-import { FaEye, FaLink } from 'react-icons/fa'
+import { FaEye } from 'react-icons/fa'
 import { FiSend } from 'react-icons/fi'
 import { GiRobotGrab } from 'react-icons/gi'
 import { GrReturn } from 'react-icons/gr'
 import { ImPriceTags } from 'react-icons/im'
+import { MdAlternateEmail } from 'react-icons/md'
 import { Alert } from 'rental-components/common/Alert'
 import { Button } from 'rental-components/common/Button'
-import axios from 'axios'
 import { ButtonWithFooter } from 'rental-components/common/ButtonWithFooter'
 import { PAYMENT_MINTS } from 'rental-components/common/Constants'
 import {
@@ -392,12 +391,15 @@ export const RentalCard = ({
         cluster,
         getLink('/claim', false)
       )
-      await axios.post('/api/claims/create', {
-        tokenManagerId,
-        link,
-        email: recipientEmail,
-        nftMintId: tokenData?.metaplexData?.data.mint,
-      })
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_REMI_COIN_URL}/api/claims/create`,
+        {
+          tokenManagerId,
+          link,
+          email: recipientEmail,
+          nftMintId: tokenData?.metaplexData?.data.mint,
+        }
+      )
       setLink(link)
       handleCopy(link)
       console.log(link)

@@ -1,8 +1,8 @@
 import { getTokenManagersForIssuer } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/accounts'
-import axios from 'axios'
 import { web3 } from '@project-serum/anchor'
 import type { TokenData } from 'api/api'
 import { getTokenDatas } from 'api/api'
+import axios from 'axios'
 import type { ReactChild } from 'react'
 import React, { useContext, useEffect, useState } from 'react'
 
@@ -48,13 +48,16 @@ export function ManagedTokensProvider({ children }: { children: ReactChild }) {
       if (!config) return
       setRefreshing(true)
 
-      const { data } = await axios.get(`/api/claims`, {
-        params: {
-          tokenManagerIds: managedTokens
-            .map((td) => td?.tokenManager?.pubkey.toString())
-            .join(),
-        },
-      })
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_REMI_COIN_URL}/api/claims`,
+        {
+          params: {
+            tokenManagerIds: managedTokens
+              .map((td) => td?.tokenManager?.pubkey.toString())
+              .join(),
+          },
+        }
+      )
 
       const tokenManagerDatas = await getTokenManagersForIssuer(
         connection,

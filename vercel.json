@@ -1,7 +1,0 @@
-{
-  "functions": {
-    "api/**/*.{j,t}s": {
-      "includeFiles": "node_modules/?prisma/client/*"
-    }
-  }
-}
