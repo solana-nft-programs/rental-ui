@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import db from '../../../prisma/prisma'
+// import db from '../../../prisma/prisma'
 
 export default async function handler(
   req: NextApiRequest,
@@ -8,15 +8,15 @@ export default async function handler(
   try {
     const { tokenManagerIds } = req.query
 
-    const found = await db.claim.findMany({
-      where: {
-        tokenManagerId: {
-          in: (tokenManagerIds as string).split(',') as string[],
-        },
-      },
-    })
+    // const found = await db.claim.findMany({
+    //   where: {
+    //     tokenManagerId: {
+    //       in: (tokenManagerIds as string).split(',') as string[],
+    //     },
+    //   },
+    // })
 
-    res.status(200).json({ claims: found })
+    res.status(200).json({ claims: [] })
   } catch (error) {
     console.log(
       'Error ocurred trying to find claims within db:',
