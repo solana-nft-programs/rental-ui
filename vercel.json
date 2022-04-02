@@ -1,7 +1,7 @@
 {
   "functions": {
     "api/**/*.{j,t}s": {
-      "excludeFiles": "node_modules/canvas/build/**"
+      "excludeFiles": "node_modules/**"
     }
   }
 }
