@@ -227,7 +227,7 @@ export const RentalCard = ({
     : PAYMENT_MINTS
 
   const showClaimRentalReceipt =
-    rentalCardConfig.invalidationOptions?.showClaimRentalReceipt || true
+    rentalCardConfig.invalidationOptions?.showClaimRentalReceipt
 
   // defaults
   const defaultVisibility = visibilities[0]
@@ -241,7 +241,7 @@ export const RentalCard = ({
     defaultPaymentMint.mint
   )
   const [expiration, setExpiration] = useState<number | null>(null)
-  const [durationAmount, setDurationAmount] = useState<number | null>(null)
+  const [durationAmount, setDurationAmount] = useState<number | null>(1)
   const [durationOption, setDurationOption] = useState<DurationOption>(
     defaultDurationOption
   )
@@ -669,6 +669,7 @@ export const RentalCard = ({
                         style={{ width: '100%' }}
                         placeholder="# of..."
                         min="0"
+                        value={durationAmount?.toString() || "1"}
                         step={1}
                         onChange={(e) => setDurationAmount(parseInt(e))}
                       />
