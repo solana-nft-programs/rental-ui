@@ -1042,7 +1042,7 @@ export const RentalCard = ({
               style={{ gap: '5px' }}
               className="flex items-center justify-center"
             >
-              Send {visibility} link
+              {visibility === 'private'  ? 'Get private link' : 'List for rent'}
               <FiSend />
             </div>
           )}
