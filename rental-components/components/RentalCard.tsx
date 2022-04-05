@@ -245,6 +245,8 @@ export const RentalCard = ({
       ?.durationOption || 'days'
   const defaultPaymentMint = paymentMintData[0]!
   const defaultInvalidationType = invalidationTypes[0]!.type
+  const defaultDurationAmount =
+    rentalCardConfig.invalidationOptions?.freezeRentalDuration?.value || '1'
 
   // state
   const [price, setPrice] = useState(0)
@@ -252,7 +254,9 @@ export const RentalCard = ({
     defaultPaymentMint.mint
   )
   const [expiration, setExpiration] = useState<number | null>(null)
-  const [durationAmount, setDurationAmount] = useState<number | null>(1)
+  const [durationAmount, setDurationAmount] = useState<number | null>(
+    parseInt(defaultDurationAmount)
+  )
   const [durationOption, setDurationOption] = useState<DurationOption>(
     defaultDurationOption
   )
