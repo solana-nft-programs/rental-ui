@@ -93,7 +93,7 @@ export const Browse = () => {
   const [selectedFilters, setSelectedFilters] = useState<{
     [filterName: string]: any[]
   }>({})
-  const [showFilters, setShowFilters] = useState<boolean>(true)
+  const [showFilters, setShowFilters] = useState<boolean>(false)
 
   const StyledSelect = styled.div`
     .ant-select-selector {
@@ -339,9 +339,9 @@ export const Browse = () => {
   const sortedAttributes = getAllAttributes(issuedTokens)
   return (
     <div className="container mx-auto">
-      <div className="mb-4 flex flex-wrap justify-center md:justify-between">
-        <div className="flex">
-          <div className="d-block flex-col  border-2 border-gray-600 py-3 px-5">
+      <div className="mb-4 flex flex-wrap justify-center md:justify-between h-min">
+        <div className="flex h-fit">
+          <div className="d-block flex-col  border-2 border-gray-600 py-3 px-5 md:ml-12">
             <p className="text-gray-400">FLOOR PRICE / WEEK</p>
             <h2 className="text-center font-bold text-gray-100">
               {calculateFloorPrice(filteredAndSortedTokens).toFixed(2)}{' '}
@@ -358,26 +358,10 @@ export const Browse = () => {
           </div>
         </div>
 
-        <StyledSelect>
-          <Select
-            className="m-[10px] h-[30px] w-max rounded-[4px] bg-black text-gray-700"
-            onChange={(e) => {
-              setSelectedOrderCategory(e)
-            }}
-            defaultValue={selectedOrderCategory}
-          >
-            {allOrderCategories.map((category) => (
-              <Option key={category} value={category}>
-                {category}
-              </Option>
-            ))}
-          </Select>
-        </StyledSelect>
-      </div>
-      {!config.browse?.hideFilters && (
+        {!config.browse?.hideFilters && (
         <div
           className={
-            'mx-auto w-[220px] text-center md:absolute md:-left-[220px]'
+            ' [w-[220px]'
           }
         >
           <div
@@ -419,6 +403,22 @@ export const Browse = () => {
         </div>
       )}
 
+        <StyledSelect>
+          <Select
+            className="m-[10px] h-[30px] w-max rounded-[4px] bg-black text-gray-700"
+            onChange={(e) => {
+              setSelectedOrderCategory(e)
+            }}
+            defaultValue={selectedOrderCategory}
+          >
+            {allOrderCategories.map((category) => (
+              <Option key={category} value={category}>
+                {category}
+              </Option>
+            ))}
+          </Select>
+        </StyledSelect>
+      </div>
       <TokensOuter>
         {!loaded ? (
           <>
