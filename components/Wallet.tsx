@@ -68,6 +68,7 @@ export const Wallet = () => {
       callback: refreshTokenAccounts,
     })
   }
+  console.log(tokenDatas)
 
   return (
     <TokensOuter>

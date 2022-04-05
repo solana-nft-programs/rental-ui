@@ -15,6 +15,7 @@ export const filterTokens = (
         tokens = tokens.filter(
           (token) =>
             token.metadata.data.properties &&
+            token.metadata.data.properties.creators &&
             token.metadata.data.properties.creators.some(
               (creator: { address: string }) =>
                 creator.address === configFilter.value

@@ -45,6 +45,7 @@ export function IssuedTokensProvider({ children }: { children: ReactChild }) {
       )
       let tokenDatas = await getTokenDatas(connection, tokenManagerDatas)
       tokenDatas = filterTokens(config.filters, tokenDatas)
+      console.log(tokenDatas, connection)
       setIssuedTokens(tokenDatas)
     } catch (e) {
       console.log(e)
