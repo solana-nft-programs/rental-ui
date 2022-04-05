@@ -340,6 +340,9 @@ export const RentalCard = ({
                   durationAmount && durationOption
                     ? durationAmount * (durationData[durationOption] || 0)
                     : undefined,
+                maxExpiration: extensionMaxExpiration
+                  ? extensionMaxExpiration
+                  : undefined,
                 extension: hasAllExtensionProperties()
                   ? {
                       extensionPaymentAmount: extensionPaymentAmount,
@@ -347,9 +350,6 @@ export const RentalCard = ({
                         extensionDurationAmount! *
                         (durationData[extensionDurationOption] || 0),
                       extensionPaymentMint: extensionPaymentMintPublicKey,
-                      maxExpiration: extensionMaxExpiration
-                        ? extensionMaxExpiration
-                        : undefined,
                       disablePartialExtension: disablePartialExtension
                         ? disablePartialExtension
                         : undefined,
@@ -669,7 +669,7 @@ export const RentalCard = ({
                         style={{ width: '100%' }}
                         placeholder="# of..."
                         min="0"
-                        value={durationAmount?.toString() || "1"}
+                        value={durationAmount?.toString() || '1'}
                         step={1}
                         onChange={(e) => setDurationAmount(parseInt(e))}
                       />
@@ -1043,7 +1043,7 @@ export const RentalCard = ({
               style={{ gap: '5px' }}
               className="flex items-center justify-center"
             >
-              {visibility === 'private'  ? 'Get private link' : 'List for rent'}
+              {visibility === 'private' ? 'Get private link' : 'List for rent'}
               <FiSend />
             </div>
           )}
