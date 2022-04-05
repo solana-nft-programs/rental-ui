@@ -1,4 +1,4 @@
-import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
+// import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { getTokenManagersByState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/accounts'
 import type { TokenData } from 'api/api'
 import { getTokenDatas } from 'api/api'
@@ -39,13 +39,9 @@ export function IssuedTokensProvider({ children }: { children: ReactChild }) {
     try {
       if (!config) return
       setRefreshing(true)
-      const tokenManagerDatas = await getTokenManagersByState(
-        connection,
-        TokenManagerState.Issued
-      )
+      const tokenManagerDatas = await getTokenManagersByState(connection, null)
       let tokenDatas = await getTokenDatas(connection, tokenManagerDatas)
       tokenDatas = filterTokens(config.filters, tokenDatas)
-      console.log(tokenDatas, connection)
       setIssuedTokens(tokenDatas)
     } catch (e) {
       console.log(e)
