@@ -271,12 +271,13 @@ export const Browse = () => {
         signers: [],
         notificationConfig: {},
       })
-      refreshIssuedTokens()
     } catch (e: any) {
       notify({
         message: e.toString(),
       })
       console.log(e)
+    } finally {
+      refreshIssuedTokens()
     }
   }
 

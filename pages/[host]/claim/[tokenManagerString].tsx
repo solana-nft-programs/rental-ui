@@ -429,11 +429,11 @@ function Claim() {
         notificationConfig: {},
       })
       setClaimed(true)
-      getMetadata()
     } catch (e: any) {
       setTokenDataStatus({ status: VerificationStatus.ERROR })
       handleError(e)
     } finally {
+      getMetadata()
       setLoadingClaim(false)
     }
   }
