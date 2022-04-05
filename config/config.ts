@@ -110,6 +110,10 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
+        freezeRentalDuration: {
+          durationDataindex: 1,
+          value: '1',
+        },
       },
     },
     airdrops: [
