@@ -187,7 +187,7 @@ export function NFT({ tokenData, hideQRCode }: NFTProps) {
   // const customImageUri =
   //   tokenManager && getQueryParam(metadata?.data?.image, 'uri')
 
-  const elligibleForRent = false
+  const elligibleForRent = true
   // !tokenManager &&
   // tokenAccount?.account.data.parsed.info.state !== 'frozen' &&
   // tokenData.editionData
