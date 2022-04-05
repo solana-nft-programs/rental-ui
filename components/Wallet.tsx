@@ -12,6 +12,7 @@ import { notify } from 'common/Notification'
 import { executeTransaction } from 'common/Transactions'
 import { asWallet } from 'common/Wallets'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
+import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useUserTokenData } from 'providers/TokenDataProvider'
 import { AsyncButton, Button } from 'rental-components/common/Button'
 import { useRentalExtensionModal } from 'rental-components/RentalExtensionModalProvider'
@@ -19,6 +20,7 @@ import { useRentalExtensionModal } from 'rental-components/RentalExtensionModalP
 export const Wallet = () => {
   const ctx = useEnvironmentCtx()
   const wallet = useWallet()
+  const { config } = useProjectConfig()
   const { tokenDatas, loaded, refreshTokenAccounts } = useUserTokenData()
   const rentalExtensionModal = useRentalExtensionModal()
 
@@ -126,7 +128,9 @@ export const Wallet = () => {
         ))
       ) : (
         <div className="white flex w-full flex-col items-center justify-center gap-1">
-          <div className="text-white">Wallet empty!</div>
+          <div className="text-white">
+            No {config.name} NFTs found in wallet!
+          </div>
           {ctx.environment.label === 'devnet' && <Airdrop />}
         </div>
       )}
