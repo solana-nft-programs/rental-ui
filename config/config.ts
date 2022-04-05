@@ -112,7 +112,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         setClaimRentalReceipt: false,
         freezeRentalDuration: {
           durationOption: 'minutes',
-          value: '10',
+          value: '30',
         },
       },
     },
