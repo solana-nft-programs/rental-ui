@@ -187,10 +187,10 @@ export function NFT({ tokenData, hideQRCode }: NFTProps) {
   // const customImageUri =
   //   tokenManager && getQueryParam(metadata?.data?.image, 'uri')
 
-  const elligibleForRent =
-    !tokenManager &&
-    tokenAccount?.account.data.parsed.info.state !== 'frozen' &&
-    tokenData.editionData
+  const elligibleForRent = false
+  // !tokenManager &&
+  // tokenAccount?.account.data.parsed.info.state !== 'frozen' &&
+  // tokenData.editionData
 
   return (
     <TokenMetadata>
@@ -254,7 +254,10 @@ export function NFT({ tokenData, hideQRCode }: NFTProps) {
               </div>
             </Popover>
           ) : (
-            <Tooltip placement="topLeft" title="This item is not elligible">
+            <Tooltip
+              placement="topLeft"
+              title="Self listing is currently disabled"
+            >
               <div id="disabled-ellipsis">
                 <FaEllipsisH />
               </div>

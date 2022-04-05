@@ -414,11 +414,13 @@ function Claim() {
           )
         }
       }
+      const overrideCollection =
+        ctx.environment.override && tokenData?.tokenManager?.parsed.receiptMint
+          ? new Connection(ctx.environment.override)
+          : ctx.connection
       await withClaimToken(
         transaction,
-        ctx.environment.override
-          ? new Connection(ctx.environment.override)
-          : ctx.connection,
+        overrideCollection,
         asWallet(wallet),
         tokenManagerId!,
         {
@@ -431,11 +433,11 @@ function Claim() {
         notificationConfig: {},
       })
       setClaimed(true)
-      getMetadata()
     } catch (e: any) {
       setTokenDataStatus({ status: VerificationStatus.ERROR })
       handleError(e)
     } finally {
+      getMetadata()
       setLoadingClaim(false)
     }
   }

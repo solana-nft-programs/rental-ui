@@ -1,7 +1,9 @@
-import { withFindOrInitAssociatedTokenAccount } from '@cardinal/token-manager'
-import { tokenManager } from '@cardinal/token-manager/dist/cjs/programs'
-import { withRemainingAccountsForReturn } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
-import { tokenManagerAddressFromMint } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/pda'
+import {
+  withInvalidate,
+} from '@cardinal/token-manager'
+import {
+  InvalidationType,
+} from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { Transaction } from '@solana/web3.js'
 import type { TokenData } from 'api/api'
@@ -12,6 +14,7 @@ import { notify } from 'common/Notification'
 import { executeTransaction } from 'common/Transactions'
 import { asWallet } from 'common/Wallets'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
+import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useUserTokenData } from 'providers/TokenDataProvider'
 import { AsyncButton, Button } from 'rental-components/common/Button'
 import { useRentalExtensionModal } from 'rental-components/RentalExtensionModalProvider'
@@ -19,6 +22,7 @@ import { useRentalExtensionModal } from 'rental-components/RentalExtensionModalP
 export const Wallet = () => {
   const ctx = useEnvironmentCtx()
   const wallet = useWallet()
+  const { config } = useProjectConfig()
   const { tokenDatas, loaded, refreshTokenAccounts } = useUserTokenData()
   const rentalExtensionModal = useRentalExtensionModal()
 
@@ -27,40 +31,12 @@ export const Wallet = () => {
     if (!wallet.publicKey) throw new Error('Wallet not connected')
 
     const transaction = new Transaction()
-    const tokenManagerId = await tokenManagerAddressFromMint(
-      ctx.connection,
-      tokenData.tokenManager?.parsed.mint
-    )
 
-    const tokenManagerTokenAccountId =
-      await withFindOrInitAssociatedTokenAccount(
-        transaction,
-        ctx.connection,
-        tokenData.tokenManager?.parsed.mint,
-        tokenManagerId,
-        wallet.publicKey,
-        true
-      )
-
-    const remainingAccountsForReturn = await withRemainingAccountsForReturn(
+    await withInvalidate(
       transaction,
       ctx.connection,
       asWallet(wallet),
-      tokenData.tokenManager
-    )
-
-    transaction.add(
-      await tokenManager.instruction.invalidate(
-        ctx.connection,
-        asWallet(wallet),
-        tokenData.tokenManager?.parsed.mint,
-        tokenManagerId,
-        tokenData.tokenManager.parsed.kind,
-        tokenData.tokenManager.parsed.state,
-        tokenManagerTokenAccountId,
-        tokenData.tokenManager?.parsed.recipientTokenAccount,
-        remainingAccountsForReturn
-      )
+      tokenData.tokenManager?.parsed.mint
     )
 
     await executeTransaction(ctx.connection, asWallet(wallet), transaction, {
@@ -103,7 +79,11 @@ export const Wallet = () => {
                 Increase Duration
               </Button>
             ) : null}
-            {tokenData.tokenManager?.parsed ? (
+            {tokenData.tokenManager?.parsed &&
+            (tokenData.tokenManager.parsed.invalidationType ===
+              InvalidationType.Reissue ||
+              tokenData.tokenManager.parsed.invalidationType ===
+                InvalidationType.Return) ? (
               <AsyncButton
                 variant="primary"
                 className="mx-auto mt-4"
@@ -125,7 +105,9 @@ export const Wallet = () => {
         ))
       ) : (
         <div className="white flex w-full flex-col items-center justify-center gap-1">
-          <div className="text-white">Wallet empty!</div>
+          <div className="text-white">
+            No {config.name} NFTs found in wallet!
+          </div>
           {ctx.environment.label === 'devnet' && <Airdrop />}
         </div>
       )}

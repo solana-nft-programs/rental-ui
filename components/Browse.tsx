@@ -16,7 +16,7 @@ import { notify } from 'common/Notification'
 import { StyledTag, Tag } from 'common/Tags'
 import { executeTransaction } from 'common/Transactions'
 import { getMintDecimalAmount } from 'common/units'
-import { shortPubKey } from 'common/utils'
+import { pubKeyUrl, shortPubKey } from 'common/utils'
 import { asWallet } from 'common/Wallets'
 import { lighten } from 'polished'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
@@ -93,7 +93,7 @@ export const Browse = () => {
   const [selectedFilters, setSelectedFilters] = useState<{
     [filterName: string]: any[]
   }>({})
-  const [showFilters, setShowFilters] = useState<boolean>(true)
+  const [showFilters, setShowFilters] = useState<boolean>(false)
 
   const StyledSelect = styled.div`
     .ant-select-selector {
@@ -271,12 +271,13 @@ export const Browse = () => {
         signers: [],
         notificationConfig: {},
       })
-      refreshIssuedTokens()
     } catch (e: any) {
       notify({
         message: e.toString(),
       })
       console.log(e)
+    } finally {
+      refreshIssuedTokens()
     }
   }
 
@@ -338,9 +339,9 @@ export const Browse = () => {
   const sortedAttributes = getAllAttributes(issuedTokens)
   return (
     <div className="container mx-auto">
-      <div className="mb-4 flex flex-wrap justify-center md:justify-between">
-        <div className="flex">
-          <div className="d-block flex-col  border-2 border-gray-600 py-3 px-5">
+      <div className="mb-4 flex h-min flex-wrap justify-center md:justify-between">
+        <div className="flex h-fit">
+          <div className="d-block flex-col  border-2 border-gray-600 py-3 px-5 md:ml-12">
             <p className="text-gray-400">FLOOR PRICE / WEEK</p>
             <h2 className="text-center font-bold text-gray-100">
               {calculateFloorPrice(filteredAndSortedTokens).toFixed(2)}{' '}
@@ -356,6 +357,47 @@ export const Browse = () => {
             </h2>
           </div>
         </div>
+
+        {!config.browse?.hideFilters && (
+          <div className={' [w-[220px]'}>
+            <div
+              onClick={() => setShowFilters(!showFilters)}
+              className="my-3 text-center text-lg text-gray-300 hover:cursor-pointer hover:text-gray-100"
+            >
+              {showFilters ? 'Filters [-]' : 'Filters [+]'}
+            </div>
+            {showFilters && (
+              <div className="flex flex-col">
+                {Object.keys(sortedAttributes).map((traitType) => (
+                  <div key={traitType}>
+                    {selectedFilters[traitType] !== undefined &&
+                      selectedFilters[traitType]!.length > 0 && (
+                        <p className="mb-1 text-gray-100">{traitType}</p>
+                      )}
+                    <StyledSelectMultiple className="mb-5">
+                      <Select
+                        mode="multiple"
+                        allowClear
+                        style={{ width: '100%', maxWidth: '200px' }}
+                        placeholder={traitType}
+                        defaultValue={selectedFilters[traitType] ?? []}
+                        onChange={(e) => {
+                          updateFilters(traitType, e)
+                        }}
+                      >
+                        {sortedAttributes[traitType]!.map((value) => (
+                          <Option key={value} value={value}>
+                            {value}
+                          </Option>
+                        ))}
+                      </Select>
+                    </StyledSelectMultiple>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
 
         <StyledSelect>
           <Select
@@ -373,51 +415,6 @@ export const Browse = () => {
           </Select>
         </StyledSelect>
       </div>
-      {!config.browse?.hideFilters && (
-        <div
-          className={
-            'mx-auto w-[220px] text-center md:absolute md:-left-[220px]'
-          }
-        >
-          <div
-            onClick={() => setShowFilters(!showFilters)}
-            className="my-3 text-center text-lg text-gray-300 hover:cursor-pointer hover:text-gray-100"
-          >
-            {showFilters ? 'Filters [-]' : 'Filters [+]'}
-          </div>
-          {showFilters && (
-            <div className="flex flex-col">
-              {Object.keys(sortedAttributes).map((traitType) => (
-                <div key={traitType}>
-                  {selectedFilters[traitType] !== undefined &&
-                    selectedFilters[traitType]!.length > 0 && (
-                      <p className="mb-1 text-gray-100">{traitType}</p>
-                    )}
-                  <StyledSelectMultiple className="mb-5">
-                    <Select
-                      mode="multiple"
-                      allowClear
-                      style={{ width: '100%', maxWidth: '200px' }}
-                      placeholder={traitType}
-                      defaultValue={selectedFilters[traitType] ?? []}
-                      onChange={(e) => {
-                        updateFilters(traitType, e)
-                      }}
-                    >
-                      {sortedAttributes[traitType]!.map((value) => (
-                        <Option key={value} value={value}>
-                          {value}
-                        </Option>
-                      ))}
-                    </Select>
-                  </StyledSelectMultiple>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
-
       <TokensOuter>
         {!loaded ? (
           <>
@@ -533,10 +530,19 @@ export const Browse = () => {
                     [TokenManagerState.Claimed]: (
                       <StyledTag>
                         <Tag state={TokenManagerState.Claimed}>
-                          Claimed by{' '}
-                          {shortPubKey(
-                            tokenData.recipientTokenAccount?.owner || ''
-                          )}{' '}
+                          Claimed by&nbsp;
+                          <a
+                            target="_blank"
+                            rel="noreferrer"
+                            href={pubKeyUrl(
+                              tokenData.recipientTokenAccount?.owner,
+                              environment.label
+                            )}
+                          >
+                            {shortPubKey(
+                              tokenData.recipientTokenAccount?.owner || ''
+                            )}
+                          </a>{' '}
                           {/* {shortDateString(
                           tokenData.tokenManager?.parsed.claimedAt
                         )} */}

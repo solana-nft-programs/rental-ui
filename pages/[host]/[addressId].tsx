@@ -49,7 +49,7 @@ function Profile() {
         loading={loaded && refreshing}
         tabs={[
           { name: 'Wallet', anchor: 'wallet' },
-          { name: 'Manage', anchor: 'manage' },
+          { name: 'Manage', anchor: 'manage', disabled: true },
           { name: 'Browse', anchor: 'browse' },
         ]}
       />

@@ -1270,10 +1270,10 @@
     ts-mocha "^8.0.0"
     typescript "^4.5.5"
 
-"@cardinal/token-manager@^0.2.22":
-  version "0.2.22"
-  resolved "https://registry.yarnpkg.com/@cardinal/token-manager/-/token-manager-0.2.22.tgz#2e472a40cff892860040e245ec497232bbe44e5c"
-  integrity sha512-L042BX6L3Me8Bk5T0mwvv2cFt0+yekCtm5yKRAdRDRsyeuAkQQqAR1NdOoJOQdV9QnvD/PWctKiVCHACcKwSTA==
+"@cardinal/token-manager@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@cardinal/token-manager/-/token-manager-1.0.3.tgz#698e25e688521f9faf6e219c363d93eaa2509529"
+  integrity sha512-TNSQWDi7EiH155qxjwPO/5sLTo3re9WsOTjXtESoE+whJFa8u2beEwD8r3pny3r4R/5a+Fkm1f0+GK0WgaHX9g==
   dependencies:
     "@metaplex-foundation/mpl-token-metadata" "^1.2.3"
     "@solana/buffer-layout" "^4.0.0"

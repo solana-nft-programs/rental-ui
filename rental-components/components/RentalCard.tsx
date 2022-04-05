@@ -96,7 +96,11 @@ export type InvalidatorOption = 'usages' | 'expiration' | 'duration' | 'manual'
 const VISIBILITY_OPTIONS = ['public', 'private'] as const
 export type VisibilityOption = typeof VISIBILITY_OPTIONS[number]
 
-export type InvalidationTypeOption = 'return' | 'invalidate' | 'release'
+export type InvalidationTypeOption =
+  | 'return'
+  | 'invalidate'
+  | 'release'
+  | 'reissue'
 const INVALIDATION_TYPES: {
   type: InvalidationType
   label: InvalidationTypeOption
@@ -112,6 +116,10 @@ const INVALIDATION_TYPES: {
   {
     type: InvalidationType.Release,
     label: 'release',
+  },
+  {
+    type: InvalidationType.Reissue,
+    label: 'reissue',
   },
 ]
 
@@ -137,6 +145,7 @@ export type RentalCardConfig = {
     durationOptions: DurationOption[]
     invalidationTypes: InvalidationTypeOption[]
     paymentMints: string[]
+    freezeRentalDuration?: { durationOption: DurationOption; value: string }
     visibilities?: VisibilityOption[]
     setClaimRentalReceipt: boolean
     showClaimRentalReceipt?: boolean
@@ -229,13 +238,17 @@ export const RentalCard = ({
     : PAYMENT_MINTS
 
   const showClaimRentalReceipt =
-    rentalCardConfig.invalidationOptions?.showClaimRentalReceipt || true
+    rentalCardConfig.invalidationOptions?.showClaimRentalReceipt
 
   // defaults
   const defaultVisibility = visibilities[0]
-  const defaultDurationOption = Object.keys(durationData)[2]! as DurationOption
+  const defaultDurationOption =
+    rentalCardConfig.invalidationOptions?.freezeRentalDuration
+      ?.durationOption || 'days'
   const defaultPaymentMint = paymentMintData[0]!
   const defaultInvalidationType = invalidationTypes[0]!.type
+  const defaultDurationAmount =
+    rentalCardConfig.invalidationOptions?.freezeRentalDuration?.value || '1'
 
   // state
   const [price, setPrice] = useState(0)
@@ -243,7 +256,9 @@ export const RentalCard = ({
     defaultPaymentMint.mint
   )
   const [expiration, setExpiration] = useState<number | null>(null)
-  const [durationAmount, setDurationAmount] = useState<number | null>(null)
+  const [durationAmount, setDurationAmount] = useState<number | null>(
+    parseInt(defaultDurationAmount)
+  )
   const [durationOption, setDurationOption] = useState<DurationOption>(
     defaultDurationOption
   )
@@ -307,6 +322,7 @@ export const RentalCard = ({
       ? true
       : false
   }
+  console.log(invalidationTypes)
 
   const handleRental = async () => {
     const extensionPaymentMintPublicKey = tryPublicKey(extensionPaymentMint)
@@ -343,6 +359,9 @@ export const RentalCard = ({
                   durationAmount && durationOption
                     ? durationAmount * (durationData[durationOption] || 0)
                     : undefined,
+                maxExpiration: extensionMaxExpiration
+                  ? extensionMaxExpiration
+                  : undefined,
                 extension: hasAllExtensionProperties()
                   ? {
                       extensionPaymentAmount: extensionPaymentAmount,
@@ -350,9 +369,6 @@ export const RentalCard = ({
                         extensionDurationAmount! *
                         (durationData[extensionDurationOption] || 0),
                       extensionPaymentMint: extensionPaymentMintPublicKey,
-                      maxExpiration: extensionMaxExpiration
-                        ? extensionMaxExpiration
-                        : undefined,
                       disablePartialExtension: disablePartialExtension
                         ? disablePartialExtension
                         : undefined,
@@ -698,13 +714,31 @@ export const RentalCard = ({
                         style={{ width: '100%' }}
                         placeholder="# of..."
                         min="0"
-                        step={1}
+                        value={
+                          rentalCardConfig.invalidationOptions
+                            ?.freezeRentalDuration
+                            ? rentalCardConfig.invalidationOptions
+                                ?.freezeRentalDuration.value
+                            : durationAmount?.toString() || '1'
+                        }
                         onChange={(e) => setDurationAmount(parseInt(e))}
+                        disabled={
+                          rentalCardConfig.invalidationOptions
+                            ?.freezeRentalDuration
+                            ? true
+                            : false
+                        }
                       />
                       <Select
                         className="w-max rounded-[4px]"
                         onChange={(e) => setDurationOption(e)}
                         defaultValue={defaultDurationOption}
+                        disabled={
+                          rentalCardConfig.invalidationOptions
+                            ?.freezeRentalDuration
+                            ? true
+                            : false
+                        }
                       >
                         {Object.keys(durationData).map((option) => (
                           <Option key={option} value={option}>
@@ -1075,7 +1109,7 @@ export const RentalCard = ({
               style={{ gap: '5px' }}
               className="flex items-center justify-center"
             >
-              Send {visibility} link
+              {visibility === 'private' ? 'Get private link' : 'List for rent'}
               <FiSend />
             </div>
           )}
