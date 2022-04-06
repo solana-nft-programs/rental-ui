@@ -11,6 +11,7 @@ export type ProjectConfig = {
   websiteUrl: string
   logoImage: string
   colors: Colors
+  disableListing?: boolean
   filters: { type: string; value: string }[]
   rentalCard: RentalCardConfig
   airdrops?: AirdropMetadata[]
@@ -83,6 +84,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     ],
   },
   portals: {
+    disableListing: true,
     name: 'portals',
     websiteUrl: 'https://theportal.to/',
     logoImage:
