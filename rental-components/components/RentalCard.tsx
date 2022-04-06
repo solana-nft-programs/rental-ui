@@ -415,8 +415,8 @@ export const RentalCard = ({
           link,
           email: recipientEmail,
           nftMintId: tokenData?.metaplexData?.data.mint,
-        },
-        { headers: { 'Access-Control-Allow-Origin': '*' } }
+        }
+        // { headers: { 'Access-Control-Allow-Origin': '*' } }
       )
       setLink(link)
       handleCopy(link)
