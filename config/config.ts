@@ -106,9 +106,14 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidationOptions: {
         visibilities: ['public'],
         durationOptions: ['minutes', 'hours', 'days', 'weeks'],
-        invalidationTypes: ['return'],
+        invalidationTypes: ['return', 'reissue'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
+        freezeRentalDuration: {
+          durationOption: 'minutes',
+          value: '30',
+        },
       },
     },
     airdrops: [
