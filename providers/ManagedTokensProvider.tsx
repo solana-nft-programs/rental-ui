@@ -56,6 +56,7 @@ export function ManagedTokensProvider({ children }: { children: ReactChild }) {
               .map((td) => td?.tokenManager?.pubkey.toString())
               .join(),
           },
+          headers: { 'Access-Control-Allow-Origin': '*' },
         }
       )
 
