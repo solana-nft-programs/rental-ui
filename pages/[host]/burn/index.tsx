@@ -1,9 +1,8 @@
 import { withFindOrInitAssociatedTokenAccount } from '@cardinal/token-manager'
-import { tokenManager } from '@cardinal/token-manager/dist/cjs/programs'
-import { withRemainingAccountsForReturn } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
-import { tokenManagerAddressFromMint } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/pda'
+import { web3 } from '@project-serum/anchor'
+import { Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { useWallet } from '@solana/wallet-adapter-react'
-import { Transaction } from '@solana/web3.js'
+import { PublicKey, Transaction } from '@solana/web3.js'
 import type { TokenData } from 'api/api'
 import { Airdrop } from 'common/Airdrop'
 import { Header } from 'common/Header'
@@ -31,11 +30,60 @@ function Burn() {
     }
   }, [wallet.publicKey])
 
-  const getExpiredTokens = (tokenData: TokenData[]) => {    
-    let datas = tokenData.filter(token => token?.metaplexData?.data?.data?.uri.includes('api.cardinal.so') 
-    && !token.tokenManager
-    && token.tokenAccount?.account.data.parsed.info.state !== 'frozen'    
-    && token?.metadata?.data?.name === 'EXPIRED'
+  const revokeRental = async (tokenData: TokenData) => {
+    const transaction = new Transaction()
+    const mintId = tokenData.metaplexData?.data.mint
+    if (!mintId || !wallet.publicKey) return
+    const walletAta = await withFindOrInitAssociatedTokenAccount(
+      transaction,
+      ctx.connection,
+      new PublicKey(mintId),
+      wallet.publicKey,
+      wallet.publicKey
+    )
+    const burnAta = await withFindOrInitAssociatedTokenAccount(
+      transaction,
+      ctx.connection,
+      new PublicKey(mintId),
+      new PublicKey('brnTskYW9dcxecg1iNtKGtajRQNE1R9B2XaqYy11DQN'),
+      wallet.publicKey
+    )
+
+    transaction.add(
+      Token.createTransferInstruction(
+        TOKEN_PROGRAM_ID,
+        walletAta,
+        burnAta,
+        wallet.publicKey,
+        [],
+        1
+      )
+    )
+
+    transaction.add(
+      Token.createCloseAccountInstruction(
+        TOKEN_PROGRAM_ID,
+        walletAta,
+        wallet.publicKey,
+        wallet.publicKey,
+        []
+      )
+    )
+
+    await executeTransaction(ctx.connection, asWallet(wallet), transaction, {
+      silent: false,
+      callback: refreshTokenAccounts,
+      notificationConfig: {}
+    })
+  }
+
+  const getExpiredTokens = (tokenData: TokenData[]) => {
+    const datas = tokenData.filter(
+      (token) =>
+        token?.metaplexData?.data?.data?.uri.includes('api.cardinal.so') &&
+        !token.tokenManager &&
+        token.tokenAccount?.account.data.parsed.info.state !== 'frozen' &&
+        token?.metadata?.data?.name === 'EXPIRED'
     )
     // console.log(datas[0])
     // console.log(datas[1])
@@ -80,24 +128,23 @@ function Burn() {
                   Increase Duration
                 </Button>
               ) : null}
-              
-                <AsyncButton
-                  variant="primary"
-                  className="mx-auto mt-3"
-                  handleClick={async () => {
-                    try {
-                      await revokeRental(tokenData)
-                    } catch (e) {
-                      notify({
-                        message: `Return failed: ${e}`,
-                        type: 'error',
-                      })
-                    }
-                  }}
-                >
-                  Burn
-                </AsyncButton>
-             
+
+              <AsyncButton
+                variant="primary"
+                className="mx-auto mt-3"
+                handleClick={async () => {
+                  try {
+                    await revokeRental(tokenData)
+                  } catch (e) {
+                    notify({
+                      message: `Return failed: ${e}`,
+                      type: 'error',
+                    })
+                  }
+                }}
+              >
+                Burn
+              </AsyncButton>
             </div>
           ))
         ) : (
