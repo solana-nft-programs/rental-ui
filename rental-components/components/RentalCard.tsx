@@ -407,6 +407,7 @@ export const RentalCard = ({
         cluster,
         getLink('/claim', false)
       )
+
       await axios.post(
         `${process.env.NEXT_PUBLIC_REMI_COIN_URL}/api/claims/create`,
         {
@@ -415,6 +416,7 @@ export const RentalCard = ({
           email: recipientEmail,
           nftMintId: tokenData?.metaplexData?.data.mint,
         }
+        // { headers: { 'Access-Control-Allow-Origin': '*' } }
       )
       setLink(link)
       handleCopy(link)
