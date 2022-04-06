@@ -50,7 +50,7 @@ export interface ProjectConfigValues {
 
 const ProjectConfigValues: React.Context<ProjectConfigValues> =
   React.createContext<ProjectConfigValues>({
-    config: projectConfigs['default']!,
+    config: projectConfigs['portals']!,
   })
 
 export function ProjectConfigProvider({ children }: { children: ReactChild }) {
@@ -62,7 +62,7 @@ export function ProjectConfigProvider({ children }: { children: ReactChild }) {
       ?.split('.')[0]
       ?.replace('dev-', '')
   const config =
-    (project && projectConfigs[project]) || projectConfigs['default']!
+    (project && projectConfigs[project]) || projectConfigs['portals']!
 
   return (
     <ProjectConfigValues.Provider
