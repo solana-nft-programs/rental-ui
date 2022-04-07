@@ -94,6 +94,7 @@ const capitalizeFirstLetter = (value: string) => {
 export type InvalidatorOption = 'usages' | 'expiration' | 'duration' | 'manual'
 
 const VISIBILITY_OPTIONS = ['public', 'private'] as const
+
 export type VisibilityOption = typeof VISIBILITY_OPTIONS[number]
 
 export type InvalidationTypeOption =
@@ -101,6 +102,7 @@ export type InvalidationTypeOption =
   | 'invalidate'
   | 'release'
   | 'reissue'
+
 const INVALIDATION_TYPES: {
   type: InvalidationType
   label: InvalidationTypeOption
@@ -130,6 +132,7 @@ export type DurationOption =
   | 'weeks'
   | 'months'
   | 'years'
+
 const DURATION_DATA: { [key in DurationOption]: number } = {
   minutes: 60,
   hours: 3600,
@@ -140,13 +143,13 @@ const DURATION_DATA: { [key in DurationOption]: number } = {
 }
 
 export type RentalCardConfig = {
-  invalidators: InvalidatorOption[]
+  invalidators: InvalidatorOption[] // 'usages' | 'expiration' | 'duration' | 'manual'
   invalidationOptions?: {
-    durationOptions: DurationOption[]
-    invalidationTypes: InvalidationTypeOption[]
+    durationOptions: DurationOption[] // 'minutes' | 'hours' | 'days' | 'weeks' | 'months' | 'years'
+    invalidationTypes: InvalidationTypeOption[] // 'return' | 'invalidate' | 'release' | 'reissue'
     paymentMints: string[]
     freezeRentalDuration?: { durationOption: DurationOption; value: string }
-    visibilities?: VisibilityOption[]
+    visibilities?: VisibilityOption[] // 'public' | 'private'
     setClaimRentalReceipt: boolean
     showClaimRentalReceipt?: boolean
   }
@@ -209,11 +212,11 @@ export const RentalCard = ({
     rentalCardConfig.invalidationOptions?.visibilities || VISIBILITY_OPTIONS
 
   const invalidationTypes = rentalCardConfig.invalidationOptions
-    ?.invalidationTypes
+    ?.invalidationTypes // 'return' | 'invalidate' | 'release' | 'reissue'
     ? INVALIDATION_TYPES.filter(({ label }) =>
         rentalCardConfig.invalidationOptions?.invalidationTypes?.includes(label)
       )
-    : INVALIDATION_TYPES
+    : INVALIDATION_TYPES // [ { type: 1, label: 'return', }, { type: 2, label: 'invalidate', } ]
 
   const durationData = rentalCardConfig.invalidationOptions?.durationOptions
     ? Object.keys(DURATION_DATA)
@@ -229,26 +232,26 @@ export const RentalCard = ({
           }
           return obj
         }, {})
-    : DURATION_DATA
+    : DURATION_DATA // { minutes: 60, days: 86400 }
 
   const paymentMintData = rentalCardConfig.invalidationOptions?.paymentMints
     ? PAYMENT_MINTS.filter(({ mint }) =>
         rentalCardConfig.invalidationOptions?.paymentMints?.includes(mint)
       )
-    : PAYMENT_MINTS
+    : PAYMENT_MINTS // [ { mint: 'So11111111111111111111111111111111111111112', symbol: 'SOL', }, { mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v', symbol: 'USDC', }, { mint: 'Saber2gLauYim4Mvftnrasomsv6NvAuncvMEZwcLpD1', symbol: 'SBR', }, ]
 
   const showClaimRentalReceipt =
     rentalCardConfig.invalidationOptions?.showClaimRentalReceipt
 
   // defaults
-  const defaultVisibility = visibilities[0]
+  const defaultVisibility = visibilities[0] // 'public'
   const defaultDurationOption =
     rentalCardConfig.invalidationOptions?.freezeRentalDuration
       ?.durationOption || 'days'
   const defaultPaymentMint = paymentMintData[0]!
   const defaultInvalidationType = invalidationTypes[0]!.type
   const defaultDurationAmount =
-    rentalCardConfig.invalidationOptions?.freezeRentalDuration?.value || '1'
+    rentalCardConfig.invalidationOptions?.freezeRentalDuration?.value || '1' // Do we have to set this?
 
   // state
   const [price, setPrice] = useState(0)
@@ -286,14 +289,14 @@ export const RentalCard = ({
   )
   const [customInvalidator, setCustomInvalidator] = useState<
     string | undefined
-  >(undefined)
+  >(undefined) // here
   const [claimRentalReceipt, setClaimRentalReceipt] = useState(
     rentalCardConfig.invalidationOptions?.setClaimRentalReceipt || false
   )
 
   const [selectedInvalidators, setSelectedInvalidators] = useState<
     InvalidatorOption[]
-  >(rentalCardConfig.invalidators[0] ? [rentalCardConfig.invalidators[0]] : [])
+  >(rentalCardConfig.invalidators[0] ? [rentalCardConfig.invalidators[0]] : []) // 'usages' | 'expiration' | 'duration' | 'manual'
   const [showAdditionalOptions, setShowAdditionalOptions] = useState(false)
   const [showExtendDuration, setShowExtendDuration] = useState(false)
 
@@ -391,6 +394,7 @@ export const RentalCard = ({
         receiptOptions: claimRentalReceipt ? { receiptMintKeypair } : undefined,
       }
 
+      console.log('ip: ', issueParams)
       const [transaction, tokenManagerId, otpKeypair] = await issueToken(
         connection,
         wallet,
@@ -416,7 +420,6 @@ export const RentalCard = ({
           email: recipientEmail,
           nftMintId: tokenData?.metaplexData?.data.mint,
         }
-        // { headers: { 'Access-Control-Allow-Origin': '*' } }
       )
       setLink(link)
       handleCopy(link)
