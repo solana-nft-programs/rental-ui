@@ -1,5 +1,4 @@
 import { withFindOrInitAssociatedTokenAccount } from '@cardinal/token-manager'
-import { web3 } from '@project-serum/anchor'
 import { Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { PublicKey, Transaction } from '@solana/web3.js'
@@ -45,7 +44,7 @@ function Burn() {
       transaction,
       ctx.connection,
       new PublicKey(mintId),
-      new PublicKey('brnTskYW9dcxecg1iNtKGtajRQNE1R9B2XaqYy11DQN'),
+      new PublicKey('cburnbWPAQZMziATsjPoSjqGFA4apFhfVXyL5Qkwftt'),
       wallet.publicKey
     )
 
@@ -73,7 +72,7 @@ function Burn() {
     await executeTransaction(ctx.connection, asWallet(wallet), transaction, {
       silent: false,
       callback: refreshTokenAccounts,
-      notificationConfig: {}
+      notificationConfig: {},
     })
   }
 
