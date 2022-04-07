@@ -101,7 +101,7 @@ export type InvalidationTypeOption =
   | 'return'
   | 'invalidate'
   | 'release'
-  | 'reissue'
+  | 'reissue' // what is this
 
 const INVALIDATION_TYPES: {
   type: InvalidationType
@@ -148,7 +148,7 @@ export type RentalCardConfig = {
     durationOptions: DurationOption[] // 'minutes' | 'hours' | 'days' | 'weeks' | 'months' | 'years'
     invalidationTypes: InvalidationTypeOption[] // 'return' | 'invalidate' | 'release' | 'reissue'
     paymentMints: string[]
-    freezeRentalDuration?: { durationOption: DurationOption; value: string }
+    freezeRentalDuration?: { durationOption: DurationOption; value: string } // net new
     visibilities?: VisibilityOption[] // 'public' | 'private'
     setClaimRentalReceipt: boolean
     showClaimRentalReceipt?: boolean
@@ -250,7 +250,7 @@ export const RentalCard = ({
       ?.durationOption || 'days'
   const defaultPaymentMint = paymentMintData[0]!
   const defaultInvalidationType = invalidationTypes[0]!.type
-  const defaultDurationAmount =
+  const defaultDurationAmount = // net new
     rentalCardConfig.invalidationOptions?.freezeRentalDuration?.value || '1' // Do we have to set this?
 
   // state
@@ -325,7 +325,6 @@ export const RentalCard = ({
       ? true
       : false
   }
-  console.log(invalidationTypes)
 
   const handleRental = async () => {
     const extensionPaymentMintPublicKey = tryPublicKey(extensionPaymentMint)
