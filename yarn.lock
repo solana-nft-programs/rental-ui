@@ -1333,10 +1333,10 @@
     eslint-plugin-react "^7.29.3"
     eslint-plugin-react-hooks "^4.3.0"
 
-"@cardinal/namespaces-components@^2.5.4":
-  version "2.5.4"
-  resolved "https://registry.yarnpkg.com/@cardinal/namespaces-components/-/namespaces-components-2.5.4.tgz#a392b377c03080e144c88d09dc69b158744fb055"
-  integrity sha512-2m2CbQjFSn4k7sC7K/Pz0gZ18QquF4/YurjQQwJnNHpV6AwLp3vsU2Po9WPgJ14L4a+k39SzmkN/GNa8zAWrWQ==
+"@cardinal/namespaces-components@^2.5.5":
+  version "2.5.5"
+  resolved "https://registry.yarnpkg.com/@cardinal/namespaces-components/-/namespaces-components-2.5.5.tgz#40a4417ea751af91d1ce21163e3a26c4ca554abb"
+  integrity sha512-rMckp4Rravsp1AH3lc7Ub+O3PLjIBKvbx7JPlMIpAerMggZ2PzenB2DYJrpRMjdtNFTpWdtHririNvvIXGUrnA==
   dependencies:
     "@cardinal/certificates" "^1.3.0"
     "@cardinal/namespaces" "^3.1.0"

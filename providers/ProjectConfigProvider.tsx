@@ -1,4 +1,4 @@
-import type { NameEntryData } from '@cardinal/namespaces-components'
+import { NameEntryData, tryGetProfile } from '@cardinal/namespaces-components'
 import { getNameEntryData } from '@cardinal/namespaces-components'
 import type { PublicKey } from '@solana/web3.js'
 import { Connection } from '@solana/web3.js'
@@ -86,11 +86,12 @@ export function ProjectConfigProvider({ children }: { children: ReactChild }) {
 
   const refreshNameEntryData = async () => {
     if (!project || !connection) return
+    const profile = await tryGetProfile(project)
     try {
       const data = await getNameEntryData(
         overrideCollection,
         namespaceName,
-        project
+        profile?.username || project
       )
       setNameEntryData(data)
     } catch (e) {

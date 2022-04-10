@@ -13,7 +13,7 @@
     "@babel/core": "^7.17.0",
     "@cardinal/common": "^1.0.3",
     "@cardinal/eslint-config-react": "^1.0.10",
-    "@cardinal/namespaces-components": "^2.5.4",
+    "@cardinal/namespaces-components": "^2.5.5",
     "@cardinal/token-manager": "^1.0.3",
     "@emotion/babel-plugin": "^11.7.2",
     "@emotion/babel-preset-css-prop": "^11.2.0",
