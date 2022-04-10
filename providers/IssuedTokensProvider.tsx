@@ -41,7 +41,11 @@ export function IssuedTokensProvider({ children }: { children: ReactChild }) {
       setRefreshing(true)
       const tokenManagerDatas = await getTokenManagersByState(connection, null)
       let tokenDatas = await getTokenDatas(connection, tokenManagerDatas)
-      tokenDatas = filterTokens(config.filters, tokenDatas)
+      tokenDatas = filterTokens(
+        config.filters,
+        tokenDatas,
+        config?.issuer?.publicKey
+      )
       setIssuedTokens(tokenDatas)
     } catch (e) {
       console.log(e)
