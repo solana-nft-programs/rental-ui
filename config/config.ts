@@ -1,3 +1,5 @@
+import type { NameEntryData } from '@cardinal/namespaces-components'
+import type { PublicKey } from '@solana/web3.js'
 import type { AirdropMetadata } from 'common/Airdrop'
 import type { RentalCardConfig } from 'rental-components/components/RentalCard'
 
@@ -7,6 +9,10 @@ export type Colors = {
 }
 
 export type ProjectConfig = {
+  issuer?: {
+    publicKey?: PublicKey
+    nameEntryData?: NameEntryData
+  }
   name: string
   websiteUrl: string
   logoImage: string
@@ -26,7 +32,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     websiteUrl: 'https://cardinal.so',
     logoImage: 'https://main.cardinal.so/assets/cardinal-titled.png',
     colors: {
-      main: 'rgba(0, 0, 0, 0.15)',
+      main: 'rgba(0, 0, 0, 0)',
       secondary: 'rgb(29, 155, 240)',
     },
     filters: [],

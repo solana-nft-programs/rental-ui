@@ -65,13 +65,11 @@ export const StyledHeader = styled.div<{ isTabletOrMobile: boolean }>`
 
   .title {
     color: rgba(255, 255, 255, 0.8);
-    font-size: 40px;
     position: relative;
 
     .subscript {
       font-size: 10px;
       font-style: italic;
-      position: absolute;
       bottom: 5px;
       right: -35px;
       background: rgba(255, 255, 255, 0.3);
@@ -216,17 +214,56 @@ export const Header = ({
     >
       <div className="left pl-8">
         <div className="title">
-          <a
-            className="cursor-pointer"
-            rel="noreferrer"
-            target="_blank"
-            href={config.websiteUrl}
-          >
-            <img className="h-9 w-auto" src={config.logoImage} alt="logo" />
-          </a>
-          <div className="subscript">
-            {ctx.environment.label === 'devnet' ? 'DEV' : 'alpha'}
-          </div>
+          {config.issuer?.publicKey && config.issuer?.nameEntryData ? (
+            <>
+              <div className="flex cursor-pointer gap-2">
+                <AddressImage
+                  connection={ctx.connection}
+                  address={config.issuer?.publicKey}
+                  height="40px"
+                  width="40px"
+                  dark={true}
+                />
+                <div>
+                  <div className="text-white">
+                    <DisplayAddress
+                      connection={ctx.connection}
+                      address={config.issuer?.publicKey}
+                      height="21px"
+                      style={{ maxWidth: '120px' }}
+                      dark={true}
+                    />
+                  </div>
+                  <div
+                    className="flex gap-2"
+                    style={{ color: Colors.lightGray }}
+                  >
+                    {shortPubKey(config.issuer?.publicKey)}
+                    <div
+                      className="subscript"
+                      style={{ bottom: 0, right: -42 }}
+                    >
+                      Vault
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              <a
+                className="cursor-pointer"
+                rel="noreferrer"
+                target="_blank"
+                href={config.websiteUrl}
+              >
+                <img className="h-9 w-auto" src={config.logoImage} alt="logo" />
+              </a>
+              <div className="subscript absolute">
+                {ctx.environment.label === 'devnet' ? 'DEV' : 'alpha'}
+              </div>
+            </>
+          )}
         </div>
         {wallet.connected &&
           ctx.environment.label === 'devnet' &&
