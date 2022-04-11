@@ -185,9 +185,7 @@ export const Manage = () => {
         ))
       ) : (
         <div className="white flex w-full flex-col items-center justify-center gap-1">
-          <div className="text-white">
-            Managing your rentals is currently disabled!
-          </div>
+          <div className="text-white">No outstanding tokens!</div>
         </div>
       )}
     </TokensOuter>
