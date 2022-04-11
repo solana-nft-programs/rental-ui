@@ -2,8 +2,8 @@ import type { Wallet } from '@saberhq/solana-contrib'
 import type { Connection } from '@solana/web3.js'
 import type { TokenData } from 'api/api'
 import React, { useContext, useState } from 'react'
-import QRCode from 'rental-components/common/QRCode'
 
+import QRCode from './common/QRCode'
 import { Modal } from './modal'
 
 export interface QRCode {

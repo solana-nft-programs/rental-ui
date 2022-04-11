@@ -3,7 +3,6 @@ import styled from '@emotion/styled'
 import type { Wallet } from '@saberhq/solana-contrib'
 import type { Connection } from '@solana/web3.js'
 import type { TokenData } from 'api/api'
-import { AwesomeQR } from 'awesome-qr'
 import { getLink } from 'providers/ProjectConfigProvider'
 import { useCallback, useEffect, useState } from 'react'
 import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
@@ -38,6 +37,7 @@ const QRCode = ({
         await wallet.signTransaction(transaction)
         const serializedUsage = transaction.serialize().toString('base64')
         console.log(getLink(`/scan?tx=${encodeURIComponent(serializedUsage)}`))
+        const { AwesomeQR } = await import('awesome-qr')
         const qrbuffer = await new AwesomeQR({
           text: getLink(`/scan?tx=${encodeURIComponent(serializedUsage)}`),
           colorDark: '#000000',

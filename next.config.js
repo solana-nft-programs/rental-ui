@@ -31,4 +31,14 @@ module.exports = {
       },
     ]
   },
+  webpack: (config, { isServer, webpack }) => {
+    if (isServer) {
+      config.plugins.push(
+        new webpack.IgnorePlugin({
+          resourceRegExp: /awesome-qr/,
+        })
+      )
+    }
+    return config
+  },
 }

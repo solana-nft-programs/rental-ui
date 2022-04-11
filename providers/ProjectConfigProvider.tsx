@@ -54,8 +54,6 @@ export const getInitialProps = async ({
     ? projectConfigs[project] || projectConfigs['default']!
     : projectConfigs['default']!
 
-  console.log(publicKey, config)
-
   return {
     config: publicKey
       ? {
@@ -95,7 +93,7 @@ export const filterTokens = (
       }
     }
     return (
-      token.metadata.data &&
+      token?.metadata?.data &&
       Object.keys(token.metadata.data).length > 0 &&
       !filtered
     )
