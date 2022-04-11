@@ -76,7 +76,7 @@ export const filterTokens = (
       filters.forEach((configFilter) => {
         if (
           configFilter.type === 'creators' &&
-          !token?.metadata?.data?.properties?.creators.some(
+          !token?.metadata?.data?.properties?.creators?.some(
             (creator: { address: string }) =>
               creator.address === configFilter.value
           )
