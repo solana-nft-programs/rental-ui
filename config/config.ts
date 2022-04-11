@@ -1,5 +1,3 @@
-import type { NameEntryData } from '@cardinal/namespaces-components'
-import type { PublicKey } from '@solana/web3.js'
 import type { AirdropMetadata } from 'common/Airdrop'
 import type { RentalCardConfig } from 'rental-components/components/RentalCard'
 
@@ -10,8 +8,7 @@ export type Colors = {
 
 export type ProjectConfig = {
   issuer?: {
-    publicKey?: PublicKey
-    nameEntryData?: NameEntryData
+    publicKeyString?: string
   }
   name: string
   websiteUrl: string

@@ -13,7 +13,10 @@ import { EnvironmentProvider } from 'providers/EnvironmentProvider'
 import { IssuedTokensProvider } from 'providers/IssuedTokensProvider'
 import { ManagedTokensProvider } from 'providers/ManagedTokensProvider'
 import { PaymentMintsProvider } from 'providers/PaymentMintsProvider'
-import { ProjectConfigProvider } from 'providers/ProjectConfigProvider'
+import {
+  getInitialProps,
+  ProjectConfigProvider,
+} from 'providers/ProjectConfigProvider'
 import { TokenAccountsProvider } from 'providers/TokenDataProvider'
 import { UTCNowProvider } from 'providers/UTCNowProvider'
 import { QRCodeProvider } from 'rental-components/QRCodeProvider'
@@ -25,11 +28,12 @@ require('@solana/wallet-adapter-react-ui/styles.css')
 const App = ({
   Component,
   pageProps,
+  config,
 }: AppProps & { config: ProjectConfig }) => (
   <EnvironmentProvider>
     <WalletProvider wallets={getWalletAdapters()}>
       <WalletIdentityProvider>
-        <ProjectConfigProvider>
+        <ProjectConfigProvider defaultConfig={config}>
           <PaymentMintsProvider>
             <QRCodeProvider>
               <UTCNowProvider>
@@ -54,5 +58,7 @@ const App = ({
     </WalletProvider>
   </EnvironmentProvider>
 )
+
+App.getInitialProps = getInitialProps
 
 export default App

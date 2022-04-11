@@ -5,6 +5,7 @@ import {
   useWalletModal,
   WalletMultiButton,
 } from '@solana/wallet-adapter-react-ui'
+import { tryPublicKey } from 'api/utils'
 import Colors from 'common/colors'
 import { useRouter } from 'next/router'
 import { lighten } from 'polished'
@@ -207,6 +208,7 @@ export const Header = ({
     ? shortPubKey(wallet?.publicKey)
     : ''
 
+  const issuer = tryPublicKey(config.issuer?.publicKeyString)
   return (
     <StyledHeader
       style={{ backgroundColor: Colors.navBg }}
@@ -214,21 +216,39 @@ export const Header = ({
     >
       <div className="left pl-8">
         <div className="title">
-          {config.issuer?.publicKey && config.issuer?.nameEntryData ? (
+          {issuer ? (
             <>
               <div className="flex cursor-pointer gap-2">
                 <AddressImage
                   connection={ctx.connection}
-                  address={config.issuer?.publicKey}
+                  address={issuer}
                   height="40px"
                   width="40px"
                   dark={true}
+                  placeholder={
+                    <div
+                      style={{
+                        color: 'white',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        gap: '8px',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <div style={{ height: '40px', width: '40px' }}>
+                        <HiUserCircle
+                          style={{ height: '100%', width: '100%' }}
+                        />
+                      </div>
+                    </div>
+                  }
                 />
                 <div>
                   <div className="text-white">
                     <DisplayAddress
                       connection={ctx.connection}
-                      address={config.issuer?.publicKey}
+                      address={issuer}
                       height="21px"
                       style={{ maxWidth: '120px' }}
                       dark={true}
@@ -238,12 +258,12 @@ export const Header = ({
                     className="flex gap-2"
                     style={{ color: Colors.lightGray }}
                   >
-                    {shortPubKey(config.issuer?.publicKey)}
+                    {shortPubKey(issuer)}
                     <div
                       className="subscript"
                       style={{ bottom: 0, right: -42 }}
                     >
-                      Vault
+                      {ctx.environment.label === 'devnet' ? 'DEV' : 'vault'}
                     </div>
                   </div>
                 </div>

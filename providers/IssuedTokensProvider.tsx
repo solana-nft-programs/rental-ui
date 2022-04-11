@@ -2,6 +2,7 @@
 import { getTokenManagersByState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/accounts'
 import type { TokenData } from 'api/api'
 import { getTokenDatas } from 'api/api'
+import { tryPublicKey } from 'api/utils'
 import type { ReactChild } from 'react'
 import React, { useContext, useEffect, useState } from 'react'
 
@@ -44,7 +45,7 @@ export function IssuedTokensProvider({ children }: { children: ReactChild }) {
       tokenDatas = filterTokens(
         config.filters,
         tokenDatas,
-        config?.issuer?.publicKey
+        tryPublicKey(config?.issuer?.publicKeyString)
       )
       setIssuedTokens(tokenDatas)
     } catch (e) {

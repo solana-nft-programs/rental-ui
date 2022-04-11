@@ -24,7 +24,7 @@ export async function getATokenAccountInfo(
 }
 
 export const tryPublicKey = (
-  publicKeyString: string | string[] | undefined
+  publicKeyString: string | string[] | undefined | null
 ): web3.PublicKey | null => {
   if (!publicKeyString) return null
   try {

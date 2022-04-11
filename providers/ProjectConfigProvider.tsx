@@ -1,21 +1,75 @@
-import { NameEntryData, tryGetProfile } from '@cardinal/namespaces-components'
-import { getNameEntryData } from '@cardinal/namespaces-components'
+import {
+  getNameEntryData,
+  tryGetProfile,
+} from '@cardinal/namespaces-components'
 import type { PublicKey } from '@solana/web3.js'
 import { Connection } from '@solana/web3.js'
 import type { TokenData } from 'api/api'
 import { tryPublicKey } from 'api/utils'
 import type { ProjectConfig } from 'config/config'
 import { projectConfigs } from 'config/config'
-import { useRouter } from 'next/router'
+import type { NextPageContext } from 'next'
 import type { ReactChild } from 'react'
-import React, { useContext, useMemo, useState } from 'react'
+import React, { useContext } from 'react'
 
-import { useEnvironmentCtx } from './EnvironmentProvider'
+import { ENVIRONMENTS } from './EnvironmentProvider'
+
+export const getInitialProps = async ({
+  ctx,
+}: {
+  ctx: NextPageContext
+}): Promise<{ config: ProjectConfig }> => {
+  const projectParams = ctx.query.project || ctx.req?.headers.host
+  const project =
+    projectParams &&
+    (typeof projectParams === 'string' ? projectParams : projectParams[0])
+      ?.split('.')[0]
+      ?.replace('dev-', '')
+
+  const cluster = (ctx.query.cluster || ctx.req?.headers.host)?.includes('dev')
+    ? 'devnet'
+    : ctx.query.cluster || process.env.BASE_CLUSTER
+  const foundEnvironment = ENVIRONMENTS.find((e) => e.label === cluster)!
+  const overrideCollection = foundEnvironment.override
+    ? new Connection(foundEnvironment.override)
+    : new Connection(foundEnvironment.value, { commitment: 'recent' })
+
+  const namespaceName = 'twitter'
+  let publicKey
+  let nameEntryData
+  if (project) {
+    const profile = await tryGetProfile(project)
+    try {
+      nameEntryData = await getNameEntryData(
+        overrideCollection,
+        namespaceName,
+        profile?.username || project
+      )
+      publicKey = tryPublicKey(project) || nameEntryData?.owner
+    } catch (e) {
+      console.log('Failed to get name entry: ', e)
+    }
+  }
+  const config = project
+    ? projectConfigs[project] || projectConfigs['default']!
+    : projectConfigs['default']!
+
+  console.log(publicKey, config)
+
+  return {
+    config: publicKey
+      ? {
+          ...projectConfigs['default']!,
+          issuer: { publicKeyString: publicKey.toString() },
+        }
+      : config,
+  }
+}
 
 export const filterTokens = (
   filters: { type: string; value: string }[],
   tokens: TokenData[],
-  issuer?: PublicKey
+  issuer?: PublicKey | null
 ): TokenData[] => {
   return tokens.filter((token) => {
     let filtered = false
@@ -67,56 +121,17 @@ const ProjectConfigValues: React.Context<ProjectConfigValues> =
     config: projectConfigs['portals']!,
   })
 
-export function ProjectConfigProvider({ children }: { children: ReactChild }) {
-  const { query } = useRouter()
-  const { environment, connection } = useEnvironmentCtx()
-  const [nameEntryData, setNameEntryData] = useState<NameEntryData | undefined>(
-    undefined
-  )
-  const projectParams = query.project || query.host
-  const project =
-    projectParams &&
-    (typeof projectParams === 'string' ? projectParams : projectParams[0])
-      ?.split('.')[0]
-      ?.replace('dev-', '')
-  const overrideCollection = environment.override
-    ? new Connection(environment.override)
-    : connection
-  const namespaceName = 'twitter'
-
-  const refreshNameEntryData = async () => {
-    if (!project || !connection) return
-    const profile = await tryGetProfile(project)
-    try {
-      const data = await getNameEntryData(
-        overrideCollection,
-        namespaceName,
-        profile?.username || project
-      )
-      setNameEntryData(data)
-    } catch (e) {
-      setNameEntryData(undefined)
-      console.log('Failed to get name entry: ', e)
-    }
-  }
-
-  useMemo(async () => {
-    refreshNameEntryData()
-  }, [connection, namespaceName, project])
-
-  const publicKey = tryPublicKey(project) || nameEntryData?.owner
-  const config =
-    (project && projectConfigs[project]) || projectConfigs['portals']!
-
+export function ProjectConfigProvider({
+  children,
+  defaultConfig,
+}: {
+  children: ReactChild
+  defaultConfig: ProjectConfig
+}) {
   return (
     <ProjectConfigValues.Provider
       value={{
-        config: publicKey
-          ? {
-              ...projectConfigs['default']!,
-              issuer: { publicKey, nameEntryData },
-            }
-          : config,
+        config: defaultConfig,
       }}
     >
       {children}
