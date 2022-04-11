@@ -19,7 +19,8 @@ export const getInitialProps = async ({
 }: {
   ctx: NextPageContext
 }): Promise<{ config: ProjectConfig }> => {
-  const projectParams = ctx.query.project || ctx.req?.headers.host
+  const projectParams =
+    ctx.query.project || ctx.req?.headers.host || ctx.query.host
   const project =
     projectParams &&
     (typeof projectParams === 'string' ? projectParams : projectParams[0])
