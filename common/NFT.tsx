@@ -257,7 +257,11 @@ export function NFT({ tokenData, hideQRCode }: NFTProps) {
           ) : (
             <Tooltip
               placement="topLeft"
-              title="Self listing is currently disabled"
+              title={
+                config.disableListing
+                  ? 'Self listing is currently disabled'
+                  : 'Not elligible for rent'
+              }
             >
               <div id="disabled-ellipsis">
                 <FaEllipsisH />

@@ -1,10 +1,17 @@
 import styled from '@emotion/styled'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
+import { Header } from 'common/Header'
+import { StyledContainer } from 'common/StyledContainer'
+import { Browse } from 'components/Browse'
+import { Manage } from 'components/Manage'
+import { Wallet } from 'components/Wallet'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
+import { useError } from 'providers/ErrorProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
-import { useEffect } from 'react'
+import { useUserTokenData } from 'providers/TokenDataProvider'
+import { useEffect, useState } from 'react'
 
 const StyledSplash = styled.div`
   margin-top: 30vh;
@@ -32,19 +39,30 @@ const StyledSplash = styled.div`
 
 export default function Home() {
   const { config } = useProjectConfig()
+  const [error, _setError] = useError()
   const wallet = useWallet()
   const router = useRouter()
+  const [tab, setTab] = useState<string>('')
 
   useEffect(() => {
+    const anchor = router.asPath.split('#')[1]
+    if (anchor !== tab) setTab(anchor || '')
+  }, [router, tab])
+
+  const { setAddress, loaded, refreshing } = useUserTokenData()
+  useEffect(() => {
     if (wallet && wallet.connected && wallet.publicKey) {
-      router.push(
-        `/${wallet.publicKey.toBase58()}${window.location.search ?? ''}`
-      )
+      setAddress(wallet.publicKey.toBase58())
+      setTab('browse')
+      router.push(`${location.pathname}${location.search}#browse`)
     }
-  }, [wallet.publicKey, router])
+  }, [wallet.publicKey])
 
   return (
-    <div className="flex min-h-screen flex-col items-center">
+    <div
+      className="min-h-screen"
+      style={{ backgroundColor: config.colors.main }}
+    >
       <Head>
         <title>Cardinal</title>
         <link rel="icon" href="/favicon.ico" />
@@ -68,34 +86,73 @@ export default function Home() {
           rel="stylesheet"
         />
       </Head>
-      <StyledSplash>
-        <div className="title">
-          <img className="mx-auto w-24" src={config.logoImage} alt="logo" />
-          <p className="mt-3 text-2xl">
-            {config.name.charAt(0).toUpperCase() +
-              config.name.substring(1, config.name.length)}
-          </p>
-          <p className="text-md mt-3">
-            The Rental Marketplace for all{' '}
-            {config.name.charAt(0).toUpperCase() +
-              config.name.substring(1, config.name.length)}{' '}
-            NFTs
-          </p>
-        </div>
-        <div className="mt-5 flex items-center justify-center">
-          <WalletMultiButton
-            style={{
-              color: 'rgba(255,255,255,0.8)',
-              fontSize: '14px',
-              zIndex: 10,
-              height: '38px',
-              border: 'none',
-              background: 'none',
-              backgroundColor: 'none',
-            }}
+      {tab ? (
+        <>
+          <Header
+            loading={loaded && refreshing}
+            tabs={[
+              {
+                name: 'Wallet',
+                anchor: wallet.publicKey?.toBase58() || 'wallet',
+                disabled: !wallet.connected,
+              },
+              {
+                name: 'Manage',
+                anchor: 'manage',
+                disabled: !wallet.connected || config.disableListing,
+              },
+              { name: 'Browse', anchor: 'browse' },
+            ]}
           />
+          <StyledContainer style={{ paddingTop: '120px' }}>
+            <div style={{ position: 'relative' }}>
+              {error}
+              {(() => {
+                switch (tab) {
+                  case 'browse':
+                    return <Browse />
+                  case 'manage':
+                    return <Manage />
+                  default:
+                    return <Wallet />
+                }
+              })()}
+            </div>
+          </StyledContainer>
+          <div style={{ marginTop: '100px' }} />
+        </>
+      ) : (
+        <div className="flex min-h-screen flex-col items-center">
+          <StyledSplash>
+            <div className="title">
+              <img className="mx-auto w-24" src={config.logoImage} alt="logo" />
+              <p className="mt-3 text-2xl">
+                {config.name.charAt(0).toUpperCase() +
+                  config.name.substring(1, config.name.length)}
+              </p>
+              <p className="text-md mt-3">
+                The Rental Marketplace for all{' '}
+                {config.name.charAt(0).toUpperCase() +
+                  config.name.substring(1, config.name.length)}{' '}
+                NFTs
+              </p>
+            </div>
+            <div className="mt-5 flex items-center justify-center">
+              <WalletMultiButton
+                style={{
+                  color: 'rgba(255,255,255,0.8)',
+                  fontSize: '14px',
+                  zIndex: 10,
+                  height: '38px',
+                  border: 'none',
+                  background: 'none',
+                  backgroundColor: 'none',
+                }}
+              />
+            </div>
+          </StyledSplash>
         </div>
-      </StyledSplash>
+      )}
     </div>
   )
 }
