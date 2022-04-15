@@ -59,8 +59,8 @@ const globalRate = 604800
 const getAllAttributes = (tokens: TokenData[]) => {
   const allAttributes: { [traitType: string]: Set<any> } = {}
   tokens.forEach((tokenData) => {
-    if (tokenData.metadata.data?.attributes) {
-      tokenData.metadata.data?.attributes.forEach(
+    if (tokenData?.metadata?.data?.attributes) {
+      tokenData?.metadata?.data?.attributes.forEach(
         (attribute: { trait_type: string; value: any }) => {
           if (attribute.trait_type in allAttributes) {
             allAttributes[attribute.trait_type]!.add(attribute.value)

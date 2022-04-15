@@ -137,6 +137,43 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       },
     ],
   },
+  monke: {
+    name: 'monke',
+    websiteUrl: 'https://market.solanamonkey.business/',
+    logoImage: 'https://market.solanamonkey.business/logo/smb-market.svg',
+    colors: {
+      main: '#202225',
+      secondary: '#0ea5e9',
+    },
+    filters: [
+      {
+        type: 'creators',
+        value: '9uBX3ASjxWvNBAD1xjbVaKA74mWGZys3RGSF7DdeDD3F',
+      },
+      {
+        type: 'symbol',
+        value: 'SMB',
+      },
+    ],
+    rentalCard: {
+      invalidators: ['duration'],
+      invalidationOptions: {
+        visibilities: ['public'],
+        durationOptions: ['minutes', 'hours', 'days', 'weeks'],
+        invalidationTypes: ['return'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+      },
+    },
+    airdrops: [
+      {
+        name: 'SMB #1148',
+        symbol: 'SMB',
+        uri: 'https://arweave.net/c2i2nLtanzMcWqLwFOE9yiwHoJ1WdvJcpdS54drBD9g',
+      },
+    ],
+  },
   br1: {
     name: 'br1',
     websiteUrl: 'https://www.br1game.com/',
