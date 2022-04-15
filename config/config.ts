@@ -172,6 +172,21 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         symbol: 'SMB',
         uri: 'https://arweave.net/c2i2nLtanzMcWqLwFOE9yiwHoJ1WdvJcpdS54drBD9g',
       },
+      {
+        name: 'SMB #2712',
+        symbol: 'SMB',
+        uri: 'https://arweave.net/xhUWFiFbhEz6EjzE05XNvYvpP5U43bNRXvtSKku12oA',
+      },
+      {
+        name: 'SMB #931',
+        symbol: 'SMB',
+        uri: 'https://arweave.net/d8IpVzCnR5sqkmimkbpxUKj4CLiOQl89ASvt6dTTyWA',
+      },
+      {
+        name: 'SMB #1785',
+        symbol: 'SMB',
+        uri: 'https://arweave.net/JR_l_iOJVvVSiuySnFKsMbDtZ61deFwkr4-wch_TJzc',
+      },
     ],
   },
   br1: {
