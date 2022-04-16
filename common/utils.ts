@@ -60,9 +60,9 @@ export function longDateString(utcSeconds: number) {
 }
 
 export function secondstoDuration(durationSeconds: number) {
-  const years = Math.floor(durationSeconds / 31536000)
-  const months = Math.floor((durationSeconds % 31536000) / 2592000)
-  const weeks = Math.floor((durationSeconds % 2592000) / 604800)
+  const years = Math.floor(durationSeconds / 31449600)
+  const months = Math.floor((durationSeconds % 31449600) / 2419200)
+  const weeks = Math.floor((durationSeconds % 2419200) / 604800)
   const days = Math.floor((durationSeconds % 604800) / 86400)
   const hours = Math.floor((durationSeconds % 86400) / 3600)
   const minutes = Math.floor((durationSeconds % 3600) / 60)
