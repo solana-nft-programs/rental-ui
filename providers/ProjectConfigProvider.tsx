@@ -41,12 +41,15 @@ export const getInitialProps = async ({
   if (project) {
     const profile = await tryGetProfile(project)
     try {
-      nameEntryData = await getNameEntryData(
-        overrideCollection,
-        namespaceName,
-        profile?.username || project
-      )
-      publicKey = tryPublicKey(project) || nameEntryData?.owner
+      publicKey = tryPublicKey(project)
+      if (!publicKey) {
+        nameEntryData = await getNameEntryData(
+          overrideCollection,
+          namespaceName,
+          profile?.username || project
+        )
+        publicKey = tryPublicKey(project) || nameEntryData?.owner
+      }
     } catch (e) {
       console.log('Failed to get name entry: ', e)
     }
