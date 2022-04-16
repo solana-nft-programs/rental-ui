@@ -80,7 +80,7 @@ export function TokenAccountsProvider({ children }: { children: ReactChild }) {
     <UserTokenData.Provider
       value={{
         address,
-        tokenDatas,
+        tokenDatas: filterTokens(config.filters, tokenDatas),
         loaded,
         refreshTokenAccounts,
         setTokenDatas,

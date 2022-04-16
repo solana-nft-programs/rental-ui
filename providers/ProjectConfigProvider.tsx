@@ -10,7 +10,7 @@ import type { ProjectConfig } from 'config/config'
 import { projectConfigs } from 'config/config'
 import type { NextPageContext } from 'next'
 import type { ReactChild } from 'react'
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 
 import { ENVIRONMENTS } from './EnvironmentProvider'
 
@@ -20,7 +20,7 @@ export const getInitialProps = async ({
   ctx: NextPageContext
 }): Promise<{ config: ProjectConfig }> => {
   const projectParams =
-    ctx.query.project || ctx.req?.headers.host || ctx.query.host
+    ctx.query.collection || ctx.req?.headers.host || ctx.query.host
   const project =
     projectParams &&
     (typeof projectParams === 'string' ? projectParams : projectParams[0])
@@ -116,11 +116,13 @@ export function getLink(path: string, withParams = true) {
 
 export interface ProjectConfigValues {
   config: ProjectConfig
+  setProjectConfig: (s: string) => void
 }
 
 const ProjectConfigValues: React.Context<ProjectConfigValues> =
   React.createContext<ProjectConfigValues>({
     config: projectConfigs['portals']!,
+    setProjectConfig: () => {},
   })
 
 export function ProjectConfigProvider({
@@ -130,10 +132,16 @@ export function ProjectConfigProvider({
   children: ReactChild
   defaultConfig: ProjectConfig
 }) {
+  const [config, setConfig] = useState<ProjectConfig>(defaultConfig)
   return (
     <ProjectConfigValues.Provider
       value={{
-        config: defaultConfig,
+        config: config,
+        setProjectConfig: (project: string) => {
+          if (projectConfigs[project]) {
+            setConfig(projectConfigs[project]!)
+          }
+        },
       }}
     >
       {children}
