@@ -428,7 +428,7 @@ export const RentalCard = ({
       await executeTransaction(connection, wallet, transaction, {
         silent: false,
         callback: refreshTokenAccounts,
-        signers: [],
+        signers: claimRentalReceipt ? [receiptMintKeypair] : [],
       })
       const link = claimLinks.getLink(
         tokenManagerId,
@@ -513,20 +513,22 @@ export const RentalCard = ({
               {rentalCardConfig.invalidators.map(
                 (invalidator) =>
                   ({
-                    usages: (
+                    duration: (
                       <div
                         className="mr-4 flex cursor-pointer"
                         onClick={() => {
-                          if (selectedInvalidators.includes('usages')) {
+                          if (selectedInvalidators.includes('duration')) {
                             setSelectedInvalidators(
-                              selectedInvalidators.filter((o) => o !== 'usages')
+                              selectedInvalidators.filter(
+                                (o) => o !== 'duration'
+                              )
                             )
                           } else {
                             setSelectedInvalidators([
                               ...selectedInvalidators.filter(
-                                (o) => o !== 'manual'
+                                (o) => o !== 'manual' && o !== 'expiration'
                               ),
-                              'usages',
+                              'duration',
                             ])
                           }
                         }}
@@ -534,9 +536,9 @@ export const RentalCard = ({
                         <input
                           className="my-auto mr-1 cursor-pointer"
                           type="checkbox"
-                          checked={selectedInvalidators.includes('usages')}
+                          checked={selectedInvalidators.includes('duration')}
                         />
-                        <span className="">Usages</span>
+                        <span className="">Duration</span>
                       </div>
                     ),
                     expiration: (
@@ -567,22 +569,20 @@ export const RentalCard = ({
                         <span className="">Expiration</span>
                       </div>
                     ),
-                    duration: (
+                    usages: (
                       <div
                         className="mr-4 flex cursor-pointer"
                         onClick={() => {
-                          if (selectedInvalidators.includes('duration')) {
+                          if (selectedInvalidators.includes('usages')) {
                             setSelectedInvalidators(
-                              selectedInvalidators.filter(
-                                (o) => o !== 'duration'
-                              )
+                              selectedInvalidators.filter((o) => o !== 'usages')
                             )
                           } else {
                             setSelectedInvalidators([
                               ...selectedInvalidators.filter(
-                                (o) => o !== 'manual' && o !== 'expiration'
+                                (o) => o !== 'manual'
                               ),
-                              'duration',
+                              'usages',
                             ])
                           }
                         }}
@@ -590,9 +590,9 @@ export const RentalCard = ({
                         <input
                           className="my-auto mr-1 cursor-pointer"
                           type="checkbox"
-                          checked={selectedInvalidators.includes('duration')}
+                          checked={selectedInvalidators.includes('usages')}
                         />
-                        <span className="">Duration</span>
+                        <span className="">Usages</span>
                       </div>
                     ),
                     manual: (
