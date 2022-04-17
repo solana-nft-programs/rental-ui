@@ -210,10 +210,7 @@ export const Header = ({
 
   const issuer = tryPublicKey(config.issuer?.publicKeyString)
   return (
-    <StyledHeader
-      style={{ backgroundColor: Colors.navBg }}
-      isTabletOrMobile={isTabletOrMobile}
-    >
+    <StyledHeader isTabletOrMobile={isTabletOrMobile}>
       <div className="left pl-8">
         <div className="title" style={{ marginRight: '40px' }}>
           {issuer ? (
