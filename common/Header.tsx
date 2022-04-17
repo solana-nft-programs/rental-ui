@@ -13,6 +13,7 @@ import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useEffect, useState } from 'react'
 import { HiUserCircle } from 'react-icons/hi'
+import { IoChevronBack } from 'react-icons/io5'
 import { useMediaQuery } from 'react-responsive'
 import { getColorByBgColor } from 'rental-components/common/Button'
 
@@ -190,7 +191,8 @@ export const Header = ({
   const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' })
   const [showTabs, setShowTabs] = useState(false)
   const [tab, setTab] = useState<string>('wallet')
-  const { config } = useProjectConfig()
+  const { config, setProjectConfig } = useProjectConfig()
+  const { host } = router.query
 
   useEffect(() => {
     if (config.colors) {
@@ -215,7 +217,7 @@ export const Header = ({
       isTabletOrMobile={isTabletOrMobile}
     >
       <div className="left pl-8">
-        <div className="title">
+        <div className="title" style={{ marginRight: '40px' }}>
           {issuer ? (
             <>
               <div className="flex cursor-pointer gap-2">
@@ -288,7 +290,7 @@ export const Header = ({
         {wallet.connected &&
           ctx.environment.label === 'devnet' &&
           !isTabletOrMobile && (
-            <div className="flex gap-2" style={{ marginLeft: '40px' }}>
+            <div className="flex gap-2">
               <Airdrop />
               <AirdropSol />
             </div>
@@ -345,6 +347,15 @@ export const Header = ({
         >
           <LoadingPulse loading={loading ?? false} />
         </div> */}
+        {config.name !== 'default' && !host?.includes(config.name) && (
+          <div
+            className="mr-2 flex cursor-pointer items-center justify-center text-lg text-white"
+            onClick={() => setProjectConfig('default')}
+          >
+            <IoChevronBack size={26} />
+            Back
+          </div>
+        )}
         {wallet.connected ? (
           isTabletOrMobile ? (
             <Hamburger className="hamb" onClick={() => setShowTabs(!showTabs)}>

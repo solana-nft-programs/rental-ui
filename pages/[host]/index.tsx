@@ -3,7 +3,9 @@ import { useWallet } from '@solana/wallet-adapter-react'
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
 import { Header } from 'common/Header'
 import { StyledContainer } from 'common/StyledContainer'
+import { firstParam } from 'common/utils'
 import { Browse } from 'components/Browse'
+import { Collections } from 'components/Collections'
 import { Manage } from 'components/Manage'
 import { Wallet } from 'components/Wallet'
 import Head from 'next/head'
@@ -48,6 +50,28 @@ export default function Home() {
     const anchor = router.asPath.split('#')[1]
     if (anchor !== tab) setTab(anchor || '')
   }, [router, tab])
+
+  useEffect(() => {
+    const { collectionParams, host, clusterParams } = router.query
+    const collection = firstParam(collectionParams)
+    const cluster = firstParam(clusterParams)
+    console.log(config.name, collection)
+    if (
+      config.name !== 'default' &&
+      !host?.includes(config.name) &&
+      collection !== config.name
+    ) {
+      router.push(
+        `${location.pathname}?collection=${config.name}${
+          cluster ? `&cluster=${cluster}` : ''
+        }#browse`
+      )
+    } else if (config.name === 'default') {
+      router.push(
+        `${location.pathname}${cluster ? `?cluster=${cluster}` : ''}#browse`
+      )
+    }
+  }, [config])
 
   const { setAddress, loaded, refreshing } = useUserTokenData()
   useEffect(() => {
@@ -110,7 +134,11 @@ export default function Home() {
               {(() => {
                 switch (tab) {
                   case 'browse':
-                    return <Browse />
+                    return config.name === 'default' ? (
+                      <Collections setTab={setTab} />
+                    ) : (
+                      <Browse config={config} />
+                    )
                   case 'manage':
                     return <Manage />
                   default:

@@ -18,6 +18,7 @@ import { executeTransaction } from 'common/Transactions'
 import { getMintDecimalAmount } from 'common/units'
 import { pubKeyUrl, shortPubKey } from 'common/utils'
 import { asWallet } from 'common/Wallets'
+import type { ProjectConfig } from 'config/config'
 import { lighten } from 'polished'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useIssuedTokens } from 'providers/IssuedTokensProvider'
@@ -26,7 +27,7 @@ import {
   usePaymentMints,
   WRAPPED_SOL_MINT,
 } from 'providers/PaymentMintsProvider'
-import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
+import { getLink } from 'providers/ProjectConfigProvider'
 import React, { useState } from 'react'
 import { FaLink } from 'react-icons/fa'
 import { AsyncButton, Button } from 'rental-components/common/Button'
@@ -59,7 +60,10 @@ const globalRate = 604800
 const getAllAttributes = (tokens: TokenData[]) => {
   const allAttributes: { [traitType: string]: Set<any> } = {}
   tokens.forEach((tokenData) => {
-    if (tokenData?.metadata?.data?.attributes) {
+    if (
+      tokenData?.metadata?.data?.attributes &&
+      tokenData?.metadata?.data?.attributes.len > 0
+    ) {
       tokenData?.metadata?.data?.attributes.forEach(
         (attribute: { trait_type: string; value: any }) => {
           if (attribute.trait_type in allAttributes) {
@@ -79,8 +83,7 @@ const getAllAttributes = (tokens: TokenData[]) => {
   return sortedAttributes
 }
 
-export const Browse = () => {
-  const { config } = useProjectConfig()
+export const Browse = ({ config }: { config: ProjectConfig }) => {
   const { connection, environment } = useEnvironmentCtx()
   const wallet = useWallet()
 

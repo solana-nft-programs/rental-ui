@@ -25,6 +25,67 @@ export type ProjectConfig = {
 
 export const projectConfigs: { [key: string]: ProjectConfig } = {
   default: {
+    name: 'default',
+    websiteUrl: 'https://cardinal.so',
+    logoImage: 'https://main.cardinal.so/assets/cardinal-titled.png',
+    colors: {
+      main: 'rgba(0, 0, 0, 0)',
+      secondary: 'rgb(29, 155, 240)',
+    },
+    filters: [],
+    rentalCard: {
+      invalidators: ['duration', 'usages', 'expiration', 'manual'],
+      extensionOptions: { showDisablePartialExtension: true },
+    },
+    airdrops: [
+      {
+        name: 'Origin Jambo',
+        symbol: 'JAMB',
+        uri: 'https://arweave.net/XBoDa9TqiOZeXW_6bV8wvieD8fMQS6IHxKipwdvduCo',
+      },
+      {
+        name: 'Solana Monkey Business',
+        symbol: 'SMB',
+        uri: 'https://arweave.net/VjfB54_BbELJ5bc1kH-kddrXfq5noloSjkcvK2Odhh0',
+      },
+      {
+        name: 'Degen Ape',
+        symbol: 'DAPE',
+        uri: 'https://arweave.net/mWra8rTxavmbCnqxs6KoWwa0gC9uM8NMeOsyVhDy0-E',
+      },
+      {
+        name: 'Thugbirdz',
+        symbol: 'THUG',
+        uri: 'https://arweave.net/l9VXqVWCsiKW-R8ShX8jknFPgBibrhQI1JRgUI9uvbw',
+      },
+      {
+        name: 'Turtles',
+        symbol: 'TRTL',
+        uri: 'https://arweave.net/KKbhlHaPMOB9yMm9yG_i7PxzK0y24I5C7gNTaRDI9OE',
+      },
+      {
+        name: 'Almost Famous Pandas',
+        symbol: 'AFP',
+        uri: '8cs7hpBcuiRbzcdUY5BHpCFCgv1m8JhpZEVHUkYTmhnA',
+      },
+      {
+        name: 'Shi Guardians',
+        symbol: 'SHI',
+        uri: 'https://arweave.net/hSI4WIsX10yRWnzgXP8oqwSCaSgPfGU5nSN-Pxjslao',
+      },
+      {
+        name: 'Hacker House',
+        symbol: 'HH',
+        uri: 'https://arweave.net/DLDhnabWSXzAYktEhEKyukt3GIfagj2rPpWncw-KDQo',
+      },
+      {
+        name: '21 Club',
+        symbol: '21',
+        uri: 'https://bafkreicv3jj6oc53kid76mkk7hqsr6edrnhsydkw4do4vonq777sgfz3le.ipfs.dweb.link?ext=json',
+      },
+    ],
+  },
+  cardinal: {
     name: 'cardinal',
     websiteUrl: 'https://cardinal.so',
     logoImage: 'https://main.cardinal.so/assets/cardinal-titled.png',

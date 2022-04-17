@@ -41,12 +41,7 @@ export function IssuedTokensProvider({ children }: { children: ReactChild }) {
       if (!config) return
       setRefreshing(true)
       const tokenManagerDatas = await getTokenManagersByState(connection, null)
-      let tokenDatas = await getTokenDatas(connection, tokenManagerDatas)
-      tokenDatas = filterTokens(
-        config.filters,
-        tokenDatas,
-        tryPublicKey(config?.issuer?.publicKeyString)
-      )
+      const tokenDatas = await getTokenDatas(connection, tokenManagerDatas)
       setIssuedTokens(tokenDatas)
     } catch (e) {
       console.log(e)
@@ -64,7 +59,11 @@ export function IssuedTokensProvider({ children }: { children: ReactChild }) {
   return (
     <IssuedTokensContext.Provider
       value={{
-        issuedTokens,
+        issuedTokens: filterTokens(
+          config.filters,
+          issuedTokens,
+          tryPublicKey(config?.issuer?.publicKeyString)
+        ),
         refreshIssuedTokens,
         refreshing,
         loaded,
