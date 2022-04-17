@@ -85,8 +85,8 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       },
     ],
   },
-  cardinal: {
-    name: 'cardinal',
+  all: {
+    name: 'all',
     websiteUrl: 'https://cardinal.so',
     logoImage: 'https://main.cardinal.so/assets/cardinal-titled.png',
     colors: {
@@ -173,10 +173,10 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         invalidationTypes: ['return'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,
-        setClaimRentalReceipt: false,       
+        setClaimRentalReceipt: false,
         maxDurationAllowed: {
           displayText: '12 weeks',
-          value: 7258000
+          value: 7258000,
         },
       },
     },

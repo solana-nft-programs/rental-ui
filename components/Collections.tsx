@@ -24,7 +24,7 @@ export const Collections = ({ setTab }: { setTab: (s: string) => void }) => {
               k !== 'default' && (
                 <div
                   key={k}
-                  className={`flex h-[200px] w-[200px] cursor-pointer items-center justify-center bg-[#282A2E] p-5`}
+                  className={`flex h-[200px] w-[200px] cursor-pointer items-center justify-center bg-[#282A2E] p-5 transition-all duration-200 hover:scale-[1.02]`}
                   onClick={() => {
                     setProjectConfig(k)
                   }}

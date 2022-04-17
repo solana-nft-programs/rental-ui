@@ -349,7 +349,7 @@ export const Header = ({
         </div> */}
         {config.name !== 'default' && !host?.includes(config.name) && (
           <div
-            className="mr-2 flex cursor-pointer items-center justify-center text-lg text-white"
+            className="mr-2 flex cursor-pointer items-center justify-center text-lg text-white transition-all duration-200 hover:scale-[1.02]"
             onClick={() => setProjectConfig('default')}
           >
             <IoChevronBack size={26} />
