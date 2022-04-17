@@ -1,6 +1,6 @@
 import { Connection } from '@solana/web3.js'
 import { useRouter } from 'next/router'
-import React, { useContext,useMemo, useState } from 'react'
+import React, { useContext, useMemo, useState } from 'react'
 
 export interface Environment {
   label: string
