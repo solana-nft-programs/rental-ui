@@ -71,7 +71,6 @@ export const StyledHeader = styled.div<{ isTabletOrMobile: boolean }>`
       font-size: 10px;
       font-style: italic;
       bottom: 5px;
-      right: -35px;
       background: rgba(255, 255, 255, 0.3);
       border-radius: 6px;
       padding: 3px 5px;
@@ -276,9 +275,12 @@ export const Header = ({
               >
                 <img className="h-9 w-auto" src={config.logoImage} alt="logo" />
               </a>
-              <div className="subscript absolute">
-                {ctx.environment.label === 'devnet' ? 'DEV' : 'alpha'}
-              </div>
+
+              {ctx.environment.label === 'devnet' ? (
+                <div className="subscript absolute right-[-35px]">dev</div>
+              ) : (
+                <div className="subscript absolute right-[-45px]">alpha</div>
+              )}
             </>
           )}
         </div>
