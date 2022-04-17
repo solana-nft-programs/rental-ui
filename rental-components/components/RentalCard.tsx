@@ -18,11 +18,17 @@ import { NFTOverlay } from 'common/NFTOverlay'
 import { notify } from 'common/Notification'
 import { executeTransaction } from 'common/Transactions'
 import { fmtMintAmount } from 'common/units'
-import { getQueryParam, longDateString, shortPubKey } from 'common/utils'
+import {
+  getQueryParam,
+  longDateString,
+  shortDateString,
+  shortPubKey,
+} from 'common/utils'
 import { usePaymentMints } from 'providers/PaymentMintsProvider'
 import { getLink } from 'providers/ProjectConfigProvider'
 import { useUserTokenData } from 'providers/TokenDataProvider'
 import React, { useEffect, useState } from 'react'
+import { AiOutlineCloseCircle } from 'react-icons/ai'
 import { BiQrScan, BiTimer } from 'react-icons/bi'
 import { FaEye, FaLink } from 'react-icons/fa'
 import { FiSend } from 'react-icons/fi'
@@ -133,8 +139,8 @@ const DURATION_DATA: { [key in DurationOption]: number } = {
   hours: 3600,
   days: 86400,
   weeks: 604800,
-  months: 2592000,
-  years: 31104000,
+  months: 2419200,
+  years: 31449600,
 }
 
 export type RentalCardConfig = {
@@ -147,6 +153,7 @@ export type RentalCardConfig = {
     visibilities?: VisibilityOption[]
     setClaimRentalReceipt: boolean
     showClaimRentalReceipt?: boolean
+    maxDurationAllowed?: { displayText: string; value: number }
   }
   extensionOptions?: {
     setDisablePartialExtension?: boolean
@@ -293,12 +300,14 @@ export const RentalCard = ({
   >(rentalCardConfig.invalidators[0] ? [rentalCardConfig.invalidators[0]] : [])
   const [showAdditionalOptions, setShowAdditionalOptions] = useState(false)
   const [showExtendDuration, setShowExtendDuration] = useState(false)
+  const [confirmRentalTerms, setConfirmRentalTerms] = useState(false)
 
   // reset
   useEffect(() => {
     if (!selectedInvalidators.includes('duration')) {
       setExtensionDurationAmount(null)
       setExtensionDurationOption(defaultDurationOption)
+      setDurationAmount(null)
     }
     if (!selectedInvalidators.includes('expiration')) {
       setExpiration(null)
@@ -332,6 +341,29 @@ export const RentalCard = ({
       }
       if (!extensionPaymentMintPublicKey) {
         throw 'Invalid payment mint'
+      }
+      if (rentalCardConfig.invalidationOptions?.maxDurationAllowed) {
+        if (
+          durationAmount &&
+          durationOption &&
+          durationAmount * (durationData[durationOption] || 0) >
+            rentalCardConfig.invalidationOptions?.maxDurationAllowed.value
+        ) {
+          throw (
+            'Duration of rental exceeds max allowed. Max duration allowed is ' +
+            rentalCardConfig.invalidationOptions?.maxDurationAllowed.displayText
+          )
+        }
+        if (
+          expiration &&
+          expiration - Date.now() >
+            rentalCardConfig.invalidationOptions?.maxDurationAllowed.value
+        ) {
+          throw (
+            'Duration of rental exceeds max allowed. Max duration allowed is ' +
+            rentalCardConfig.invalidationOptions?.maxDurationAllowed.displayText
+          )
+        }
       }
 
       setLoading(true)
@@ -409,6 +441,7 @@ export const RentalCard = ({
       console.log(link)
     } catch (e) {
       console.log('Error handling rental', e)
+      setConfirmRentalTerms(false)
       setError(`Error handling rental: ${formatError(`${e}`)}`)
     } finally {
       setLoading(false)
@@ -690,7 +723,7 @@ export const RentalCard = ({
                             ?.freezeRentalDuration
                             ? rentalCardConfig.invalidationOptions
                                 ?.freezeRentalDuration.value
-                            : durationAmount?.toString() || '1'
+                            : durationAmount?.toString() || '0'
                         }
                         onChange={(e) => setDurationAmount(parseInt(e))}
                         disabled={
@@ -703,6 +736,7 @@ export const RentalCard = ({
                       <Select
                         className="w-max rounded-[4px]"
                         onChange={(e) => setDurationOption(e)}
+                        value={durationOption}
                         defaultValue={defaultDurationOption}
                         disabled={
                           rentalCardConfig.invalidationOptions
@@ -931,6 +965,7 @@ export const RentalCard = ({
         <ButtonWithFooter
           loading={loading}
           complete={false}
+          disabled={!confirmRentalTerms}
           message={
             link ? (
               <StyledAlert>
@@ -962,7 +997,15 @@ export const RentalCard = ({
                   style={{ height: 'auto' }}
                   message={
                     <>
-                      <div>{error}</div>
+                      <div>
+                        {error}
+                        <div
+                          className="float-right mt-3 cursor-pointer"
+                          onClick={() => setError(undefined)}
+                        >
+                          <AiOutlineCloseCircle />
+                        </div>
+                      </div>
                     </>
                   }
                   type="error"
@@ -970,92 +1013,146 @@ export const RentalCard = ({
                 />
               </StyledAlert>
             ) : (
-              <StyledAlert>
-                <Alert
-                  style={{ height: 'auto' }}
-                  message={
-                    <>
-                      <div>
-                        Whoever claims this rental will own the asset{' '}
-                        {totalUsages && expiration
-                          ? `for either ${totalUsages} uses or until ${longDateString(
-                              expiration
-                            )} and then it will be ${
-                              invalidationType === InvalidationType.Return
-                                ? 'securely returned to you.'
-                                : invalidationType === InvalidationType.Release
-                                ? 'released to whoever claims it.'
-                                : 'invalid forever..'
-                            }`
-                          : totalUsages
-                          ? `for ${totalUsages} uses and then it will be ${
-                              invalidationType === InvalidationType.Return
-                                ? 'securely returned to you.'
-                                : invalidationType === InvalidationType.Release
-                                ? 'released to whoever claims it.'
-                                : 'invalid forever'
-                            }`
-                          : expiration
-                          ? `until ${longDateString(
-                              expiration
-                            )} and then it will be ${
-                              invalidationType === InvalidationType.Return
-                                ? 'securely returned to you.'
-                                : invalidationType === InvalidationType.Release
-                                ? 'released to whoever claims it.'
-                                : 'invalid forever.'
-                            }`
-                          : durationAmount && durationOption
-                          ? `
+              <>
+                <StyledAlert>
+                  <Alert
+                    style={{ height: 'auto' }}
+                    message={
+                      <>
+                        <div>
+                          Whoever claims this rental will own the asset{' '}
+                          {totalUsages && expiration
+                            ? `for either ${totalUsages} uses or until ${longDateString(
+                                expiration
+                              )} and then it will be ${
+                                invalidationType === InvalidationType.Return
+                                  ? 'securely returned to you.'
+                                  : invalidationType ===
+                                    InvalidationType.Release
+                                  ? 'released to whoever claims it.'
+                                  : 'invalid forever..'
+                              }`
+                            : totalUsages
+                            ? `for ${totalUsages} uses and then it will be ${
+                                invalidationType === InvalidationType.Return
+                                  ? 'securely returned to you.'
+                                  : invalidationType ===
+                                    InvalidationType.Release
+                                  ? 'released to whoever claims it.'
+                                  : 'invalid forever'
+                              }`
+                            : expiration
+                            ? `until ${longDateString(
+                                expiration
+                              )} and then it will be ${
+                                invalidationType === InvalidationType.Return
+                                  ? 'securely returned to you.'
+                                  : invalidationType ===
+                                    InvalidationType.Release
+                                  ? 'released to whoever claims it.'
+                                  : 'invalid forever.'
+                              }`
+                            : durationAmount && durationOption
+                            ? `
                             for ${durationAmount} ${
-                              durationAmount !== 1
-                                ? durationOption.toLocaleLowerCase()
-                                : durationOption
-                                    .toLocaleLowerCase()
-                                    .substring(0, durationOption.length - 1)
-                            } and then it will be ${
-                              invalidationType === InvalidationType.Return
-                                ? 'securely returned to you.'
-                                : invalidationType === InvalidationType.Release
-                                ? 'released to whoever claims it.'
-                                : 'invalid forever.'
-                            }`
-                          : 'forever.'}
-                        {showExtendDuration &&
-                        extensionPaymentAmount &&
-                        extensionDurationAmount &&
-                        extensionPaymentMint
-                          ? ` The claimer can choose to extend the rental at the rate of ${fmtMintAmount(
-                              paymentMintInfos[extensionPaymentMint.toString()],
-                              new anchor.BN(extensionPaymentAmount)
-                            )} ${
-                              paymentMintData.find(
-                                (obj) => obj.mint === extensionPaymentMint
-                              )?.symbol
-                            } / ${extensionDurationAmount} ${
-                              extensionDurationAmount === 1
-                                ? extensionDurationOption
-                                    ?.toLowerCase()
-                                    .substring(
-                                      0,
-                                      extensionDurationOption.length - 1
-                                    )
-                                : extensionDurationOption?.toLowerCase()
-                            }${
-                              extensionMaxExpiration
-                                ? ` up until ${new Date(
-                                    extensionMaxExpiration * 1000
-                                  ).toLocaleString('en-US')}.`
-                                : '.'
-                            } `
-                          : null}
-                      </div>
-                    </>
-                  }
-                  type="info"
-                  showIcon
-                />
-              </StyledAlert>
+                                durationAmount !== 1
+                                  ? durationOption.toLocaleLowerCase()
+                                  : durationOption
+                                      .toLocaleLowerCase()
+                                      .substring(0, durationOption.length - 1)
+                              } and then it will be ${
+                                invalidationType === InvalidationType.Return
+                                  ? 'securely returned to you.'
+                                  : invalidationType ===
+                                    InvalidationType.Release
+                                  ? 'released to whoever claims it.'
+                                  : 'invalid forever.'
+                              }`
+                            : 'forever.'}
+                          {showExtendDuration &&
+                          extensionPaymentAmount &&
+                          extensionDurationAmount &&
+                          extensionPaymentMint
+                            ? ` The claimer can choose to extend the rental at the rate of ${fmtMintAmount(
+                                paymentMintInfos[
+                                  extensionPaymentMint.toString()
+                                ],
+                                new anchor.BN(extensionPaymentAmount)
+                              )} ${
+                                paymentMintData.find(
+                                  (obj) => obj.mint === extensionPaymentMint
+                                )?.symbol
+                              } / ${extensionDurationAmount} ${
+                                extensionDurationAmount === 1
+                                  ? extensionDurationOption
+                                      ?.toLowerCase()
+                                      .substring(
+                                        0,
+                                        extensionDurationOption.length - 1
+                                      )
+                                  : extensionDurationOption?.toLowerCase()
+                              }${
+                                extensionMaxExpiration
+                                  ? ` up until ${new Date(
+                                      extensionMaxExpiration * 1000
+                                    ).toLocaleString('en-US')}.`
+                                  : '.'
+                              } `
+                            : null}
+                          <div className="mt-3 flex">
+                            <p className="mr-3">
+                              <b>Price: </b>{' '}
+                              {fmtMintAmount(
+                                paymentMintInfos[paymentMint.toString()],
+                                new anchor.BN(price)
+                              )}{' '}
+                              {
+                                paymentMintData.find(
+                                  (obj) => obj.mint === extensionPaymentMint
+                                )?.symbol
+                              }
+                            </p>
+                            {durationAmount && durationOption ? (
+                              <p>
+                                <b>Duration: </b> {durationAmount}{' '}
+                                {durationAmount !== 1
+                                  ? durationOption.toLocaleLowerCase()
+                                  : durationOption
+                                      .toLocaleLowerCase()
+                                      .substring(0, durationOption.length - 1)}
+                              </p>
+                            ) : null}
+                            {expiration && (
+                              <p className="mr-3">
+                                <b>Expiration: </b>{' '}
+                                {shortDateString(expiration)}
+                              </p>
+                            )}
+                            {totalUsages && (
+                              <p className="mr-3">
+                                <b>Usages: </b> {totalUsages}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      </>
+                    }
+                    type="info"
+                    showIcon
+                  />
+                </StyledAlert>
+                <div
+                  className="flex w-full justify-end"
+                  onClick={() => setConfirmRentalTerms(!confirmRentalTerms)}
+                >
+                  <input
+                    type="checkbox"
+                    className="my-auto mr-2 inline-block"
+                    checked={confirmRentalTerms}
+                  />
+                  <p> I agree to the above rental terms </p>
+                </div>
+              </>
             )
           }
           onClick={link ? () => handleCopy(link) : handleRental}
