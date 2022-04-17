@@ -88,7 +88,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
   all: {
     name: 'all',
     websiteUrl: 'https://cardinal.so',
-    logoImage: 'https://main.cardinal.so/assets/cardinal-titled.png',
+    logoImage: './logos/all.svg',
     colors: {
       main: 'rgba(0, 0, 0, 0)',
       secondary: 'rgb(29, 155, 240)',
@@ -149,8 +149,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
   portals: {
     name: 'portals',
     websiteUrl: 'https://theportal.to/',
-    logoImage:
-      'https://pbs.twimg.com/profile_images/1496665887041994755/GlWexgQC_400x400.jpg',
+    logoImage: './logos/portals.svg',
     colors: {
       main: 'rgb(0,0,0)',
       secondary: 'rgb(128,221,239)',

@@ -24,10 +24,8 @@ import { shortPubKey } from './utils'
 export const StyledHeader = styled.div<{ isTabletOrMobile: boolean }>`
   z-index: 100;
   position: fixed;
-  transition-delay: 10s;
   justify-content: space-between;
   display: flex;
-  transition: 2s;
   top: 0;
   width: 100%;
   height: 100px;
