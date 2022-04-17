@@ -90,7 +90,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     websiteUrl: 'https://cardinal.so',
     logoImage: './logos/all.svg',
     colors: {
-      main: 'rgba(0, 0, 0, 0)',
+      main: 'rgb(26, 27, 32)',
       secondary: 'rgb(29, 155, 240)',
     },
     filters: [],

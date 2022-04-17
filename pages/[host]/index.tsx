@@ -55,7 +55,6 @@ export default function Home() {
     const { collectionParams, host, clusterParams } = router.query
     const collection = firstParam(collectionParams)
     const cluster = firstParam(clusterParams)
-    console.log(config.name, collection)
     if (
       config.name !== 'default' &&
       !host?.includes(config.name) &&
