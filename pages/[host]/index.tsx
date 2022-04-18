@@ -52,9 +52,7 @@ export default function Home() {
   }, [router, tab])
 
   useEffect(() => {
-    const { collectionParams, host, clusterParams } = router.query
-    const collection = firstParam(collectionParams)
-    const cluster = firstParam(clusterParams)
+    const { collection, host, cluster } = router.query
     if (
       config.name !== 'default' &&
       !host?.includes(config.name) &&

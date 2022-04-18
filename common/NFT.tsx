@@ -8,7 +8,7 @@ import { executeTransaction } from 'common/Transactions'
 import { pubKeyUrl } from 'common/utils'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
-import React from 'react'
+import React, { useState } from 'react'
 import { FaEllipsisH } from 'react-icons/fa'
 import { FiExternalLink, FiSend } from 'react-icons/fi'
 import { IoClose, IoQrCodeOutline } from 'react-icons/io5'
@@ -176,6 +176,7 @@ export function NFT({ tokenData, hideQRCode }: NFTProps) {
   const { show } = useQRCode()
   const rentalModal = useRentalModal()
   const { config } = useProjectConfig()
+  // const [showPopover, setShowPopover] = useState(false)
 
   const {
     tokenAccount,
@@ -202,6 +203,7 @@ export function NFT({ tokenData, hideQRCode }: NFTProps) {
             <Popover
               placement="bottomLeft"
               zIndex={10}
+              // visible={showPopover}
               content={
                 <div id="context-menu">
                   <div
@@ -232,6 +234,7 @@ export function NFT({ tokenData, hideQRCode }: NFTProps) {
                         gap: '10px',
                         opacity: 1,
                       }}
+                      className="hover:text-[#1890ff]"
                       onClick={() => {
                         rentalModal.show(
                           asWallet(wallet),

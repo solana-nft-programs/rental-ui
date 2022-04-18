@@ -36,6 +36,12 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     rentalCard: {
       invalidators: ['duration', 'usages', 'expiration', 'manual'],
       extensionOptions: { showDisablePartialExtension: true },
+      invalidationOptions: {
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
     },
     airdrops: [
       {
@@ -97,6 +103,12 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     rentalCard: {
       invalidators: ['duration', 'usages', 'expiration', 'manual'],
       extensionOptions: { showDisablePartialExtension: true },
+      invalidationOptions: {
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
     },
     airdrops: [
       {
@@ -224,6 +236,10 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
       },
     },
     airdrops: [
@@ -276,6 +292,10 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         paymentMints: ['So11111111111111111111111111111111111111112'],
         setClaimRentalReceipt: true,
         showClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
       },
     },
   },
