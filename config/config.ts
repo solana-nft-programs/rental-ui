@@ -29,7 +29,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     websiteUrl: 'https://cardinal.so',
     logoImage: 'https://main.cardinal.so/assets/cardinal-titled.png',
     colors: {
-      main: 'rgba(0, 0, 0, 0)',
+      main: 'rgb(26, 27, 32)',
       secondary: 'rgb(29, 155, 240)',
     },
     filters: [],
@@ -96,7 +96,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     websiteUrl: 'https://cardinal.so',
     logoImage: 'https://main.cardinal.so/assets/cardinal-titled.png',
     colors: {
-      main: 'rgba(0, 0, 0, 0)',
+      main: 'rgb(26, 27, 32)',
       secondary: 'rgb(29, 155, 240)',
     },
     filters: [],
