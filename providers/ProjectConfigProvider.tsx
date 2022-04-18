@@ -61,7 +61,7 @@ export const getInitialProps = async ({
   return {
     config: publicKey
       ? {
-          ...projectConfigs['default']!,
+          ...projectConfigs['vault']!,
           issuer: { publicKeyString: publicKey.toString() },
         }
       : config,
