@@ -16,7 +16,7 @@ export type ProjectConfig = {
   logoImage: string
   colors: Colors
   disableListing?: boolean
-  filters: { type: string; value: string }[]
+  filters: { type: 'creators' | 'symbol' | 'issuer'; value: string }[]
   rentalCard: RentalCardConfig
   airdrops?: AirdropMetadata[]
   browse?: {
