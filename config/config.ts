@@ -7,6 +7,7 @@ export type Colors = {
 }
 
 export type ProjectConfig = {
+  type: 'Collection' | 'Guild'
   issuer?: {
     publicKeyString?: string
   }
@@ -15,7 +16,7 @@ export type ProjectConfig = {
   logoImage: string
   colors: Colors
   disableListing?: boolean
-  filters: { type: string; value: string }[]
+  filters: { type: 'creators' | 'symbol' | 'issuer'; value: string }[]
   rentalCard: RentalCardConfig
   airdrops?: AirdropMetadata[]
   browse?: {
@@ -26,6 +27,7 @@ export type ProjectConfig = {
 export const projectConfigs: { [key: string]: ProjectConfig } = {
   default: {
     name: 'default',
+    type: 'Collection',
     websiteUrl: 'https://cardinal.so',
     logoImage: 'https://main.cardinal.so/assets/cardinal-titled.png',
     colors: {
@@ -93,6 +95,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
   },
   vault: {
     name: 'vault',
+    type: 'Collection',
     websiteUrl: 'https://cardinal.so',
     logoImage: 'https://main.cardinal.so/assets/cardinal-titled.png',
     colors: {
@@ -160,6 +163,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
   },
   all: {
     name: 'all',
+    type: 'Collection',
     websiteUrl: 'https://cardinal.so',
     logoImage: './logos/all.svg',
     colors: {
@@ -227,6 +231,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
   },
   portals: {
     name: 'portals',
+    type: 'Collection',
     websiteUrl: 'https://theportal.to/',
     logoImage: './logos/portals.svg',
     colors: {
@@ -278,6 +283,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
   },
   monke: {
     name: 'monke',
+    type: 'Collection',
     websiteUrl: 'https://market.solanamonkey.business/',
     logoImage: 'https://market.solanamonkey.business/logo/smb-market.svg',
     colors: {
@@ -334,6 +340,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
   },
   br1: {
     name: 'br1',
+    type: 'Collection',
     websiteUrl: 'https://www.br1game.com/',
     logoImage:
       'https://static.wixstatic.com/media/a5e645_ede493815397419cad3c618bd7cb4aa4~mv2.png/v1/fill/w_888,h_390,al_c,usm_0.66_1.00_0.01,enc_auto/Artboard%202%20copy%204-1.png',
@@ -359,6 +366,94 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         paymentMints: ['So11111111111111111111111111111111111111112'],
         setClaimRentalReceipt: true,
         showClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
+  },
+  defiland: {
+    name: 'defiland',
+    type: 'Collection',
+    websiteUrl: 'https://www.defiland.app/',
+    logoImage: 'https://defiland.app/_nuxt/img/defiland.74b3850.svg',
+    colors: {
+      main: '#2d1923',
+      secondary: '#ad4933',
+    },
+    filters: [
+      {
+        type: 'creators',
+        value: 'Cjaj1MjAvHoo68LwY8iPXSSkYR6xsfDBqEp3ZyeRdoar',
+      },
+    ],
+    rentalCard: {
+      invalidators: ['duration'],
+      invalidationOptions: {
+        durationOptions: ['hours', 'days', 'weeks', 'years'],
+        invalidationTypes: ['return'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        setClaimRentalReceipt: true,
+        showClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
+  },
+  ['all-starz']: {
+    name: 'all-starz',
+    type: 'Guild',
+    websiteUrl: 'https://all-starz.gitbook.io/all-starz/',
+    logoImage:
+      'https://pbs.twimg.com/profile_images/1514813811571630085/18p6C0YJ_400x400.jpg',
+    colors: {
+      main: '#000',
+      secondary: '#f71202',
+    },
+    filters: [
+      { type: 'issuer', value: 'Cx2FDbdfqezYiN8teLFdFAzdv9mwG48uYbe218Az4EMP' },
+    ],
+    rentalCard: {
+      invalidators: ['duration'],
+      invalidationOptions: {
+        visibilities: ['public'],
+        durationOptions: ['minutes', 'hours', 'days', 'weeks'],
+        invalidationTypes: ['return'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
+  },
+  ['3dgamersguild']: {
+    name: '3dgamersguild',
+    type: 'Guild',
+    websiteUrl: 'https://www.3dgamersguild.com/',
+    logoImage:
+      'https://images.squarespace-cdn.com/content/v1/618b2aec73c8ed19abf2fd2f/c4a759b4-91d5-462a-bd6d-ce3766ffda2f/3D+Gamers+Logo+with+white+letters+white+text.png?format=1500w',
+    colors: {
+      main: 'rgb(26, 27, 32)',
+      secondary: '#34659b',
+    },
+    filters: [
+      { type: 'issuer', value: '9qoRqZmrAf6bqtmTAPA1UkgCRvKuaugF17xBdympy1vd' },
+    ],
+    rentalCard: {
+      invalidators: ['duration'],
+      invalidationOptions: {
+        visibilities: ['public'],
+        durationOptions: ['minutes', 'hours', 'days', 'weeks'],
+        invalidationTypes: ['return'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
         maxDurationAllowed: {
           displayText: '12 weeks',
           value: 7258000,

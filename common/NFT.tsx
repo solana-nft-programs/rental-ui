@@ -8,7 +8,7 @@ import { executeTransaction } from 'common/Transactions'
 import { pubKeyUrl } from 'common/utils'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
-import React, { useState } from 'react'
+import React from 'react'
 import { FaEllipsisH } from 'react-icons/fa'
 import { FiExternalLink, FiSend } from 'react-icons/fi'
 import { IoClose, IoQrCodeOutline } from 'react-icons/io5'
@@ -21,7 +21,7 @@ import { asWallet } from './Wallets'
 export const TokensOuter = styled.div`
   display: flex;
   align-items: flex-start;
-  max-width: 880px;
+  max-width: 1480px;
   flex-wrap: wrap;
   margin: 10px auto;
   padding-bottom: 60px;
