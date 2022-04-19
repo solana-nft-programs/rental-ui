@@ -69,7 +69,10 @@ export const getInitialProps = async ({
 }
 
 export const filterTokens = (
-  filters: { type: 'creators' | 'symbol' | 'issuer'; value: string }[],
+  filters: {
+    type: 'creators' | 'symbol' | 'issuer'
+    value: string | string[]
+  }[],
   tokens: TokenData[],
   issuer?: PublicKey | null
 ): TokenData[] => {
@@ -79,9 +82,9 @@ export const filterTokens = (
       filters.forEach((configFilter) => {
         if (
           configFilter.type === 'creators' &&
-          !token?.metadata?.data?.properties?.creators?.some(
-            (creator: { address: string }) =>
-              creator.address === configFilter.value
+          !token.metaplexData?.data?.data?.creators?.some(
+            (creator: { address: string, verified: boolean }) =>
+              configFilter.value.includes(creator.address) && creator.verified
           )
         ) {
           filtered = true
