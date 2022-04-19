@@ -62,7 +62,7 @@ const getAllAttributes = (tokens: TokenData[]) => {
   tokens.forEach((tokenData) => {
     if (
       tokenData?.metadata?.data?.attributes &&
-      tokenData?.metadata?.data?.attributes.len > 0
+      tokenData?.metadata?.data?.attributes.length > 0
     ) {
       tokenData?.metadata?.data?.attributes.forEach(
         (attribute: { trait_type: string; value: any }) => {
@@ -114,8 +114,8 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
   const StyledSelectMultiple = styled.div`
     .ant-select-selector {
       min-width: 180px;
-      border: 1px solid ${lighten(0.6, config.colors.main)} !important;
-      background-color: ${lighten(0.3, config.colors.main)} !important;
+      border: 1px solid ${lighten(0.3, config.colors.main)} !important;
+      background-color: ${lighten(0.1, config.colors.main)} !important;
       color: ${config.colors.secondary} !important;
     }
 
@@ -380,6 +380,9 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                     <StyledSelectMultiple className="mb-5">
                       <Select
                         mode="multiple"
+                        dropdownStyle={{
+                          backgroundColor: lighten(0.1, config.colors.main),
+                        }}
                         allowClear
                         style={{ width: '100%', maxWidth: '200px' }}
                         placeholder={traitType}
@@ -389,7 +392,14 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                         }}
                       >
                         {sortedAttributes[traitType]!.map((value) => (
-                          <Option key={value} value={value}>
+                          <Option
+                            key={value}
+                            value={value}
+                            style={{
+                              color: config.colors.secondary,
+                              background: lighten(0.1, config.colors.main),
+                            }}
+                          >
                             {value}
                           </Option>
                         ))}
@@ -409,9 +419,20 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
               setSelectedOrderCategory(e)
             }}
             defaultValue={selectedOrderCategory}
+            dropdownStyle={{
+              backgroundColor: lighten(0.1, config.colors.main),
+            }}
           >
             {allOrderCategories.map((category) => (
-              <Option key={category} value={category}>
+              <Option
+                className="hover:brightness-125"
+                key={category}
+                value={category}
+                style={{
+                  color: config.colors.secondary,
+                  background: lighten(0.1, config.colors.main),
+                }}
+              >
                 {category}
               </Option>
             ))}
