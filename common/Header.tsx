@@ -122,7 +122,6 @@ export const StyledTabs = styled.div<{ show: boolean }>`
     margin: 30px auto;
     padding: 5px;
     position: relative;
-    background-color: ${Colors.tabsBg};
     border-radius: 20px;
     align-items: center;
     gap: 5px;
@@ -136,7 +135,6 @@ export const StyledTabs = styled.div<{ show: boolean }>`
   }
 
   @media (max-width: 1224px) {
-    transition: 0.2s all;
     display: flex;
     height: 40vh;
     width: 100vw;
@@ -296,7 +294,7 @@ export const Header = ({
       <div className="center">
         {tabs && (
           <StyledTabs
-            // show={!isTabletOrMobile || showTabs}
+            style={{ background: lighten(0.1, config.colors.main) }}
             show={showTabs}
           >
             {tabs.map(({ disabled, name, anchor }) => (
