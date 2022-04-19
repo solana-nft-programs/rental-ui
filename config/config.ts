@@ -16,7 +16,10 @@ export type ProjectConfig = {
   logoImage: string
   colors: Colors
   disableListing?: boolean
-  filters: { type: 'creators' | 'symbol' | 'issuer'; value: string }[]
+  filters: {
+    type: 'creators' | 'symbol' | 'issuer'
+    value: string | string[]
+  }[]
   rentalCard: RentalCardConfig
   airdrops?: AirdropMetadata[]
   browse?: {
@@ -241,7 +244,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     filters: [
       {
         type: 'creators',
-        value: 'GdtkQajEADGbfSUEBS5zctYrhemXYQkqnrMiGY7n7vAw',
+        value: ['5grvMeoBqv5ZdHq9JMy5RrxLPNAt1nzc9cpqYWFUwizz'],
       },
       {
         type: 'symbol',
@@ -293,7 +296,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     filters: [
       {
         type: 'creators',
-        value: '9uBX3ASjxWvNBAD1xjbVaKA74mWGZys3RGSF7DdeDD3F',
+        value: ['9uBX3ASjxWvNBAD1xjbVaKA74mWGZys3RGSF7DdeDD3F'],
       },
       {
         type: 'symbol',
@@ -351,7 +354,10 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     filters: [
       {
         type: 'creators',
-        value: '9yz273zB6rQHyptbSpVvC75o4G17NwJrTk4u2ZiNV3tZ',
+        value: [
+          '9yz273zB6rQHyptbSpVvC75o4G17NwJrTk4u2ZiNV3tZ',
+          'BTzGQ6yk1uFN9q9Po3LGSvmZ3dxq8nf8WPwr4D12APxo',
+        ],
       },
       {
         type: 'symbol',
@@ -385,7 +391,10 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     filters: [
       {
         type: 'creators',
-        value: 'Cjaj1MjAvHoo68LwY8iPXSSkYR6xsfDBqEp3ZyeRdoar',
+        value: [
+          '4exgPiVhpromTi8duBsMnscoodAjU1as13s1AXZGsGHP',
+          '5XTbjtKM1whecjXMMdDUz3BzWqEDRuJxTRPX3xTF1qmG',
+        ],
       },
     ],
     rentalCard: {
