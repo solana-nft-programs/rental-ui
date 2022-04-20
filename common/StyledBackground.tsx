@@ -13,7 +13,7 @@ export const StyledBackground = styled.div<BkgProps>`
   position: fixed;
   background: ${(props) =>
     props.colors
-      ? `linear-gradient(-45deg, ${props.colors.main}, ${props.colors.secondary})`
+      ? `linear-gradient(-45deg, ${props.colors.main}, ${props.colors.main})`
       : props.dark
       ? 'linear-gradient(-45deg, #200028, #000000, #002e38)'
       : 'linear-gradient(-45deg, #ee7752, #e7cae4, #23a6d5, #23d5ab)'};

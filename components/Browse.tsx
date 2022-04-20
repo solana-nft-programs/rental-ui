@@ -626,7 +626,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
           ))
         ) : (
           <div className="white flex w-full flex-col items-center justify-center gap-1">
-            <div className="text-white">No outstanding tokens!</div>
+            <div className="text-gray-200">No outstanding tokens!</div>
           </div>
         )}
       </TokensOuter>

@@ -392,9 +392,11 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       {
         type: 'creators',
         value: [
-          '4exgPiVhpromTi8duBsMnscoodAjU1as13s1AXZGsGHP',
+          '4exgPiVhpromTi8duBsMnscoodAjU1as13s1AXZGsGHP', // harvester
+          '3XE8DuYzqZLKr1XqXrvADRTxXWL91KuakqsKfD3cYoLP', // gun
           '5XTbjtKM1whecjXMMdDUz3BzWqEDRuJxTRPX3xTF1qmG',
-          'Ajp7uzkyPUU35pGdkjZd9Gbe4zgDQXterWY8ZzvP4sCk',
+          'Ajp7uzkyPUU35pGdkjZd9Gbe4zgDQXterWY8ZzvP4sCk', // boat
+          '8m4TTZz3RsDVakDSwn7T89GyButxLiMqn2zq7DWfANu7', // cat, cow, dog
         ],
       },
     ],
