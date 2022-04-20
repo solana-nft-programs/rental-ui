@@ -435,7 +435,7 @@ function Claim() {
 
   return (
     <>
-      <Header hideBack />
+      <Header homeButton />
       <div
         style={{
           fontFamily: 'Oswald, sans-serif',
