@@ -30,7 +30,7 @@ const UserTokenData: React.Context<UserTokenDataValues> =
   })
 
 export function TokenAccountsProvider({ children }: { children: ReactChild }) {
-  const { connection } = useEnvironmentCtx()
+  const { connection, environment } = useEnvironmentCtx()
   const [address, setAddress] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [tokenDatas, setTokenDatas] = useState<TokenData[]>([])
@@ -52,7 +52,11 @@ export function TokenAccountsProvider({ children }: { children: ReactChild }) {
     getTokenAccountsWithData(connection, address)
       .then((tokenDatas) => {
         let tokensWithMetadata = tokenDatas.filter((td) => td.metadata)
-        tokensWithMetadata = filterTokens(config.filters, tokensWithMetadata)
+        tokensWithMetadata = filterTokens(
+          environment.label,
+          config.filters,
+          tokensWithMetadata
+        )
         setTokenDatas(tokensWithMetadata)
       })
       .catch((e) => {
@@ -80,7 +84,7 @@ export function TokenAccountsProvider({ children }: { children: ReactChild }) {
     <UserTokenData.Provider
       value={{
         address,
-        tokenDatas: filterTokens(config.filters, tokenDatas),
+        tokenDatas: filterTokens(environment.label, config.filters, tokenDatas),
         loaded,
         refreshTokenAccounts,
         setTokenDatas,

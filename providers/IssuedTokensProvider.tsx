@@ -29,7 +29,7 @@ const IssuedTokensContext: React.Context<IssuedTokensContextValues> =
 
 export function IssuedTokensProvider({ children }: { children: ReactChild }) {
   const { config } = useProjectConfig()
-  const { connection } = useEnvironmentCtx()
+  const { connection, environment } = useEnvironmentCtx()
   const { tokenDatas } = useUserTokenData()
   const [issuedTokens, setIssuedTokens] = useState<TokenData[]>([])
   const [refreshing, setRefreshing] = useState<boolean>(false)
@@ -60,6 +60,7 @@ export function IssuedTokensProvider({ children }: { children: ReactChild }) {
     <IssuedTokensContext.Provider
       value={{
         issuedTokens: filterTokens(
+          environment.label,
           config.filters,
           issuedTokens,
           tryPublicKey(config?.issuer?.publicKeyString)

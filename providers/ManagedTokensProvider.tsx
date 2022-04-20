@@ -27,7 +27,7 @@ const ManagedTokensContext: React.Context<ManagedTokensContextValues> =
   })
 
 export function ManagedTokensProvider({ children }: { children: ReactChild }) {
-  const { connection } = useEnvironmentCtx()
+  const { connection, environment } = useEnvironmentCtx()
   const { address, tokenDatas } = useUserTokenData()
   const [managedTokens, setManagedTokens] = useState<TokenData[]>([])
   const [refreshing, setRefreshing] = useState<boolean>(false)
@@ -48,7 +48,7 @@ export function ManagedTokensProvider({ children }: { children: ReactChild }) {
         new web3.PublicKey(address)
       )
       let tokenDatas = await getTokenDatas(connection, tokenManagerDatas)
-      tokenDatas = filterTokens(config.filters, tokenDatas)
+      tokenDatas = filterTokens(environment.label, config.filters, tokenDatas)
       setManagedTokens(tokenDatas)
     } catch (e) {
       console.log(e)
