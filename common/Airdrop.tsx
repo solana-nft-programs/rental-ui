@@ -2,6 +2,7 @@ import { createMint } from '@cardinal/common'
 import {
   CreateMasterEditionV3,
   CreateMetadataV2,
+  Creator,
   DataV2,
   MasterEdition,
   Metadata,
@@ -14,6 +15,7 @@ import type { Connection } from '@solana/web3.js'
 import { Keypair, LAMPORTS_PER_SOL, Transaction } from '@solana/web3.js'
 import { notify } from 'common/Notification'
 import { asWallet } from 'common/Wallets'
+import type { ProjectConfig } from 'config/config'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useUserTokenData } from 'providers/TokenDataProvider'
@@ -26,8 +28,10 @@ export type AirdropMetadata = { name: string; symbol: string; uri: string }
 export async function airdropNFT(
   connection: Connection,
   wallet: Wallet,
-  airdropMetadatas: AirdropMetadata[]
+  config: ProjectConfig
 ): Promise<string> {
+  const airdropMetadatas = config.airdrops || []
+  const creators = config.filters.find((f) => f.type === 'creators')
   const randInt = Math.round(Math.random() * (airdropMetadatas.length - 1))
   const metadata: AirdropMetadata | undefined = airdropMetadatas[randInt]
   if (!metadata) throw new Error('No configured airdrops found')
@@ -58,9 +62,26 @@ export async function airdropNFT(
         symbol: metadata.symbol,
         uri: metadata.uri,
         sellerFeeBasisPoints: 10,
-        creators: null,
         collection: null,
         uses: null,
+        creators: creators
+          ? (creators.value as string[])
+              .map(
+                (c) =>
+                  new Creator({
+                    address: c,
+                    verified: false,
+                    share: Math.floor((1 / (creators.value.length + 1)) * 100),
+                  })
+              )
+              .concat(
+                new Creator({
+                  address: tokenCreator.publicKey.toString(),
+                  verified: false,
+                  share: Math.floor((1 / (creators.value.length + 1)) * 100),
+                })
+              )
+          : null,
       }),
       updateAuthority: tokenCreator.publicKey,
       mint: masterEditionMint.publicKey,
@@ -120,7 +141,7 @@ export const Airdrop = () => {
       handleClick={async () => {
         if (!wallet.connected) return
         try {
-          await airdropNFT(connection, asWallet(wallet), config.airdrops || [])
+          await airdropNFT(connection, asWallet(wallet), config)
           await refreshTokenAccounts()
         } catch (e) {
           notify({ message: `Airdrop failed: ${e}`, type: 'error' })

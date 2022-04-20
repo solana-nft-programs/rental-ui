@@ -69,6 +69,7 @@ export const getInitialProps = async ({
 }
 
 export const filterTokens = (
+  cluster: string,
   filters: {
     type: 'creators' | 'symbol' | 'issuer'
     value: string | string[]
@@ -83,8 +84,9 @@ export const filterTokens = (
         if (
           configFilter.type === 'creators' &&
           !token.metaplexData?.data?.data?.creators?.some(
-            (creator: { address: string, verified: boolean }) =>
-              configFilter.value.includes(creator.address) && creator.verified
+            (creator) =>
+              configFilter.value.includes(creator.address) &&
+              (cluster === 'devnet' || creator.verified)
           )
         ) {
           filtered = true
