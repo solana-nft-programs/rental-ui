@@ -421,8 +421,8 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     websiteUrl: 'https://metaopsgaming.com/',
     logoImage: './logos/metaops.png',
     colors: {
-      main: '#c63434',
-      secondary: '#7c8c99',
+      main: '#544046',
+      secondary: '#e24040',
     },
     filters: [
       {

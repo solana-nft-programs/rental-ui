@@ -104,10 +104,10 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
       min-width: 180px;
       border: 1px solid ${lighten(0.3, config.colors.main)} !important;
       background-color: ${lighten(0.1, config.colors.main)} !important;
-      color: ${config.colors.secondary} !important;
+      color: #ffffff !important;
     }
     .ant-select-arrow {
-      color: ${config.colors.secondary} !important;
+      color: #ffffff !important;
     }
   `
 
@@ -429,7 +429,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                 key={category}
                 value={category}
                 style={{
-                  color: config.colors.secondary,
+                  color: '#ffffff',
                   background: lighten(0.1, config.colors.main),
                 }}
               >
