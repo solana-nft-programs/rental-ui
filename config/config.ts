@@ -413,6 +413,62 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       },
     },
   },
+  metaops: {
+    name: 'metaops',
+    type: 'Collection',
+    websiteUrl: 'https://metaopsgaming.com/',
+    logoImage: './logos/metaops.png',
+    colors: {
+      main: '#c63434',
+      secondary: '#7c8c99',
+    },
+    filters: [
+      {
+        type: 'creators',
+        value: [
+          'GU2nTh3aWQz4AA8Gaih5AmV8WmKt3Y8P6iwy5t9347h',
+          '8CWFS9nzXtLd3LGE3GaSLYTAEUzkAoUPwmtq32nJFkSZ',
+          'HMduKVo3A19U5EpQdEhPjo9hq9zfZXn8aGVYZp7Vc7fX',
+        ],
+      },
+    ],
+    rentalCard: {
+      invalidators: ['duration'],
+      invalidationOptions: {
+        durationOptions: ['hours', 'days', 'weeks', 'years'],
+        invalidationTypes: ['return'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        setClaimRentalReceipt: true,
+        showClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
+    airdrops: [
+      {
+        name: 'MetaOps PFP #4340',
+        symbol: 'MOPFP',
+        uri: 'https://storage.googleapis.com/fractal-launchpad-public-assets/metaops-assets/jsons/2789.json',
+      },
+      {
+        name: 'MetaOps PFP #5553',
+        symbol: 'MOPFP',
+        uri: 'https://storage.googleapis.com/fractal-launchpad-public-assets/metaops-assets/jsons/3160.json',
+      },
+      {
+        name: 'MetaOps PFP #4699',
+        symbol: 'MOPFP',
+        uri: 'https://storage.googleapis.com/fractal-launchpad-public-assets/metaops-assets/jsons/3102.json',
+      },
+      {
+        name: 'MetaOps PFP #692',
+        symbol: 'MOPFP',
+        uri: 'https://www.magiceden.io/item-details/4r9jMVm5rXdiCLa2oMLkV2ecL3wmmcoFtsMUJJoum38r',
+      },
+    ],
+  },
   ['all-starz']: {
     name: 'all-starz',
     type: 'Guild',
