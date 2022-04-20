@@ -174,9 +174,11 @@ export const StyledTab = styled.div<{
 
 export const Header = ({
   tabs,
+  homeButton,
   loading,
 }: {
   tabs?: { disabled?: boolean; name: string; anchor: string }[]
+  homeButton?: boolean
   loading?: boolean
 }) => {
   const ctx = useEnvironmentCtx()
@@ -285,7 +287,11 @@ export const Header = ({
         {config.name !== 'default' && !host?.includes(config.name) && (
           <div
             className="mr-2 flex cursor-pointer items-center justify-center text-lg text-white transition-all duration-200 hover:scale-[1.02]"
-            onClick={() => setProjectConfig('default')}
+            onClick={() =>
+              homeButton
+                ? router.push(`/${location.search}#browse`)
+                : setProjectConfig('default')
+            }
           >
             <IoChevronBack size={26} />
             Back
