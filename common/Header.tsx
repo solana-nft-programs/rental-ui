@@ -174,9 +174,11 @@ export const StyledTab = styled.div<{
 
 export const Header = ({
   tabs,
+  hideBack,
   loading,
 }: {
   tabs?: { disabled?: boolean; name: string; anchor: string }[]
+  hideBack?: boolean
   loading?: boolean
 }) => {
   const ctx = useEnvironmentCtx()
@@ -282,15 +284,17 @@ export const Header = ({
             </>
           )}
         </div>
-        {config.name !== 'default' && !host?.includes(config.name) && (
-          <div
-            className="mr-2 flex cursor-pointer items-center justify-center text-lg text-white transition-all duration-200 hover:scale-[1.02]"
-            onClick={() => setProjectConfig('default')}
-          >
-            <IoChevronBack size={26} />
-            Back
-          </div>
-        )}
+        {config.name !== 'default' &&
+          !host?.includes(config.name) &&
+          !hideBack && (
+            <div
+              className="mr-2 flex cursor-pointer items-center justify-center text-lg text-white transition-all duration-200 hover:scale-[1.02]"
+              onClick={() => setProjectConfig('default')}
+            >
+              <IoChevronBack size={26} />
+              Back
+            </div>
+          )}
         {wallet.connected &&
           ctx.environment.label === 'devnet' &&
           !isTabletOrMobile && (

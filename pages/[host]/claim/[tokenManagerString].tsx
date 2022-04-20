@@ -17,6 +17,7 @@ import { executeTransaction } from 'common/Transactions'
 import { pubKeyUrl, shortPubKey } from 'common/utils'
 import { asWallet } from 'common/Wallets'
 import { useRouter } from 'next/router'
+import { transparentize } from 'polished'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { PAYMENT_MINTS, WRAPPED_SOL_MINT } from 'providers/PaymentMintsProvider'
 import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
@@ -29,17 +30,6 @@ type Hideable = {
   visible?: boolean
 }
 
-const VerificationStepsOuter = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding-top: calc(50vh - 250px);
-  padding-bottom: calc(50vh - 250px);
-  width: 90%;
-  margin: 0px auto;
-  font-weight: 200;
-  font-family: Oswald, sans-serif;
-`
-
 enum VerificationStatus {
   WARNING,
   ERROR,
@@ -49,6 +39,7 @@ enum VerificationStatus {
 interface Verifiable extends Hideable {
   status?: VerificationStatus
   scanning?: boolean
+  colors?: { main: string; secondary: string }
 }
 
 const VerificationStep = styled.div<Verifiable>`
@@ -67,7 +58,11 @@ const VerificationStep = styled.div<Verifiable>`
         case VerificationStatus.ERROR:
           return '0 0 30px 20px rgba(255, 0, 50, 0.3)'
         default:
-          return '0 0 80px 50px rgba(255, 255, 255, 0.3)'
+          return `0 0 80px 50px ${
+            props.colors?.secondary
+              ? transparentize(0.5, props.colors.secondary)
+              : 'rgba(255, 255, 255, 0.3)'
+          }`
       }
     }
   }};
@@ -440,9 +435,20 @@ function Claim() {
 
   return (
     <>
-      <Header />
-      <VerificationStepsOuter>
-        <VerificationStep visible={true} status={tokenDataStatus?.status}>
+      <Header hideBack />
+      <div
+        style={{
+          fontFamily: 'Oswald, sans-serif',
+          fontWeight: '200',
+          paddingTop: 'calc(50vh - 300px)',
+        }}
+        className="flex flex-col"
+      >
+        <VerificationStep
+          visible={true}
+          status={tokenDataStatus?.status}
+          colors={config.colors}
+        >
           <div className="header">
             <div className="step-name uppercase">Claim Asset</div>
             {tokenManagerId && tokenData?.tokenManager?.parsed.mint && (
@@ -595,7 +601,7 @@ function Claim() {
         >
           {error}
         </div>
-      </VerificationStepsOuter>
+      </div>
       <StyledBackground colors={config.colors} />
     </>
   )
