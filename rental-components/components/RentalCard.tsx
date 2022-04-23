@@ -19,6 +19,7 @@ import { notify } from 'common/Notification'
 import { executeTransaction } from 'common/Transactions'
 import { fmtMintAmount } from 'common/units'
 import {
+  capitalizeFirstLetter,
   getQueryParam,
   longDateString,
   pubKeyUrl,
@@ -92,10 +93,6 @@ const formatError = (error: string) => {
   return error
 }
 
-const capitalizeFirstLetter = (value: string) => {
-  return value[0] ? value[0].toUpperCase() + value.slice(1) : ''
-}
-
 export type InvalidatorOption =
   | 'usages'
   | 'expiration'
@@ -140,13 +137,21 @@ export type DurationOption =
   | 'weeks'
   | 'months'
   | 'years'
-const DURATION_DATA: { [key in DurationOption]: number } = {
+export const DURATION_DATA: { [key in DurationOption]: number } = {
   minutes: 60,
   hours: 3600,
   days: 86400,
   weeks: 604800,
   months: 2419200,
   years: 31449600,
+}
+export const SECONDS_TO_DURATION: { [key in number]: DurationOption } = {
+  60: 'minutes',
+  3600: 'hours',
+  86400: 'days',
+  604800: 'weeks',
+  2419200: 'months',
+  31449600: 'years',
 }
 
 export type RentalCardConfig = {

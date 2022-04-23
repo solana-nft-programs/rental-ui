@@ -15,7 +15,7 @@ import { NFTPlaceholder } from 'common/NFTPlaceholder'
 import { notify } from 'common/Notification'
 import { StyledTag, Tag } from 'common/Tags'
 import { executeTransaction } from 'common/Transactions'
-import { getMintDecimalAmount } from 'common/units'
+import { fmtMintAmount, getMintDecimalAmount } from 'common/units'
 import { pubKeyUrl, shortPubKey } from 'common/utils'
 import { asWallet } from 'common/Wallets'
 import type { ProjectConfig } from 'config/config'
@@ -31,6 +31,10 @@ import { getLink } from 'providers/ProjectConfigProvider'
 import React, { useState } from 'react'
 import { FaLink } from 'react-icons/fa'
 import { AsyncButton, Button } from 'rental-components/common/Button'
+import {
+  DURATION_DATA,
+} from 'rental-components/components/RentalCard'
+import { useRentalRateModal } from 'rental-components/RentalRateModalProvider'
 
 const { Option } = Select
 
@@ -97,6 +101,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
     [filterName: string]: any[]
   }>({})
   const [showFilters, setShowFilters] = useState<boolean>(false)
+  const rentalRateModal = useRentalRateModal()
 
   const StyledSelect = styled.div`
     .ant-select-selector {
@@ -339,6 +344,45 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
     setSelectedFilters(filters)
   }
 
+  const getTokenRentalRate = (tokenData: TokenData) => {
+    const rateOption = config.marketplaceRate ?? 'weeks'
+    const rateSeconds = new BN(DURATION_DATA[rateOption])
+    const {
+      extensionPaymentAmount,
+      extensionPaymentMint,
+      extensionDurationSeconds,
+    } = tokenData.timeInvalidator?.parsed || {
+      extensionPaymentAmount: null,
+      extensionPaymentMint: null,
+      extensionDurationOption: null,
+    }
+
+    if (
+      !extensionPaymentAmount ||
+      !extensionPaymentMint ||
+      !extensionDurationSeconds
+    ) {
+      return null
+    }
+
+    const marketplaceRate =
+      (extensionPaymentAmount.toNumber() /
+        extensionDurationSeconds.toNumber()) *
+      rateSeconds.toNumber()
+
+    try {
+      return `${fmtMintAmount(
+        paymentMintInfos[extensionPaymentMint.toString()],
+        new BN(marketplaceRate)
+      )} ${getSymbolFromTokenData(tokenData)} / ${rateOption?.substring(
+        0,
+        rateOption.length - 1
+      )}`
+    } catch {
+      return null
+    }
+  }
+
   const sortedAttributes = getAllAttributes(issuedTokens)
   return (
     <div className="container mx-auto">
@@ -524,21 +568,28 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                             className="mr-1 inline-block flex-none"
                             handleClick={async () => {
                               if (wallet.publicKey) {
-                                await handleClaim(tokenData)
+                                if (
+                                  tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber() ===
+                                  0
+                                ) {
+                                  rentalRateModal.show(
+                                    asWallet(wallet),
+                                    connection,
+                                    environment.label,
+                                    tokenData
+                                  )
+                                } else {
+                                  await handleClaim(tokenData)
+                                }
                               }
                             }}
                           >
                             {tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber() ===
                             0 ? (
-                              <>
-                                Rate: {' '}
-                                {(tokenData.claimApprover?.parsed?.paymentAmount.toNumber() ??
-                                  0) / 1000000000}{' '}
-                                {getSymbolFromTokenData(tokenData)}{' '}
-                              </>
+                              <>{getTokenRentalRate(tokenData)} </>
                             ) : (
                               <>
-                                Claim{' '}{tokenData.timeInvalidator?.parsed.extensionDurationSeconds?.toNumber()}
+                                Claim{' '}
                                 {(tokenData.claimApprover?.parsed?.paymentAmount.toNumber() ??
                                   0) / 1000000000}{' '}
                                 {getSymbolFromTokenData(tokenData)}{' '}

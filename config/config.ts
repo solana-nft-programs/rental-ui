@@ -1,5 +1,8 @@
 import type { AirdropMetadata } from 'common/Airdrop'
-import type { RentalCardConfig } from 'rental-components/components/RentalCard'
+import type {
+  DurationOption,
+  RentalCardConfig,
+} from 'rental-components/components/RentalCard'
 
 export type Colors = {
   main: string
@@ -25,6 +28,7 @@ export type ProjectConfig = {
   browse?: {
     hideFilters?: boolean
   }
+  marketplaceRate?: DurationOption
 }
 
 export const projectConfigs: { [key: string]: ProjectConfig } = {
@@ -255,10 +259,10 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidators: ['rate'],
       invalidationOptions: {
         freezeRentalDuration: {
-          value: "1",
-          durationOption: "weeks"
+          value: '1',
+          durationOption: 'days',
         },
-        visibilities: ['public'],        
+        visibilities: ['public'],
         durationOptions: ['minutes', 'hours', 'days', 'weeks'],
         invalidationTypes: ['return'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
@@ -287,6 +291,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         uri: 'https://arweave.net/6ZcTxyREtg0WsOSGSBq-CSyQ3DPlU1k4R_A7mrgehRE',
       },
     ],
+    marketplaceRate: 'weeks',
   },
   monke: {
     name: 'monke',

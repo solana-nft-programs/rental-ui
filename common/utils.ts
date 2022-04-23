@@ -109,3 +109,7 @@ export const camelCase = (str: string) => {
     .map((x) => x.charAt(0).toUpperCase() + x.slice(1))
     .join('')
 }
+
+export const capitalizeFirstLetter = (value: string) => {
+  return value[0] ? value[0].toUpperCase() + value.slice(1) : ''
+}

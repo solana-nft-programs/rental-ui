@@ -22,6 +22,7 @@ import { UTCNowProvider } from 'providers/UTCNowProvider'
 import { QRCodeProvider } from 'rental-components/QRCodeProvider'
 import { RentalExtensionModalProvider } from 'rental-components/RentalExtensionModalProvider'
 import { RentalModalProvider } from 'rental-components/RentalModalProvider'
+import { RentalRateModalProvider } from 'rental-components/RentalRateModalProvider'
 
 require('@solana/wallet-adapter-react-ui/styles.css')
 
@@ -42,9 +43,11 @@ const App = ({
                     <IssuedTokensProvider>
                       <RentalModalProvider>
                         <RentalExtensionModalProvider>
-                          <WalletModalProvider>
-                            <Component {...pageProps} />
-                          </WalletModalProvider>
+                          <RentalRateModalProvider>
+                            <WalletModalProvider>
+                              <Component {...pageProps} />
+                            </WalletModalProvider>
+                          </RentalRateModalProvider>
                         </RentalExtensionModalProvider>
                       </RentalModalProvider>
                     </IssuedTokensProvider>
