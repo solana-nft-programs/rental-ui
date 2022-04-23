@@ -477,7 +477,7 @@ export const RentalRateCard = ({
         <ButtonWithFooter
           loading={loading}
           complete={false}          
-          disabled={exceedMaxExpiration() || paymentAmount === 0}
+          disabled={exceedMaxExpiration() || (paymentAmount === 0 && extensionPaymentAmount.toNumber() !== 0)}
           message={
             !exceedMaxExpiration() ? (
               extensionSuccess && !error ? (
