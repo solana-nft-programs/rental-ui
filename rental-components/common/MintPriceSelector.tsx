@@ -10,6 +10,7 @@ const { Option } = Select
 export const MintPriceSelector = ({
   price,
   mint,
+  paymentMintData,
   disabled,
   mintDisabled,
   handlePrice,
@@ -17,6 +18,10 @@ export const MintPriceSelector = ({
 }: {
   price: number
   mint: string
+  paymentMintData: {
+    mint: string
+    symbol: string
+  }[]
   disabled?: boolean
   mintDisabled?: boolean
   handlePrice: (p: number) => void
@@ -46,10 +51,11 @@ export const MintPriceSelector = ({
       />
       <Select
         onChange={(e) => handleMint(e)}
-        defaultValue={PAYMENT_MINTS[0]!.mint}
+        defaultValue={paymentMintData[0]?.symbol ?? PAYMENT_MINTS[0]!.symbol}
         disabled={disabled || mintDisabled}
+        showArrow={!mintDisabled}
       >
-        {PAYMENT_MINTS.map(
+        {(paymentMintData ?? PAYMENT_MINTS).map(
           ({ mint, symbol }) =>
             paymentMintInfos[mint] && (
               <Option key={mint} value={mint}>

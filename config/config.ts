@@ -252,9 +252,13 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       },
     ],
     rentalCard: {
-      invalidators: ['duration'],
+      invalidators: ['rate'],
       invalidationOptions: {
-        visibilities: ['public'],
+        freezeRentalDuration: {
+          value: "1",
+          durationOption: "weeks"
+        },
+        visibilities: ['public'],        
         durationOptions: ['minutes', 'hours', 'days', 'weeks'],
         invalidationTypes: ['return'],
         paymentMints: ['So11111111111111111111111111111111111111112'],

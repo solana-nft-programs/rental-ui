@@ -14,7 +14,10 @@ export const PAYMENT_MINTS = [
     mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
     symbol: 'USDC',
   },
-  { mint: '2tWC4JAdL4AxEFJySziYJfsAnW2MHKRo98vbAPiRDSk8', symbol: 'USDC' },
+  {
+    mint: '2tWC4JAdL4AxEFJySziYJfsAnW2MHKRo98vbAPiRDSk8',
+    symbol: 'USDC',
+  },
 ]
 
 export const WRAPPED_SOL_MINT = 'So11111111111111111111111111111111111111112'

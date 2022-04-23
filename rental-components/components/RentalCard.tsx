@@ -25,6 +25,7 @@ import {
   shortDateString,
   shortPubKey,
 } from 'common/utils'
+import moment from 'moment'
 import { usePaymentMints } from 'providers/PaymentMintsProvider'
 import { getLink } from 'providers/ProjectConfigProvider'
 import { useUserTokenData } from 'providers/TokenDataProvider'
@@ -95,7 +96,12 @@ const capitalizeFirstLetter = (value: string) => {
   return value[0] ? value[0].toUpperCase() + value.slice(1) : ''
 }
 
-export type InvalidatorOption = 'usages' | 'expiration' | 'duration' | 'manual'
+export type InvalidatorOption =
+  | 'usages'
+  | 'expiration'
+  | 'duration'
+  | 'manual'
+  | 'rate'
 
 const VISIBILITY_OPTIONS = ['public', 'private'] as const
 export type VisibilityOption = typeof VISIBILITY_OPTIONS[number]
@@ -149,7 +155,7 @@ export type RentalCardConfig = {
     durationOptions?: DurationOption[]
     invalidationTypes?: InvalidationTypeOption[]
     paymentMints?: string[]
-    freezeRentalDuration?: { durationOption: DurationOption; value: string }
+    freezeRentalDuration?: { durationOption?: DurationOption; value?: string }
     visibilities?: VisibilityOption[]
     setClaimRentalReceipt?: boolean
     showClaimRentalReceipt?: boolean
@@ -242,6 +248,8 @@ export const RentalCard = ({
       )
     : PAYMENT_MINTS
 
+  // console.log(paymentMintData)
+
   const showClaimRentalReceipt =
     rentalCardConfig.invalidationOptions?.showClaimRentalReceipt
 
@@ -278,7 +286,12 @@ export const RentalCard = ({
     useState<DurationOption>(defaultDurationOption)
   const [extensionMaxExpiration, setExtensionMaxExpiration] = useState<
     number | null
-  >(null)
+  >(
+    rentalCardConfig.invalidationOptions?.maxDurationAllowed?.value
+      ? Date.now() / 1000 +
+          rentalCardConfig.invalidationOptions?.maxDurationAllowed?.value
+      : null
+  )
   const [disablePartialExtension, setDisablePartialExtension] = useState<
     boolean | null
   >(null)
@@ -300,7 +313,8 @@ export const RentalCard = ({
   >(rentalCardConfig.invalidators[0] ? [rentalCardConfig.invalidators[0]] : [])
   const [showAdditionalOptions, setShowAdditionalOptions] = useState(false)
   const [showExtendDuration, setShowExtendDuration] = useState(false)
-  const [confirmRentalTerms, setConfirmRentalTerms] = useState(false)
+  const [confirmRentalTerms, setConfirmRentalTerms] = useState(true)
+  const rateRental = selectedInvalidators.includes('rate')
 
   // reset
   useEffect(() => {
@@ -318,15 +332,41 @@ export const RentalCard = ({
     if (!selectedInvalidators.includes('usages')) {
       setTotalUsages(null)
     }
+    if (selectedInvalidators.includes('rate')) {
+      setExtensionDurationAmount(
+        parseInt(
+          rentalCardConfig.invalidationOptions?.freezeRentalDuration?.value ??
+            '0'
+        )
+      )
+      setDurationAmount(0)
+    }
   }, [selectedInvalidators])
 
   const hasAllExtensionProperties = (): boolean => {
-    return extensionPaymentAmount &&
+    console.log(
+      extensionPaymentAmount,
+      extensionDurationAmount,
+      extensionPaymentMint,
+      extensionDurationOption
+    )
+    return (extensionPaymentAmount || extensionPaymentAmount === 0) &&
       extensionDurationAmount &&
       extensionPaymentMint &&
       extensionDurationOption
       ? true
       : false
+  }
+
+  const extensionRate = () => {
+    return `${fmtMintAmount(
+      paymentMintInfos[extensionPaymentMint.toString()],
+      new anchor.BN(extensionPaymentAmount)
+    )} ${
+      paymentMintData.find((obj) => obj.mint === extensionPaymentMint)?.symbol
+    } / ${extensionDurationOption
+      ?.toLowerCase()
+      .substring(0, extensionDurationOption.length - 1)}`
   }
 
   const handleRental = async () => {
@@ -380,11 +420,11 @@ export const RentalCard = ({
               }
             : undefined,
         timeInvalidation:
-          expiration || (durationAmount && durationOption)
+          expiration || (durationAmount && durationOption) || rateRental
             ? {
                 expiration: expiration || undefined,
                 durationSeconds:
-                  durationAmount && durationOption
+                  (durationAmount || durationAmount === 0) && durationOption
                     ? durationAmount * (durationData[durationOption] || 0)
                     : undefined,
                 maxExpiration: extensionMaxExpiration
@@ -418,6 +458,8 @@ export const RentalCard = ({
           : undefined,
         receiptOptions: claimRentalReceipt ? { receiptMintKeypair } : undefined,
       }
+
+      console.log(issueParams)
 
       const [transaction, tokenManagerId, otpKeypair] = await issueToken(
         connection,
@@ -512,6 +554,35 @@ export const RentalCard = ({
               {rentalCardConfig.invalidators.map(
                 (invalidator) =>
                   ({
+                    rate: (
+                      <div
+                        className="mr-4 flex cursor-pointer"
+                        onClick={() => {
+                          if (selectedInvalidators.includes('rate')) {
+                            setSelectedInvalidators(
+                              selectedInvalidators.filter((o) => o !== 'rate')
+                            )
+                          } else {
+                            setSelectedInvalidators([
+                              ...selectedInvalidators.filter(
+                                (o) =>
+                                  o !== 'manual' &&
+                                  o !== 'expiration' &&
+                                  o !== 'duration'
+                              ),
+                              'rate',
+                            ])
+                          }
+                        }}
+                      >
+                        <input
+                          className="my-auto mr-1 cursor-pointer"
+                          type="checkbox"
+                          checked={selectedInvalidators.includes('rate')}
+                        />
+                        <span className="">Rate</span>
+                      </div>
+                    ),
                     duration: (
                       <div
                         className="mr-4 flex cursor-pointer"
@@ -620,22 +691,95 @@ export const RentalCard = ({
             </div>
           )}
           <div className="grid grid-cols-2 gap-4">
-            {!selectedInvalidators.includes('manual') && (
-              <StepDetail
-                icon={<ImPriceTags />}
-                title="Rental Price"
-                description={
-                  <MintPriceSelector
-                    disabled={visibility === 'private'}
-                    price={price}
-                    mint={paymentMint}
-                    mintDisabled={paymentMintData.length === 1}
-                    handlePrice={setPrice}
-                    handleMint={setPaymentMint}
-                  />
-                }
-              />
+            {selectedInvalidators.includes('rate') && (
+              <>
+                <StepDetail
+                  icon={<ImPriceTags />}
+                  title="Rental Rate"
+                  description={
+                    <div className="flex">
+                      <div className="mr-2">
+                        <MintPriceSelector
+                          disabled={visibility === 'private'}
+                          price={extensionPaymentAmount}
+                          mint={extensionPaymentMint}
+                          paymentMintData={paymentMintData}
+                          mintDisabled={paymentMintData.length === 1}
+                          handlePrice={setExtensionPaymentAmount}
+                          handleMint={setExtensionPaymentMint}
+                        />
+                      </div>
+                      <div>
+                        <Select
+                          className="w-max rounded-[4px]"
+                          onChange={(e) => setDurationOption(e)}
+                          value={durationOption}
+                          defaultValue={defaultDurationOption}
+                          disabled={
+                            rentalCardConfig.invalidationOptions
+                              ?.freezeRentalDuration
+                              ? true
+                              : false
+                          }
+                        >
+                          {Object.keys(durationData).map((option) => (
+                            <Option key={option} value={option}>
+                              {capitalizeFirstLetter(option).substring(
+                                0,
+                                option.length - 1
+                              )}
+                            </Option>
+                          ))}
+                        </Select>{' '}
+                      </div>
+                    </div>
+                  }
+                />
+                <StepDetail
+                  icon={<BiTimer />}
+                  title="Max Rental Duration"
+                  description={
+                    <div>
+                      <DatePicker
+                        className="rounded-[4px]"
+                        style={{
+                          zIndex: 99999,
+                        }}
+                        defaultValue={
+                          extensionMaxExpiration
+                            ? moment(extensionMaxExpiration * 1000)
+                            : undefined
+                        }
+                        showTime
+                        onChange={(e) =>
+                          setExtensionMaxExpiration(
+                            e ? e.valueOf() / 1000 : null
+                          )
+                        }
+                      />
+                    </div>
+                  }
+                />
+              </>
             )}
+            {!selectedInvalidators.includes('manual') &&
+              !selectedInvalidators.includes('rate') && (
+                <StepDetail
+                  icon={<ImPriceTags />}
+                  title="Rental Price"
+                  description={
+                    <MintPriceSelector
+                      disabled={visibility === 'private'}
+                      price={price}
+                      mint={paymentMint}
+                      mintDisabled={paymentMintData.length === 1}
+                      paymentMintData={paymentMintData}
+                      handlePrice={setPrice}
+                      handleMint={setPaymentMint}
+                    />
+                  }
+                />
+              )}
             {selectedInvalidators.includes('manual') && (
               <StepDetail
                 icon={<GiRobotGrab />}
@@ -783,6 +927,7 @@ export const RentalCard = ({
                               price={extensionPaymentAmount}
                               mint={extensionPaymentMint}
                               mintDisabled={paymentMintData.length === 1}
+                              paymentMintData={paymentMintData}
                               handlePrice={setExtensionPaymentAmount}
                               handleMint={setExtensionPaymentMint}
                             />
@@ -1080,6 +1225,14 @@ export const RentalCard = ({
                               }{' '}
                               revokes it
                             </>
+                          ) : selectedInvalidators.includes('rate') ? (
+                            `at the rate of  ${extensionRate()} ${
+                              extensionMaxExpiration
+                                ? ` up until ${new Date(
+                                    extensionMaxExpiration * 1000
+                                  ).toLocaleString('en-US')}.`
+                                : '.'
+                            }`
                           ) : (
                             'forever.'
                           )}
@@ -1114,18 +1267,25 @@ export const RentalCard = ({
                               } `
                             : null}
                           <div className="mt-2 flex gap-3">
-                            <p>
-                              <b>Price: </b>{' '}
-                              {fmtMintAmount(
-                                paymentMintInfos[paymentMint.toString()],
-                                new anchor.BN(price)
-                              )}{' '}
-                              {
-                                paymentMintData.find(
-                                  (obj) => obj.mint === extensionPaymentMint
-                                )?.symbol
-                              }
-                            </p>
+                            {selectedInvalidators.includes('rate') ? (
+                              <p>
+                                <b>Rate: </b> {extensionRate()}
+                              </p>
+                            ) : (
+                              <p>
+                                <b>Price: </b>{' '}
+                                {fmtMintAmount(
+                                  paymentMintInfos[paymentMint.toString()],
+                                  new anchor.BN(price)
+                                )}{' '}
+                                {
+                                  paymentMintData.find(
+                                    (obj) => obj.mint === extensionPaymentMint
+                                  )?.symbol
+                                }
+                              </p>
+                            )}
+
                             {durationAmount && durationOption ? (
                               <p>
                                 <b>Duration: </b> {durationAmount}{' '}

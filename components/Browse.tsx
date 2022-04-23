@@ -528,12 +528,22 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                               }
                             }}
                           >
-                            <>
-                              Claim{' '}
-                              {(tokenData.claimApprover?.parsed?.paymentAmount.toNumber() ??
-                                0) / 1000000000}{' '}
-                              {getSymbolFromTokenData(tokenData)}{' '}
-                            </>
+                            {tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber() ===
+                            0 ? (
+                              <>
+                                Rate: {' '}
+                                {(tokenData.claimApprover?.parsed?.paymentAmount.toNumber() ??
+                                  0) / 1000000000}{' '}
+                                {getSymbolFromTokenData(tokenData)}{' '}
+                              </>
+                            ) : (
+                              <>
+                                Claim{' '}{tokenData.timeInvalidator?.parsed.extensionDurationSeconds?.toNumber()}
+                                {(tokenData.claimApprover?.parsed?.paymentAmount.toNumber() ??
+                                  0) / 1000000000}{' '}
+                                {getSymbolFromTokenData(tokenData)}{' '}
+                              </>
+                            )}
                           </AsyncButton>
                           <Button
                             variant="tertiary"
