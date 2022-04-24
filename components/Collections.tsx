@@ -39,7 +39,7 @@ export const Collections = ({ setTab }: { setTab: (s: string) => void }) => {
               {configs.map((config) => (
                 <div
                   key={config.name}
-                  className={`flex h-[200px] min-w-[200px] cursor-pointer items-center justify-center rounded-xl bg-[#282A2E] p-5 transition-all duration-200 hover:scale-[1.02]`}
+                  className={`flex h-[200px] min-w-[200px] cursor-pointer items-center justify-center rounded-xl bg-[#282A2E] p-10 transition-all duration-200 hover:scale-[1.02]`}
                   onClick={() => {
                     setProjectConfig(config.name)
                   }}

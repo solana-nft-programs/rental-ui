@@ -475,8 +475,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     name: 'all-starz',
     type: 'Guild',
     websiteUrl: 'https://all-starz.gitbook.io/all-starz/',
-    logoImage:
-      'https://pbs.twimg.com/profile_images/1514813811571630085/18p6C0YJ_400x400.jpg',
+    logoImage: './logos/all-starz.jpg',
     colors: {
       main: '#000',
       secondary: '#f71202',
