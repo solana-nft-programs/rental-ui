@@ -111,7 +111,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
   const [selectedFilters, setSelectedFilters] = useState<{
     [filterName: string]: any[]
   }>({})
-  const [showFilters, setShowFilters] = useState<boolean>(false)
+  const [showFilters, setShowFilters] = useState<boolean>(true)
   const [maxDurationBounds, setMaxDurationBounds] = useState<[number, number]>([
     0,
     Infinity,
