@@ -5,11 +5,11 @@ import styled from '@emotion/styled'
 import { BN } from '@project-serum/anchor'
 import type * as splToken from '@solana/spl-token'
 import { useWallet } from '@solana/wallet-adapter-react'
-import { PublicKey } from '@solana/web3.js'
-import { Connection, Transaction } from '@solana/web3.js'
+import { Connection, PublicKey, Transaction } from '@solana/web3.js'
 import { Select, Slider } from 'antd'
 import type { TokenData } from 'api/api'
 import { withWrapSol } from 'api/wrappedSol'
+import { BigNumber } from 'bignumber.js'
 import { NFT, TokensOuter } from 'common/NFT'
 import { NFTPlaceholder } from 'common/NFTPlaceholder'
 import { notify } from 'common/Notification'
@@ -180,17 +180,24 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
   `
 
   const getPriceFromTokenData = (tokenData: TokenData) => {
-    if (tokenData.claimApprover?.parsed && tokenData.claimApprover?.parsed?.paymentMint.toString()) {
-      const mintInfo = paymentMintInfos[
-        tokenData.claimApprover?.parsed?.paymentMint.toString()
-      ]
+    if (
+      tokenData.claimApprover?.parsed &&
+      tokenData.claimApprover?.parsed?.paymentMint.toString()
+    ) {
+      const mintInfo =
+        paymentMintInfos[
+          tokenData.claimApprover?.parsed?.paymentMint.toString()
+        ]
       if (mintInfo) {
-        return getMintDecimalAmount(mintInfo, tokenData.claimApprover?.parsed?.paymentAmount)
+        return getMintDecimalAmount(
+          mintInfo,
+          tokenData.claimApprover?.parsed?.paymentAmount
+        )
       } else {
-        return 0
-      }      
+        return new BigNumber(0)
+      }
     } else {
-      return 0
+      return new BigNumber(0)
     }
   }
 
@@ -271,12 +278,12 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
     tokenData: TokenData,
     rate: number = globalRate
   ) => {
-    let price = 0
+    let price: BigNumber | undefined = new BigNumber(0)
     if (tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber() === 0) {
       return getTokenRentalRate(tokenData)?.rate ?? 0
     } else {
       price = getPriceFromTokenData(tokenData)
-      if (price === 0) return 0
+      if (price.toNumber() === 0) return 0
       let duration = 0
       if (tokenData.timeInvalidator?.parsed.durationSeconds) {
         duration = tokenData.timeInvalidator.parsed.durationSeconds.toNumber()
@@ -286,7 +293,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
           tokenData.timeInvalidator.parsed.expiration.toNumber() -
           Date.now() / 1000
       }
-      return (price / duration) * rate
+      return (price.toNumber() / duration) * rate
     }
   }
 
@@ -482,8 +489,8 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
           tokenData.timeInvalidator?.parsed && onlyRateTokens(tokenData)
       )
       .map((tokenData) => {
-        let price = 0,
-          duration = 0
+        let price = new BigNumber(0)
+        let duration = 0
 
         if (tokenData.timeInvalidator?.parsed) {
           if (
@@ -499,7 +506,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                   tokenData.timeInvalidator?.parsed?.extensionPaymentMint.toString()
                 ]!,
                 tokenData.timeInvalidator?.parsed?.extensionPaymentAmount
-              ).toNumber()
+              )
               duration =
                 tokenData.timeInvalidator.parsed.extensionDurationSeconds.toNumber()
             }
@@ -524,7 +531,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
             }
           }
         }
-        return (price / duration) * globalRate
+        return (price.toNumber() / duration) * globalRate
       })
     if (rentalPrices.length === 0) return 0
     return Math.min(...rentalPrices)
@@ -864,7 +871,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                           </div>
                         ),
                         [TokenManagerState.Claimed]: (
-                          <div className="flex w-full justify-between text-left">
+                          <div className="flex w-full justify-between">
                             <StyledTag>
                               <div className=" w-full">
                                 <Tag
@@ -892,46 +899,47 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                                   />{' '}
                                 </Tag>
                               ) : null}
+                            </StyledTag>
 
-                              {((wallet.publicKey &&
-                                tokenData?.tokenManager?.parsed.invalidators &&
-                                tokenData?.tokenManager?.parsed.invalidators
-                                  .map((i: PublicKey) => i.toString())
-                                  .includes(wallet.publicKey?.toString())) ||
-                                (tokenData.timeInvalidator &&
-                                  tokenData.timeInvalidator.parsed.expiration &&
-                                  tokenData.timeInvalidator.parsed.expiration.lte(
-                                    new BN(Date.now() / 1000)
-                                  )) ||
-                                (tokenData.useInvalidator &&
-                                  tokenData.useInvalidator.parsed.maxUsages &&
-                                  tokenData.useInvalidator.parsed.usages.gte(
-                                    tokenData.useInvalidator.parsed.maxUsages
-                                  ))) && (
-                                <Button
-                                  variant="primary"
-                                  disabled={!wallet.connected}
-                                  onClick={async () => {
-                                    tokenData?.tokenManager &&
-                                      executeTransaction(
+                            {((wallet.publicKey &&
+                              tokenData?.tokenManager?.parsed.invalidators &&
+                              tokenData?.tokenManager?.parsed.invalidators
+                                .map((i: PublicKey) => i.toString())
+                                .includes(wallet.publicKey?.toString())) ||
+                              (tokenData.timeInvalidator &&
+                                tokenData.timeInvalidator.parsed.expiration &&
+                                tokenData.timeInvalidator.parsed.expiration.lte(
+                                  new BN(Date.now() / 1000)
+                                )) ||
+                              (tokenData.useInvalidator &&
+                                tokenData.useInvalidator.parsed.maxUsages &&
+                                tokenData.useInvalidator.parsed.usages.gte(
+                                  tokenData.useInvalidator.parsed.maxUsages
+                                ))) && (
+                              <Button
+                                variant="primary"
+                                disabled={!wallet.connected}
+                                className="mr-1 inline-block flex-none"
+                                onClick={async () => {
+                                  tokenData?.tokenManager &&
+                                    executeTransaction(
+                                      connection,
+                                      asWallet(wallet),
+                                      await invalidate(
                                         connection,
                                         asWallet(wallet),
-                                        await invalidate(
-                                          connection,
-                                          asWallet(wallet),
-                                          tokenData?.tokenManager?.parsed.mint
-                                        ),
-                                        {
-                                          callback: refreshIssuedTokens,
-                                          silent: true,
-                                        }
-                                      )
-                                  }}
-                                >
-                                  Revoke
-                                </Button>
-                              )}
-                            </StyledTag>
+                                        tokenData?.tokenManager?.parsed.mint
+                                      ),
+                                      {
+                                        callback: refreshIssuedTokens,
+                                        silent: true,
+                                      }
+                                    )
+                                }}
+                              >
+                                Revoke
+                              </Button>
+                            )}
                           </div>
                         ),
                         [TokenManagerState.Invalidated]: (
