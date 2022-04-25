@@ -674,10 +674,10 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
           </StyledSelect>
         </div>
       </div>
-      <div className="flex-col lg:flex lg:flex-row">
-        <div className="mr-10 rounded-lg  text-left lg:w-1/5 lg:pr-4 xl:px-10 ">
+      <div className="mx-5 flex lg:flex lg:flex-row">
+        <div className="mr-10 w-[200px] rounded-lg text-left">
           <div>
-            <div className="mx-auto max-w-[250px] text-white">
+            <div className="text-white">
               <p className="mb-5 text-lg text-gray-300">Duration Range:</p>
               <Slider
                 onChange={(bounds) =>
@@ -699,12 +699,12 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
               <div className="mx-auto mt-10">
                 <div
                   onClick={() => setShowFilters(!showFilters)}
-                  className="w-max-[250px] my-3 mx-auto w-[250px] text-lg text-gray-300 hover:cursor-pointer hover:text-gray-100"
+                  className="my-3 mx-auto text-lg text-gray-300 hover:cursor-pointer hover:text-gray-100"
                 >
                   {showFilters ? 'Filters [-]' : 'Filters [+]'}
                 </div>
                 {showFilters && (
-                  <div className="mx-auto flex w-[250px] flex-col">
+                  <div className="mx-auto flex flex-col">
                     {Object.keys(sortedAttributes).map((traitType) => (
                       <div key={traitType}>
                         {selectedFilters[traitType] !== undefined &&
@@ -718,7 +718,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                               backgroundColor: lighten(0.1, config.colors.main),
                             }}
                             allowClear
-                            style={{ width: '100%', maxWidth: '200px' }}
+                            style={{ width: '100%' }}
                             placeholder={traitType}
                             defaultValue={selectedFilters[traitType] ?? []}
                             onChange={(e) => {
@@ -747,7 +747,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
             )}
           </div>
         </div>
-        <div className="lg:w-4/5">
+        <div>
           <TokensOuter>
             {!loaded ? (
               <>
