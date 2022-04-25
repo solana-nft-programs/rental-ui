@@ -63,7 +63,7 @@ export const Wallet = () => {
               key={tokenData?.tokenAccount?.pubkey.toBase58()}
               tokenData={tokenData}
             ></NFT>
-            {tokenData.timeInvalidator?.parsed?.extensionDurationSeconds ? (
+            {tokenData.timeInvalidator?.parsed?.extensionDurationSeconds && tokenData.tokenManager ? (
               <Button
                 variant="primary"
                 className="mx-auto mt-4"
