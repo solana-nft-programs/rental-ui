@@ -181,8 +181,7 @@ export const RentalRateCard = ({
     try {
       setError('')
       setExtensionSuccess(false)
-      console.log(tokenData)
-      // if (!tokenAccount) throw 'Token acount not found'
+      setLoading(true)  
       if (!tokenData.tokenManager) throw 'Token manager not found'
       if (!currentExtensionSeconds) throw 'No duration specified'
       // wrap sol if there is payment required
@@ -203,7 +202,7 @@ export const RentalRateCard = ({
       await withClaimToken(
         transaction,
         environment.override
-          ? new Connection(environment.override)
+        ? new Connection(environment.override)
           : connection,
         wallet,
         tokenData.tokenManager?.pubkey

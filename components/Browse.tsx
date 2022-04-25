@@ -670,7 +670,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
       <div className="flex-col lg:flex lg:flex-row">
         <div className="mr-10 rounded-lg  text-left lg:w-1/5 lg:pr-4 xl:px-10 ">
           <div>
-            <div className="mx-auto max-w-[220px] text-white">
+            <div className="mx-auto max-w-[250px] text-white">
               <p className="mb-5 text-lg text-gray-300">Duration Range:</p>
               <Slider
                 onChange={(bounds) =>
@@ -692,7 +692,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
               <div className="mx-auto mt-10">
                 <div
                   onClick={() => setShowFilters(!showFilters)}
-                  className="w-max-[250px] my-3 mx-2 mx-auto w-[250px] text-lg text-gray-300 hover:cursor-pointer hover:text-gray-100"
+                  className="w-max-[250px] my-3 mx-auto w-[250px] text-lg text-gray-300 hover:cursor-pointer hover:text-gray-100"
                 >
                   {showFilters ? 'Filters [-]' : 'Filters [+]'}
                 </div>
