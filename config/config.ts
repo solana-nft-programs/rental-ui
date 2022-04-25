@@ -1,5 +1,8 @@
 import type { AirdropMetadata } from 'common/Airdrop'
-import type { RentalCardConfig } from 'rental-components/components/RentalCard'
+import type {
+  DurationOption,
+  RentalCardConfig,
+} from 'rental-components/components/RentalCard'
 
 export type Colors = {
   main: string
@@ -25,6 +28,7 @@ export type ProjectConfig = {
   browse?: {
     hideFilters?: boolean
   }
+  marketplaceRate?: DurationOption
 }
 
 export const projectConfigs: { [key: string]: ProjectConfig } = {
@@ -238,8 +242,8 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     websiteUrl: 'https://theportal.to/',
     logoImage: './logos/portals.svg',
     colors: {
-      main: 'rgb(0,0,0)',
-      secondary: 'rgb(128,221,239)',
+      main: '#000',
+      secondary: '#80ddef',
     },
     filters: [
       {
@@ -252,8 +256,12 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       },
     ],
     rentalCard: {
-      invalidators: ['duration'],
+      invalidators: ['rate'],
       invalidationOptions: {
+        freezeRentalDuration: {
+          value: '1',
+          durationOption: 'days',
+        },
         visibilities: ['public'],
         durationOptions: ['minutes', 'hours', 'days', 'weeks'],
         invalidationTypes: ['return'],
@@ -283,6 +291,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         uri: 'https://arweave.net/6ZcTxyREtg0WsOSGSBq-CSyQ3DPlU1k4R_A7mrgehRE',
       },
     ],
+    marketplaceRate: 'weeks',
   },
   monke: {
     name: 'monke',

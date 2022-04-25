@@ -244,13 +244,13 @@ export function NFTOverlay({
             {utils.getExpirationString(expiration, UTCNow)}
           </div>
         )}
-        {!expiration &&
+        {/* {!expiration &&
           durationSeconds &&
           state !== TokenManagerState.Claimed && (
             <div className="expiration">
               {utils.secondstoDuration(durationSeconds)}
             </div>
-          )}
+          )} */}
         {!expiration &&
           durationSeconds &&
           stateChangedAt &&

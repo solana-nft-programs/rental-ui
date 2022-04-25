@@ -39,7 +39,7 @@ export const TokenMetadata = styled.div`
   border-radius: 10px;
   width: 280px;
   background-color: ${Colors.tokenBackground};
-  padding: 15px 0px;
+  // padding: 15px 0px;
   z-index: 0;
 
   #ellipsis {
@@ -158,7 +158,8 @@ export const TokenMetadata = styled.div`
     max-width: 100%;
     #media {
       object-fit: contain;
-      max-width: 250px;
+      // max-width: 250px;
+      border-radius: 10px;
       height: 100%;
       --poster-color: transparent;
     }
