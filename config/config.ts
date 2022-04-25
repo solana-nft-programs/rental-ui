@@ -242,8 +242,8 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     websiteUrl: 'https://theportal.to/',
     logoImage: './logos/portals.svg',
     colors: {
-      main: 'rgb(0,0,0)',
-      secondary: 'rgb(128,221,239)',
+      main: '#000',
+      secondary: '#80ddef',
     },
     filters: [
       {

@@ -171,6 +171,11 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
     }
   `
 
+  const StyledSecondaryText = styled.div`
+    color: ${config.colors.secondary} !important;
+    display: inline-flex;
+  `
+
   const getPriceFromTokenData = (tokenData: TokenData) => {
     if (tokenData.claimApprover?.parsed) {
       return getMintDecimalAmount(
@@ -328,12 +333,15 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
   const filterTokens = (tokens: TokenData[]): TokenData[] => {
     console.log(maxDurationBounds)
     const durationTokens = tokens.filter(
-      (token) =>      
+      (token) =>
         maxDurationBounds[0] <=
-          ((token.timeInvalidator?.parsed?.maxExpiration?.toNumber() ??
-            Infinity) - currentTime) &&
+          (token.timeInvalidator?.parsed?.maxExpiration?.toNumber() ??
+            Infinity) -
+            currentTime &&
         maxDurationBounds[1] >=
-          ((token.timeInvalidator?.parsed?.maxExpiration?.toNumber() ?? Infinity) - currentTime)
+          (token.timeInvalidator?.parsed?.maxExpiration?.toNumber() ??
+            Infinity) -
+            currentTime
     )
     if (Object.keys(selectedFilters).length <= 0) return durationTokens
     const attributeFilteredTokens: TokenData[] = []
@@ -547,22 +555,24 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
             </h2>
           </div>
         </div>
-        <div className="mx-5 w-[300px] text-white">
-          <Slider
-            onChange={(bounds) =>
-              setMaxDurationBounds([
-                boundsToSeconds[bounds[0]]!,
-                boundsToSeconds[bounds[1]]!,
-              ])
-            }
-            trackStyle={[{ backgroundColor: config.colors.secondary }]}
-            handleStyle={[{ borderColor: config.colors.secondary }]}
-            range
-            marks={marks}
-            step={null}
-            defaultValue={[0, 100]}
-          />
-        </div>
+        {config.marketplaceRate ? (
+          <div className="mx-5 w-[300px] text-white">
+            <Slider
+              onChange={(bounds) =>
+                setMaxDurationBounds([
+                  boundsToSeconds[bounds[0]]!,
+                  boundsToSeconds[bounds[1]]!,
+                ])
+              }
+              trackStyle={[{ backgroundColor: config.colors.secondary }]}
+              handleStyle={[{ borderColor: config.colors.secondary }]}
+              range
+              marks={marks}
+              step={null}
+              defaultValue={[0, 100]}
+            />
+          </div>
+        ) : null}
 
         {!config.browse?.hideFilters && (
           <div className={' [w-[220px]'}>
@@ -687,13 +697,16 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                           >
                             <Tag
                               state={TokenManagerState.Issued}
-                              color="warning"
+                              // color="warning"
                             >
                               <div className="float-left">
-                                <p className="float-left inline-block text-ellipsis whitespace-nowrap">
-                                  Max:{' '}
-                                  {getTokenMaxDuration(tokenData).displayText}
-                                  {/* ) * 1000
+                                <StyledSecondaryText>
+                                  <p
+                                    className={`float-left inline-block text-ellipsis whitespace-nowrap`}
+                                  >
+                                    Max:{' '}
+                                    <b>{getTokenMaxDuration(tokenData).displayText}</b>
+                                    {/* ) * 1000
                                   ).toLocaleString('en-US', {
                                     year: 'numeric',
                                     month: 'numeric',
@@ -701,7 +714,8 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                                     hour: 'numeric',
                                     minute: '2-digit',
                                   })} */}
-                                </p>
+                                  </p>
+                                </StyledSecondaryText>
                                 <br />{' '}
                                 <DisplayAddress
                                   connection={connection}
@@ -710,7 +724,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                                     undefined
                                   }
                                   height="18px"
-                                  width="100px"
+                                  width="100px"                                  
                                   dark={true}
                                 />{' '}
                               </div>
