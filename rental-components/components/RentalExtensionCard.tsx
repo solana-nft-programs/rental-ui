@@ -146,6 +146,8 @@ export const RentalExtensionCard = ({
       setExtensionSuccess(false)
       if (!tokenAccount) throw 'Token acount not found'
       if (!tokenData.tokenManager) throw 'Token manager not found'
+      const secondsToAdd = paymentAmountToSeconds(paymentAmount)
+      if (!secondsToAdd) throw 'Invalid payment amount'
 
       setLoading(true)
       const transaction = new Transaction()
@@ -162,7 +164,7 @@ export const RentalExtensionCard = ({
         connection,
         wallet,
         tokenData.tokenManager?.pubkey,
-        paymentAmount
+        secondsToAdd
       )
 
       await executeTransaction(connection, wallet, transaction, {

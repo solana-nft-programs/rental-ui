@@ -239,12 +239,12 @@ export function NFTOverlay({
               )?.symbol || paymentMint.toString()}
             </div>
           )}
-        {/* {expiration && (
+        {expiration && (
           <div className="expiration">
             {utils.getExpirationString(expiration, UTCNow)}
           </div>
         )}
-        {!expiration &&
+        {/* {!expiration &&
           durationSeconds &&
           state !== TokenManagerState.Claimed && (
             <div className="expiration">

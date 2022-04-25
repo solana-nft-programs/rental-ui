@@ -1,15 +1,10 @@
-import {
-  extendExpiration,
-  withClaimToken,
-  withExtendExpiration,
-} from '@cardinal/token-manager'
+import { withClaimToken, withExtendExpiration } from '@cardinal/token-manager'
 import { withWrapSol } from '@cardinal/token-manager/dist/cjs/wrappedSol'
 import styled from '@emotion/styled'
 import * as anchor from '@project-serum/anchor'
 import type { Wallet } from '@saberhq/solana-contrib'
 import type * as splToken from '@solana/spl-token'
-import { Connection } from '@solana/web3.js'
-import { Transaction } from '@solana/web3.js'
+import { Connection , Transaction } from '@solana/web3.js'
 import { InputNumber, Select } from 'antd'
 import { Option } from 'antd/lib/mentions'
 import type { TokenData } from 'api/api'
@@ -20,15 +15,18 @@ import { TokenDataOverlay } from 'common/NFTOverlay'
 import { notify } from 'common/Notification'
 import { executeTransaction } from 'common/Transactions'
 import { fmtMintAmount } from 'common/units'
-import { capitalizeFirstLetter, getQueryParam, secondsToString } from 'common/utils'
-import { ProjectConfig } from 'config/config'
+import {
+  capitalizeFirstLetter,
+  getQueryParam,
+  secondsToString,
+} from 'common/utils'
+import type { ProjectConfig } from 'config/config'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import {
   usePaymentMints,
   WRAPPED_SOL_MINT,
 } from 'providers/PaymentMintsProvider'
-import { useUserTokenData } from 'providers/TokenDataProvider'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from 'react-icons/ai'
 import { BiTimer } from 'react-icons/bi'
 import { FiSend } from 'react-icons/fi'
@@ -39,8 +37,10 @@ import { PAYMENT_MINTS } from 'rental-components/common/Constants'
 import { MintPriceSelector } from 'rental-components/common/MintPriceSelector'
 import { PoweredByFooter } from 'rental-components/common/PoweredByFooter'
 import { StepDetail } from 'rental-components/common/StepDetail'
+
+import type {
+  DurationOption} from './RentalCard';
 import {
-  DurationOption,
   DURATION_DATA,
   SECONDS_TO_DURATION,
 } from './RentalCard'
@@ -184,6 +184,7 @@ export const RentalRateCard = ({
       console.log(tokenData)
       // if (!tokenAccount) throw 'Token acount not found'
       if (!tokenData.tokenManager) throw 'Token manager not found'
+      if (!currentExtensionSeconds) throw 'No duration specified'
       // wrap sol if there is payment required
       const transaction = new Transaction()
 
@@ -212,7 +213,7 @@ export const RentalRateCard = ({
         connection,
         wallet,
         tokenData.tokenManager?.pubkey,
-        paymentAmount
+        currentExtensionSeconds
       )
       await executeTransaction(connection, wallet, transaction, {
         confirmOptions: { commitment: 'confirmed', maxRetries: 3 },
@@ -464,8 +465,11 @@ export const RentalRateCard = ({
 
         <ButtonWithFooter
           loading={loading}
-          complete={false}          
-          disabled={exceedMaxExpiration() || (paymentAmount === 0 && extensionPaymentAmount.toNumber() !== 0)}
+          complete={false}
+          disabled={
+            exceedMaxExpiration() ||
+            (paymentAmount === 0 && extensionPaymentAmount.toNumber() !== 0)
+          }
           message={
             !exceedMaxExpiration() ? (
               extensionSuccess && !error ? (
