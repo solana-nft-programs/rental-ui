@@ -174,6 +174,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
   const StyledSecondaryText = styled.div`
     color: ${config.colors.secondary} !important;
     display: inline-flex;
+    float: left;
   `
 
   const getPriceFromTokenData = (tokenData: TokenData) => {
@@ -229,7 +230,12 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
 
     try {
       return {
-        rate: marketplaceRate,
+        rate: parseFloat(
+          fmtMintAmount(
+            paymentMintInfos[extensionPaymentMint.toString()],
+            new BN(marketplaceRate)
+          )
+        ),
         displayText: `${fmtMintAmount(
           paymentMintInfos[extensionPaymentMint.toString()],
           new BN(marketplaceRate)
@@ -281,67 +287,94 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
   }
 
   const sortTokens = (tokens: TokenData[]): TokenData[] => {
+    let sortedTokens
     switch (selectedOrderCategory) {
       case OrderCategories.RecentlyListed:
-        return tokens.sort((a, b) => {
+        sortedTokens = tokens.sort((a, b) => {
           return (
             (a.tokenManager?.parsed.stateChangedAt.toNumber() ?? 0) -
             (b.tokenManager?.parsed.stateChangedAt.toNumber() ?? 0)
           )
         })
+        break
       case OrderCategories.PriceLowToHigh:
-        return tokens.sort((a, b) => {
+        sortedTokens = tokens.sort((a, b) => {
           return (
             (a.claimApprover?.parsed.paymentAmount.toNumber() ?? 0) -
             (b.claimApprover?.parsed.paymentAmount.toNumber() ?? 0)
           )
         })
+        break
       case OrderCategories.PriceHighToLow:
-        return tokens.sort((a, b) => {
+        sortedTokens = tokens.sort((a, b) => {
           return (
             (b.claimApprover?.parsed.paymentAmount.toNumber() ?? 0) -
             (a.claimApprover?.parsed.paymentAmount.toNumber() ?? 0)
           )
         })
+        break
       case OrderCategories.RateLowToHigh:
-        return tokens.sort((a, b) => {
+        sortedTokens = tokens.sort((a, b) => {
           return getPriceOrRentalRate(a) - getPriceOrRentalRate(b)
         })
+        break
       case OrderCategories.RateHighToLow:
-        return tokens.sort((a, b) => {
+        sortedTokens = tokens.sort((a, b) => {
           return getPriceOrRentalRate(b) - getPriceOrRentalRate(a)
         })
+        break
       case OrderCategories.MaxDurationLowToHigh:
-        return tokens.sort((a, b) => {
+        sortedTokens = tokens.sort((a, b) => {
           return (
             (a.timeInvalidator?.parsed.maxExpiration?.toNumber() ?? 0) -
             (b.timeInvalidator?.parsed.maxExpiration?.toNumber() ?? 0)
           )
         })
+        break
       case OrderCategories.MaxDurationHighToLow:
-        return tokens.sort((a, b) => {
+        sortedTokens = tokens.sort((a, b) => {
           return (
             (b.timeInvalidator?.parsed.maxExpiration?.toNumber() ?? 0) -
             (a.timeInvalidator?.parsed.maxExpiration?.toNumber() ?? 0)
           )
         })
+        break
       default:
         return []
+    }
+
+    return [
+      ...sortedTokens.filter(
+        (token) =>
+          token.timeInvalidator?.parsed.durationSeconds?.toNumber() === 0
+      ),
+      ...sortedTokens.filter(
+        (token) =>
+          token.timeInvalidator?.parsed.durationSeconds?.toNumber() !== 0
+      ),
+    ]
+  }
+
+  const durationAmount = (token: TokenData) => {
+    if (
+      token.timeInvalidator?.parsed.durationSeconds?.toNumber() === 0 &&
+      token.timeInvalidator?.parsed?.maxExpiration?.toNumber()
+    ) {
+      return (
+        token.timeInvalidator?.parsed?.maxExpiration?.toNumber() - currentTime
+      )
+    } else if (token.timeInvalidator?.parsed?.expiration?.toNumber()) {
+      return token.timeInvalidator?.parsed?.expiration?.toNumber() - currentTime
+    } else {
+      return token.timeInvalidator?.parsed?.durationSeconds?.toNumber()
     }
   }
 
   const filterTokens = (tokens: TokenData[]): TokenData[] => {
-    console.log(maxDurationBounds)
     const durationTokens = tokens.filter(
       (token) =>
-        maxDurationBounds[0] <=
-          (token.timeInvalidator?.parsed?.maxExpiration?.toNumber() ??
-            Infinity) -
-            currentTime &&
-        maxDurationBounds[1] >=
-          (token.timeInvalidator?.parsed?.maxExpiration?.toNumber() ??
-            Infinity) -
-            currentTime
+        maxDurationBounds[0] <= (durationAmount(token) ?? Infinity) &&
+        maxDurationBounds[1] >= (durationAmount(token) ?? Infinity)
     )
     if (Object.keys(selectedFilters).length <= 0) return durationTokens
     const attributeFilteredTokens: TokenData[] = []
@@ -537,176 +570,193 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
 
   return (
     <div className="container mx-auto">
-      <div className="mb-4 flex h-min flex-wrap justify-center md:justify-between">
-        <div className="flex h-fit">
-          <div className="d-block flex-col  border-2 border-gray-600 py-3 px-5 md:ml-12">
-            <p className="text-gray-400">FLOOR PRICE / WEEK</p>
-            <h2 className="text-center font-bold text-gray-100">
-              {calculateFloorPrice(filteredAndSortedTokens).toFixed(2)}{' '}
-              {filteredAndSortedTokens.length > 0
-                ? getSymbolFromTokenData(filteredAndSortedTokens[0]!)
-                : '◎'}
-            </h2>
-          </div>
-          <div className="d-block flex-col border-2 border-gray-600  py-3 px-5">
-            <p className="text-gray-400">TOTAL LISTED</p>
-            <h2 className="text-center font-bold text-gray-100">
-              {filteredAndSortedTokens.length}
-            </h2>
-          </div>
-        </div>
-        {config.marketplaceRate ? (
-          <div className="mx-5 w-[300px] text-white">
-            <Slider
-              onChange={(bounds) =>
-                setMaxDurationBounds([
-                  boundsToSeconds[bounds[0]]!,
-                  boundsToSeconds[bounds[1]]!,
-                ])
-              }
-              trackStyle={[{ backgroundColor: config.colors.secondary }]}
-              handleStyle={[{ borderColor: config.colors.secondary }]}
-              range
-              marks={marks}
-              step={null}
-              defaultValue={[0, 100]}
-            />
-          </div>
-        ) : null}
-
-        {!config.browse?.hideFilters && (
-          <div className={' [w-[220px]'}>
-            <div
-              onClick={() => setShowFilters(!showFilters)}
-              className="my-3 text-center text-lg text-gray-300 hover:cursor-pointer hover:text-gray-100"
-            >
-              {showFilters ? 'Filters [-]' : 'Filters [+]'}
+      <div className="flex justify-center">
+        <div className="md:w-1/5"></div>
+        <div className="mb-4 flex h-min flex-col flex-wrap justify-center md:w-4/5 md:flex-row md:justify-between">
+          <div className="flex h-fit">
+            <div className="d-block flex-col  border-2 border-gray-600 py-3 px-5 md:ml-12">
+              <p className="text-gray-400">FLOOR PRICE / WEEK</p>
+              <h2 className="text-center font-bold text-gray-100">
+                {calculateFloorPrice(filteredAndSortedTokens).toFixed(2)}{' '}
+                {filteredAndSortedTokens.length > 0
+                  ? getSymbolFromTokenData(filteredAndSortedTokens[0]!)
+                  : '◎'}
+              </h2>
             </div>
-            {showFilters && (
-              <div className="flex flex-col">
-                {Object.keys(sortedAttributes).map((traitType) => (
-                  <div key={traitType}>
-                    {selectedFilters[traitType] !== undefined &&
-                      selectedFilters[traitType]!.length > 0 && (
-                        <p className="mb-1 text-gray-100">{traitType}</p>
-                      )}
-                    <StyledSelectMultiple className="mb-5">
-                      <Select
-                        mode="multiple"
-                        dropdownStyle={{
-                          backgroundColor: lighten(0.1, config.colors.main),
-                        }}
-                        allowClear
-                        style={{ width: '100%', maxWidth: '200px' }}
-                        placeholder={traitType}
-                        defaultValue={selectedFilters[traitType] ?? []}
-                        onChange={(e) => {
-                          updateFilters(traitType, e)
-                        }}
-                      >
-                        {sortedAttributes[traitType]!.map((value) => (
-                          <Option
-                            key={value}
-                            value={value}
-                            style={{
-                              color: config.colors.secondary,
-                              background: lighten(0.1, config.colors.main),
+            <div className="d-block flex-col border-2 border-gray-600  py-3 px-5">
+              <p className="text-gray-400">TOTAL LISTED</p>
+              <h2 className="text-center font-bold text-gray-100">
+                {filteredAndSortedTokens.length}
+              </h2>
+            </div>
+          </div>
+          <StyledSelect>
+            <Select
+              className="mx-auto lg:mr-20 block m-[10px] h-[30px] w-max rounded-[4px] bg-black text-gray-700"
+              onChange={(e) => {
+                setSelectedOrderCategory(e)
+              }}
+              defaultValue={selectedOrderCategory}
+              dropdownStyle={{
+                backgroundColor: lighten(0.1, config.colors.main),
+              }}
+            >
+              {allOrderCategories.map((category) => (
+                <Option
+                  className="hover:brightness-125"
+                  key={category}
+                  value={category}
+                  style={{
+                    color: '#ffffff',
+                    background: lighten(0.1, config.colors.main),
+                  }}
+                >
+                  {category}
+                </Option>
+              ))}
+            </Select>
+          </StyledSelect>
+        </div>
+      </div>
+      <div className="flex-col lg:flex lg:flex-row">
+        <div className="mr-10 rounded-lg  text-left lg:w-1/5 lg:pr-4 xl:px-10 ">
+          <div>
+            {config.marketplaceRate ? (
+              <div className="mx-auto max-w-[220px] text-white">
+                <p className="mb-5 text-lg text-gray-300">Duration Range:</p>
+                <Slider
+                  onChange={(bounds) =>
+                    setMaxDurationBounds([
+                      boundsToSeconds[bounds[0]]!,
+                      boundsToSeconds[bounds[1]]!,
+                    ])
+                  }
+                  trackStyle={[{ backgroundColor: config.colors.secondary }]}
+                  handleStyle={[{ borderColor: config.colors.secondary }]}
+                  range
+                  marks={marks}
+                  step={null}
+                  defaultValue={[0, 100]}
+                />
+              </div>
+            ) : null}
+            {!config.browse?.hideFilters && (
+              <div className="mt-10 mx-auto">
+                <div
+                  onClick={() => setShowFilters(!showFilters)}
+                  className="my-3 mx-2 text-lg mx-auto w-max-[250px] w-[250px] text-gray-300 hover:cursor-pointer hover:text-gray-100"
+                >
+                  {showFilters ? 'Filters [-]' : 'Filters [+]'}
+                </div>
+                {showFilters && (
+                  <div className="flex flex-col w-[250px] mx-auto">
+                    {Object.keys(sortedAttributes).map((traitType) => (
+                      <div key={traitType}>
+                        {selectedFilters[traitType] !== undefined &&
+                          selectedFilters[traitType]!.length > 0 && (
+                            <p className="mb-1 text-gray-100">{traitType}</p>
+                          )}
+                        <StyledSelectMultiple className="mb-5">
+                          <Select
+                            mode="multiple"
+                            dropdownStyle={{
+                              backgroundColor: lighten(0.1, config.colors.main),
+                            }}
+                            allowClear
+                            style={{ width: '100%', maxWidth: '200px' }}
+                            placeholder={traitType}
+                            defaultValue={selectedFilters[traitType] ?? []}
+                            onChange={(e) => {
+                              updateFilters(traitType, e)
                             }}
                           >
-                            {value}
-                          </Option>
-                        ))}
-                      </Select>
-                    </StyledSelectMultiple>
+                            {sortedAttributes[traitType]!.map((value) => (
+                              <Option
+                                key={value}
+                                value={value}
+                                style={{
+                                  color: config.colors.secondary,
+                                  background: lighten(0.1, config.colors.main),
+                                }}
+                              >
+                                {value}
+                              </Option>
+                            ))}
+                          </Select>
+                        </StyledSelectMultiple>
+                      </div>
+                    ))}
                   </div>
-                ))}
+                )}
               </div>
             )}
           </div>
-        )}
-
-        <StyledSelect>
-          <Select
-            className="m-[10px] h-[30px] w-max rounded-[4px] bg-black text-gray-700"
-            onChange={(e) => {
-              setSelectedOrderCategory(e)
-            }}
-            defaultValue={selectedOrderCategory}
-            dropdownStyle={{
-              backgroundColor: lighten(0.1, config.colors.main),
-            }}
-          >
-            {allOrderCategories.map((category) => (
-              <Option
-                className="hover:brightness-125"
-                key={category}
-                value={category}
-                style={{
-                  color: '#ffffff',
-                  background: lighten(0.1, config.colors.main),
-                }}
-              >
-                {category}
-              </Option>
-            ))}
-          </Select>
-        </StyledSelect>
-      </div>
-      <TokensOuter>
-        {!loaded ? (
-          <>
-            <NFTPlaceholder />
-            <NFTPlaceholder />
-            <NFTPlaceholder />
-            <NFTPlaceholder />
-            <NFTPlaceholder />
-            <NFTPlaceholder />
-          </>
-        ) : filteredAndSortedTokens && filteredAndSortedTokens.length > 0 ? (
-          filteredAndSortedTokens.map((tokenData) => (
-            <div
-              key={tokenData.tokenManager?.pubkey.toString()}
-              style={{
-                paddingTop: '10px',
-                display: 'flex',
-                gap: '10px',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            >
+        </div>
+        <div className="lg:w-4/5">
+          <TokensOuter>
+            {!loaded ? (
               <>
-                <NFT
-                  key={tokenData?.tokenManager?.pubkey.toBase58()}
-                  tokenData={tokenData}
-                  hideQRCode={true}
-                ></NFT>
-                {
-                  {
-                    [TokenManagerState.Initialized]: <>Initiliazed</>,
-                    [TokenManagerState.Issued]: (
-                      <div className="flex w-full justify-between">
-                        <StyledTag>
-                          <div
-                            style={{
-                              display: 'flex',
-                              flexDirection: 'column',
-                              justifyContent: 'space-between',
-                              width: '100%',
-                            }}
-                          >
-                            <Tag
-                              state={TokenManagerState.Issued}
-                              // color="warning"
-                            >
-                              <div className="float-left">
-                                <StyledSecondaryText>
-                                  <p
-                                    className={`float-left inline-block text-ellipsis whitespace-nowrap`}
-                                  >
-                                    Max:{' '}
-                                    <b>{getTokenMaxDuration(tokenData).displayText}</b>
-                                    {/* ) * 1000
+                <NFTPlaceholder />
+                <NFTPlaceholder />
+                <NFTPlaceholder />
+                <NFTPlaceholder />
+                <NFTPlaceholder />
+                <NFTPlaceholder />
+              </>
+            ) : filteredAndSortedTokens &&
+              filteredAndSortedTokens.length > 0 ? (
+              filteredAndSortedTokens.map((tokenData) => (
+                <div
+                  key={tokenData.tokenManager?.pubkey.toString()}
+                  style={{
+                    paddingTop: '10px',
+                    display: 'flex',
+                    gap: '10px',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  <>
+                    <NFT                      
+                      key={tokenData?.tokenManager?.pubkey.toBase58()}
+                      tokenData={tokenData}
+                      hideQRCode={true}
+                    ></NFT>
+                    {
+                      {
+                        [TokenManagerState.Initialized]: <>Initiliazed</>,
+                        [TokenManagerState.Issued]: (
+                          <div className="flex w-full justify-between">
+                            <StyledTag>
+                              <div
+                                style={{
+                                  display: 'flex',
+                                  flexDirection: 'column',
+                                  justifyContent: 'space-between',
+                                  width: '100%',
+                                }}
+                              >
+                                <Tag
+                                  state={TokenManagerState.Issued}
+                                  // color="warning"
+                                >
+                                  {tokenData.timeInvalidator?.parsed ? (
+                                    <div className="float-left">
+                                      {tokenData.timeInvalidator?.parsed
+                                        .maxExpiration ? (
+                                        <StyledSecondaryText>
+                                          <p
+                                            className={`float-left inline-block text-ellipsis whitespace-nowrap`}
+                                          >
+                                            Max:{' '}
+                                            <b>
+                                              {
+                                                getTokenMaxDuration(tokenData)
+                                                  .displayText
+                                              }
+                                            </b>
+                                            {/* ) * 1000
                                   ).toLocaleString('en-US', {
                                     year: 'numeric',
                                     month: 'numeric',
@@ -714,155 +764,186 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                                     hour: 'numeric',
                                     minute: '2-digit',
                                   })} */}
-                                  </p>
-                                </StyledSecondaryText>
-                                <br />{' '}
-                                <DisplayAddress
-                                  connection={connection}
-                                  address={
-                                    tokenData.tokenManager?.parsed.issuer ||
-                                    undefined
-                                  }
-                                  height="18px"
-                                  width="100px"                                  
-                                  dark={true}
-                                />{' '}
+                                          </p>
+                                        </StyledSecondaryText>
+                                      ) : (
+                                        <>
+                                          <p className="float-left inline-block text-ellipsis whitespace-nowrap">
+                                            Duration:{' '}
+                                            <b>
+                                              {tokenData.timeInvalidator?.parsed
+                                                .durationSeconds
+                                                ? secondsToString(
+                                                    tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber(),
+                                                    false
+                                                  )
+                                                : tokenData.timeInvalidator
+                                                    ?.parsed.expiration
+                                                ? secondsToString(
+                                                    tokenData.timeInvalidator?.parsed.expiration?.toNumber() -
+                                                      currentTime,
+                                                    false
+                                                  )
+                                                : null}
+                                            </b>
+                                          </p>
+                                        </>
+                                      )}
+                                      <br />{' '}
+                                      <DisplayAddress
+                                        connection={connection}
+                                        address={
+                                          tokenData.tokenManager?.parsed
+                                            .issuer || undefined
+                                        }
+                                        height="18px"
+                                        width="100px"
+                                        dark={true}
+                                      />{' '}
+                                    </div>
+                                  ) : null}
+                                </Tag>
                               </div>
-                            </Tag>
-                          </div>
-                        </StyledTag>
+                            </StyledTag>
 
-                        <div className="flex w-max">
-                          <AsyncButton
-                            bgColor={config.colors.secondary}
-                            variant="primary"
-                            disabled={!wallet.publicKey}
-                            className="mr-1 inline-block flex-none"
-                            handleClick={async () => {
-                              if (wallet.publicKey) {
-                                if (
-                                  tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber() ===
-                                  0
-                                ) {
-                                  rentalRateModal.show(
-                                    asWallet(wallet),
-                                    connection,
-                                    environment.label,
-                                    tokenData
+                            <div className="flex w-max">
+                              <AsyncButton
+                                bgColor={config.colors.secondary}
+                                variant="primary"
+                                disabled={!wallet.publicKey}
+                                className="mr-1 inline-block flex-none"
+                                handleClick={async () => {
+                                  if (wallet.publicKey) {
+                                    if (
+                                      tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber() ===
+                                      0
+                                    ) {
+                                      rentalRateModal.show(
+                                        asWallet(wallet),
+                                        connection,
+                                        environment.label,
+                                        tokenData
+                                      )
+                                    } else {
+                                      await handleClaim(tokenData)
+                                    }
+                                  }
+                                }}
+                              >
+                                {tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber() ===
+                                0 ? (
+                                  <>
+                                    {getTokenRentalRate(tokenData)?.displayText}{' '}
+                                  </>
+                                ) : (
+                                  <>
+                                    Claim{' '}
+                                    {(tokenData.claimApprover?.parsed?.paymentAmount.toNumber() ??
+                                      0) / 1000000000}{' '}
+                                    {getSymbolFromTokenData(tokenData)}{' '}
+                                  </>
+                                )}
+                              </AsyncButton>
+                              <Button
+                                variant="tertiary"
+                                className="mr-1 inline-block flex-none"
+                                onClick={() =>
+                                  handleCopy(
+                                    getLink(
+                                      `/claim/${tokenData.tokenManager?.pubkey.toBase58()}`
+                                    )
                                   )
-                                } else {
-                                  await handleClaim(tokenData)
                                 }
-                              }
-                            }}
-                          >
-                            {tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber() ===
-                            0 ? (
-                              <>{getTokenRentalRate(tokenData)?.displayText} </>
-                            ) : (
-                              <>
-                                Claim{' '}
-                                {(tokenData.claimApprover?.parsed?.paymentAmount.toNumber() ??
-                                  0) / 1000000000}{' '}
-                                {getSymbolFromTokenData(tokenData)}{' '}
-                              </>
-                            )}
-                          </AsyncButton>
-                          <Button
-                            variant="tertiary"
-                            className="mr-1 inline-block flex-none"
-                            onClick={() =>
-                              handleCopy(
-                                getLink(
-                                  `/claim/${tokenData.tokenManager?.pubkey.toBase58()}`
-                                )
-                              )
-                            }
-                          >
-                            <FaLink />
-                          </Button>
-                        </div>
-                      </div>
-                    ),
-                    [TokenManagerState.Claimed]: (
-                      <StyledTag>
-                        <Tag state={TokenManagerState.Claimed}>
-                          Claimed by&nbsp;
-                          <a
-                            target="_blank"
-                            rel="noreferrer"
-                            href={pubKeyUrl(
-                              tokenData.recipientTokenAccount?.owner,
-                              environment.label
-                            )}
-                          >
-                            {shortPubKey(
-                              tokenData.recipientTokenAccount?.owner || ''
-                            )}
-                          </a>{' '}
-                          {/* {shortDateString(
+                              >
+                                <FaLink />
+                              </Button>
+                            </div>
+                          </div>
+                        ),
+                        [TokenManagerState.Claimed]: (
+                          <StyledTag>
+                            <Tag state={TokenManagerState.Claimed}>
+                              Claimed by&nbsp;
+                              <a
+                                target="_blank"
+                                rel="noreferrer"
+                                href={pubKeyUrl(
+                                  tokenData.recipientTokenAccount?.owner,
+                                  environment.label
+                                )}
+                              >
+                                {shortPubKey(
+                                  tokenData.recipientTokenAccount?.owner || ''
+                                )}
+                              </a>{' '}
+                              {/* {shortDateString(
                           tokenData.tokenManager?.parsed.claimedAt
                         )} */}
-                        </Tag>
-                        {((wallet.publicKey &&
-                          tokenData?.tokenManager?.parsed.invalidators &&
-                          tokenData?.tokenManager?.parsed.invalidators
-                            .map((i: PublicKey) => i.toString())
-                            .includes(wallet.publicKey?.toString())) ||
-                          (tokenData.timeInvalidator &&
-                            tokenData.timeInvalidator.parsed.expiration &&
-                            tokenData.timeInvalidator.parsed.expiration.lte(
-                              new BN(Date.now() / 1000)
-                            )) ||
-                          (tokenData.useInvalidator &&
-                            tokenData.useInvalidator.parsed.maxUsages &&
-                            tokenData.useInvalidator.parsed.usages.gte(
-                              tokenData.useInvalidator.parsed.maxUsages
-                            ))) && (
-                          <Button
-                            variant="primary"
-                            disabled={!wallet.connected}
-                            onClick={async () => {
-                              tokenData?.tokenManager &&
-                                executeTransaction(
-                                  connection,
-                                  asWallet(wallet),
-                                  await invalidate(
-                                    connection,
-                                    asWallet(wallet),
-                                    tokenData?.tokenManager?.parsed.mint
-                                  ),
-                                  {
-                                    callback: refreshIssuedTokens,
-                                    silent: true,
-                                  }
-                                )
-                            }}
-                          >
-                            Revoke
-                          </Button>
-                        )}
-                      </StyledTag>
-                    ),
-                    [TokenManagerState.Invalidated]: (
-                      <Tag state={TokenManagerState.Invalidated}>
-                        Invalidated
-                        {/* {shortDateString(
+                            </Tag>
+                            {((wallet.publicKey &&
+                              tokenData?.tokenManager?.parsed.invalidators &&
+                              tokenData?.tokenManager?.parsed.invalidators
+                                .map((i: PublicKey) => i.toString())
+                                .includes(wallet.publicKey?.toString())) ||
+                              (tokenData.timeInvalidator &&
+                                tokenData.timeInvalidator.parsed.expiration &&
+                                tokenData.timeInvalidator.parsed.expiration.lte(
+                                  new BN(Date.now() / 1000)
+                                )) ||
+                              (tokenData.useInvalidator &&
+                                tokenData.useInvalidator.parsed.maxUsages &&
+                                tokenData.useInvalidator.parsed.usages.gte(
+                                  tokenData.useInvalidator.parsed.maxUsages
+                                ))) && (
+                              <Button
+                                variant="primary"
+                                disabled={!wallet.connected}
+                                onClick={async () => {
+                                  tokenData?.tokenManager &&
+                                    executeTransaction(
+                                      connection,
+                                      asWallet(wallet),
+                                      await invalidate(
+                                        connection,
+                                        asWallet(wallet),
+                                        tokenData?.tokenManager?.parsed.mint
+                                      ),
+                                      {
+                                        callback: refreshIssuedTokens,
+                                        silent: true,
+                                      }
+                                    )
+                                }}
+                              >
+                                Revoke
+                              </Button>
+                            )}
+                          </StyledTag>
+                        ),
+                        [TokenManagerState.Invalidated]: (
+                          <Tag state={TokenManagerState.Invalidated}>
+                            Invalidated
+                            {/* {shortDateString(
                     tokenData.tokenManager?.parsed.claimedAt
                   )} */}
-                      </Tag>
-                    ),
-                  }[tokenData?.tokenManager?.parsed.state as TokenManagerState]
-                }
-              </>
-            </div>
-          ))
-        ) : (
-          <div className="white flex w-full flex-col items-center justify-center gap-1">
-            <div className="text-gray-200">No outstanding tokens!</div>
-          </div>
-        )}
-      </TokensOuter>
+                          </Tag>
+                        ),
+                      }[
+                        tokenData?.tokenManager?.parsed
+                          .state as TokenManagerState
+                      ]
+                    }
+                  </>
+                </div>
+              ))
+            ) : (
+              <div className="white flex w-full flex-col items-center justify-center gap-1">
+                <div className="text-gray-200">No outstanding tokens!</div>
+              </div>
+            )}
+          </TokensOuter>
+        </div>
+      </div>
     </div>
   )
 }

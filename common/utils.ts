@@ -114,14 +114,20 @@ export const capitalizeFirstLetter = (value: string) => {
   return value[0] ? value[0].toUpperCase() + value.slice(1) : ''
 }
 
-export const secondsToString = (requiredSeconds: number | undefined | null, showSeconds = true) => {
+export const secondsToString = (
+  requiredSeconds: number | undefined | null,
+  showSeconds = true
+) => {
   if (!requiredSeconds || requiredSeconds === 0) return '0'
-  const days = Math.floor(requiredSeconds / 60 / 60 / 24)
+  const weeks = Math.floor(requiredSeconds / 60 / 60 / 24 / 7)
+  const days = Math.floor((requiredSeconds / 60 / 60 / 24) % 7)
   const hours = Math.floor((requiredSeconds / 60 / 60) % 24)
   const minutes = Math.floor((requiredSeconds / 60) % 60)
   const seconds = Math.round(requiredSeconds % 60)
 
-  return `${days ? `${days}d ` : ''}${hours ? `${hours}h ` : ''}${
-    minutes ? `${minutes}m ` : ''
-  }${seconds && showSeconds ? `${seconds}s` : ''}`
+  return `${weeks ? `${weeks}w ` : ''} ${days ? `${days}d ` : ''}${
+    hours ? `${hours}h ` : ''
+  }${!weeks && minutes ? `${minutes}m ` : ''}${
+    seconds && showSeconds ? `${seconds}s` : ''
+  }`
 }
