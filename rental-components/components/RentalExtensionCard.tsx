@@ -14,7 +14,7 @@ import { TokenDataOverlay } from 'common/NFTOverlay'
 import { notify } from 'common/Notification'
 import { executeTransaction } from 'common/Transactions'
 import { fmtMintAmount } from 'common/units'
-import { getQueryParam } from 'common/utils'
+import { getQueryParam, secondsToString } from 'common/utils'
 import {
   usePaymentMints,
   WRAPPED_SOL_MINT,
@@ -177,18 +177,6 @@ export const RentalExtensionCard = ({
     } finally {
       setLoading(false)
     }
-  }
-
-  const secondsToString = (requiredSeconds: number | undefined | null) => {
-    if (!requiredSeconds || requiredSeconds === 0) return '0'
-    const days = Math.floor(requiredSeconds / 60 / 60 / 24)
-    const hours = Math.floor((requiredSeconds / 60 / 60) % 24)
-    const minutes = Math.floor((requiredSeconds / 60) % 60)
-    const seconds = Math.round(requiredSeconds % 60)
-
-    return `${days ? `${days}d ` : ''}${hours ? `${hours}h ` : ''}${
-      minutes ? `${minutes}m ` : ''
-    }${seconds ? `${seconds}s` : ''}`
   }
 
   const handlePaymentAmountChange = (value: number) => {

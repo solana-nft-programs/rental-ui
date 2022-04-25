@@ -7,7 +7,7 @@ import type * as splToken from '@solana/spl-token'
 import { useWallet } from '@solana/wallet-adapter-react'
 import type { PublicKey } from '@solana/web3.js'
 import { Connection, Transaction } from '@solana/web3.js'
-import { Select } from 'antd'
+import { Select, Slider } from 'antd'
 import type { TokenData } from 'api/api'
 import { withWrapSol } from 'api/wrappedSol'
 import { NFT, TokensOuter } from 'common/NFT'
@@ -16,7 +16,7 @@ import { notify } from 'common/Notification'
 import { StyledTag, Tag } from 'common/Tags'
 import { executeTransaction } from 'common/Transactions'
 import { fmtMintAmount, getMintDecimalAmount } from 'common/units'
-import { pubKeyUrl, shortPubKey } from 'common/utils'
+import { pubKeyUrl, secondsToString, shortPubKey } from 'common/utils'
 import { asWallet } from 'common/Wallets'
 import type { ProjectConfig } from 'config/config'
 import { lighten } from 'polished'
@@ -31,9 +31,7 @@ import { getLink } from 'providers/ProjectConfigProvider'
 import React, { useState } from 'react'
 import { FaLink } from 'react-icons/fa'
 import { AsyncButton, Button } from 'rental-components/common/Button'
-import {
-  DURATION_DATA,
-} from 'rental-components/components/RentalCard'
+import { DURATION_DATA } from 'rental-components/components/RentalCard'
 import { useRentalRateModal } from 'rental-components/RentalRateModalProvider'
 
 const { Option } = Select
@@ -49,6 +47,8 @@ enum OrderCategories {
   PriceHighToLow = 'Price: High to Low',
   RateLowToHigh = 'Rate: Low to High',
   RateHighToLow = 'Rate: High to Low',
+  MaxDurationLowToHigh = 'Max Duration: Low to High',
+  MaxDurationHighToLow = 'Max Duration: High to Low',
 }
 
 const allOrderCategories = [
@@ -58,6 +58,15 @@ const allOrderCategories = [
   OrderCategories.RateLowToHigh,
   OrderCategories.RateHighToLow,
 ]
+
+const boundsToSeconds: { [key in number]: number } = {
+  0: 0,
+  20: 3600,
+  40: 86400,
+  60: 604800,
+  80: 2419200,
+  100: Infinity,
+}
 
 const globalRate = 604800
 
@@ -96,12 +105,30 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
     useState<splToken.AccountInfo | null>(null)
   const { paymentMintInfos } = usePaymentMints()
   const [selectedOrderCategory, setSelectedOrderCategory] =
-    useState<OrderCategories>(OrderCategories.PriceLowToHigh)
+    useState<OrderCategories>(OrderCategories.RateLowToHigh)
   const [selectedFilters, setSelectedFilters] = useState<{
     [filterName: string]: any[]
   }>({})
   const [showFilters, setShowFilters] = useState<boolean>(false)
+  const [maxDurationBounds, setMaxDurationBounds] = useState<[number, number]>([
+    0,
+    Infinity,
+  ])
   const rentalRateModal = useRentalRateModal()
+  const currentTime = Date.now() / 1000
+
+  if (
+    config.marketplaceRate &&
+    !allOrderCategories.includes(OrderCategories.MaxDurationHighToLow)
+  ) {
+    allOrderCategories.push(
+      ...[
+        OrderCategories.MaxDurationLowToHigh,
+        OrderCategories.MaxDurationHighToLow,
+      ]
+    )
+    allOrderCategories.splice(1, 2)
+  }
 
   const StyledSelect = styled.div`
     .ant-select-selector {
@@ -157,22 +184,95 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
     }
   }
 
-  const calculateRateFromTokenData = (
+  const getSymbolFromTokenData = (tokenData: TokenData) => {
+    const symbol = PAYMENT_MINTS.find(
+      (mint) =>
+        mint.mint === tokenData.claimApprover?.parsed?.paymentMint.toString()
+    )?.symbol
+    if (!symbol || symbol === 'SOL') {
+      return '◎'
+    } else {
+      return symbol
+    }
+  }
+
+  function getTokenRentalRate(tokenData: TokenData) {
+    const rateOption = config.marketplaceRate ?? 'weeks'
+    const rateSeconds = new BN(DURATION_DATA[rateOption])
+    const {
+      extensionPaymentAmount,
+      extensionPaymentMint,
+      extensionDurationSeconds,
+    } = tokenData.timeInvalidator?.parsed || {
+      extensionPaymentAmount: null,
+      extensionPaymentMint: null,
+      extensionDurationOption: null,
+    }
+
+    if (
+      !extensionPaymentAmount ||
+      !extensionPaymentMint ||
+      !extensionDurationSeconds
+    ) {
+      return null
+    }
+
+    const marketplaceRate =
+      (extensionPaymentAmount.toNumber() /
+        extensionDurationSeconds.toNumber()) *
+      rateSeconds.toNumber()
+
+    try {
+      return {
+        rate: marketplaceRate,
+        displayText: `${fmtMintAmount(
+          paymentMintInfos[extensionPaymentMint.toString()],
+          new BN(marketplaceRate)
+        )} ${getSymbolFromTokenData(tokenData)} / ${rateOption?.substring(
+          0,
+          rateOption.length - 1
+        )}`,
+      }
+    } catch (e) {
+      return null
+    }
+  }
+
+  const getTokenMaxDuration = (tokenData: TokenData) => {
+    if (tokenData.timeInvalidator?.parsed.maxExpiration) {
+      const maxDuration =
+        tokenData.timeInvalidator?.parsed.maxExpiration?.toNumber() -
+        currentTime
+      return {
+        value: maxDuration,
+        displayText: secondsToString(maxDuration, false),
+      }
+    } else {
+      return { value: Infinity, displayText: '∞' }
+    }
+  }
+
+  const getPriceOrRentalRate = (
     tokenData: TokenData,
     rate: number = globalRate
   ) => {
-    const price = getPriceFromTokenData(tokenData)
-    if (price === 0) return 0
-    let duration = 0
-    if (tokenData.timeInvalidator?.parsed.durationSeconds) {
-      duration = tokenData.timeInvalidator.parsed.durationSeconds.toNumber()
+    let price = 0
+    if (tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber() === 0) {
+      return getTokenRentalRate(tokenData)?.rate ?? 0
+    } else {
+      price = getPriceFromTokenData(tokenData)
+      if (price === 0) return 0
+      let duration = 0
+      if (tokenData.timeInvalidator?.parsed.durationSeconds) {
+        duration = tokenData.timeInvalidator.parsed.durationSeconds.toNumber()
+      }
+      if (tokenData.timeInvalidator?.parsed.expiration) {
+        duration =
+          tokenData.timeInvalidator.parsed.expiration.toNumber() -
+          Date.now() / 1000
+      }
+      return (price / duration) * rate
     }
-    if (tokenData.timeInvalidator?.parsed.expiration) {
-      duration =
-        tokenData.timeInvalidator.parsed.expiration.toNumber() -
-        Date.now() / 1000
-    }
-    return (price / duration) * rate
   }
 
   const sortTokens = (tokens: TokenData[]): TokenData[] => {
@@ -200,11 +300,25 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
         })
       case OrderCategories.RateLowToHigh:
         return tokens.sort((a, b) => {
-          return calculateRateFromTokenData(a) - calculateRateFromTokenData(b)
+          return getPriceOrRentalRate(a) - getPriceOrRentalRate(b)
         })
       case OrderCategories.RateHighToLow:
         return tokens.sort((a, b) => {
-          return calculateRateFromTokenData(b) - calculateRateFromTokenData(a)
+          return getPriceOrRentalRate(b) - getPriceOrRentalRate(a)
+        })
+      case OrderCategories.MaxDurationLowToHigh:
+        return tokens.sort((a, b) => {
+          return (
+            (a.timeInvalidator?.parsed.maxExpiration?.toNumber() ?? 0) -
+            (b.timeInvalidator?.parsed.maxExpiration?.toNumber() ?? 0)
+          )
+        })
+      case OrderCategories.MaxDurationHighToLow:
+        return tokens.sort((a, b) => {
+          return (
+            (b.timeInvalidator?.parsed.maxExpiration?.toNumber() ?? 0) -
+            (a.timeInvalidator?.parsed.maxExpiration?.toNumber() ?? 0)
+          )
         })
       default:
         return []
@@ -212,9 +326,18 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
   }
 
   const filterTokens = (tokens: TokenData[]): TokenData[] => {
-    if (Object.keys(selectedFilters).length <= 0) return tokens
+    console.log(maxDurationBounds)
+    const durationTokens = tokens.filter(
+      (token) =>      
+        maxDurationBounds[0] <=
+          ((token.timeInvalidator?.parsed?.maxExpiration?.toNumber() ??
+            Infinity) - currentTime) &&
+        maxDurationBounds[1] >=
+          ((token.timeInvalidator?.parsed?.maxExpiration?.toNumber() ?? Infinity) - currentTime)
+    )
+    if (Object.keys(selectedFilters).length <= 0) return durationTokens
     const attributeFilteredTokens: TokenData[] = []
-    tokens.forEach((token) => {
+    durationTokens.forEach((token) => {
       let addToken = false
       Object.keys(selectedFilters).forEach((filterName) => {
         if (selectedFilters[filterName]!.length > 0) {
@@ -289,43 +412,62 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
     }
   }
 
-  const getSymbolFromTokenData = (tokenData: TokenData) => {
-    const symbol = PAYMENT_MINTS.find(
-      (mint) =>
-        mint.mint === tokenData.claimApprover?.parsed?.paymentMint.toString()
-    )?.symbol
-    if (!symbol || symbol === 'SOL') {
-      return '◎'
-    } else {
-      return symbol
-    }
-  }
-
   const calculateFloorPrice = (tokenDatas: TokenData[]): number => {
+    const onlyRateTokens = (tokenData: TokenData) => {
+      if (config.marketplaceRate) {
+        return (
+          tokenData.timeInvalidator?.parsed?.durationSeconds?.toNumber() === 0
+        )
+      } else {
+        return false
+      }
+    }
+
     const rentalPrices = tokenDatas
-      .filter((tokenData) => tokenData.timeInvalidator?.parsed)
+      .filter(
+        (tokenData) =>
+          tokenData.timeInvalidator?.parsed && onlyRateTokens(tokenData)
+      )
       .map((tokenData) => {
         let price = 0,
           duration = 0
 
         if (tokenData.timeInvalidator?.parsed) {
           if (
-            tokenData.claimApprover?.parsed?.paymentMint &&
-            paymentMintInfos &&
-            paymentMintInfos[
-              tokenData.claimApprover?.parsed?.paymentMint.toString()
-            ]
+            tokenData.timeInvalidator.parsed.durationSeconds?.toNumber() === 0
           ) {
-            price = getPriceFromTokenData(tokenData)
-          }
-          if (tokenData.timeInvalidator.parsed.durationSeconds) {
-            duration =
-              tokenData.timeInvalidator.parsed.durationSeconds.toNumber()
-          }
-          if (tokenData.timeInvalidator.parsed.expiration) {
-            duration =
-              tokenData.timeInvalidator.parsed.expiration.toNumber() -
-              Date.now() / 1000
+            if (
+              tokenData.timeInvalidator.parsed.extensionPaymentAmount &&
+              tokenData.timeInvalidator.parsed.extensionDurationSeconds
+            ) {
+              price = getMintDecimalAmount(
+                paymentMintInfos[
+                  tokenData.timeInvalidator?.parsed?.extensionPaymentMint!.toString()
+                ]!,
+                tokenData.timeInvalidator?.parsed?.extensionPaymentAmount
+              ).toNumber()
+              duration =
+                tokenData.timeInvalidator.parsed.extensionDurationSeconds.toNumber()
+            }
+          } else {
+            if (
+              tokenData.claimApprover?.parsed?.paymentMint &&
+              paymentMintInfos &&
+              paymentMintInfos[
+                tokenData.claimApprover?.parsed?.paymentMint.toString()
+              ]
+            ) {
+              price = getPriceFromTokenData(tokenData)
+            }
+            if (tokenData.timeInvalidator.parsed.durationSeconds) {
+              duration =
+                tokenData.timeInvalidator.parsed.durationSeconds.toNumber()
+            }
+            if (tokenData.timeInvalidator.parsed.expiration) {
+              duration =
+                tokenData.timeInvalidator.parsed.expiration.toNumber() -
+                Date.now() / 1000
+            }
           }
         }
         return (price / duration) * globalRate
@@ -344,46 +486,47 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
     setSelectedFilters(filters)
   }
 
-  const getTokenRentalRate = (tokenData: TokenData) => {
-    const rateOption = config.marketplaceRate ?? 'weeks'
-    const rateSeconds = new BN(DURATION_DATA[rateOption])
-    const {
-      extensionPaymentAmount,
-      extensionPaymentMint,
-      extensionDurationSeconds,
-    } = tokenData.timeInvalidator?.parsed || {
-      extensionPaymentAmount: null,
-      extensionPaymentMint: null,
-      extensionDurationOption: null,
-    }
-
-    if (
-      !extensionPaymentAmount ||
-      !extensionPaymentMint ||
-      !extensionDurationSeconds
-    ) {
-      return null
-    }
-
-    const marketplaceRate =
-      (extensionPaymentAmount.toNumber() /
-        extensionDurationSeconds.toNumber()) *
-      rateSeconds.toNumber()
-
-    try {
-      return `${fmtMintAmount(
-        paymentMintInfos[extensionPaymentMint.toString()],
-        new BN(marketplaceRate)
-      )} ${getSymbolFromTokenData(tokenData)} / ${rateOption?.substring(
-        0,
-        rateOption.length - 1
-      )}`
-    } catch {
-      return null
-    }
+  const marks = {
+    0: {
+      style: {
+        color: '#fff',
+      },
+      label: <span>0</span>,
+    },
+    20: {
+      style: {
+        color: '#fff',
+      },
+      label: <span>1h</span>,
+    },
+    40: {
+      style: {
+        color: '#fff',
+      },
+      label: <span>1d</span>,
+    },
+    60: {
+      style: {
+        color: '#fff',
+      },
+      label: <span>1w</span>,
+    },
+    80: {
+      style: {
+        color: '#fff',
+      },
+      label: <span>4w</span>,
+    },
+    100: {
+      style: {
+        color: '#fff',
+      },
+      label: <span>∞</span>,
+    },
   }
 
   const sortedAttributes = getAllAttributes(issuedTokens)
+
   return (
     <div className="container mx-auto">
       <div className="mb-4 flex h-min flex-wrap justify-center md:justify-between">
@@ -403,6 +546,22 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
               {filteredAndSortedTokens.length}
             </h2>
           </div>
+        </div>
+        <div className="mx-5 w-[300px] text-white">
+          <Slider
+            onChange={(bounds) =>
+              setMaxDurationBounds([
+                boundsToSeconds[bounds[0]]!,
+                boundsToSeconds[bounds[1]]!,
+              ])
+            }
+            trackStyle={[{ backgroundColor: config.colors.secondary }]}
+            handleStyle={[{ borderColor: config.colors.secondary }]}
+            range
+            marks={marks}
+            step={null}
+            defaultValue={[0, 100]}
+          />
         </div>
 
         {!config.browse?.hideFilters && (
@@ -532,17 +691,16 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                             >
                               <div className="float-left">
                                 <p className="float-left inline-block text-ellipsis whitespace-nowrap">
-                                  {new Date(
-                                    Number(
-                                      tokenData.tokenManager?.parsed.stateChangedAt.toString()
-                                    ) * 1000
+                                  Max:{' '}
+                                  {getTokenMaxDuration(tokenData).displayText}
+                                  {/* ) * 1000
                                   ).toLocaleString('en-US', {
                                     year: 'numeric',
                                     month: 'numeric',
                                     day: 'numeric',
                                     hour: 'numeric',
                                     minute: '2-digit',
-                                  })}
+                                  })} */}
                                 </p>
                                 <br />{' '}
                                 <DisplayAddress
@@ -586,7 +744,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                           >
                             {tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber() ===
                             0 ? (
-                              <>{getTokenRentalRate(tokenData)} </>
+                              <>{getTokenRentalRate(tokenData)?.displayText} </>
                             ) : (
                               <>
                                 Claim{' '}

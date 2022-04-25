@@ -75,7 +75,7 @@ export function TokenAccountsProvider({ children }: { children: ReactChild }) {
         refreshTokenAccounts()
         return getTokenAccountsInterval
       })(),
-      10000
+      100000
     )
     return () => clearInterval(interval)
   }, [refreshTokenAccounts])

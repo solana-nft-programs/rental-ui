@@ -20,7 +20,7 @@ import { TokenDataOverlay } from 'common/NFTOverlay'
 import { notify } from 'common/Notification'
 import { executeTransaction } from 'common/Transactions'
 import { fmtMintAmount } from 'common/units'
-import { capitalizeFirstLetter, getQueryParam } from 'common/utils'
+import { capitalizeFirstLetter, getQueryParam, secondsToString } from 'common/utils'
 import { ProjectConfig } from 'config/config'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import {
@@ -228,18 +228,6 @@ export const RentalRateCard = ({
     } finally {
       setLoading(false)
     }
-  }
-
-  const secondsToString = (requiredSeconds: number | undefined | null) => {
-    if (!requiredSeconds || requiredSeconds === 0) return '0'
-    const days = Math.floor(requiredSeconds / 60 / 60 / 24)
-    const hours = Math.floor((requiredSeconds / 60 / 60) % 24)
-    const minutes = Math.floor((requiredSeconds / 60) % 60)
-    const seconds = Math.round(requiredSeconds % 60)
-
-    return `${days ? `${days}d ` : ''}${hours ? `${hours}h ` : ''}${
-      minutes ? `${minutes}m ` : ''
-    }${seconds ? `${seconds}s` : ''}`
   }
 
   const handlePaymentAmountChange = (value: number) => {
