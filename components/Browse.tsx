@@ -5,7 +5,7 @@ import styled from '@emotion/styled'
 import { BN } from '@project-serum/anchor'
 import type * as splToken from '@solana/spl-token'
 import { useWallet } from '@solana/wallet-adapter-react'
-import type { PublicKey } from '@solana/web3.js'
+import { PublicKey } from '@solana/web3.js'
 import { Connection, Transaction } from '@solana/web3.js'
 import { Select, Slider } from 'antd'
 import type { TokenData } from 'api/api'
@@ -566,6 +566,42 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
     },
   }
 
+  const getDurationText = (tokenData: TokenData) => {
+    return tokenData.timeInvalidator?.parsed ? (
+      <div className="float-left">
+        {tokenData.timeInvalidator?.parsed.maxExpiration ? (
+          <StyledSecondaryText>
+            <p
+              className={`float-left inline-block text-ellipsis whitespace-nowrap`}
+            >
+              Max: <b>{getTokenMaxDuration(tokenData).displayText}</b>
+            </p>
+          </StyledSecondaryText>
+        ) : (
+          <>
+            <p className="float-left inline-block text-ellipsis whitespace-nowrap">
+              Duration:{' '}
+              <b>
+                {tokenData.timeInvalidator?.parsed.durationSeconds
+                  ? secondsToString(
+                      tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber(),
+                      false
+                    )
+                  : tokenData.timeInvalidator?.parsed.expiration
+                  ? secondsToString(
+                      tokenData.timeInvalidator?.parsed.expiration?.toNumber() -
+                        currentTime,
+                      false
+                    )
+                  : null}
+              </b>
+            </p>
+          </>
+        )}
+      </div>
+    ) : null
+  }
+
   const sortedAttributes = getAllAttributes(issuedTokens)
 
   return (
@@ -592,7 +628,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
           </div>
           <StyledSelect>
             <Select
-              className="mx-auto lg:mr-20 block m-[10px] h-[30px] w-max rounded-[4px] bg-black text-gray-700"
+              className="m-[10px] mx-auto block h-[30px] w-max rounded-[4px] bg-black text-gray-700 lg:mr-20 xl:mr-4"
               onChange={(e) => {
                 setSelectedOrderCategory(e)
               }}
@@ -641,15 +677,15 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
               </div>
             ) : null}
             {!config.browse?.hideFilters && (
-              <div className="mt-10 mx-auto">
+              <div className="mx-auto mt-10">
                 <div
                   onClick={() => setShowFilters(!showFilters)}
-                  className="my-3 mx-2 text-lg mx-auto w-max-[250px] w-[250px] text-gray-300 hover:cursor-pointer hover:text-gray-100"
+                  className="w-max-[250px] my-3 mx-2 mx-auto w-[250px] text-lg text-gray-300 hover:cursor-pointer hover:text-gray-100"
                 >
                   {showFilters ? 'Filters [-]' : 'Filters [+]'}
                 </div>
                 {showFilters && (
-                  <div className="flex flex-col w-[250px] mx-auto">
+                  <div className="mx-auto flex w-[250px] flex-col">
                     {Object.keys(sortedAttributes).map((traitType) => (
                       <div key={traitType}>
                         {selectedFilters[traitType] !== undefined &&
@@ -718,7 +754,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                   }}
                 >
                   <>
-                    <NFT                      
+                    <NFT
                       key={tokenData?.tokenManager?.pubkey.toBase58()}
                       tokenData={tokenData}
                       hideQRCode={true}
@@ -743,52 +779,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                                 >
                                   {tokenData.timeInvalidator?.parsed ? (
                                     <div className="float-left">
-                                      {tokenData.timeInvalidator?.parsed
-                                        .maxExpiration ? (
-                                        <StyledSecondaryText>
-                                          <p
-                                            className={`float-left inline-block text-ellipsis whitespace-nowrap`}
-                                          >
-                                            Max:{' '}
-                                            <b>
-                                              {
-                                                getTokenMaxDuration(tokenData)
-                                                  .displayText
-                                              }
-                                            </b>
-                                            {/* ) * 1000
-                                  ).toLocaleString('en-US', {
-                                    year: 'numeric',
-                                    month: 'numeric',
-                                    day: 'numeric',
-                                    hour: 'numeric',
-                                    minute: '2-digit',
-                                  })} */}
-                                          </p>
-                                        </StyledSecondaryText>
-                                      ) : (
-                                        <>
-                                          <p className="float-left inline-block text-ellipsis whitespace-nowrap">
-                                            Duration:{' '}
-                                            <b>
-                                              {tokenData.timeInvalidator?.parsed
-                                                .durationSeconds
-                                                ? secondsToString(
-                                                    tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber(),
-                                                    false
-                                                  )
-                                                : tokenData.timeInvalidator
-                                                    ?.parsed.expiration
-                                                ? secondsToString(
-                                                    tokenData.timeInvalidator?.parsed.expiration?.toNumber() -
-                                                      currentTime,
-                                                    false
-                                                  )
-                                                : null}
-                                            </b>
-                                          </p>
-                                        </>
-                                      )}
+                                      {getDurationText(tokenData)}
                                       <br />{' '}
                                       <DisplayAddress
                                         connection={connection}
@@ -861,71 +852,79 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                           </div>
                         ),
                         [TokenManagerState.Claimed]: (
-                          <StyledTag>
-                            <Tag state={TokenManagerState.Claimed}>
-                              Claimed by&nbsp;
-                              <a
-                                target="_blank"
-                                rel="noreferrer"
-                                href={pubKeyUrl(
-                                  tokenData.recipientTokenAccount?.owner,
-                                  environment.label
-                                )}
-                              >
-                                {shortPubKey(
-                                  tokenData.recipientTokenAccount?.owner || ''
-                                )}
-                              </a>{' '}
-                              {/* {shortDateString(
-                          tokenData.tokenManager?.parsed.claimedAt
-                        )} */}
-                            </Tag>
-                            {((wallet.publicKey &&
-                              tokenData?.tokenManager?.parsed.invalidators &&
-                              tokenData?.tokenManager?.parsed.invalidators
-                                .map((i: PublicKey) => i.toString())
-                                .includes(wallet.publicKey?.toString())) ||
-                              (tokenData.timeInvalidator &&
-                                tokenData.timeInvalidator.parsed.expiration &&
-                                tokenData.timeInvalidator.parsed.expiration.lte(
-                                  new BN(Date.now() / 1000)
-                                )) ||
-                              (tokenData.useInvalidator &&
-                                tokenData.useInvalidator.parsed.maxUsages &&
-                                tokenData.useInvalidator.parsed.usages.gte(
-                                  tokenData.useInvalidator.parsed.maxUsages
-                                ))) && (
-                              <Button
-                                variant="primary"
-                                disabled={!wallet.connected}
-                                onClick={async () => {
-                                  tokenData?.tokenManager &&
-                                    executeTransaction(
-                                      connection,
-                                      asWallet(wallet),
-                                      await invalidate(
+                          <div className="flex w-full justify-between text-left">
+                            <StyledTag>
+                              <div className=" w-full">
+                                <Tag
+                                  state={TokenManagerState.Issued}
+                                  // color="warning"
+                                >
+                                  {getDurationText(tokenData)}
+                                </Tag>
+                              </div>
+
+                              {tokenData.recipientTokenAccount?.owner ? (
+                                <Tag state={TokenManagerState.Claimed}>
+                                  Claimed by&nbsp;
+                                  <DisplayAddress
+                                    style={{ color: '#52c41a !important' }}
+                                    connection={connection}
+                                    address={
+                                      new PublicKey(
+                                        tokenData.recipientTokenAccount?.owner
+                                      )
+                                    }
+                                    height="18px"
+                                    width="100px"
+                                    dark={true}
+                                  />{' '}
+                                </Tag>
+                              ) : null}
+
+                              {((wallet.publicKey &&
+                                tokenData?.tokenManager?.parsed.invalidators &&
+                                tokenData?.tokenManager?.parsed.invalidators
+                                  .map((i: PublicKey) => i.toString())
+                                  .includes(wallet.publicKey?.toString())) ||
+                                (tokenData.timeInvalidator &&
+                                  tokenData.timeInvalidator.parsed.expiration &&
+                                  tokenData.timeInvalidator.parsed.expiration.lte(
+                                    new BN(Date.now() / 1000)
+                                  )) ||
+                                (tokenData.useInvalidator &&
+                                  tokenData.useInvalidator.parsed.maxUsages &&
+                                  tokenData.useInvalidator.parsed.usages.gte(
+                                    tokenData.useInvalidator.parsed.maxUsages
+                                  ))) && (
+                                <Button
+                                  variant="primary"
+                                  disabled={!wallet.connected}
+                                  onClick={async () => {
+                                    tokenData?.tokenManager &&
+                                      executeTransaction(
                                         connection,
                                         asWallet(wallet),
-                                        tokenData?.tokenManager?.parsed.mint
-                                      ),
-                                      {
-                                        callback: refreshIssuedTokens,
-                                        silent: true,
-                                      }
-                                    )
-                                }}
-                              >
-                                Revoke
-                              </Button>
-                            )}
-                          </StyledTag>
+                                        await invalidate(
+                                          connection,
+                                          asWallet(wallet),
+                                          tokenData?.tokenManager?.parsed.mint
+                                        ),
+                                        {
+                                          callback: refreshIssuedTokens,
+                                          silent: true,
+                                        }
+                                      )
+                                  }}
+                                >
+                                  Revoke
+                                </Button>
+                              )}
+                            </StyledTag>
+                          </div>
                         ),
                         [TokenManagerState.Invalidated]: (
                           <Tag state={TokenManagerState.Invalidated}>
                             Invalidated
-                            {/* {shortDateString(
-                    tokenData.tokenManager?.parsed.claimedAt
-                  )} */}
                           </Tag>
                         ),
                       }[

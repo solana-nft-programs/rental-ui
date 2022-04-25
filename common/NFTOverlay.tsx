@@ -239,7 +239,7 @@ export function NFTOverlay({
               )?.symbol || paymentMint.toString()}
             </div>
           )}
-        {expiration && (
+        {/* {expiration && (
           <div className="expiration">
             {utils.getExpirationString(expiration, UTCNow)}
           </div>
@@ -250,7 +250,7 @@ export function NFTOverlay({
             <div className="expiration">
               {utils.secondstoDuration(durationSeconds)}
             </div>
-          )}
+          )} */}
         {!expiration &&
           durationSeconds &&
           stateChangedAt &&
