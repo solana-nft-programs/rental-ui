@@ -16,7 +16,7 @@ import { notify } from 'common/Notification'
 import { StyledTag, Tag } from 'common/Tags'
 import { executeTransaction } from 'common/Transactions'
 import { fmtMintAmount, getMintDecimalAmount } from 'common/units'
-import { pubKeyUrl, secondsToString, shortPubKey } from 'common/utils'
+import { secondsToString } from 'common/utils'
 import { asWallet } from 'common/Wallets'
 import type { ProjectConfig } from 'config/config'
 import { lighten } from 'polished'
@@ -47,8 +47,8 @@ enum OrderCategories {
   PriceHighToLow = 'Price: High to Low',
   RateLowToHigh = 'Rate: Low to High',
   RateHighToLow = 'Rate: High to Low',
-  MaxDurationLowToHigh = 'Max Duration: Low to High',
-  MaxDurationHighToLow = 'Max Duration: High to Low',
+  DurationLowToHigh = 'Duration: Low to High',
+  DurationHighToLow = 'Duration: High to Low',
 }
 
 const allOrderCategories = [
@@ -57,6 +57,8 @@ const allOrderCategories = [
   OrderCategories.PriceHighToLow,
   OrderCategories.RateLowToHigh,
   OrderCategories.RateHighToLow,
+  OrderCategories.DurationLowToHigh,
+  OrderCategories.DurationHighToLow,
 ]
 
 const boundsToSeconds: { [key in number]: number } = {
@@ -117,18 +119,18 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
   const rentalRateModal = useRentalRateModal()
   const currentTime = Date.now() / 1000
 
-  if (
-    config.marketplaceRate &&
-    !allOrderCategories.includes(OrderCategories.MaxDurationHighToLow)
-  ) {
-    allOrderCategories.push(
-      ...[
-        OrderCategories.MaxDurationLowToHigh,
-        OrderCategories.MaxDurationHighToLow,
-      ]
-    )
-    allOrderCategories.splice(1, 2)
-  }
+  // if (
+  //   config.marketplaceRate &&
+  //   !allOrderCategories.includes(OrderCategories.MaxDurationHighToLow)
+  // ) {
+  //   allOrderCategories.push(
+  //     ...[
+  //       OrderCategories.MaxDurationLowToHigh,
+  //       OrderCategories.MaxDurationHighToLow,
+  //     ]
+  //   )
+  //   allOrderCategories.splice(1, 2)
+  // }
 
   const StyledSelect = styled.div`
     .ant-select-selector {
@@ -178,13 +180,15 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
   `
 
   const getPriceFromTokenData = (tokenData: TokenData) => {
-    if (tokenData.claimApprover?.parsed) {
-      return getMintDecimalAmount(
-        paymentMintInfos[
-          tokenData.claimApprover?.parsed?.paymentMint.toString()
-        ]!,
-        tokenData.claimApprover?.parsed?.paymentAmount
-      ).toNumber()
+    if (tokenData.claimApprover?.parsed && tokenData.claimApprover?.parsed?.paymentMint.toString()) {
+      const mintInfo = paymentMintInfos[
+        tokenData.claimApprover?.parsed?.paymentMint.toString()
+      ]
+      if (mintInfo) {
+        return getMintDecimalAmount(mintInfo, tokenData.claimApprover?.parsed?.paymentAmount)
+      } else {
+        return 0
+      }      
     } else {
       return 0
     }
@@ -286,6 +290,20 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
     }
   }
 
+  const getRentalDuration = (tokenData: TokenData) => {
+    if (tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber() === 0) {
+      return getTokenMaxDuration(tokenData).value
+    } else if (tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber()) {
+      return tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber()
+    } else if (tokenData.timeInvalidator?.parsed.expiration?.toNumber()) {
+      return (
+        tokenData.timeInvalidator?.parsed.expiration?.toNumber() - currentTime
+      )
+    } else {
+      return 0
+    }
+  }
+
   const sortTokens = (tokens: TokenData[]): TokenData[] => {
     let sortedTokens
     switch (selectedOrderCategory) {
@@ -323,20 +341,14 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
           return getPriceOrRentalRate(b) - getPriceOrRentalRate(a)
         })
         break
-      case OrderCategories.MaxDurationLowToHigh:
+      case OrderCategories.DurationLowToHigh:
         sortedTokens = tokens.sort((a, b) => {
-          return (
-            (a.timeInvalidator?.parsed.maxExpiration?.toNumber() ?? 0) -
-            (b.timeInvalidator?.parsed.maxExpiration?.toNumber() ?? 0)
-          )
+          return getRentalDuration(a) - getRentalDuration(b)
         })
         break
-      case OrderCategories.MaxDurationHighToLow:
+      case OrderCategories.DurationHighToLow:
         sortedTokens = tokens.sort((a, b) => {
-          return (
-            (b.timeInvalidator?.parsed.maxExpiration?.toNumber() ?? 0) -
-            (a.timeInvalidator?.parsed.maxExpiration?.toNumber() ?? 0)
-          )
+          return getRentalDuration(b) - getRentalDuration(a)
         })
         break
       default:
@@ -479,11 +491,12 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
           ) {
             if (
               tokenData.timeInvalidator.parsed.extensionPaymentAmount &&
-              tokenData.timeInvalidator.parsed.extensionDurationSeconds
+              tokenData.timeInvalidator.parsed.extensionDurationSeconds &&
+              tokenData.timeInvalidator?.parsed?.extensionPaymentMint
             ) {
               price = getMintDecimalAmount(
                 paymentMintInfos[
-                  tokenData.timeInvalidator?.parsed?.extensionPaymentMint!.toString()
+                  tokenData.timeInvalidator?.parsed?.extensionPaymentMint.toString()
                 ]!,
                 tokenData.timeInvalidator?.parsed?.extensionPaymentAmount
               ).toNumber()
@@ -657,25 +670,24 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
       <div className="flex-col lg:flex lg:flex-row">
         <div className="mr-10 rounded-lg  text-left lg:w-1/5 lg:pr-4 xl:px-10 ">
           <div>
-            {config.marketplaceRate ? (
-              <div className="mx-auto max-w-[220px] text-white">
-                <p className="mb-5 text-lg text-gray-300">Duration Range:</p>
-                <Slider
-                  onChange={(bounds) =>
-                    setMaxDurationBounds([
-                      boundsToSeconds[bounds[0]]!,
-                      boundsToSeconds[bounds[1]]!,
-                    ])
-                  }
-                  trackStyle={[{ backgroundColor: config.colors.secondary }]}
-                  handleStyle={[{ borderColor: config.colors.secondary }]}
-                  range
-                  marks={marks}
-                  step={null}
-                  defaultValue={[0, 100]}
-                />
-              </div>
-            ) : null}
+            <div className="mx-auto max-w-[220px] text-white">
+              <p className="mb-5 text-lg text-gray-300">Duration Range:</p>
+              <Slider
+                onChange={(bounds) =>
+                  setMaxDurationBounds([
+                    boundsToSeconds[bounds[0]]!,
+                    boundsToSeconds[bounds[1]]!,
+                  ])
+                }
+                trackStyle={[{ backgroundColor: config.colors.secondary }]}
+                handleStyle={[{ borderColor: config.colors.secondary }]}
+                range
+                marks={marks}
+                step={null}
+                defaultValue={[0, 100]}
+              />
+            </div>
+
             {!config.browse?.hideFilters && (
               <div className="mx-auto mt-10">
                 <div
