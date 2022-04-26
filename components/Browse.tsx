@@ -31,7 +31,7 @@ import { getLink } from 'providers/ProjectConfigProvider'
 import React, { useState } from 'react'
 import { FaLink } from 'react-icons/fa'
 import { AsyncButton, Button } from 'rental-components/common/Button'
-import { DurationOption, DURATION_DATA } from 'rental-components/components/RentalCard'
+import { DURATION_DATA } from 'rental-components/components/RentalCard'
 import { useRentalRateModal } from 'rental-components/RentalRateModalProvider'
 
 const { Option } = Select
@@ -117,7 +117,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
   const rentalRateModal = useRentalRateModal()
   const currentTime = Date.now() / 1000
 
-  const globalRate = DURATION_DATA[config.marketplaceRate ?? 'days'] 
+  const globalRate = DURATION_DATA[config.marketplaceRate ?? 'days']
 
   const StyledSelect = styled.div`
     .ant-select-selector {
@@ -161,9 +161,15 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
   `
 
   const StyledSecondaryText = styled.div`
-    color: ${config.colors.secondary} !important;
+    color: #d89614 !important;
     display: inline-flex;
     float: left;
+  `
+
+  const TwitterHandle = styled.div`
+    a {
+      color: #d89614 !important;
+    }
   `
 
   const getPriceFromTokenData = (tokenData: TokenData) => {
@@ -577,33 +583,29 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
     return tokenData.timeInvalidator?.parsed ? (
       <div className="float-left">
         {tokenData.timeInvalidator?.parsed.maxExpiration ? (
-          <StyledSecondaryText>
-            <p
-              className={`float-left inline-block text-ellipsis whitespace-nowrap`}
-            >
-              Max: <b>{getTokenMaxDuration(tokenData).displayText}</b>
-            </p>
-          </StyledSecondaryText>
+          <p
+            className={`float-left inline-block text-ellipsis whitespace-nowrap`}
+          >
+            Max Duration: <b>{getTokenMaxDuration(tokenData).displayText}</b>
+          </p>
         ) : (
-          <>
-            <p className="float-left inline-block text-ellipsis whitespace-nowrap">
-              Duration:{' '}
-              <b>
-                {tokenData.timeInvalidator?.parsed.durationSeconds
-                  ? secondsToString(
-                      tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber(),
-                      false
-                    )
-                  : tokenData.timeInvalidator?.parsed.expiration
-                  ? secondsToString(
-                      tokenData.timeInvalidator?.parsed.expiration?.toNumber() -
-                        currentTime,
-                      false
-                    )
-                  : null}
-              </b>
-            </p>
-          </>
+          <p className="float-left inline-block text-ellipsis whitespace-nowrap">
+            Fixed Duration:{' '}
+            <b>
+              {tokenData.timeInvalidator?.parsed.durationSeconds
+                ? secondsToString(
+                    tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber(),
+                    false
+                  )
+                : tokenData.timeInvalidator?.parsed.expiration
+                ? secondsToString(
+                    tokenData.timeInvalidator?.parsed.expiration?.toNumber() -
+                      currentTime,
+                    false
+                  )
+                : null}
+            </b>
+          </p>
         )}
       </div>
     ) : null
@@ -618,7 +620,14 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
         <div className="mb-4 flex h-min flex-col flex-wrap justify-center md:w-4/5 md:flex-row md:justify-between">
           <div className="flex h-fit">
             <div className="d-block flex-col  border-2 border-gray-600 py-3 px-5 md:ml-12">
-              <p className="text-gray-400">FLOOR PRICE / {config.marketplaceRate ? config.marketplaceRate.substring(0, config.marketplaceRate.length-1).toUpperCase() : 'DAY'}</p>
+              <p className="text-gray-400">
+                FLOOR PRICE /{' '}
+                {config.marketplaceRate
+                  ? config.marketplaceRate
+                      .substring(0, config.marketplaceRate.length - 1)
+                      .toUpperCase()
+                  : 'DAY'}
+              </p>
               <h2 className="text-center font-bold text-gray-100">
                 {calculateFloorPrice(filteredAndSortedTokens).toFixed(2)}{' '}
                 {filteredAndSortedTokens.length > 0
@@ -750,14 +759,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
               filteredAndSortedTokens.map((tokenData) => (
                 <div
                   key={tokenData.tokenManager?.pubkey.toString()}
-                  style={{
-                    paddingTop: '10px',
-                    display: 'flex',
-                    gap: '10px',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
+                  className="flex flex-col justify-center pt-[10px] align-middle"
                 >
                   <>
                     <NFT
@@ -769,7 +771,9 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                       {
                         [TokenManagerState.Initialized]: <>Initiliazed</>,
                         [TokenManagerState.Issued]: (
-                          <div className="flex w-full justify-between">
+                          <div
+                            className={`flex min-h-[82px] w-[280px] flex-row justify-between rounded-bl-md rounded-br-md bg-white/[.15] p-3`}
+                          >
                             <StyledTag>
                               <div
                                 style={{
@@ -785,7 +789,28 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                                 >
                                   {tokenData.timeInvalidator?.parsed ? (
                                     <div className="float-left">
-                                      {getDurationText(tokenData)}
+                                      <p className="mb-1 flex w-full flex-row-reverse justify-end pb-0 font-bold text-white">
+                                        <div className="ml-[6px] mt-[2px] flex w-fit">
+                                          <span
+                                            className=" flex w-full text-left"
+                                            onClick={() =>
+                                              handleCopy(
+                                                getLink(
+                                                  `/claim/${tokenData.tokenManager?.pubkey.toBase58()}`
+                                                )
+                                              )
+                                            }
+                                          >
+                                            <FaLink />
+                                          </span>
+                                        </div>
+                                        <p className="flex w-fit text-left">
+                                          {tokenData.metadata.data.name}
+                                        </p>
+                                      </p>
+                                      <StyledSecondaryText>
+                                        {getDurationText(tokenData)}
+                                      </StyledSecondaryText>
                                       <br />{' '}
                                       <DisplayAddress
                                         connection={connection}
@@ -803,7 +828,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                               </div>
                             </StyledTag>
 
-                            <div className="flex w-max">
+                            <div className="flex w-max flex-col justify-end">
                               <AsyncButton
                                 bgColor={config.colors.secondary}
                                 variant="primary"
@@ -841,28 +866,36 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                                   </>
                                 )}
                               </AsyncButton>
-                              <Button
-                                variant="tertiary"
-                                className="mr-1 inline-block flex-none"
-                                onClick={() =>
-                                  handleCopy(
-                                    getLink(
-                                      `/claim/${tokenData.tokenManager?.pubkey.toBase58()}`
-                                    )
-                                  )
-                                }
-                              >
-                                <FaLink />
-                              </Button>
                             </div>
                           </div>
                         ),
                         [TokenManagerState.Claimed]: (
-                          <div className="flex w-full justify-between">
+                          <div
+                            className={`flex min-h-[82px] w-[280px] flex-row justify-between rounded-bl-md rounded-br-md bg-white/[.15] p-3`}
+                          >
                             <StyledTag>
+                              <p className="float-left mb-1 flex w-full flex-row-reverse justify-end pb-0 text-xs font-bold text-white">
+                                <div className="ml-[6px] mt-[2px] w-fit">
+                                  <span
+                                    className="flex text-left"
+                                    onClick={() =>
+                                      handleCopy(
+                                        getLink(
+                                          `/claim/${tokenData.tokenManager?.pubkey.toBase58()}`
+                                        )
+                                      )
+                                    }
+                                  >
+                                    <FaLink />
+                                  </span>
+                                </div>
+                                <p className="flex w-fit text-left">
+                                  {tokenData.metadata.data.name}
+                                </p>
+                              </p>
                               <div className=" w-full">
                                 <Tag
-                                  state={TokenManagerState.Issued}
+                                  state={TokenManagerState.Claimed}
                                   // color="warning"
                                 >
                                   {getDurationText(tokenData)}
@@ -906,7 +939,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                               <Button
                                 variant="primary"
                                 disabled={!wallet.connected}
-                                className="mr-1 inline-block flex-none"
+                                className="mr-1 mt-[30px] inline-block flex-none"
                                 onClick={async () => {
                                   tokenData?.tokenManager &&
                                     executeTransaction(

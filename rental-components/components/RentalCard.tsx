@@ -532,6 +532,7 @@ export const RentalCard = ({
               returnable={invalidationType === InvalidationType.Return}
               revocable={customInvalidator ? true : false}
               lineHeight={12}
+              borderRadius={10}
             />
             {metadata && metadata.data && (
               // (metadata.data.animation_url ? (

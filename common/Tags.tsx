@@ -6,7 +6,7 @@ export const StyledTag = styled.span`
   text-align: center;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  // justify-content: center;
   align-items: center;
   span {
     border: none;
@@ -24,5 +24,5 @@ export const Tag = styled.div<{ state: TokenManagerState }>`
   color: white;
   font-size: 12px;
   cursor: pointer;
-  color: ${({ state }) => stateColor(state, true)};
+  color: ${({ state }) => stateColor(state, true)} !important;
 `

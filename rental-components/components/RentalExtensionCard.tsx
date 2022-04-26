@@ -270,7 +270,7 @@ export const RentalExtensionCard = ({
         )}
         <ImageWrapper>
           <NFTOuter>
-            <TokenDataOverlay tokenData={tokenData} lineHeight={12} />
+            <TokenDataOverlay tokenData={tokenData} lineHeight={12} borderRadius={10} />
             {metadata && metadata.data && (
               // (metadata.data.animation_url ? (
               //   // @ts-ignore
