@@ -7,6 +7,7 @@ import { WalletIdentityProvider } from '@cardinal/namespaces-components'
 import { WalletProvider } from '@solana/wallet-adapter-react'
 import { WalletModalProvider } from '@solana/wallet-adapter-react-ui'
 import { getWalletAdapters } from '@solana/wallet-adapter-wallets'
+import { ToastContainer } from 'common/Notification'
 import type { ProjectConfig } from 'config/config'
 import type { AppProps } from 'next/app'
 import { EnvironmentProvider } from 'providers/EnvironmentProvider'
@@ -45,7 +46,10 @@ const App = ({
                         <RentalExtensionModalProvider>
                           <RentalRateModalProvider>
                             <WalletModalProvider>
-                              <Component {...pageProps} />
+                              <>
+                                <ToastContainer />
+                                <Component {...pageProps} />
+                              </>
                             </WalletModalProvider>
                           </RentalRateModalProvider>
                         </RentalExtensionModalProvider>

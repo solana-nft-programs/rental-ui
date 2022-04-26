@@ -191,8 +191,6 @@ export const Header = ({
   const { config, setProjectConfig } = useProjectConfig()
   const { host } = router.query
 
-  console.log(config.logoImage)
-
   useEffect(() => {
     if (config.colors) {
       Colors.navBg = config.colors.main
