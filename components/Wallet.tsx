@@ -62,6 +62,7 @@ export const Wallet = () => {
             <NFT
               key={tokenData?.tokenAccount?.pubkey.toBase58()}
               tokenData={tokenData}
+              fullyRounded={true}
             ></NFT>
             {tokenData.timeInvalidator?.parsed?.extensionDurationSeconds && tokenData.tokenManager ? (
               <Button

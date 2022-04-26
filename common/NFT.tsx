@@ -158,8 +158,7 @@ export const TokenMetadata = styled.div`
     max-width: 100%;
     #media {
       object-fit: contain;
-      // max-width: 250px;
-      border-radius: 10px 10px 0px 0px;
+      // max-width: 250px;      
       height: 100%;
       --poster-color: transparent;
     }
@@ -169,9 +168,10 @@ export const TokenMetadata = styled.div`
 interface NFTProps {
   tokenData: TokenData
   hideQRCode?: boolean
+  fullyRounded?: boolean
 }
 
-export function NFT({ tokenData, hideQRCode }: NFTProps) {
+export function NFT({ tokenData, hideQRCode, fullyRounded }: NFTProps) {
   const ctx = useEnvironmentCtx()
   const wallet = useWallet()
   const { show } = useQRCode()
@@ -335,6 +335,7 @@ export function NFT({ tokenData, hideQRCode }: NFTProps) {
             src={metadata.data.image}
             // src={customImageUri || metadata.data.image}
             alt={metadata.data.name}
+            className={fullyRounded ? "rounded-[10px]" : "rounded-tr-[10px] rounded-tl-[10px]"}
           />
         )}
       </div>

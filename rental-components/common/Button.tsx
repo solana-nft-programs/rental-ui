@@ -20,7 +20,8 @@ export const Button = styled.button<ButtonProps>`
   opacity: ${({ disabled }) => (disabled ? '0.5' : '1')};
   border: none;
   outline: none;
-  height: 26px;
+  min-height: 26px;
+  height: fit-content;
   font-size: 12px;
   mix-blend-mode: normal;
   box-shadow: ${({ boxShadow }) =>

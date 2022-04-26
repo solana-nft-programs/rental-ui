@@ -58,6 +58,7 @@ export const Manage = () => {
                 key={tokenData?.tokenManager?.pubkey.toBase58()}
                 tokenData={tokenData}
                 hideQRCode={true}
+                fullyRounded={true}
               ></NFT>
               {
                 {

@@ -762,14 +762,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
               filteredAndSortedTokens.map((tokenData) => (
                 <div
                   key={tokenData.tokenManager?.pubkey.toString()}
-                  style={{
-                    paddingTop: '10px',
-                    display: 'flex',
-                    // gap: '10px',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
+                  className="pt-[10px] flex flex-col justify-center align-middle"                  
                 >
                   <>
                     <NFT
@@ -782,7 +775,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                         [TokenManagerState.Initialized]: <>Initiliazed</>,
                         [TokenManagerState.Issued]: (
                           <div
-                            className={`flex justify-between rounded-bl-md rounded-br-md bg-white/[.15] p-3 w-[280px]`}
+                            className={`flex flex-row justify-between rounded-bl-md rounded-br-md bg-white/[.15] p-3 w-[280px]`}
                           >
                             <StyledTag>
                               <div
