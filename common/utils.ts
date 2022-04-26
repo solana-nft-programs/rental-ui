@@ -1,5 +1,7 @@
 import type * as web3 from '@solana/web3.js'
 
+export type Cluster = web3.Cluster | 'mainnet' | 'localnet'
+
 export function getExpirationString(expiration: number, UTCSecondsNow: number) {
   let day = (expiration - UTCSecondsNow) / 60 / 60 / 24
   let hour = ((expiration - UTCSecondsNow) / 60 / 60) % 24

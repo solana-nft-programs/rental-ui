@@ -1,40 +1,119 @@
-import { notification } from 'antd'
+import styled from '@emotion/styled'
+import { lighten } from 'polished'
+import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import React from 'react'
+import toast, { resolveValue, ToastBar, Toaster } from 'react-hot-toast'
+import { VscClose } from 'react-icons/vsc'
+
+import type { Cluster } from './utils'
+
+interface INotifyArgs {
+  message?: string
+  description?: React.ReactNode
+  txid?: string
+  txids?: string[]
+  cluster?: Cluster
+  type?: 'success' | 'error' | 'info' | 'warn'
+}
 
 export function notify({
   message,
   description,
   txid,
-  type = 'info',
-  placement = 'topRight',
+  txids,
   cluster,
-}: {
-  message: string
-  description?: string | JSX.Element
-  txid?: string
-  type?: string
-  placement?: string
-  cluster?: string
-}) {
-  // @ts-ignore
-  notification[type]({
-    message: <span>{message}</span>,
-    description: (
-      <>
-        <div>{description}</div>
-        {txid && (
-          <a
-            rel="noreferrer"
-            target="_blank"
-            href={`https://explorer.solana.com/tx/${txid}${
-              cluster === 'devnet' ? '?cluster=devnet' : ''
-            }`}
-          >
-            View transaction {txid.slice(0, 8)}...{txid.slice(txid.length - 8)}
-          </a>
-        )}
-      </>
-    ),
-    placement,
+  type = 'info',
+}: INotifyArgs): void {
+  const logLevel =
+    type === 'warn' ? 'warn' : type === 'error' ? 'error' : 'info'
+  if (txids?.length === 1) {
+    txid = txids[0]
+  }
+  console[logLevel](`Notify: ${message ?? '<no message>'}`, description, {
+    cluster,
+    txid,
+    txids,
+    type,
   })
+
+  if (txid) {
+    description = (
+      <div>
+        View Transaction:{' '}
+        <a
+          href={`https://explorer.solana.com/tx/${txid}?cluster=${
+            cluster?.toString() ?? ''
+          }`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {txid.slice(0, 8)}...{txid.slice(txid.length - 8)}
+        </a>
+      </div>
+    )
+  } else if (txids) {
+    description = (
+      <div>
+        View Transactions:{' '}
+        <TxContainer>
+          {txids.map((txid, i) => (
+            <a
+              key={i}
+              href={`https://explorer.solana.com/tx/${txid}?cluster=${
+                cluster?.toString() ?? ''
+              }`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              [{i + 1}]
+            </a>
+          ))}
+        </TxContainer>
+      </div>
+    )
+  }
+  toast(
+    <div className="flex flex-col gap-1 text-sm">
+      <div className="font-medium">{message}</div>
+      {description && <div className="text-secondary">{description}</div>}
+    </div>
+  )
+}
+
+const TxContainer = styled.div`
+  display: inline-flex;
+  gap: 4px;
+`
+
+export function ToastContainer() {
+  const { config } = useProjectConfig()
+  return (
+    <Toaster position="top-right">
+      {(t) => (
+        <ToastBar toast={t} style={{ background: 'none', border: 'none' }}>
+          {() => (
+            <div
+              className={`relative flex w-full max-w-sm gap-4 rounded border p-4 shadow ${
+                t.visible ? 'animate-enter' : 'animate-leave'
+              }`}
+              style={{
+                borderColor: config.colors.secondary,
+                backgroundColor: lighten(0.1, config.colors.main),
+                color: config.colors.secondary,
+              }}
+            >
+              {resolveValue(t.message, t)}
+              <button
+                style={{ color: config.colors.secondary }}
+                className={``}
+                onClick={() => toast.dismiss(t.id)}
+              >
+                <VscClose />
+              </button>
+            </div>
+          )}
+        </ToastBar>
+      )}
+    </Toaster>
+  )
 }
