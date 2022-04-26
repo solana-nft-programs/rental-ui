@@ -17,6 +17,8 @@ import {
   DisabledEllipsisStyle,
   EllipsisStyle,
   MediaOuterStyle,
+  NFTImageHeight,
+  NFTImageWidth,
   QRCodeStyle,
   TokenMetadataStyle,
   UnissueStyle,
@@ -36,7 +38,6 @@ export function NFT({ tokenData, hideQRCode, className }: NFTProps) {
   const { show } = useQRCode()
   const rentalModal = useRentalModal()
   const { config } = useProjectConfig()
-  // const [showPopover, setShowPopover] = useState(false)
 
   const {
     tokenAccount,
@@ -175,7 +176,7 @@ export function NFT({ tokenData, hideQRCode, className }: NFTProps) {
         )}
         {metadata && metadata.data && (
           <img
-            className="h-[200px] rounded-xl object-contain sm:h-[175px] md:h-[150px] lg:h-[175px] xl:h-[190px] 2xl:h-[240px]"
+            className={`${NFTImageHeight} ${NFTImageWidth} rounded-xl object-contain`}
             src={metadata.data.image}
             // src={customImageUri || metadata.data.image}
             alt={metadata.data.name}

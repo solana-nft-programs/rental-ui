@@ -1,28 +1,40 @@
-import type { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
-import styled from '@emotion/styled'
-import { stateColor } from 'common/NFTOverlay'
+// import type { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
+// import { stateColor } from 'common/NFTOverlay'
 
-export const StyledTag = styled.span`  
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  span {
-    border: none;
-    background: none;
-    display: block;
-    width: 100%;
-  }
-  button {
-    margin: 5px 0px;
-  }
-`
+export function StyledTag({
+  children,
+  className,
+}: {
+  children: React.ReactNode
+  className?: string
+}) {
+  return (
+    <span
+      className={`${className} flex flex-col items-center justify-center text-center`}
+    >
+      {children}
+    </span>
+  )
+}
 
-export const Tag = styled.div<{ state: TokenManagerState }>`
-  display: flex;
-  color: white;
-  font-size: 12px;
-  cursor: pointer;
-  color: ${({ state }) => stateColor(state, true)};
-`
+export function Tag({
+  children,
+  // state,
+  className,
+  onClick,
+}: {
+  children: React.ReactNode
+  // state: TokenManagerState
+  className?: string
+  onClick?: () => void
+}) {
+  return (
+    <span
+      onClick={onClick}
+      className={`${className} flex cursor-pointer text-xs`}
+      // style={{ color: stateColor(state, true) }}
+    >
+      {children}
+    </span>
+  )
+}

@@ -28,6 +28,8 @@ export const Collections = ({ setTab }: { setTab: (s: string) => void }) => {
           <NFTPlaceholder />
           <NFTPlaceholder />
           <NFTPlaceholder />
+          <NFTPlaceholder />
+          <NFTPlaceholder />
         </div>
       ) : projectConfigs ? (
         Object.entries(categories).map(([type, configs]) => (

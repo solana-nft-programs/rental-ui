@@ -55,11 +55,13 @@ export const Wallet = () => {
         </>
       ) : tokenDatas && tokenDatas.length > 0 ? (
         tokenDatas.map((tokenData) => (
-          <div key={tokenData.tokenAccount?.pubkey.toString()}>
+          <div
+            className="flex justify-center"
+            key={tokenData.tokenAccount?.pubkey.toString()}
+          >
             <NFT
               key={tokenData?.tokenAccount?.pubkey.toBase58()}
               tokenData={tokenData}
-              className="w-full"
             ></NFT>
             {tokenData.timeInvalidator?.parsed?.extensionDurationSeconds &&
             tokenData.tokenManager ? (

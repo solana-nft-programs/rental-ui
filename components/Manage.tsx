@@ -40,6 +40,8 @@ export const Manage = () => {
           <NFTPlaceholder />
           <NFTPlaceholder />
           <NFTPlaceholder />
+          <NFTPlaceholder />
+          <NFTPlaceholder />
         </>
       ) : managedTokens && managedTokens.length > 0 ? (
         managedTokens.map((tokenData) => (
@@ -74,7 +76,7 @@ export const Manage = () => {
                             )
                           )
                         }
-                        color="warning"
+                        // color="warning"
                       >
                         Issued by{' '}
                         {shortPubKey(tokenData.tokenManager?.parsed.issuer)}{' '}

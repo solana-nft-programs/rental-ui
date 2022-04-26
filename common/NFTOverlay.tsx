@@ -67,9 +67,16 @@ const StyledOverlay = styled.div<{
 
   .logo {
     position: absolute;
-    bottom: 4%;
-    right: 4%;
-    width: 12%;
+    bottom: 2%;
+    right: 3%;
+    color: white;
+  }
+
+  .logo1 {
+    position: absolute;
+    bottom: 2%;
+    left: 3%;
+    color: white;
   }
 
   .expiration {
@@ -79,13 +86,13 @@ const StyledOverlay = styled.div<{
 
 export const stateColor = (state: TokenManagerState, light = false): string => {
   if (state === TokenManagerState.Invalidated) {
-    return 'rgba(125, 0, 0, 1)'
+    return '#7d0000'
   } else if (state === TokenManagerState.Issued) {
     return light ? '#d89614' : '#593815'
   } else if (state === TokenManagerState.Claimed) {
     return light ? '#52c41a' : '#274916'
   } else {
-    return 'rgba(255, 255, 255, 0.3)`'
+    return '#ffffff opacity-30`'
   }
 }
 
@@ -269,8 +276,11 @@ export function NFTOverlay({
           </div>
         )}
       </div>
-      <div className="logo">
-        <img src="/assets/cardinal-crosshair.svg" alt="crosshair"></img>
+      <div className="logo1 text-sm font-medium text-white opacity-95">
+        Max claim
+      </div>
+      <div className="logo text-sm font-medium text-white opacity-95">
+        11w 6d 20h
       </div>
     </StyledOverlay>
   )
