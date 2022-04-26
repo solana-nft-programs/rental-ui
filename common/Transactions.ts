@@ -16,7 +16,11 @@ export const executeTransaction = async (
     silent?: boolean
     signers?: Signer[]
     confirmOptions?: ConfirmOptions
-    notificationConfig?: { message?: string; errorMessage?: string }
+    notificationConfig?: {
+      message?: string
+      errorMessage?: string
+      description?: string
+    }
     callback?: () => void
   }
 ): Promise<string> => {
@@ -38,15 +42,16 @@ export const executeTransaction = async (
     console.log('Successful tx', txid)
     config.notificationConfig &&
       notify({
-        message: config.notificationConfig.message ?? 'Succesful transaction',
+        message: 'Succesful transaction',
+        description: config.notificationConfig.message,
         txid,
       })
   } catch (e) {
     console.log('Failed transaction: ', e)
     config.notificationConfig &&
       notify({
-        message:
-          config.notificationConfig.errorMessage ?? `Failed transaction: ${e}`,
+        message: 'Failed transaction',
+        description: config.notificationConfig.errorMessage ?? `${e}`,
         txid,
         type: 'error',
       })

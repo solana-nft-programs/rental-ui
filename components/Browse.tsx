@@ -38,7 +38,10 @@ const { Option } = Select
 
 const handleCopy = (shareUrl: string) => {
   navigator.clipboard.writeText(shareUrl)
-  notify({ message: 'Share link copied' })
+  notify({
+    message: 'Share link copied',
+    description: 'Paste this link from your clipboard',
+  })
 }
 
 enum OrderCategories {
@@ -457,7 +460,8 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
       })
     } catch (e: any) {
       notify({
-        message: e.toString(),
+        message: 'Error claiming rental',
+        description: e.toString(),
       })
       console.log(e)
     } finally {

@@ -4,6 +4,7 @@ import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import React from 'react'
 import toast, { resolveValue, ToastBar, Toaster } from 'react-hot-toast'
 import { VscClose } from 'react-icons/vsc'
+import { getColorByBgColor } from 'rental-components/common/Button'
 
 import type { Cluster } from './utils'
 
@@ -75,8 +76,9 @@ export function notify({
   toast(
     <div className="flex flex-col gap-1 text-sm">
       <div className="font-medium">{message}</div>
-      {description && <div className="text-secondary">{description}</div>}
-    </div>
+      {description && <div style={{ opacity: '.5' }}>{description}</div>}
+    </div>,
+    { duration: 5000 }
   )
 }
 
@@ -90,7 +92,10 @@ export function ToastContainer() {
   return (
     <Toaster position="top-right">
       {(t) => (
-        <ToastBar toast={t} style={{ background: 'none', border: 'none' }}>
+        <ToastBar
+          toast={t}
+          style={{ background: 'none', border: 'none', padding: '0px' }}
+        >
           {() => (
             <div
               className={`relative flex w-full max-w-sm gap-4 rounded border p-4 shadow ${
@@ -99,12 +104,12 @@ export function ToastContainer() {
               style={{
                 borderColor: config.colors.secondary,
                 backgroundColor: lighten(0.1, config.colors.main),
-                color: config.colors.secondary,
+                color: getColorByBgColor(config.colors.main),
               }}
             >
               {resolveValue(t.message, t)}
               <button
-                style={{ color: config.colors.secondary }}
+                style={{ color: getColorByBgColor(config.colors.main) }}
                 className={``}
                 onClick={() => toast.dismiss(t.id)}
               >
