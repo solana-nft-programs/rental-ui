@@ -126,7 +126,7 @@ export const secondsToString = (
   const seconds = Math.round(requiredSeconds % 60)
 
   return `${weeks ? `${weeks}w ` : ''} ${days ? `${days}d ` : ''}${
-    hours ? `${hours}h ` : ''
+    !weeks && hours ? `${hours}h ` : ''
   }${!weeks && minutes ? `${minutes}m ` : ''}${
     seconds && showSeconds ? `${seconds}s` : ''
   }`

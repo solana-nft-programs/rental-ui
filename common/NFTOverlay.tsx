@@ -30,9 +30,9 @@ const StyledOverlay = styled.div<{
 
   background: ${({ shadow }) =>
     shadow
-      ? 'linear-gradient(rgba(26, 27, 32, 0.2) 60%,rgba(26, 27, 32, 0.4),rgba(26, 27, 32, 1) 90%)'
+      ? 'linear-gradient(rgba(26, 27, 32, 0.2) 70%,rgba(26, 27, 32, 0.4),rgba(26, 27, 32, 0.6) 100%)'
       : 'none'};
-  border-radius: 10px;
+  // border-radius: 10px;
   z-index: 2;
   // outline: 6px solid black;
 
@@ -96,6 +96,7 @@ function getBoxShadow(
   totalUsages: number | undefined,
   lineHeight: number
 ) {
+  return '0 0 0 0'
   if (
     state === TokenManagerState.Invalidated ||
     (totalUsages && usages && usages >= totalUsages) ||

@@ -24,5 +24,5 @@ export const Tag = styled.div<{ state: TokenManagerState }>`
   color: white;
   font-size: 12px;
   cursor: pointer;
-  color: ${({ state }) => stateColor(state, true)};
+  color: ${({ state }) => stateColor(state, true)} !important;
 `
