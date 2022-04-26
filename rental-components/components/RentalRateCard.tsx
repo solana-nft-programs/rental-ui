@@ -4,7 +4,7 @@ import styled from '@emotion/styled'
 import * as anchor from '@project-serum/anchor'
 import type { Wallet } from '@saberhq/solana-contrib'
 import type * as splToken from '@solana/spl-token'
-import { Connection , Transaction } from '@solana/web3.js'
+import { Connection, Transaction } from '@solana/web3.js'
 import { InputNumber, Select } from 'antd'
 import { Option } from 'antd/lib/mentions'
 import type { TokenData } from 'api/api'
@@ -38,12 +38,8 @@ import { MintPriceSelector } from 'rental-components/common/MintPriceSelector'
 import { PoweredByFooter } from 'rental-components/common/PoweredByFooter'
 import { StepDetail } from 'rental-components/common/StepDetail'
 
-import type {
-  DurationOption} from './RentalCard';
-import {
-  DURATION_DATA,
-  SECONDS_TO_DURATION,
-} from './RentalCard'
+import type { DurationOption } from './RentalCard'
+import { DURATION_DATA, SECONDS_TO_DURATION } from './RentalCard'
 
 const NFTOuter = styled.div`
   margin: 20px auto 0px auto;
@@ -181,7 +177,7 @@ export const RentalRateCard = ({
     try {
       setError('')
       setExtensionSuccess(false)
-      setLoading(true)  
+      setLoading(true)
       if (!tokenData.tokenManager) throw 'Token manager not found'
       if (!currentExtensionSeconds) throw 'No duration specified'
       // wrap sol if there is payment required
@@ -202,7 +198,7 @@ export const RentalRateCard = ({
       await withClaimToken(
         transaction,
         environment.override
-        ? new Connection(environment.override)
+          ? new Connection(environment.override)
           : connection,
         wallet,
         tokenData.tokenManager?.pubkey
@@ -319,7 +315,11 @@ export const RentalRateCard = ({
         )}
         <ImageWrapper>
           <NFTOuter>
-            <TokenDataOverlay tokenData={tokenData} lineHeight={12} borderRadius={10} />
+            <TokenDataOverlay
+              tokenData={tokenData}
+              lineHeight={12}
+              borderRadius={10}
+            />
             {metadata && metadata.data && (
               <img
                 className="media"
@@ -505,7 +505,7 @@ export const RentalRateCard = ({
                   <Alert
                     style={{ height: 'auto' }}
                     message={
-                      <>
+                      <div className="ml-2">
                         {paymentAmount !== 0 ||
                         extensionPaymentAmount?.toNumber() === 0
                           ? `Pay ${fmtMintAmount(
@@ -520,7 +520,13 @@ export const RentalRateCard = ({
                               currentExtensionSeconds
                             )}`
                           : `Enter a duration to rent this NFT at the specified rate.`}
-                      </>
+
+                        <div className="mt-1 flex gap-3">
+                          <p>
+                            <b>Rate: </b> {loadRate()}
+                          </p>
+                        </div>
+                      </div>
                     }
                     type="info"
                     showIcon
