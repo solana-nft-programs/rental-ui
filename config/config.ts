@@ -1,3 +1,4 @@
+import { PublicKey } from '@solana/web3.js'
 import type { AirdropMetadata } from 'common/Airdrop'
 import type {
   DurationOption,
@@ -29,6 +30,7 @@ export type ProjectConfig = {
     hideFilters?: boolean
   }
   marketplaceRate?: DurationOption
+  paymentManager?: PublicKey
 }
 
 export const projectConfigs: { [key: string]: ProjectConfig } = {
@@ -239,7 +241,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         uri: 'https://bafkreicv3jj6oc53kid76mkk7hqsr6edrnhsydkw4do4vonq777sgfz3le.ipfs.dweb.link?ext=json',
       },
     ],
-    marketplaceRate: 'weeks'
+    marketplaceRate: 'days',
   },
   portals: {
     name: 'portals',
@@ -278,6 +280,9 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
           value: 7258000,
         },
       },
+      paymentManager: new PublicKey(
+        'cprtEVpR3uPs38USVq1MYrPMW7exZTnq2kRNSuvjvYM'
+      ),
     },
     airdrops: [
       {
@@ -296,7 +301,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         uri: 'https://arweave.net/6ZcTxyREtg0WsOSGSBq-CSyQ3DPlU1k4R_A7mrgehRE',
       },
     ],
-    marketplaceRate: 'weeks',
+    marketplaceRate: 'days',
   },
   monke: {
     name: 'monke',
@@ -358,7 +363,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         uri: 'https://arweave.net/JR_l_iOJVvVSiuySnFKsMbDtZ61deFwkr4-wch_TJzc',
       },
     ],
-    marketplaceRate: 'weeks',
+    marketplaceRate: 'days',
   },
   br1: {
     name: 'br1',
@@ -401,7 +406,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         },
       },
     },
-    marketplaceRate: 'weeks',
+    marketplaceRate: 'days',
   },
   defiland: {
     name: 'defiland',
@@ -442,7 +447,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         },
       },
     },
-    marketplaceRate: 'weeks',
+    marketplaceRate: 'days',
   },
   metaops: {
     name: 'metaops',
@@ -479,7 +484,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
           displayText: '12 weeks',
           value: 7258000,
         },
-      }, 
+      },
     },
     airdrops: [
       {
@@ -503,7 +508,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         uri: 'https://www.magiceden.io/item-details/4r9jMVm5rXdiCLa2oMLkV2ecL3wmmcoFtsMUJJoum38r',
       },
     ],
-    marketplaceRate: 'weeks',
+    marketplaceRate: 'days',
   },
   ['all-starz']: {
     name: 'all-starz',
@@ -536,7 +541,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         },
       },
     },
-    marketplaceRate: 'weeks',
+    marketplaceRate: 'days',
   },
   ['3dgamersguild']: {
     name: '3dgamersguild',
@@ -570,6 +575,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         },
       },
     },
-    marketplaceRate: 'weeks',
+    marketplaceRate: 'days',
   },
 }

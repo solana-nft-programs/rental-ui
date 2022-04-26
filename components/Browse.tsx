@@ -31,7 +31,7 @@ import { getLink } from 'providers/ProjectConfigProvider'
 import React, { useState } from 'react'
 import { FaLink } from 'react-icons/fa'
 import { AsyncButton, Button } from 'rental-components/common/Button'
-import { DURATION_DATA } from 'rental-components/components/RentalCard'
+import { DurationOption, DURATION_DATA } from 'rental-components/components/RentalCard'
 import { useRentalRateModal } from 'rental-components/RentalRateModalProvider'
 
 const { Option } = Select
@@ -69,8 +69,6 @@ const boundsToSeconds: { [key in number]: number } = {
   80: 2419200,
   100: Infinity,
 }
-
-const globalRate = 604800
 
 const getAllAttributes = (tokens: TokenData[]) => {
   const allAttributes: { [traitType: string]: Set<any> } = {}
@@ -119,18 +117,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
   const rentalRateModal = useRentalRateModal()
   const currentTime = Date.now() / 1000
 
-  // if (
-  //   config.marketplaceRate &&
-  //   !allOrderCategories.includes(OrderCategories.MaxDurationHighToLow)
-  // ) {
-  //   allOrderCategories.push(
-  //     ...[
-  //       OrderCategories.MaxDurationLowToHigh,
-  //       OrderCategories.MaxDurationHighToLow,
-  //     ]
-  //   )
-  //   allOrderCategories.splice(1, 2)
-  // }
+  const globalRate = DURATION_DATA[config.marketplaceRate ?? 'days'] 
 
   const StyledSelect = styled.div`
     .ant-select-selector {
@@ -631,7 +618,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
         <div className="mb-4 flex h-min flex-col flex-wrap justify-center md:w-4/5 md:flex-row md:justify-between">
           <div className="flex h-fit">
             <div className="d-block flex-col  border-2 border-gray-600 py-3 px-5 md:ml-12">
-              <p className="text-gray-400">FLOOR PRICE / WEEK</p>
+              <p className="text-gray-400">FLOOR PRICE / {config.marketplaceRate ? config.marketplaceRate.substring(0, config.marketplaceRate.length-1).toUpperCase() : 'DAY'}</p>
               <h2 className="text-center font-bold text-gray-100">
                 {calculateFloorPrice(filteredAndSortedTokens).toFixed(2)}{' '}
                 {filteredAndSortedTokens.length > 0

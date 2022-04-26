@@ -170,6 +170,7 @@ export type RentalCardConfig = {
     setDisablePartialExtension?: boolean
     showDisablePartialExtension?: boolean
   }
+  paymentManager?: PublicKey
 }
 
 export type RentalCardProps = {
@@ -447,6 +448,7 @@ export const RentalCard = ({
                         : undefined,
                     }
                   : undefined,
+                paymentManager: rentalCardConfig.paymentManager ?? undefined,
               }
             : undefined,
         useInvalidation: totalUsages ? { totalUsages: totalUsages } : undefined,
@@ -1169,7 +1171,7 @@ export const RentalCard = ({
                     message={
                       <>
                         <div>
-                          Whoever claims this rental will own the asset{' '}
+                          Whoever claims this rental may own the asset{' '}
                           {totalUsages && expiration ? (
                             `for either ${totalUsages} uses or until ${longDateString(
                               expiration
