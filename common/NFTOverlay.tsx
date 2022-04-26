@@ -98,27 +98,27 @@ function getBoxShadow(
   lineHeight: number
 ) {
   return '0 0 0 0'
-  if (
-    state === TokenManagerState.Invalidated ||
-    (totalUsages && usages && usages >= totalUsages) ||
-    (expiration && expiration <= Math.floor(Date.now() / 1000))
-  ) {
-    return `0 0 ${0.4 * lineHeight}px ${0.4 * lineHeight}px ${stateColor(
-      TokenManagerState.Invalidated
-    )}`
-  } else if (state === TokenManagerState.Issued) {
-    return `0 0 ${0.4 * lineHeight}px ${0.4 * lineHeight}px ${stateColor(
-      TokenManagerState.Issued
-    )}`
-  } else if (state === TokenManagerState.Claimed) {
-    return `0 0 ${0.4 * lineHeight}px ${0.4 * lineHeight}px ${stateColor(
-      TokenManagerState.Claimed
-    )}`
-  } else {
-    return `0 0 ${0.4 * lineHeight}px ${0.4 * lineHeight}px ${stateColor(
-      state
-    )}`
-  }
+  // if (
+  //   state === TokenManagerState.Invalidated ||
+  //   (totalUsages && usages && usages >= totalUsages) ||
+  //   (expiration && expiration <= Math.floor(Date.now() / 1000))
+  // ) {
+  //   return `0 0 ${0.4 * lineHeight}px ${0.4 * lineHeight}px ${stateColor(
+  //     TokenManagerState.Invalidated
+  //   )}`
+  // } else if (state === TokenManagerState.Issued) {
+  //   return `0 0 ${0.4 * lineHeight}px ${0.4 * lineHeight}px ${stateColor(
+  //     TokenManagerState.Issued
+  //   )}`
+  // } else if (state === TokenManagerState.Claimed) {
+  //   return `0 0 ${0.4 * lineHeight}px ${0.4 * lineHeight}px ${stateColor(
+  //     TokenManagerState.Claimed
+  //   )}`
+  // } else {
+  //   return `0 0 ${0.4 * lineHeight}px ${0.4 * lineHeight}px ${stateColor(
+  //     state
+  //   )}`
+  // }
 }
 
 export function TokenDataOverlay({
