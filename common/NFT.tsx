@@ -175,7 +175,7 @@ export function NFT({ tokenData, hideQRCode, className }: NFTProps) {
         )}
         {metadata && metadata.data && (
           <img
-            className="h-[280px] rounded-xl object-contain"
+            className="h-[200px] rounded-xl object-contain sm:h-[175px] md:h-[150px] lg:h-[175px] xl:h-[190px] 2xl:h-[240px]"
             src={metadata.data.image}
             // src={customImageUri || metadata.data.image}
             alt={metadata.data.name}
