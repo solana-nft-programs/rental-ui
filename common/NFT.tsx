@@ -27,9 +27,10 @@ import { asWallet } from './Wallets'
 interface NFTProps {
   tokenData: TokenData
   hideQRCode?: boolean
+  className?: string
 }
 
-export function NFT({ tokenData, hideQRCode }: NFTProps) {
+export function NFT({ tokenData, hideQRCode, className }: NFTProps) {
   const ctx = useEnvironmentCtx()
   const wallet = useWallet()
   const { show } = useQRCode()
@@ -52,7 +53,7 @@ export function NFT({ tokenData, hideQRCode }: NFTProps) {
     tokenData.editionData
 
   return (
-    <TokenMetadataStyle className="w-[280px]">
+    <TokenMetadataStyle className={`${className}`}>
       {wallet &&
         wallet.connected &&
         (!tokenManager ? (
@@ -154,7 +155,7 @@ export function NFT({ tokenData, hideQRCode }: NFTProps) {
             </QRCodeStyle>
           )
         ))}
-      <MediaOuterStyle className="h-[280px]">
+      <MediaOuterStyle className="h-full">
         {tokenManager && (
           <NFTOverlay
             state={tokenManager?.parsed.state}
@@ -174,7 +175,7 @@ export function NFT({ tokenData, hideQRCode }: NFTProps) {
         )}
         {metadata && metadata.data && (
           <img
-            className="h-full rounded-xl object-contain"
+            className="h-[280px] rounded-xl object-contain"
             src={metadata.data.image}
             // src={customImageUri || metadata.data.image}
             alt={metadata.data.name}

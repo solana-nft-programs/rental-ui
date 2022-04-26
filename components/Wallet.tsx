@@ -59,6 +59,7 @@ export const Wallet = () => {
             <NFT
               key={tokenData?.tokenAccount?.pubkey.toBase58()}
               tokenData={tokenData}
+              className="w-full"
             ></NFT>
             {tokenData.timeInvalidator?.parsed?.extensionDurationSeconds &&
             tokenData.tokenManager ? (
