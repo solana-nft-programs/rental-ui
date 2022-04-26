@@ -1,14 +1,11 @@
-import {
-  withInvalidate,
-} from '@cardinal/token-manager'
-import {
-  InvalidationType,
-} from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
+import { withInvalidate } from '@cardinal/token-manager'
+import { InvalidationType } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { Transaction } from '@solana/web3.js'
 import type { TokenData } from 'api/api'
 import { Airdrop } from 'common/Airdrop'
-import { NFT, TokensOuter } from 'common/NFT'
+import { TokensOuter } from 'common/CustomStyles'
+import { NFT } from 'common/NFT'
 import { NFTPlaceholder } from 'common/NFTPlaceholder'
 import { notify } from 'common/Notification'
 import { executeTransaction } from 'common/Transactions'
@@ -46,7 +43,7 @@ export const Wallet = () => {
   }
 
   return (
-    <TokensOuter>
+    <TokensOuter className="max-w-[1480px]">
       {!loaded ? (
         <>
           <NFTPlaceholder />
@@ -63,7 +60,8 @@ export const Wallet = () => {
               key={tokenData?.tokenAccount?.pubkey.toBase58()}
               tokenData={tokenData}
             ></NFT>
-            {tokenData.timeInvalidator?.parsed?.extensionDurationSeconds && tokenData.tokenManager ? (
+            {tokenData.timeInvalidator?.parsed?.extensionDurationSeconds &&
+            tokenData.tokenManager ? (
               <Button
                 variant="primary"
                 className="mx-auto mt-4"

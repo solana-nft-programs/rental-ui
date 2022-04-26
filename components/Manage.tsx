@@ -3,7 +3,8 @@ import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tok
 import { BN } from '@project-serum/anchor'
 import { useWallet } from '@solana/wallet-adapter-react'
 import type { PublicKey } from '@solana/web3.js'
-import { NFT, TokensOuter } from 'common/NFT'
+import { TokensOuter } from 'common/CustomStyles'
+import { NFT } from 'common/NFT'
 import { NFTPlaceholder } from 'common/NFTPlaceholder'
 import { notify } from 'common/Notification'
 import { StyledTag, Tag } from 'common/Tags'
@@ -30,7 +31,7 @@ export const Manage = () => {
   const { managedTokens, loaded } = useManagedTokens()
 
   return (
-    <TokensOuter>
+    <TokensOuter className="max-w-[1480px]">
       {!loaded ? (
         <>
           <NFTPlaceholder />
