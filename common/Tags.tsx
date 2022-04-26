@@ -6,7 +6,7 @@ export const StyledTag = styled.span`
   text-align: center;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  // justify-content: center;
   align-items: center;
   span {
     border: none;

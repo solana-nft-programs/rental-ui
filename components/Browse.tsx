@@ -775,7 +775,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                         [TokenManagerState.Initialized]: <>Initiliazed</>,
                         [TokenManagerState.Issued]: (
                           <div
-                            className={`flex flex-row justify-between rounded-bl-md rounded-br-md bg-white/[.15] p-3 w-[280px]`}
+                            className={`flex flex-row justify-between rounded-bl-md rounded-br-md bg-white/[.15] p-3 w-[280px] min-h-[82px]`}
                           >
                             <StyledTag>
                               <div
@@ -873,7 +873,9 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                           </div>
                         ),
                         [TokenManagerState.Claimed]: (
-                          <div className="flex w-full justify-between rounded-bl-md rounded-br-md bg-white/[.15] p-3">
+                          <div
+                            className={`flex flex-row justify-between rounded-bl-md rounded-br-md bg-white/[.15] p-3 w-[280px] min-h-[82px]`}
+                          >
                             <StyledTag>
                               <p className="float-left mb-1 flex w-full flex-row-reverse justify-end pb-0 text-xs font-bold text-white">
                                 <div className="ml-[6px] mt-[2px] w-fit">
@@ -940,7 +942,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                               <Button
                                 variant="primary"
                                 disabled={!wallet.connected}
-                                className="mr-1 inline-block flex-none"
+                                className="mr-1 inline-block flex-none mt-[30px]"
                                 onClick={async () => {
                                   tokenData?.tokenManager &&
                                     executeTransaction(

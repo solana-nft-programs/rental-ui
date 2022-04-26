@@ -319,7 +319,7 @@ export const RentalRateCard = ({
         )}
         <ImageWrapper>
           <NFTOuter>
-            <TokenDataOverlay tokenData={tokenData} lineHeight={12} />
+            <TokenDataOverlay tokenData={tokenData} lineHeight={12} borderRadius={10} />
             {metadata && metadata.data && (
               <img
                 className="media"

@@ -475,7 +475,7 @@ function Claim() {
                 {tokenData ? (
                   <>
                     <NFTOuter>
-                      <TokenDataOverlay tokenData={tokenData} lineHeight={14} />
+                      <TokenDataOverlay tokenData={tokenData} lineHeight={14} borderRadius={10} />
                       {tokenData?.metadata?.data && (
                         // (tokenData.metadata.data.animation_url ? (
                         //   // @ts-ignore
