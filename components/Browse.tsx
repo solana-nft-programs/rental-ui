@@ -31,10 +31,7 @@ import { getLink } from 'providers/ProjectConfigProvider'
 import React, { useState } from 'react'
 import { FaLink } from 'react-icons/fa'
 import { AsyncButton, Button } from 'rental-components/common/Button'
-import {
-  DurationOption,
-  DURATION_DATA,
-} from 'rental-components/components/RentalCard'
+import { DURATION_DATA } from 'rental-components/components/RentalCard'
 import { useRentalRateModal } from 'rental-components/RentalRateModalProvider'
 
 const { Option } = Select
@@ -762,7 +759,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
               filteredAndSortedTokens.map((tokenData) => (
                 <div
                   key={tokenData.tokenManager?.pubkey.toString()}
-                  className="pt-[10px] flex flex-col justify-center align-middle"                  
+                  className="flex flex-col justify-center pt-[10px] align-middle"
                 >
                   <>
                     <NFT
@@ -775,7 +772,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                         [TokenManagerState.Initialized]: <>Initiliazed</>,
                         [TokenManagerState.Issued]: (
                           <div
-                            className={`flex flex-row justify-between rounded-bl-md rounded-br-md bg-white/[.15] p-3 w-[280px] min-h-[82px]`}
+                            className={`flex min-h-[82px] w-[280px] flex-row justify-between rounded-bl-md rounded-br-md bg-white/[.15] p-3`}
                           >
                             <StyledTag>
                               <div
@@ -874,7 +871,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                         ),
                         [TokenManagerState.Claimed]: (
                           <div
-                            className={`flex flex-row justify-between rounded-bl-md rounded-br-md bg-white/[.15] p-3 w-[280px] min-h-[82px]`}
+                            className={`flex min-h-[82px] w-[280px] flex-row justify-between rounded-bl-md rounded-br-md bg-white/[.15] p-3`}
                           >
                             <StyledTag>
                               <p className="float-left mb-1 flex w-full flex-row-reverse justify-end pb-0 text-xs font-bold text-white">
@@ -942,7 +939,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                               <Button
                                 variant="primary"
                                 disabled={!wallet.connected}
-                                className="mr-1 inline-block flex-none mt-[30px]"
+                                className="mr-1 mt-[30px] inline-block flex-none"
                                 onClick={async () => {
                                   tokenData?.tokenManager &&
                                     executeTransaction(
