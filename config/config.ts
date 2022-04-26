@@ -43,7 +43,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     },
     filters: [],
     rentalCard: {
-      invalidators: ['duration', 'usages', 'expiration', 'manual'],
+      invalidators: ['duration', 'usages', 'expiration', 'manual', 'rate'],
       extensionOptions: { showDisablePartialExtension: true },
       invalidationOptions: {
         maxDurationAllowed: {
@@ -179,9 +179,13 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     },
     filters: [],
     rentalCard: {
-      invalidators: ['duration', 'usages', 'expiration', 'manual'],
+      invalidators: ['rate'],
       extensionOptions: { showDisablePartialExtension: true },
       invalidationOptions: {
+        freezeRentalDuration: {
+          value: '1',
+          durationOption: 'days',
+        },
         maxDurationAllowed: {
           displayText: '12 weeks',
           value: 7258000,
@@ -235,6 +239,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         uri: 'https://bafkreicv3jj6oc53kid76mkk7hqsr6edrnhsydkw4do4vonq777sgfz3le.ipfs.dweb.link?ext=json',
       },
     ],
+    marketplaceRate: 'weeks'
   },
   portals: {
     name: 'portals',
@@ -264,7 +269,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         },
         visibilities: ['public'],
         durationOptions: ['minutes', 'hours', 'days', 'weeks'],
-        invalidationTypes: ['return'],
+        invalidationTypes: ['reissue'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
@@ -313,11 +318,15 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       },
     ],
     rentalCard: {
-      invalidators: ['duration'],
+      invalidators: ['rate'],
       invalidationOptions: {
+        freezeRentalDuration: {
+          value: '1',
+          durationOption: 'days',
+        },
         visibilities: ['public'],
         durationOptions: ['minutes', 'hours', 'days', 'weeks'],
-        invalidationTypes: ['return'],
+        invalidationTypes: ['reissue'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
@@ -349,6 +358,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         uri: 'https://arweave.net/JR_l_iOJVvVSiuySnFKsMbDtZ61deFwkr4-wch_TJzc',
       },
     ],
+    marketplaceRate: 'weeks',
   },
   br1: {
     name: 'br1',
@@ -374,10 +384,14 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       },
     ],
     rentalCard: {
-      invalidators: ['duration'],
+      invalidators: ['rate'],
       invalidationOptions: {
+        freezeRentalDuration: {
+          value: '1',
+          durationOption: 'days',
+        },
         durationOptions: ['hours', 'days', 'weeks', 'years'],
-        invalidationTypes: ['return'],
+        invalidationTypes: ['reissue'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         setClaimRentalReceipt: true,
         showClaimRentalReceipt: false,
@@ -387,6 +401,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         },
       },
     },
+    marketplaceRate: 'weeks',
   },
   defiland: {
     name: 'defiland',
@@ -410,10 +425,14 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       },
     ],
     rentalCard: {
-      invalidators: ['duration'],
+      invalidators: ['rate'],
       invalidationOptions: {
+        freezeRentalDuration: {
+          value: '1',
+          durationOption: 'days',
+        },
         durationOptions: ['hours', 'days', 'weeks', 'years'],
-        invalidationTypes: ['return'],
+        invalidationTypes: ['reissue'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         setClaimRentalReceipt: true,
         showClaimRentalReceipt: false,
@@ -423,6 +442,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         },
       },
     },
+    marketplaceRate: 'weeks',
   },
   metaops: {
     name: 'metaops',
@@ -444,10 +464,14 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       },
     ],
     rentalCard: {
-      invalidators: ['duration'],
+      invalidators: ['rate'],
       invalidationOptions: {
+        freezeRentalDuration: {
+          value: '1',
+          durationOption: 'days',
+        },
         durationOptions: ['hours', 'days', 'weeks', 'years'],
-        invalidationTypes: ['return'],
+        invalidationTypes: ['reissue'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         setClaimRentalReceipt: true,
         showClaimRentalReceipt: false,
@@ -455,7 +479,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
           displayText: '12 weeks',
           value: 7258000,
         },
-      },
+      }, 
     },
     airdrops: [
       {
@@ -479,6 +503,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         uri: 'https://www.magiceden.io/item-details/4r9jMVm5rXdiCLa2oMLkV2ecL3wmmcoFtsMUJJoum38r',
       },
     ],
+    marketplaceRate: 'weeks',
   },
   ['all-starz']: {
     name: 'all-starz',
@@ -493,11 +518,15 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       { type: 'issuer', value: 'Cx2FDbdfqezYiN8teLFdFAzdv9mwG48uYbe218Az4EMP' },
     ],
     rentalCard: {
-      invalidators: ['duration'],
+      invalidators: ['rate'],
       invalidationOptions: {
+        freezeRentalDuration: {
+          value: '1',
+          durationOption: 'days',
+        },
         visibilities: ['public'],
         durationOptions: ['minutes', 'hours', 'days', 'weeks'],
-        invalidationTypes: ['return'],
+        invalidationTypes: ['reissue'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
@@ -507,6 +536,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         },
       },
     },
+    marketplaceRate: 'weeks',
   },
   ['3dgamersguild']: {
     name: '3dgamersguild',
@@ -522,11 +552,15 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       { type: 'issuer', value: '9qoRqZmrAf6bqtmTAPA1UkgCRvKuaugF17xBdympy1vd' },
     ],
     rentalCard: {
-      invalidators: ['duration'],
+      invalidators: ['rate'],
       invalidationOptions: {
+        freezeRentalDuration: {
+          value: '1',
+          durationOption: 'days',
+        },
         visibilities: ['public'],
         durationOptions: ['minutes', 'hours', 'days', 'weeks'],
-        invalidationTypes: ['return'],
+        invalidationTypes: ['reissue'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
@@ -536,5 +570,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         },
       },
     },
+    marketplaceRate: 'weeks',
   },
 }
