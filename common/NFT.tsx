@@ -1,9 +1,7 @@
 import { unissueToken } from '@cardinal/token-manager'
-import styled from '@emotion/styled'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { Popover, Tooltip } from 'antd'
 import type { TokenData } from 'api/api'
-import Colors from 'common/colors'
 import { executeTransaction } from 'common/Transactions'
 import { pubKeyUrl } from 'common/utils'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
@@ -15,156 +13,16 @@ import { IoClose, IoQrCodeOutline } from 'react-icons/io5'
 import { useQRCode } from 'rental-components/QRCodeProvider'
 import { useRentalModal } from 'rental-components/RentalModalProvider'
 
+import {
+  DisabledEllipsisStyle,
+  EllipsisStyle,
+  MediaOuterStyle,
+  QRCodeStyle,
+  TokenMetadataStyle,
+  UnissueStyle,
+} from './CustomStyles'
 import { NFTOverlay } from './NFTOverlay'
 import { asWallet } from './Wallets'
-
-export const TokensOuter = styled.div`
-  display: flex;
-  align-items: flex-start;
-  max-width: 1480px;
-  flex-wrap: wrap;
-  margin: 10px auto;
-  padding-bottom: 60px;
-  gap: 20px;
-
-  @media (max-width: 1224px) {
-    justify-content: center;
-  }
-`
-
-export const TokenMetadata = styled.div`
-  text-align: center;
-  position: relative;
-  display: inline-block;
-  border-radius: 10px;
-  width: 280px;
-  background-color: ${Colors.tokenBackground};
-  // padding: 15px 0px;
-  z-index: 0;
-
-  #ellipsis {
-    color: ${Colors.white};
-    z-index: 1;
-    top: 6px;
-    right: 10px;
-    position: absolute;
-    font-size: 20px;
-    border-radius: 50%;
-    width: 35px;
-    height: 35px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    transition: 0.2s all;
-    background: ${Colors.navBg};
-    &:hover {
-      background: ${Colors.background};
-    }
-  }
-
-  #disabled-ellipsis {
-    color: ${Colors.lightGray};
-    z-index: 1;
-    top: 6px;
-    right: 10px;
-    position: absolute;
-    font-size: 20px;
-    border-radius: 50%;
-    width: 35px;
-    height: 35px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    transition: 0.2s all;
-    // background: rgba(100, 100, 100);
-    background: ${Colors.background};
-  }
-
-  .qr-code {
-    color: white;
-    z-index: 5;
-    top: 6px;
-    right: 10px;
-    position: absolute;
-    font-size: 15px;
-    border-radius: 50%;
-    width: 35px;
-    height: 35px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    transition: 0.2s all;
-    // background: rgba(100, 100, 100);
-    background: ${Colors.navBg};
-    &:hover {
-      // background: rgba(120, 120, 120);
-      background: ${Colors.background};
-    }
-  }
-
-  .unissue {
-    color: white;
-    z-index: 5;
-    top: 5px;
-    right: 5px;
-    position: absolute;
-    font-size: 18px;
-    border-radius: 50%;
-    width: 35px;
-    height: 35px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    transition: 0.2s all;
-    // background: rgba(100, 100, 100);
-    background: ${Colors.navBg};
-    &:hover {
-      // background: rgba(120, 120, 120);
-      background: ${Colors.background};
-    }
-  }
-
-  #header {
-    background: rgba(0, 0, 0, 0.4);
-    z-index: 1;
-    padding: 12px;
-    position: absolute;
-    top: -50px;
-    width: 100%;
-    transition: 0.2s all;
-  }
-
-  &:hover {
-    cursor: pointer;
-
-    #header {
-      top: 0;
-    }
-  }
-
-  #name {
-    font-size: 14px;
-  }
-
-  #media-outer {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 280px;
-    max-width: 100%;
-    #media {
-      object-fit: contain;
-      // max-width: 250px;
-      border-radius: 10px;
-      height: 100%;
-      --poster-color: transparent;
-    }
-  }
-`
 
 interface NFTProps {
   tokenData: TokenData
@@ -186,8 +44,6 @@ export function NFT({ tokenData, hideQRCode }: NFTProps) {
     timeInvalidator,
     useInvalidator,
   } = tokenData
-  // const customImageUri =
-  //   tokenManager && getQueryParam(metadata?.data?.image, 'uri')
 
   const elligibleForRent =
     !config.disableListing &&
@@ -196,7 +52,7 @@ export function NFT({ tokenData, hideQRCode }: NFTProps) {
     tokenData.editionData
 
   return (
-    <TokenMetadata>
+    <TokenMetadataStyle className="w-[280px]">
       {wallet &&
         wallet.connected &&
         (!tokenManager ? (
@@ -204,20 +60,11 @@ export function NFT({ tokenData, hideQRCode }: NFTProps) {
             <Popover
               placement="bottomLeft"
               zIndex={10}
-              // visible={showPopover}
               content={
-                <div id="context-menu">
-                  <div
-                    style={{
-                      cursor: 'pointer',
-                    }}
-                  >
+                <div>
+                  <div className="cursor-pointer">
                     <a
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '10px',
-                      }}
+                      className="flex items-center gap-2.5"
                       href={pubKeyUrl(
                         tokenAccount?.account.data.parsed.info.mint,
                         ctx.environment.label
@@ -229,13 +76,7 @@ export function NFT({ tokenData, hideQRCode }: NFTProps) {
                       <FiExternalLink />
                     </a>
                     <div
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '10px',
-                        opacity: 1,
-                      }}
-                      className="hover:text-[#1890ff]"
+                      className="flex items-center gap-2.5 opacity-100 hover:text-[#1890ff]"
                       onClick={() => {
                         rentalModal.show(
                           asWallet(wallet),
@@ -254,9 +95,9 @@ export function NFT({ tokenData, hideQRCode }: NFTProps) {
               }
               trigger="click"
             >
-              <div id="ellipsis">
+              <EllipsisStyle className="h-[35px] w-[35px]">
                 <FaEllipsisH />
-              </div>
+              </EllipsisStyle>
             </Popover>
           ) : (
             <Tooltip
@@ -267,51 +108,53 @@ export function NFT({ tokenData, hideQRCode }: NFTProps) {
                   : 'Not elligible for rent'
               }
             >
-              <div id="disabled-ellipsis">
+              <DisabledEllipsisStyle className="h-[35px] w-[35px]">
                 <FaEllipsisH />
-              </div>
+              </DisabledEllipsisStyle>
             </Tooltip>
           )
         ) : tokenManager.parsed.issuer.toString() ===
             wallet.publicKey?.toString() && hideQRCode ? (
-          <div
-            className="unissue"
-            onClick={async () =>
-              tokenData?.tokenManager &&
-              executeTransaction(
-                ctx.connection,
-                asWallet(wallet),
-                await unissueToken(
-                  ctx.connection,
-                  asWallet(wallet),
-                  tokenData?.tokenManager?.parsed.mint
-                ),
-                {
-                  silent: true,
-                }
-              )
-            }
-          >
-            <IoClose />
-          </div>
-        ) : (
-          !hideQRCode && (
+          <UnissueStyle>
             <div
-              className="qr-code"
-              onClick={() =>
-                show(
+              onClick={async () =>
+                tokenData?.tokenManager &&
+                executeTransaction(
                   ctx.connection,
                   asWallet(wallet),
-                  tokenData,
-                  ctx.environment.label
+                  await unissueToken(
+                    ctx.connection,
+                    asWallet(wallet),
+                    tokenData?.tokenManager?.parsed.mint
+                  ),
+                  {
+                    silent: true,
+                  }
                 )
               }
             >
-              <IoQrCodeOutline />
+              <IoClose />
             </div>
+          </UnissueStyle>
+        ) : (
+          !hideQRCode && (
+            <QRCodeStyle className="h-[35px] w-[35px]">
+              <div
+                onClick={() =>
+                  show(
+                    ctx.connection,
+                    asWallet(wallet),
+                    tokenData,
+                    ctx.environment.label
+                  )
+                }
+              >
+                <IoQrCodeOutline />
+              </div>
+            </QRCodeStyle>
           )
         ))}
-      <div id="media-outer">
+      <MediaOuterStyle className="h-[280px]">
         {tokenManager && (
           <NFTOverlay
             state={tokenManager?.parsed.state}
@@ -331,13 +174,13 @@ export function NFT({ tokenData, hideQRCode }: NFTProps) {
         )}
         {metadata && metadata.data && (
           <img
-            id="media"
+            className="h-full rounded-xl object-contain"
             src={metadata.data.image}
             // src={customImageUri || metadata.data.image}
             alt={metadata.data.name}
           />
         )}
-      </div>
-    </TokenMetadata>
+      </MediaOuterStyle>
+    </TokenMetadataStyle>
   )
 }

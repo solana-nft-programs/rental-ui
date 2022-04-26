@@ -10,7 +10,8 @@ import { Select, Slider } from 'antd'
 import type { TokenData } from 'api/api'
 import { withWrapSol } from 'api/wrappedSol'
 import { BigNumber } from 'bignumber.js'
-import { NFT, TokensOuter } from 'common/NFT'
+import { TokensOuter } from 'common/CustomStyles'
+import { NFT } from 'common/NFT'
 import { NFTPlaceholder } from 'common/NFTPlaceholder'
 import { notify } from 'common/Notification'
 import { StyledTag, Tag } from 'common/Tags'
@@ -748,7 +749,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
           </div>
         </div>
         <div>
-          <TokensOuter>
+          <TokensOuter className="max-w-[1480px]">
             {!loaded ? (
               <>
                 <NFTPlaceholder />
