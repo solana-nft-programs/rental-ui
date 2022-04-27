@@ -13,7 +13,7 @@ import { BigNumber } from 'bignumber.js'
 import { NFT, TokensOuter } from 'common/NFT'
 import { NFTPlaceholder } from 'common/NFTPlaceholder'
 import { notify } from 'common/Notification'
-import { StyledTag, Tag } from 'common/Tags'
+import { Tag } from 'common/Tags'
 import { executeTransaction } from 'common/Transactions'
 import { fmtMintAmount, getMintDecimalAmount } from 'common/units'
 import { secondsToString } from 'common/utils'
@@ -788,59 +788,50 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                           <div
                             className={`flex min-h-[82px] w-[280px] flex-row justify-between rounded-bl-md rounded-br-md bg-white/[.15] p-3`}
                           >
-                            <StyledTag>
-                              <div
-                                style={{
-                                  display: 'flex',
-                                  flexDirection: 'column',
-                                  justifyContent: 'space-between',
-                                  width: '100%',
-                                }}
+                            <div className="flex flex-col items-start justify-between">
+                              <Tag
+                                state={TokenManagerState.Issued}
+                                // color="warning"
                               >
-                                <Tag
-                                  state={TokenManagerState.Issued}
-                                  // color="warning"
-                                >
-                                  {tokenData.timeInvalidator?.parsed ? (
-                                    <div className="float-left">
-                                      <p className="mb-1 flex w-full flex-row-reverse justify-end pb-0 font-bold text-white">
-                                        <div className="ml-[6px] mt-[2px] flex w-fit">
-                                          <span
-                                            className=" flex w-full text-left"
-                                            onClick={() =>
-                                              handleCopy(
-                                                getLink(
-                                                  `/claim/${tokenData.tokenManager?.pubkey.toBase58()}`
-                                                )
+                                {tokenData.timeInvalidator?.parsed ? (
+                                  <div className="float-left">
+                                    <p className="mb-1 flex w-full flex-row-reverse justify-end pb-0 font-bold text-white">
+                                      <div className="ml-[6px] mt-[2px] flex w-fit">
+                                        <span
+                                          className=" flex w-full text-left"
+                                          onClick={() =>
+                                            handleCopy(
+                                              getLink(
+                                                `/claim/${tokenData.tokenManager?.pubkey.toBase58()}`
                                               )
-                                            }
-                                          >
-                                            <FaLink />
-                                          </span>
-                                        </div>
-                                        <p className="flex w-fit text-left">
-                                          {tokenData.metadata.data.name}
-                                        </p>
+                                            )
+                                          }
+                                        >
+                                          <FaLink />
+                                        </span>
+                                      </div>
+                                      <p className="flex w-fit text-left">
+                                        {tokenData.metadata.data.name}
                                       </p>
-                                      <StyledSecondaryText>
-                                        {getDurationText(tokenData)}
-                                      </StyledSecondaryText>
-                                      <br />{' '}
-                                      <DisplayAddress
-                                        connection={connection}
-                                        address={
-                                          tokenData.tokenManager?.parsed
-                                            .issuer || undefined
-                                        }
-                                        height="18px"
-                                        width="100px"
-                                        dark={true}
-                                      />{' '}
-                                    </div>
-                                  ) : null}
-                                </Tag>
-                              </div>
-                            </StyledTag>
+                                    </p>
+                                    <StyledSecondaryText>
+                                      {getDurationText(tokenData)}
+                                    </StyledSecondaryText>
+                                    <br />{' '}
+                                    <DisplayAddress
+                                      connection={connection}
+                                      address={
+                                        tokenData.tokenManager?.parsed.issuer ||
+                                        undefined
+                                      }
+                                      height="18px"
+                                      width="100px"
+                                      dark={true}
+                                    />{' '}
+                                  </div>
+                                ) : null}
+                              </Tag>
+                            </div>
 
                             <div className="flex w-max flex-col justify-end">
                               <AsyncButton
@@ -887,7 +878,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                           <div
                             className={`flex min-h-[82px] w-[280px] flex-row justify-between rounded-bl-md rounded-br-md bg-white/[.15] p-3`}
                           >
-                            <StyledTag>
+                            <div className="flex flex-col items-start justify-between">
                               <p className="float-left mb-1 flex w-full flex-row-reverse justify-end pb-0 text-xs font-bold text-white">
                                 <div className="ml-[6px] mt-[2px] w-fit">
                                   <span
@@ -916,7 +907,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                                 </Tag>
                               </div>
 
-                              {tokenData.recipientTokenAccount?.owner ? (
+                              {tokenData.recipientTokenAccount?.owner && (
                                 <Tag state={TokenManagerState.Claimed}>
                                   Claimed by&nbsp;
                                   <DisplayAddress
@@ -932,9 +923,8 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                                     dark={true}
                                   />{' '}
                                 </Tag>
-                              ) : null}
-                            </StyledTag>
-
+                              )}
+                            </div>
                             {((wallet.publicKey &&
                               tokenData?.tokenManager?.parsed.invalidators &&
                               tokenData?.tokenManager?.parsed.invalidators
