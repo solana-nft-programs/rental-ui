@@ -35,11 +35,12 @@ export const TokensOuter = styled.div`
   }
 `
 
-export const TokenMetadata = styled.div`
+export const TokenMetadata = styled.div<{ allBorderRadius?: boolean }>`
   text-align: center;
   position: relative;
   display: inline-block;
-  border-radius: 10px;
+  border-radius: ${({ allBorderRadius }) =>
+    allBorderRadius ? '10px' : '10px 10px 0 0'};
   width: 280px;
   background-color: ${Colors.tokenBackground};
 

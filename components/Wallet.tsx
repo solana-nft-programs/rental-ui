@@ -63,51 +63,52 @@ export const Wallet = () => {
               tokenData={tokenData}
               fullyRounded={false}
             ></NFT>
-            <div className="flex flex-row justify-between rounded-bl-md rounded-br-md bg-white/[.10] p-3 w-[280px]">
-              <p className="mt-2 text-white text-ellipsis whitespace-nowrap overflow-hidden mr-4">{tokenData.metadata.data.name}</p>
+            <div className="flex w-[280px] flex-row justify-between rounded-bl-md rounded-br-md bg-white/[.10] p-3">
+              <p className="mt-2 mr-4 overflow-hidden text-ellipsis whitespace-nowrap text-white">
+                {tokenData.metadata.data.name}
+              </p>
               <div className="my-auto flex-col justify-items-end">
                 {tokenData.timeInvalidator?.parsed?.extensionDurationSeconds &&
-                tokenData.tokenManager ? (
-                  <Button
-                    variant="primary"
-                    className=" mb-3 float-right"
-                    onClick={() =>
-                      rentalExtensionModal.show(
-                        asWallet(wallet),
-                        ctx.connection,
-                        ctx.environment.label,
-                        tokenData
-                      )
-                    }
-                  >
-                    Add Duration
-                  </Button>
-                ) : null}
-                {tokenData.tokenManager?.parsed &&
-                (tokenData.tokenManager.parsed.invalidationType ===
-                  InvalidationType.Reissue ||
-                  tokenData.tokenManager.parsed.invalidationType ===
-                    InvalidationType.Return) ? (
-                  <AsyncButton
-                    variant="primary"
-                    className=" my-auto float-right"
-                    handleClick={async () => {
-                      try {
-                        await revokeRental(tokenData)
-                      } catch (e) {
-                        notify({
-                          message: `Return failed: ${e}`,
-                          type: 'error',
-                        })
+                  tokenData.tokenManager && (
+                    <Button
+                      variant="primary"
+                      className=" float-right mb-3"
+                      onClick={() =>
+                        rentalExtensionModal.show(
+                          asWallet(wallet),
+                          ctx.connection,
+                          ctx.environment.label,
+                          tokenData
+                        )
                       }
-                    }}
-                  >
-                    Return
-                  </AsyncButton>
-                ) : null}
+                    >
+                      Add Duration
+                    </Button>
+                  )}
+                {tokenData.tokenManager?.parsed &&
+                  (tokenData.tokenManager.parsed.invalidationType ===
+                    InvalidationType.Reissue ||
+                    tokenData.tokenManager.parsed.invalidationType ===
+                      InvalidationType.Return) && (
+                    <AsyncButton
+                      variant="primary"
+                      className=" float-right my-auto"
+                      handleClick={async () => {
+                        try {
+                          await revokeRental(tokenData)
+                        } catch (e) {
+                          notify({
+                            message: `Return failed: ${e}`,
+                            type: 'error',
+                          })
+                        }
+                      }}
+                    >
+                      Return
+                    </AsyncButton>
+                  )}
               </div>
             </div>
-            ]
           </div>
         ))
       ) : (
