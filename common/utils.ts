@@ -1,5 +1,7 @@
 import type * as web3 from '@solana/web3.js'
 
+export type Cluster = web3.Cluster | 'mainnet' | 'localnet'
+
 export function getExpirationString(expiration: number, UTCSecondsNow: number) {
   let day = (expiration - UTCSecondsNow) / 60 / 60 / 24
   let hour = ((expiration - UTCSecondsNow) / 60 / 60) % 24
@@ -60,9 +62,9 @@ export function longDateString(utcSeconds: number) {
 }
 
 export function secondstoDuration(durationSeconds: number) {
-  const years = Math.floor(durationSeconds / 31536000)
-  const months = Math.floor((durationSeconds % 31536000) / 2592000)
-  const weeks = Math.floor((durationSeconds % 2592000) / 604800)
+  const years = Math.floor(durationSeconds / 31449600)
+  const months = Math.floor((durationSeconds % 31449600) / 2419200)
+  const weeks = Math.floor((durationSeconds % 2419200) / 604800)
   const days = Math.floor((durationSeconds % 604800) / 86400)
   const hours = Math.floor((durationSeconds % 86400) / 3600)
   const minutes = Math.floor((durationSeconds % 3600) / 60)
@@ -108,4 +110,26 @@ export const camelCase = (str: string) => {
     .split(' ')
     .map((x) => x.charAt(0).toUpperCase() + x.slice(1))
     .join('')
+}
+
+export const capitalizeFirstLetter = (value: string) => {
+  return value[0] ? value[0].toUpperCase() + value.slice(1) : ''
+}
+
+export const secondsToString = (
+  requiredSeconds: number | undefined | null,
+  showSeconds = true
+) => {
+  if (!requiredSeconds || requiredSeconds === 0) return '0'
+  const weeks = Math.floor(requiredSeconds / 60 / 60 / 24 / 7)
+  const days = Math.floor((requiredSeconds / 60 / 60 / 24) % 7)
+  const hours = Math.floor((requiredSeconds / 60 / 60) % 24)
+  const minutes = Math.floor((requiredSeconds / 60) % 60)
+  const seconds = Math.round(requiredSeconds % 60)
+
+  return `${weeks ? `${weeks}w ` : ''} ${days ? `${days}d ` : ''}${
+    !weeks && hours ? `${hours}h ` : ''
+  }${!weeks && minutes ? `${minutes}m ` : ''}${
+    seconds && showSeconds ? `${seconds}s` : ''
+  }`
 }
