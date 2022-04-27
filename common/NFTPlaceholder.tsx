@@ -17,7 +17,7 @@ export const TokensOuter = styled.div`
 
 export function NFTPlaceholder() {
   return (
-    <TokenMetadata className="animate-pulse">
+    <TokenMetadata allBorderRadius={true} className="animate-pulse">
       <div id="media-outer">
         {/* <div className="flex h-full w-full animate-pulse space-x-4 px-5">
           <div

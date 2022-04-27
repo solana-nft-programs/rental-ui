@@ -281,7 +281,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
           value: 7258000,
         },
       },
-      paymentManager: 'cprtEVpR3uPs38USVq1MYrPMW7exZTnq2kRNSuvjvYM',
+      // paymentManager: 'cprtEVpR3uPs38USVq1MYrPMW7exZTnq2kRNSuvjvYM',
     },
     airdrops: [
       {
