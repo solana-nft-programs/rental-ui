@@ -3,6 +3,7 @@ import { invalidate, withClaimToken } from '@cardinal/token-manager'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import styled from '@emotion/styled'
 import { BN } from '@project-serum/anchor'
+import { colors } from '@react-spring/web/node_modules/@react-spring/shared'
 import type * as splToken from '@solana/spl-token'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { Connection, PublicKey, Transaction } from '@solana/web3.js'
@@ -622,6 +623,68 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
       <div className="flex justify-center">
         <div className="md:w-1/5"></div>
         <div className="mb-4 flex h-min flex-col flex-wrap justify-center md:w-4/5 md:flex-row md:justify-between">
+          <div className="w-5/6"></div>
+          {/* <div
+            className="rounded-m flex h-fit rounded-lg"
+            style={{ background: lighten(0.1, config.colors.main) }}
+          >
+            <div className="d-block flex-col py-3 px-5">
+              <p className="text-gray-400">
+                FLOOR PRICE /{' '}
+                {config.marketplaceRate
+                  ? config.marketplaceRate
+                      .substring(0, config.marketplaceRate.length - 1)
+                      .toUpperCase()
+                  : 'DAY'}
+              </p>
+              <h2 className="text-center font-bold text-gray-100">
+                {calculateFloorPrice(filteredAndSortedTokens).toFixed(2)}{' '}
+                {filteredAndSortedTokens.length > 0
+                  ? getSymbolFromTokenData(filteredAndSortedTokens[0]!)
+                  : '◎'}
+              </h2>
+            </div>
+            <div
+              className="my-3 w-[1px]"
+              style={{ background: lighten(0.4, config.colors.main) }}
+            ></div>
+            <div className="d-block flex-col py-3 px-5">
+              <p className="text-gray-400">TOTAL LISTED</p>
+              <h2 className="text-center font-bold text-gray-100">
+                {filteredAndSortedTokens.length}
+              </h2>
+            </div>
+          </div> */}
+          <StyledSelect>
+            <Select
+              className="m-[10px] mx-auto block h-[30px] w-max rounded-[4px] bg-black text-gray-700 lg:mr-20 xl:mr-4"
+              onChange={(e) => {
+                setSelectedOrderCategory(e)
+              }}
+              defaultValue={selectedOrderCategory}
+              dropdownStyle={{
+                backgroundColor: lighten(0.1, config.colors.main),
+              }}
+            >
+              {allOrderCategories.map((category) => (
+                <Option
+                  className="hover:brightness-125"
+                  key={category}
+                  value={category}
+                  style={{
+                    color: '#ffffff',
+                    background: lighten(0.1, config.colors.main),
+                  }}
+                >
+                  {category}
+                </Option>
+              ))}
+            </Select>
+          </StyledSelect>
+        </div>
+      </div>
+      <div className="flex lg:flex lg:flex-row">
+        <div className="mr-5 flex flex-col gap-5">
           <div
             className="rounded-m flex h-fit rounded-lg"
             style={{ background: lighten(0.1, config.colors.main) }}
@@ -653,37 +716,10 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
               </h2>
             </div>
           </div>
-          <StyledSelect>
-            <Select
-              className="m-[10px] mx-auto block h-[30px] w-max rounded-[4px] bg-black text-gray-700 lg:mr-20 xl:mr-4"
-              onChange={(e) => {
-                setSelectedOrderCategory(e)
-              }}
-              defaultValue={selectedOrderCategory}
-              dropdownStyle={{
-                backgroundColor: lighten(0.1, config.colors.main),
-              }}
-            >
-              {allOrderCategories.map((category) => (
-                <Option
-                  className="hover:brightness-125"
-                  key={category}
-                  value={category}
-                  style={{
-                    color: '#ffffff',
-                    background: lighten(0.1, config.colors.main),
-                  }}
-                >
-                  {category}
-                </Option>
-              ))}
-            </Select>
-          </StyledSelect>
-        </div>
-      </div>
-      <div className="mx-5 flex lg:flex lg:flex-row">
-        <div className="mr-10 w-[200px] rounded-lg text-left">
-          <div>
+          <div
+            className="max-h-[70vh] w-[280px] overflow-scroll rounded-lg py-5 px-8 text-left"
+            style={{ background: lighten(0.1, config.colors.main) }}
+          >
             <div className="text-white">
               <p className="mb-5 text-lg text-gray-300">Duration Range:</p>
               <Slider
@@ -770,7 +806,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
               filteredAndSortedTokens.map((tokenData) => (
                 <div
                   key={tokenData.tokenManager?.pubkey.toString()}
-                  className="flex flex-col justify-center pt-[10px] align-middle"
+                  className="flex flex-col justify-center align-middle"
                 >
                   <>
                     <NFT
