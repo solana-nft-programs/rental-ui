@@ -622,8 +622,11 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
       <div className="flex justify-center">
         <div className="md:w-1/5"></div>
         <div className="mb-4 flex h-min flex-col flex-wrap justify-center md:w-4/5 md:flex-row md:justify-between">
-          <div className="flex h-fit">
-            <div className="d-block flex-col  border-2 border-gray-600 py-3 px-5 md:ml-12">
+          <div
+            className="rounded-m flex h-fit rounded-lg"
+            style={{ background: lighten(0.1, config.colors.main) }}
+          >
+            <div className="d-block flex-col py-3 px-5">
               <p className="text-gray-400">
                 FLOOR PRICE /{' '}
                 {config.marketplaceRate
@@ -639,7 +642,11 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                   : '◎'}
               </h2>
             </div>
-            <div className="d-block flex-col border-2 border-gray-600  py-3 px-5">
+            <div
+              className="my-3 w-[1px]"
+              style={{ background: lighten(0.4, config.colors.main) }}
+            ></div>
+            <div className="d-block flex-col py-3 px-5">
               <p className="text-gray-400">TOTAL LISTED</p>
               <h2 className="text-center font-bold text-gray-100">
                 {filteredAndSortedTokens.length}
