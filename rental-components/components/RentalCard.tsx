@@ -170,7 +170,7 @@ export type RentalCardConfig = {
     setDisablePartialExtension?: boolean
     showDisablePartialExtension?: boolean
   }
-  paymentManager?: PublicKey
+  paymentManager?: string
 }
 
 export type RentalCardProps = {
@@ -415,7 +415,6 @@ export const RentalCard = ({
       const rentalMint = new PublicKey(
         tokenAccount?.account.data.parsed.info.mint
       )
-
       const receiptMintKeypair = Keypair.generate()
       const issueParams: IssueParameters = {
         claimPayment:
@@ -448,7 +447,9 @@ export const RentalCard = ({
                         : undefined,
                     }
                   : undefined,
-                paymentManager: rentalCardConfig.paymentManager ?? undefined,
+                paymentManager: rentalCardConfig.paymentManager
+                  ? new PublicKey(rentalCardConfig.paymentManager)
+                  : undefined,
               }
             : undefined,
         useInvalidation: totalUsages ? { totalUsages: totalUsages } : undefined,

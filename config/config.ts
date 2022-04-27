@@ -184,6 +184,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidators: ['rate'],
       extensionOptions: { showDisablePartialExtension: true },
       invalidationOptions: {
+        visibilities: ['public'],
         freezeRentalDuration: {
           value: '1',
           durationOption: 'days',
@@ -280,9 +281,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
           value: 7258000,
         },
       },
-      paymentManager: new PublicKey(
-        'cprtEVpR3uPs38USVq1MYrPMW7exZTnq2kRNSuvjvYM'
-      ),
+      paymentManager: 'cprtEVpR3uPs38USVq1MYrPMW7exZTnq2kRNSuvjvYM',
     },
     airdrops: [
       {
@@ -396,6 +395,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
           durationOption: 'days',
         },
         durationOptions: ['hours', 'days', 'weeks', 'years'],
+        visibilities: ['public'],
         invalidationTypes: ['reissue'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         setClaimRentalReceipt: true,
@@ -437,6 +437,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
           durationOption: 'days',
         },
         durationOptions: ['hours', 'days', 'weeks', 'years'],
+        visibilities: ['public'],
         invalidationTypes: ['reissue'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         setClaimRentalReceipt: true,
@@ -476,6 +477,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
           durationOption: 'days',
         },
         durationOptions: ['hours', 'days', 'weeks', 'years'],
+        visibilities: ['public'],
         invalidationTypes: ['reissue'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         setClaimRentalReceipt: true,
