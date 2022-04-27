@@ -681,9 +681,12 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
           </StyledSelect>
         </div>
       </div>
-      <div className="mx-5 flex lg:flex lg:flex-row">
-        <div className="mr-10 w-[200px] rounded-lg text-left">
-          <div>
+      <div className="flex lg:flex lg:flex-row">
+        <div className="mr-5">
+          <div
+            className="max-h-[70vh] w-[280px] overflow-scroll rounded-lg py-5 px-8 text-left"
+            style={{ background: lighten(0.1, config.colors.main) }}
+          >
             <div className="text-white">
               <p className="mb-5 text-lg text-gray-300">Duration Range:</p>
               <Slider
@@ -770,7 +773,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
               filteredAndSortedTokens.map((tokenData) => (
                 <div
                   key={tokenData.tokenManager?.pubkey.toString()}
-                  className="flex flex-col justify-center pt-[10px] align-middle"
+                  className="flex flex-col justify-center align-middle"
                 >
                   <>
                     <NFT
