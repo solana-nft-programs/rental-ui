@@ -185,6 +185,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       extensionOptions: { showDisablePartialExtension: true },
       invalidationOptions: {
         visibilities: ['public'],
+        invalidationTypes: ['reissue'],
         freezeRentalDuration: {
           value: '1',
           durationOption: 'days',
