@@ -1,4 +1,3 @@
-import { PublicKey } from '@solana/web3.js'
 import type { AirdropMetadata } from 'common/Airdrop'
 import type {
   DurationOption,
@@ -30,7 +29,7 @@ export type ProjectConfig = {
     hideFilters?: boolean
   }
   marketplaceRate?: DurationOption
-  paymentManager?: PublicKey
+  paymentManager?: string
 }
 
 export const projectConfigs: { [key: string]: ProjectConfig } = {
