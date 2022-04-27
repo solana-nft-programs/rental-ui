@@ -1,9 +1,5 @@
-import {
-  withInvalidate,
-} from '@cardinal/token-manager'
-import {
-  InvalidationType,
-} from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
+import { withInvalidate } from '@cardinal/token-manager'
+import { InvalidationType } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { Transaction } from '@solana/web3.js'
 import type { TokenData } from 'api/api'
@@ -58,50 +54,60 @@ export const Wallet = () => {
         </>
       ) : tokenDatas && tokenDatas.length > 0 ? (
         tokenDatas.map((tokenData) => (
-          <div key={tokenData.tokenAccount?.pubkey.toString()}>
+          <div
+            key={tokenData.tokenAccount?.pubkey.toString()}
+            className="flex flex-col"
+          >
             <NFT
               key={tokenData?.tokenAccount?.pubkey.toBase58()}
               tokenData={tokenData}
-              fullyRounded={true}
+              fullyRounded={false}
             ></NFT>
-            {tokenData.timeInvalidator?.parsed?.extensionDurationSeconds && tokenData.tokenManager ? (
-              <Button
-                variant="primary"
-                className="mx-auto mt-4"
-                onClick={() =>
-                  rentalExtensionModal.show(
-                    asWallet(wallet),
-                    ctx.connection,
-                    ctx.environment.label,
-                    tokenData
-                  )
-                }
-              >
-                Increase Duration
-              </Button>
-            ) : null}
-            {tokenData.tokenManager?.parsed &&
-            (tokenData.tokenManager.parsed.invalidationType ===
-              InvalidationType.Reissue ||
-              tokenData.tokenManager.parsed.invalidationType ===
-                InvalidationType.Return) ? (
-              <AsyncButton
-                variant="primary"
-                className="mx-auto mt-4"
-                handleClick={async () => {
-                  try {
-                    await revokeRental(tokenData)
-                  } catch (e) {
-                    notify({
-                      message: `Return failed: ${e}`,
-                      type: 'error',
-                    })
-                  }
-                }}
-              >
-                Return
-              </AsyncButton>
-            ) : null}
+            <div className="flex flex-row justify-between rounded-bl-md rounded-br-md bg-white/[.10] p-3 w-[280px]">
+              <p className="mt-2 text-white text-ellipsis whitespace-nowrap overflow-hidden mr-4">{tokenData.metadata.data.name}</p>
+              <div className="my-auto flex-col justify-items-end">
+                {tokenData.timeInvalidator?.parsed?.extensionDurationSeconds &&
+                tokenData.tokenManager ? (
+                  <Button
+                    variant="primary"
+                    className=" mb-3 float-right"
+                    onClick={() =>
+                      rentalExtensionModal.show(
+                        asWallet(wallet),
+                        ctx.connection,
+                        ctx.environment.label,
+                        tokenData
+                      )
+                    }
+                  >
+                    Add Duration
+                  </Button>
+                ) : null}
+                {tokenData.tokenManager?.parsed &&
+                (tokenData.tokenManager.parsed.invalidationType ===
+                  InvalidationType.Reissue ||
+                  tokenData.tokenManager.parsed.invalidationType ===
+                    InvalidationType.Return) ? (
+                  <AsyncButton
+                    variant="primary"
+                    className=" my-auto float-right"
+                    handleClick={async () => {
+                      try {
+                        await revokeRental(tokenData)
+                      } catch (e) {
+                        notify({
+                          message: `Return failed: ${e}`,
+                          type: 'error',
+                        })
+                      }
+                    }}
+                  >
+                    Return
+                  </AsyncButton>
+                ) : null}
+              </div>
+            </div>
+            ]
           </div>
         ))
       ) : (
