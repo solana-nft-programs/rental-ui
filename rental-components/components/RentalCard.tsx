@@ -19,7 +19,13 @@ import { NFTOverlay } from 'common/NFTOverlay'
 import { notify } from 'common/Notification'
 import { executeTransaction } from 'common/Transactions'
 import { fmtMintAmount } from 'common/units'
-import { getQueryParam, longDateString, shortPubKey } from 'common/utils'
+import {
+  getQueryParam,
+  longDateString,
+  pubKeyUrl,
+  shortDateString,
+  shortPubKey,
+} from 'common/utils'
 import moment from 'moment'
 import { usePaymentMints } from 'providers/PaymentMintsProvider'
 import { getLink } from 'providers/ProjectConfigProvider'
@@ -327,8 +333,24 @@ export const RentalCard = ({
     }
   }, [selectedInvalidators])
 
+  const extensionRate = () => {
+    return `${fmtMintAmount(
+      paymentMintInfos[extensionPaymentMint.toString()],
+      new anchor.BN(extensionPaymentAmount)
+    )} ${
+      paymentMintData.find((obj) => obj.mint === extensionPaymentMint)?.symbol
+    } / ${extensionDurationOption
+      ?.toLowerCase()
+      .substring(0, extensionDurationOption.length - 1)}`
+  }
   const hasAllExtensionProperties = (): boolean => {
-    return extensionPaymentAmount &&
+    console.log(
+      extensionPaymentAmount,
+      extensionDurationAmount,
+      extensionPaymentMint,
+      extensionDurationOption
+    )
+    return (extensionPaymentAmount || extensionPaymentAmount === 0) &&
       extensionDurationAmount &&
       extensionPaymentMint &&
       extensionDurationOption
@@ -1628,51 +1650,78 @@ export const RentalCard = ({
                   message={
                     <>
                       <div>
-                        Whoever claims this rental will own the asset{' '}
-                        {totalUsages && expiration
-                          ? `for either ${totalUsages} uses or until ${longDateString(
-                              expiration
-                            )} and then it will be ${
-                              invalidationType === InvalidationType.Return
-                                ? 'securely returned to you.'
-                                : invalidationType === InvalidationType.Release
-                                ? 'released to whoever claims it.'
-                                : 'invalid forever..'
-                            }`
-                          : totalUsages
-                          ? `for ${totalUsages} uses and then it will be ${
-                              invalidationType === InvalidationType.Return
-                                ? 'securely returned to you.'
-                                : invalidationType === InvalidationType.Release
-                                ? 'released to whoever claims it.'
-                                : 'invalid forever'
-                            }`
-                          : expiration
-                          ? `until ${longDateString(
-                              expiration
-                            )} and then it will be ${
-                              invalidationType === InvalidationType.Return
-                                ? 'securely returned to you.'
-                                : invalidationType === InvalidationType.Release
-                                ? 'released to whoever claims it.'
-                                : 'invalid forever.'
-                            }`
-                          : durationAmount && durationOption
-                          ? `
+                        Whoever claims this rental may own the asset{' '}
+                        {totalUsages && expiration ? (
+                          `for either ${totalUsages} uses or until ${longDateString(
+                            expiration
+                          )} and then it will be ${
+                            invalidationType === InvalidationType.Return
+                              ? 'securely returned to you.'
+                              : invalidationType === InvalidationType.Release
+                              ? 'released to whoever claims it.'
+                              : 'invalid forever..'
+                          }`
+                        ) : totalUsages ? (
+                          `for ${totalUsages} uses and then it will be ${
+                            invalidationType === InvalidationType.Return
+                              ? 'securely returned to you.'
+                              : invalidationType === InvalidationType.Release
+                              ? 'released to whoever claims it.'
+                              : 'invalid forever'
+                          }`
+                        ) : expiration ? (
+                          `until ${longDateString(
+                            expiration
+                          )} and then it will be ${
+                            invalidationType === InvalidationType.Return
+                              ? 'securely returned to you.'
+                              : invalidationType === InvalidationType.Release
+                              ? 'released to whoever claims it.'
+                              : 'invalid forever.'
+                          }`
+                        ) : durationAmount && durationOption ? (
+                          `
                             for ${durationAmount} ${
-                              durationAmount !== 1
-                                ? durationOption.toLocaleLowerCase()
-                                : durationOption
-                                    .toLocaleLowerCase()
-                                    .substring(0, durationOption.length - 1)
-                            } and then it will be ${
-                              invalidationType === InvalidationType.Return
-                                ? 'securely returned to you.'
-                                : invalidationType === InvalidationType.Release
-                                ? 'released to whoever claims it.'
-                                : 'invalid forever.'
-                            }`
-                          : 'forever.'}
+                            durationAmount !== 1
+                              ? durationOption.toLocaleLowerCase()
+                              : durationOption
+                                  .toLocaleLowerCase()
+                                  .substring(0, durationOption.length - 1)
+                          } and then it will be ${
+                            invalidationType === InvalidationType.Return
+                              ? 'securely returned to you.'
+                              : invalidationType === InvalidationType.Release
+                              ? 'released to whoever claims it.'
+                              : 'invalid forever.'
+                          }`
+                        ) : customInvalidator ? (
+                          <>
+                            until{' '}
+                            {
+                              <a
+                                target="_blank"
+                                rel="noreferrer"
+                                href={pubKeyUrl(
+                                  new PublicKey(customInvalidator),
+                                  cluster || 'mainnet'
+                                )}
+                              >
+                                {shortPubKey(customInvalidator)}
+                              </a>
+                            }{' '}
+                            revokes it
+                          </>
+                        ) : selectedInvalidators.includes('rate') ? (
+                          `at the rate of  ${extensionRate()} ${
+                            extensionMaxExpiration
+                              ? ` up until ${new Date(
+                                  extensionMaxExpiration * 1000
+                                ).toLocaleString('en-US')}.`
+                              : '.'
+                          }`
+                        ) : (
+                          'forever.'
+                        )}
                         {showExtendDuration &&
                         extensionPaymentAmount &&
                         extensionDurationAmount &&
@@ -1701,6 +1750,47 @@ export const RentalCard = ({
                                 : '.'
                             } `
                           : null}
+                        <div className="mt-2 flex gap-3">
+                          {selectedInvalidators.includes('rate') ? (
+                            <p>
+                              <b>Rate: </b> {extensionRate()}
+                            </p>
+                          ) : (
+                            <p>
+                              <b>Price: </b>{' '}
+                              {fmtMintAmount(
+                                paymentMintInfos[paymentMint.toString()],
+                                new anchor.BN(price)
+                              )}{' '}
+                              {
+                                paymentMintData.find(
+                                  (obj) => obj.mint === extensionPaymentMint
+                                )?.symbol
+                              }
+                            </p>
+                          )}
+
+                          {durationAmount && durationOption ? (
+                            <p>
+                              <b>Duration: </b> {durationAmount}{' '}
+                              {durationAmount !== 1
+                                ? durationOption.toLocaleLowerCase()
+                                : durationOption
+                                    .toLocaleLowerCase()
+                                    .substring(0, durationOption.length - 1)}
+                            </p>
+                          ) : null}
+                          {expiration && (
+                            <p>
+                              <b>Expiration: </b> {shortDateString(expiration)}
+                            </p>
+                          )}
+                          {totalUsages && (
+                            <p>
+                              <b>Usages: </b> {totalUsages}
+                            </p>
+                          )}
+                        </div>
                       </div>
                     </>
                   }
