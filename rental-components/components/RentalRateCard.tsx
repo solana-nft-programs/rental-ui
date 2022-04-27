@@ -27,7 +27,7 @@ import {
   WRAPPED_SOL_MINT,
 } from 'providers/PaymentMintsProvider'
 import { useEffect, useState } from 'react'
-import { AiOutlineMinusCircle, AiOutlinePlusCircle } from 'react-icons/ai'
+import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai'
 import { BiTimer } from 'react-icons/bi'
 import { FiSend } from 'react-icons/fi'
 import { ImPriceTags } from 'react-icons/im'
@@ -362,17 +362,10 @@ export const RentalRateCard = ({
                 description={
                   <div>
                     <div className="flex gap-3 align-middle ">
-                      <div className="flex">
-                        <button
-                          className="mr-2"
-                          onClick={() =>
-                            setDurationAmount(Math.max(0, durationAmount - 1))
-                          }
-                        >
-                          <AiOutlineMinusCircle />
-                        </button>
+                      <div className="relative flex">
                         <InputNumber
-                          className="rounded-[4px]"
+                          className="appearance-none rounded-[4px]"
+                          controls={false}
                           style={{ width: '100%' }}
                           placeholder="# of..."
                           min="0"
@@ -380,14 +373,28 @@ export const RentalRateCard = ({
                           value={`${durationAmount}`}
                           onChange={(e) => setDurationAmount(parseInt(e))}
                         />
-                        <button
-                          className="ml-2"
-                          onClick={() =>
-                            setDurationAmount(Math.max(0, durationAmount + 1))
-                          }
-                        >
-                          <AiOutlinePlusCircle />
-                        </button>
+                        <div className="absolute right-3 top-1/2 flex -translate-y-1/2 transform items-center justify-center gap-1">
+                          <button
+                            onClick={() =>
+                              setDurationAmount(Math.max(0, durationAmount - 1))
+                            }
+                          >
+                            <AiOutlineMinus
+                              className="opacity-50 hover:opacity-100"
+                              style={{ height: '16px', width: '16px' }}
+                            />
+                          </button>
+                          <button
+                            onClick={() =>
+                              setDurationAmount(Math.max(0, durationAmount + 1))
+                            }
+                          >
+                            <AiOutlinePlus
+                              className="opacity-50 hover:opacity-100"
+                              style={{ height: '16px', width: '16px' }}
+                            />
+                          </button>
+                        </div>
                       </div>
                       <Select
                         className="w-max rounded-[4px]"
@@ -396,12 +403,13 @@ export const RentalRateCard = ({
                       >
                         {Object.keys(DURATION_DATA).map((option) => (
                           <Option key={option} value={option}>
-                            {durationAmount !== undefined && durationAmount > 1
+                            {capitalizeFirstLetter(option)}
+                            {/* {durationAmount !== undefined && durationAmount > 1
                               ? capitalizeFirstLetter(option)
                               : capitalizeFirstLetter(option).substring(
                                   0,
                                   option.length - 1
-                                )}
+                                )} */}
                           </Option>
                         ))}
                       </Select>
