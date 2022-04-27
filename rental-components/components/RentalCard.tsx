@@ -282,6 +282,7 @@ export const RentalCard = ({
   >(null)
   const [totalUsages, setTotalUsages] = useState<number | null>(null)
   const [recipientEmail, setRecipientEmail] = useState<string | null>(null)
+  const [brandName, setBrandName] = useState<string | null>(null)
   const [visibility, setVisibiliy] =
     useState<VisibilityOption>(defaultVisibility)
   const [invalidationType, setInvalidationType] = useState(
@@ -417,6 +418,7 @@ export const RentalCard = ({
           tokenManagerId,
           link,
           email: recipientEmail,
+          brandName,
           nftMintId: tokenData?.metaplexData?.data.mint,
         }
       )
@@ -603,7 +605,7 @@ export const RentalCard = ({
               )}
             </div>
           )}
-          <div className="flex justify-center">
+          <div className="space-between flex">
             <StepDetail
               icon={<MdAlternateEmail />}
               title="Email"
@@ -614,6 +616,21 @@ export const RentalCard = ({
                       name="email"
                       type="email"
                       onChange={(e) => setRecipientEmail(e.target.value)}
+                    />
+                  </InputBorder>
+                </Fieldset>
+              }
+            />
+            <StepDetail
+              icon={<MdAlternateEmail />}
+              title="Brand Name"
+              description={
+                <Fieldset>
+                  <InputBorder>
+                    <Input
+                      name="brandName"
+                      type="text"
+                      onChange={(e) => setBrandName(e.target.value)}
                     />
                   </InputBorder>
                 </Fieldset>
