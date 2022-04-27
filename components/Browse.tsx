@@ -681,10 +681,10 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
           </StyledSelect>
         </div>
       </div>
-      <div className="flex lg:flex lg:flex-row">
+      <div className="flex lg:flex lg:flex-row ">
         <div className="mr-5">
           <div
-            className="max-h-[70vh] w-[280px] overflow-scroll rounded-lg py-5 px-8 text-left"
+            className="max-h-[70vh] w-[280px] overflow-y-auto rounded-lg py-5 px-8 text-left"
             style={{ background: lighten(0.1, config.colors.main) }}
           >
             <div className="text-white">

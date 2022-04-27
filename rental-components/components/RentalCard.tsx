@@ -338,14 +338,26 @@ export const RentalCard = ({
     if (!selectedInvalidators.includes('usages')) {
       setTotalUsages(null)
     }
+    if (!selectedInvalidators.includes('rate')) {
+      setExtensionMaxExpiration(null)
+      setExtensionDurationAmount(null)
+    }
     if (selectedInvalidators.includes('rate')) {
       setExtensionDurationAmount(
         parseInt(
           rentalCardConfig.invalidationOptions?.freezeRentalDuration?.value ??
-            '0'
+            '1'
         )
       )
+      setExtensionPaymentMint(defaultPaymentMint.mint)
+      setExtensionPaymentAmount(0)
       setDurationAmount(0)
+      setExtensionMaxExpiration(
+        rentalCardConfig.invalidationOptions?.maxDurationAllowed?.value
+          ? Date.now() / 1000 +
+              rentalCardConfig.invalidationOptions?.maxDurationAllowed?.value
+          : null
+      )
     }
   }, [selectedInvalidators])
 
@@ -605,7 +617,10 @@ export const RentalCard = ({
                           } else {
                             setSelectedInvalidators([
                               ...selectedInvalidators.filter(
-                                (o) => o !== 'manual' && o !== 'expiration'
+                                (o) =>
+                                  o !== 'manual' &&
+                                  o !== 'expiration' &&
+                                  o !== 'rate'
                               ),
                               'duration',
                             ])
@@ -1182,7 +1197,9 @@ export const RentalCard = ({
                                 ? 'securely returned to you.'
                                 : invalidationType === InvalidationType.Release
                                 ? 'released to whoever claims it.'
-                                : 'invalid forever..'
+                                : invalidationType === InvalidationType.Reissue
+                                ? 'relisted back in the marketplace.'
+                                : 'invalid forever.'
                             }`
                           ) : totalUsages ? (
                             `for ${totalUsages} uses and then it will be ${
@@ -1190,7 +1207,9 @@ export const RentalCard = ({
                                 ? 'securely returned to you.'
                                 : invalidationType === InvalidationType.Release
                                 ? 'released to whoever claims it.'
-                                : 'invalid forever'
+                                : invalidationType === InvalidationType.Reissue
+                                ? 'relisted back in the marketplace.'
+                                : 'invalid forever.'
                             }`
                           ) : expiration ? (
                             `until ${longDateString(
@@ -1200,6 +1219,8 @@ export const RentalCard = ({
                                 ? 'securely returned to you.'
                                 : invalidationType === InvalidationType.Release
                                 ? 'released to whoever claims it.'
+                                : invalidationType === InvalidationType.Reissue
+                                ? 'relisted back in the marketplace.'
                                 : 'invalid forever.'
                             }`
                           ) : durationAmount && durationOption ? (
@@ -1215,6 +1236,8 @@ export const RentalCard = ({
                                 ? 'securely returned to you.'
                                 : invalidationType === InvalidationType.Release
                                 ? 'released to whoever claims it.'
+                                : invalidationType === InvalidationType.Reissue
+                                ? 'relisted back in the marketplace.'
                                 : 'invalid forever.'
                             }`
                           ) : customInvalidator ? (
@@ -1248,7 +1271,8 @@ export const RentalCard = ({
                           {showExtendDuration &&
                           extensionPaymentAmount &&
                           extensionDurationAmount &&
-                          extensionPaymentMint
+                          extensionPaymentMint &&
+                          durationAmount !== 0
                             ? ` The claimer can choose to extend the rental at the rate of ${fmtMintAmount(
                                 paymentMintInfos[
                                   extensionPaymentMint.toString()
