@@ -16,6 +16,7 @@ const StyledOverlay = styled.div<{
   maxWidth?: string
   lineHeight?: number
   shadow?: boolean
+  borderRadius?: number
 }>`
   bottom: 0;
   position: absolute;
@@ -30,12 +31,12 @@ const StyledOverlay = styled.div<{
 
   background: ${({ shadow }) =>
     shadow
-      ? 'linear-gradient(rgba(26, 27, 32, 0.2) 60%,rgba(26, 27, 32, 0.4),rgba(26, 27, 32, 1) 90%)'
+      ? 'linear-gradient(rgba(26, 27, 32, 0.2) 70%,rgba(26, 27, 32, 0.4),rgba(26, 27, 32, 0.6) 100%)'
       : 'none'};
-  border-radius: 10px;
+
   z-index: 2;
   // outline: 6px solid black;
-
+  border-radius: ${({ borderRadius }) => borderRadius}px;
   .top-right {
     position: absolute;
     top: 4%;
@@ -96,35 +97,38 @@ function getBoxShadow(
   totalUsages: number | undefined,
   lineHeight: number
 ) {
-  if (
-    state === TokenManagerState.Invalidated ||
-    (totalUsages && usages && usages >= totalUsages) ||
-    (expiration && expiration <= Math.floor(Date.now() / 1000))
-  ) {
-    return `0 0 ${0.4 * lineHeight}px ${0.4 * lineHeight}px ${stateColor(
-      TokenManagerState.Invalidated
-    )}`
-  } else if (state === TokenManagerState.Issued) {
-    return `0 0 ${0.4 * lineHeight}px ${0.4 * lineHeight}px ${stateColor(
-      TokenManagerState.Issued
-    )}`
-  } else if (state === TokenManagerState.Claimed) {
-    return `0 0 ${0.4 * lineHeight}px ${0.4 * lineHeight}px ${stateColor(
-      TokenManagerState.Claimed
-    )}`
-  } else {
-    return `0 0 ${0.4 * lineHeight}px ${0.4 * lineHeight}px ${stateColor(
-      state
-    )}`
-  }
+  return '0 0 0 0'
+  // if (
+  //   state === TokenManagerState.Invalidated ||
+  //   (totalUsages && usages && usages >= totalUsages) ||
+  //   (expiration && expiration <= Math.floor(Date.now() / 1000))
+  // ) {
+  //   return `0 0 ${0.4 * lineHeight}px ${0.4 * lineHeight}px ${stateColor(
+  //     TokenManagerState.Invalidated
+  //   )}`
+  // } else if (state === TokenManagerState.Issued) {
+  //   return `0 0 ${0.4 * lineHeight}px ${0.4 * lineHeight}px ${stateColor(
+  //     TokenManagerState.Issued
+  //   )}`
+  // } else if (state === TokenManagerState.Claimed) {
+  //   return `0 0 ${0.4 * lineHeight}px ${0.4 * lineHeight}px ${stateColor(
+  //     TokenManagerState.Claimed
+  //   )}`
+  // } else {
+  //   return `0 0 ${0.4 * lineHeight}px ${0.4 * lineHeight}px ${stateColor(
+  //     state
+  //   )}`
+  // }
 }
 
 export function TokenDataOverlay({
   tokenData,
   lineHeight,
+  borderRadius,
 }: {
   tokenData: TokenData
   lineHeight: number
+  borderRadius: number
 }) {
   return (
     <NFTOverlay
@@ -148,6 +152,7 @@ export function TokenDataOverlay({
       usages={tokenData.useInvalidator?.parsed.usages.toNumber()}
       totalUsages={tokenData.useInvalidator?.parsed.totalUsages?.toNumber()}
       lineHeight={lineHeight}
+      borderRadius={borderRadius}
     />
   )
 }
@@ -166,6 +171,7 @@ interface NFTOverlayProps {
   returnable?: boolean
   lineHeight?: number
   stateChangedAt?: number
+  borderRadius?: number
 }
 
 export function NFTOverlay({
@@ -182,6 +188,7 @@ export function NFTOverlay({
   returnable,
   stateChangedAt,
   lineHeight = 20,
+  borderRadius,
 }: NFTOverlayProps) {
   const { UTCNow } = useUTCNow()
   const { paymentMintInfos } = usePaymentMints()
@@ -204,6 +211,7 @@ export function NFTOverlay({
           lineHeight
         ),
       }}
+      borderRadius={borderRadius ?? 0}
     >
       <div className="top-right">
         {revocable && (
@@ -244,13 +252,13 @@ export function NFTOverlay({
             {utils.getExpirationString(expiration, UTCNow)}
           </div>
         )}
-        {!expiration &&
+        {/* {!expiration &&
           durationSeconds &&
           state !== TokenManagerState.Claimed && (
             <div className="expiration">
               {utils.secondstoDuration(durationSeconds)}
             </div>
-          )}
+          )} */}
         {!expiration &&
           durationSeconds &&
           stateChangedAt &&
