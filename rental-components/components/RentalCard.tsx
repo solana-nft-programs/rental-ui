@@ -14,6 +14,7 @@ import type { TokenData } from 'api/api'
 import type { EditionInfo } from 'api/editions'
 import getEditionInfo from 'api/editions'
 import { tryPublicKey } from 'api/utils'
+import axios from 'axios'
 import { NFTOverlay } from 'common/NFTOverlay'
 import { notify } from 'common/Notification'
 import { executeTransaction } from 'common/Transactions'
@@ -32,11 +33,12 @@ import { getLink } from 'providers/ProjectConfigProvider'
 import { useUserTokenData } from 'providers/TokenDataProvider'
 import React, { useEffect, useState } from 'react'
 import { BiQrScan, BiTimer } from 'react-icons/bi'
-import { FaEye, FaLink } from 'react-icons/fa'
+import { FaEye } from 'react-icons/fa'
 import { FiSend } from 'react-icons/fi'
 import { GiRobotGrab } from 'react-icons/gi'
 import { GrReturn } from 'react-icons/gr'
 import { ImPriceTags } from 'react-icons/im'
+import { MdAlternateEmail } from 'react-icons/md'
 import { Alert } from 'rental-components/common/Alert'
 import { Button } from 'rental-components/common/Button'
 import { ButtonWithFooter } from 'rental-components/common/ButtonWithFooter'
@@ -66,7 +68,9 @@ const NFTOuter = styled.div`
 
 const handleCopy = (shareUrl: string) => {
   navigator.clipboard.writeText(shareUrl)
-  notify({ message: 'Share link copied' })
+  notify({
+    message: 'Share link copied to clipboard and notification sent to receiver',
+  })
 }
 
 function getEditionPill(editionInfo: EditionInfo) {
@@ -302,6 +306,8 @@ export const RentalCard = ({
     boolean | null
   >(null)
   const [totalUsages, setTotalUsages] = useState<number | null>(null)
+  const [recipientEmail, setRecipientEmail] = useState<string | null>(null)
+  const [brandName, setBrandName] = useState<string | null>(null)
   const [visibility, setVisibiliy] =
     useState<VisibilityOption>(defaultVisibility)
   const [invalidationType, setInvalidationType] = useState(
@@ -484,6 +490,17 @@ export const RentalCard = ({
         otpKeypair,
         cluster,
         getLink('/claim', false)
+      )
+
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_REMI_COIN_URL}/api/claims/create`,
+        {
+          tokenManagerId,
+          link,
+          email: recipientEmail,
+          brandName,
+          nftMintId: tokenData?.metaplexData?.data.mint,
+        }
       )
       setLink(link)
       handleCopy(link)
@@ -699,6 +716,38 @@ export const RentalCard = ({
               )}
             </div>
           )}
+          <div className="space-between flex">
+            <StepDetail
+              icon={<MdAlternateEmail />}
+              title="Email"
+              description={
+                <Fieldset>
+                  <InputBorder>
+                    <Input
+                      name="email"
+                      type="email"
+                      onChange={(e) => setRecipientEmail(e.target.value)}
+                    />
+                  </InputBorder>
+                </Fieldset>
+              }
+            />
+            <StepDetail
+              icon={<MdAlternateEmail />}
+              title="Brand Name"
+              description={
+                <Fieldset>
+                  <InputBorder>
+                    <Input
+                      name="brandName"
+                      type="text"
+                      onChange={(e) => setBrandName(e.target.value)}
+                    />
+                  </InputBorder>
+                </Fieldset>
+              }
+            />
+          </div>
           <div className="grid grid-cols-2 gap-4">
             {selectedInvalidators.includes('rate') && (
               <>
@@ -1130,13 +1179,14 @@ export const RentalCard = ({
                   message={
                     <>
                       <div>
-                        Link created {link.substring(0, 20)}
+                        Notification sent to {recipientEmail}
+                        {/* Link created {link.substring(0, 20)}
                         ...
                         {link.substring(link.length - 5)}
                         <div>
                           This link can only be used once and cannot be
                           regenerated
-                        </div>
+                        </div> */}
                       </div>
                     </>
                   }
@@ -1348,10 +1398,11 @@ export const RentalCard = ({
               style={{ gap: '5px', fontWeight: '300' }}
               className="flex items-center justify-center"
             >
-              <FaLink />
+              Notification sent to recipient
+              {/* <FaLink />
               {link.substring(0, 40)}
               ...
-              {link.substring(link.length - 10)}
+              {link.substring(link.length - 10)} */}
             </div>
           ) : (
             <div
