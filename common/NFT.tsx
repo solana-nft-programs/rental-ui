@@ -127,7 +127,7 @@ export function NFT({ tokenData, hideQRCode, fullyRounded }: NFTProps) {
       <Popover
         content={
           <div
-            className="flex flex-col rounded-md px-1 py-2"
+            className="flex flex-col rounded-md px-1 py-1"
             style={{
               background: lighten(0.1, config.colors.main),
               color: getColorByBgColor(config.colors.main),
@@ -142,7 +142,8 @@ export function NFT({ tokenData, hideQRCode, fullyRounded }: NFTProps) {
                   color: 'white',
                 }}
                 href={pubKeyUrl(
-                  tokenAccount?.account.data.parsed.info.mint,
+                  tokenManager?.parsed.mint ??
+                    tokenAccount?.account.data.parsed.info.mint,
                   ctx.environment.label
                 )}
                 target="_blank"
