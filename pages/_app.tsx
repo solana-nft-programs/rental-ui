@@ -8,6 +8,7 @@ import { WalletProvider } from '@solana/wallet-adapter-react'
 import { WalletModalProvider } from '@solana/wallet-adapter-react-ui'
 import { getWalletAdapters } from '@solana/wallet-adapter-wallets'
 import type { ProjectConfig } from 'config/config'
+import LogRocket from 'logrocket'
 import type { AppProps } from 'next/app'
 import { EnvironmentProvider } from 'providers/EnvironmentProvider'
 import { IssuedTokensProvider } from 'providers/IssuedTokensProvider'
@@ -20,7 +21,17 @@ import { QRCodeProvider } from 'rental-components/QRCodeProvider'
 import { RentalExtensionModalProvider } from 'rental-components/RentalExtensionModalProvider'
 import { RentalModalProvider } from 'rental-components/RentalModalProvider'
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const setupLogRocketReact = require('logrocket-react')
+
 require('@solana/wallet-adapter-react-ui/styles.css')
+
+// Logrocket: only initialize when in the browser
+if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'development') {
+  LogRocket.init('wuxy5s/remi-coin')
+  // plugins should also only be initialized when in the browser
+  setupLogRocketReact(LogRocket)
+}
 
 const App = ({
   Component,
