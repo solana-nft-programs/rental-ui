@@ -14,7 +14,7 @@ import { TokenDataOverlay } from 'common/NFTOverlay'
 import { notify } from 'common/Notification'
 import { executeTransaction } from 'common/Transactions'
 import { fmtMintAmount } from 'common/units'
-import { getQueryParam } from 'common/utils'
+import { getQueryParam, secondsToString } from 'common/utils'
 import {
   usePaymentMints,
   WRAPPED_SOL_MINT,
@@ -146,6 +146,8 @@ export const RentalExtensionCard = ({
       setExtensionSuccess(false)
       if (!tokenAccount) throw 'Token acount not found'
       if (!tokenData.tokenManager) throw 'Token manager not found'
+      const secondsToAdd = paymentAmountToSeconds(paymentAmount)
+      if (!secondsToAdd) throw 'Invalid payment amount'
 
       setLoading(true)
       const transaction = new Transaction()
@@ -162,7 +164,7 @@ export const RentalExtensionCard = ({
         connection,
         wallet,
         tokenData.tokenManager?.pubkey,
-        paymentAmount
+        secondsToAdd
       )
 
       await executeTransaction(connection, wallet, transaction, {
@@ -177,18 +179,6 @@ export const RentalExtensionCard = ({
     } finally {
       setLoading(false)
     }
-  }
-
-  const secondsToString = (requiredSeconds: number | undefined | null) => {
-    if (!requiredSeconds || requiredSeconds === 0) return '0'
-    const days = Math.floor(requiredSeconds / 60 / 60 / 24)
-    const hours = Math.floor((requiredSeconds / 60 / 60) % 24)
-    const minutes = Math.floor((requiredSeconds / 60) % 60)
-    const seconds = Math.round(requiredSeconds % 60)
-
-    return `${days ? `${days}d ` : ''}${hours ? `${hours}h ` : ''}${
-      minutes ? `${minutes}m ` : ''
-    }${seconds ? `${seconds}s` : ''}`
   }
 
   const handlePaymentAmountChange = (value: number) => {
@@ -280,7 +270,11 @@ export const RentalExtensionCard = ({
         )}
         <ImageWrapper>
           <NFTOuter>
-            <TokenDataOverlay tokenData={tokenData} lineHeight={12} />
+            <TokenDataOverlay
+              tokenData={tokenData}
+              lineHeight={12}
+              borderRadius={10}
+            />
             {metadata && metadata.data && (
               // (metadata.data.animation_url ? (
               //   // @ts-ignore
@@ -314,6 +308,7 @@ export const RentalExtensionCard = ({
                 <MintPriceSelector
                   price={paymentAmount}
                   handlePrice={handlePaymentAmountChange}
+                  paymentMintData={PAYMENT_MINTS}
                   mint={extensionPaymentMint?.toString()}
                   handleMint={() => {}}
                   mintDisabled={true}
