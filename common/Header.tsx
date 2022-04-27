@@ -1,4 +1,4 @@
-import { AddressImage, DisplayAddress } from '@cardinal/namespaces-components'
+import { ProfileSmall } from '@cardinal/namespaces-components'
 import styled from '@emotion/styled'
 import { useWallet } from '@solana/wallet-adapter-react'
 import {
@@ -12,14 +12,12 @@ import { lighten } from 'polished'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useEffect, useState } from 'react'
-import { HiUserCircle } from 'react-icons/hi'
 import { IoChevronBack } from 'react-icons/io5'
 import { useMediaQuery } from 'react-responsive'
 import { getColorByBgColor } from 'rental-components/common/Button'
 
 import { Airdrop, AirdropSol } from './Airdrop'
 import { LoadingPulse } from './LoadingPulse'
-import { shortPubKey } from './utils'
 
 export const StyledHeader = styled.div<{ isTabletOrMobile: boolean }>`
   z-index: 100;
@@ -203,10 +201,6 @@ export const Header = ({
     if (anchor !== tab) setTab(anchor || 'wallet')
   }, [router.asPath, tab])
 
-  const walletAddressFormatted = wallet?.publicKey
-    ? shortPubKey(wallet?.publicKey)
-    : ''
-
   const issuer = tryPublicKey(config.issuer?.publicKeyString)
   return (
     <StyledHeader isTabletOrMobile={isTabletOrMobile}>
@@ -215,54 +209,11 @@ export const Header = ({
           {issuer ? (
             <>
               <div className="flex cursor-pointer gap-2">
-                <AddressImage
+                <ProfileSmall
+                  dark
                   connection={ctx.connection}
                   address={issuer}
-                  height="40px"
-                  width="40px"
-                  dark={true}
-                  placeholder={
-                    <div
-                      style={{
-                        color: 'white',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        gap: '8px',
-                        cursor: 'pointer',
-                      }}
-                    >
-                      <div style={{ height: '40px', width: '40px' }}>
-                        <HiUserCircle
-                          style={{ height: '100%', width: '100%' }}
-                        />
-                      </div>
-                    </div>
-                  }
                 />
-                <div>
-                  <div className="text-white">
-                    <DisplayAddress
-                      connection={ctx.connection}
-                      address={issuer}
-                      height="21px"
-                      style={{ maxWidth: '120px' }}
-                      dark={true}
-                    />
-                  </div>
-                  <div
-                    className="flex gap-2"
-                    style={{ color: Colors.lightGray }}
-                  >
-                    {shortPubKey(issuer)}
-                    <div
-                      className="subscript"
-                      style={{ bottom: 0, right: -42 }}
-                    >
-                      {ctx.environment.label === 'devnet' ? 'DEV' : 'vault'}
-                    </div>
-                  </div>
-                </div>
               </div>
             </>
           ) : (
@@ -357,7 +308,7 @@ export const Header = ({
         >
           <LoadingPulse loading={loading ?? false} />
         </div> */}
-        {wallet.connected ? (
+        {wallet.connected && wallet.publicKey ? (
           isTabletOrMobile ? (
             <Hamburger className="hamb" onClick={() => setShowTabs(!showTabs)}>
               <span className="hamb-line"></span>
@@ -367,44 +318,11 @@ export const Header = ({
               className="flex cursor-pointer gap-2"
               onClick={() => setVisible(true)}
             >
-              <AddressImage
+              <ProfileSmall
+                dark
                 connection={ctx.connection}
-                address={wallet.publicKey || undefined}
-                height="40px"
-                width="40px"
-                dark={true}
-                placeholder={
-                  <div
-                    style={{
-                      color: 'white',
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      gap: '8px',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    <div style={{ height: '40px', width: '40px' }}>
-                      <HiUserCircle style={{ height: '100%', width: '100%' }} />
-                    </div>
-                  </div>
-                }
+                address={wallet.publicKey}
               />
-              <div>
-                <div className="text-white">
-                  <DisplayAddress
-                    style={{ pointerEvents: 'none' }}
-                    connection={ctx.connection}
-                    address={wallet.publicKey || undefined}
-                    height="12px"
-                    width="100px"
-                    dark={true}
-                  />
-                </div>
-                <div style={{ color: Colors.lightGray }}>
-                  {walletAddressFormatted}
-                </div>
-              </div>
             </div>
           )
         ) : (
