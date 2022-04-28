@@ -14,7 +14,6 @@ import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useManagedTokens } from 'providers/ManagedTokensProvider'
 import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useUserTokenData } from 'providers/TokenDataProvider'
-import { FaLink } from 'react-icons/fa'
 import { AsyncButton } from 'rental-components/common/Button'
 
 const handleCopy = (shareUrl: string) => {

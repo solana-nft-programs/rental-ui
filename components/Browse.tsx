@@ -850,7 +850,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                                     />{' '}
                                   </div>
                                 </Tag>
-                              ) :   (
+                              ) : (
                                 <div className="my-auto rounded-lg bg-gray-800 px-5 py-1 text-white">
                                   Private
                                 </div>
@@ -944,19 +944,24 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                                         dark={true}
                                       />{' '}
                                     </div>
-                                    <DisplayAddress
-                                      style={{
-                                        color: '#52c41a !important',
-                                        display: 'inline',
-                                      }}
-                                      connection={connection}
-                                      address={
-                                        tokenData.tokenManager?.parsed.issuer
-                                      }
-                                      height="18px"
-                                      width="100px"
-                                      dark={true}
-                                    />{' '}
+                                    <div>
+                                      <span className="inline-block">
+                                        Issued by&nbsp;
+                                      </span>
+                                      <DisplayAddress
+                                        style={{
+                                          color: '#52c41a !important',
+                                          display: 'inline',
+                                        }}
+                                        connection={connection}
+                                        address={
+                                          tokenData.tokenManager?.parsed.issuer
+                                        }
+                                        height="18px"
+                                        width="100px"
+                                        dark={true}
+                                      />{' '}
+                                    </div>
                                   </div>
                                 </Tag>
                               )}
