@@ -801,25 +801,23 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                           <div
                             className={`flex min-h-[82px] w-[280px] flex-col rounded-bl-md rounded-br-md bg-white/[.15] p-3`}
                           >
-                            <div className="flex w-full flex-row">
-                              <div className="mb-1 flex w-full flex-row-reverse justify-end pb-0 font-bold text-white">
-                                <div className="ml-[6px] mt-[2px] flex w-fit cursor-pointer">
-                                  <span
-                                    className="flex w-full text-left"
-                                    onClick={() =>
-                                      handleCopy(
-                                        getLink(
-                                          `/claim/${tokenData.tokenManager?.pubkey.toBase58()}`
-                                        )
+                            <div className="mb-3 flex w-full flex-row font-bold text-white">
+                              <p className="flex w-fit text-left">
+                                {tokenData.metadata.data.name}
+                              </p>
+                              <div className="ml-[6px] mt-[2px] flex w-fit cursor-pointer">
+                                <span
+                                  className="flex w-full text-left"
+                                  onClick={() =>
+                                    handleCopy(
+                                      getLink(
+                                        `/claim/${tokenData.tokenManager?.pubkey.toBase58()}`
                                       )
-                                    }
-                                  >
-                                    <FaLink />
-                                  </span>
-                                </div>
-                                <p className="flex w-fit text-left">
-                                  {tokenData.metadata.data.name}
-                                </p>
+                                    )
+                                  }
+                                >
+                                  <FaLink />
+                                </span>
                               </div>
                             </div>
 
@@ -896,27 +894,25 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                         ),
                         [TokenManagerState.Claimed]: (
                           <div
-                            className={`flex min-h-[82px] w-[280px] flex-col justify-between rounded-bl-md rounded-br-md bg-white/[.15] p-3`}
+                            className={`flex min-h-[82px] w-[280px] flex-col rounded-bl-md rounded-br-md bg-white/[.15] p-3`}
                           >
-                            <div className="flex w-full flex-row">
-                              <div className="mb-1 flex w-full flex-row-reverse justify-end pb-0 font-bold text-white">
-                                <div className="ml-[6px] mt-[2px] flex w-fit cursor-pointer">
-                                  <span
-                                    className="flex w-full text-left"
-                                    onClick={() =>
-                                      handleCopy(
-                                        getLink(
-                                          `/claim/${tokenData.tokenManager?.pubkey.toBase58()}`
-                                        )
+                            <div className="mb-3 flex w-full flex-row font-bold text-white">
+                              <p className="flex w-fit text-left">
+                                {tokenData.metadata.data.name}
+                              </p>
+                              <div className="ml-[6px] mt-[2px] flex w-fit cursor-pointer">
+                                <span
+                                  className="flex w-full text-left"
+                                  onClick={() =>
+                                    handleCopy(
+                                      getLink(
+                                        `/claim/${tokenData.tokenManager?.pubkey.toBase58()}`
                                       )
-                                    }
-                                  >
-                                    <FaLink />
-                                  </span>
-                                </div>
-                                <p className="flex w-fit text-left">
-                                  {tokenData.metadata.data.name}
-                                </p>
+                                    )
+                                  }
+                                >
+                                  <FaLink />
+                                </span>
                               </div>
                             </div>
 
