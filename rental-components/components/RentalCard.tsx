@@ -495,8 +495,6 @@ export const RentalCard = ({
             : undefined,
         }
 
-        console.log(issueParams)
-
         const [transaction, tokenManagerId, otpKeypair] = await issueToken(
           connection,
           wallet,
@@ -517,7 +515,6 @@ export const RentalCard = ({
         )
         setLink(link)
         handleCopy(link)
-        console.log(link)
       }
     } catch (e) {
       console.log('Error handling rental', e)

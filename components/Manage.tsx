@@ -14,7 +14,6 @@ import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useManagedTokens } from 'providers/ManagedTokensProvider'
 import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useUserTokenData } from 'providers/TokenDataProvider'
-import { FaLink } from 'react-icons/fa'
 import { AsyncButton } from 'rental-components/common/Button'
 
 const handleCopy = (shareUrl: string) => {
@@ -79,8 +78,6 @@ export const Manage = () => {
                         >
                           Issued by{' '}
                           {shortPubKey(tokenData.tokenManager?.parsed.issuer)}{' '}
-                          {/* {shortDateString(tokenData.tokenManager?.parsed.issuedAt)} */}
-                          <FaLink className="ml-1" />
                         </Tag>
                         {tokenData.tokenManager?.parsed.issuer.toBase58() ===
                           wallet.publicKey?.toBase58() && (

@@ -150,7 +150,7 @@ export const Wallet = () => {
                 }}
                 className="flex w-[280px] flex-row justify-between rounded-bl-md rounded-br-md bg-white/[.10] p-3"
               >
-                <p className="mt-2 mr-4 overflow-hidden text-ellipsis whitespace-nowrap text-white">
+                <p className="overflow-hidden text-ellipsis whitespace-nowrap pr-5 text-white">
                   {tokenData.metadata.data.name}
                 </p>
                 <div className="my-auto flex-col justify-items-end">
