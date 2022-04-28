@@ -72,8 +72,13 @@ export const Wallet = () => {
             tokenData.tokenAccount?.account.data.parsed.info.mint.toString()
         )
       )
-    } else {
+    } else if (elligibleForRent(tokenData)) {
       setSelectedTokens([...selectedTokens, tokenData])
+    } else {
+      notify({
+        message: 'Not elligible',
+        description: 'This token is not ellgibile for rent!',
+      })
     }
   }
 
