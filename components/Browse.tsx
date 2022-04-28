@@ -631,7 +631,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
   const sortedAttributes = getAllAttributes(issuedTokens)
 
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto pt-10">
       <div className="flex justify-center">
         <div className="md:w-1/5"></div>
         <div className="mb-4 flex h-min flex-col flex-wrap justify-center md:w-4/5 md:flex-row md:justify-between">
@@ -801,29 +801,32 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                       [TokenManagerState.Initialized]: <>Initiliazed</>,
                       [TokenManagerState.Issued]: (
                         <div
-                          className={`flex min-h-[82px] w-[280px] flex-col rounded-bl-md rounded-br-md bg-white/[.15] p-3`}
+                          style={{
+                            background: lighten(0.07, config.colors.main),
+                          }}
+                          className={`flex min-h-[82px] w-[280px] flex-col rounded-bl-md rounded-br-md p-3`}
                         >
-                          <div className="mb-3 flex w-full flex-row font-bold text-white">
-                            <p className="flex w-fit text-left">
+                          <div
+                            className="mb-2 flex w-full flex-row text-xs font-bold text-white"
+                            onClick={() =>
+                              handleCopy(
+                                getLink(
+                                  `/claim/${tokenData.tokenManager?.pubkey.toBase58()}`
+                                )
+                              )
+                            }
+                          >
+                            <p className="flex w-fit overflow-hidden text-ellipsis whitespace-nowrap text-left">
                               {tokenData.metadata.data.name}
                             </p>
                             <div className="ml-[6px] mt-[2px] flex w-fit cursor-pointer">
-                              <span
-                                className="flex w-full text-left"
-                                onClick={() =>
-                                  handleCopy(
-                                    getLink(
-                                      `/claim/${tokenData.tokenManager?.pubkey.toBase58()}`
-                                    )
-                                  )
-                                }
-                              >
+                              <span className="flex w-full text-left">
                                 <FaLink />
                               </span>
                             </div>
                           </div>
 
-                          <div className="flex w-full flex-row justify-between">
+                          <div className="flex w-full flex-row justify-between text-xs">
                             {tokenData.timeInvalidator?.parsed ? (
                               <Tag
                                 state={TokenManagerState.Issued}
@@ -853,7 +856,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                                 </div>
                               </Tag>
                             ) : (
-                              <div className="my-auto rounded-lg bg-gray-800 px-5 py-1 text-white">
+                              <div className="my-auto rounded-lg bg-gray-800 px-5 py-2 text-white">
                                 Private
                               </div>
                             )}
@@ -862,7 +865,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                               bgColor={config.colors.secondary}
                               variant="primary"
                               disabled={!wallet.publicKey}
-                              className="my-auto inline-block h-8"
+                              className="my-auto inline-block flex-none text-xs"
                               handleClick={async () => {
                                 if (wallet.publicKey) {
                                   if (
@@ -900,23 +903,26 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                       ),
                       [TokenManagerState.Claimed]: (
                         <div
-                          className={`flex min-h-[82px] w-[280px] flex-col rounded-bl-md rounded-br-md bg-white/[.15] p-3`}
+                          style={{
+                            background: lighten(0.07, config.colors.main),
+                          }}
+                          className={`flex min-h-[82px] w-[280px] flex-col rounded-bl-md rounded-br-md p-3`}
                         >
-                          <div className="mb-3 flex w-full flex-row font-bold text-white">
-                            <p className="flex w-fit text-left">
+                          <div
+                            className="mb-2 flex w-full cursor-pointer flex-row text-xs font-bold text-white"
+                            onClick={() =>
+                              handleCopy(
+                                getLink(
+                                  `/claim/${tokenData.tokenManager?.pubkey.toBase58()}`
+                                )
+                              )
+                            }
+                          >
+                            <p className="flex w-fit overflow-hidden text-ellipsis whitespace-nowrap text-left">
                               {tokenData.metadata.data.name}
                             </p>
-                            <div className="ml-[6px] mt-[2px] flex w-fit cursor-pointer">
-                              <span
-                                className="flex w-full text-left"
-                                onClick={() =>
-                                  handleCopy(
-                                    getLink(
-                                      `/claim/${tokenData.tokenManager?.pubkey.toBase58()}`
-                                    )
-                                  )
-                                }
-                              >
+                            <div className="ml-[6px] mt-[2px] flex w-fit">
+                              <span className="flex w-full text-left">
                                 <FaLink />
                               </span>
                             </div>
