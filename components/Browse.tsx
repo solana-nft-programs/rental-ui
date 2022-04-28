@@ -827,17 +827,11 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
 
                           <div className="flex w-full flex-row justify-between text-xs">
                             {tokenData.timeInvalidator?.parsed ? (
-                              <Tag
-                                state={TokenManagerState.Issued}
-                                // color="warning"
-                              >
-                                <div className="flex-col">
-                                  <div>
-                                    <StyledSecondaryText>
-                                      {getDurationText(tokenData)}
-                                    </StyledSecondaryText>
-                                    <br />{' '}
-                                  </div>
+                              <Tag state={TokenManagerState.Issued}>
+                                <div className="flex flex-col">
+                                  <StyledSecondaryText>
+                                    {getDurationText(tokenData)}
+                                  </StyledSecondaryText>
                                   <DisplayAddress
                                     style={{
                                       color: '#52c41a !important',
@@ -851,7 +845,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                                     height="18px"
                                     width="100px"
                                     dark={true}
-                                  />{' '}
+                                  />
                                 </div>
                               </Tag>
                             ) : (
