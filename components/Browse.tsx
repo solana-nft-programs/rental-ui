@@ -793,36 +793,33 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                           }}
                           className={`flex min-h-[82px] w-[280px] flex-row justify-between rounded-bl-md rounded-br-md p-3`}
                         >
-                          <div className="flex flex-col items-start">
-                            <Tag
-                              state={TokenManagerState.Issued}
-                              // color="warning"
-                            >
-                              {tokenData.timeInvalidator?.parsed ? (
-                                <div className="float-left">
-                                  <p className="mb-1 flex w-full flex-row-reverse justify-end pb-0 font-bold text-white">
-                                    <div className="ml-[6px] mt-[2px] flex w-fit">
-                                      <span
-                                        className=" flex w-full text-left"
-                                        onClick={() =>
-                                          handleCopy(
-                                            getLink(
-                                              `/claim/${tokenData.tokenManager?.pubkey.toBase58()}`
-                                            )
-                                          )
-                                        }
-                                      >
-                                        <FaLink />
-                                      </span>
-                                    </div>
-                                    <p className="flex w-fit overflow-hidden text-ellipsis whitespace-nowrap text-left">
-                                      {tokenData.metadata.data.name}
-                                    </p>
+                          <div className="w-[64%] text-xs">
+                            {tokenData.timeInvalidator?.parsed && (
+                              <>
+                                <p className="mb-1 flex w-full flex-row justify-start pb-0 font-bold text-white">
+                                  <p className="flex overflow-hidden text-ellipsis whitespace-nowrap text-left">
+                                    {tokenData.metadata.data.name}
                                   </p>
-                                  <StyledSecondaryText>
-                                    {getDurationText(tokenData)}
-                                  </StyledSecondaryText>
-                                  <br />{' '}
+                                  <div className="ml-[6px] mt-[2px] flex w-fit">
+                                    <span
+                                      className=" flex w-full text-left"
+                                      onClick={() =>
+                                        handleCopy(
+                                          getLink(
+                                            `/claim/${tokenData.tokenManager?.pubkey.toBase58()}`
+                                          )
+                                        )
+                                      }
+                                    >
+                                      <FaLink />
+                                    </span>
+                                  </div>
+                                </p>
+                                <StyledSecondaryText>
+                                  {getDurationText(tokenData)}
+                                </StyledSecondaryText>
+                                <br />
+                                <Tag state={TokenManagerState.Issued}>
                                   <DisplayAddress
                                     connection={connection}
                                     address={
@@ -832,10 +829,10 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                                     height="18px"
                                     width="100px"
                                     dark={true}
-                                  />{' '}
-                                </div>
-                              ) : null}
-                            </Tag>
+                                  />
+                                </Tag>
+                              </>
+                            )}
                           </div>
 
                           <div className="flex w-max flex-col justify-end">
@@ -843,7 +840,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                               bgColor={config.colors.secondary}
                               variant="primary"
                               disabled={!wallet.publicKey}
-                              className="mr-1 inline-block flex-none"
+                              className="inline-block flex-none text-xs"
                               handleClick={async () => {
                                 if (wallet.publicKey) {
                                   if (
@@ -886,7 +883,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                           }}
                           className={`flex min-h-[82px] w-[280px] flex-row justify-between rounded-bl-md rounded-br-md p-3`}
                         >
-                          <div className="flex flex-col items-start">
+                          <div className="flex w-[64%] flex-col items-start text-xs">
                             <p className="float-left mb-1 flex w-full flex-row-reverse justify-end pb-0 text-xs font-bold text-white">
                               <div className="ml-[6px] mt-[2px] w-fit">
                                 <span
@@ -907,17 +904,17 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                               </p>
                             </p>
                             <div className=" w-full">
-                              <Tag
-                                state={TokenManagerState.Claimed}
-                                // color="warning"
-                              >
+                              <Tag state={TokenManagerState.Claimed}>
                                 {getDurationText(tokenData)}
                               </Tag>
                             </div>
 
                             {tokenData.recipientTokenAccount?.owner && (
-                              <Tag state={TokenManagerState.Claimed}>
-                                Claimed by&nbsp;
+                              <Tag
+                                state={TokenManagerState.Claimed}
+                                className="flex"
+                              >
+                                <span>Claimed by&nbsp;</span>
                                 <DisplayAddress
                                   style={{ color: '#52c41a !important' }}
                                   connection={connection}
@@ -951,7 +948,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                             <Button
                               variant="primary"
                               disabled={!wallet.connected}
-                              className="mr-1 mt-[30px] inline-block flex-none"
+                              className="mt-[30px] inline-block flex-none"
                               onClick={async () => {
                                 tokenData?.tokenManager &&
                                   executeTransaction(
