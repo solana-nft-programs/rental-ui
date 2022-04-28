@@ -34,15 +34,15 @@ export const Footer = ({
           </span>
         </div>
         <div className="flex gap-10 self-end text-center md:gap-20">
-          <span className="flex flex-col items-start gap-1">
+          {/* <span className="flex flex-col items-start gap-1">
             <div className="mb-2 text-lg font-semibold text-white">App</div>
             <a href="/" className="text-gray-400">
-              Pools
+              Wallet
             </a>
             <a href="/admin" className="text-gray-400">
-              Admin
+              Manage
             </a>
-          </span>
+          </span> */}
           <span className="flex flex-col items-start gap-1">
             <div className="mb-2 text-lg font-semibold text-white">
               Resources
