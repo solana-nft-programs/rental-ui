@@ -13,15 +13,19 @@ import { lighten } from 'polished'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useUserTokenData } from 'providers/TokenDataProvider'
+import { useState } from 'react'
 import { AsyncButton, Button } from 'rental-components/common/Button'
 import { useRentalExtensionModal } from 'rental-components/RentalExtensionModalProvider'
+import { useRentalModal } from 'rental-components/RentalModalProvider'
 
 export const Wallet = () => {
   const ctx = useEnvironmentCtx()
   const wallet = useWallet()
   const { config } = useProjectConfig()
   const { tokenDatas, loaded, refreshTokenAccounts } = useUserTokenData()
+  const rentalModal = useRentalModal()
   const rentalExtensionModal = useRentalExtensionModal()
+  const [selectedTokens, setSelectedTokens] = useState<TokenData[]>([])
 
   const revokeRental = async (tokenData: TokenData) => {
     if (!tokenData.tokenManager) throw new Error('Invalid token manager')
@@ -42,8 +46,64 @@ export const Wallet = () => {
     })
   }
 
+  const elligibleForRent = (tokenData: TokenData) => {
+    return (
+      !config.disableListing &&
+      !tokenData.tokenManager &&
+      tokenData.tokenAccount?.account.data.parsed.info.state !== 'frozen' &&
+      tokenData.editionData
+    )
+  }
+
+  const isSelected = (tokenData: TokenData) => {
+    return selectedTokens.some(
+      (t) =>
+        t.tokenAccount?.account.data.parsed.info.mint.toString() ===
+        tokenData.tokenAccount?.account.data.parsed.info.mint.toString()
+    )
+  }
+
+  const handleNFTSelect = (tokenData: TokenData) => {
+    if (isSelected(tokenData)) {
+      setSelectedTokens(
+        selectedTokens.filter(
+          (t) =>
+            t.tokenAccount?.account.data.parsed.info.mint.toString() !==
+            tokenData.tokenAccount?.account.data.parsed.info.mint.toString()
+        )
+      )
+    } else {
+      setSelectedTokens([...selectedTokens, tokenData])
+    }
+  }
+
   return (
-    <div className="mt-10">
+    <div className="flex flex-col">
+      {tokenDatas && tokenDatas.length > 0 && (
+        <div className="container block">
+          <div>
+            <Button
+              disabled={selectedTokens.length === 0}
+              variant="primary"
+              className=" float-right mb-5"
+              bgColor={config.colors.secondary}
+              onClick={() =>
+                rentalModal.show(
+                  asWallet(wallet),
+                  ctx.connection,
+                  ctx.environment.label,
+                  selectedTokens,
+                  config.rentalCard
+                )
+              }
+            >
+              {`Bulk Upload ${
+                selectedTokens.length ? `(${selectedTokens.length})` : ''
+              }`}
+            </Button>
+          </div>
+        </div>
+      )}
       <TokensOuter>
         {!loaded ? (
           <>
@@ -58,18 +118,32 @@ export const Wallet = () => {
           tokenDatas.map((tokenData) => (
             <div
               key={tokenData.tokenAccount?.pubkey.toString()}
-              className="flex flex-col"
+              className="relative flex flex-col"
             >
               <NFT
                 key={tokenData?.tokenAccount?.pubkey.toBase58()}
                 tokenData={tokenData}
                 fullyRounded={false}
+                onClick={() => handleNFTSelect(tokenData)}
               ></NFT>
+              {elligibleForRent(tokenData) && (
+                <input
+                  autoComplete="off"
+                  type={'checkbox'}
+                  className={`absolute top-3 left-3 h-5 w-5  rounded-sm font-medium text-black focus:outline-none`}
+                  id={tokenData?.tokenAccount?.pubkey.toBase58()}
+                  name={tokenData?.tokenAccount?.pubkey.toBase58()}
+                  checked={isSelected(tokenData)}
+                  onChange={(e) => {
+                    handleNFTSelect(tokenData)
+                  }}
+                />
+              )}
               <div
                 style={{
                   background: lighten(0.07, config.colors.main),
                 }}
-                className="flex w-[280px] flex-row justify-between rounded-bl-md rounded-br-md p-3"
+                className="flex w-[280px] flex-row justify-between rounded-bl-md rounded-br-md bg-white/[.10] p-3"
               >
                 <p className="mt-2 mr-4 overflow-hidden text-ellipsis whitespace-nowrap text-white">
                   {tokenData.metadata.data.name}

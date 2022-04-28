@@ -62,9 +62,15 @@ interface NFTProps {
   tokenData: TokenData
   hideQRCode?: boolean
   fullyRounded?: boolean
+  onClick?: () => void
 }
 
-export function NFT({ tokenData, hideQRCode, fullyRounded }: NFTProps) {
+export function NFT({
+  tokenData,
+  hideQRCode,
+  fullyRounded,
+  onClick,
+}: NFTProps) {
   const ctx = useEnvironmentCtx()
   const wallet = useWallet()
   const { show } = useQRCode()
@@ -134,7 +140,7 @@ export function NFT({ tokenData, hideQRCode, fullyRounded }: NFTProps) {
                         asWallet(wallet),
                         ctx.connection,
                         ctx.environment.label,
-                        tokenData,
+                        [tokenData],
                         config.rentalCard
                       )
                   }}
@@ -207,7 +213,13 @@ export function NFT({ tokenData, hideQRCode, fullyRounded }: NFTProps) {
           <FaEllipsisH />
         </div>
       </Popover>
-      <div id="media-outer" className="z-0">
+      <div
+        id="media-outer"
+        className={`z-0 ${onClick ? 'cursor-pointer' : ''}`}
+        onClick={() => {
+          onClick ? onClick() : () => {}
+        }}
+      >
         {tokenManager && (
           <NFTOverlay
             state={tokenManager?.parsed.state}
