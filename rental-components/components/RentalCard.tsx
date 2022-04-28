@@ -507,8 +507,8 @@ export const RentalCard = ({
           callback: refreshTokenAccounts,
           signers: claimRentalReceipt ? [receiptMintKeypair] : [],
         })
-        setTotalListed(i+1)
-        
+        setTotalListed(i + 1)
+
         const link = claimLinks.getLink(
           tokenManagerId,
           otpKeypair,
@@ -546,7 +546,12 @@ export const RentalCard = ({
             showIcon
           />
         )}
-        <div className="flex w-full justify-center gap-4 overflow-x-auto">
+        <div
+          className={
+            `flex w-full gap-4 overflow-x-auto ` +
+            (tokenDatas.length <= 2 ? 'justify-center' : '')
+          }
+        >
           {tokenDatas.map((tokenData, i) => (
             <ImageWrapper key={i}>
               <NFTOuter>
@@ -1161,7 +1166,7 @@ export const RentalCard = ({
         <ButtonWithFooter
           loading={loading}
           complete={false}
-          disabled={!confirmRentalTerms}          
+          disabled={!confirmRentalTerms}
           message={
             link ? (
               <StyledAlert>
