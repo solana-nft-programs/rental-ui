@@ -21,7 +21,6 @@ export const Button = styled.button<ButtonProps>`
   border: none;
   outline: none;
   min-height: 26px;
-  height: fit-content;
   font-size: 12px;
   mix-blend-mode: normal;
   box-shadow: ${({ boxShadow }) =>

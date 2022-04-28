@@ -358,7 +358,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
         return []
     }
 
-    return [
+    sortedTokens = [
       ...sortedTokens.filter(
         (token) =>
           token.timeInvalidator?.parsed.durationSeconds?.toNumber() === 0
@@ -366,6 +366,19 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
       ...sortedTokens.filter(
         (token) =>
           token.timeInvalidator?.parsed.durationSeconds?.toNumber() !== 0
+      ),
+    ]
+
+    return [
+      ...sortedTokens.filter(
+        (token) =>
+          (token?.tokenManager?.parsed.state as TokenManagerState) ===
+          TokenManagerState.Issued
+      ),
+      ...sortedTokens.filter(
+        (token) =>
+          (token?.tokenManager?.parsed.state as TokenManagerState) !==
+          TokenManagerState.Issued
       ),
     ]
   }
@@ -682,7 +695,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
         </div>
       </div>
       <div className="flex lg:flex lg:flex-row">
-        <div className="mr-5">
+        <div className="mr-10">
           <div
             className="max-h-[70vh] w-[280px] overflow-scroll rounded-lg py-5 px-8 text-left"
             style={{ background: lighten(0.1, config.colors.main) }}
@@ -786,39 +799,48 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                         [TokenManagerState.Initialized]: <>Initiliazed</>,
                         [TokenManagerState.Issued]: (
                           <div
-                            className={`flex min-h-[82px] w-[280px] flex-row justify-between rounded-bl-md rounded-br-md bg-white/[.15] p-3`}
+                            className={`flex min-h-[82px] w-[280px] flex-col rounded-bl-md rounded-br-md bg-white/[.15] p-3`}
                           >
-                            <div className="flex flex-col items-start">
+                            <div className="flex w-full flex-row">
+                              <div className="mb-1 flex w-full flex-row-reverse justify-end pb-0 font-bold text-white">
+                                <div className="ml-[6px] mt-[2px] flex w-fit cursor-pointer">
+                                  <span
+                                    className="flex w-full text-left"
+                                    onClick={() =>
+                                      handleCopy(
+                                        getLink(
+                                          `/claim/${tokenData.tokenManager?.pubkey.toBase58()}`
+                                        )
+                                      )
+                                    }
+                                  >
+                                    <FaLink />
+                                  </span>
+                                </div>
+                                <p className="flex w-fit text-left">
+                                  {tokenData.metadata.data.name}
+                                </p>
+                              </div>
+                            </div>
+
+                            <div className="flex w-full flex-row justify-between">
                               <Tag
                                 state={TokenManagerState.Issued}
                                 // color="warning"
                               >
                                 {tokenData.timeInvalidator?.parsed ? (
-                                  <div className="float-left">
-                                    <p className="mb-1 flex w-full flex-row-reverse justify-end pb-0 font-bold text-white">
-                                      <div className="ml-[6px] mt-[2px] flex w-fit">
-                                        <span
-                                          className=" flex w-full text-left"
-                                          onClick={() =>
-                                            handleCopy(
-                                              getLink(
-                                                `/claim/${tokenData.tokenManager?.pubkey.toBase58()}`
-                                              )
-                                            )
-                                          }
-                                        >
-                                          <FaLink />
-                                        </span>
-                                      </div>
-                                      <p className="flex w-fit text-left">
-                                        {tokenData.metadata.data.name}
-                                      </p>
-                                    </p>
-                                    <StyledSecondaryText>
-                                      {getDurationText(tokenData)}
-                                    </StyledSecondaryText>
-                                    <br />{' '}
+                                  <div className="flex-col">
+                                    <div>
+                                      <StyledSecondaryText>
+                                        {getDurationText(tokenData)}
+                                      </StyledSecondaryText>
+                                      <br />{' '}
+                                    </div>
                                     <DisplayAddress
+                                      style={{
+                                        color: '#52c41a !important',
+                                        display: 'inline',
+                                      }}
                                       connection={connection}
                                       address={
                                         tokenData.tokenManager?.parsed.issuer ||
@@ -831,14 +853,12 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                                   </div>
                                 ) : null}
                               </Tag>
-                            </div>
 
-                            <div className="flex w-max flex-col justify-end">
                               <AsyncButton
                                 bgColor={config.colors.secondary}
                                 variant="primary"
                                 disabled={!wallet.publicKey}
-                                className="mr-1 inline-block flex-none"
+                                className="inline-block h-8"
                                 handleClick={async () => {
                                   if (wallet.publicKey) {
                                     if (
@@ -876,13 +896,13 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                         ),
                         [TokenManagerState.Claimed]: (
                           <div
-                            className={`flex min-h-[82px] w-[280px] flex-row justify-between rounded-bl-md rounded-br-md bg-white/[.15] p-3`}
+                            className={`flex min-h-[82px] w-[280px] flex-col justify-between rounded-bl-md rounded-br-md bg-white/[.15] p-3`}
                           >
-                            <div className="flex flex-col items-start">
-                              <p className="float-left mb-1 flex w-full flex-row-reverse justify-end pb-0 text-xs font-bold text-white">
-                                <div className="ml-[6px] mt-[2px] w-fit">
+                            <div className="flex w-full flex-row">
+                              <div className="mb-1 flex w-full flex-row-reverse justify-end pb-0 font-bold text-white">
+                                <div className="ml-[6px] mt-[2px] flex w-fit cursor-pointer">
                                   <span
-                                    className="flex text-left"
+                                    className="flex w-full text-left"
                                     onClick={() =>
                                       handleCopy(
                                         getLink(
@@ -897,73 +917,88 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                                 <p className="flex w-fit text-left">
                                   {tokenData.metadata.data.name}
                                 </p>
-                              </p>
-                              <div className=" w-full">
-                                <Tag
-                                  state={TokenManagerState.Claimed}
-                                  // color="warning"
-                                >
-                                  {getDurationText(tokenData)}
-                                </Tag>
                               </div>
+                            </div>
 
+                            <div className="flex flex-row justify-between">
                               {tokenData.recipientTokenAccount?.owner && (
                                 <Tag state={TokenManagerState.Claimed}>
-                                  Claimed by&nbsp;
-                                  <DisplayAddress
-                                    style={{ color: '#52c41a !important' }}
-                                    connection={connection}
-                                    address={
-                                      new PublicKey(
-                                        tokenData.recipientTokenAccount?.owner
-                                      )
-                                    }
-                                    height="18px"
-                                    width="100px"
-                                    dark={true}
-                                  />{' '}
+                                  <div className="flex-col">
+                                    <div>
+                                      <span className="inline-block">
+                                        Claimed by&nbsp;
+                                      </span>
+                                      <DisplayAddress
+                                        style={{
+                                          color: '#52c41a !important',
+                                          display: 'inline',
+                                        }}
+                                        connection={connection}
+                                        address={
+                                          new PublicKey(
+                                            tokenData.recipientTokenAccount?.owner
+                                          )
+                                        }
+                                        height="18px"
+                                        width="100px"
+                                        dark={true}
+                                      />{' '}
+                                    </div>
+                                    <DisplayAddress
+                                      style={{
+                                        color: '#52c41a !important',
+                                        display: 'inline',
+                                      }}
+                                      connection={connection}
+                                      address={
+                                        tokenData.tokenManager?.parsed.issuer
+                                      }
+                                      height="18px"
+                                      width="100px"
+                                      dark={true}
+                                    />{' '}
+                                  </div>
                                 </Tag>
                               )}
-                            </div>
-                            {((wallet.publicKey &&
-                              tokenData?.tokenManager?.parsed.invalidators &&
-                              tokenData?.tokenManager?.parsed.invalidators
-                                .map((i: PublicKey) => i.toString())
-                                .includes(wallet.publicKey?.toString())) ||
-                              (tokenData.timeInvalidator &&
-                                tokenData.timeInvalidator.parsed.expiration &&
-                                tokenData.timeInvalidator.parsed.expiration.lte(
-                                  new BN(Date.now() / 1000)
-                                )) ||
-                              (tokenData.useInvalidator &&
-                                tokenData.useInvalidator.parsed.maxUsages &&
-                                tokenData.useInvalidator.parsed.usages.gte(
-                                  tokenData.useInvalidator.parsed.maxUsages
-                                ))) && (
-                              <Button
-                                variant="primary"
-                                disabled={!wallet.connected}
-                                className="mr-1 mt-[30px] inline-block flex-none"
-                                onClick={async () => {
-                                  tokenData?.tokenManager &&
-                                    executeTransaction(
-                                      connection,
-                                      asWallet(wallet),
-                                      await invalidate(
+                              {((wallet.publicKey &&
+                                tokenData?.tokenManager?.parsed.invalidators &&
+                                tokenData?.tokenManager?.parsed.invalidators
+                                  .map((i: PublicKey) => i.toString())
+                                  .includes(wallet.publicKey?.toString())) ||
+                                (tokenData.timeInvalidator &&
+                                  tokenData.timeInvalidator.parsed.expiration &&
+                                  tokenData.timeInvalidator.parsed.expiration.lte(
+                                    new BN(Date.now() / 1000)
+                                  )) ||
+                                (tokenData.useInvalidator &&
+                                  tokenData.useInvalidator.parsed.maxUsages &&
+                                  tokenData.useInvalidator.parsed.usages.gte(
+                                    tokenData.useInvalidator.parsed.maxUsages
+                                  ))) && (
+                                <Button
+                                  variant="primary"
+                                  disabled={!wallet.connected}
+                                  onClick={async () => {
+                                    tokenData?.tokenManager &&
+                                      executeTransaction(
                                         connection,
                                         asWallet(wallet),
-                                        tokenData?.tokenManager?.parsed.mint
-                                      ),
-                                      {
-                                        callback: refreshIssuedTokens,
-                                        silent: true,
-                                      }
-                                    )
-                                }}
-                              >
-                                Revoke
-                              </Button>
-                            )}
+                                        await invalidate(
+                                          connection,
+                                          asWallet(wallet),
+                                          tokenData?.tokenManager?.parsed.mint
+                                        ),
+                                        {
+                                          callback: refreshIssuedTokens,
+                                          silent: true,
+                                        }
+                                      )
+                                  }}
+                                >
+                                  Revoke
+                                </Button>
+                              )}
+                            </div>
                           </div>
                         ),
                         [TokenManagerState.Invalidated]: (
