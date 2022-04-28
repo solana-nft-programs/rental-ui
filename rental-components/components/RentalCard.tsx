@@ -507,6 +507,8 @@ export const RentalCard = ({
           callback: refreshTokenAccounts,
           signers: claimRentalReceipt ? [receiptMintKeypair] : [],
         })
+        setTotalListed(i+1)
+        
         const link = claimLinks.getLink(
           tokenManagerId,
           otpKeypair,
@@ -516,7 +518,6 @@ export const RentalCard = ({
         setLink(link)
         handleCopy(link)
         console.log(link)
-        setTotalListed(totalListed + 1)
       }
     } catch (e) {
       console.log('Error handling rental', e)
@@ -1160,7 +1161,7 @@ export const RentalCard = ({
         <ButtonWithFooter
           loading={loading}
           complete={false}
-          disabled={!confirmRentalTerms}
+          disabled={!confirmRentalTerms}          
           message={
             link ? (
               <StyledAlert>

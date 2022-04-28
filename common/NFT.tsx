@@ -42,44 +42,6 @@ export const TokenMetadata = styled.div<{ allBorderRadius?: boolean }>`
   border-radius: ${({ allBorderRadius }) =>
     allBorderRadius ? '10px' : '10px 10px 0 0'};
   width: 280px;
-  background-color: ${Colors.tokenBackground};
-
-  .unissue {
-    color: white;
-    z-index: 5;
-    top: 5px;
-    right: 5px;
-    position: absolute;
-    font-size: 18px;
-    border-radius: 50%;
-    width: 35px;
-    height: 35px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    transition: 0.2s all;
-    // background: rgba(100, 100, 100);
-    background: ${Colors.navBg};
-    &:hover {
-      // background: rgba(120, 120, 120);
-      background: ${Colors.background};
-    }
-  }
-
-  #header {
-    background: rgba(0, 0, 0, 0.4);
-    z-index: 1;
-    padding: 12px;
-    position: absolute;
-    top: -50px;
-    width: 100%;
-    transition: 0.2s all;
-  }
-
-  #name {
-    font-size: 14px;
-  }
 
   #media-outer {
     display: flex;
@@ -130,13 +92,17 @@ export function NFT({
     tokenData.editionData
 
   return (
-    <TokenMetadata>
+    <TokenMetadata
+      style={{
+        background: lighten(0.02, config.colors.main),
+      }}
+    >
       <Popover
         content={
           <div
             className="flex flex-col rounded-md px-1 py-1"
             style={{
-              background: lighten(0.1, config.colors.main),
+              background: lighten(0.07, config.colors.main),
               color: getColorByBgColor(config.colors.main),
             }}
           >
@@ -240,7 +206,7 @@ export function NFT({
           )}]`}
           style={{
             transition: '0.2s all',
-            background: lighten(0.1, config.colors.main),
+            background: lighten(0.07, config.colors.main),
           }}
           key={tokenAccount?.pubkey.toString()}
         >

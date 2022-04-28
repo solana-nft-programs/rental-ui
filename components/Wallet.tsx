@@ -9,11 +9,13 @@ import { NFTPlaceholder } from 'common/NFTPlaceholder'
 import { notify } from 'common/Notification'
 import { executeTransaction } from 'common/Transactions'
 import { asWallet } from 'common/Wallets'
+import { lighten } from 'polished'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useUserTokenData } from 'providers/TokenDataProvider'
 import { useState } from 'react'
 import { AsyncButton, Button } from 'rental-components/common/Button'
+import { useRentalExtensionModal } from 'rental-components/RentalExtensionModalProvider'
 import { useRentalModal } from 'rental-components/RentalModalProvider'
 
 export const Wallet = () => {
@@ -22,6 +24,7 @@ export const Wallet = () => {
   const { config } = useProjectConfig()
   const { tokenDatas, loaded, refreshTokenAccounts } = useUserTokenData()
   const rentalModal = useRentalModal()
+  const rentalExtensionModal = useRentalExtensionModal()
   const [selectedTokens, setSelectedTokens] = useState<TokenData[]>([])
 
   const revokeRental = async (tokenData: TokenData) => {
@@ -136,7 +139,12 @@ export const Wallet = () => {
                   }}
                 />
               )}
-              <div className="flex w-[280px] flex-row justify-between rounded-bl-md rounded-br-md bg-white/[.10] p-3">
+              <div
+                style={{
+                  background: lighten(0.07, config.colors.main),
+                }}
+                className="flex w-[280px] flex-row justify-between rounded-bl-md rounded-br-md bg-white/[.10] p-3"
+              >
                 <p className="mt-2 mr-4 overflow-hidden text-ellipsis whitespace-nowrap text-white">
                   {tokenData.metadata.data.name}
                 </p>
@@ -187,8 +195,8 @@ export const Wallet = () => {
           ))
         ) : (
           <div className="white flex w-full flex-col items-center justify-center gap-1">
-            <div className="text-white">
-              No {config.name} NFTs found in wallet!
+            <div className="text-gray-500">
+              No {config.name} NFTs found in wallet...
             </div>
             {ctx.environment.label === 'devnet' && <Airdrop />}
           </div>
