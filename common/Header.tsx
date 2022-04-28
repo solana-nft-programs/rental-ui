@@ -153,20 +153,15 @@ export const StyledTab = styled.div<{
   disabled: boolean | undefined
 }>`
   border-radius: 20px;
-  background: ${({ selected }) => (selected ? Colors.secondary : 'none')};
   opacity: ${({ disabled }) => (disabled ? 0.25 : 1)};
-  color: ${({ selected }) =>
-    selected
-      ? getColorByBgColor(Colors.secondary)
-      : getColorByBgColor(Colors.navBg)};
   text-align: center;
   width: 150px;
   padding: 10px 20px;
   cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
-  transition: 0.3s all;
   &:hover {
+    // transition: 0.3s all;
     background: ${({ disabled }) =>
-      disabled ? '' : lighten(0.1, Colors.secondary)};
+      disabled ? '' : lighten(0.07, Colors.secondary)};
   }
 `
 
@@ -203,7 +198,11 @@ export const Header = ({
 
   const issuer = tryPublicKey(config.issuer?.publicKeyString)
   return (
-    <StyledHeader isTabletOrMobile={isTabletOrMobile}>
+    <StyledHeader
+      isTabletOrMobile={isTabletOrMobile}
+      className="shadow-2xl"
+      style={{ background: config.colors.main }}
+    >
       <div className="left pl-8">
         <div className="title" style={{ marginRight: '40px' }}>
           {issuer ? (
@@ -224,7 +223,11 @@ export const Header = ({
                 target="_blank"
                 href={config.websiteUrl}
               >
-                <img className="h-9 w-auto" src={config.logoImage} alt="logo" />
+                <img
+                  className="max-h-9 w-full max-w-[160px]"
+                  src={config.logoImage}
+                  alt="logo"
+                />
               </a>
 
               {ctx.environment.label === 'devnet' ? (
@@ -260,12 +263,20 @@ export const Header = ({
       <div className="center">
         {tabs && (
           <StyledTabs
-            style={{ background: lighten(0.1, config.colors.main) }}
+            style={{ background: lighten(0.07, config.colors.main) }}
             show={showTabs}
+            className="shadow-2xl"
           >
             {tabs.map(({ disabled, name, anchor }) => (
               <StyledTab
                 key={anchor}
+                style={{
+                  background: tab === anchor ? config.colors.secondary : 'none',
+                  color:
+                    tab === anchor
+                      ? getColorByBgColor(config.colors.secondary)
+                      : getColorByBgColor(config.colors.main),
+                }}
                 selected={tab === anchor}
                 className="tab"
                 disabled={disabled}

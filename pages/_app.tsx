@@ -33,7 +33,7 @@ const App = ({
   config,
 }: AppProps & { config: ProjectConfig }) => (
   <EnvironmentProvider>
-    <WalletProvider wallets={getWalletAdapters()}>
+    <WalletProvider wallets={getWalletAdapters()} autoConnect>
       <WalletIdentityProvider>
         <ProjectConfigProvider defaultConfig={config}>
           <PaymentMintsProvider>

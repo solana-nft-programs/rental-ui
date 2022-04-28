@@ -23,11 +23,9 @@ import * as spl from '@solana/spl-token'
 import type {
   AccountInfo,
   Connection,
-  ParsedAccountData} from '@solana/web3.js';
-import {
-  PublicKey,
-  SystemProgram,
+  ParsedAccountData,
 } from '@solana/web3.js'
+import { PublicKey, SystemProgram } from '@solana/web3.js'
 
 export async function findAssociatedTokenAddress(
   walletAddress: PublicKey,
@@ -108,7 +106,7 @@ export async function getTokenAccountsWithData(
       let timeInvalidatorId = null
       let useInvalidatorId = null
       if (tokenManagerId) {
-        [[timeInvalidatorId], [useInvalidatorId]] = await Promise.all([
+        ;[[timeInvalidatorId], [useInvalidatorId]] = await Promise.all([
           timeInvalidator.pda.findTimeInvalidatorAddress(tokenManagerId),
           useInvalidator.pda.findUseInvalidatorAddress(tokenManagerId),
         ])
@@ -124,34 +122,37 @@ export async function getTokenAccountsWithData(
     })
   )
 
-  // @ts-ignore
   const metadataIds: [
     PublicKey[],
     PublicKey[],
-    PublicKey[],
-    PublicKey[],
-    PublicKey[]
-  ] =
-    // @ts-ignore
-    metadataTuples.reduce(
-      (
-        acc,
-        [
-          metaplexId,
-          editionId,
-          tokenManagerId,
-          timeInvalidatorId,
-          useInvalidatorId,
-        ]
-      ) => [
-        [...acc[0], metaplexId],
-        [...acc[1], editionId],
-        [...acc[2], tokenManagerId],
-        [...acc[3], timeInvalidatorId],
-        [...acc[4], useInvalidatorId],
-      ],
-      [[], [], [], [], []]
-    )
+    (PublicKey | null)[],
+    (PublicKey | null)[],
+    (PublicKey | null)[]
+  ] = metadataTuples.reduce(
+    (
+      acc,
+      [
+        metaplexId,
+        editionId,
+        tokenManagerId,
+        timeInvalidatorId,
+        useInvalidatorId,
+      ]
+    ) => [
+      [...acc[0], metaplexId],
+      [...acc[1], editionId],
+      [...acc[2], tokenManagerId],
+      [...acc[3], timeInvalidatorId],
+      [...acc[4], useInvalidatorId],
+    ],
+    [[], [], [], [], []] as [
+      PublicKey[],
+      PublicKey[],
+      (PublicKey | null)[],
+      (PublicKey | null)[],
+      (PublicKey | null)[]
+    ]
+  )
 
   const [
     metaplexAccountInfos,
@@ -162,9 +163,18 @@ export async function getTokenAccountsWithData(
   ] = await Promise.all([
     getBatchedMultipleAccounts(connection, metadataIds[0]),
     getBatchedMultipleAccounts(connection, metadataIds[1]),
-    tokenManager.accounts.getTokenManagers(connection, metadataIds[2]),
-    timeInvalidator.accounts.getTimeInvalidators(connection, metadataIds[3]),
-    useInvalidator.accounts.getUseInvalidators(connection, metadataIds[4]),
+    tokenManager.accounts.getTokenManagers(
+      connection,
+      metadataIds[2].filter((pk) => pk) as PublicKey[]
+    ),
+    timeInvalidator.accounts.getTimeInvalidators(
+      connection,
+      metadataIds[3].filter((pk) => pk) as PublicKey[]
+    ),
+    useInvalidator.accounts.getUseInvalidators(
+      connection,
+      metadataIds[4].filter((pk) => pk) as PublicKey[]
+    ),
   ])
 
   const metaplexData = metaplexAccountInfos.map((accountInfo, i) => {

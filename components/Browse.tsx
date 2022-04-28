@@ -860,7 +860,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                                 bgColor={config.colors.secondary}
                                 variant="primary"
                                 disabled={!wallet.publicKey}
-                                className="inline-block h-8"
+                                className="my-auto inline-block h-8"
                                 handleClick={async () => {
                                   if (wallet.publicKey) {
                                     if (
