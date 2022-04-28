@@ -796,25 +796,23 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                           <div className="w-[64%] text-xs">
                             {tokenData.timeInvalidator?.parsed && (
                               <>
-                                <p className="mb-1 flex w-full flex-row justify-start pb-0 font-bold text-white">
+                                <div
+                                  className="mb-1 flex w-full cursor-pointer flex-row justify-start pb-0 font-bold text-white"
+                                  onClick={() =>
+                                    handleCopy(
+                                      getLink(
+                                        `/claim/${tokenData.tokenManager?.pubkey.toBase58()}`
+                                      )
+                                    )
+                                  }
+                                >
                                   <p className="flex overflow-hidden text-ellipsis whitespace-nowrap text-left">
                                     {tokenData.metadata.data.name}
                                   </p>
                                   <div className="ml-[6px] mt-[2px] flex w-fit">
-                                    <span
-                                      className=" flex w-full text-left"
-                                      onClick={() =>
-                                        handleCopy(
-                                          getLink(
-                                            `/claim/${tokenData.tokenManager?.pubkey.toBase58()}`
-                                          )
-                                        )
-                                      }
-                                    >
-                                      <FaLink />
-                                    </span>
+                                    <FaLink />
                                   </div>
-                                </p>
+                                </div>
                                 <StyledSecondaryText>
                                   {getDurationText(tokenData)}
                                 </StyledSecondaryText>
@@ -884,25 +882,23 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                           className={`flex min-h-[82px] w-[280px] flex-row justify-between rounded-bl-md rounded-br-md p-3`}
                         >
                           <div className="flex w-[64%] flex-col items-start text-xs">
-                            <p className="float-left mb-1 flex w-full flex-row-reverse justify-end pb-0 text-xs font-bold text-white">
+                            <div
+                              className="float-left mb-1 flex w-full cursor-pointer flex-row-reverse justify-end pb-0 text-xs font-bold text-white"
+                              onClick={() =>
+                                handleCopy(
+                                  getLink(
+                                    `/claim/${tokenData.tokenManager?.pubkey.toBase58()}`
+                                  )
+                                )
+                              }
+                            >
                               <div className="ml-[6px] mt-[2px] w-fit">
-                                <span
-                                  className="flex text-left"
-                                  onClick={() =>
-                                    handleCopy(
-                                      getLink(
-                                        `/claim/${tokenData.tokenManager?.pubkey.toBase58()}`
-                                      )
-                                    )
-                                  }
-                                >
-                                  <FaLink />
-                                </span>
+                                <FaLink />
                               </div>
                               <p className="flex w-fit overflow-hidden text-ellipsis whitespace-nowrap text-left">
                                 {tokenData.metadata.data.name}
                               </p>
-                            </p>
+                            </div>
                             <div className=" w-full">
                               <Tag state={TokenManagerState.Claimed}>
                                 {getDurationText(tokenData)}
