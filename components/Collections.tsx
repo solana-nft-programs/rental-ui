@@ -20,7 +20,7 @@ export const Collections = ({ setTab }: { setTab: (s: string) => void }) => {
   )
 
   return (
-    <div className="container mx-auto px-5">
+    <div className="container mx-auto px-10 md:px-0">
       {!projectConfigs ? (
         <div className="grid grid-cols-4 flex-wrap gap-4">
           <NFTPlaceholder />
@@ -31,11 +31,14 @@ export const Collections = ({ setTab }: { setTab: (s: string) => void }) => {
           <NFTPlaceholder />
         </div>
       ) : projectConfigs ? (
-        Object.entries(categories).map(([type, configs]) => (
+        Object.entries(categories).map(([type, configs], i) => (
           <div key={type}>
             <div className="mt-10 mb-5 text-lg font-semibold text-white">
               {/* {type} */}
             </div>
+            {i > 0 && (
+              <div className="mx-auto mb-10 h-[2px] w-[90%] rounded-lg bg-gray-500 opacity-50"></div>
+            )}
             <div className="grid grid-cols-1 flex-wrap gap-4 md:grid-cols-3 lg:grid-cols-4">
               {configs.map((config) => (
                 <div

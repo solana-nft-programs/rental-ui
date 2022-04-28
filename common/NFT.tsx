@@ -3,7 +3,6 @@ import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tok
 import styled from '@emotion/styled'
 import { useWallet } from '@solana/wallet-adapter-react'
 import type { TokenData } from 'api/api'
-import Colors from 'common/colors'
 import { pubKeyUrl } from 'common/utils'
 import { lighten } from 'polished'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
