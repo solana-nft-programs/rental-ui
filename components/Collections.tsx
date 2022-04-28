@@ -1,6 +1,7 @@
 import { NFTPlaceholder } from 'common/NFTPlaceholder'
 import type { ProjectConfig } from 'config/config'
 import { projectConfigs } from 'config/config'
+import { lighten } from 'polished'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import React from 'react'
 
@@ -32,14 +33,15 @@ export const Collections = ({ setTab }: { setTab: (s: string) => void }) => {
       ) : projectConfigs ? (
         Object.entries(categories).map(([type, configs]) => (
           <div key={type}>
-            <div className="mt-10 mb-5 text-lg font-bold text-white">
-              {type}
+            <div className="mt-10 mb-5 text-lg font-semibold text-white">
+              {/* {type} */}
             </div>
             <div className="grid grid-cols-4 flex-wrap gap-4">
               {configs.map((config) => (
                 <div
                   key={config.name}
-                  className={`flex h-[200px] min-w-[200px] cursor-pointer items-center justify-center rounded-xl bg-[#282A2E] p-10 transition-all duration-200 hover:scale-[1.02]`}
+                  style={{ background: lighten(0.07, config.colors.main) }}
+                  className={`flex h-[200px] min-w-[200px] cursor-pointer items-center justify-center rounded-xl p-10 shadow-2xl transition-all duration-200 hover:scale-[1.02]`}
                   onClick={() => {
                     setProjectConfig(config.name)
                   }}

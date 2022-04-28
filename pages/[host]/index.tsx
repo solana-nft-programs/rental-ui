@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
+import { Footer } from 'common/Footer'
 import { Header } from 'common/Header'
-import { StyledContainer } from 'common/StyledContainer'
 import { Browse } from 'components/Browse'
 import { Collections } from 'components/Collections'
 import { Manage } from 'components/Manage'
@@ -124,26 +124,27 @@ export default function Home() {
               { name: 'Browse', anchor: 'browse' },
             ]}
           />
-          <StyledContainer style={{ paddingTop: '120px' }}>
-            <div style={{ position: 'relative' }}>
-              {error}
-              {(() => {
-                switch (tab) {
-                  case 'browse':
-                    return config.name === 'default' ? (
-                      <Collections setTab={setTab} />
-                    ) : (
-                      <Browse config={config} />
-                    )
-                  case 'manage':
-                    return <Manage />
-                  default:
-                    return <Wallet />
-                }
-              })()}
-            </div>
-          </StyledContainer>
-          <div style={{ marginTop: '100px' }} />
+          <div
+            className="pt-[100px]"
+            style={{ minHeight: 'calc(100vh - 337px)' }}
+          >
+            {error}
+            {(() => {
+              switch (tab) {
+                case 'browse':
+                  return config.name === 'default' ? (
+                    <Collections setTab={setTab} />
+                  ) : (
+                    <Browse config={config} />
+                  )
+                case 'manage':
+                  return <Manage />
+                default:
+                  return <Wallet />
+              }
+            })()}
+          </div>
+          <Footer bgColor={config.colors.main} />
         </>
       ) : (
         <div className="flex min-h-screen flex-col items-center">

@@ -130,7 +130,7 @@ export function NFT({ tokenData, hideQRCode, fullyRounded }: NFTProps) {
           <div
             className="flex flex-col rounded-md px-1 py-1"
             style={{
-              background: lighten(0.1, config.colors.main),
+              background: lighten(0.07, config.colors.main),
               color: getColorByBgColor(config.colors.main),
             }}
           >
@@ -234,7 +234,7 @@ export function NFT({ tokenData, hideQRCode, fullyRounded }: NFTProps) {
           )}]`}
           style={{
             transition: '0.2s all',
-            background: lighten(0.1, config.colors.main),
+            background: lighten(0.07, config.colors.main),
           }}
           key={tokenAccount?.pubkey.toString()}
         >

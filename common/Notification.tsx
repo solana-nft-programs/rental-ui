@@ -103,7 +103,7 @@ export function ToastContainer() {
               }`}
               style={{
                 borderColor: config.colors.secondary,
-                backgroundColor: lighten(0.1, config.colors.main),
+                backgroundColor: lighten(0.07, config.colors.main),
                 color: getColorByBgColor(config.colors.main),
               }}
             >
