@@ -56,7 +56,7 @@ export const Wallet = () => {
         tokenDatas.map((tokenData) => (
           <div
             key={tokenData.tokenAccount?.pubkey.toString()}
-            className="flex flex-col"
+            className="flex flex-col pt-10"
           >
             <NFT
               key={tokenData?.tokenAccount?.pubkey.toBase58()}
