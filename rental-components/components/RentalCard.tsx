@@ -367,12 +367,6 @@ export const RentalCard = ({
   }, [selectedInvalidators])
 
   const hasAllExtensionProperties = (): boolean => {
-    console.log(
-      extensionPaymentAmount,
-      extensionDurationAmount,
-      extensionPaymentMint,
-      extensionDurationOption
-    )
     return (extensionPaymentAmount || extensionPaymentAmount === 0) &&
       extensionDurationAmount &&
       extensionPaymentMint &&

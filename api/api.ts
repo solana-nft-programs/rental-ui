@@ -105,12 +105,12 @@ export async function getTokenAccountsWithData(
 
       let timeInvalidatorId = null
       let useInvalidatorId = null
-      if (tokenManagerId) {
-        ;[[timeInvalidatorId], [useInvalidatorId]] = await Promise.all([
+      if (tokenManagerId)
+        [[timeInvalidatorId], [useInvalidatorId]] = await Promise.all([
           timeInvalidator.pda.findTimeInvalidatorAddress(tokenManagerId),
           useInvalidator.pda.findUseInvalidatorAddress(tokenManagerId),
         ])
-      }
+
       return [
         metadataId,
         editionId,
