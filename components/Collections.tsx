@@ -20,7 +20,7 @@ export const Collections = ({ setTab }: { setTab: (s: string) => void }) => {
   )
 
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto px-5">
       {!projectConfigs ? (
         <div className="grid grid-cols-4 flex-wrap gap-4">
           <NFTPlaceholder />
@@ -36,7 +36,7 @@ export const Collections = ({ setTab }: { setTab: (s: string) => void }) => {
             <div className="mt-10 mb-5 text-lg font-semibold text-white">
               {/* {type} */}
             </div>
-            <div className="grid grid-cols-4 flex-wrap gap-4">
+            <div className="grid grid-cols-1 flex-wrap gap-4 md:grid-cols-3 lg:grid-cols-4">
               {configs.map((config) => (
                 <div
                   key={config.name}
