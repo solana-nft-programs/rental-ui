@@ -13,12 +13,12 @@ export interface RentalModal {
     wallet: Wallet,
     connection: Connection,
     cluster: string,
-    tokenData: TokenData,
+    tokenDatas: TokenData[],
     rentalCardConfig: RentalCardConfig | undefined,
     dev?: boolean
   ) => void
   showRentalModal: boolean
-  tokenData: TokenData | undefined
+  tokenDatas: TokenData[] | undefined
 }
 
 export const RentalModalContext = React.createContext<RentalModal | null>(null)
@@ -39,7 +39,7 @@ export const RentalModalProvider: React.FC<Props> = ({
   const [cluster, setCluster] = useState<string | undefined>(undefined)
   const [dev, setDev] = useState<boolean | undefined>(undefined)
   const [showRentalModal, setShowRentalModal] = useState<boolean>(false)
-  const [tokenData, setTokenData] = useState<TokenData | undefined>(undefined)
+  const [tokenDatas, setTokenDatas] = useState<TokenData[] | undefined>(undefined)
   const [rentalCardConfig, setRentalCardConfig] = useState<
     RentalCardConfig | undefined
   >(undefined)
@@ -51,19 +51,19 @@ export const RentalModalProvider: React.FC<Props> = ({
           wallet,
           connection,
           cluster,
-          tokenData,
+          tokenDatas,
           rentalCardConfig,
           dev
         ) => {
           setWallet(wallet)
           setConnection(connection)
           setCluster(cluster)
-          setTokenData(tokenData)
+          setTokenDatas(tokenDatas)
           setDev(dev)
           setShowRentalModal(true)
           setRentalCardConfig(rentalCardConfig)
         },
-        tokenData,
+        tokenDatas,
         showRentalModal,
       }}
     >
@@ -78,7 +78,7 @@ export const RentalModalProvider: React.FC<Props> = ({
             cluster={cluster}
             wallet={wallet}
             connection={connection}
-            tokenData={tokenData || {}}
+            tokenDatas={tokenDatas || []}
             rentalCardConfig={rentalCardConfig || { invalidators: [] }}
             appName={appName}
             appTwitter={appTwitter}

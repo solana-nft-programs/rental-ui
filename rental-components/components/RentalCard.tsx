@@ -55,6 +55,7 @@ const { Option } = Select
 const NFTOuter = styled.div`
   margin: 20px auto 0px auto;
   height: 200px;
+  width: 200px;
   position: relative;
   border-radius: 10px;
 
@@ -178,7 +179,7 @@ export type RentalCardProps = {
   cluster?: string
   connection: Connection
   wallet: Wallet
-  tokenData: TokenData
+  tokenDatas: TokenData[]
   appName?: string
   appTwitter?: string
   rentalCardConfig: RentalCardConfig
@@ -193,7 +194,7 @@ export const RentalCard = ({
   cluster,
   connection,
   wallet,
-  tokenData,
+  tokenDatas,
   rentalCardConfig,
   notify,
   onComplete,
@@ -203,23 +204,26 @@ export const RentalCard = ({
   const [link, setLink] = useState<string | null>(null)
   const { refreshTokenAccounts } = useUserTokenData()
   const { paymentMintInfos } = usePaymentMints()
-  const { tokenAccount, metaplexData, editionData, metadata, tokenManager } =
-    tokenData
-  const customImageUri = getQueryParam(metadata?.data?.image, 'uri')
+  const metaplexDatas = tokenDatas.map((t) => t.metaplexData)
 
   // TODO get this from tokenData
-  const [editionInfo, setEditionInfo] = useState<EditionInfo>({})
+  const [editionInfos, setEditionInfos] = useState<(EditionInfo | null)[]>([])
   const getEdition = async () => {
-    try {
-      const editionInfo = await getEditionInfo(metaplexData, connection)
-      setEditionInfo(editionInfo)
-    } catch (e) {
-      console.log(e)
+    const editionData = []
+    for (const token of tokenDatas) {
+      try {
+        const editionInfo = await getEditionInfo(token.metaplexData, connection)
+        editionData.push(editionInfo)
+      } catch (e) {
+        editionData.push(null)
+        console.log(e)
+      }
     }
+    setEditionInfos(editionData)
   }
   useEffect(() => {
     getEdition()
-  }, [metaplexData])
+  }, [metaplexDatas])
 
   // Pull overrides from config
   const visibilities =
@@ -320,6 +324,7 @@ export const RentalCard = ({
   const [showAdditionalOptions, setShowAdditionalOptions] = useState(false)
   const [showExtendDuration, setShowExtendDuration] = useState(false)
   const [confirmRentalTerms, setConfirmRentalTerms] = useState(true)
+  const [totalListed, setTotalListed] = useState(0)
   const rateRental = selectedInvalidators.includes('rate')
 
   // reset
@@ -390,9 +395,6 @@ export const RentalCard = ({
   const handleRental = async () => {
     const extensionPaymentMintPublicKey = tryPublicKey(extensionPaymentMint)
     try {
-      if (!tokenAccount) {
-        throw 'Token acount not found'
-      }
       if (showExtendDuration && !hasAllExtensionProperties()) {
         throw 'Please fill out all extension time and price fields'
       }
@@ -423,83 +425,99 @@ export const RentalCard = ({
         }
       }
 
-      setLoading(true)
-      const rentalMint = new PublicKey(
-        tokenAccount?.account.data.parsed.info.mint
-      )
-      const receiptMintKeypair = Keypair.generate()
-      const issueParams: IssueParameters = {
-        claimPayment:
-          price && paymentMint
-            ? {
-                paymentAmount: price,
-                paymentMint: new PublicKey(paymentMint),
-              }
-            : undefined,
-        timeInvalidation:
-          expiration || (durationAmount && durationOption) || rateRental
-            ? {
-                expiration: expiration || undefined,
-                durationSeconds:
-                  (durationAmount || durationAmount === 0) && durationOption
-                    ? durationAmount * (durationData[durationOption] || 0)
+      for (let i = 0; i < tokenDatas.length; i = i + 1) {
+        const { tokenAccount } = tokenDatas[i]!
+        const editionInfo = editionInfos[i]
+        if (!tokenAccount) {
+          throw 'Token acount not found'
+        }
+        if (!editionInfo) {
+          throw 'Edition info not found'
+        }
+
+        setLoading(true)
+        const rentalMint = new PublicKey(
+          tokenAccount?.account.data.parsed.info.mint
+        )
+        const receiptMintKeypair = Keypair.generate()
+        const issueParams: IssueParameters = {
+          claimPayment:
+            price && paymentMint
+              ? {
+                  paymentAmount: price,
+                  paymentMint: new PublicKey(paymentMint),
+                }
+              : undefined,
+          timeInvalidation:
+            expiration || (durationAmount && durationOption) || rateRental
+              ? {
+                  expiration: expiration || undefined,
+                  durationSeconds:
+                    (durationAmount || durationAmount === 0) && durationOption
+                      ? durationAmount * (durationData[durationOption] || 0)
+                      : undefined,
+                  maxExpiration: extensionMaxExpiration
+                    ? extensionMaxExpiration
                     : undefined,
-                maxExpiration: extensionMaxExpiration
-                  ? extensionMaxExpiration
-                  : undefined,
-                extension: hasAllExtensionProperties()
-                  ? {
-                      extensionPaymentAmount: extensionPaymentAmount,
-                      extensionDurationSeconds:
-                        extensionDurationAmount! *
-                        (durationData[extensionDurationOption] || 0),
-                      extensionPaymentMint: extensionPaymentMintPublicKey,
-                      disablePartialExtension: disablePartialExtension
-                        ? disablePartialExtension
-                        : undefined,
-                    }
-                  : undefined,
-                paymentManager: rentalCardConfig.paymentManager
-                  ? new PublicKey(rentalCardConfig.paymentManager)
-                  : undefined,
-              }
+                  extension: hasAllExtensionProperties()
+                    ? {
+                        extensionPaymentAmount: extensionPaymentAmount,
+                        extensionDurationSeconds:
+                          extensionDurationAmount! *
+                          (durationData[extensionDurationOption] || 0),
+                        extensionPaymentMint: extensionPaymentMintPublicKey,
+                        disablePartialExtension: disablePartialExtension
+                          ? disablePartialExtension
+                          : undefined,
+                      }
+                    : undefined,
+                  paymentManager: rentalCardConfig.paymentManager
+                    ? new PublicKey(rentalCardConfig.paymentManager)
+                    : undefined,
+                }
+              : undefined,
+          useInvalidation: totalUsages
+            ? { totalUsages: totalUsages }
             : undefined,
-        useInvalidation: totalUsages ? { totalUsages: totalUsages } : undefined,
-        mint: rentalMint,
-        issuerTokenAccountId: tokenAccount?.pubkey,
-        kind:
-          editionInfo.edition || editionInfo.masterEdition
-            ? TokenManagerKind.Edition
-            : TokenManagerKind.Managed,
-        invalidationType,
-        visibility,
-        customInvalidators: customInvalidator
-          ? [new PublicKey(customInvalidator)]
-          : undefined,
-        receiptOptions: claimRentalReceipt ? { receiptMintKeypair } : undefined,
+          mint: rentalMint,
+          issuerTokenAccountId: tokenAccount?.pubkey,
+          kind:
+            editionInfo.edition || editionInfo.masterEdition
+              ? TokenManagerKind.Edition
+              : TokenManagerKind.Managed,
+          invalidationType,
+          visibility,
+          customInvalidators: customInvalidator
+            ? [new PublicKey(customInvalidator)]
+            : undefined,
+          receiptOptions: claimRentalReceipt
+            ? { receiptMintKeypair }
+            : undefined,
+        }
+
+        console.log(issueParams)
+
+        const [transaction, tokenManagerId, otpKeypair] = await issueToken(
+          connection,
+          wallet,
+          issueParams
+        )
+        await executeTransaction(connection, wallet, transaction, {
+          silent: false,
+          callback: refreshTokenAccounts,
+          signers: claimRentalReceipt ? [receiptMintKeypair] : [],
+        })
+        const link = claimLinks.getLink(
+          tokenManagerId,
+          otpKeypair,
+          cluster,
+          getLink('/claim', false)
+        )
+        setLink(link)
+        handleCopy(link)
+        console.log(link)
+        setTotalListed(totalListed + 1)
       }
-
-      console.log(issueParams)
-
-      const [transaction, tokenManagerId, otpKeypair] = await issueToken(
-        connection,
-        wallet,
-        issueParams
-      )
-      await executeTransaction(connection, wallet, transaction, {
-        silent: false,
-        callback: refreshTokenAccounts,
-        signers: claimRentalReceipt ? [receiptMintKeypair] : [],
-      })
-      const link = claimLinks.getLink(
-        tokenManagerId,
-        otpKeypair,
-        cluster,
-        getLink('/claim', false)
-      )
-      setLink(link)
-      handleCopy(link)
-      console.log(link)
     } catch (e) {
       console.log('Error handling rental', e)
       setConfirmRentalTerms(false)
@@ -527,48 +545,57 @@ export const RentalCard = ({
             showIcon
           />
         )}
-        <ImageWrapper>
-          <NFTOuter>
-            <NFTOverlay
-              state={tokenManager?.parsed.state}
-              paymentAmount={price || undefined}
-              paymentMint={paymentMint || undefined}
-              expiration={expiration || undefined}
-              durationSeconds={
-                durationAmount && durationOption
-                  ? durationAmount * (durationData[durationOption] || 0)
-                  : undefined
-              }
-              usages={totalUsages ? 0 : undefined}
-              totalUsages={totalUsages || undefined}
-              extendable={hasAllExtensionProperties()}
-              returnable={invalidationType === InvalidationType.Return}
-              revocable={customInvalidator ? true : false}
-              lineHeight={12}
-              borderRadius={10}
-            />
-            {metadata && metadata.data && (
-              // (metadata.data.animation_url ? (
-              //   // @ts-ignore
-              //   <video
-              //     className="media"
-              //     auto-rotate-delay="0"
-              //     auto-rotate="true"
-              //     auto-play="true"
-              //     src={metadata.data.animation_url}
-              //     // arStatus="not-presenting"
-              //     // @ts-ignore
-              //   ></video>
-              // ) : (
-              <img
-                className="media"
-                src={customImageUri || metadata.data.image}
-                alt={metadata.data.name}
-              />
-            )}
-          </NFTOuter>
-          {editionInfo && getEditionPill(editionInfo)}
-        </ImageWrapper>
+        <div className="flex w-full justify-center gap-4 overflow-x-auto">
+          {tokenDatas.map((tokenData, i) => (
+            <ImageWrapper key={i}>
+              <NFTOuter>
+                <NFTOverlay
+                  state={tokenData.tokenManager?.parsed.state}
+                  paymentAmount={price || undefined}
+                  paymentMint={paymentMint || undefined}
+                  expiration={expiration || undefined}
+                  durationSeconds={
+                    durationAmount && durationOption
+                      ? durationAmount * (durationData[durationOption] || 0)
+                      : undefined
+                  }
+                  usages={totalUsages ? 0 : undefined}
+                  totalUsages={totalUsages || undefined}
+                  extendable={hasAllExtensionProperties()}
+                  returnable={invalidationType === InvalidationType.Return}
+                  revocable={customInvalidator ? true : false}
+                  lineHeight={12}
+                  borderRadius={10}
+                />
+                {tokenData.metadata && tokenData.metadata.data && (
+                  // (metadata.data.animation_url ? (
+                  //   // @ts-ignore
+                  //   <video
+                  //     className="media"
+                  //     auto-rotate-delay="0"
+                  //     auto-rotate="true"
+                  //     auto-play="true"
+                  //     src={metadata.data.animation_url}
+                  //     // arStatus="not-presenting"
+                  //     // @ts-ignore
+                  //   ></video>
+                  // ) : (
+                  <img
+                    className="media"
+                    src={
+                      getQueryParam(tokenData.metadata?.data?.image, 'uri') ||
+                      tokenData.metadata.data.image
+                    }
+                    alt={tokenData.metadata.data.name}
+                  />
+                )}
+              </NFTOuter>
+              {editionInfos[i] &&
+                editionInfos[i] !== undefined &&
+                getEditionPill(editionInfos[i]!)}
+            </ImageWrapper>
+          ))}
+        </div>
         <DetailsWrapper>
           {rentalCardConfig.invalidators.length > 1 && (
             <div className="flex justify-center">
@@ -1145,13 +1172,20 @@ export const RentalCard = ({
                   message={
                     <>
                       <div>
+                        Successfully listed: ({totalListed} /{' '}
+                        {tokenDatas.length})
+                        <br />
                         Link created {link.substring(0, 20)}
                         ...
-                        {link.substring(link.length - 5)}
-                        <div>
-                          This link can only be used once and cannot be
-                          regenerated
-                        </div>
+                        {visibility === 'private' && (
+                          <>
+                            {link.substring(link.length - 5)}
+                            <div>
+                              This link can only be used once and cannot be
+                              regenerated
+                            </div>
+                          </>
+                        )}
                       </div>
                     </>
                   }
@@ -1444,6 +1478,7 @@ const Instruction = styled.h2`
 `
 
 const DetailsWrapper = styled.div`
+  margin-top: 20px;
   display: grid;
   grid-row-gap: 28px;
 `
