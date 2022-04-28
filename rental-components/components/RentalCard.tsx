@@ -467,8 +467,6 @@ export const RentalCard = ({
         receiptOptions: claimRentalReceipt ? { receiptMintKeypair } : undefined,
       }
 
-      console.log(issueParams)
-
       const [transaction, tokenManagerId, otpKeypair] = await issueToken(
         connection,
         wallet,

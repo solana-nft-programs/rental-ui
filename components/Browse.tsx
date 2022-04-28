@@ -822,11 +822,11 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                             </div>
 
                             <div className="flex w-full flex-row justify-between">
-                              <Tag
-                                state={TokenManagerState.Issued}
-                                // color="warning"
-                              >
-                                {tokenData.timeInvalidator?.parsed ? (
+                              {tokenData.timeInvalidator?.parsed ? (
+                                <Tag
+                                  state={TokenManagerState.Issued}
+                                  // color="warning"
+                                >
                                   <div className="flex-col">
                                     <div>
                                       <StyledSecondaryText>
@@ -849,8 +849,12 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                                       dark={true}
                                     />{' '}
                                   </div>
-                                ) : null}
-                              </Tag>
+                                </Tag>
+                              ) :   (
+                                <div className="my-auto rounded-lg bg-gray-800 px-5 py-1 text-white">
+                                  Private
+                                </div>
+                              )}
 
                               <AsyncButton
                                 bgColor={config.colors.secondary}
