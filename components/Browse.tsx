@@ -127,7 +127,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
       height: 40px;
       min-width: 180px;
       border: 1px solid ${lighten(0.3, config.colors.main)} !important;
-      background-color: ${lighten(0.1, config.colors.main)} !important;
+      background-color: ${lighten(0.07, config.colors.main)} !important;
       color: #ffffff !important;
     }
     .ant-select-arrow {
@@ -139,12 +139,12 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
     .ant-select-selector {
       min-width: 180px;
       border: 1px solid ${lighten(0.3, config.colors.main)} !important;
-      background-color: ${lighten(0.1, config.colors.main)} !important;
+      background-color: ${lighten(0.07, config.colors.main)} !important;
       color: ${config.colors.secondary} !important;
     }
 
     .ant-select-selection-item {
-      background-color: ${lighten(0.1, config.colors.main)} !important;
+      background-color: ${lighten(0.07, config.colors.main)} !important;
       border: 1px solid ${lighten(0.3, config.colors.main)} !important;
     }
 
@@ -618,13 +618,13 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
   const sortedAttributes = getAllAttributes(issuedTokens)
 
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto pt-10">
       <div className="flex justify-center">
         <div className="md:w-1/5"></div>
         <div className="mb-4 flex h-min flex-col flex-wrap justify-center md:w-4/5 md:flex-row md:justify-between">
           <div
             className="rounded-m flex h-fit rounded-lg"
-            style={{ background: lighten(0.1, config.colors.main) }}
+            style={{ background: lighten(0.07, config.colors.main) }}
           >
             <div className="d-block flex-col py-3 px-5">
               <p className="text-gray-400">
@@ -661,7 +661,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
               }}
               defaultValue={selectedOrderCategory}
               dropdownStyle={{
-                backgroundColor: lighten(0.1, config.colors.main),
+                backgroundColor: lighten(0.07, config.colors.main),
               }}
             >
               {allOrderCategories.map((category) => (
@@ -671,7 +671,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                   value={category}
                   style={{
                     color: '#ffffff',
-                    background: lighten(0.1, config.colors.main),
+                    background: lighten(0.07, config.colors.main),
                   }}
                 >
                   {category}
@@ -685,7 +685,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
         <div className="mr-5">
           <div
             className="max-h-[70vh] w-[280px] overflow-y-auto rounded-lg py-5 px-8 text-left"
-            style={{ background: lighten(0.1, config.colors.main) }}
+            style={{ background: lighten(0.07, config.colors.main) }}
           >
             <div className="text-white">
               <p className="mb-5 text-lg text-gray-300">Duration Range:</p>
@@ -725,7 +725,10 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                           <Select
                             mode="multiple"
                             dropdownStyle={{
-                              backgroundColor: lighten(0.1, config.colors.main),
+                              backgroundColor: lighten(
+                                0.07,
+                                config.colors.main
+                              ),
                             }}
                             allowClear
                             style={{ width: '100%' }}
@@ -741,7 +744,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                                 value={value}
                                 style={{
                                   color: config.colors.secondary,
-                                  background: lighten(0.1, config.colors.main),
+                                  background: lighten(0.07, config.colors.main),
                                 }}
                               >
                                 {value}
@@ -757,7 +760,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
             )}
           </div>
         </div>
-        <div>
+        <div className="w-full">
           <TokensOuter>
             {!loaded ? (
               <>
@@ -980,8 +983,8 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                 </div>
               ))
             ) : (
-              <div className="white flex w-full flex-col items-center justify-center gap-1">
-                <div className="text-gray-200">No outstanding tokens!</div>
+              <div className="white mt-12 flex w-full flex-col items-center justify-center gap-1">
+                <div className="text-gray-500">No outstanding tokens!</div>
               </div>
             )}
           </TokensOuter>

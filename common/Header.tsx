@@ -166,7 +166,7 @@ export const StyledTab = styled.div<{
   transition: 0.3s all;
   &:hover {
     background: ${({ disabled }) =>
-      disabled ? '' : lighten(0.1, Colors.secondary)};
+      disabled ? '' : lighten(0.07, Colors.secondary)};
   }
 `
 
@@ -203,7 +203,11 @@ export const Header = ({
 
   const issuer = tryPublicKey(config.issuer?.publicKeyString)
   return (
-    <StyledHeader isTabletOrMobile={isTabletOrMobile}>
+    <StyledHeader
+      isTabletOrMobile={isTabletOrMobile}
+      className="shadow-2xl"
+      style={{ background: config.colors.main }}
+    >
       <div className="left pl-8">
         <div className="title" style={{ marginRight: '40px' }}>
           {issuer ? (
@@ -224,7 +228,11 @@ export const Header = ({
                 target="_blank"
                 href={config.websiteUrl}
               >
-                <img className="h-9 w-auto" src={config.logoImage} alt="logo" />
+                <img
+                  className="max-h-9 w-full max-w-[160px]"
+                  src={config.logoImage}
+                  alt="logo"
+                />
               </a>
 
               {ctx.environment.label === 'devnet' ? (
@@ -260,8 +268,9 @@ export const Header = ({
       <div className="center">
         {tabs && (
           <StyledTabs
-            style={{ background: lighten(0.1, config.colors.main) }}
+            style={{ background: lighten(0.07, config.colors.main) }}
             show={showTabs}
+            className="shadow-2xl"
           >
             {tabs.map(({ disabled, name, anchor }) => (
               <StyledTab

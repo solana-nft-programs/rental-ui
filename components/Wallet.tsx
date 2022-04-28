@@ -112,8 +112,8 @@ export const Wallet = () => {
           </div>
         ))
       ) : (
-        <div className="white flex w-full flex-col items-center justify-center gap-1">
-          <div className="text-white">
+        <div className="white mt-10 flex w-full flex-col items-center justify-center gap-1">
+          <div className="text-gray-500">
             No {config.name} NFTs found in wallet!
           </div>
           {ctx.environment.label === 'devnet' && <Airdrop />}
