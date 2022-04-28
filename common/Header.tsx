@@ -153,18 +153,13 @@ export const StyledTab = styled.div<{
   disabled: boolean | undefined
 }>`
   border-radius: 20px;
-  background: ${({ selected }) => (selected ? Colors.secondary : 'none')};
   opacity: ${({ disabled }) => (disabled ? 0.25 : 1)};
-  color: ${({ selected }) =>
-    selected
-      ? getColorByBgColor(Colors.secondary)
-      : getColorByBgColor(Colors.navBg)};
   text-align: center;
   width: 150px;
   padding: 10px 20px;
   cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
   &:hover {
-    transition: 0.3s all;
+    // transition: 0.3s all;
     background: ${({ disabled }) =>
       disabled ? '' : lighten(0.07, Colors.secondary)};
   }
@@ -275,6 +270,13 @@ export const Header = ({
             {tabs.map(({ disabled, name, anchor }) => (
               <StyledTab
                 key={anchor}
+                style={{
+                  background: tab === anchor ? config.colors.secondary : 'none',
+                  color:
+                    tab === anchor
+                      ? getColorByBgColor(config.colors.secondary)
+                      : getColorByBgColor(config.colors.main),
+                }}
                 selected={tab === anchor}
                 className="tab"
                 disabled={disabled}
