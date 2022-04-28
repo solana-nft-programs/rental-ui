@@ -984,7 +984,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
               ))
             ) : (
               <div className="white mt-12 flex w-full flex-col items-center justify-center gap-1">
-                <div className="text-gray-500">No outstanding tokens!</div>
+                <div className="text-gray-500">No rentals to see here...</div>
               </div>
             )}
           </TokensOuter>
