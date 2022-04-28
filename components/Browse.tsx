@@ -921,11 +921,11 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                             </div>
                           </div>
 
-                          <div className="flex flex-row justify-between">
+                          <div className="flex flex-row justify-between text-xs">
                             {tokenData.recipientTokenAccount?.owner && (
                               <Tag state={TokenManagerState.Claimed}>
-                                <div className="flex-col">
-                                  <div>
+                                <div className="flex flex-col">
+                                  <div className="flex">
                                     <span className="inline-block">
                                       Claimed by&nbsp;
                                     </span>
@@ -943,9 +943,9 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                                       height="18px"
                                       width="100px"
                                       dark={true}
-                                    />{' '}
+                                    />
                                   </div>
-                                  <div>
+                                  <div className="flex">
                                     <span className="inline-block">
                                       Issued by&nbsp;
                                     </span>
@@ -961,7 +961,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                                       height="18px"
                                       width="100px"
                                       dark={true}
-                                    />{' '}
+                                    />
                                   </div>
                                 </div>
                               </Tag>
