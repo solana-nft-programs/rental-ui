@@ -42,7 +42,6 @@ export const TokenMetadata = styled.div<{ allBorderRadius?: boolean }>`
   border-radius: ${({ allBorderRadius }) =>
     allBorderRadius ? '10px' : '10px 10px 0 0'};
   width: 280px;
-  background-color: ${Colors.tokenBackground};
 
   #media-outer {
     display: flex;
@@ -87,7 +86,11 @@ export function NFT({ tokenData, hideQRCode, fullyRounded }: NFTProps) {
     tokenData.editionData
 
   return (
-    <TokenMetadata>
+    <TokenMetadata
+      style={{
+        background: lighten(0.02, config.colors.main),
+      }}
+    >
       <Popover
         content={
           <div

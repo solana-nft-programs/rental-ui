@@ -9,6 +9,7 @@ import { NFTPlaceholder } from 'common/NFTPlaceholder'
 import { notify } from 'common/Notification'
 import { executeTransaction } from 'common/Transactions'
 import { asWallet } from 'common/Wallets'
+import { lighten } from 'polished'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useUserTokenData } from 'providers/TokenDataProvider'
@@ -64,7 +65,12 @@ export const Wallet = () => {
                 tokenData={tokenData}
                 fullyRounded={false}
               ></NFT>
-              <div className="flex w-[280px] flex-row justify-between rounded-bl-md rounded-br-md bg-white/[.10] p-3">
+              <div
+                style={{
+                  background: lighten(0.07, config.colors.main),
+                }}
+                className="flex w-[280px] flex-row justify-between rounded-bl-md rounded-br-md p-3"
+              >
                 <p className="mt-2 mr-4 overflow-hidden text-ellipsis whitespace-nowrap text-white">
                   {tokenData.metadata.data.name}
                 </p>
