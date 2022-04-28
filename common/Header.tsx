@@ -163,8 +163,8 @@ export const StyledTab = styled.div<{
   width: 150px;
   padding: 10px 20px;
   cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
-  transition: 0.3s all;
   &:hover {
+    transition: 0.3s all;
     background: ${({ disabled }) =>
       disabled ? '' : lighten(0.07, Colors.secondary)};
   }
