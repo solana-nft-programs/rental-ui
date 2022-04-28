@@ -12,12 +12,15 @@ import { lighten } from 'polished'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useEffect, useState } from 'react'
+import { BiChevronDown } from 'react-icons/bi'
 import { IoChevronBack } from 'react-icons/io5'
 import { useMediaQuery } from 'react-responsive'
 import { getColorByBgColor } from 'rental-components/common/Button'
+import { AccountPopover } from './AccountPopover'
 
 import { Airdrop, AirdropSol } from './Airdrop'
 import { LoadingPulse } from './LoadingPulse'
+import { Popover } from './Popover'
 
 export const StyledHeader = styled.div<{ isTabletOrMobile: boolean }>`
   z-index: 100;
@@ -325,16 +328,20 @@ export const Header = ({
               <span className="hamb-line"></span>
             </Hamburger>
           ) : (
-            <div
-              className="flex cursor-pointer gap-2"
-              onClick={() => setVisible(true)}
+            <Popover
+              offset={[-30, 20]}
+              placement="bottom-end"
+              content={<AccountPopover />}
             >
-              <ProfileSmall
-                dark
-                connection={ctx.connection}
-                address={wallet.publicKey}
-              />
-            </div>
+              <div className="flex cursor-pointer gap-2 text-gray-500 transition duration-200 hover:text-gray-300">
+                <ProfileSmall
+                  dark
+                  connection={ctx.connection}
+                  address={wallet.publicKey}
+                />
+                <BiChevronDown className="h-10 text-[25px] hover:scale-105" />
+              </div>
+            </Popover>
           )
         ) : (
           <WalletMultiButton

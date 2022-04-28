@@ -1,9 +1,10 @@
+import type { Cluster } from '@solana/web3.js'
 import { Connection } from '@solana/web3.js'
 import { useRouter } from 'next/router'
 import React, { useContext, useMemo, useState } from 'react'
 
 export interface Environment {
-  label: string
+  label: Cluster | 'mainnet' | 'localnet'
   value: string
   override?: string
 }
@@ -27,7 +28,8 @@ export const ENVIRONMENTS: Environment[] = [
   },
   {
     label: 'devnet',
-    value: 'https://purple-old-lake.solana-devnet.quiknode.pro/13480a1cc2033abc1d3523523bc1acabd97b6874/',
+    value:
+      'https://purple-old-lake.solana-devnet.quiknode.pro/13480a1cc2033abc1d3523523bc1acabd97b6874/',
   },
   {
     label: 'localnet',

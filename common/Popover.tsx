@@ -45,13 +45,6 @@ import { usePopper } from 'react-popper'
 //   }
 // `
 
-export interface PopoverProps {
-  content: React.ReactNode
-  guide?: boolean
-  children: React.ReactNode
-  placement?: Placement
-}
-
 // export const Popover: React.FC<PopoverProps> = ({
 //   content,
 //   children,
@@ -143,11 +136,20 @@ export interface PopoverProps {
 //   )
 // }
 
+export interface PopoverProps {
+  content: React.ReactNode
+  guide?: boolean
+  children: React.ReactNode
+  placement?: Placement
+  offset?: [number, number]
+}
+
 export const Popover: React.FC<PopoverProps> = ({
   content,
   children,
   placement = 'right-end',
-}: PopoverProps) => {
+  offset = [-25, 5],
+}) => {
   const [referenceElement, setReferenceElement] =
     useState<HTMLDivElement | null>(null)
   const [popperElement, setPopperElement] = useState<HTMLDivElement | null>(
@@ -156,7 +158,7 @@ export const Popover: React.FC<PopoverProps> = ({
   const { styles, attributes } = usePopper(referenceElement, popperElement, {
     placement,
     modifiers: [
-      { name: 'offset', options: { offset: [-25, 5] } },
+      { name: 'offset', options: { offset } },
       // { name: 'arrow', options: { element: arrowElement } },
     ],
   })
