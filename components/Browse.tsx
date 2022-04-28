@@ -794,8 +794,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                   <NFT
                     key={tokenData?.tokenManager?.pubkey.toBase58()}
                     tokenData={tokenData}
-                    hideQRCode={true}
-                  ></NFT>
+                  />
                   {
                     {
                       [TokenManagerState.Initialized]: <>Initiliazed</>,

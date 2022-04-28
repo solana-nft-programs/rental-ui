@@ -83,30 +83,28 @@ export const Wallet = () => {
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="mt-5 flex flex-col">
       {tokenDatas && tokenDatas.length > 0 && (
-        <div className="container block">
-          <div>
-            <Button
-              disabled={selectedTokens.length === 0}
-              variant="primary"
-              className=" float-right mb-5"
-              bgColor={config.colors.secondary}
-              onClick={() =>
-                rentalModal.show(
-                  asWallet(wallet),
-                  ctx.connection,
-                  ctx.environment.label,
-                  selectedTokens,
-                  config.rentalCard
-                )
-              }
-            >
-              {`Bulk Upload ${
-                selectedTokens.length ? `(${selectedTokens.length})` : ''
-              }`}
-            </Button>
-          </div>
+        <div className="container mx-auto mb-5 flex items-end justify-end">
+          <Button
+            disabled={selectedTokens.length === 0}
+            variant="primary"
+            className="mr-5"
+            bgColor={config.colors.secondary}
+            onClick={() =>
+              rentalModal.show(
+                asWallet(wallet),
+                ctx.connection,
+                ctx.environment.label,
+                selectedTokens,
+                config.rentalCard
+              )
+            }
+          >
+            {`Bulk Upload ${
+              selectedTokens.length ? `(${selectedTokens.length})` : ''
+            }`}
+          </Button>
         </div>
       )}
       <TokensOuter>
@@ -130,7 +128,7 @@ export const Wallet = () => {
                 tokenData={tokenData}
                 fullyRounded={false}
                 onClick={() => handleNFTSelect(tokenData)}
-              ></NFT>
+              />
               {elligibleForRent(tokenData) && (
                 <input
                   autoComplete="off"

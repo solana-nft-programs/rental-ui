@@ -57,9 +57,8 @@ export const Manage = () => {
                 <NFT
                   key={tokenData?.tokenManager?.pubkey.toBase58()}
                   tokenData={tokenData}
-                  hideQRCode={true}
                   fullyRounded={true}
-                ></NFT>
+                />
                 {
                   {
                     [TokenManagerState.Initialized]: <>Initiliazed</>,

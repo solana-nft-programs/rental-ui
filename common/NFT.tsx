@@ -59,17 +59,11 @@ export const TokenMetadata = styled.div<{ allBorderRadius?: boolean }>`
 
 interface NFTProps {
   tokenData: TokenData
-  hideQRCode?: boolean
   fullyRounded?: boolean
   onClick?: () => void
 }
 
-export function NFT({
-  tokenData,
-  hideQRCode,
-  fullyRounded,
-  onClick,
-}: NFTProps) {
+export function NFT({ tokenData, fullyRounded, onClick }: NFTProps) {
   const ctx = useEnvironmentCtx()
   const wallet = useWallet()
   const { show } = useQRCode()
