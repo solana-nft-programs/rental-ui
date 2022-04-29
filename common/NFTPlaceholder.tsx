@@ -22,7 +22,7 @@ export function NFTPlaceholder() {
   return (
     <TokenMetadata allBorderRadius={true} className="animate-pulse">
       <div id="media-outer">
-        <div className="flex h-full w-full animate-pulse space-x-4 px-5">
+        <div className="flex h-[280px] w-full animate-pulse space-x-4">
           <div
             style={{ background: lighten(0.1, config.colors.main) }}
             className={`radius-100 h-full w-full rounded-md`}
