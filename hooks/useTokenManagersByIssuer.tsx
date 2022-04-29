@@ -1,17 +1,17 @@
 import { gql } from '@apollo/client'
 import { getTokenManagersForIssuer } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/accounts'
 import type { TokenData } from 'api/api'
-import { getTokenDatas } from 'api/api'
+import { convertStringsToPubkeys, getTokenDatas } from 'api/api'
 import client from 'client'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
-import { filterTokens, useProjectConfig } from 'providers/ProjectConfigProvider'
 
+// import { filterTokens, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useDataHook } from './useDataHook'
 import { useWalletId } from './useWalletId'
 
-export const useUserManagedTokens = () => {
+export const useTokenManagersByIssuer = () => {
   const walletId = useWalletId()
-  const { config } = useProjectConfig()
+  // const { config } = useProjectConfig()
   const { connection, environment } = useEnvironmentCtx()
   return useDataHook<TokenData[] | undefined>(
     async () => {
@@ -44,14 +44,25 @@ export const useUserManagedTokens = () => {
           },
         })
         return response.data
+      } else if (environment.api) {
+        const response = await fetch(
+          `${
+            environment.api
+          }/tokenManagersByIssuer?issuer=${walletId.toBase58()}&cluster=${
+            environment.label
+          }`
+          // &collection=${config.name}
+        )
+        const json = (await response.json()) as { data: TokenData[] }
+        return json.data.map((tokenData) => convertStringsToPubkeys(tokenData))
       } else {
         const tokenManagerDatas = await getTokenManagersForIssuer(
           connection,
           walletId
         )
-        let tokenDatas = await getTokenDatas(connection, tokenManagerDatas)
-        tokenDatas = filterTokens(environment.label, config.filters, tokenDatas)
-        return tokenDatas
+        return getTokenDatas(connection, tokenManagerDatas)
+        // tokenDatas = filterTokens(environment.label, config.filters, tokenDatas)
+        // return tokenDatas
       }
     },
     [walletId?.toString()],

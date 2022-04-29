@@ -51,12 +51,7 @@ export function TokenAccountsProvider({ children }: { children: ReactChild }) {
     setError(null)
     getTokenAccountsWithData(connection, address)
       .then((tokenDatas) => {
-        let tokensWithMetadata = tokenDatas.filter((td) => td.metadata)
-        tokensWithMetadata = filterTokens(
-          environment.label,
-          config.filters,
-          tokensWithMetadata
-        )
+        const tokensWithMetadata = tokenDatas.filter((td) => td.metadata)
         setTokenDatas(tokensWithMetadata)
       })
       .catch((e) => {
@@ -67,7 +62,7 @@ export function TokenAccountsProvider({ children }: { children: ReactChild }) {
         setLoaded(true)
         setRefreshing(false)
       })
-  }, [connection, setError, address, setRefreshing, config])
+  }, [connection, setError, address, setRefreshing])
 
   useEffect(() => {
     const interval = setInterval(

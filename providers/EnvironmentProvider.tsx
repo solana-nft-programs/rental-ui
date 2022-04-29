@@ -8,6 +8,7 @@ export interface Environment {
   label: Cluster | 'mainnet' | 'localnet'
   value: string
   override?: string
+  api?: string
   index?: ApolloClient<NormalizedCacheObject>
 }
 
@@ -27,6 +28,7 @@ export const ENVIRONMENTS: Environment[] = [
     //   uri: '//graph.holaplex.com/v1',
     //   cache: new InMemoryCache({ resultCaching: false }),
     // }),
+    api: '/api',
   },
   {
     label: 'testnet',

@@ -10,7 +10,7 @@ import { StyledTag, Tag } from 'common/Tags'
 import { executeTransaction } from 'common/Transactions'
 import { shortPubKey } from 'common/utils'
 import { asWallet } from 'common/Wallets'
-import { useUserManagedTokens } from 'hooks/useUserManagedTokens'
+import { useTokenManagersByIssuer } from 'hooks/useTokenManagersByIssuer'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useUserTokenData } from 'providers/TokenDataProvider'
@@ -26,12 +26,12 @@ export const Manage = () => {
   const { connection } = useEnvironmentCtx()
   const wallet = useWallet()
   const { refreshTokenAccounts } = useUserTokenData()
-  const managedTokens = useUserManagedTokens()
+  const tokenManagerByIssuer = useTokenManagersByIssuer()
 
   return (
     <div className="mt-10">
       <TokensOuter>
-        {!managedTokens.loaded ? (
+        {!tokenManagerByIssuer.loaded ? (
           <>
             <NFTPlaceholder />
             <NFTPlaceholder />
@@ -40,8 +40,9 @@ export const Manage = () => {
             <NFTPlaceholder />
             <NFTPlaceholder />
           </>
-        ) : managedTokens.data && managedTokens.data.length > 0 ? (
-          managedTokens.data.map((tokenData) => (
+        ) : tokenManagerByIssuer.data &&
+          tokenManagerByIssuer.data.length > 0 ? (
+          tokenManagerByIssuer.data.map((tokenData) => (
             <div
               key={tokenData.tokenManager?.pubkey.toString()}
               style={{

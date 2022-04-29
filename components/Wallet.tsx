@@ -11,7 +11,7 @@ import { executeTransaction } from 'common/Transactions'
 import { asWallet } from 'common/Wallets'
 import { lighten } from 'polished'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
-import { useProjectConfig } from 'providers/ProjectConfigProvider'
+import { filterTokens, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useUserTokenData } from 'providers/TokenDataProvider'
 import { useState } from 'react'
 import { AsyncButton, Button } from 'rental-components/common/Button'
@@ -26,6 +26,12 @@ export const Wallet = () => {
   const rentalModal = useRentalModal()
   const rentalExtensionModal = useRentalExtensionModal()
   const [selectedTokens, setSelectedTokens] = useState<TokenData[]>([])
+
+  const filteredTokenDatas = filterTokens(
+    ctx.environment.label,
+    config.filters,
+    tokenDatas
+  )
 
   const revokeRental = async (tokenData: TokenData) => {
     if (!tokenData.tokenManager) throw new Error('Invalid token manager')
@@ -84,7 +90,7 @@ export const Wallet = () => {
 
   return (
     <div className="mt-5 flex flex-col">
-      {tokenDatas && tokenDatas.length > 0 && (
+      {filteredTokenDatas && filteredTokenDatas.length > 0 && (
         <div className="container mx-auto mb-5 flex items-end justify-end">
           <Button
             disabled={selectedTokens.length === 0}
@@ -117,8 +123,8 @@ export const Wallet = () => {
             <NFTPlaceholder />
             <NFTPlaceholder />
           </>
-        ) : tokenDatas && tokenDatas.length > 0 ? (
-          tokenDatas.map((tokenData) => (
+        ) : filteredTokenDatas && filteredTokenDatas.length > 0 ? (
+          filteredTokenDatas.map((tokenData) => (
             <div
               key={tokenData.tokenAccount?.pubkey.toString()}
               className="relative flex flex-col"

@@ -26,6 +26,7 @@ import type {
   ParsedAccountData,
 } from '@solana/web3.js'
 import { PublicKey, SystemProgram } from '@solana/web3.js'
+import { tryPublicKey } from './utils'
 
 export async function findAssociatedTokenAddress(
   walletAddress: PublicKey,
@@ -59,6 +60,29 @@ export type TokenData = {
   useInvalidator?: AccountData<UseInvalidatorData> | null
   timeInvalidator?: AccountData<TimeInvalidatorData> | null
   recipientTokenAccount?: spl.AccountInfo | null
+}
+
+/** Converts serialized tokenData or similar to TokenData */
+export const convertStringsToPubkeys: any = (obj: any) => {
+  if (!obj) return obj
+  if (typeof obj === 'string') {
+    try {
+      return new anchor.BN(obj, 16)
+    } catch {
+      return tryPublicKey(obj) ?? obj
+    }
+  }
+  if (obj instanceof Array) {
+    return obj.map((v) => convertStringsToPubkeys(v))
+  }
+  if (typeof obj === 'object') {
+    const convertedObject: { [key: string]: any } = {}
+    Object.entries(obj).forEach(([k, v]) => {
+      convertedObject[k] = convertStringsToPubkeys(v)
+    })
+    return convertedObject
+  }
+  return obj
 }
 
 export async function getTokenAccountsWithData(
