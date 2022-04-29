@@ -5,15 +5,12 @@ import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 
 // import { filterTokens, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useDataHook } from './useDataHook'
-import { useWalletId } from './useWalletId'
 
 export const useTokenManagers = () => {
-  const walletId = useWalletId()
   // const { config } = useProjectConfig()
   const { connection, environment } = useEnvironmentCtx()
   return useDataHook<TokenData[] | undefined>(
     async () => {
-      if (!walletId) return
       // if (environment.index) {
       // const response = await client.query({
       //   query: gql`
@@ -51,6 +48,7 @@ export const useTokenManagers = () => {
         console.log(json)
         return json.data.map((tokenData) => convertStringsToPubkeys(tokenData))
       } else {
+        console.log('---')
         const tokenManagerDatas = await getTokenManagersByState(
           connection,
           null
