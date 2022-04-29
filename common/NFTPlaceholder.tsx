@@ -20,15 +20,10 @@ export const TokensOuter = styled.div`
 export function NFTPlaceholder() {
   const { config } = useProjectConfig()
   return (
-    <TokenMetadata allBorderRadius={true} className="animate-pulse">
-      <div id="media-outer">
-        <div className="flex h-[280px] w-full animate-pulse space-x-4">
-          <div
-            style={{ background: lighten(0.1, config.colors.main) }}
-            className={`radius-100 h-full w-full rounded-md`}
-          ></div>
-        </div>
-      </div>
-    </TokenMetadata>
+    <TokenMetadata
+      allBorderRadius={true}
+      className="h-[360px] animate-pulse"
+      style={{ background: lighten(0.1, config.colors.main) }}
+    ></TokenMetadata>
   )
 }
