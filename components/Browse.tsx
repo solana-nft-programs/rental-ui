@@ -429,6 +429,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
     return attributeFilteredTokens
   }
 
+  console.log(tokenManagers)
   const filteredAndSortedTokens: TokenData[] = sortTokens(
     filterTokensByAttributes(
       filterTokens(

@@ -45,16 +45,13 @@ export const useTokenManagers = () => {
           // &collection=${config.name}`
         )
         const json = (await response.json()) as { data: TokenData[] }
-        console.log(json)
         return json.data.map((tokenData) => convertStringsToPubkeys(tokenData))
       } else {
-        console.log('---')
         const tokenManagerDatas = await getTokenManagersByState(
           connection,
           null
         )
         const tokenDatas = await getTokenDatas(connection, tokenManagerDatas)
-        console.log(tokenDatas)
         // tokenDatas = filterTokens(environment.label, config.filters, tokenDatas)
         return tokenDatas
       }
