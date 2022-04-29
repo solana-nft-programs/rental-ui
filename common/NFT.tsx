@@ -17,6 +17,7 @@ import { useRentalModal } from 'rental-components/RentalModalProvider'
 import {
   MediaOuterStyle,
   NFTImageHeight,
+  NFTImageMaxWidth,
   TokenMetadataStyle,
 } from './CustomStyles'
 import { NFTOverlay } from './NFTOverlay'
@@ -202,7 +203,7 @@ export function NFT({ tokenData, onClick }: NFTProps) {
             src={metadata.data.image}
             // src={customImageUri || metadata.data.image}
             alt={metadata.data.name}
-            className={`${NFTImageHeight} rounded-t-lg`}
+            className={`${NFTImageHeight} ${NFTImageMaxWidth} rounded-t-lg`}
           />
         )}
       </MediaOuterStyle>

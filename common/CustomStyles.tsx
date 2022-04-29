@@ -4,6 +4,8 @@ export const NFTImageHeight =
   'h-[200px] sm:h-[180px] md:h-[180px] lg:h-[200px] xl:h-[240px] 2xl:h-[280px]'
 export const NFTImageWidth =
   'w-[200px] sm:w-[180px] md:w-[180px] lg:w-[200px] xl:w-[240px] 2xl:w-[280px]'
+export const NFTImageMaxWidth =
+  'max-w-[200px] sm:max-w-[180px] md:max-w-[180px] lg:max-w-[200px] xl:max-w-[240px] 2xl:max-w-[280px]'
 
 export function TokensOuterStyle({
   children,
