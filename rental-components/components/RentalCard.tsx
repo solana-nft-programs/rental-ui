@@ -14,7 +14,6 @@ import type { TokenData } from 'api/api'
 import type { EditionInfo } from 'api/editions'
 import getEditionInfo from 'api/editions'
 import { tryPublicKey } from 'api/utils'
-import axios from 'axios'
 import { NFTOverlay } from 'common/NFTOverlay'
 import { notify } from 'common/Notification'
 import { executeTransaction } from 'common/Transactions'
@@ -492,16 +491,17 @@ export const RentalCard = ({
         getLink('/claim', false)
       )
 
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_REMI_COIN_URL}/api/claims/create`,
-        {
-          tokenManagerId,
-          link,
-          email: recipientEmail,
-          brandName,
-          nftMintId: tokenData?.metaplexData?.data.mint,
-        }
-      )
+      console.log('link: ', link)
+      // await axios.post(
+      //   `${process.env.NEXT_PUBLIC_REMI_COIN_URL}/api/claims/create`,
+      //   {
+      //     tokenManagerId,
+      //     link,
+      //     email: recipientEmail,
+      //     brandName,
+      //     nftMintId: tokenData?.metaplexData?.data.mint,
+      //   }
+      // )
       setLink(link)
       handleCopy(link)
       console.log(link)

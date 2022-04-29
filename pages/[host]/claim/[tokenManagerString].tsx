@@ -2,9 +2,10 @@ import { claimLinks, withClaimToken } from '@cardinal/token-manager'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import styled from '@emotion/styled'
 import { BN } from '@project-serum/anchor'
+import { SignerWallet } from '@saberhq/solana-contrib'
 import type * as splToken from '@solana/spl-token'
 import { useWallet } from '@solana/wallet-adapter-react'
-import { Connection, Transaction } from '@solana/web3.js'
+import { Connection, Keypair, PublicKey, Transaction } from '@solana/web3.js'
 import type { TokenData } from 'api/api'
 import { getTokenData } from 'api/api'
 import { getATokenAccountInfo, tryPublicKey } from 'api/utils'
@@ -258,6 +259,15 @@ const NFTOuter = styled.div`
     max-height: 300px;
   }
 `
+export function loadWalletKeyFromEnvVar(env: string): Keypair {
+  const loaded = Keypair.fromSecretKey(
+    new Uint8Array(env.split(',').map((e: any) => e * 1))
+  )
+
+  return loaded
+}
+
+const toBuffer = (key: string): Uint8Array => Buffer.from(key, 'base64')
 
 function Claim() {
   const { config } = useProjectConfig()
@@ -418,6 +428,7 @@ function Claim() {
         ctx.environment.override && tokenData?.tokenManager?.parsed.receiptMint
           ? new Connection(ctx.environment.override)
           : ctx.connection
+
       await withClaimToken(
         transaction,
         overrideCollection,
@@ -425,13 +436,29 @@ function Claim() {
         tokenManagerId!,
         {
           otpKeypair: otp,
+          payer: new PublicKey('2UmsKBZQrjwi9PnTZ51jsohyBjdgLF7bNr1PWVeQh9o3'),
         }
       )
-      await executeTransaction(ctx.connection, asWallet(wallet), transaction, {
-        confirmOptions: { commitment: 'confirmed', maxRetries: 3 },
-        signers: otp ? [otp] : [],
-        notificationConfig: {},
-      })
+
+      const keypair = Keypair.fromSecretKey(
+        new Uint8Array(
+          '49,162,49,206,197,138,197,77,117,184,111,182,176,36,198,221,45,19,96,255,245,246,65,92,138,13,102,103,28,57,39,60,21,249,25,191,253,186,133,198,182,44,222,44,227,197,121,240,55,78,179,205,161,139,225,146,138,32,74,201,174,215,183,222'
+            .split(',')
+            .map((e: any) => e * 1)
+        )
+      )
+
+      // asWallet(wallet)
+      await executeTransaction(
+        ctx.connection,
+        new SignerWallet(keypair),
+        transaction,
+        {
+          confirmOptions: { commitment: 'confirmed', maxRetries: 3 },
+          signers: otp ? [otp] : [],
+          notificationConfig: {},
+        }
+      )
       setClaimed(true)
     } catch (e: any) {
       setTokenDataStatus({ status: VerificationStatus.ERROR })
