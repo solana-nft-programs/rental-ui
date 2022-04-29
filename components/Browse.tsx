@@ -429,15 +429,11 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
     return attributeFilteredTokens
   }
 
-  console.log(tokenManagers)
+  const tokenManagersForConfig =
+    filterTokens(environment.label, config.filters, tokenManagers.data ?? []) ??
+    []
   const filteredAndSortedTokens: TokenData[] = sortTokens(
-    filterTokensByAttributes(
-      filterTokens(
-        environment.label,
-        config.filters,
-        tokenManagers.data ?? []
-      ) ?? []
-    )
+    filterTokensByAttributes(tokenManagersForConfig)
   )
   const handleClaim = async (tokenData: TokenData) => {
     try {
@@ -634,7 +630,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
     ) : null
   }
 
-  const sortedAttributes = getAllAttributes(tokenManagers.data ?? [])
+  const sortedAttributes = getAllAttributes(tokenManagersForConfig ?? [])
 
   return (
     <div className="container mx-auto pt-10">
