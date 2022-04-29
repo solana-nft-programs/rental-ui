@@ -28,7 +28,7 @@ export const ENVIRONMENTS: Environment[] = [
     //   uri: '//graph.holaplex.com/v1',
     //   cache: new InMemoryCache({ resultCaching: false }),
     // }),
-    api: '/api',
+    // api: '/api',
   },
   {
     label: 'testnet',

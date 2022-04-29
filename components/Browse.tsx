@@ -431,7 +431,11 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
 
   const filteredAndSortedTokens: TokenData[] = sortTokens(
     filterTokensByAttributes(
-      filterTokens(environment.label, config.filters, tokenManagers.data ?? [])
+      filterTokens(
+        environment.label,
+        config.filters,
+        tokenManagers.data ?? []
+      ) ?? []
     )
   )
   const handleClaim = async (tokenData: TokenData) => {

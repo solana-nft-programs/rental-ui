@@ -1,10 +1,7 @@
 import { ProfileSmall } from '@cardinal/namespaces-components'
 import styled from '@emotion/styled'
 import { useWallet } from '@solana/wallet-adapter-react'
-import {
-  useWalletModal,
-  WalletMultiButton,
-} from '@solana/wallet-adapter-react-ui'
+import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
 import { tryPublicKey } from 'api/utils'
 import Colors from 'common/colors'
 import { useRouter } from 'next/router'
@@ -16,8 +13,8 @@ import { BiChevronDown } from 'react-icons/bi'
 import { IoChevronBack } from 'react-icons/io5'
 import { useMediaQuery } from 'react-responsive'
 import { getColorByBgColor } from 'rental-components/common/Button'
-import { AccountPopover } from './AccountPopover'
 
+import { AccountPopover } from './AccountPopover'
 import { Airdrop, AirdropSol } from './Airdrop'
 import { LoadingPulse } from './LoadingPulse'
 import { Popover } from './Popover'

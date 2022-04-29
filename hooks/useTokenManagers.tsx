@@ -1,4 +1,4 @@
-import { getTokenManagersForIssuer } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/accounts'
+import { getTokenManagersByState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/accounts'
 import type { TokenData } from 'api/api'
 import { convertStringsToPubkeys, getTokenDatas } from 'api/api'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
@@ -51,13 +51,14 @@ export const useTokenManagers = () => {
         console.log(json)
         return json.data.map((tokenData) => convertStringsToPubkeys(tokenData))
       } else {
-        const tokenManagerDatas = await getTokenManagersForIssuer(
+        const tokenManagerDatas = await getTokenManagersByState(
           connection,
-          walletId
+          null
         )
-        return getTokenDatas(connection, tokenManagerDatas)
+        const tokenDatas = await getTokenDatas(connection, tokenManagerDatas)
+        console.log(tokenDatas)
         // tokenDatas = filterTokens(environment.label, config.filters, tokenDatas)
-        // return tokenDatas
+        return tokenDatas
       }
     },
     [],
