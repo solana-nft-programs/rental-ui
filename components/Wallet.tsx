@@ -4,7 +4,8 @@ import { useWallet } from '@solana/wallet-adapter-react'
 import { Transaction } from '@solana/web3.js'
 import type { TokenData } from 'api/api'
 import { Airdrop } from 'common/Airdrop'
-import { NFT, TokensOuter } from 'common/NFT'
+import { NFTImageWidth, TokensOuterStyle } from 'common/CustomStyles'
+import { NFT } from 'common/NFT'
 import { NFTPlaceholder } from 'common/NFTPlaceholder'
 import { notify } from 'common/Notification'
 import { executeTransaction } from 'common/Transactions'
@@ -113,7 +114,7 @@ export const Wallet = () => {
           </Button>
         </div>
       )}
-      <TokensOuter>
+      <TokensOuterStyle>
         {!loaded ? (
           <>
             <NFTPlaceholder />
@@ -139,7 +140,7 @@ export const Wallet = () => {
                 <input
                   autoComplete="off"
                   type={'checkbox'}
-                  className={`absolute top-3 left-3 h-5 w-5  rounded-sm font-medium text-black focus:outline-none`}
+                  className={`absolute top-3 left-3 h-5 w-5 rounded-sm font-medium text-black focus:outline-none`}
                   id={tokenData?.tokenAccount?.pubkey.toBase58()}
                   name={tokenData?.tokenAccount?.pubkey.toBase58()}
                   checked={isSelected(tokenData)}
@@ -152,7 +153,7 @@ export const Wallet = () => {
                 style={{
                   background: lighten(0.07, config.colors.main),
                 }}
-                className="flex w-[280px] flex-row justify-between rounded-bl-md rounded-br-md bg-white/[.10] p-3"
+                className={`flex ${NFTImageWidth} flex-row justify-between rounded-b-lg bg-white/[.10] p-3`}
               >
                 <p className="overflow-hidden text-ellipsis whitespace-nowrap pr-5 text-white">
                   {tokenData.metadata.data.name}
@@ -210,7 +211,7 @@ export const Wallet = () => {
             {ctx.environment.label === 'devnet' && <Airdrop />}
           </div>
         )}
-      </TokensOuter>
+      </TokensOuterStyle>
     </div>
   )
 }

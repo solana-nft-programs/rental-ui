@@ -1,6 +1,5 @@
 import { unissueToken } from '@cardinal/token-manager'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
-import styled from '@emotion/styled'
 import { useWallet } from '@solana/wallet-adapter-react'
 import type { TokenData } from 'api/api'
 import { pubKeyUrl } from 'common/utils'
@@ -15,47 +14,15 @@ import { getColorByBgColor } from 'rental-components/common/Button'
 import { useQRCode } from 'rental-components/QRCodeProvider'
 import { useRentalModal } from 'rental-components/RentalModalProvider'
 
+import {
+  MediaOuterStyle,
+  NFTImageHeight,
+  TokenMetadataStyle,
+} from './CustomStyles'
 import { NFTOverlay } from './NFTOverlay'
 import { Popover, PopoverItem } from './Popover'
 import { executeTransaction } from './Transactions'
 import { asWallet } from './Wallets'
-
-export const TokensOuter = styled.div`
-  display: flex;
-  align-items: flex-start;
-  max-width: 1480px;
-  flex-wrap: wrap;
-  margin: 0px auto;
-  padding-bottom: 60px;
-  gap: 20px;
-
-  @media (max-width: 1224px) {
-    justify-content: center;
-  }
-`
-
-export const TokenMetadata = styled.div<{ allBorderRadius?: boolean }>`
-  text-align: center;
-  position: relative;
-  display: inline-block;
-  border-radius: ${({ allBorderRadius }) =>
-    allBorderRadius ? '10px' : '10px 10px 0 0'};
-  width: 280px;
-
-  #media-outer {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 280px;
-    max-width: 100%;
-    #media {
-      object-fit: contain;
-      // max-width: 250px;
-      height: 100%;
-      --poster-color: transparent;
-    }
-  }
-`
 
 interface NFTProps {
   tokenData: TokenData
@@ -63,7 +30,7 @@ interface NFTProps {
   onClick?: () => void
 }
 
-export function NFT({ tokenData, fullyRounded, onClick }: NFTProps) {
+export function NFT({ tokenData, onClick }: NFTProps) {
   const ctx = useEnvironmentCtx()
   const wallet = useWallet()
   const { show } = useQRCode()
@@ -85,10 +52,11 @@ export function NFT({ tokenData, fullyRounded, onClick }: NFTProps) {
     tokenData.editionData
 
   return (
-    <TokenMetadata
+    <TokenMetadataStyle
       style={{
         background: lighten(0.02, config.colors.main),
       }}
+      className="rounded-t-lg"
     >
       <Popover
         content={
@@ -206,8 +174,7 @@ export function NFT({ tokenData, fullyRounded, onClick }: NFTProps) {
           <FaEllipsisH />
         </div>
       </Popover>
-      <div
-        id="media-outer"
+      <MediaOuterStyle
         className={`z-0 ${onClick ? 'cursor-pointer' : ''}`}
         onClick={() => {
           onClick ? onClick() : () => {}
@@ -232,18 +199,13 @@ export function NFT({ tokenData, fullyRounded, onClick }: NFTProps) {
         )}
         {metadata && metadata.data && (
           <img
-            id="media"
             src={metadata.data.image}
             // src={customImageUri || metadata.data.image}
             alt={metadata.data.name}
-            className={
-              fullyRounded
-                ? 'rounded-[10px]'
-                : 'rounded-tr-[10px] rounded-tl-[10px]'
-            }
+            className={`${NFTImageHeight} rounded-t-lg`}
           />
         )}
-      </div>
-    </TokenMetadata>
+      </MediaOuterStyle>
+    </TokenMetadataStyle>
   )
 }

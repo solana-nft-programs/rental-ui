@@ -4,8 +4,9 @@ import { useWallet } from '@solana/wallet-adapter-react'
 import { PublicKey, Transaction } from '@solana/web3.js'
 import type { TokenData } from 'api/api'
 import { Airdrop } from 'common/Airdrop'
+import { TokensOuterStyle } from 'common/CustomStyles'
 import { Header } from 'common/Header'
-import { NFT, TokensOuter } from 'common/NFT'
+import { NFT } from 'common/NFT'
 import { NFTPlaceholder } from 'common/NFTPlaceholder'
 import { notify } from 'common/Notification'
 import { executeTransaction } from 'common/Transactions'
@@ -94,7 +95,7 @@ function Burn() {
   return (
     <>
       <Header />
-      <TokensOuter style={{ marginTop: '120px' }}>
+      <TokensOuterStyle style={{ marginTop: '120px' }}>
         {!loaded ? (
           <>
             <NFTPlaceholder />
@@ -152,7 +153,7 @@ function Burn() {
             {ctx.environment.label === 'devnet' && <Airdrop />}
           </div>
         )}
-      </TokensOuter>
+      </TokensOuterStyle>
     </>
   )
 }

@@ -3,7 +3,8 @@ import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tok
 import { BN } from '@project-serum/anchor'
 import { useWallet } from '@solana/wallet-adapter-react'
 import type { PublicKey } from '@solana/web3.js'
-import { NFT, TokensOuter } from 'common/NFT'
+import { TokensOuterStyle } from 'common/CustomStyles'
+import { NFT } from 'common/NFT'
 import { NFTPlaceholder } from 'common/NFTPlaceholder'
 import { notify } from 'common/Notification'
 import { StyledTag, Tag } from 'common/Tags'
@@ -30,7 +31,7 @@ export const Manage = () => {
 
   return (
     <div className="mt-10">
-      <TokensOuter>
+      <TokensOuterStyle>
         {!tokenManagerByIssuer.loaded ? (
           <>
             <NFTPlaceholder />
@@ -74,7 +75,6 @@ export const Manage = () => {
                               )
                             )
                           }
-                          color="warning"
                         >
                           Issued by{' '}
                           {shortPubKey(tokenData.tokenManager?.parsed.issuer)}{' '}
@@ -187,7 +187,7 @@ export const Manage = () => {
             <div className="text-gray-500">No outstanding rentals found...</div>
           </div>
         )}
-      </TokensOuter>
+      </TokensOuterStyle>
     </div>
   )
 }
