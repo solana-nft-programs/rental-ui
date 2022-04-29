@@ -12,7 +12,6 @@ import type { ProjectConfig } from 'config/config'
 import type { AppProps } from 'next/app'
 import { EnvironmentProvider } from 'providers/EnvironmentProvider'
 import { IssuedTokensProvider } from 'providers/IssuedTokensProvider'
-import { ManagedTokensProvider } from 'providers/ManagedTokensProvider'
 import { PaymentMintsProvider } from 'providers/PaymentMintsProvider'
 import {
   getInitialProps,
@@ -40,22 +39,20 @@ const App = ({
             <QRCodeProvider>
               <UTCNowProvider>
                 <TokenAccountsProvider>
-                  <ManagedTokensProvider>
-                    <IssuedTokensProvider>
-                      <RentalModalProvider>
-                        <RentalExtensionModalProvider>
-                          <RentalRateModalProvider>
-                            <WalletModalProvider>
-                              <>
-                                <ToastContainer />
-                                <Component {...pageProps} />
-                              </>
-                            </WalletModalProvider>
-                          </RentalRateModalProvider>
-                        </RentalExtensionModalProvider>
-                      </RentalModalProvider>
-                    </IssuedTokensProvider>
-                  </ManagedTokensProvider>
+                  <IssuedTokensProvider>
+                    <RentalModalProvider>
+                      <RentalExtensionModalProvider>
+                        <RentalRateModalProvider>
+                          <WalletModalProvider>
+                            <>
+                              <ToastContainer />
+                              <Component {...pageProps} />
+                            </>
+                          </WalletModalProvider>
+                        </RentalRateModalProvider>
+                      </RentalExtensionModalProvider>
+                    </RentalModalProvider>
+                  </IssuedTokensProvider>
                 </TokenAccountsProvider>
               </UTCNowProvider>
             </QRCodeProvider>

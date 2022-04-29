@@ -27,7 +27,7 @@ import {
   usePaymentMints,
   WRAPPED_SOL_MINT,
 } from 'providers/PaymentMintsProvider'
-import { getLink } from 'providers/ProjectConfigProvider'
+import { filterTokens, getLink } from 'providers/ProjectConfigProvider'
 import React, { useState } from 'react'
 import { FaLink } from 'react-icons/fa'
 import { AsyncButton, Button } from 'rental-components/common/Button'
@@ -103,7 +103,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
   const { connection, environment } = useEnvironmentCtx()
   const wallet = useWallet()
 
-  const { issuedTokens, loaded, refreshIssuedTokens } = useIssuedTokens()
+  const tokenManagers = useIssuedTokens()
   const [userPaymentTokenAccount, _setUserPaymentTokenAccount] =
     useState<splToken.AccountInfo | null>(null)
   const { paymentMintInfos } = usePaymentMints()
@@ -398,7 +398,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
     }
   }
 
-  const filterTokens = (tokens: TokenData[]): TokenData[] => {
+  const filterTokensByAttributes = (tokens: TokenData[]): TokenData[] => {
     const durationTokens = tokens.filter(
       (token) =>
         maxDurationBounds[0] <= (durationAmount(token) ?? Infinity) &&
@@ -430,9 +430,10 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
   }
 
   const filteredAndSortedTokens: TokenData[] = sortTokens(
-    filterTokens(issuedTokens)
+    filterTokensByAttributes(
+      filterTokens(environment.label, config.filters, tokenManagers.data ?? [])
+    )
   )
-
   const handleClaim = async (tokenData: TokenData) => {
     try {
       if (!tokenData.tokenManager) throw new Error('No token manager data')
@@ -478,7 +479,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
       })
       console.log(e)
     } finally {
-      refreshIssuedTokens()
+      tokenManagers.refresh()
     }
   }
 
@@ -628,7 +629,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
     ) : null
   }
 
-  const sortedAttributes = getAllAttributes(issuedTokens)
+  const sortedAttributes = getAllAttributes(tokenManagers.data ?? [])
 
   return (
     <div className="container mx-auto pt-10">
@@ -775,7 +776,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
         </div>
         <div className="w-full">
           <TokensOuter>
-            {!loaded ? (
+            {!tokenManagers.loaded ? (
               <>
                 <NFTPlaceholder />
                 <NFTPlaceholder />
@@ -995,7 +996,7 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
                                         tokenData?.tokenManager?.parsed.mint
                                       ),
                                       {
-                                        callback: refreshIssuedTokens,
+                                        callback: tokenManagers.refresh,
                                         silent: true,
                                       }
                                     )

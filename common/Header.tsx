@@ -180,7 +180,6 @@ export const Header = ({
   const ctx = useEnvironmentCtx()
   const wallet = useWallet()
   const router = useRouter()
-  const { setVisible } = useWalletModal()
   const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' })
   const [showTabs, setShowTabs] = useState(false)
   const [tab, setTab] = useState<string>('wallet')
@@ -244,11 +243,10 @@ export const Header = ({
         {config.name !== 'default' && !host?.includes(config.name) && (
           <div
             className="mr-2 flex cursor-pointer items-center justify-center text-lg text-white transition-all duration-200 hover:scale-[1.02]"
-            onClick={() =>
-              homeButton
-                ? router.push(`/${location.search}#browse`)
-                : setProjectConfig('default')
-            }
+            onClick={() => {
+              setProjectConfig('default')
+              homeButton ?? router.push(`/${location.search}#browse`)
+            }}
           >
             <IoChevronBack size={26} />
             Back

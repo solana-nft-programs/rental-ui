@@ -85,7 +85,7 @@ export const filterTokens = (
           configFilter.type === 'creators' &&
           !token.metaplexData?.data?.data?.creators?.some(
             (creator) =>
-              configFilter.value.includes(creator.address) &&
+              configFilter.value.includes(creator.address.toString()) &&
               (cluster === 'devnet' || creator.verified)
           )
         ) {
