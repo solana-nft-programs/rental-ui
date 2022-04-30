@@ -10,6 +10,7 @@ import { Wallet } from 'components/Wallet'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useError } from 'providers/ErrorProvider'
+import { useIssuedTokens } from 'providers/IssuedTokensProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useUserTokenData } from 'providers/TokenDataProvider'
 import { useEffect, useState } from 'react'
@@ -43,6 +44,7 @@ export default function Home() {
   const [error, _setError] = useError()
   const wallet = useWallet()
   const router = useRouter()
+  const tokenManager = useIssuedTokens()
   const [tab, setTab] = useState<string>('')
 
   useEffect(() => {
@@ -109,7 +111,7 @@ export default function Home() {
       {tab ? (
         <>
           <Header
-            loading={loaded && refreshing}
+            loading={tokenManager.loaded && tokenManager.refreshing}
             tabs={[
               {
                 name: 'Wallet',
