@@ -2,6 +2,7 @@ import type { Wallet } from '@saberhq/solana-contrib'
 import type {
   ConfirmOptions,
   Connection,
+  PublicKey,
   Signer,
   Transaction,
 } from '@solana/web3.js'
@@ -13,16 +14,22 @@ export const executeTransaction = async (
   wallet: Wallet,
   transaction: Transaction,
   config: {
+    feePayer?: PublicKey
     silent?: boolean
     signers?: Signer[]
     confirmOptions?: ConfirmOptions
-    notificationConfig?: { message?: string; errorMessage?: string }
+    notificationConfig?: {
+      message?: string
+      errorMessage?: string
+      description?: string
+    }
     callback?: () => void
   }
 ): Promise<string> => {
   let txid = ''
   try {
-    transaction.feePayer = wallet.publicKey
+    transaction.feePayer = config.feePayer ?? wallet.publicKey
+    // transaction.feePayer = wallet.publicKey
     transaction.recentBlockhash = (
       await connection.getRecentBlockhash('max')
     ).blockhash
@@ -38,15 +45,16 @@ export const executeTransaction = async (
     console.log('Successful tx', txid)
     config.notificationConfig &&
       notify({
-        message: config.notificationConfig.message ?? 'Succesful transaction',
+        message: 'Succesful transaction',
+        description: config.notificationConfig.message,
         txid,
       })
   } catch (e) {
     console.log('Failed transaction: ', e)
     config.notificationConfig &&
       notify({
-        message:
-          config.notificationConfig.errorMessage ?? `Failed transaction: ${e}`,
+        message: 'Failed transaction',
+        description: config.notificationConfig.errorMessage ?? `${e}`,
         txid,
         type: 'error',
       })

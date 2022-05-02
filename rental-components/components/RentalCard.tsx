@@ -491,17 +491,6 @@ export const RentalCard = ({
         getLink('/claim', false)
       )
 
-      console.log('link: ', link)
-      // await axios.post(
-      //   `${process.env.NEXT_PUBLIC_REMI_COIN_URL}/api/claims/create`,
-      //   {
-      //     tokenManagerId,
-      //     link,
-      //     email: recipientEmail,
-      //     brandName,
-      //     nftMintId: tokenData?.metaplexData?.data.mint,
-      //   }
-      // )
       setLink(link)
       handleCopy(link)
       console.log(link)

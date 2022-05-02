@@ -397,9 +397,8 @@ function Claim() {
       if (router.asPath.includes('otp=')) {
         const split = router.asPath.split('/claim')
         if (split && split[1]) {
-          const [_tokenManagerId, otpKeypair] = claimLinks.fromLink(
-            getLink(`/claim${split[1].split('&cluster')[0]}`)
-          )
+          const l = getLink(`/claim${split[1].split('&cluster')[0]}`)
+          const [_tokenManagerId, otpKeypair] = claimLinks.fromLink(l)
           otp = otpKeypair
         }
       }
@@ -429,7 +428,7 @@ function Claim() {
           ? new Connection(ctx.environment.override)
           : ctx.connection
 
-      await withClaimToken(
+      const t = await withClaimToken(
         transaction,
         overrideCollection,
         asWallet(wallet),
@@ -439,6 +438,8 @@ function Claim() {
           payer: new PublicKey('2UmsKBZQrjwi9PnTZ51jsohyBjdgLF7bNr1PWVeQh9o3'),
         }
       )
+
+      console.log(t)
 
       const keypair = Keypair.fromSecretKey(
         new Uint8Array(
@@ -454,6 +455,7 @@ function Claim() {
         new SignerWallet(keypair),
         transaction,
         {
+          feePayer: keypair.publicKey,
           confirmOptions: { commitment: 'confirmed', maxRetries: 3 },
           signers: otp ? [otp] : [],
           notificationConfig: {},
