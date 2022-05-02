@@ -173,7 +173,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     name: 'all',
     type: 'Collection',
     websiteUrl: 'https://cardinal.so',
-    logoImage: './logos/all.svg',
+    logoImage: '/logos/all.svg',
     colors: {
       main: 'rgb(26, 27, 32)',
       secondary: 'rgb(29, 155, 240)',

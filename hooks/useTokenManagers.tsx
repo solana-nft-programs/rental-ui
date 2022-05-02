@@ -37,7 +37,6 @@ export const useTokenManagers = () => {
           // &collection=${config.name}`
         )
         const json = (await response.json()) as { data: TokenData[] }
-        console.log(json)
         return json.data.map((tokenData) => convertStringsToPubkeys(tokenData))
       } else {
         const tokenManagerDatas = await getTokenManagersByState(
@@ -50,6 +49,6 @@ export const useTokenManagers = () => {
       }
     },
     [],
-    { name: 'useTokenManagersByState', refreshInterval: 10000 }
+    { name: 'useTokenManagersByState', refreshInterval: 20000 }
   )
 }
