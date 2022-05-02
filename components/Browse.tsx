@@ -18,16 +18,15 @@ import { executeTransaction } from 'common/Transactions'
 import { fmtMintAmount, getMintDecimalAmount } from 'common/units'
 import { secondsToString } from 'common/utils'
 import { asWallet } from 'common/Wallets'
-import type { ProjectConfig } from 'config/config'
 import { lighten } from 'polished'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
-import { useIssuedTokens } from 'providers/IssuedTokensProvider'
 import {
   PAYMENT_MINTS,
   usePaymentMints,
   WRAPPED_SOL_MINT,
 } from 'providers/PaymentMintsProvider'
-import { filterTokens, getLink } from 'providers/ProjectConfigProvider'
+import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
+import { useAllTokenManagers } from 'providers/TokenManagersProvider'
 import React, { useState } from 'react'
 import { FaLink } from 'react-icons/fa'
 import { AsyncButton, Button } from 'rental-components/common/Button'
@@ -99,11 +98,13 @@ const getAllAttributes = (tokens: TokenData[]) => {
   return sortedAttributes
 }
 
-export const Browse = ({ config }: { config: ProjectConfig }) => {
+export const Browse = () => {
   const { connection, environment } = useEnvironmentCtx()
   const wallet = useWallet()
+  const { config } = useProjectConfig()
+  const tokenManagers = useAllTokenManagers()
+  const tokenManagersForConfig = tokenManagers.data || []
 
-  const tokenManagers = useIssuedTokens()
   const [userPaymentTokenAccount, _setUserPaymentTokenAccount] =
     useState<splToken.AccountInfo | null>(null)
   const { paymentMintInfos } = usePaymentMints()
@@ -167,12 +168,6 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
     color: #d89614 !important;
     display: inline-flex;
     float: left;
-  `
-
-  const TwitterHandle = styled.div`
-    a {
-      color: #d89614 !important;
-    }
   `
 
   const getPriceFromTokenData = (tokenData: TokenData) => {
@@ -429,9 +424,6 @@ export const Browse = ({ config }: { config: ProjectConfig }) => {
     return attributeFilteredTokens
   }
 
-  const tokenManagersForConfig =
-    filterTokens(environment.label, config.filters, tokenManagers.data ?? []) ??
-    []
   const filteredAndSortedTokens: TokenData[] = sortTokens(
     filterTokensByAttributes(tokenManagersForConfig)
   )

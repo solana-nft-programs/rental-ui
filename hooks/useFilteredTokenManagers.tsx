@@ -3,12 +3,12 @@ import { getTokenManagersByState } from '@cardinal/token-manager/dist/cjs/progra
 import type { TokenData } from 'api/api'
 import { convertStringsToPubkeys, getTokenDatas } from 'api/api'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
+import { filterTokens, useProjectConfig } from 'providers/ProjectConfigProvider'
 
-// import { filterTokens, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useDataHook } from './useDataHook'
 
-export const useTokenManagers = () => {
-  // const { config } = useProjectConfig()
+export const useFilteredTokenManagers = () => {
+  const { config } = useProjectConfig()
   const { connection, environment } = useEnvironmentCtx()
   return useDataHook<TokenData[] | undefined>(
     async () => {
@@ -33,10 +33,10 @@ export const useTokenManagers = () => {
         return response.data
       } else if (environment.api) {
         const response = await fetch(
-          `${environment.api}/tokenManagersByState?cluster=${environment.label}`
-          // &collection=${config.name}`
+          `${environment.api}/tokenManagersByState?cluster=${environment.label}&collection=${config.name}`
         )
         const json = (await response.json()) as { data: TokenData[] }
+        console.log(json)
         return json.data.map((tokenData) => convertStringsToPubkeys(tokenData))
       } else {
         const tokenManagerDatas = await getTokenManagersByState(
@@ -44,11 +44,10 @@ export const useTokenManagers = () => {
           null
         )
         const tokenDatas = await getTokenDatas(connection, tokenManagerDatas)
-        // tokenDatas = filterTokens(environment.label, config.filters, tokenDatas)
-        return tokenDatas
+        return filterTokens(environment.label, config.filters, tokenDatas)
       }
     },
-    [],
-    { name: 'useTokenManagers', refreshInterval: 20000 }
+    [config.name],
+    { name: 'useFilteredTokenManagers', refreshInterval: 10000 }
   )
 }

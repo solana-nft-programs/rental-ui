@@ -56,13 +56,7 @@ export function useDataHook<T>(
 
   useEffect(() => {
     if (params?.refreshInterval) {
-      const interval = setInterval(
-        (function fetchInterval(): () => void {
-          refresh()
-          return fetchInterval
-        })(),
-        params?.refreshInterval
-      )
+      const interval = setInterval(() => refresh(), params?.refreshInterval)
       return () => clearInterval(interval)
     }
   }, [...dependencies])
