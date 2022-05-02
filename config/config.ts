@@ -512,6 +512,70 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     ],
     marketplaceRate: 'days',
   },
+  psyker: {
+    name: 'psyker',
+    type: 'Collection',
+    websiteUrl: 'https://psyker.game/',
+    logoImage: './logos/psyker.png',
+    colors: {
+      main: '#00101b',
+      secondary: '#ff0034',
+    },
+    filters: [
+      {
+        type: 'creators',
+        value: [
+          '8AkWaZh92FwkdPmqbR58FpTkpZjrCrRK648UWu6Kuz8',
+          '3aKY2TVrHV7XnjcuYhP2gdUWqF8ra8TA4AL5qWQQz5gr',
+          'Gvp1RDYLpbBQg35k3x1zpBxWhXNEPuS1jbLALDH8XCaA',
+          '2e8DoDgFZR3By185CDPJAwNE3h1QsaS1NtndM8NQi3Q5',
+          'HMduKVo3A19U5EpQdEhPjo9hq9zfZXn8aGVYZp7Vc7fX',
+        ],
+      },
+    ],
+    rentalCard: {
+      invalidators: ['rate'],
+      invalidationOptions: {
+        freezeRentalDuration: {
+          value: '1',
+          durationOption: 'days',
+        },
+        durationOptions: ['hours', 'days', 'weeks', 'years'],
+        visibilities: ['public'],
+        invalidationTypes: ['reissue'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        setClaimRentalReceipt: true,
+        showClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
+    airdrops: [
+      {
+        name: 'MetaOps PFP #4340',
+        symbol: 'MOPFP',
+        uri: 'https://storage.googleapis.com/fractal-launchpad-public-assets/metaops-assets/jsons/2789.json',
+      },
+      {
+        name: 'MetaOps PFP #5553',
+        symbol: 'MOPFP',
+        uri: 'https://storage.googleapis.com/fractal-launchpad-public-assets/metaops-assets/jsons/3160.json',
+      },
+      {
+        name: 'MetaOps PFP #4699',
+        symbol: 'MOPFP',
+        uri: 'https://storage.googleapis.com/fractal-launchpad-public-assets/metaops-assets/jsons/3102.json',
+      },
+      {
+        name: 'MetaOps PFP #692',
+        symbol: 'MOPFP',
+        uri: 'https://www.magiceden.io/item-details/4r9jMVm5rXdiCLa2oMLkV2ecL3wmmcoFtsMUJJoum38r',
+      },
+    ],
+    marketplaceRate: 'days',
+  },
   ['all-starz']: {
     name: 'all-starz',
     type: 'Guild',
