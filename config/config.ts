@@ -180,12 +180,12 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     },
     filters: [],
     rentalCard: {
-      invalidators: ['rate'],
+      invalidators: ['rate', 'duration'],
       extensionOptions: { showDisablePartialExtension: true },
       invalidationOptions: {
         visibilities: ['public'],
         invalidationTypes: ['reissue'],
-        freezeRentalDuration: {
+        freezeRentalRateDuration: {
           value: '1',
           durationOption: 'days',
         },
@@ -264,12 +264,12 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       },
     ],
     rentalCard: {
-      invalidators: ['rate'],
+      invalidators: ['rate', 'duration'],
       invalidationOptions: {
-        freezeRentalDuration: {
+        freezeRentalRateDuration: {
           value: '1',
           durationOption: 'days',
-        },
+        },        
         visibilities: ['public'],
         durationOptions: ['minutes', 'hours', 'days', 'weeks'],
         invalidationTypes: ['reissue'],
@@ -322,9 +322,9 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       },
     ],
     rentalCard: {
-      invalidators: ['rate'],
+      invalidators: ['rate', 'duration'],
       invalidationOptions: {
-        freezeRentalDuration: {
+        freezeRentalRateDuration: {
           value: '1',
           durationOption: 'days',
         },
@@ -388,9 +388,9 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       },
     ],
     rentalCard: {
-      invalidators: ['rate'],
+      invalidators: ['rate', 'duration'],
       invalidationOptions: {
-        freezeRentalDuration: {
+        freezeRentalRateDuration: {
           value: '1',
           durationOption: 'days',
         },
@@ -430,9 +430,9 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       },
     ],
     rentalCard: {
-      invalidators: ['rate'],
+      invalidators: ['rate', 'duration'],
       invalidationOptions: {
-        freezeRentalDuration: {
+        freezeRentalRateDuration: {
           value: '1',
           durationOption: 'days',
         },
@@ -470,9 +470,9 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       },
     ],
     rentalCard: {
-      invalidators: ['rate'],
+      invalidators: ['rate', 'duration'],
       invalidationOptions: {
-        freezeRentalDuration: {
+        freezeRentalRateDuration: {
           value: '1',
           durationOption: 'days',
         },
@@ -534,9 +534,9 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       },
     ],
     rentalCard: {
-      invalidators: ['rate'],
+      invalidators: ['rate', 'duration'],
       invalidationOptions: {
-        freezeRentalDuration: {
+        freezeRentalRateDuration: {
           value: '1',
           durationOption: 'days',
         },
@@ -589,9 +589,9 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       { type: 'issuer', value: 'Cx2FDbdfqezYiN8teLFdFAzdv9mwG48uYbe218Az4EMP' },
     ],
     rentalCard: {
-      invalidators: ['rate'],
+      invalidators: ['rate', 'duration'],
       invalidationOptions: {
-        freezeRentalDuration: {
+        freezeRentalRateDuration: {
           value: '1',
           durationOption: 'days',
         },
@@ -623,9 +623,9 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       { type: 'issuer', value: '9qoRqZmrAf6bqtmTAPA1UkgCRvKuaugF17xBdympy1vd' },
     ],
     rentalCard: {
-      invalidators: ['rate'],
+      invalidators: ['rate', 'duration'],
       invalidationOptions: {
-        freezeRentalDuration: {
+        freezeRentalRateDuration: {
           value: '1',
           durationOption: 'days',
         },
