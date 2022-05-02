@@ -269,7 +269,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         freezeRentalRateDuration: {
           value: '1',
           durationOption: 'days',
-        },        
+        },
         visibilities: ['public'],
         durationOptions: ['minutes', 'hours', 'days', 'weeks'],
         invalidationTypes: ['reissue'],
