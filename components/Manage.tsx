@@ -74,7 +74,7 @@ export const Manage = () => {
                         className={`flex min-h-[82px] w-[280px] flex-col rounded-b-md p-3`}
                       >
                         <div
-                          className="mb-2 flex w-full flex-row text-xs font-bold text-white"
+                          className="mb-2 flex w-full cursor-pointer flex-row text-xs font-bold text-white"
                           onClick={() =>
                             handleCopy(
                               getLink(
