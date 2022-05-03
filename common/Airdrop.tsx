@@ -31,7 +31,6 @@ export async function airdropNFT(
   config: ProjectConfig
 ): Promise<string> {
   const airdropMetadatas = config.airdrops || []
-  const creators = config.filters.find((f) => f.type === 'creators')
   const randInt = Math.round(Math.random() * (airdropMetadatas.length - 1))
   const metadata: AirdropMetadata | undefined = airdropMetadatas[randInt]
   if (!metadata) throw new Error('No configured airdrops found')
@@ -64,24 +63,31 @@ export async function airdropNFT(
         sellerFeeBasisPoints: 10,
         collection: null,
         uses: null,
-        creators: creators
-          ? (creators.value as string[])
-              .map(
-                (c) =>
+        creators:
+          config.filter?.value && config.filter?.type === 'creators'
+            ? config.filter.value
+                .map(
+                  (c) =>
+                    new Creator({
+                      address: c,
+                      verified: false,
+                      share: Math.floor(
+                        (1 /
+                          ((config.filter ?? { value: [] }).value.length + 1)) *
+                          100
+                      ),
+                    })
+                )
+                .concat(
                   new Creator({
-                    address: c,
+                    address: tokenCreator.publicKey.toString(),
                     verified: false,
-                    share: Math.floor((1 / (creators.value.length + 1)) * 100),
+                    share: Math.floor(
+                      (1 / (config.filter.value.length + 1)) * 100
+                    ),
                   })
-              )
-              .concat(
-                new Creator({
-                  address: tokenCreator.publicKey.toString(),
-                  verified: false,
-                  share: Math.floor((1 / (creators.value.length + 1)) * 100),
-                })
-              )
-          : null,
+                )
+            : null,
       }),
       updateAuthority: tokenCreator.publicKey,
       mint: masterEditionMint.publicKey,

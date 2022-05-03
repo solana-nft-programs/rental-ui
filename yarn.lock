@@ -1419,10 +1419,10 @@
     tiny-invariant "^1.2.0"
     tslib "^2.3.1"
 
-"@cardinal/token-manager@^1.3.3":
-  version "1.3.3"
-  resolved "https://registry.npmjs.org/@cardinal/token-manager/-/token-manager-1.3.3.tgz"
-  integrity sha512-wMvt/agHSYwp4vGQFPazaBnJmSE21VqbEIO99Pqqv4qumaYWNTmso/RZlWksdOPCl6zt3ClukJa2VRrsaEXr4w==
+"@cardinal/token-manager@^1.3.6":
+  version "1.3.6"
+  resolved "https://registry.yarnpkg.com/@cardinal/token-manager/-/token-manager-1.3.6.tgz#9461cab5151f780d205458f83cd25b31112a6b01"
+  integrity sha512-6hmfqU8hmXtDDf7CSsOUnNFPA4BojEC37R2a4kUIII/OnQ0IEDonM0agmXoMFxmw0v5ylzWKbTj4JK4O560ZIA==
   dependencies:
     "@metaplex-foundation/mpl-token-metadata" "^1.2.3"
     "@solana/buffer-layout" "^4.0.0"

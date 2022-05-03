@@ -1,4 +1,5 @@
-import type { ApolloClient, NormalizedCacheObject } from '@apollo/client'
+import type { NormalizedCacheObject } from '@apollo/client'
+import { ApolloClient, InMemoryCache } from '@apollo/client'
 import type { Cluster } from '@solana/web3.js'
 import { Connection } from '@solana/web3.js'
 import { useRouter } from 'next/router'
@@ -18,17 +19,21 @@ export interface EnvironmentContextValues {
   connection: Connection
 }
 
+const INDEX_ENABLED = false
+
 export const ENVIRONMENTS: Environment[] = [
   {
     label: 'mainnet',
     value:
       'https://solana-api.syndica.io/access-token/bkBr4li7aGVa3euVG0q4iSI6uuMiEo2jYQD35r8ytGZrksM7pdJi2a57pmlYRqCw',
     override: 'https://ssc-dao.genesysgo.net',
-    // index: new ApolloClient({
-    //   uri: '//graph.holaplex.com/v1',
-    //   cache: new InMemoryCache({ resultCaching: false }),
-    // }),
-    api: '/api',
+    index: INDEX_ENABLED
+      ? new ApolloClient({
+          uri: 'https://prod-holaplex.hasura.app/v1/graphql',
+          cache: new InMemoryCache({ resultCaching: false }),
+        })
+      : undefined,
+    // api: '/api',
   },
   {
     label: 'testnet',

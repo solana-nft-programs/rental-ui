@@ -162,6 +162,7 @@ export type RentalCardConfig = {
     invalidationTypes?: InvalidationTypeOption[]
     paymentMints?: string[]
     freezeRentalDuration?: { durationOption?: DurationOption; value?: string }
+    freezeRentalRateDuration?: { durationOption?: DurationOption; value?: string }
     visibilities?: VisibilityOption[]
     setClaimRentalReceipt?: boolean
     showClaimRentalReceipt?: boolean
@@ -323,7 +324,7 @@ export const RentalCard = ({
   >(rentalCardConfig.invalidators[0] ? [rentalCardConfig.invalidators[0]] : [])
   const [showAdditionalOptions, setShowAdditionalOptions] = useState(false)
   const [showExtendDuration, setShowExtendDuration] = useState(false)
-  const [confirmRentalTerms, setConfirmRentalTerms] = useState(true)
+  const [confirmRentalTerms, setConfirmRentalTerms] = useState(false)
   const [totalListed, setTotalListed] = useState(0)
   const rateRental = selectedInvalidators.includes('rate')
 
@@ -350,7 +351,7 @@ export const RentalCard = ({
     if (selectedInvalidators.includes('rate')) {
       setExtensionDurationAmount(
         parseInt(
-          rentalCardConfig.invalidationOptions?.freezeRentalDuration?.value ??
+          rentalCardConfig.invalidationOptions?.freezeRentalRateDuration?.value ??
             '1'
         )
       )
@@ -765,7 +766,7 @@ export const RentalCard = ({
                           defaultValue={defaultDurationOption}
                           disabled={
                             rentalCardConfig.invalidationOptions
-                              ?.freezeRentalDuration
+                              ?.freezeRentalRateDuration
                               ? true
                               : false
                           }

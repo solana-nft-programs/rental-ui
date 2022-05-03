@@ -6,7 +6,6 @@ import { firstParam } from 'common/utils'
 import { projectConfigs } from 'config/config'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { ENVIRONMENTS } from 'providers/EnvironmentProvider'
-import { filterTokens } from 'providers/ProjectConfigProvider'
 
 export default async function handler(
   req: NextApiRequest,
@@ -31,15 +30,15 @@ export default async function handler(
     issuerId
   )
 
-  let tokenDatas = await getTokenDatas(connection, tokenManagerDatas)
-  if (collectionParam) {
-    const config =
-      projectConfigs[firstParam(collectionParam)] || projectConfigs['default']!
-    tokenDatas = filterTokens(
-      firstParam(clusterParam),
-      config.filters,
-      tokenDatas
-    )
-  }
+  const config =
+    projectConfigs[firstParam(collectionParam)] || projectConfigs['default']!
+
+  const tokenDatas = await getTokenDatas(
+    connection,
+    tokenManagerDatas,
+    config.filter,
+    firstParam(clusterParam)
+  )
+
   res.status(200).json({ data: tokenDatas })
 }

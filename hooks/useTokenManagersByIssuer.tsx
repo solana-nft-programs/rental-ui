@@ -2,8 +2,8 @@ import { gql } from '@apollo/client'
 import { getTokenManagersForIssuer } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/accounts'
 import type { TokenData } from 'api/api'
 import { convertStringsToPubkeys, getTokenDatas } from 'api/api'
-import client from 'client'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
+import { useProjectConfig } from 'providers/ProjectConfigProvider'
 
 // import { filterTokens, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useDataHook } from './useDataHook'
@@ -11,25 +11,25 @@ import { useWalletId } from './useWalletId'
 
 export const useTokenManagersByIssuer = () => {
   const walletId = useWalletId()
-  // const { config } = useProjectConfig()
+  const { config } = useProjectConfig()
   const { connection, environment } = useEnvironmentCtx()
   return useDataHook<TokenData[] | undefined>(
     async () => {
       if (!walletId) return
       if (environment.index) {
-        const response = await client.query({
+        const response = await environment.index.query({
           query: gql`
             query GetTokenManagersForIssuer(
-              $issuer: PublicKey!
+              $issuer: String!
               $limit: Int!
               $offset: Int!
             ) {
               cardinal_token_managers(
-                issuer: $issuer
+                where: { issuer: { _eq: $issuer } }
                 limit: $limit
                 offset: $offset
               ) {
-                token_manager_address
+                address
                 mint
                 amount
                 state
@@ -39,10 +39,11 @@ export const useTokenManagersByIssuer = () => {
           `,
           variables: {
             issuer: walletId.toBase58(),
-            offset: 0,
             limit: 200,
+            offset: 0,
           },
         })
+        console.log(response)
         return response.data
       } else if (environment.api) {
         const response = await fetch(
@@ -51,7 +52,6 @@ export const useTokenManagersByIssuer = () => {
           }/tokenManagersByIssuer?issuer=${walletId.toBase58()}&cluster=${
             environment.label
           }`
-          // &collection=${config.name}
         )
         const json = (await response.json()) as { data: TokenData[] }
         return json.data.map((tokenData) => convertStringsToPubkeys(tokenData))
@@ -60,12 +60,16 @@ export const useTokenManagersByIssuer = () => {
           connection,
           walletId
         )
-        return getTokenDatas(connection, tokenManagerDatas)
-        // tokenDatas = filterTokens(environment.label, config.filters, tokenDatas)
-        // return tokenDatas
+        const tokenDatas = await getTokenDatas(
+          connection,
+          tokenManagerDatas,
+          config.filter,
+          environment.label
+        )
+        return tokenDatas
       }
     },
     [walletId?.toString()],
-    { name: 'stakePoolData' }
+    { name: 'useTokenManagersByIssuer' }
   )
 }

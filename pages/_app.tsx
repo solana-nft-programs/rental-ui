@@ -11,13 +11,13 @@ import { ToastContainer } from 'common/Notification'
 import type { ProjectConfig } from 'config/config'
 import type { AppProps } from 'next/app'
 import { EnvironmentProvider } from 'providers/EnvironmentProvider'
-import { IssuedTokensProvider } from 'providers/IssuedTokensProvider'
 import { PaymentMintsProvider } from 'providers/PaymentMintsProvider'
 import {
   getInitialProps,
   ProjectConfigProvider,
 } from 'providers/ProjectConfigProvider'
 import { TokenAccountsProvider } from 'providers/TokenDataProvider'
+// import { TokenManagersProvider } from 'providers/TokenManagersProvider'
 import { UTCNowProvider } from 'providers/UTCNowProvider'
 import { QRCodeProvider } from 'rental-components/QRCodeProvider'
 import { RentalExtensionModalProvider } from 'rental-components/RentalExtensionModalProvider'
@@ -39,20 +39,20 @@ const App = ({
             <QRCodeProvider>
               <UTCNowProvider>
                 <TokenAccountsProvider>
-                  <IssuedTokensProvider>
-                    <RentalModalProvider>
-                      <RentalExtensionModalProvider>
-                        <RentalRateModalProvider>
-                          <WalletModalProvider>
-                            <>
-                              <ToastContainer />
-                              <Component {...pageProps} />
-                            </>
-                          </WalletModalProvider>
-                        </RentalRateModalProvider>
-                      </RentalExtensionModalProvider>
-                    </RentalModalProvider>
-                  </IssuedTokensProvider>
+                  {/* <TokenManagersProvider> */}
+                  <RentalModalProvider>
+                    <RentalExtensionModalProvider>
+                      <RentalRateModalProvider>
+                        <WalletModalProvider>
+                          <>
+                            <ToastContainer />
+                            <Component {...pageProps} />
+                          </>
+                        </WalletModalProvider>
+                      </RentalRateModalProvider>
+                    </RentalExtensionModalProvider>
+                  </RentalModalProvider>
+                  {/* </TokenManagersProvider> */}
                 </TokenAccountsProvider>
               </UTCNowProvider>
             </QRCodeProvider>

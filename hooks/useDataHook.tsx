@@ -2,7 +2,7 @@ import { notify } from 'common/Notification'
 import type { DependencyList } from 'react'
 import { useEffect, useMemo, useState } from 'react'
 
-const DEBUG = false
+const DEBUG = true
 
 export interface DataHookValues<T> {
   refresh: (reload?: boolean) => Promise<void>
@@ -56,13 +56,7 @@ export function useDataHook<T>(
 
   useEffect(() => {
     if (params?.refreshInterval) {
-      const interval = setInterval(
-        (function fetchInterval(): () => void {
-          refresh()
-          return fetchInterval
-        })(),
-        params?.refreshInterval
-      )
+      const interval = setInterval(() => refresh(), params?.refreshInterval)
       return () => clearInterval(interval)
     }
   }, [...dependencies])

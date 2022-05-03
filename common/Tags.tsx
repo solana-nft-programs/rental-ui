@@ -2,23 +2,6 @@ import type { TokenManagerState } from '@cardinal/token-manager/dist/cjs/program
 import styled from '@emotion/styled'
 import { stateColor } from 'common/NFTOverlay'
 
-export const StyledTag = styled.span`
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  // justify-content: center;
-  align-items: center;
-  span {
-    border: none;
-    background: none;
-    display: block;
-    width: 100%;
-  }
-  button {
-    margin: 5px 0px;
-  }
-`
-
 export const Tag = styled.div<{ state: TokenManagerState }>`
   color: ${({ state }) => stateColor(state, true)} !important;
 `
