@@ -35,7 +35,6 @@ const StyledOverlay = styled.div<{
       : 'none'};
 
   z-index: 2;
-  // outline: 6px solid black;
   border-radius: ${({ borderRadius }) => borderRadius}px;
   .top-right {
     position: absolute;

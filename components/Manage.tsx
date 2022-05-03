@@ -1,26 +1,25 @@
+import { DisplayAddress } from '@cardinal/namespaces-components'
 import { invalidate, unissueToken } from '@cardinal/token-manager'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { BN } from '@project-serum/anchor'
 import { useWallet } from '@solana/wallet-adapter-react'
-import type { PublicKey } from '@solana/web3.js'
+import { PublicKey } from '@solana/web3.js'
 import { Header } from 'common/Header'
 import { NFT, TokensOuter } from 'common/NFT'
 import { NFTPlaceholder } from 'common/NFTPlaceholder'
 import { notify } from 'common/Notification'
-import { StyledTag, Tag } from 'common/Tags'
+import { Tag } from 'common/Tags'
 import { executeTransaction } from 'common/Transactions'
-import { shortPubKey } from 'common/utils'
 import { asWallet } from 'common/Wallets'
 import { useTokenManagersByIssuer } from 'hooks/useTokenManagersByIssuer'
+import { lighten } from 'polished'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useUserTokenData } from 'providers/TokenDataProvider'
+import { FaLink } from 'react-icons/fa'
 import { AsyncButton } from 'rental-components/common/Button'
 
-const handleCopy = (shareUrl: string) => {
-  navigator.clipboard.writeText(shareUrl)
-  notify({ message: 'Share link copied' })
-}
+import { getDurationText, handleCopy } from './Browse'
 
 export const Manage = () => {
   const { config } = useProjectConfig()
@@ -62,28 +61,25 @@ export const Manage = () => {
             tokenManagerByIssuer.data.map((tokenData) => (
               <div
                 key={tokenData.tokenManager?.pubkey.toString()}
-                style={{
-                  paddingTop: '10px',
-                  display: 'flex',
-                  gap: '10px',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
+                className="flex flex-col justify-center align-middle"
               >
                 <>
                   <NFT
                     key={tokenData?.tokenManager?.pubkey.toBase58()}
                     tokenData={tokenData}
-                    fullyRounded={true}
                   />
                   {
                     {
                       [TokenManagerState.Initialized]: <>Initiliazed</>,
                       [TokenManagerState.Issued]: (
-                        <StyledTag>
-                          <Tag
-                            state={TokenManagerState.Issued}
+                        <div
+                          style={{
+                            background: lighten(0.07, config.colors.main),
+                          }}
+                          className={`flex min-h-[82px] w-[280px] flex-col rounded-bl-md rounded-br-md p-3`}
+                        >
+                          <div
+                            className="mb-2 flex w-full flex-row text-xs font-bold text-white"
                             onClick={() =>
                               handleCopy(
                                 getLink(
@@ -91,17 +87,49 @@ export const Manage = () => {
                                 )
                               )
                             }
-                            color="warning"
                           >
-                            Issued by{' '}
-                            {shortPubKey(tokenData.tokenManager?.parsed.issuer)}{' '}
-                          </Tag>
-                          {tokenData.tokenManager?.parsed.issuer.toBase58() ===
-                            wallet.publicKey?.toBase58() && (
+                            <p className="flex w-fit overflow-hidden text-ellipsis whitespace-nowrap text-left">
+                              {tokenData.metadata.data.name}
+                            </p>
+                            <div className="ml-[6px] mt-[2px] flex w-fit cursor-pointer">
+                              <span className="flex w-full text-left">
+                                <FaLink />
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="flex w-full flex-row justify-between text-xs">
+                            {tokenData.timeInvalidator?.parsed ? (
+                              <Tag state={TokenManagerState.Issued}>
+                                <div className="flex flex-col">
+                                  <div>{getDurationText(tokenData)}</div>
+                                  <DisplayAddress
+                                    style={{
+                                      color: '#52c41a !important',
+                                      display: 'inline',
+                                    }}
+                                    connection={connection}
+                                    address={
+                                      tokenData.tokenManager?.parsed.issuer ||
+                                      undefined
+                                    }
+                                    height="18px"
+                                    width="100px"
+                                    dark={true}
+                                  />
+                                </div>
+                              </Tag>
+                            ) : (
+                              <div className="my-auto rounded-lg bg-gray-800 px-5 py-2 text-white">
+                                Private
+                              </div>
+                            )}
+
                             <AsyncButton
                               bgColor={config.colors.secondary}
                               variant="primary"
                               disabled={!wallet.connected}
+                              className="my-auto inline-block flex-none text-xs"
                               handleClick={async () => {
                                 try {
                                   if (tokenData?.tokenManager) {
@@ -131,67 +159,125 @@ export const Manage = () => {
                             >
                               Unissue
                             </AsyncButton>
-                          )}
-                        </StyledTag>
+                          </div>
+                        </div>
                       ),
                       [TokenManagerState.Claimed]: (
-                        <StyledTag>
-                          <Tag state={TokenManagerState.Claimed}>
-                            Claimed by{' '}
-                            {shortPubKey(
-                              tokenData.recipientTokenAccount?.owner || ''
-                            )}{' '}
-                            {/* {shortDateString(
-                          tokenData.tokenManager?.parsed.claimedAt
-                        )} */}
-                          </Tag>
-                          {((wallet.publicKey &&
-                            tokenData?.tokenManager?.parsed.invalidators &&
-                            tokenData?.tokenManager?.parsed.invalidators
-                              .map((i: PublicKey) => i.toString())
-                              .includes(wallet.publicKey?.toString())) ||
-                            (tokenData.timeInvalidator &&
-                              tokenData.timeInvalidator.parsed.expiration &&
-                              tokenData.timeInvalidator.parsed.expiration.lte(
-                                new BN(Date.now() / 1000)
-                              )) ||
-                            (tokenData.useInvalidator &&
-                              tokenData.useInvalidator.parsed.maxUsages &&
-                              tokenData.useInvalidator.parsed.usages.gte(
-                                tokenData.useInvalidator.parsed.maxUsages
-                              ))) && (
-                            <AsyncButton
-                              variant="primary"
-                              disabled={!wallet.connected}
-                              handleClick={async () => {
-                                tokenData?.tokenManager &&
-                                  executeTransaction(
-                                    connection,
-                                    asWallet(wallet),
-                                    await invalidate(
+                        <div
+                          style={{
+                            background: lighten(0.07, config.colors.main),
+                          }}
+                          className={`flex min-h-[82px] w-[280px] flex-col rounded-bl-md rounded-br-md p-3`}
+                        >
+                          <div
+                            className="mb-2 flex w-full cursor-pointer flex-row text-xs font-bold text-white"
+                            onClick={() =>
+                              handleCopy(
+                                getLink(
+                                  `/claim/${tokenData.tokenManager?.pubkey.toBase58()}`
+                                )
+                              )
+                            }
+                          >
+                            <p className="flex w-fit overflow-hidden text-ellipsis whitespace-nowrap text-left">
+                              {tokenData.metadata.data.name}
+                            </p>
+                            <div className="ml-[6px] mt-[2px] flex w-fit">
+                              <span className="flex w-full text-left">
+                                <FaLink />
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="flex flex-row justify-between text-xs">
+                            {tokenData.recipientTokenAccount?.owner && (
+                              <Tag state={TokenManagerState.Claimed}>
+                                <div className="flex flex-col">
+                                  <div className="flex">
+                                    <span className="inline-block">
+                                      Claimed by&nbsp;
+                                    </span>
+                                    <DisplayAddress
+                                      style={{
+                                        color: '#52c41a !important',
+                                        display: 'inline',
+                                      }}
+                                      connection={connection}
+                                      address={
+                                        new PublicKey(
+                                          tokenData.recipientTokenAccount?.owner
+                                        )
+                                      }
+                                      height="18px"
+                                      width="100px"
+                                      dark={true}
+                                    />
+                                  </div>
+                                  <div className="flex">
+                                    <span className="inline-block">
+                                      Issued by&nbsp;
+                                    </span>
+                                    <DisplayAddress
+                                      style={{
+                                        color: '#52c41a !important',
+                                        display: 'inline',
+                                      }}
+                                      connection={connection}
+                                      address={
+                                        tokenData.tokenManager?.parsed.issuer
+                                      }
+                                      height="18px"
+                                      width="100px"
+                                      dark={true}
+                                    />
+                                  </div>
+                                </div>
+                              </Tag>
+                            )}
+                            {((wallet.publicKey &&
+                              tokenData?.tokenManager?.parsed.invalidators &&
+                              tokenData?.tokenManager?.parsed.invalidators
+                                .map((i: PublicKey) => i.toString())
+                                .includes(wallet.publicKey?.toString())) ||
+                              (tokenData.timeInvalidator &&
+                                tokenData.timeInvalidator.parsed.expiration &&
+                                tokenData.timeInvalidator.parsed.expiration.lte(
+                                  new BN(Date.now() / 1000)
+                                )) ||
+                              (tokenData.useInvalidator &&
+                                tokenData.useInvalidator.parsed.maxUsages &&
+                                tokenData.useInvalidator.parsed.usages.gte(
+                                  tokenData.useInvalidator.parsed.maxUsages
+                                ))) && (
+                              <AsyncButton
+                                variant="primary"
+                                disabled={!wallet.connected}
+                                handleClick={async () => {
+                                  tokenData?.tokenManager &&
+                                    executeTransaction(
                                       connection,
                                       asWallet(wallet),
-                                      tokenData?.tokenManager?.parsed.mint
-                                    ),
-                                    {
-                                      callback: refreshTokenAccounts,
-                                      silent: true,
-                                      notificationConfig: {},
-                                    }
-                                  )
-                              }}
-                            >
-                              <>Revoke</>
-                            </AsyncButton>
-                          )}
-                        </StyledTag>
+                                      await invalidate(
+                                        connection,
+                                        asWallet(wallet),
+                                        tokenData?.tokenManager?.parsed.mint
+                                      ),
+                                      {
+                                        callback: tokenManagerByIssuer.refresh,
+                                        silent: true,
+                                      }
+                                    )
+                                }}
+                              >
+                                Revoke
+                              </AsyncButton>
+                            )}
+                          </div>
+                        </div>
                       ),
                       [TokenManagerState.Invalidated]: (
                         <Tag state={TokenManagerState.Invalidated}>
                           Invalidated
-                          {/* {shortDateString(
-                    tokenData.tokenManager?.parsed.claimedAt
-                  )} */}
                         </Tag>
                       ),
                     }[

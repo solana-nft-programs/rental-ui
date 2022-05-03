@@ -52,7 +52,6 @@ export const useTokenManagersByIssuer = () => {
           }/tokenManagersByIssuer?issuer=${walletId.toBase58()}&cluster=${
             environment.label
           }`
-          // &collection=${config.name}
         )
         const json = (await response.json()) as { data: TokenData[] }
         return json.data.map((tokenData) => convertStringsToPubkeys(tokenData))

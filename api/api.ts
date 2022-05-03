@@ -664,9 +664,9 @@ export async function getTokenDatasV2(
         )
     )[0]
     return {
-      recipientTokenAccount: tokenManagerData.parsed.claimApprover
+      recipientTokenAccount: tokenManagerData.parsed.recipientTokenAccount
         ? (accountsById[
-            tokenManagerData.parsed.claimApprover?.toString()
+            tokenManagerData.parsed.recipientTokenAccount?.toString()
           ] as spl.AccountInfo)
         : undefined,
       metaplexData: metaplexData[tokenManagerData.pubkey.toString()],

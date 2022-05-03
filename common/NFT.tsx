@@ -41,20 +41,6 @@ export const TokenMetadata = styled.div<{ allBorderRadius?: boolean }>`
   border-radius: ${({ allBorderRadius }) =>
     allBorderRadius ? '10px' : '10px 10px 0 0'};
   width: 280px;
-
-  #media-outer {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 280px;
-    max-width: 100%;
-    #media {
-      object-fit: contain;
-      // max-width: 250px;
-      height: 100%;
-      --poster-color: transparent;
-    }
-  }
 `
 
 interface NFTProps {
@@ -207,8 +193,7 @@ export function NFT({ tokenData, fullyRounded, onClick }: NFTProps) {
         </div>
       </Popover>
       <div
-        id="media-outer"
-        className={`z-0 ${onClick ? 'cursor-pointer' : ''}`}
+        className={`z-0 flex h-[280px] max-w-full cursor-pointer items-center justify-center`}
         onClick={() => {
           onClick ? onClick() : () => {}
         }}
@@ -236,7 +221,10 @@ export function NFT({ tokenData, fullyRounded, onClick }: NFTProps) {
             src={metadata.data.image}
             // src={customImageUri || metadata.data.image}
             alt={metadata.data.name}
-            className={fullyRounded ? 'rounded-[10px]' : 'rounded-t-[10px]'}
+            className={`h-full object-contain ${
+              fullyRounded ? 'rounded-[10px]' : 'rounded-t-[10px]'
+            }
+            `}
           />
         )}
       </div>

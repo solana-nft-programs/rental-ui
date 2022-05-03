@@ -30,13 +30,13 @@ import {
 import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
 import React, { useState } from 'react'
 import { FaLink } from 'react-icons/fa'
-import { AsyncButton, Button } from 'rental-components/common/Button'
+import { AsyncButton } from 'rental-components/common/Button'
 import { DURATION_DATA } from 'rental-components/components/RentalCard'
 import { useRentalRateModal } from 'rental-components/RentalRateModalProvider'
 
 const { Option } = Select
 
-const handleCopy = (shareUrl: string) => {
+export const handleCopy = (shareUrl: string) => {
   navigator.clipboard.writeText(shareUrl)
   notify({
     message: 'Share link copied',
@@ -97,6 +97,52 @@ const getAllAttributes = (tokens: TokenData[]) => {
     sortedAttributes[traitType] = Array.from(allAttributes[traitType] ?? [])
   })
   return sortedAttributes
+}
+
+export const getTokenMaxDuration = (tokenData: TokenData) => {
+  if (tokenData.timeInvalidator?.parsed.maxExpiration) {
+    const maxDuration =
+      tokenData.timeInvalidator?.parsed.maxExpiration?.toNumber() -
+      Date.now() / 1000
+    return {
+      value: maxDuration,
+      displayText: secondsToString(maxDuration, false),
+    }
+  } else {
+    return { value: Infinity, displayText: '∞' }
+  }
+}
+
+export const getDurationText = (tokenData: TokenData) => {
+  return tokenData.timeInvalidator?.parsed ? (
+    <div className="float-left">
+      {tokenData.timeInvalidator?.parsed.maxExpiration ? (
+        <p
+          className={`float-left inline-block text-ellipsis whitespace-nowrap`}
+        >
+          Max Duration: <b>{getTokenMaxDuration(tokenData).displayText}</b>
+        </p>
+      ) : (
+        <p className="float-left inline-block text-ellipsis whitespace-nowrap">
+          Fixed Duration:{' '}
+          <b>
+            {tokenData.timeInvalidator?.parsed.durationSeconds
+              ? secondsToString(
+                  tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber(),
+                  false
+                )
+              : tokenData.timeInvalidator?.parsed.expiration
+              ? secondsToString(
+                  tokenData.timeInvalidator?.parsed.expiration?.toNumber() -
+                    Date.now() / 1000,
+                  false
+                )
+              : null}
+          </b>
+        </p>
+      )}
+    </div>
+  ) : null
 }
 
 export const Browse = () => {
@@ -163,12 +209,6 @@ export const Browse = () => {
     .ant-select-clear {
       background: none;
     }
-  `
-
-  const StyledSecondaryText = styled.div`
-    color: #d89614 !important;
-    display: inline-flex;
-    float: left;
   `
 
   const getPriceFromTokenData = (tokenData: TokenData) => {
@@ -249,20 +289,6 @@ export const Browse = () => {
       }
     } catch (e) {
       return null
-    }
-  }
-
-  const getTokenMaxDuration = (tokenData: TokenData) => {
-    if (tokenData.timeInvalidator?.parsed.maxExpiration) {
-      const maxDuration =
-        tokenData.timeInvalidator?.parsed.maxExpiration?.toNumber() -
-        currentTime
-      return {
-        value: maxDuration,
-        displayText: secondsToString(maxDuration, false),
-      }
-    } else {
-      return { value: Infinity, displayText: '∞' }
     }
   }
 
@@ -591,38 +617,6 @@ export const Browse = () => {
     },
   }
 
-  const getDurationText = (tokenData: TokenData) => {
-    return tokenData.timeInvalidator?.parsed ? (
-      <div className="float-left">
-        {tokenData.timeInvalidator?.parsed.maxExpiration ? (
-          <p
-            className={`float-left inline-block text-ellipsis whitespace-nowrap`}
-          >
-            Max Duration: <b>{getTokenMaxDuration(tokenData).displayText}</b>
-          </p>
-        ) : (
-          <p className="float-left inline-block text-ellipsis whitespace-nowrap">
-            Fixed Duration:{' '}
-            <b>
-              {tokenData.timeInvalidator?.parsed.durationSeconds
-                ? secondsToString(
-                    tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber(),
-                    false
-                  )
-                : tokenData.timeInvalidator?.parsed.expiration
-                ? secondsToString(
-                    tokenData.timeInvalidator?.parsed.expiration?.toNumber() -
-                      currentTime,
-                    false
-                  )
-                : null}
-            </b>
-          </p>
-        )}
-      </div>
-    ) : null
-  }
-
   const sortedAttributes = getAllAttributes(tokenManagersForConfig ?? [])
 
   return (
@@ -844,9 +838,7 @@ export const Browse = () => {
                               {tokenData.timeInvalidator?.parsed ? (
                                 <Tag state={TokenManagerState.Issued}>
                                   <div className="flex flex-col">
-                                    <StyledSecondaryText>
-                                      {getDurationText(tokenData)}
-                                    </StyledSecondaryText>
+                                    <div>{getDurationText(tokenData)}</div>
                                     <DisplayAddress
                                       style={{
                                         color: '#52c41a !important',
@@ -996,10 +988,10 @@ export const Browse = () => {
                                   tokenData.useInvalidator.parsed.usages.gte(
                                     tokenData.useInvalidator.parsed.maxUsages
                                   ))) && (
-                                <Button
+                                <AsyncButton
                                   variant="primary"
                                   disabled={!wallet.connected}
-                                  onClick={async () => {
+                                  handleClick={async () => {
                                     tokenData?.tokenManager &&
                                       executeTransaction(
                                         connection,
@@ -1017,7 +1009,7 @@ export const Browse = () => {
                                   }}
                                 >
                                   Revoke
-                                </Button>
+                                </AsyncButton>
                               )}
                             </div>
                           </div>

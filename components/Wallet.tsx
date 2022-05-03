@@ -149,7 +149,6 @@ export const Wallet = () => {
                 <NFT
                   key={tokenData?.tokenAccount?.pubkey.toBase58()}
                   tokenData={tokenData}
-                  fullyRounded={false}
                   onClick={() => handleNFTSelect(tokenData)}
                 />
                 {elligibleForRent(tokenData) && (
