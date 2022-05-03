@@ -19,7 +19,7 @@ export interface EnvironmentContextValues {
   connection: Connection
 }
 
-const INDEX_ENABLED = false
+const INDEX_ENABLED = true
 
 export const ENVIRONMENTS: Environment[] = [
   {

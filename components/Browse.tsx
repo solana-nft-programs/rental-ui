@@ -18,6 +18,7 @@ import { executeTransaction } from 'common/Transactions'
 import { fmtMintAmount, getMintDecimalAmount } from 'common/units'
 import { secondsToString } from 'common/utils'
 import { asWallet } from 'common/Wallets'
+import { useProjectStats, useProjectStatsHook } from 'hooks/useProjectStatsHook'
 import { useFilteredTokenManagers } from 'hooks/useFilteredTokenManagers'
 import { lighten } from 'polished'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
@@ -150,6 +151,7 @@ export const Browse = () => {
   const { config } = useProjectConfig()
   const tokenManagers = useFilteredTokenManagers()
   const tokenManagersForConfig = tokenManagers.data || []
+  const projectStats = useProjectStats()
 
   const [userPaymentTokenAccount, _setUserPaymentTokenAccount] =
     useState<splToken.AccountInfo | null>(null)
@@ -670,6 +672,40 @@ export const Browse = () => {
                   {filteredAndSortedTokens.length}
                 </h2>
               </div>
+              <div
+                className="my-3 w-[1px]"
+                style={{ background: lighten(0.4, config.colors.main) }}
+              ></div>
+              {projectStats && (
+                <>
+                  <div className="d-block flex-col py-3 px-5">
+                    <p className="text-gray-400">TOTAL RENTED (ALL-TIME)</p>
+                    <h2 className="text-center font-bold text-gray-100">
+                      {projectStats.data?.totalRentalCount}
+                    </h2>
+                  </div>
+                  <div
+                    className="my-3 w-[1px]"
+                    style={{ background: lighten(0.4, config.colors.main) }}
+                  ></div>
+                  <div className="d-block flex-col py-3 px-5">
+                    <p className="text-gray-400">TOTAL DURATION (ALL-TIME)</p>
+                    <h2 className="text-center font-bold text-gray-100">
+                      {secondsToString(projectStats.data?.totalRentalDuration)}
+                    </h2>
+                  </div>
+                  <div
+                    className="my-3 w-[1px]"
+                    style={{ background: lighten(0.4, config.colors.main) }}
+                  ></div>
+                  <div className="d-block flex-col py-3 px-5">
+                    <p className="text-gray-400">TOTAL VOLUME (ALL-TIME)</p>
+                    <h2 className="text-center font-bold text-gray-100">
+                      {secondsToString(projectStats.data?.totalRentalVolume)} ◎
+                    </h2>
+                  </div>
+                </>
+              )}
             </div>
             <StyledSelect>
               <Select
