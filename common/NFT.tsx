@@ -34,22 +34,22 @@ export const TokensOuter = styled.div`
   }
 `
 
-export const TokenMetadata = styled.div<{ allBorderRadius?: boolean }>`
-  text-align: center;
-  position: relative;
-  display: inline-block;
-  border-radius: ${({ allBorderRadius }) =>
-    allBorderRadius ? '10px' : '10px 10px 0 0'};
-  width: 280px;
-`
+export function NFTPlaceholder() {
+  const { config } = useProjectConfig()
+  return (
+    <div
+      className="h-[360px] w-[280px] animate-pulse rounded-[10px]"
+      style={{ background: lighten(0.1, config.colors.main) }}
+    ></div>
+  )
+}
 
 interface NFTProps {
   tokenData: TokenData
-  fullyRounded?: boolean
   onClick?: () => void
 }
 
-export function NFT({ tokenData, fullyRounded, onClick }: NFTProps) {
+export function NFT({ tokenData, onClick }: NFTProps) {
   const ctx = useEnvironmentCtx()
   const wallet = useWallet()
   const { show } = useQRCode()
@@ -71,7 +71,8 @@ export function NFT({ tokenData, fullyRounded, onClick }: NFTProps) {
     tokenData.editionData
 
   return (
-    <TokenMetadata
+    <div
+      className="relative w-[280px]"
       style={{
         background: lighten(0.02, config.colors.main),
       }}
@@ -221,13 +222,10 @@ export function NFT({ tokenData, fullyRounded, onClick }: NFTProps) {
             src={metadata.data.image}
             // src={customImageUri || metadata.data.image}
             alt={metadata.data.name}
-            className={`h-full object-contain ${
-              fullyRounded ? 'rounded-[10px]' : 'rounded-t-[10px]'
-            }
-            `}
+            className={`h-full rounded-t-[10px] object-contain`}
           />
         )}
       </div>
-    </TokenMetadata>
+    </div>
   )
 }

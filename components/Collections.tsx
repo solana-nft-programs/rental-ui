@@ -1,6 +1,6 @@
 import { useWallet } from '@solana/wallet-adapter-react'
 import { Header } from 'common/Header'
-import { NFTPlaceholder } from 'common/NFTPlaceholder'
+import { NFTPlaceholder } from 'common/NFT'
 import type { ProjectConfig } from 'config/config'
 import { projectConfigs } from 'config/config'
 import { lighten } from 'polished'
