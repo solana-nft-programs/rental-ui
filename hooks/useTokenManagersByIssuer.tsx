@@ -1,8 +1,9 @@
 import { gql } from '@apollo/client'
 import { getTokenManagersForIssuer } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/accounts'
 import type { TokenData } from 'api/api'
-import { convertStringsToPubkeys, getTokenDatas } from 'api/api'
+import { convertStringsToPubkeys, getTokenDatasV2 } from 'api/api'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
+import { useProjectConfig } from 'providers/ProjectConfigProvider'
 
 // import { filterTokens, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useDataHook } from './useDataHook'
@@ -10,7 +11,7 @@ import { useWalletId } from './useWalletId'
 
 export const useTokenManagersByIssuer = () => {
   const walletId = useWalletId()
-  // const { config } = useProjectConfig()
+  const { config } = useProjectConfig()
   const { connection, environment } = useEnvironmentCtx()
   return useDataHook<TokenData[] | undefined>(
     async () => {
@@ -60,9 +61,13 @@ export const useTokenManagersByIssuer = () => {
           connection,
           walletId
         )
-        return getTokenDatas(connection, tokenManagerDatas)
-        // tokenDatas = filterTokens(environment.label, config.filters, tokenDatas)
-        // return tokenDatas
+        const tokenDatas = await getTokenDatasV2(
+          connection,
+          tokenManagerDatas,
+          config.filter,
+          environment.label
+        )
+        return tokenDatas
       }
     },
     [walletId?.toString()],

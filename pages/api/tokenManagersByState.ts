@@ -1,7 +1,7 @@
 import type { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { getTokenManagersByState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/accounts'
 import { Connection } from '@solana/web3.js'
-import { getTokenDatas } from 'api/api'
+import { getTokenDatasV2 } from 'api/api'
 import { firstParam } from 'common/utils'
 import { projectConfigs } from 'config/config'
 import type { NextApiRequest, NextApiResponse } from 'next'
@@ -35,15 +35,22 @@ export default async function handler(
     connection,
     state ?? null
   )
-  let tokenDatas = await getTokenDatas(connection, tokenManagerDatas)
+
+  const config =
+    projectConfigs[firstParam(collectionParam)] || projectConfigs['default']!
+
+  let tokenDatas = await getTokenDatasV2(
+    connection,
+    tokenManagerDatas,
+    config.filter,
+    firstParam(clusterParam)
+  )
 
   if (collectionParam) {
-    const config =
-      projectConfigs[firstParam(collectionParam)] || projectConfigs['default']!
     tokenDatas = filterTokens(
       firstParam(clusterParam),
-      config.filters,
-      tokenDatas
+      tokenDatas,
+      config.filter
     )
   }
   res.status(200).json({ data: tokenDatas })

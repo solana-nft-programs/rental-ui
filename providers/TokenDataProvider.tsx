@@ -79,7 +79,7 @@ export function TokenAccountsProvider({ children }: { children: ReactChild }) {
     <UserTokenData.Provider
       value={{
         address,
-        tokenDatas: filterTokens(environment.label, config.filters, tokenDatas),
+        tokenDatas: filterTokens(environment.label, tokenDatas, config.filter),
         loaded,
         refreshTokenAccounts,
         setTokenDatas,

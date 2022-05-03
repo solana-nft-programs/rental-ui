@@ -124,7 +124,7 @@ function getBoxShadow(
 export function TokenDataOverlay({
   tokenData,
   lineHeight,
-  borderRadius
+  borderRadius,
 }: {
   tokenData: TokenData
   lineHeight: number
