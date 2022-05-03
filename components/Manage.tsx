@@ -58,10 +58,7 @@ export const Manage = () => {
           ) : tokenManagerByIssuer.data &&
             tokenManagerByIssuer.data.length > 0 ? (
             tokenManagerByIssuer.data.map((tokenData) => (
-              <div
-                key={tokenData.tokenManager?.pubkey.toString()}
-                className="flex flex-col justify-center align-middle"
-              >
+              <div key={tokenData.tokenManager?.pubkey.toString()}>
                 <NFT
                   key={tokenData?.tokenManager?.pubkey.toBase58()}
                   tokenData={tokenData}
@@ -74,7 +71,7 @@ export const Manage = () => {
                         style={{
                           background: lighten(0.07, config.colors.main),
                         }}
-                        className={`flex min-h-[82px] w-[280px] flex-col rounded-bl-md rounded-br-md p-3`}
+                        className={`flex min-h-[82px] w-[280px] flex-col rounded-b-md p-3`}
                       >
                         <div
                           className="mb-2 flex w-full flex-row text-xs font-bold text-white"
@@ -89,23 +86,18 @@ export const Manage = () => {
                           <p className="flex w-fit overflow-hidden text-ellipsis whitespace-nowrap text-left">
                             {tokenData.metadata.data.name}
                           </p>
-                          <div className="ml-[6px] mt-[2px] flex w-fit cursor-pointer">
-                            <span className="flex w-full text-left">
-                              <FaLink />
-                            </span>
+                          <div className="ml-[6px] mt-[2px] flex w-fit">
+                            <FaLink />
                           </div>
                         </div>
 
                         <div className="flex w-full flex-row justify-between text-xs">
-                          {tokenData.timeInvalidator?.parsed ? (
+                          {tokenData.timeInvalidator?.parsed ||
+                          tokenData.useInvalidator?.parsed ? (
                             <Tag state={TokenManagerState.Issued}>
                               <div className="flex flex-col">
                                 <div>{getDurationText(tokenData)}</div>
                                 <DisplayAddress
-                                  style={{
-                                    color: '#52c41a !important',
-                                    display: 'inline',
-                                  }}
                                   connection={connection}
                                   address={
                                     tokenData.tokenManager?.parsed.issuer ||
@@ -165,7 +157,7 @@ export const Manage = () => {
                         style={{
                           background: lighten(0.07, config.colors.main),
                         }}
-                        className={`flex min-h-[82px] w-[280px] flex-col rounded-bl-md rounded-br-md p-3`}
+                        className={`flex min-h-[82px] w-[280px] flex-col rounded-b-md p-3`}
                       >
                         <div
                           className="mb-2 flex w-full cursor-pointer flex-row text-xs font-bold text-white"

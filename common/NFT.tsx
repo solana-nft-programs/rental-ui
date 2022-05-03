@@ -38,10 +38,30 @@ export const TokensOuter = styled.div`
 export function NFTPlaceholder() {
   const { config } = useProjectConfig()
   return (
-    <div
-      className="h-[360px] w-[280px] animate-pulse rounded-[10px]"
-      style={{ background: lighten(0.1, config.colors.main) }}
-    ></div>
+    <div className="w-[280px]">
+      <div
+        className="flex h-[280px] w-full animate-pulse items-center justify-center rounded-t-md p-0"
+        style={{ background: lighten(0.04, config.colors.main) }}
+      >
+        {/* <div
+          className="h-full w-full animate-pulse rounded-md"
+          style={{ background: lighten(0.04, config.colors.main) }}
+        ></div> */}
+      </div>
+      <div
+        style={{ background: lighten(0.07, config.colors.main) }}
+        className={`flex min-h-[82px] w-[280px] flex-col gap-3 rounded-b-md p-3`}
+      >
+        <div
+          className="h-5 w-2/3 animate-pulse rounded-md"
+          style={{ background: lighten(0.1, config.colors.main) }}
+        ></div>
+        <div
+          className="h-5 w-1/3 animate-pulse rounded-md"
+          style={{ background: lighten(0.1, config.colors.main) }}
+        ></div>
+      </div>
+    </div>
   )
 }
 
@@ -225,7 +245,6 @@ export function NFT({ tokenData, onClick }: NFTProps) {
         )}
         {metadata && metadata.data && (
           <img
-            id="media"
             src={metadata.data.image}
             // src={customImageUri || metadata.data.image}
             alt={metadata.data.name}

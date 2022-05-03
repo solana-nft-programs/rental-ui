@@ -132,10 +132,7 @@ export const Wallet = () => {
             </>
           ) : filteredTokenDatas && filteredTokenDatas.length > 0 ? (
             filteredTokenDatas.map((tokenData) => (
-              <div
-                key={tokenData.tokenAccount?.pubkey.toString()}
-                className="relative flex flex-col"
-              >
+              <div key={tokenData.tokenAccount?.pubkey.toString()}>
                 <NFT
                   key={tokenData?.tokenAccount?.pubkey.toBase58()}
                   tokenData={tokenData}
@@ -158,7 +155,7 @@ export const Wallet = () => {
                   style={{
                     background: lighten(0.07, config.colors.main),
                   }}
-                  className="flex w-[280px] flex-row justify-between rounded-bl-md rounded-br-md bg-white/[.10] p-3"
+                  className="flex w-[280px] flex-row justify-between rounded-bl-md rounded-br-md p-3"
                 >
                   <p className="overflow-hidden text-ellipsis whitespace-nowrap pr-5 text-white">
                     {tokenData.metadata.data.name}
