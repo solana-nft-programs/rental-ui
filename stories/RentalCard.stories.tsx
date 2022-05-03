@@ -101,7 +101,7 @@ Primary.args = {
       },
       editionData: {
         pubkey: new PublicKey('5rYEz8UEtmsCs3wVR6odh8v6wbK2XWrKDeY9jGu7v78P'),
-        data: {
+        parsed: {
           key: 6,
           supply: new BN('00'),
           maxSupply: new BN('01'),
