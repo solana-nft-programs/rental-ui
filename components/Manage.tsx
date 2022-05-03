@@ -204,7 +204,7 @@ export const Manage = () => {
           ) : (
             <div className="white flex w-full flex-col items-center justify-center gap-1">
               <div className="text-gray-500">
-                No outstanding rentals found...
+                No outstanding {config.name} rentals found...
               </div>
             </div>
           )}

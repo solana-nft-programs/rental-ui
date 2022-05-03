@@ -220,7 +220,7 @@ export const Wallet = () => {
               </div>
             ))
           ) : (
-            <div className="white flex w-full flex-col items-center justify-center gap-1">
+            <div className="white mt-5 flex w-full flex-col items-center justify-center gap-1">
               <div className="text-gray-500">
                 No {config.name} NFTs found in wallet...
               </div>
