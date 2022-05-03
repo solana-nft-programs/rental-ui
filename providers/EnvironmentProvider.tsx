@@ -33,7 +33,7 @@ export const ENVIRONMENTS: Environment[] = [
           cache: new InMemoryCache({ resultCaching: false }),
         })
       : undefined,
-    api: '/api',
+    // api: '/api',
   },
   {
     label: 'testnet',

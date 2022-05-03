@@ -236,11 +236,7 @@ export function NFT({ tokenData, fullyRounded, onClick }: NFTProps) {
             src={metadata.data.image}
             // src={customImageUri || metadata.data.image}
             alt={metadata.data.name}
-            className={
-              fullyRounded
-                ? 'rounded-[10px]'
-                : 'rounded-tr-[10px] rounded-tl-[10px]'
-            }
+            className={fullyRounded ? 'rounded-[10px]' : 'rounded-t-[10px]'}
           />
         )}
       </div>

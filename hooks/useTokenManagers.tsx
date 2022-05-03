@@ -30,7 +30,8 @@ export const useTokenManagers = () => {
             limit: 200,
           },
         })
-        return response.data
+        // return response.data
+        return []
       } else if (environment.api) {
         const response = await fetch(
           `${environment.api}/tokenManagersByState?cluster=${environment.label}`

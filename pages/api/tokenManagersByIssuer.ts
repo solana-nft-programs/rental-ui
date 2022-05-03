@@ -37,8 +37,8 @@ export default async function handler(
       projectConfigs[firstParam(collectionParam)] || projectConfigs['default']!
     tokenDatas = filterTokens(
       firstParam(clusterParam),
-      config.filters,
-      tokenDatas
+      tokenDatas,
+      config.filter
     )
   }
   res.status(200).json({ data: tokenDatas })

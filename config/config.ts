@@ -9,6 +9,11 @@ export type Colors = {
   secondary: string
 }
 
+export type TokenFilter = {
+  type: 'creators' | 'symbol' | 'issuer'
+  value: string[]
+}
+
 export type ProjectConfig = {
   type: 'Collection' | 'Guild'
   issuer?: {
@@ -19,10 +24,7 @@ export type ProjectConfig = {
   logoImage: string
   colors: Colors
   disableListing?: boolean
-  filters: {
-    type: 'creators' | 'symbol' | 'issuer'
-    value: string | string[]
-  }[]
+  filter?: TokenFilter
   rentalCard: RentalCardConfig
   airdrops?: AirdropMetadata[]
   browse?: {
@@ -42,7 +44,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       main: 'rgb(26, 27, 32)',
       secondary: 'rgb(29, 155, 240)',
     },
-    filters: [],
     rentalCard: {
       invalidators: ['duration', 'usages', 'expiration', 'manual', 'rate'],
       extensionOptions: { showDisablePartialExtension: true },
@@ -110,7 +111,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       main: 'rgb(26, 27, 32)',
       secondary: 'rgb(29, 155, 240)',
     },
-    filters: [],
     rentalCard: {
       invalidators: ['duration', 'usages', 'expiration', 'manual'],
       extensionOptions: { showDisablePartialExtension: true },
@@ -178,7 +178,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       main: 'rgb(26, 27, 32)',
       secondary: 'rgb(29, 155, 240)',
     },
-    filters: [],
     rentalCard: {
       invalidators: ['rate'],
       extensionOptions: { showDisablePartialExtension: true },
@@ -253,16 +252,10 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       main: '#000',
       secondary: '#80ddef',
     },
-    filters: [
-      {
-        type: 'creators',
-        value: ['5grvMeoBqv5ZdHq9JMy5RrxLPNAt1nzc9cpqYWFUwizz'],
-      },
-      {
-        type: 'symbol',
-        value: 'PRTL',
-      },
-    ],
+    filter: {
+      type: 'creators',
+      value: ['5grvMeoBqv5ZdHq9JMy5RrxLPNAt1nzc9cpqYWFUwizz'],
+    },
     rentalCard: {
       invalidators: ['rate'],
       invalidationOptions: {
@@ -311,16 +304,10 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       main: '#202225',
       secondary: '#0ea5e9',
     },
-    filters: [
-      {
-        type: 'creators',
-        value: ['9uBX3ASjxWvNBAD1xjbVaKA74mWGZys3RGSF7DdeDD3F'],
-      },
-      {
-        type: 'symbol',
-        value: 'SMB',
-      },
-    ],
+    filter: {
+      type: 'creators',
+      value: ['9uBX3ASjxWvNBAD1xjbVaKA74mWGZys3RGSF7DdeDD3F'],
+    },
     rentalCard: {
       invalidators: ['rate'],
       invalidationOptions: {
@@ -374,19 +361,13 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       main: 'rgb(0,0,0)',
       secondary: 'rgb(169,60,239)',
     },
-    filters: [
-      {
-        type: 'creators',
-        value: [
-          '9yz273zB6rQHyptbSpVvC75o4G17NwJrTk4u2ZiNV3tZ',
-          'BTzGQ6yk1uFN9q9Po3LGSvmZ3dxq8nf8WPwr4D12APxo',
-        ],
-      },
-      {
-        type: 'symbol',
-        value: 'BR1',
-      },
-    ],
+    filter: {
+      type: 'creators',
+      value: [
+        '9yz273zB6rQHyptbSpVvC75o4G17NwJrTk4u2ZiNV3tZ',
+        'BTzGQ6yk1uFN9q9Po3LGSvmZ3dxq8nf8WPwr4D12APxo',
+      ],
+    },
     rentalCard: {
       invalidators: ['rate'],
       invalidationOptions: {
@@ -417,18 +398,16 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       main: '#2d1923',
       secondary: '#ad4933',
     },
-    filters: [
-      {
-        type: 'creators',
-        value: [
-          '4exgPiVhpromTi8duBsMnscoodAjU1as13s1AXZGsGHP', // harvester
-          '3XE8DuYzqZLKr1XqXrvADRTxXWL91KuakqsKfD3cYoLP', // gun
-          '5XTbjtKM1whecjXMMdDUz3BzWqEDRuJxTRPX3xTF1qmG',
-          'Ajp7uzkyPUU35pGdkjZd9Gbe4zgDQXterWY8ZzvP4sCk', // boat
-          '8m4TTZz3RsDVakDSwn7T89GyButxLiMqn2zq7DWfANu7', // cat, cow, dog
-        ],
-      },
-    ],
+    filter: {
+      type: 'creators',
+      value: [
+        '4exgPiVhpromTi8duBsMnscoodAjU1as13s1AXZGsGHP', // harvester
+        '3XE8DuYzqZLKr1XqXrvADRTxXWL91KuakqsKfD3cYoLP', // gun
+        '5XTbjtKM1whecjXMMdDUz3BzWqEDRuJxTRPX3xTF1qmG',
+        'Ajp7uzkyPUU35pGdkjZd9Gbe4zgDQXterWY8ZzvP4sCk', // boat
+        '8m4TTZz3RsDVakDSwn7T89GyButxLiMqn2zq7DWfANu7', // cat, cow, dog
+      ],
+    },
     rentalCard: {
       invalidators: ['rate'],
       invalidationOptions: {
@@ -459,16 +438,14 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       main: '#544046',
       secondary: '#e24040',
     },
-    filters: [
-      {
-        type: 'creators',
-        value: [
-          'GU2nTh3aWQz4AA8Gaih5AmV8WmKt3Y8P6iwy5t9347h',
-          '8CWFS9nzXtLd3LGE3GaSLYTAEUzkAoUPwmtq32nJFkSZ',
-          'HMduKVo3A19U5EpQdEhPjo9hq9zfZXn8aGVYZp7Vc7fX',
-        ],
-      },
-    ],
+    filter: {
+      type: 'creators',
+      value: [
+        'GU2nTh3aWQz4AA8Gaih5AmV8WmKt3Y8P6iwy5t9347h',
+        '8CWFS9nzXtLd3LGE3GaSLYTAEUzkAoUPwmtq32nJFkSZ',
+        'HMduKVo3A19U5EpQdEhPjo9hq9zfZXn8aGVYZp7Vc7fX',
+      ],
+    },
     rentalCard: {
       invalidators: ['rate'],
       invalidationOptions: {
@@ -521,18 +498,16 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       main: '#00101b',
       secondary: '#ff0034',
     },
-    filters: [
-      {
-        type: 'creators',
-        value: [
-          '8AkWaZh92FwkdPmqbR58FpTkpZjrCrRK648UWu6Kuz8',
-          '3aKY2TVrHV7XnjcuYhP2gdUWqF8ra8TA4AL5qWQQz5gr',
-          'Gvp1RDYLpbBQg35k3x1zpBxWhXNEPuS1jbLALDH8XCaA',
-          '2e8DoDgFZR3By185CDPJAwNE3h1QsaS1NtndM8NQi3Q5',
-          'HMduKVo3A19U5EpQdEhPjo9hq9zfZXn8aGVYZp7Vc7fX',
-        ],
-      },
-    ],
+    filter: {
+      type: 'creators',
+      value: [
+        '8AkWaZh92FwkdPmqbR58FpTkpZjrCrRK648UWu6Kuz8',
+        '3aKY2TVrHV7XnjcuYhP2gdUWqF8ra8TA4AL5qWQQz5gr',
+        'Gvp1RDYLpbBQg35k3x1zpBxWhXNEPuS1jbLALDH8XCaA',
+        '2e8DoDgFZR3By185CDPJAwNE3h1QsaS1NtndM8NQi3Q5',
+        'HMduKVo3A19U5EpQdEhPjo9hq9zfZXn8aGVYZp7Vc7fX',
+      ],
+    },
     rentalCard: {
       invalidators: ['rate'],
       invalidationOptions: {
@@ -585,9 +560,10 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       main: '#000',
       secondary: '#f71202',
     },
-    filters: [
-      { type: 'issuer', value: 'Cx2FDbdfqezYiN8teLFdFAzdv9mwG48uYbe218Az4EMP' },
-    ],
+    filter: {
+      type: 'issuer',
+      value: ['Cx2FDbdfqezYiN8teLFdFAzdv9mwG48uYbe218Az4EMP'],
+    },
     rentalCard: {
       invalidators: ['rate'],
       invalidationOptions: {
@@ -619,9 +595,10 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       main: 'rgb(26, 27, 32)',
       secondary: '#34659b',
     },
-    filters: [
-      { type: 'issuer', value: '9qoRqZmrAf6bqtmTAPA1UkgCRvKuaugF17xBdympy1vd' },
-    ],
+    filter: {
+      type: 'issuer',
+      value: ['9qoRqZmrAf6bqtmTAPA1UkgCRvKuaugF17xBdympy1vd'],
+    },
     rentalCard: {
       invalidators: ['rate'],
       invalidationOptions: {

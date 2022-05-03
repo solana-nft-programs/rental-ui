@@ -4,6 +4,7 @@ import { useWallet } from '@solana/wallet-adapter-react'
 import { Transaction } from '@solana/web3.js'
 import type { TokenData } from 'api/api'
 import { Airdrop } from 'common/Airdrop'
+import { Header } from 'common/Header'
 import { NFT, TokensOuter } from 'common/NFT'
 import { NFTPlaceholder } from 'common/NFTPlaceholder'
 import { notify } from 'common/Notification'
@@ -29,8 +30,8 @@ export const Wallet = () => {
 
   const filteredTokenDatas = filterTokens(
     ctx.environment.label,
-    config.filters,
-    tokenDatas
+    tokenDatas,
+    config.filter
   )
 
   const revokeRental = async (tokenData: TokenData) => {
@@ -89,128 +90,145 @@ export const Wallet = () => {
   }
 
   return (
-    <div className="mt-5 flex flex-col">
-      {filteredTokenDatas && filteredTokenDatas.length > 0 && (
-        <div className="container mx-auto mb-5 flex items-end justify-end">
-          <Button
-            disabled={selectedTokens.length === 0}
-            variant="primary"
-            className="mr-5"
-            bgColor={config.colors.secondary}
-            onClick={() =>
-              rentalModal.show(
-                asWallet(wallet),
-                ctx.connection,
-                ctx.environment.label,
-                selectedTokens,
-                config.rentalCard
-              )
-            }
-          >
-            {`Bulk Upload ${
-              selectedTokens.length ? `(${selectedTokens.length})` : ''
-            }`}
-          </Button>
-        </div>
-      )}
-      <TokensOuter>
-        {!loaded ? (
-          <>
-            <NFTPlaceholder />
-            <NFTPlaceholder />
-            <NFTPlaceholder />
-            <NFTPlaceholder />
-            <NFTPlaceholder />
-            <NFTPlaceholder />
-          </>
-        ) : filteredTokenDatas && filteredTokenDatas.length > 0 ? (
-          filteredTokenDatas.map((tokenData) => (
-            <div
-              key={tokenData.tokenAccount?.pubkey.toString()}
-              className="relative flex flex-col"
+    <>
+      <Header
+        tabs={[
+          {
+            name: 'Wallet',
+            anchor: wallet.publicKey?.toBase58() || 'wallet',
+            disabled: !wallet.connected,
+          },
+          {
+            name: 'Manage',
+            anchor: 'manage',
+            disabled: !wallet.connected || config.disableListing,
+          },
+          { name: 'Browse', anchor: 'browse' },
+        ]}
+      />
+      <div className="mt-5 flex flex-col">
+        {filteredTokenDatas && filteredTokenDatas.length > 0 && (
+          <div className="container mx-auto mb-5 flex items-end justify-end">
+            <Button
+              disabled={selectedTokens.length === 0}
+              variant="primary"
+              className="mr-5"
+              bgColor={config.colors.secondary}
+              onClick={() =>
+                rentalModal.show(
+                  asWallet(wallet),
+                  ctx.connection,
+                  ctx.environment.label,
+                  selectedTokens,
+                  config.rentalCard
+                )
+              }
             >
-              <NFT
-                key={tokenData?.tokenAccount?.pubkey.toBase58()}
-                tokenData={tokenData}
-                fullyRounded={false}
-                onClick={() => handleNFTSelect(tokenData)}
-              />
-              {elligibleForRent(tokenData) && (
-                <input
-                  autoComplete="off"
-                  type={'checkbox'}
-                  className={`absolute top-3 left-3 h-5 w-5  rounded-sm font-medium text-black focus:outline-none`}
-                  id={tokenData?.tokenAccount?.pubkey.toBase58()}
-                  name={tokenData?.tokenAccount?.pubkey.toBase58()}
-                  checked={isSelected(tokenData)}
-                  onChange={(e) => {
-                    handleNFTSelect(tokenData)
-                  }}
-                />
-              )}
-              <div
-                style={{
-                  background: lighten(0.07, config.colors.main),
-                }}
-                className="flex w-[280px] flex-row justify-between rounded-bl-md rounded-br-md bg-white/[.10] p-3"
-              >
-                <p className="overflow-hidden text-ellipsis whitespace-nowrap pr-5 text-white">
-                  {tokenData.metadata.data.name}
-                </p>
-                <div className="my-auto flex-col justify-items-end">
-                  {tokenData.timeInvalidator?.parsed
-                    ?.extensionDurationSeconds &&
-                    tokenData.tokenManager && (
-                      <Button
-                        variant="primary"
-                        className=" float-right mb-3"
-                        onClick={() =>
-                          rentalExtensionModal.show(
-                            asWallet(wallet),
-                            ctx.connection,
-                            ctx.environment.label,
-                            tokenData
-                          )
-                        }
-                      >
-                        Add Duration
-                      </Button>
-                    )}
-                  {tokenData.tokenManager?.parsed &&
-                    (tokenData.tokenManager.parsed.invalidationType ===
-                      InvalidationType.Reissue ||
-                      tokenData.tokenManager.parsed.invalidationType ===
-                        InvalidationType.Return) && (
-                      <AsyncButton
-                        variant="primary"
-                        className=" float-right my-auto"
-                        handleClick={async () => {
-                          try {
-                            await revokeRental(tokenData)
-                          } catch (e) {
-                            notify({
-                              message: `Return failed: ${e}`,
-                              type: 'error',
-                            })
-                          }
-                        }}
-                      >
-                        Return
-                      </AsyncButton>
-                    )}
-                </div>
-              </div>
-            </div>
-          ))
-        ) : (
-          <div className="white flex w-full flex-col items-center justify-center gap-1">
-            <div className="text-gray-500">
-              No {config.name} NFTs found in wallet...
-            </div>
-            {ctx.environment.label === 'devnet' && <Airdrop />}
+              {`Bulk Upload ${
+                selectedTokens.length ? `(${selectedTokens.length})` : ''
+              }`}
+            </Button>
           </div>
         )}
-      </TokensOuter>
-    </div>
+        <TokensOuter>
+          {!loaded ? (
+            <>
+              <NFTPlaceholder />
+              <NFTPlaceholder />
+              <NFTPlaceholder />
+              <NFTPlaceholder />
+              <NFTPlaceholder />
+              <NFTPlaceholder />
+            </>
+          ) : filteredTokenDatas && filteredTokenDatas.length > 0 ? (
+            filteredTokenDatas.map((tokenData) => (
+              <div
+                key={tokenData.tokenAccount?.pubkey.toString()}
+                className="relative flex flex-col"
+              >
+                <NFT
+                  key={tokenData?.tokenAccount?.pubkey.toBase58()}
+                  tokenData={tokenData}
+                  fullyRounded={false}
+                  onClick={() => handleNFTSelect(tokenData)}
+                />
+                {elligibleForRent(tokenData) && (
+                  <input
+                    autoComplete="off"
+                    type={'checkbox'}
+                    className={`absolute top-3 left-3 h-5 w-5  rounded-sm font-medium text-black focus:outline-none`}
+                    id={tokenData?.tokenAccount?.pubkey.toBase58()}
+                    name={tokenData?.tokenAccount?.pubkey.toBase58()}
+                    checked={isSelected(tokenData)}
+                    onChange={(e) => {
+                      handleNFTSelect(tokenData)
+                    }}
+                  />
+                )}
+                <div
+                  style={{
+                    background: lighten(0.07, config.colors.main),
+                  }}
+                  className="flex w-[280px] flex-row justify-between rounded-bl-md rounded-br-md bg-white/[.10] p-3"
+                >
+                  <p className="overflow-hidden text-ellipsis whitespace-nowrap pr-5 text-white">
+                    {tokenData.metadata.data.name}
+                  </p>
+                  <div className="my-auto flex-col justify-items-end">
+                    {tokenData.timeInvalidator?.parsed
+                      ?.extensionDurationSeconds &&
+                      tokenData.tokenManager && (
+                        <Button
+                          variant="primary"
+                          className=" float-right mb-3"
+                          onClick={() =>
+                            rentalExtensionModal.show(
+                              asWallet(wallet),
+                              ctx.connection,
+                              ctx.environment.label,
+                              tokenData
+                            )
+                          }
+                        >
+                          Add Duration
+                        </Button>
+                      )}
+                    {tokenData.tokenManager?.parsed &&
+                      (tokenData.tokenManager.parsed.invalidationType ===
+                        InvalidationType.Reissue ||
+                        tokenData.tokenManager.parsed.invalidationType ===
+                          InvalidationType.Return) && (
+                        <AsyncButton
+                          variant="primary"
+                          className=" float-right my-auto"
+                          handleClick={async () => {
+                            try {
+                              await revokeRental(tokenData)
+                            } catch (e) {
+                              notify({
+                                message: `Return failed: ${e}`,
+                                type: 'error',
+                              })
+                            }
+                          }}
+                        >
+                          Return
+                        </AsyncButton>
+                      )}
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="white flex w-full flex-col items-center justify-center gap-1">
+              <div className="text-gray-500">
+                No {config.name} NFTs found in wallet...
+              </div>
+              {ctx.environment.label === 'devnet' && <Airdrop />}
+            </div>
+          )}
+        </TokensOuter>
+      </div>
+    </>
   )
 }

@@ -7,10 +7,22 @@ import {
   useInvalidator,
 } from '@cardinal/token-manager/dist/cjs/programs'
 import type { PaidClaimApproverData } from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
+import {
+  CLAIM_APPROVER_ADDRESS,
+  CLAIM_APPROVER_IDL,
+} from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
 import type { TimeInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
+import {
+  TIME_INVALIDATOR_ADDRESS,
+  TIME_INVALIDATOR_IDL,
+} from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
 import type { TokenManagerData } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { tryTokenManagerAddressFromMint } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/pda'
 import type { UseInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
+import {
+  USE_INVALIDATOR_ADDRESS,
+  USE_INVALIDATOR_IDL,
+} from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
 import * as metaplex from '@metaplex-foundation/mpl-token-metadata'
 import {
   Edition,
@@ -19,6 +31,8 @@ import {
   MetadataKey,
 } from '@metaplex-foundation/mpl-token-metadata'
 import * as anchor from '@project-serum/anchor'
+import { BorshAccountsCoder } from '@project-serum/anchor'
+import { TOKEN_PROGRAM_ID } from '@project-serum/anchor/dist/cjs/utils/token'
 import * as spl from '@solana/spl-token'
 import type {
   AccountInfo,
@@ -26,6 +40,8 @@ import type {
   ParsedAccountData,
 } from '@solana/web3.js'
 import { PublicKey, SystemProgram } from '@solana/web3.js'
+import type { TokenFilter } from 'config/config'
+
 import { tryPublicKey } from './utils'
 
 export async function findAssociatedTokenAddress(
@@ -477,6 +493,202 @@ export async function getTokenDatas(
       ),
     })
   )
+}
+
+export async function getTokenDatasV2(
+  connection: Connection,
+  tokenManagerDatas: AccountData<TokenManagerData>[],
+  filter?: TokenFilter,
+  cluster?: string
+): Promise<TokenData[]> {
+  if (filter?.type === 'issuer') {
+    tokenManagerDatas = tokenManagerDatas.filter((tm) =>
+      filter.value.includes(tm.parsed.issuer.toString())
+    )
+  }
+
+  const metaplexIds = await Promise.all(
+    tokenManagerDatas.map(
+      async (tm) =>
+        (
+          await metaplex.MetadataProgram.find_metadata_account(tm.parsed.mint)
+        )[0]
+    )
+  )
+  const metaplexAccountInfos = await getBatchedMultipleAccounts(
+    connection,
+    metaplexIds
+  )
+  const metaplexData = metaplexAccountInfos.reduce((acc, accountInfo, i) => {
+    try {
+      acc[tokenManagerDatas[i]!.pubkey.toString()] = {
+        pubkey: metaplexIds[i]!,
+        ...accountInfo,
+        data: metaplex.MetadataData.deserialize(
+          accountInfo?.data as Buffer
+        ) as metaplex.MetadataData,
+      }
+    } catch (e) {}
+    return acc
+  }, {} as { [tokenManagerId: string]: { pubkey: PublicKey; data: metaplex.MetadataData } })
+
+  if (filter?.type === 'creators') {
+    tokenManagerDatas = tokenManagerDatas.filter((tm) =>
+      metaplexData[tm.pubkey.toString()]?.data?.data?.creators?.some(
+        (creator) =>
+          filter.value.includes(creator.address.toString()) &&
+          (cluster === 'devnet' || creator.verified)
+      )
+    )
+  }
+
+  const idsToFetch = tokenManagerDatas
+    .reduce(
+      (acc, tm) => [
+        ...acc,
+        tm.parsed.claimApprover,
+        ...tm.parsed.invalidators,
+        tm.parsed.recipientTokenAccount,
+      ],
+      [] as (PublicKey | null)[]
+    )
+    .filter((id) => id) as PublicKey[]
+
+  const rawData = await getBatchedMultipleAccounts(connection, idsToFetch, {
+    encoding: 'jsonParsed',
+  })
+  const accountsById = rawData.reduce(
+    (acc, accountInfo, i) => {
+      const ownerString = accountInfo?.owner.toString()
+      switch (ownerString) {
+        case TIME_INVALIDATOR_ADDRESS.toString():
+          try {
+            const coder = new BorshAccountsCoder(TIME_INVALIDATOR_IDL)
+            const parsed = coder.decode(
+              'timeInvalidator',
+              accountInfo?.data as Buffer
+            ) as TimeInvalidatorData
+            acc[idsToFetch[i]!.toString()] = {
+              pubkey: idsToFetch[i]!,
+              ...(accountInfo as AccountInfo<Buffer>),
+              parsed,
+            }
+          } catch (e) {}
+          return acc
+        case USE_INVALIDATOR_ADDRESS.toString():
+          try {
+            const coder = new BorshAccountsCoder(USE_INVALIDATOR_IDL)
+            const parsed = coder.decode(
+              'useInvalidator',
+              accountInfo?.data as Buffer
+            ) as UseInvalidatorData
+            acc[idsToFetch[i]!.toString()] = {
+              pubkey: idsToFetch[i]!,
+              ...(accountInfo as AccountInfo<Buffer>),
+              parsed,
+            }
+          } catch (e) {}
+          return acc
+        case CLAIM_APPROVER_ADDRESS.toString():
+          try {
+            const coder = new BorshAccountsCoder(CLAIM_APPROVER_IDL)
+            const parsed = coder.decode(
+              'paidClaimApprover',
+              accountInfo?.data as Buffer
+            ) as PaidClaimApproverData
+            acc[idsToFetch[i]!.toString()] = {
+              pubkey: idsToFetch[i]!,
+              ...(accountInfo as AccountInfo<Buffer>),
+              parsed,
+            }
+          } catch (e) {}
+          return acc
+        case TOKEN_PROGRAM_ID.toString():
+          try {
+            acc[idsToFetch[i]!.toString()] = (
+              accountInfo?.data as ParsedAccountData
+            ).parsed?.info as spl.AccountInfo
+          } catch (e) {}
+          return acc
+        default:
+          return acc
+      }
+    },
+    {} as {
+      [accountId: string]:
+        | (AccountData<PaidClaimApproverData> & AccountInfo<Buffer>)
+        | (AccountData<TimeInvalidatorData> & AccountInfo<Buffer>)
+        | (AccountData<UseInvalidatorData> & AccountInfo<Buffer>)
+        | spl.AccountInfo
+        | undefined
+        | null
+    }
+  )
+
+  const metadatas = await Promise.all(
+    tokenManagerDatas.map(async (tm) => {
+      try {
+        const metaplexDataForTokenManager = metaplexData[tm.pubkey.toString()]
+        if (!metaplexDataForTokenManager?.data.data.uri) return null
+        const json = await fetch(
+          metaplexDataForTokenManager.data.data.uri
+        ).then((r) => r.json())
+        return {
+          pubkey: metaplexDataForTokenManager.pubkey,
+          data: json,
+        }
+      } catch (e) {}
+    })
+  )
+  const metadataById = metadatas.reduce(
+    (acc, md, i) => ({ ...acc, [tokenManagerDatas[i]!.pubkey.toString()]: md }),
+    {} as {
+      [tokenManagerId: string]:
+        | { pubkey: PublicKey; data: any }
+        | undefined
+        | null
+    }
+  )
+
+  return tokenManagerDatas.map((tokenManagerData) => {
+    const timeInvalidatorId = tokenManagerData.parsed.invalidators.filter(
+      (invalidator) =>
+        accountsById[invalidator.toString()]?.owner.equals(
+          TIME_INVALIDATOR_ADDRESS
+        )
+    )[0]
+    const useInvalidatorId = tokenManagerData.parsed.invalidators.filter(
+      (invalidator) =>
+        accountsById[invalidator.toString()]?.owner.equals(
+          USE_INVALIDATOR_ADDRESS
+        )
+    )[0]
+    return {
+      recipientTokenAccount: tokenManagerData.parsed.claimApprover
+        ? (accountsById[
+            tokenManagerData.parsed.claimApprover?.toString()
+          ] as spl.AccountInfo)
+        : undefined,
+      metaplexData: metaplexData[tokenManagerData.pubkey.toString()],
+      tokenManager: tokenManagerData,
+      metadata: metadataById[tokenManagerData.pubkey.toString()],
+      claimApprover: tokenManagerData.parsed.claimApprover?.toString()
+        ? (accountsById[
+            tokenManagerData.parsed.claimApprover?.toString()
+          ] as AccountData<PaidClaimApproverData>)
+        : undefined,
+      useInvalidator: useInvalidatorId
+        ? (accountsById[
+            useInvalidatorId.toString()
+          ] as AccountData<UseInvalidatorData>)
+        : undefined,
+      timeInvalidator: timeInvalidatorId
+        ? (accountsById[
+            timeInvalidatorId.toString()
+          ] as AccountData<TimeInvalidatorData>)
+        : undefined,
+    }
+  })
 }
 
 export async function getTokenData(
