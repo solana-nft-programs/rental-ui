@@ -39,7 +39,7 @@ import type {
   Connection,
   ParsedAccountData,
 } from '@solana/web3.js'
-import { PublicKey, SystemProgram } from '@solana/web3.js'
+import { PublicKey } from '@solana/web3.js'
 import type { TokenFilter } from 'config/config'
 
 import { tryPublicKey } from './utils'
@@ -253,9 +253,7 @@ export async function getTokenAccountsWithData(
           data: parsed,
         }
       }
-    } catch (e) {
-      console.log(e)
-    }
+    } catch (e) {}
     return md
   })
 
@@ -268,10 +266,7 @@ export async function getTokenAccountsWithData(
           pubkey: md.pubkey,
           data: json,
         }
-      } catch (e) {
-        // console.log(e)
-        return null
-      }
+      } catch (e) {}
     })
   )
 
@@ -316,186 +311,6 @@ export async function getTokenAccountsWithData(
 }
 
 export async function getTokenDatas(
-  connection: Connection,
-  tokenManagerDatas: AccountData<TokenManagerData>[]
-): Promise<TokenData[]> {
-  const metadataTuples: [
-    PublicKey,
-    PublicKey,
-    PublicKey,
-    PublicKey,
-    PublicKey,
-    PublicKey | null
-  ][] = await Promise.all(
-    tokenManagerDatas.map(async (tokenManagerData) => {
-      const [
-        [metadataId],
-        [claimApproverId],
-        [timeInvalidatorId],
-        [useInvalidatorId],
-      ] = await Promise.all([
-        PublicKey.findProgramAddress(
-          [
-            anchor.utils.bytes.utf8.encode(metaplex.MetadataProgram.PREFIX),
-            metaplex.MetadataProgram.PUBKEY.toBuffer(),
-            tokenManagerData.parsed.mint.toBuffer(),
-          ],
-          metaplex.MetadataProgram.PUBKEY
-        ),
-        claimApprover.pda.findClaimApproverAddress(tokenManagerData.pubkey),
-        timeInvalidator.pda.findTimeInvalidatorAddress(tokenManagerData.pubkey),
-        useInvalidator.pda.findUseInvalidatorAddress(tokenManagerData.pubkey),
-      ])
-
-      const recipientTokenAccountId =
-        tokenManagerData.parsed.recipientTokenAccount?.toString() !==
-        SystemProgram.programId.toString()
-          ? (tokenManagerData.parsed?.recipientTokenAccount as PublicKey)
-          : null
-
-      return [
-        metadataId,
-        tokenManagerData.pubkey,
-        claimApproverId,
-        timeInvalidatorId,
-        useInvalidatorId,
-        recipientTokenAccountId,
-      ]
-    })
-  )
-
-  // @ts-ignore
-  const metadataIds: [
-    PublicKey[],
-    PublicKey[],
-    PublicKey[],
-    PublicKey[],
-    PublicKey[]
-  ] =
-    // @ts-ignore
-    metadataTuples.reduce(
-      (
-        acc,
-        [
-          metaplexId,
-          _tokenManagerId,
-          claimApproverId,
-          timeInvalidatorId,
-          useInvalidatorId,
-          recipientTokenAccountId,
-        ]
-      ) => [
-        [...acc[0], metaplexId],
-        [...acc[1], claimApproverId],
-        [...acc[2], timeInvalidatorId],
-        [...acc[3], useInvalidatorId],
-        [...acc[4], recipientTokenAccountId],
-      ],
-      [[], [], [], [], []]
-    )
-
-  const [
-    tokenAccounts,
-    metaplexAccountInfos,
-    claimApprovers,
-    timeInvalidators,
-    useInvalidators,
-  ] = await Promise.all([
-    getBatchedMultipleAccounts(
-      connection,
-      metadataIds[4].filter((pk) => pk),
-      {
-        encoding: 'jsonParsed',
-      }
-    )
-      .then((tokenAccounts) =>
-        tokenAccounts.map(
-          (acc) => (acc?.data as ParsedAccountData).parsed?.info
-        )
-      )
-      .catch((e) => {
-        console.log('Failed ot get token accounts', e)
-        return []
-      }) as Promise<(spl.AccountInfo | null)[]>,
-    getBatchedMultipleAccounts(connection, metadataIds[0]),
-    claimApprover.accounts.getClaimApprovers(connection, metadataIds[1]),
-    timeInvalidator.accounts.getTimeInvalidators(connection, metadataIds[2]),
-    useInvalidator.accounts.getUseInvalidators(connection, metadataIds[3]),
-  ])
-
-  const metaplexData = metaplexAccountInfos.map((accountInfo, i) => {
-    let md
-    try {
-      md = {
-        pubkey: metadataIds[0][i]!,
-        ...accountInfo,
-        data: metaplex.MetadataData.deserialize(accountInfo?.data as Buffer),
-      }
-    } catch (e) {}
-    return md
-  })
-
-  const metadata = await Promise.all(
-    metaplexData.map(async (md) => {
-      try {
-        if (!md?.data.data.uri) return null
-        const json = await fetch(md.data.data.uri).then((r) => r.json())
-        return {
-          pubkey: md.pubkey,
-          data: json,
-        }
-      } catch (e) {
-        // console.log(e)
-        return null
-      }
-    })
-  )
-
-  return metadataTuples.map(
-    ([
-      metaplexId,
-      tokenManagerId,
-      claimApproverId,
-      timeInvalidatorId,
-      useInvalidatorId,
-      _tokenAccountId,
-    ]) => ({
-      recipientTokenAccount: tokenAccounts.find((data) =>
-        data
-          ? data.delegate?.toString() === tokenManagerId?.toString()
-          : undefined
-      ),
-      metaplexData: metaplexData.find((data) =>
-        data ? data.pubkey.toBase58() === metaplexId.toBase58() : undefined
-      ),
-      tokenManager: tokenManagerDatas.find((tkm) =>
-        tkm?.parsed
-          ? tkm.pubkey.toBase58() === tokenManagerId?.toBase58()
-          : undefined
-      ),
-      metadata: metadata.find((data) =>
-        data ? data.pubkey.toBase58() === metaplexId.toBase58() : undefined
-      ),
-      claimApprover: claimApprovers.find((data) =>
-        data?.parsed
-          ? data.pubkey.toBase58() === claimApproverId?.toBase58()
-          : undefined
-      ),
-      useInvalidator: useInvalidators.find((data) =>
-        data?.parsed
-          ? data.pubkey.toBase58() === useInvalidatorId?.toBase58()
-          : undefined
-      ),
-      timeInvalidator: timeInvalidators.find((data) =>
-        data?.parsed
-          ? data.pubkey.toBase58() === timeInvalidatorId?.toBase58()
-          : undefined
-      ),
-    })
-  )
-}
-
-export async function getTokenDatasV2(
   connection: Connection,
   tokenManagerDatas: AccountData<TokenManagerData>[],
   filter?: TokenFilter,

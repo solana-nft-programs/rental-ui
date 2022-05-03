@@ -5,11 +5,7 @@ import {
 } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/accounts'
 import type { PublicKey } from '@solana/web3.js'
 import type { TokenData } from 'api/api'
-import {
-  convertStringsToPubkeys,
-  getTokenDatas,
-  getTokenDatasV2,
-} from 'api/api'
+import { convertStringsToPubkeys, getTokenDatas } from 'api/api'
 import { tryPublicKey } from 'api/utils'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
@@ -90,7 +86,9 @@ export const useFilteredTokenManagers = () => {
           console.log(tokenManagerDatas)
           const tokenDatas = await getTokenDatas(
             connection,
-            tokenManagerDatas.filter((tm) => tm.parsed)
+            tokenManagerDatas,
+            config.filter,
+            environment.label
           )
 
           ////
@@ -111,7 +109,7 @@ export const useFilteredTokenManagers = () => {
           connection,
           null
         )
-        const tokenDatas = await getTokenDatasV2(
+        const tokenDatas = await getTokenDatas(
           connection,
           tokenManagerDatas,
           config.filter,
