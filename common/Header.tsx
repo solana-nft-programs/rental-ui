@@ -153,7 +153,7 @@ export const Header = ({
         {wallet.connected &&
           ctx.environment.label === 'devnet' &&
           !isTabletOrMobile && (
-            <div className="flex gap-2">
+            <div className="my-auto flex gap-2">
               <Airdrop />
               <AirdropSol />
             </div>
