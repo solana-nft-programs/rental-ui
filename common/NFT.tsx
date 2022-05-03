@@ -4,6 +4,7 @@ import styled from '@emotion/styled'
 import { useWallet } from '@solana/wallet-adapter-react'
 import type { TokenData } from 'api/api'
 import { pubKeyUrl } from 'common/utils'
+import type { ProjectConfig } from 'config/config'
 import { lighten } from 'polished'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
@@ -44,6 +45,18 @@ export function NFTPlaceholder() {
   )
 }
 
+export const elligibleForRent = (
+  config: ProjectConfig,
+  tokenData: TokenData
+): boolean => {
+  return (
+    !config.disableListing &&
+    !tokenData.tokenManager &&
+    tokenData.tokenAccount?.account.data.parsed.info.state !== 'frozen' &&
+    Boolean(tokenData.editionData)
+  )
+}
+
 interface NFTProps {
   tokenData: TokenData
   onClick?: () => void
@@ -63,12 +76,6 @@ export function NFT({ tokenData, onClick }: NFTProps) {
     timeInvalidator,
     useInvalidator,
   } = tokenData
-
-  const elligibleForRent =
-    !config.disableListing &&
-    !tokenManager &&
-    tokenAccount?.account.data.parsed.info.state !== 'frozen' &&
-    tokenData.editionData
 
   return (
     <div
@@ -110,12 +117,12 @@ export function NFT({ tokenData, onClick }: NFTProps) {
               <PopoverItem>
                 <div
                   className={`${
-                    elligibleForRent
+                    elligibleForRent(config, tokenData)
                       ? 'cursor-pointer'
                       : 'cursor-default opacity-20'
                   } flex items-center justify-between gap-2`}
                   onClick={() => {
-                    elligibleForRent &&
+                    elligibleForRent(config, tokenData) &&
                       rentalModal.show(
                         asWallet(wallet),
                         ctx.connection,

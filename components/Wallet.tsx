@@ -5,7 +5,7 @@ import { Transaction } from '@solana/web3.js'
 import type { TokenData } from 'api/api'
 import { Airdrop } from 'common/Airdrop'
 import { Header } from 'common/Header'
-import { NFT, NFTPlaceholder, TokensOuter } from 'common/NFT'
+import { elligibleForRent, NFT, NFTPlaceholder, TokensOuter } from 'common/NFT'
 import { notify } from 'common/Notification'
 import { executeTransaction } from 'common/Transactions'
 import { asWallet } from 'common/Wallets'
@@ -52,15 +52,6 @@ export const Wallet = () => {
     })
   }
 
-  const elligibleForRent = (tokenData: TokenData) => {
-    return (
-      !config.disableListing &&
-      !tokenData.tokenManager &&
-      tokenData.tokenAccount?.account.data.parsed.info.state !== 'frozen' &&
-      tokenData.editionData
-    )
-  }
-
   const isSelected = (tokenData: TokenData) => {
     return selectedTokens.some(
       (t) =>
@@ -78,7 +69,7 @@ export const Wallet = () => {
             tokenData.tokenAccount?.account.data.parsed.info.mint.toString()
         )
       )
-    } else if (elligibleForRent(tokenData)) {
+    } else if (elligibleForRent(config, tokenData)) {
       setSelectedTokens([...selectedTokens, tokenData])
     } else {
       notify({
@@ -150,7 +141,7 @@ export const Wallet = () => {
                   tokenData={tokenData}
                   onClick={() => handleNFTSelect(tokenData)}
                 />
-                {elligibleForRent(tokenData) && (
+                {elligibleForRent(config, tokenData) && (
                   <input
                     autoComplete="off"
                     type={'checkbox'}
