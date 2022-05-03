@@ -28,9 +28,7 @@ export const useSubLoad = (
         // rootMargin: "0px 0px 100px 0px"
       }
     )
-
-    console.log(elRef)
-    observer.observe(elRef.current)
+''    observer.observe(elRef.current)
   }, [])
 
   return [loaded, elRef]
