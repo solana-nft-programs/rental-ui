@@ -639,104 +639,109 @@ export const Browse = () => {
         ]}
       />
       <div className="container mx-auto pt-10">
+        <div className="mb-4 flex h-min w-full flex-col flex-wrap justify-center md:flex-row md:justify-center">
+          <div
+            className="rounded-m flex h-fit rounded-lg"
+            style={{ background: lighten(0.07, config.colors.main) }}
+          >
+            <div className="d-block flex-col py-3 px-5">
+              <p className="text-gray-400">
+                FLOOR PRICE /{' '}
+                {config.marketplaceRate
+                  ? config.marketplaceRate
+                      .substring(0, config.marketplaceRate.length - 1)
+                      .toUpperCase()
+                  : 'DAY'}
+              </p>
+              <h2 className="text-center font-bold text-gray-100">
+                {calculateFloorPrice(filteredAndSortedTokens).toFixed(2)}{' '}
+                {filteredAndSortedTokens.length > 0
+                  ? getSymbolFromTokenData(filteredAndSortedTokens[0]!)
+                  : '◎'}
+              </h2>
+            </div>
+            <div
+              className="my-3 w-[1px]"
+              style={{ background: lighten(0.4, config.colors.main) }}
+            ></div>
+            <div className="d-block flex-col py-3 px-5">
+              <p className="text-gray-400">TOTAL LISTED</p>
+              <h2 className="text-center font-bold text-gray-100">
+                {filteredAndSortedTokens.length}
+              </h2>
+            </div>
+            <div
+              className="my-3 w-[1px]"
+              style={{ background: lighten(0.4, config.colors.main) }}
+            ></div>
+            {projectStats && (
+              <>
+                <div className="d-block flex-col py-3 px-5">
+                  <p className="text-gray-400">TOTAL RENTED (ALL-TIME)</p>
+                  <h2 className="text-center font-bold text-gray-100">
+                    {projectStats.data?.totalRentalCount}
+                  </h2>
+                </div>
+                <div
+                  className="my-3 w-[1px]"
+                  style={{ background: lighten(0.4, config.colors.main) }}
+                ></div>
+                <div className="d-block flex-col py-3 px-5">
+                  <p className="text-gray-400">TOTAL DURATION (ALL-TIME)</p>
+                  <h2 className="text-center font-bold text-gray-100">
+                    {secondsToString(projectStats.data?.totalRentalDuration)}
+                  </h2>
+                </div>
+                <div
+                  className="my-3 w-[1px]"
+                  style={{ background: lighten(0.4, config.colors.main) }}
+                ></div>
+                <div className="d-block flex-col py-3 px-5">
+                  <p className="text-gray-400">TOTAL VOLUME (ALL-TIME)</p>
+                  <h2 className="text-center font-bold text-gray-100">
+                    {secondsToString(projectStats.data?.totalRentalVolume)} ◎
+                  </h2>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
         <div className="flex justify-center">
           <div className="md:w-1/5"></div>
-          <div className="mb-4 flex h-min flex-col flex-wrap justify-center md:w-4/5 md:flex-row md:justify-between">
-            <div
-              className="rounded-m flex h-fit rounded-lg"
-              style={{ background: lighten(0.07, config.colors.main) }}
-            >
-              <div className="d-block flex-col py-3 px-5">
-                <p className="text-gray-400">
-                  FLOOR PRICE /{' '}
-                  {config.marketplaceRate
-                    ? config.marketplaceRate
-                        .substring(0, config.marketplaceRate.length - 1)
-                        .toUpperCase()
-                    : 'DAY'}
-                </p>
-                <h2 className="text-center font-bold text-gray-100">
-                  {calculateFloorPrice(filteredAndSortedTokens).toFixed(2)}{' '}
-                  {filteredAndSortedTokens.length > 0
-                    ? getSymbolFromTokenData(filteredAndSortedTokens[0]!)
-                    : '◎'}
-                </h2>
-              </div>
-              <div
-                className="my-3 w-[1px]"
-                style={{ background: lighten(0.4, config.colors.main) }}
-              ></div>
-              <div className="d-block flex-col py-3 px-5">
-                <p className="text-gray-400">TOTAL LISTED</p>
-                <h2 className="text-center font-bold text-gray-100">
-                  {filteredAndSortedTokens.length}
-                </h2>
-              </div>
-              <div
-                className="my-3 w-[1px]"
-                style={{ background: lighten(0.4, config.colors.main) }}
-              ></div>
-              {projectStats && (
-                <>
-                  <div className="d-block flex-col py-3 px-5">
-                    <p className="text-gray-400">TOTAL RENTED (ALL-TIME)</p>
-                    <h2 className="text-center font-bold text-gray-100">
-                      {projectStats.data?.totalRentalCount}
-                    </h2>
-                  </div>
-                  <div
-                    className="my-3 w-[1px]"
-                    style={{ background: lighten(0.4, config.colors.main) }}
-                  ></div>
-                  <div className="d-block flex-col py-3 px-5">
-                    <p className="text-gray-400">TOTAL DURATION (ALL-TIME)</p>
-                    <h2 className="text-center font-bold text-gray-100">
-                      {secondsToString(projectStats.data?.totalRentalDuration)}
-                    </h2>
-                  </div>
-                  <div
-                    className="my-3 w-[1px]"
-                    style={{ background: lighten(0.4, config.colors.main) }}
-                  ></div>
-                  <div className="d-block flex-col py-3 px-5">
-                    <p className="text-gray-400">TOTAL VOLUME (ALL-TIME)</p>
-                    <h2 className="text-center font-bold text-gray-100">
-                      {secondsToString(projectStats.data?.totalRentalVolume)} ◎
-                    </h2>
-                  </div>
-                </>
-              )}
-            </div>
-            <StyledSelect>
-              <Select
-                className="m-[10px] mx-auto block h-[30px] w-max rounded-[4px] bg-black text-gray-700 lg:mr-20 xl:mr-4"
-                onChange={(e) => {
-                  setSelectedOrderCategory(e)
-                }}
-                defaultValue={selectedOrderCategory}
-                dropdownStyle={{
-                  backgroundColor: lighten(0.07, config.colors.main),
-                }}
-              >
-                {allOrderCategories.map((category) => (
-                  <Option
-                    className="hover:brightness-125"
-                    key={category}
-                    value={category}
-                    style={{
-                      color: '#ffffff',
-                      background: lighten(0.07, config.colors.main),
-                    }}
-                  >
-                    {category}
-                  </Option>
-                ))}
-              </Select>
-            </StyledSelect>
-          </div>
         </div>
         <div className="flex flex-wrap justify-center gap-5 md:flex-nowrap lg:flex lg:flex-row">
           <div className="flex flex-col gap-5">
+            <div
+              className="max-h-[70vh] w-[280px] overflow-y-auto rounded-lg py-4 px-8 text-left"
+              style={{ background: lighten(0.07, config.colors.main) }}
+            >
+              <StyledSelect>
+                <Select
+                  className=" block h-[30px] w-full rounded-[4px] bg-black text-gray-700 lg:mr-20 xl:mr-4"
+                  onChange={(e) => {
+                    setSelectedOrderCategory(e)
+                  }}
+                  defaultValue={selectedOrderCategory}
+                  dropdownStyle={{
+                    backgroundColor: lighten(0.07, config.colors.main),
+                  }}
+                >
+                  {allOrderCategories.map((category) => (
+                    <Option
+                      className="hover:brightness-125"
+                      key={category}
+                      value={category}
+                      style={{
+                        color: '#ffffff',
+                        background: lighten(0.07, config.colors.main),
+                      }}
+                    >
+                      {category}
+                    </Option>
+                  ))}
+                </Select>
+              </StyledSelect>
+            </div>
             <div
               className="max-h-[70vh] w-[280px] overflow-y-auto rounded-lg py-5 px-8 text-left"
               style={{ background: lighten(0.07, config.colors.main) }}
