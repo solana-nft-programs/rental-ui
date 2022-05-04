@@ -37,7 +37,7 @@ export const useProjectStats = () => {
 
   return useDataHook<ProjectStats | undefined>(
     async () => {
-      if (environment.index && config.rentalCard) {
+      if (environment.index && config.filter?.type === 'creators') {
         const collectionClaimEvents = await environment.index.query({
           query: gql`
             query GetCardinalClaimEvents($creators: [String!]) {
@@ -158,10 +158,14 @@ export const useProjectStats = () => {
         }
         return stats
       } else {
-        return {}
+        return {
+          totalRentalCount: null,
+          totalRentalVolume: null,
+          totalRentalDuration: null,
+        }
       }
     },
-    [environment.index, config.paymentManager],
+    [environment.index],
     { name: 'useProjectStats', refreshInterval: 10000 }
   )
 }

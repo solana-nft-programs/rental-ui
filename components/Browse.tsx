@@ -670,18 +670,23 @@ export const Browse = () => {
                 {filteredAndSortedTokens.length}
               </h2>
             </div>
-            <div
-              className="my-3 w-[1px]"
-              style={{ background: lighten(0.4, config.colors.main) }}
-            ></div>
+
             {projectStats && (
               <>
-                <div className="d-block flex-col py-3 px-5">
-                  <p className="text-gray-400">TOTAL RENTALS (ALL-TIME)</p>
-                  <h2 className="text-center font-bold text-gray-100">
-                    {projectStats.data?.totalRentalCount}
-                  </h2>
-                </div>
+                {projectStats.data?.totalRentalCount && (
+                  <>
+                    <div
+                      className="my-3 w-[1px]"
+                      style={{ background: lighten(0.4, config.colors.main) }}
+                    ></div>
+                    <div className="d-block flex-col py-3 px-5">
+                      <p className="text-gray-400">TOTAL RENTALS (ALL-TIME)</p>
+                      <h2 className="text-center font-bold text-gray-100">
+                        {projectStats.data?.totalRentalCount}
+                      </h2>
+                    </div>
+                  </>
+                )}
                 {projectStats.data?.totalRentalDuration && (
                   <>
                     <div
