@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 import { getTokenManagersForIssuer } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/accounts'
 import type { TokenData } from 'api/api'
-import { convertStringsToPubkeys, getTokenDatasV2 } from 'api/api'
+import { convertStringsToPubkeys, getTokenDatas } from 'api/api'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 
@@ -60,7 +60,7 @@ export const useTokenManagersByIssuer = () => {
           connection,
           walletId
         )
-        const tokenDatas = await getTokenDatasV2(
+        const tokenDatas = await getTokenDatas(
           connection,
           tokenManagerDatas,
           config.filter,

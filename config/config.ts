@@ -179,12 +179,12 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       secondary: 'rgb(29, 155, 240)',
     },
     rentalCard: {
-      invalidators: ['rate'],
+      invalidators: ['rate', 'duration'],
       extensionOptions: { showDisablePartialExtension: true },
       invalidationOptions: {
         visibilities: ['public'],
         invalidationTypes: ['reissue'],
-        freezeRentalDuration: {
+        freezeRentalRateDuration: {
           value: '1',
           durationOption: 'days',
         },
@@ -257,9 +257,9 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       value: ['5grvMeoBqv5ZdHq9JMy5RrxLPNAt1nzc9cpqYWFUwizz'],
     },
     rentalCard: {
-      invalidators: ['rate'],
+      invalidators: ['rate', 'duration'],
       invalidationOptions: {
-        freezeRentalDuration: {
+        freezeRentalRateDuration: {
           value: '1',
           durationOption: 'days',
         },
@@ -309,9 +309,9 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       value: ['9uBX3ASjxWvNBAD1xjbVaKA74mWGZys3RGSF7DdeDD3F'],
     },
     rentalCard: {
-      invalidators: ['rate'],
+      invalidators: ['rate', 'duration'],
       invalidationOptions: {
-        freezeRentalDuration: {
+        freezeRentalRateDuration: {
           value: '1',
           durationOption: 'days',
         },
@@ -369,9 +369,9 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       ],
     },
     rentalCard: {
-      invalidators: ['rate'],
+      invalidators: ['rate', 'duration'],
       invalidationOptions: {
-        freezeRentalDuration: {
+        freezeRentalRateDuration: {
           value: '1',
           durationOption: 'days',
         },
@@ -409,9 +409,9 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       ],
     },
     rentalCard: {
-      invalidators: ['rate'],
+      invalidators: ['rate', 'duration'],
       invalidationOptions: {
-        freezeRentalDuration: {
+        freezeRentalRateDuration: {
           value: '1',
           durationOption: 'days',
         },
@@ -447,9 +447,9 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       ],
     },
     rentalCard: {
-      invalidators: ['rate'],
+      invalidators: ['rate', 'duration'],
       invalidationOptions: {
-        freezeRentalDuration: {
+        freezeRentalRateDuration: {
           value: '1',
           durationOption: 'days',
         },
@@ -504,14 +504,14 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         '8AkWaZh92FwkdPmqbR58FpTkpZjrCrRK648UWu6Kuz8',
         '3aKY2TVrHV7XnjcuYhP2gdUWqF8ra8TA4AL5qWQQz5gr',
         'Gvp1RDYLpbBQg35k3x1zpBxWhXNEPuS1jbLALDH8XCaA',
-        '2e8DoDgFZR3By185CDPJAwNE3h1QsaS1NtndM8NQi3Q5',
-        'HMduKVo3A19U5EpQdEhPjo9hq9zfZXn8aGVYZp7Vc7fX',
+        // '2e8DoDgFZR3By185CDPJAwNE3h1QsaS1NtndM8NQi3Q5',
+        // 'HMduKVo3A19U5EpQdEhPjo9hq9zfZXn8aGVYZp7Vc7fX',
       ],
     },
     rentalCard: {
-      invalidators: ['rate'],
+      invalidators: ['rate', 'duration'],
       invalidationOptions: {
-        freezeRentalDuration: {
+        freezeRentalRateDuration: {
           value: '1',
           durationOption: 'days',
         },
@@ -529,24 +529,24 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     },
     airdrops: [
       {
-        name: 'MetaOps PFP #4340',
-        symbol: 'MOPFP',
-        uri: 'https://storage.googleapis.com/fractal-launchpad-public-assets/metaops-assets/jsons/2789.json',
+        name: 'Keycard #1823',
+        symbol: 'PSYKC',
+        uri: 'https://storage.googleapis.com/fractal-launchpad-public-assets/psyker-assets/jsons/1823.json',
       },
       {
-        name: 'MetaOps PFP #5553',
-        symbol: 'MOPFP',
-        uri: 'https://storage.googleapis.com/fractal-launchpad-public-assets/metaops-assets/jsons/3160.json',
+        name: 'Keycard #2157',
+        symbol: 'PSYKC',
+        uri: 'https://storage.googleapis.com/fractal-launchpad-public-assets/psyker-assets/jsons/2157.json',
       },
       {
-        name: 'MetaOps PFP #4699',
-        symbol: 'MOPFP',
-        uri: 'https://storage.googleapis.com/fractal-launchpad-public-assets/metaops-assets/jsons/3102.json',
+        name: 'Keycard #4449',
+        symbol: 'PSYKC',
+        uri: 'https://storage.googleapis.com/fractal-launchpad-public-assets/psyker-assets/jsons/4449.json',
       },
       {
-        name: 'MetaOps PFP #692',
-        symbol: 'MOPFP',
-        uri: 'https://www.magiceden.io/item-details/4r9jMVm5rXdiCLa2oMLkV2ecL3wmmcoFtsMUJJoum38r',
+        name: 'Keycard #1823',
+        symbol: 'PSYKC',
+        uri: 'https://storage.googleapis.com/fractal-launchpad-public-assets/psyker-assets/jsons/1823.json',
       },
     ],
     marketplaceRate: 'days',
@@ -565,9 +565,9 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       value: ['Cx2FDbdfqezYiN8teLFdFAzdv9mwG48uYbe218Az4EMP'],
     },
     rentalCard: {
-      invalidators: ['rate'],
+      invalidators: ['rate', 'duration'],
       invalidationOptions: {
-        freezeRentalDuration: {
+        freezeRentalRateDuration: {
           value: '1',
           durationOption: 'days',
         },
@@ -600,9 +600,9 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       value: ['9qoRqZmrAf6bqtmTAPA1UkgCRvKuaugF17xBdympy1vd'],
     },
     rentalCard: {
-      invalidators: ['rate'],
+      invalidators: ['rate', 'duration'],
       invalidationOptions: {
-        freezeRentalDuration: {
+        freezeRentalRateDuration: {
           value: '1',
           durationOption: 'days',
         },
