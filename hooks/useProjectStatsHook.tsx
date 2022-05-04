@@ -105,59 +105,56 @@ export const useProjectStats = () => {
               : 0
           )
         )
-        
-        console.log(claimEvents[64])
-        const getTotalRentalVolume = () => {
-          return claimEvents
-            .map((claimEvent: ClaimEvent) => {
-              claimEvent.paid_claim_approver_payment_mint &&
-              claimEvent.paid_claim_approver_payment_amount
-                ? getMintDecimalAmount(
-                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                    paymentMintInfos[
-                      claimEvent.paid_claim_approver_payment_mint
-                    ]!,
-                    new BN(claimEvent.paid_claim_approver_payment_amount)
-                  ).toNumber()
-                : claimEvent.time_invalidator_duration_seconds === 0
-                ? (getMintDecimalAmount(
-                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                    paymentMintInfos[
-                      claimEvent.time_invalidator_extension_payment_mint
-                    ]!,
-                    new BN(claimEvent.time_invalidator_extension_payment_amount)
-                  ).toNumber() *
-                    ((new Date(
-                      claimEvent.time_invalidator_expiration
-                    ).valueOf() -
-                      new Date(claimEvent.state_changed_at).valueOf()) /
-                      1000)) /
-                  claimEvent.time_invalidator_extension_duration_seconds
-                : 0
-            })
-            .reduce((prev: number, curr: number) => prev + curr, 0)
-        }
 
-        console.log(getTotalRentalVolume())
+        // const getTotalRentalVolume = () => {
+        //   return claimEvents
+        //     .map((claimEvent: ClaimEvent) => {
+        //       claimEvent.paid_claim_approver_payment_mint &&
+        //       claimEvent.paid_claim_approver_payment_amount
+        //         ? getMintDecimalAmount(
+        //             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        //             paymentMintInfos[
+        //               claimEvent.paid_claim_approver_payment_mint
+        //             ]!,
+        //             new BN(claimEvent.paid_claim_approver_payment_amount)
+        //           ).toNumber()
+        //         : claimEvent.time_invalidator_duration_seconds === 0
+        //         ? (getMintDecimalAmount(
+        //             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        //             paymentMintInfos[
+        //               claimEvent.time_invalidator_extension_payment_mint
+        //             ]!,
+        //             new BN(claimEvent.time_invalidator_extension_payment_amount)
+        //           ).toNumber() *
+        //             ((new Date(
+        //               claimEvent.time_invalidator_expiration
+        //             ).valueOf() -
+        //               new Date(claimEvent.state_changed_at).valueOf()) /
+        //               1000)) /
+        //           claimEvent.time_invalidator_extension_duration_seconds
+        //         : 0
+        //     })
+        //     .reduce((prev: number, curr: number) => prev + curr, 0)
+        // }
 
-        const getTotalRentalDuration = () => {
-          return claimEvents
-            .map((claimEvent: ClaimEvent) =>
-              claimEvent.time_invalidator_expiration
-                ? (new Date(claimEvent.time_invalidator_expiration).getTime() -
-                    new Date(claimEvent.state_changed_at).getTime()) /
-                  1000
-                : claimEvent.time_invalidator_duration_seconds
-                ? claimEvent.time_invalidator_duration_seconds
-                : 0
-            )
-            .reduce((prev: number, curr: number) => prev + curr, 0)
-        }
+        // const getTotalRentalDuration = () => {
+        //   return claimEvents
+        //     .map((claimEvent: ClaimEvent) =>
+        //       claimEvent.time_invalidator_expiration
+        //         ? (new Date(claimEvent.time_invalidator_expiration).getTime() -
+        //             new Date(claimEvent.state_changed_at).getTime()) /
+        //           1000
+        //         : claimEvent.time_invalidator_duration_seconds
+        //         ? claimEvent.time_invalidator_duration_seconds
+        //         : 0
+        //     )
+        //     .reduce((prev: number, curr: number) => prev + curr, 0)
+        // }
 
         const stats = {
           totalRentalCount: claimEvents.length,
-          totalRentalVolume: 0,
-          totalRentalDuration: getTotalRentalDuration(),
+          totalRentalVolume: null,
+          totalRentalDuration: null,
         }
         return stats
       } else {
