@@ -208,7 +208,6 @@ export const RentalCard = ({
   const [link, setLink] = useState<string | null>(null)
   const { refreshTokenAccounts } = useUserTokenData()
   const { paymentMintInfos } = usePaymentMints()
-  const metaplexDatas = tokenDatas.map((t) => t.metaplexData)
 
   // TODO get this from tokenData
   const [editionInfos, setEditionInfos] = useState<(EditionInfo | null)[]>([])
@@ -227,7 +226,7 @@ export const RentalCard = ({
   }
   useEffect(() => {
     getEdition()
-  }, [metaplexDatas])
+  }, [tokenDatas])
 
   // Pull overrides from config
   const visibilities =
