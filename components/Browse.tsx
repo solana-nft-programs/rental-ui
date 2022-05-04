@@ -873,7 +873,7 @@ export const Browse = () => {
                               }
                             >
                               <p className="flex w-fit overflow-hidden text-ellipsis whitespace-nowrap text-left">
-                                {tokenData.metadata.data.name}
+                                {tokenData.metadata?.data?.name}
                               </p>
                               <div className="ml-[6px] mt-[2px] flex w-fit">
                                 <FaLink />
@@ -962,7 +962,7 @@ export const Browse = () => {
                               }
                             >
                               <p className="flex w-fit overflow-hidden text-ellipsis whitespace-nowrap text-left">
-                                {tokenData.metadata.data.name}
+                                {tokenData.metadata?.data?.name}
                               </p>
                               <div className="ml-[6px] mt-[2px] flex w-fit">
                                 <span className="flex w-full text-left">

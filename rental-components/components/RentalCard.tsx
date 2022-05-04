@@ -162,7 +162,10 @@ export type RentalCardConfig = {
     invalidationTypes?: InvalidationTypeOption[]
     paymentMints?: string[]
     freezeRentalDuration?: { durationOption?: DurationOption; value?: string }
-    freezeRentalRateDuration?: { durationOption?: DurationOption; value?: string }
+    freezeRentalRateDuration?: {
+      durationOption?: DurationOption
+      value?: string
+    }
     visibilities?: VisibilityOption[]
     setClaimRentalReceipt?: boolean
     showClaimRentalReceipt?: boolean
@@ -205,7 +208,6 @@ export const RentalCard = ({
   const [link, setLink] = useState<string | null>(null)
   const { refreshTokenAccounts } = useUserTokenData()
   const { paymentMintInfos } = usePaymentMints()
-  const metaplexDatas = tokenDatas.map((t) => t.metaplexData)
 
   // TODO get this from tokenData
   const [editionInfos, setEditionInfos] = useState<(EditionInfo | null)[]>([])
@@ -224,7 +226,7 @@ export const RentalCard = ({
   }
   useEffect(() => {
     getEdition()
-  }, [metaplexDatas])
+  }, [tokenDatas])
 
   // Pull overrides from config
   const visibilities =
@@ -279,7 +281,6 @@ export const RentalCard = ({
   const [paymentMint, setPaymentMint] = useState<string>(
     defaultPaymentMint.mint
   )
-  const [expiration, setExpiration] = useState<number | null>(null)
   const [durationAmount, setDurationAmount] = useState<number | null>(
     parseInt(defaultDurationAmount)
   )
@@ -336,7 +337,7 @@ export const RentalCard = ({
       setDurationAmount(null)
     }
     if (!selectedInvalidators.includes('expiration')) {
-      setExpiration(null)
+      setExtensionMaxExpiration(null)
     }
     if (!selectedInvalidators.includes('manual')) {
       setCustomInvalidator(undefined)
@@ -351,8 +352,8 @@ export const RentalCard = ({
     if (selectedInvalidators.includes('rate')) {
       setExtensionDurationAmount(
         parseInt(
-          rentalCardConfig.invalidationOptions?.freezeRentalRateDuration?.value ??
-            '1'
+          rentalCardConfig.invalidationOptions?.freezeRentalRateDuration
+            ?.value ?? '1'
         )
       )
       setExtensionPaymentMint(defaultPaymentMint.mint)
@@ -409,8 +410,8 @@ export const RentalCard = ({
           )
         }
         if (
-          expiration &&
-          expiration - Date.now() >
+          extensionMaxExpiration &&
+          extensionMaxExpiration - Date.now() >
             rentalCardConfig.invalidationOptions?.maxDurationAllowed.value
         ) {
           throw (
@@ -444,9 +445,10 @@ export const RentalCard = ({
                 }
               : undefined,
           timeInvalidation:
-            expiration || (durationAmount && durationOption) || rateRental
+            extensionMaxExpiration ||
+            (durationAmount && durationOption) ||
+            rateRental
               ? {
-                  expiration: expiration || undefined,
                   durationSeconds:
                     (durationAmount || durationAmount === 0) && durationOption
                       ? durationAmount * (durationData[durationOption] || 0)
@@ -551,7 +553,7 @@ export const RentalCard = ({
                   state={tokenData.tokenManager?.parsed.state}
                   paymentAmount={price || undefined}
                   paymentMint={paymentMint || undefined}
-                  expiration={expiration || undefined}
+                  expiration={extensionMaxExpiration || undefined}
                   durationSeconds={
                     durationAmount && durationOption
                       ? durationAmount * (durationData[durationOption] || 0)
@@ -891,7 +893,7 @@ export const RentalCard = ({
                       }}
                       showTime
                       onChange={(e) =>
-                        setExpiration(e ? e.valueOf() / 1000 : null)
+                        setExtensionMaxExpiration(e ? e.valueOf() / 1000 : null)
                       }
                     />
                   </div>
@@ -1221,9 +1223,9 @@ export const RentalCard = ({
                       <>
                         <div>
                           Whoever claims this rental may own the asset{' '}
-                          {totalUsages && expiration ? (
+                          {totalUsages && extensionMaxExpiration ? (
                             `for either ${totalUsages} uses or until ${longDateString(
-                              expiration
+                              extensionMaxExpiration
                             )} and then it will be ${
                               invalidationType === InvalidationType.Return
                                 ? 'securely returned to you.'
@@ -1235,18 +1237,6 @@ export const RentalCard = ({
                             }`
                           ) : totalUsages ? (
                             `for ${totalUsages} uses and then it will be ${
-                              invalidationType === InvalidationType.Return
-                                ? 'securely returned to you.'
-                                : invalidationType === InvalidationType.Release
-                                ? 'released to whoever claims it.'
-                                : invalidationType === InvalidationType.Reissue
-                                ? 'relisted back in the marketplace.'
-                                : 'invalid forever.'
-                            }`
-                          ) : expiration ? (
-                            `until ${longDateString(
-                              expiration
-                            )} and then it will be ${
                               invalidationType === InvalidationType.Return
                                 ? 'securely returned to you.'
                                 : invalidationType === InvalidationType.Release
@@ -1290,16 +1280,18 @@ export const RentalCard = ({
                               revokes it
                             </>
                           ) : selectedInvalidators.includes('rate') ? (
-                            `at the rate of  ${extensionRate()} ${
-                              extensionMaxExpiration
-                                ? ` up until ${new Date(
-                                    extensionMaxExpiration * 1000
-                                  ).toLocaleString('en-US')}.`
-                                : '.'
-                            }`
-                          ) : (
+                            `at the rate of  ${extensionRate()}.`
+                          ) : !extensionMaxExpiration ? (
                             'forever.'
+                          ) : (
+                            '.'
                           )}
+                          {extensionMaxExpiration
+                            ? ` This rental will be returned to your wallet at ${new Date(
+                                extensionMaxExpiration * 1000
+                              ).toLocaleString('en-US')}.`
+                            : ''}
+                          `
                           {showExtendDuration &&
                           extensionPaymentAmount &&
                           extensionDurationAmount &&
@@ -1361,10 +1353,10 @@ export const RentalCard = ({
                                       .substring(0, durationOption.length - 1)}
                               </p>
                             ) : null}
-                            {expiration && (
+                            {extensionMaxExpiration && (
                               <p>
                                 <b>Expiration: </b>{' '}
-                                {shortDateString(expiration)}
+                                {shortDateString(extensionMaxExpiration)}
                               </p>
                             )}
                             {totalUsages && (

@@ -246,18 +246,11 @@ export function NFTOverlay({
               )?.symbol || paymentMint.toString()}
             </div>
           )}
-        {expiration && (
+        {expiration && state === TokenManagerState.Claimed && (
           <div className="expiration">
             {utils.getExpirationString(expiration, UTCNow)}
           </div>
         )}
-        {/* {!expiration &&
-          durationSeconds &&
-          state !== TokenManagerState.Claimed && (
-            <div className="expiration">
-              {utils.secondstoDuration(durationSeconds)}
-            </div>
-          )} */}
         {!expiration &&
           durationSeconds &&
           stateChangedAt &&
@@ -269,7 +262,7 @@ export function NFTOverlay({
               )}
             </div>
           )}
-        {usages !== undefined && (
+        {usages !== undefined && state === TokenManagerState.Claimed && (
           <div className="expiration">
             Used ({usages?.toString() || 0}
             {totalUsages && ` / ${totalUsages.toString()}`})
