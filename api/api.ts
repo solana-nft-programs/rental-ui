@@ -263,7 +263,8 @@ export const accountDataById = async (
   const filteredIds = ids.filter((id): id is PublicKey => id !== null)
   const delegateAccountInfos = await getBatchedMultipleAccounts(
     connection,
-    filteredIds
+    filteredIds,
+    { encoding: 'jsonParsed' }
   )
   return deserializeAccountInfos(filteredIds, delegateAccountInfos)
 }
