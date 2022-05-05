@@ -638,13 +638,13 @@ export const Browse = () => {
           { name: 'Browse', anchor: 'browse' },
         ]}
       />
-      <div className="container mx-auto pt-10">
-        <div className="mb-4 flex h-min w-full flex-col flex-wrap justify-center md:flex-row md:justify-center">
-          <div
-            className="rounded-m flex h-fit rounded-lg"
-            style={{ background: lighten(0.07, config.colors.main) }}
-          >
-            <div className="d-block flex-col py-3 px-5">
+      <div className="container mx-auto pt-4">
+        <div className="mb-4 flex h-min w-full justify-center md:flex-row md:justify-center">
+          <div className="rounded-m flex h-fit flex-col rounded-lg sm:flex-row">
+            <div
+              className="d-block mb-2 flex-col py-3 px-5 sm:mb-0"
+              style={{ background: lighten(0.07, config.colors.main) }}
+            >
               <p className="text-gray-400">
                 FLOOR PRICE /{' '}
                 {config.marketplaceRate
@@ -661,10 +661,13 @@ export const Browse = () => {
               </h2>
             </div>
             <div
-              className="my-3 w-[1px]"
+              className="w-[1px]"
               style={{ background: lighten(0.4, config.colors.main) }}
             ></div>
-            <div className="d-block flex-col py-3 px-5">
+            <div
+              className="d-block mb-2 flex-col py-3 px-5 sm:mb-0"
+              style={{ background: lighten(0.07, config.colors.main) }}
+            >
               <p className="text-gray-400">TOTAL LISTED</p>
               <h2 className="text-center font-bold text-gray-100">
                 {filteredAndSortedTokens.length}
@@ -676,10 +679,13 @@ export const Browse = () => {
                 {projectStats.data?.totalRentalCount && (
                   <>
                     <div
-                      className="my-3 w-[1px]"
+                      className="w-[1px]"
                       style={{ background: lighten(0.4, config.colors.main) }}
                     ></div>
-                    <div className="d-block flex-col py-3 px-5">
+                    <div
+                      className="d-block flex-col py-3 px-5"
+                      style={{ background: lighten(0.07, config.colors.main) }}
+                    >
                       <p className="text-gray-400">TOTAL RENTALS (ALL-TIME)</p>
                       <h2 className="text-center font-bold text-gray-100">
                         {projectStats.data?.totalRentalCount}
