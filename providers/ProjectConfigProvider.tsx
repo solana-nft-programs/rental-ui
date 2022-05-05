@@ -70,39 +70,37 @@ export const getInitialProps = async ({
 
 export const filterTokens = (
   cluster: string,
-  filters: {
-    type: 'creators' | 'symbol' | 'issuer'
-    value: string | string[]
-  }[],
   tokens: TokenData[],
+  filter?: {
+    type: 'creators' | 'symbol' | 'issuer'
+    value: string[]
+  },
   issuer?: PublicKey | null
 ): TokenData[] => {
   return tokens.filter((token) => {
     let filtered = false
-    if (filters.length > 0 || issuer) {
-      filters.forEach((configFilter) => {
-        if (
-          configFilter.type === 'creators' &&
-          !token.metaplexData?.data?.data?.creators?.some(
-            (creator) =>
-              configFilter.value.includes(creator.address.toString()) &&
-              (cluster === 'devnet' || creator.verified)
-          )
-        ) {
-          filtered = true
-        } else if (
-          configFilter.type === 'symbol' &&
-          token.metadata?.data?.symbol !== configFilter.value
-        ) {
-          filtered = true
-        } else if (
-          configFilter.type === 'issuer' &&
-          token.tokenManager?.parsed.issuer &&
-          token.tokenManager?.parsed.issuer.toString() !== configFilter.value
-        ) {
-          filtered = true
-        }
-      })
+    if (filter) {
+      if (
+        filter.type === 'creators' &&
+        !token.metaplexData?.data?.data?.creators?.some(
+          (creator) =>
+            filter.value.includes(creator.address.toString()) &&
+            (cluster === 'devnet' || creator.verified)
+        )
+      ) {
+        filtered = true
+      } else if (
+        filter.type === 'symbol' &&
+        token.metadata?.data?.symbol !== filter.value
+      ) {
+        filtered = true
+      } else if (
+        filter.type === 'issuer' &&
+        token.tokenManager?.parsed.issuer &&
+        filter.value.includes(token.tokenManager?.parsed.issuer.toString())
+      ) {
+        filtered = true
+      }
       if (issuer && !token.tokenManager?.parsed.issuer.equals(issuer)) {
         filtered = true
       }

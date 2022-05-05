@@ -19,67 +19,6 @@ import { Airdrop, AirdropSol } from './Airdrop'
 import { LoadingPulse } from './LoadingPulse'
 import { Popover } from './Popover'
 
-export const StyledHeader = styled.div<{ isTabletOrMobile: boolean }>`
-  z-index: 100;
-  position: fixed;
-  justify-content: space-between;
-  display: flex;
-  top: 0;
-  width: 100%;
-  height: 100px;
-  align-items: center;
-
-  .left {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-  }
-
-  .right {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    justify-content: flex-end;
-
-    button {
-      background: none;
-
-      &:hover {
-        background: none;
-      }
-    }
-  }
-
-  .center {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    color: rgba(255, 255, 255, 0.8);
-    @media (max-width: 1224px) {
-      width: 100vw;
-    }
-  }
-
-  .title {
-    color: rgba(255, 255, 255, 0.8);
-    position: relative;
-
-    .subscript {
-      font-size: 10px;
-      font-style: italic;
-      bottom: 5px;
-      background: rgba(255, 255, 255, 0.3);
-      border-radius: 6px;
-      padding: 3px 5px;
-    }
-  }
-
-  .wallet-adapter-button {
-    padding: 0px;
-  }
-`
-
 export const Hamburger = styled.div`
     cursor: pointer;
     padding: 5px 0px;
@@ -112,56 +51,16 @@ export const Hamburger = styled.div`
   }
 `
 
-export const StyledTabs = styled.div<{ show: boolean }>`
-  font-size: 13px;
+export const StyledWalletButton = styled(WalletMultiButton)`
+  button {
+    background: none;
 
-  @media (min-width: 1224px) {
-    display: flex;
-    margin: 30px auto;
-    padding: 5px;
-    position: relative;
-    border-radius: 20px;
-    align-items: center;
-    gap: 5px;
-
-    .vline {
-      width: 1px;
-      height: 20px;
-      background: ${Colors.lightGray};
-      opacity: 0;
+    &:hover {
+      background: none;
     }
   }
-
-  @media (max-width: 1224px) {
-    display: flex;
-    height: 40vh;
-    width: 100vw;
-    position: absolute;
-    gap: 10px;
-    top: ${({ show }) => (show ? '-50px' : '-60vh')};
-    text-align: center;
-    align-items: center;
-    flex-direction: column;
-    justify-content: space-around;
-    padding: 20% 0px;
-    background-color: ${Colors.navBg};
-  }
-`
-
-export const StyledTab = styled.div<{
-  selected: boolean
-  disabled: boolean | undefined
-}>`
-  border-radius: 20px;
-  opacity: ${({ disabled }) => (disabled ? 0.25 : 1)};
-  text-align: center;
-  width: 150px;
-  padding: 10px 20px;
-  cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
-  &:hover {
-    // transition: 0.3s all;
-    background: ${({ disabled }) =>
-      disabled ? '' : lighten(0.07, Colors.secondary)};
+  .wallet-adapter-button {
+    padding: 0px;
   }
 `
 
@@ -197,13 +96,12 @@ export const Header = ({
 
   const issuer = tryPublicKey(config.issuer?.publicKeyString)
   return (
-    <StyledHeader
-      isTabletOrMobile={isTabletOrMobile}
-      className="shadow-2xl"
+    <div
+      className="fixed top-0 z-[100] flex h-[100px] w-full items-center justify-between shadow-2xl"
       style={{ background: config.colors.main }}
     >
-      <div className="left pl-8">
-        <div className="title" style={{ marginRight: '40px' }}>
+      <div className="flex gap-5 pl-8 text-gray-300">
+        <div className="title relative" style={{ marginRight: '40px' }}>
           {issuer ? (
             <>
               <div className="flex cursor-pointer gap-2">
@@ -228,12 +126,15 @@ export const Header = ({
                   alt="logo"
                 />
               </a>
-
-              {ctx.environment.label === 'devnet' ? (
-                <div className="subscript absolute right-[-35px]">dev</div>
-              ) : (
-                <div className="subscript absolute right-[-45px]">alpha</div>
-              )}
+              <div
+                className={`absolute bottom-1 rounded-md bg-gray-600 py-[3px] px-[5px] text-[10px] italic ${
+                  ctx.environment.label === 'devnet'
+                    ? 'right-[-35px]'
+                    : 'right-[-45px]'
+                }`}
+              >
+                {ctx.environment.label === 'devnet' ? 'dev' : 'alpha'}
+              </div>
             </>
           )}
         </div>
@@ -252,32 +153,38 @@ export const Header = ({
         {wallet.connected &&
           ctx.environment.label === 'devnet' &&
           !isTabletOrMobile && (
-            <div className="flex gap-2">
+            <div className="my-auto flex gap-2">
               <Airdrop />
               <AirdropSol />
             </div>
           )}
       </div>
-      <div className="center">
+      <div className="absolute left-1/2 w-screen -translate-x-1/2 md:w-auto">
         {tabs && (
-          <StyledTabs
+          <div
             style={{ background: lighten(0.07, config.colors.main) }}
-            show={showTabs}
-            className="shadow-2xl"
+            className={`flex p-[5px] text-sm shadow-2xl ${
+              showTabs ? 'top-[-50px]' : 'top-[-60vh]'
+            } absolute h-[40vh] w-screen flex-col items-center justify-around rounded-none py-20 md:relative md:top-0 md:h-auto md:w-auto md:translate-x-0 md:flex-row md:rounded-[20px] md:p-[5px]`}
           >
             {tabs.map(({ disabled, name, anchor }) => (
-              <StyledTab
+              <div
+                className={`w-[150px] rounded-[20px] px-[20px] py-[10px] text-center ${
+                  tab === anchor ? '' : ''
+                } ${
+                  disabled ? 'opacity-25' : 'cursor-pointer'
+                } transition-all hover:brightness-125`}
                 key={anchor}
                 style={{
-                  background: tab === anchor ? config.colors.secondary : 'none',
+                  backgroundColor:
+                    tab === anchor
+                      ? config.colors.secondary
+                      : lighten(0.07, config.colors.main),
                   color:
                     tab === anchor
                       ? getColorByBgColor(config.colors.secondary)
                       : getColorByBgColor(config.colors.main),
                 }}
-                selected={tab === anchor}
-                className="tab"
-                disabled={disabled}
                 onClick={() => {
                   if (disabled) return
                   setTab(anchor)
@@ -288,7 +195,7 @@ export const Header = ({
                 }}
               >
                 {name}
-              </StyledTab>
+              </div>
             ))}
             <div
               style={{
@@ -301,22 +208,10 @@ export const Header = ({
             >
               <LoadingPulse loading={loading ?? false} />
             </div>
-          </StyledTabs>
+          </div>
         )}
       </div>
       <div className="right pr-8">
-        {/* <div
-          style={{
-            position: 'absolute',
-            color: 'white',
-            width: '30px',
-            height: '30px',
-            left: isTabletOrMobile ? 'none' : -50,
-            top: isTabletOrMobile ? 50 : 8,
-          }}
-        >
-          <LoadingPulse loading={loading ?? false} />
-        </div> */}
         {wallet.connected && wallet.publicKey ? (
           isTabletOrMobile ? (
             <Hamburger className="hamb" onClick={() => setShowTabs(!showTabs)}>
@@ -339,7 +234,7 @@ export const Header = ({
             </Popover>
           )
         ) : (
-          <WalletMultiButton
+          <StyledWalletButton
             style={{
               color: 'rgba(255,255,255,0.8)',
               fontSize: '14px',
@@ -352,6 +247,6 @@ export const Header = ({
           />
         )}
       </div>
-    </StyledHeader>
+    </div>
   )
 }

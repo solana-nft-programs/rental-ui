@@ -7,10 +7,10 @@ import type { Wallet } from '@saberhq/solana-contrib'
 import { useWallet } from '@solana/wallet-adapter-react'
 import type { Cluster } from '@solana/web3.js'
 import { lighten } from 'polished'
-import { ENVIRONMENTS, useEnvironmentCtx } from 'providers/EnvironmentProvider'
+import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import React from 'react'
-import { FaGlobe, FaPowerOff, FaTwitter } from 'react-icons/fa'
+import { FaPowerOff, FaTwitter } from 'react-icons/fa'
 
 export const AccountPopover = () => {
   const { connection, environment, setEnvironment } = useEnvironmentCtx()
@@ -78,7 +78,10 @@ export const AccountPopover = () => {
               <FaTwitter />
               <span>
                 {loadingName ? (
-                  <div className="w-24" />
+                  <div
+                    className="animate h-4 w-24 animate-pulse"
+                    style={{ background: lighten(0.1, config.colors.main) }}
+                  />
                 ) : displayName ? (
                   'Edit Twitter'
                 ) : (

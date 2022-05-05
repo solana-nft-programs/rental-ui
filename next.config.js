@@ -12,7 +12,7 @@ if (
 
 /** @type {import('next').NextConfig} */
 module.exports = {
-  reactStrictMode: true,
+  reactStrictMode: false,
   env: {
     BASE_URL: process.env.BASE_URL || 'http://localhost:3000',
     BASE_CLUSTER: process.env.BASE_CLUSTER || 'devnet',

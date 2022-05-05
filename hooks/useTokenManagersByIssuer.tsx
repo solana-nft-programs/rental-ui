@@ -3,6 +3,7 @@ import { getTokenManagersForIssuer } from '@cardinal/token-manager/dist/cjs/prog
 import type { TokenData } from 'api/api'
 import { convertStringsToPubkeys, getTokenDatas } from 'api/api'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
+import { useProjectConfig } from 'providers/ProjectConfigProvider'
 
 // import { filterTokens, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useDataHook } from './useDataHook'
@@ -10,7 +11,7 @@ import { useWalletId } from './useWalletId'
 
 export const useTokenManagersByIssuer = () => {
   const walletId = useWalletId()
-  // const { config } = useProjectConfig()
+  const { config } = useProjectConfig()
   const { connection, environment } = useEnvironmentCtx()
   return useDataHook<TokenData[] | undefined>(
     async () => {
@@ -51,7 +52,6 @@ export const useTokenManagersByIssuer = () => {
           }/tokenManagersByIssuer?issuer=${walletId.toBase58()}&cluster=${
             environment.label
           }`
-          // &collection=${config.name}
         )
         const json = (await response.json()) as { data: TokenData[] }
         return json.data.map((tokenData) => convertStringsToPubkeys(tokenData))
@@ -60,9 +60,13 @@ export const useTokenManagersByIssuer = () => {
           connection,
           walletId
         )
-        return getTokenDatas(connection, tokenManagerDatas)
-        // tokenDatas = filterTokens(environment.label, config.filters, tokenDatas)
-        // return tokenDatas
+        const tokenDatas = await getTokenDatas(
+          connection,
+          tokenManagerDatas,
+          config.filter,
+          environment.label
+        )
+        return tokenDatas
       }
     },
     [walletId?.toString()],

@@ -2,17 +2,14 @@ import styled from '@emotion/styled'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
 import { Footer } from 'common/Footer'
-import { Header } from 'common/Header'
 import { Browse } from 'components/Browse'
 import { Collections } from 'components/Collections'
 import { Manage } from 'components/Manage'
 import { Wallet } from 'components/Wallet'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { useError } from 'providers/ErrorProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useUserTokenData } from 'providers/TokenDataProvider'
-import { useAllTokenManagers } from 'providers/TokenManagersProvider'
 import { useEffect, useState } from 'react'
 
 const StyledSplash = styled.div`
@@ -41,10 +38,8 @@ const StyledSplash = styled.div`
 
 export default function Home() {
   const { config } = useProjectConfig()
-  const [error, _setError] = useError()
   const wallet = useWallet()
   const router = useRouter()
-  const tokenManagers = useAllTokenManagers()
   const [tab, setTab] = useState<string>('')
 
   useEffect(() => {
@@ -110,27 +105,10 @@ export default function Home() {
       </Head>
       {tab ? (
         <>
-          <Header
-            loading={tokenManagers.loaded && tokenManagers.refreshing}
-            tabs={[
-              {
-                name: 'Wallet',
-                anchor: wallet.publicKey?.toBase58() || 'wallet',
-                disabled: !wallet.connected,
-              },
-              {
-                name: 'Manage',
-                anchor: 'manage',
-                disabled: !wallet.connected || config.disableListing,
-              },
-              { name: 'Browse', anchor: 'browse' },
-            ]}
-          />
           <div
             className="pt-[100px]"
             style={{ minHeight: 'calc(100vh - 337px)' }}
           >
-            {error}
             {(() => {
               switch (tab) {
                 case 'browse':

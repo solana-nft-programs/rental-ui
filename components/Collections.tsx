@@ -1,4 +1,5 @@
-import { NFTPlaceholder } from 'common/NFTPlaceholder'
+import { useWallet } from '@solana/wallet-adapter-react'
+import { Header } from 'common/Header'
 import type { ProjectConfig } from 'config/config'
 import { projectConfigs } from 'config/config'
 import { lighten } from 'polished'
@@ -6,7 +7,8 @@ import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import React from 'react'
 
 export const Collections = ({ setTab }: { setTab: (s: string) => void }) => {
-  const { setProjectConfig } = useProjectConfig()
+  const { setProjectConfig, config } = useProjectConfig()
+  const wallet = useWallet()
 
   const categories = Object.entries(projectConfigs).reduce(
     (acc, [k, config]) => {
@@ -20,18 +22,24 @@ export const Collections = ({ setTab }: { setTab: (s: string) => void }) => {
   )
 
   return (
-    <div className="container mx-auto px-10 md:px-0">
-      {!projectConfigs ? (
-        <div className="grid grid-cols-4 flex-wrap gap-4">
-          <NFTPlaceholder />
-          <NFTPlaceholder />
-          <NFTPlaceholder />
-          <NFTPlaceholder />
-          <NFTPlaceholder />
-          <NFTPlaceholder />
-        </div>
-      ) : projectConfigs ? (
-        Object.entries(categories).map(([type, configs], i) => (
+    <>
+      <Header
+        tabs={[
+          {
+            name: 'Wallet',
+            anchor: wallet.publicKey?.toBase58() || 'wallet',
+            disabled: !wallet.connected,
+          },
+          {
+            name: 'Manage',
+            anchor: 'manage',
+            disabled: !wallet.connected || config.disableListing,
+          },
+          { name: 'Browse', anchor: 'browse' },
+        ]}
+      />
+      <div className="container mx-auto px-10 md:px-0">
+        {Object.entries(categories).map(([type, configs], i) => (
           <div key={type}>
             <div className="mt-10 mb-5 text-lg font-semibold text-white">
               {/* {type} */}
@@ -58,12 +66,8 @@ export const Collections = ({ setTab }: { setTab: (s: string) => void }) => {
               ))}
             </div>
           </div>
-        ))
-      ) : (
-        <div className="white flex w-full flex-col items-center justify-center gap-1">
-          <div className="text-white">No configs!</div>
-        </div>
-      )}
-    </div>
+        ))}
+      </div>
+    </>
   )
 }

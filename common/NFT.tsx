@@ -4,6 +4,7 @@ import styled from '@emotion/styled'
 import { useWallet } from '@solana/wallet-adapter-react'
 import type { TokenData } from 'api/api'
 import { pubKeyUrl } from 'common/utils'
+import type { ProjectConfig } from 'config/config'
 import { lighten } from 'polished'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
@@ -34,36 +35,54 @@ export const TokensOuter = styled.div`
   }
 `
 
-export const TokenMetadata = styled.div<{ allBorderRadius?: boolean }>`
-  text-align: center;
-  position: relative;
-  display: inline-block;
-  border-radius: ${({ allBorderRadius }) =>
-    allBorderRadius ? '10px' : '10px 10px 0 0'};
-  width: 280px;
+export function NFTPlaceholder() {
+  const { config } = useProjectConfig()
+  return (
+    <div className="w-[280px]">
+      <div
+        className="flex h-[280px] w-full animate-pulse items-center justify-center rounded-t-md p-0"
+        style={{ background: lighten(0.04, config.colors.main) }}
+      >
+        {/* <div
+          className="h-full w-full animate-pulse rounded-md"
+          style={{ background: lighten(0.04, config.colors.main) }}
+        ></div> */}
+      </div>
+      <div
+        style={{ background: lighten(0.07, config.colors.main) }}
+        className={`flex min-h-[82px] w-[280px] flex-col gap-3 rounded-b-md p-3`}
+      >
+        <div
+          className="h-5 w-2/3 animate-pulse rounded-md"
+          style={{ background: lighten(0.1, config.colors.main) }}
+        ></div>
+        <div
+          className="h-5 w-1/3 animate-pulse rounded-md"
+          style={{ background: lighten(0.1, config.colors.main) }}
+        ></div>
+      </div>
+    </div>
+  )
+}
 
-  #media-outer {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 280px;
-    max-width: 100%;
-    #media {
-      object-fit: contain;
-      // max-width: 250px;
-      height: 100%;
-      --poster-color: transparent;
-    }
-  }
-`
+export const elligibleForRent = (
+  config: ProjectConfig,
+  tokenData: TokenData
+): boolean => {
+  return (
+    !config.disableListing &&
+    !tokenData.tokenManager &&
+    tokenData.tokenAccount?.account.data.parsed.info.state !== 'frozen' &&
+    Boolean(tokenData.editionData)
+  )
+}
 
 interface NFTProps {
   tokenData: TokenData
-  fullyRounded?: boolean
   onClick?: () => void
 }
 
-export function NFT({ tokenData, fullyRounded, onClick }: NFTProps) {
+export function NFT({ tokenData, onClick }: NFTProps) {
   const ctx = useEnvironmentCtx()
   const wallet = useWallet()
   const { show } = useQRCode()
@@ -78,14 +97,9 @@ export function NFT({ tokenData, fullyRounded, onClick }: NFTProps) {
     useInvalidator,
   } = tokenData
 
-  const elligibleForRent =
-    !config.disableListing &&
-    !tokenManager &&
-    tokenAccount?.account.data.parsed.info.state !== 'frozen' &&
-    tokenData.editionData
-
   return (
-    <TokenMetadata
+    <div
+      className="relative w-[280px]"
       style={{
         background: lighten(0.02, config.colors.main),
       }}
@@ -123,12 +137,12 @@ export function NFT({ tokenData, fullyRounded, onClick }: NFTProps) {
               <PopoverItem>
                 <div
                   className={`${
-                    elligibleForRent
+                    elligibleForRent(config, tokenData)
                       ? 'cursor-pointer'
                       : 'cursor-default opacity-20'
                   } flex items-center justify-between gap-2`}
                   onClick={() => {
-                    elligibleForRent &&
+                    elligibleForRent(config, tokenData) &&
                       rentalModal.show(
                         asWallet(wallet),
                         ctx.connection,
@@ -207,8 +221,7 @@ export function NFT({ tokenData, fullyRounded, onClick }: NFTProps) {
         </div>
       </Popover>
       <div
-        id="media-outer"
-        className={`z-0 ${onClick ? 'cursor-pointer' : ''}`}
+        className={`z-0 flex h-[280px] max-w-full cursor-pointer items-center justify-center`}
         onClick={() => {
           onClick ? onClick() : () => {}
         }}
@@ -227,23 +240,18 @@ export function NFT({ tokenData, fullyRounded, onClick }: NFTProps) {
             lineHeight={14}
             stateChangedAt={
               tokenManager?.parsed.stateChangedAt?.toNumber() || undefined
-            }
+            }            
           />
         )}
         {metadata && metadata.data && (
           <img
-            id="media"
             src={metadata.data.image}
             // src={customImageUri || metadata.data.image}
             alt={metadata.data.name}
-            className={
-              fullyRounded
-                ? 'rounded-[10px]'
-                : 'rounded-tr-[10px] rounded-tl-[10px]'
-            }
+            className={`h-full rounded-t-[10px] object-contain`}
           />
         )}
       </div>
-    </TokenMetadata>
+    </div>
   )
 }

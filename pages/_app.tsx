@@ -17,7 +17,7 @@ import {
   ProjectConfigProvider,
 } from 'providers/ProjectConfigProvider'
 import { TokenAccountsProvider } from 'providers/TokenDataProvider'
-import { TokenManagersProvider } from 'providers/TokenManagersProvider'
+// import { TokenManagersProvider } from 'providers/TokenManagersProvider'
 import { UTCNowProvider } from 'providers/UTCNowProvider'
 import { QRCodeProvider } from 'rental-components/QRCodeProvider'
 import { RentalExtensionModalProvider } from 'rental-components/RentalExtensionModalProvider'
@@ -39,20 +39,20 @@ const App = ({
             <QRCodeProvider>
               <UTCNowProvider>
                 <TokenAccountsProvider>
-                  <TokenManagersProvider>
-                    <RentalModalProvider>
-                      <RentalExtensionModalProvider>
-                        <RentalRateModalProvider>
-                          <WalletModalProvider>
-                            <>
-                              <ToastContainer />
-                              <Component {...pageProps} />
-                            </>
-                          </WalletModalProvider>
-                        </RentalRateModalProvider>
-                      </RentalExtensionModalProvider>
-                    </RentalModalProvider>
-                  </TokenManagersProvider>
+                  {/* <TokenManagersProvider> */}
+                  <RentalModalProvider>
+                    <RentalExtensionModalProvider>
+                      <RentalRateModalProvider>
+                        <WalletModalProvider>
+                          <>
+                            <ToastContainer />
+                            <Component {...pageProps} />
+                          </>
+                        </WalletModalProvider>
+                      </RentalRateModalProvider>
+                    </RentalExtensionModalProvider>
+                  </RentalModalProvider>
+                  {/* </TokenManagersProvider> */}
                 </TokenAccountsProvider>
               </UTCNowProvider>
             </QRCodeProvider>
