@@ -1,7 +1,7 @@
 import { withInvalidate } from '@cardinal/token-manager'
 import { InvalidationType } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { useWallet } from '@solana/wallet-adapter-react'
-import { PublicKey, Transaction } from '@solana/web3.js'
+import { Transaction } from '@solana/web3.js'
 import { Select } from 'antd'
 import { Option } from 'antd/lib/mentions'
 import type { TokenData } from 'api/api'
@@ -256,24 +256,26 @@ export const Wallet = () => {
             ) : filteredTokenDatas && filteredTokenDatas.length > 0 ? (
               filteredTokenDatas.map((tokenData) => (
                 <div key={tokenData.tokenAccount?.pubkey.toString()}>
-                  <NFT
-                    key={tokenData?.tokenAccount?.pubkey.toBase58()}
-                    tokenData={tokenData}
-                    onClick={() => handleNFTSelect(tokenData)}
-                  />
-                  {elligibleForRent(config, tokenData) && (
-                    <input
-                      autoComplete="off"
-                      type={'checkbox'}
-                      className={`absolute top-3 left-3 h-5 w-5  rounded-sm font-medium text-black focus:outline-none`}
-                      id={tokenData?.tokenAccount?.pubkey.toBase58()}
-                      name={tokenData?.tokenAccount?.pubkey.toBase58()}
-                      checked={isSelected(tokenData)}
-                      onChange={(e) => {
-                        handleNFTSelect(tokenData)
-                      }}
+                  <div className="relative">
+                    <NFT
+                      key={tokenData?.tokenAccount?.pubkey.toBase58()}
+                      tokenData={tokenData}
+                      onClick={() => handleNFTSelect(tokenData)}
                     />
-                  )}
+                    {elligibleForRent(config, tokenData) && (
+                      <input
+                        autoComplete="off"
+                        type={'checkbox'}
+                        className={`absolute left-3 top-3 z-20 h-5  w-5 rounded-sm font-medium text-black focus:outline-none`}
+                        id={tokenData?.tokenAccount?.pubkey.toBase58()}
+                        name={tokenData?.tokenAccount?.pubkey.toBase58()}
+                        checked={isSelected(tokenData)}
+                        onChange={(e) => {
+                          handleNFTSelect(tokenData)
+                        }}
+                      />
+                    )}
+                  </div>
                   <div
                     style={{
                       background: lighten(0.07, config.colors.main),

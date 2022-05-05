@@ -1,4 +1,4 @@
-import { TokenData } from './../api/api';
+import type { TokenData } from './../api/api';
 import type * as web3 from '@solana/web3.js'
 
 export type Cluster = web3.Cluster | 'mainnet' | 'localnet'

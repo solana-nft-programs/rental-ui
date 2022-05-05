@@ -99,7 +99,7 @@ export function NFT({ tokenData, onClick }: NFTProps) {
 
   return (
     <div
-      className="relative w-[280px]"
+      className="relative w-[280px] z-0"
       style={{
         background: lighten(0.02, config.colors.main),
       }}
