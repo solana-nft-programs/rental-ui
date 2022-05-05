@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { ApolloClient, gql, InMemoryCache } from '@apollo/client'
 import { BN } from '@project-serum/anchor'
 import { fmtMintAmount, getMintDecimalAmount } from 'common/units'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
@@ -37,8 +37,12 @@ export const useProjectStats = () => {
 
   return useDataHook<ProjectStats | undefined>(
     async () => {
-      if (environment.index && config.filter?.type === 'creators') {
-        const collectionClaimEvents = await environment.index.query({
+      const index = new ApolloClient({
+        uri: 'https://prod-holaplex.hasura.app/v1/graphql',
+        cache: new InMemoryCache({ resultCaching: false }),
+      })
+      if (index && config.filter?.type === 'creators') {
+        const collectionClaimEvents = await index.query({
           query: gql`
             query GetCardinalClaimEvents($creators: [String!]) {
               cardinal_claim_events(
@@ -78,34 +82,7 @@ export const useProjectStats = () => {
         if (claimEvents.length === 0) {
           return {}
         }
-
-        console.log(
-          claimEvents.map((claimEvent: ClaimEvent) =>
-            claimEvent.paid_claim_approver_payment_mint &&
-            claimEvent.paid_claim_approver_payment_amount
-              ? getMintDecimalAmount(
-                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                  paymentMintInfos[
-                    claimEvent.paid_claim_approver_payment_mint
-                  ]!,
-                  new BN(claimEvent.paid_claim_approver_payment_amount)
-                ).toNumber()
-              : claimEvent.time_invalidator_duration_seconds === 0
-              ? (getMintDecimalAmount(
-                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                  paymentMintInfos[
-                    claimEvent.time_invalidator_extension_payment_mint
-                  ]!,
-                  new BN(claimEvent.time_invalidator_extension_payment_amount)
-                ).toNumber() *
-                  ((new Date(claimEvent.time_invalidator_expiration).valueOf() -
-                    new Date(claimEvent.state_changed_at).valueOf()) /
-                    1000)) /
-                claimEvent.time_invalidator_extension_duration_seconds
-              : 0
-          )
-        )
-
+    
         // const getTotalRentalVolume = () => {
         //   return claimEvents
         //     .map((claimEvent: ClaimEvent) => {
@@ -166,6 +143,6 @@ export const useProjectStats = () => {
       }
     },
     [environment.index],
-    { name: 'useProjectStats', refreshInterval: 10000 }
+    { name: 'useProjectStats', refreshInterval: 60000 }
   )
 }
