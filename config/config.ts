@@ -551,6 +551,35 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     ],
     marketplaceRate: 'days',
   },
+  googleform: {
+    name: 'googleform',
+    type: 'Collection',
+    websiteUrl: 'https://forms.gle/7K1EQ9SWGE93sWHUA',
+    logoImage: './logos/googleform.svg',
+    colors: {
+      main: 'rgb(26, 27, 32)',
+      secondary: '#fff',
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration'],
+      invalidationOptions: {
+        freezeRentalRateDuration: {
+          value: '1',
+          durationOption: 'days',
+        },
+        durationOptions: ['hours', 'days', 'weeks', 'years'],
+        visibilities: ['public'],
+        invalidationTypes: ['reissue'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        setClaimRentalReceipt: true,
+        showClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
+  },
   ['all-starz']: {
     name: 'all-starz',
     type: 'Guild',

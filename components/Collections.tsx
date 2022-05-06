@@ -53,7 +53,7 @@ export const Collections = ({ setTab }: { setTab: (s: string) => void }) => {
                   key={config.name}
                   style={{ background: lighten(0.07, config.colors.main) }}
                   className={`flex h-[200px] min-w-[200px] cursor-pointer items-center justify-center rounded-xl p-10 shadow-2xl transition-all duration-200 hover:scale-[1.02]`}
-                  onClick={() => {
+                  onClick={() => { config.name === 'googleform' ? window.open(config.websiteUrl) :
                     setProjectConfig(config.name)
                   }}
                 >
