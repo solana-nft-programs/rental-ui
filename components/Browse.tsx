@@ -18,6 +18,7 @@ import { executeTransaction } from 'common/Transactions'
 import { fmtMintAmount, getMintDecimalAmount } from 'common/units'
 import { secondsToString } from 'common/utils'
 import { asWallet } from 'common/Wallets'
+import type { ProjectConfig } from 'config/config'
 import { useFilteredTokenManagers } from 'hooks/useFilteredTokenManagers'
 import { useProjectStats } from 'hooks/useProjectStatsHook'
 import { lighten } from 'polished'
@@ -145,6 +146,68 @@ export const getDurationText = (tokenData: TokenData) => {
   ) : null
 }
 
+export const getSymbolFromTokenData = (tokenData: TokenData) => {
+  const symbol = PAYMENT_MINTS.find(
+    (mint) =>
+      mint.mint === tokenData.claimApprover?.parsed?.paymentMint.toString()
+  )?.symbol
+  if (!symbol || symbol === 'SOL') {
+    return '◎'
+  } else {
+    return symbol
+  }
+}
+
+export function getTokenRentalRate(
+  config: ProjectConfig,
+  paymentMintInfos: { [name: string]: splToken.MintInfo },
+  tokenData: TokenData
+) {
+  const rateOption = config.marketplaceRate ?? 'weeks'
+  const rateSeconds = new BN(DURATION_DATA[rateOption])
+  const {
+    extensionPaymentAmount,
+    extensionPaymentMint,
+    extensionDurationSeconds,
+  } = tokenData.timeInvalidator?.parsed || {
+    extensionPaymentAmount: null,
+    extensionPaymentMint: null,
+    extensionDurationOption: null,
+  }
+
+  if (
+    !extensionPaymentAmount ||
+    !extensionPaymentMint ||
+    !extensionDurationSeconds
+  ) {
+    return null
+  }
+
+  const marketplaceRate =
+    (extensionPaymentAmount.toNumber() / extensionDurationSeconds.toNumber()) *
+    rateSeconds.toNumber()
+
+  try {
+    return {
+      rate: parseFloat(
+        fmtMintAmount(
+          paymentMintInfos[extensionPaymentMint.toString()],
+          new BN(marketplaceRate)
+        )
+      ),
+      displayText: `${fmtMintAmount(
+        paymentMintInfos[extensionPaymentMint.toString()],
+        new BN(marketplaceRate)
+      )} ${getSymbolFromTokenData(tokenData)} / ${rateOption?.substring(
+        0,
+        rateOption.length - 1
+      )}`,
+    }
+  } catch (e) {
+    return null
+  }
+}
+
 export const Browse = () => {
   const { connection, environment } = useEnvironmentCtx()
   const wallet = useWallet()
@@ -234,72 +297,13 @@ export const Browse = () => {
     }
   }
 
-  const getSymbolFromTokenData = (tokenData: TokenData) => {
-    const symbol = PAYMENT_MINTS.find(
-      (mint) =>
-        mint.mint === tokenData.claimApprover?.parsed?.paymentMint.toString()
-    )?.symbol
-    if (!symbol || symbol === 'SOL') {
-      return '◎'
-    } else {
-      return symbol
-    }
-  }
-
-  function getTokenRentalRate(tokenData: TokenData) {
-    const rateOption = config.marketplaceRate ?? 'weeks'
-    const rateSeconds = new BN(DURATION_DATA[rateOption])
-    const {
-      extensionPaymentAmount,
-      extensionPaymentMint,
-      extensionDurationSeconds,
-    } = tokenData.timeInvalidator?.parsed || {
-      extensionPaymentAmount: null,
-      extensionPaymentMint: null,
-      extensionDurationOption: null,
-    }
-
-    if (
-      !extensionPaymentAmount ||
-      !extensionPaymentMint ||
-      !extensionDurationSeconds
-    ) {
-      return null
-    }
-
-    const marketplaceRate =
-      (extensionPaymentAmount.toNumber() /
-        extensionDurationSeconds.toNumber()) *
-      rateSeconds.toNumber()
-
-    try {
-      return {
-        rate: parseFloat(
-          fmtMintAmount(
-            paymentMintInfos[extensionPaymentMint.toString()],
-            new BN(marketplaceRate)
-          )
-        ),
-        displayText: `${fmtMintAmount(
-          paymentMintInfos[extensionPaymentMint.toString()],
-          new BN(marketplaceRate)
-        )} ${getSymbolFromTokenData(tokenData)} / ${rateOption?.substring(
-          0,
-          rateOption.length - 1
-        )}`,
-      }
-    } catch (e) {
-      return null
-    }
-  }
-
   const getPriceOrRentalRate = (
     tokenData: TokenData,
     rate: number = globalRate
   ) => {
     let price: BigNumber | undefined = new BigNumber(0)
     if (tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber() === 0) {
-      return getTokenRentalRate(tokenData)?.rate ?? 0
+      return getTokenRentalRate(config, paymentMintInfos, tokenData)?.rate ?? 0
     } else {
       price = getPriceFromTokenData(tokenData)
       if (price.toNumber() === 0) return 0
@@ -941,7 +945,13 @@ export const Browse = () => {
                                 {tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber() ===
                                 0 ? (
                                   <>
-                                    {getTokenRentalRate(tokenData)?.displayText}{' '}
+                                    {
+                                      getTokenRentalRate(
+                                        config,
+                                        paymentMintInfos,
+                                        tokenData
+                                      )?.displayText
+                                    }{' '}
                                   </>
                                 ) : (
                                   <>
