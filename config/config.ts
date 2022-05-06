@@ -433,7 +433,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     name: 'metaops',
     type: 'Collection',
     websiteUrl: 'https://metaopsgaming.com/',
-    logoImage: './logos/metaops.png',
+    logoImage: '/logos/metaops.png',
     colors: {
       main: '#544046',
       secondary: '#e24040',
@@ -493,7 +493,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     name: 'psyker',
     type: 'Collection',
     websiteUrl: 'https://psyker.game/',
-    logoImage: './logos/psyker.png',
+    logoImage: '/logos/psyker.png',
     colors: {
       main: '#00101b',
       secondary: '#ff0034',
@@ -555,7 +555,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     name: 'all-starz',
     type: 'Guild',
     websiteUrl: 'https://all-starz.gitbook.io/all-starz/',
-    logoImage: './logos/all-starz.jpg',
+    logoImage: '/logos/all-starz.jpg',
     colors: {
       main: '#000',
       secondary: '#f71202',
