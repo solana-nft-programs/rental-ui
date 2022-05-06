@@ -47,12 +47,13 @@ export const Wallet = () => {
     )
 
     if (tokenData.timeInvalidator) {
-    await withResetExpiration(
-      transaction,
-      ctx.connection,
-      asWallet(wallet),
-      tokenData.tokenManager?.pubkey
-    )}
+      await withResetExpiration(
+        transaction,
+        ctx.connection,
+        asWallet(wallet),
+        tokenData.tokenManager?.pubkey
+      )
+    }
 
     await executeTransaction(ctx.connection, asWallet(wallet), transaction, {
       silent: false,
