@@ -1,4 +1,8 @@
-import { withClaimToken, withExtendExpiration } from '@cardinal/token-manager'
+import {
+  withClaimToken,
+  withExtendExpiration,
+  withResetExpiration,
+} from '@cardinal/token-manager'
 import { withWrapSol } from '@cardinal/token-manager/dist/cjs/wrappedSol'
 import styled from '@emotion/styled'
 import * as anchor from '@project-serum/anchor'
@@ -195,6 +199,15 @@ export const RentalRateCard = ({
       }
 
       console.log('Claiming token manager', tokenData)
+      if (tokenData.timeInvalidator) {
+        await withResetExpiration(
+          transaction,
+          connection,
+          wallet,
+          tokenData.tokenManager?.pubkey
+        )
+      }
+
       await withClaimToken(
         transaction,
         environment.override
@@ -203,6 +216,7 @@ export const RentalRateCard = ({
         wallet,
         tokenData.tokenManager?.pubkey
       )
+
       await withExtendExpiration(
         transaction,
         connection,
@@ -210,6 +224,7 @@ export const RentalRateCard = ({
         tokenData.tokenManager?.pubkey,
         currentExtensionSeconds
       )
+
       await executeTransaction(connection, wallet, transaction, {
         confirmOptions: { commitment: 'confirmed', maxRetries: 3 },
         signers: [],

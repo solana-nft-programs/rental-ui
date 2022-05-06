@@ -1,4 +1,4 @@
-import { withInvalidate } from '@cardinal/token-manager'
+import { withResetExpiration, withInvalidate } from '@cardinal/token-manager'
 import { InvalidationType } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { Transaction } from '@solana/web3.js'
@@ -45,6 +45,14 @@ export const Wallet = () => {
       asWallet(wallet),
       tokenData.tokenManager?.parsed.mint
     )
+
+    if (tokenData.timeInvalidator) {
+    await withResetExpiration(
+      transaction,
+      ctx.connection,
+      asWallet(wallet),
+      tokenData.tokenManager?.pubkey
+    )}
 
     await executeTransaction(ctx.connection, asWallet(wallet), transaction, {
       silent: false,
