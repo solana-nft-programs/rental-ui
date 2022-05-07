@@ -934,7 +934,8 @@ export const Browse = () => {
                                         asWallet(wallet),
                                         connection,
                                         environment.label,
-                                        tokenData
+                                        tokenData,
+                                        true
                                       )
                                     } else {
                                       await handleClaim(tokenData)

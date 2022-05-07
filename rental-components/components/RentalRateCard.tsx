@@ -1,3 +1,4 @@
+import { withFindOrInitAssociatedTokenAccount } from '@cardinal/common'
 import {
   withClaimToken,
   withExtendExpiration,
@@ -161,11 +162,6 @@ export const RentalRateCard = ({
   useEffect(() => {
     const newDuration = durationAmount * DURATION_DATA[durationOption]
     setCurrentExtensionSeconds(newDuration)
-    console.log(
-      ((extensionPaymentAmount?.toNumber() ?? 0) /
-        (extensionDurationSeconds?.toNumber() ?? 0)) *
-        newDuration
-    )
     setPaymentAmount(
       ((extensionPaymentAmount?.toNumber() ?? 0) /
         (extensionDurationSeconds?.toNumber() ?? 0)) *
@@ -199,7 +195,10 @@ export const RentalRateCard = ({
         }
       }
 
-      console.log('Claiming token manager', tokenData)
+      console.log(
+        `${claim ? 'Claiming' : 'Extending'} token manager`,
+        tokenData
+      )
       if (claim) {
         if (tokenData.timeInvalidator) {
           await withResetExpiration(
@@ -216,6 +215,17 @@ export const RentalRateCard = ({
             : connection,
           wallet,
           tokenData.tokenManager?.pubkey
+        )
+      }
+
+      if (extensionPaymentMint) {
+        // https://linear.app/cardinal-labs/issue/CRD-322/time-invalidator-requires-creation-of-payer-token-account-even-when
+        await withFindOrInitAssociatedTokenAccount(
+          transaction,
+          connection,
+          extensionPaymentMint,
+          wallet.publicKey,
+          wallet.publicKey
         )
       }
 
