@@ -644,7 +644,7 @@ export const Browse = () => {
       />
       <div className="container mx-auto pt-4">
         <div className="mb-4 flex h-min w-full justify-center md:flex-row md:justify-center">
-          <div className="rounded-m flex h-fit flex-col rounded-lg sm:flex-row">
+          <div className="flex h-fit flex-col overflow-hidden rounded-lg sm:flex-row">
             <div
               className="d-block mb-2 flex-col py-3 px-5 sm:mb-0"
               style={{ background: lighten(0.07, config.colors.main) }}
@@ -713,7 +713,7 @@ export const Browse = () => {
                     </div>
                   </>
                 )}
-                {projectStats.data?.totalRentalDuration && (
+                {projectStats.data?.totalRentalVolume && (
                   <>
                     <div
                       className="my-3 w-[1px]"

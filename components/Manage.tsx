@@ -30,6 +30,7 @@ export const Manage = () => {
   return (
     <>
       <Header
+        loading={tokenManagerByIssuer.loaded && tokenManagerByIssuer.refreshing}
         tabs={[
           {
             name: 'Wallet',

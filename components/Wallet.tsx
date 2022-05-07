@@ -1,4 +1,4 @@
-import { withResetExpiration, withInvalidate } from '@cardinal/token-manager'
+import { withInvalidate, withResetExpiration } from '@cardinal/token-manager'
 import { InvalidationType } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { Transaction } from '@solana/web3.js'
@@ -15,16 +15,17 @@ import { filterTokens, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useUserTokenData } from 'providers/TokenDataProvider'
 import { useState } from 'react'
 import { AsyncButton, Button } from 'rental-components/common/Button'
-import { useRentalExtensionModal } from 'rental-components/RentalExtensionModalProvider'
 import { useRentalModal } from 'rental-components/RentalModalProvider'
+import { useRentalRateModal } from 'rental-components/RentalRateModalProvider'
 
 export const Wallet = () => {
   const ctx = useEnvironmentCtx()
   const wallet = useWallet()
   const { config } = useProjectConfig()
-  const { tokenDatas, loaded, refreshTokenAccounts } = useUserTokenData()
+  const { tokenDatas, loaded, refreshing, refreshTokenAccounts } =
+    useUserTokenData()
   const rentalModal = useRentalModal()
-  const rentalExtensionModal = useRentalExtensionModal()
+  const rentalRateModal = useRentalRateModal()
   const [selectedTokens, setSelectedTokens] = useState<TokenData[]>([])
 
   const filteredTokenDatas = filterTokens(
@@ -91,6 +92,7 @@ export const Wallet = () => {
   return (
     <>
       <Header
+        loading={loaded && refreshing}
         tabs={[
           {
             name: 'Wallet',
@@ -177,11 +179,12 @@ export const Wallet = () => {
                           variant="primary"
                           className=" float-right mb-3"
                           onClick={() =>
-                            rentalExtensionModal.show(
+                            rentalRateModal.show(
                               asWallet(wallet),
                               ctx.connection,
                               ctx.environment.label,
-                              tokenData
+                              tokenData,
+                              false
                             )
                           }
                         >

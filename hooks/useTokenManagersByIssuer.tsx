@@ -70,6 +70,6 @@ export const useTokenManagersByIssuer = () => {
       }
     },
     [walletId?.toString()],
-    { name: 'useTokenManagersByIssuer' }
+    { name: 'useTokenManagersByIssuer', refreshInterval: 10000 }
   )
 }

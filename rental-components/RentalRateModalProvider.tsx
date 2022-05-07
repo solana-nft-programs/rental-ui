@@ -14,7 +14,7 @@ interface RentalRateModal {
     connection: Connection,
     cluster: string,
     tokenData: TokenData,
-    dev?: boolean
+    claim?: boolean
   ) => void
   showRentalRateModal: boolean
   tokenData: TokenData | undefined
@@ -32,21 +32,21 @@ export const RentalRateModalProvider: React.FC<Props> = ({
   const [wallet, setWallet] = useState<Wallet | null>(null)
   const [connection, setConnection] = useState<Connection | null>(null)
   const [cluster, setCluster] = useState<string | undefined>(undefined)
-  const [dev, setDev] = useState<boolean | undefined>(undefined)
   const [showRentalRateModal, setShowRentalRateModal] = useState<boolean>(false)
   const [tokenData, setTokenData] = useState<TokenData | undefined>(undefined)
+  const [claim, setClaim] = useState(true)
   const { config } = useProjectConfig()
 
   return (
     <RentalRateModalContext.Provider
       value={{
-        show: (wallet, connection, cluster, tokenData, dev) => {
+        show: (wallet, connection, cluster, tokenData, claim) => {
           setWallet(wallet)
           setConnection(connection)
           setCluster(cluster)
           setTokenData(tokenData)
-          setDev(dev)
           setShowRentalRateModal(true)
+          setClaim(claim ?? false)
         },
         tokenData,
         showRentalRateModal,
@@ -59,12 +59,12 @@ export const RentalRateModalProvider: React.FC<Props> = ({
       >
         {wallet && connection && (
           <RentalRateCard
-            dev={dev}
             cluster={cluster}
             wallet={wallet}
             connection={connection}
             tokenData={tokenData || {}}
             config={config}
+            claim={claim}
             onComplete={() => {
               withSleep(() => {
                 setShowRentalRateModal(false)
