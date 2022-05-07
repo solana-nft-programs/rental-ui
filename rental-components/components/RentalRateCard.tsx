@@ -86,8 +86,8 @@ const formatError = (error: string) => {
   return error
 }
 
-export type RentalCardProps = {
-  dev?: boolean
+export type RentalRateCardProps = {
+  claim?: boolean
   cluster?: string
   connection: Connection
   wallet: Wallet
@@ -104,7 +104,8 @@ export const RentalRateCard = ({
   connection,
   wallet,
   tokenData,
-}: RentalCardProps) => {
+  claim = true,
+}: RentalRateCardProps) => {
   const [error, setError] = useState<string>()
   const [loading, setLoading] = useState(false)
   const [link, setLink] = useState<string | null>(null)
@@ -199,23 +200,24 @@ export const RentalRateCard = ({
       }
 
       console.log('Claiming token manager', tokenData)
-      if (tokenData.timeInvalidator) {
-        await withResetExpiration(
+      if (claim) {
+        if (tokenData.timeInvalidator) {
+          await withResetExpiration(
+            transaction,
+            connection,
+            wallet,
+            tokenData.tokenManager?.pubkey
+          )
+        }
+        await withClaimToken(
           transaction,
-          connection,
+          environment.override
+            ? new Connection(environment.override)
+            : connection,
           wallet,
           tokenData.tokenManager?.pubkey
         )
       }
-
-      await withClaimToken(
-        transaction,
-        environment.override
-          ? new Connection(environment.override)
-          : connection,
-        wallet,
-        tokenData.tokenManager?.pubkey
-      )
 
       await withExtendExpiration(
         transaction,
@@ -503,7 +505,11 @@ export const RentalRateCard = ({
                     }}
                     message={
                       <>
-                        <div>NFT successfully rented!</div>
+                        <div>
+                          {claim
+                            ? 'NFT successfully rented!'
+                            : 'Duration successfully added to rental.'}
+                        </div>
                       </>
                     }
                     type="success"
@@ -539,11 +545,14 @@ export const RentalRateCard = ({
                         PAYMENT_MINTS.find(
                           (obj) => obj.mint === extensionPaymentMint.toString()
                         )?.symbol
-                      } to rent this NFT for ${secondsToString(
-                              currentExtensionSeconds
-                            )}`
-                          : `Enter a duration to rent this NFT at the specified rate.`}
-
+                      } to ${
+                              claim
+                                ? 'rent this NFT for'
+                                : 'extend the duration of your rental by'
+                            } ${secondsToString(currentExtensionSeconds)}`
+                          : `Enter a duration to ${
+                              claim ? 'rent' : 'extend'
+                            } this NFT at the specified rate.`}
                         <div className="mt-1 flex gap-3">
                           <p>
                             <b>Rate: </b> {loadRate()}
@@ -565,7 +574,7 @@ export const RentalRateCard = ({
             style={{ gap: '5px' }}
             className="flex items-center justify-center"
           >
-            Rent NFT
+            {claim ? 'Rent NFT' : 'Extend Rental'}
             <FiSend />
           </div>
         </ButtonWithFooter>
