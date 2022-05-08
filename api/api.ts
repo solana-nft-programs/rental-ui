@@ -1,4 +1,5 @@
 import { getBatchedMultiplAccounts as getBatchedMultipleAccounts } from '@cardinal/common'
+import { STAKE_POOL_ADDRESS } from '@cardinal/staking/dist/cjs/programs/stakePool'
 import type { AccountData } from '@cardinal/token-manager'
 import { tokenManager } from '@cardinal/token-manager/dist/cjs/programs'
 import type { PaidClaimApproverData } from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
@@ -109,30 +110,32 @@ export type AccountType =
   | 'timeInvalidator'
   | 'paidClaimApprover'
   | 'useInvalidator'
+  | 'stakePool'
+
+export type AccountTypeData = {
+  type: AccountType
+  displayName?: string
+}
 
 export type AccountDataById = {
   [accountId: string]:
-    | (AccountData<TokenManagerData> &
-        AccountInfo<Buffer> & { type: AccountType })
+    | (AccountData<TokenManagerData> & AccountInfo<Buffer> & AccountTypeData)
     | (AccountData<PaidClaimApproverData> &
-        AccountInfo<Buffer> & { type: AccountType })
-    | (AccountData<TimeInvalidatorData> &
-        AccountInfo<Buffer> & { type: AccountType })
-    | (AccountData<UseInvalidatorData> &
-        AccountInfo<Buffer> & { type: AccountType })
-    | (spl.AccountInfo & { type: AccountType })
-    | ({
-        pubkey: PublicKey
-        parsed: metaplex.MetadataData
-      } & AccountInfo<Buffer> & {
-          type: AccountType
-        })
-    | ({
-        pubkey: PublicKey
-        parsed: metaplex.EditionData | metaplex.MasterEditionData
-      } & AccountInfo<Buffer> & {
-          type: AccountType
-        })
+        AccountInfo<Buffer> &
+        AccountTypeData)
+    | (AccountData<TimeInvalidatorData> & AccountInfo<Buffer> & AccountTypeData)
+    | (AccountData<UseInvalidatorData> & AccountInfo<Buffer> & AccountTypeData)
+    | (spl.AccountInfo & AccountTypeData)
+    | (AccountData<metaplex.MetadataData> &
+        AccountInfo<Buffer> &
+        AccountTypeData)
+    | (AccountData<metaplex.EditionData> &
+        AccountInfo<Buffer> &
+        AccountTypeData)
+    | (AccountData<metaplex.MasterEditionData> &
+        AccountInfo<Buffer> &
+        AccountTypeData)
+    | (AccountData<undefined> & AccountInfo<Buffer> & AccountTypeData)
 }
 
 export const deserializeAccountInfos = (
@@ -215,6 +218,16 @@ export const deserializeAccountInfos = (
           }
         } catch (e) {}
         return acc
+      case STAKE_POOL_ADDRESS.toString():
+        try {
+          acc[accountIds[i]!.toString()] = {
+            type: 'stakePool',
+            displayName: 'Staked',
+            ...((accountInfo?.data as ParsedAccountData).parsed
+              ?.info as spl.AccountInfo),
+          }
+        } catch (e) {}
+        return acc
       case metaplex.MetadataProgram.PUBKEY.toString():
         try {
           acc[accountIds[i]!.toString()] = {
@@ -263,12 +276,12 @@ export const accountDataById = async (
   ids: (PublicKey | null)[]
 ): Promise<AccountDataById> => {
   const filteredIds = ids.filter((id): id is PublicKey => id !== null)
-  const delegateAccountInfos = await getBatchedMultipleAccounts(
+  const accountInfos = await getBatchedMultipleAccounts(
     connection,
     filteredIds,
     { encoding: 'jsonParsed' }
   )
-  return deserializeAccountInfos(filteredIds, delegateAccountInfos)
+  return deserializeAccountInfos(filteredIds, accountInfos)
 }
 
 export async function getTokenAccountsWithData(

@@ -241,6 +241,13 @@ export function NFT({ tokenData, onClick }: NFTProps) {
             stateChangedAt={
               tokenManager?.parsed.stateChangedAt?.toNumber() || undefined
             }
+            additionalInvalidators={
+              tokenManager?.parsed.invalidators.length === 1 &&
+              tokenManager.parsed.invalidators[0]?.toString() ===
+                tokenData?.recipientTokenAccount?.owner.toString()
+                ? ['Staked']
+                : []
+            }
           />
         )}
         {metadata && metadata.data && (

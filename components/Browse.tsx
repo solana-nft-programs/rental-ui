@@ -896,8 +896,12 @@ export const Browse = () => {
                             </div>
 
                             <div className="flex w-full flex-row justify-between text-xs">
-                              {tokenData.timeInvalidator?.parsed ||
-                              tokenData.useInvalidator?.parsed ? (
+                              {tokenData.tokenManager?.parsed.claimApprover &&
+                              !tokenData.claimApprover ? (
+                                <div className="my-auto rounded-lg bg-gray-800 px-5 py-2 text-white">
+                                  Private
+                                </div>
+                              ) : (
                                 <Tag state={TokenManagerState.Issued}>
                                   <div className="flex flex-col">
                                     <div>{getDurationText(tokenData)}</div>
@@ -913,10 +917,6 @@ export const Browse = () => {
                                     />
                                   </div>
                                 </Tag>
-                              ) : (
-                                <div className="my-auto rounded-lg bg-gray-800 px-5 py-2 text-white">
-                                  Private
-                                </div>
                               )}
 
                               <AsyncButton

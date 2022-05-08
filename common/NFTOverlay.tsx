@@ -171,6 +171,7 @@ interface NFTOverlayProps {
   lineHeight?: number
   stateChangedAt?: number
   borderRadius?: number
+  additionalInvalidators?: string[]
 }
 
 export function NFTOverlay({
@@ -188,6 +189,7 @@ export function NFTOverlay({
   stateChangedAt,
   lineHeight = 20,
   borderRadius,
+  additionalInvalidators,
 }: NFTOverlayProps) {
   const { UTCNow } = useUTCNow()
   const { paymentMintInfos } = usePaymentMints()
@@ -268,6 +270,15 @@ export function NFTOverlay({
             {totalUsages && ` / ${totalUsages.toString()}`})
           </div>
         )}
+        {additionalInvalidators &&
+          additionalInvalidators.map((i) => (
+            <div
+              key={i}
+              className="my-auto rounded-lg bg-gray-800 px-2 py-1 text-white"
+            >
+              {i}
+            </div>
+          ))}
       </div>
       <div className="logo">
         <img src="/assets/cardinal-crosshair.svg" alt="crosshair"></img>
