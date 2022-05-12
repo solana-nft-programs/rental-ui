@@ -530,15 +530,13 @@ export async function getTokenDatas(
   return tokenManagerDatas.map((tokenManagerData) => {
     const timeInvalidatorId = tokenManagerData.parsed.invalidators.filter(
       (invalidator) =>
-        accountsById[invalidator.toString()]?.owner.equals(
-          TIME_INVALIDATOR_ADDRESS
-        )
+        accountsById[invalidator.toString()]?.owner?.toString() ===
+        TIME_INVALIDATOR_ADDRESS.toString()
     )[0]
     const useInvalidatorId = tokenManagerData.parsed.invalidators.filter(
       (invalidator) =>
-        accountsById[invalidator.toString()]?.owner.equals(
-          USE_INVALIDATOR_ADDRESS
-        )
+        accountsById[invalidator.toString()]?.owner?.toString() ===
+        USE_INVALIDATOR_ADDRESS.toString()
     )[0]
     return {
       recipientTokenAccount: tokenManagerData.parsed.recipientTokenAccount

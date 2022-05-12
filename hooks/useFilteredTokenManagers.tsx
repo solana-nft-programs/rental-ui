@@ -119,6 +119,6 @@ export const useFilteredTokenManagers = () => {
       }
     },
     [config.name],
-    { name: 'useFilteredTokenManagers', refreshInterval: 10000 }
+    { name: 'useFilteredTokenManagers', refreshInterval: 12000 }
   )
 }
