@@ -850,7 +850,7 @@ export const RentalCard = ({
                     </Fieldset>
                     <Button
                       variant={'primary'}
-                      className="ml-2 mt-0.5 inline-block flex-none"
+                      className="ml-2 h-[31px]"
                       onClick={() =>
                         setCustomInvalidator(wallet.publicKey.toString())
                       }
@@ -1291,7 +1291,6 @@ export const RentalCard = ({
                                 extensionMaxExpiration * 1000
                               ).toLocaleString('en-US')}.`
                             : ''}
-                          `
                           {showExtendDuration &&
                           extensionPaymentAmount &&
                           extensionDurationAmount &&
