@@ -12,6 +12,7 @@ import {
   TIME_INVALIDATOR_ADDRESS,
   TIME_INVALIDATOR_IDL,
 } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
+import { findTimeInvalidatorAddress } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator/pda'
 import type { TokenManagerData } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import {
   TOKEN_MANAGER_ADDRESS,
@@ -22,6 +23,7 @@ import {
   USE_INVALIDATOR_ADDRESS,
   USE_INVALIDATOR_IDL,
 } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
+import { findUseInvalidatorAddress } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator/pda'
 import * as metaplex from '@metaplex-foundation/mpl-token-metadata'
 import {
   Edition,
@@ -490,6 +492,29 @@ export async function getTokenDatas(
       )
     )
   }
+
+  // filter by known invalidators
+  const knownTokenManagers = []
+  for (const tm of tokenManagerDatas) {
+    const [[timeInvalidatorId, useInvalidatorId]] = await Promise.all([
+      findTimeInvalidatorAddress(tm.pubkey),
+      findUseInvalidatorAddress(tm.pubkey),
+    ])
+    const knownInvalidators = [
+      timeInvalidatorId.toString(),
+      useInvalidatorId.toString(),
+    ]
+    let filter = false
+    tm.parsed.invalidators.forEach((i) => {
+      if (!knownInvalidators.includes(i.toString())) {
+        filter = true
+      }
+    })
+    if (!filter) {
+      knownTokenManagers.push(tm)
+    }
+  }
+  tokenManagerDatas = knownTokenManagers
 
   const idsToFetch = tokenManagerDatas.reduce(
     (acc, tm) => [
