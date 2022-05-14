@@ -19,6 +19,7 @@ export type ProjectConfig = {
   issuer?: {
     publicKeyString?: string
   }
+  issuedOnly?: boolean
   name: string
   websiteUrl: string
   logoImage: string
@@ -174,6 +175,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     type: 'Collection',
     websiteUrl: 'https://cardinal.so',
     logoImage: '/logos/all.svg',
+    issuedOnly: true,
     colors: {
       main: 'rgb(26, 27, 32)',
       secondary: 'rgb(29, 155, 240)',

@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client'
+import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import {
   getTokenManagers,
   getTokenManagersByState,
@@ -107,7 +108,7 @@ export const useFilteredTokenManagers = () => {
       } else {
         const tokenManagerDatas = await getTokenManagersByState(
           connection,
-          null
+          config.issuedOnly ? TokenManagerState.Issued : null
         )
         const tokenDatas = await getTokenDatas(
           connection,
