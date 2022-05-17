@@ -17,7 +17,6 @@ import {
   ProjectConfigProvider,
 } from 'providers/ProjectConfigProvider'
 import { TokenAccountsProvider } from 'providers/TokenDataProvider'
-// import { TokenManagersProvider } from 'providers/TokenManagersProvider'
 import { UTCNowProvider } from 'providers/UTCNowProvider'
 import { QRCodeProvider } from 'rental-components/QRCodeProvider'
 import { RentalExtensionModalProvider } from 'rental-components/RentalExtensionModalProvider'
@@ -39,7 +38,6 @@ const App = ({
             <QRCodeProvider>
               <UTCNowProvider>
                 <TokenAccountsProvider>
-                  {/* <TokenManagersProvider> */}
                   <RentalModalProvider>
                     <RentalExtensionModalProvider>
                       <RentalRateModalProvider>
@@ -52,7 +50,6 @@ const App = ({
                       </RentalRateModalProvider>
                     </RentalExtensionModalProvider>
                   </RentalModalProvider>
-                  {/* </TokenManagersProvider> */}
                 </TokenAccountsProvider>
               </UTCNowProvider>
             </QRCodeProvider>
