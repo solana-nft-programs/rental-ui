@@ -98,7 +98,7 @@ export const Header = ({
   return (
     <div
       className="fixed top-0 z-[100] flex h-[100px] w-full items-center justify-between shadow-2xl"
-      style={{ background: config.colors.main }}
+      // style={{ background: config.colors.main }}
     >
       <div className="flex gap-5 pl-8 text-gray-300">
         <div className="title relative" style={{ marginRight: '40px' }}>

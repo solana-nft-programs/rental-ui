@@ -85,7 +85,7 @@ const QRCode = ({
   )
 }
 
-const QRCodeOuter = styled.div`
+export const QRCodeOuter = styled.div`
   width: 100%;
   height: 100%;
   display: flex;

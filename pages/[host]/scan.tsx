@@ -7,24 +7,13 @@ import { StyledBackground } from 'common/StyledBackground'
 import { firstParam, pubKeyUrl } from 'common/utils'
 import { useRouter } from 'next/router'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
+import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import React, { useEffect, useState } from 'react'
 import { FaCheckCircle, FaQuestionCircle } from 'react-icons/fa'
 
 type Hideable = {
   visible?: boolean
 }
-
-const VerificationStepsOuter = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding-top: calc(50vh - 250px);
-  padding-bottom: calc(50vh - 250px);
-  width: 90%;
-  margin: 0px auto;
-  font-weight: 200;
-  text-transform: uppercase;
-  font-family: Oswald, sans-serif;
-`
 
 enum VerificationStatus {
   WARNING,
@@ -50,14 +39,8 @@ const formatError = (error: string): string => {
 }
 
 const VerificationStep = styled.div<Verifiable>`
-  text-align: center;
-  // background-color: rgba(50,50,50,0.2);
   transition: height 0.3s;
   height: ${(props) => (props.visible ? '500px' : '0px')};
-  border-radius: 10px;
-  margin: 0px auto;
-  width: 90%;
-  max-width: 500px;
   box-shadow: ${(props) => {
     if (props.visible) {
       switch (props.status) {
@@ -70,103 +53,13 @@ const VerificationStep = styled.div<Verifiable>`
       }
     }
   }};
-  color: white;
-  position: relative;
-  overflow: hidden;
-
-  .header {
-    position: relative;
-    padding: 28px 28px 0px 28px;
-    z-index: 1;
-  }
-
-  .step-name {
-    font-size: 28px;
-    font-weight: 400;
-  }
-
-  .address {
-    text-decoration: none;
-    color: white;
-    width: 100%;
-    overflow-wrap: break-word;
-    transition: 0.2s all;
-
-    &:hover {
-      cursor: pointer;
-      text-shadow: 0 0 10px #fff;
-    }
-  }
-
-  .addresses {
-    width: 100%;
-    max-height: 65px;
-    overflow: scroll;
-    overflow-wrap: break-word;
-  }
-
-  .footer {
-  }
-
-  .content {
-    position: absolute;
-    top: 58%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 80%;
-    &:after {
-      content: '';
-      display: block;
-      padding-bottom: 100%;
-    }
-
-    .asset {
-      img {
-        width: 85%;
-        border-radius: 10px;
-      }
-    }
-
-    i {
-      font-size: 170px;
-    }
-  }
-
-  &:after {
-    content: '';
-    position: absolute;
-    top: -110%;
-    left: -210%;
-    width: 200%;
-    height: 200%;
-    opacity: 0;
-    transform: rotate(30deg);
-
-    background: rgba(255, 255, 255, 0.13);
-    background: linear-gradient(
-      to right,
-      rgba(255, 255, 255, 0.13) 0%,
-      rgba(255, 255, 255, 0.13) 77%,
-      rgba(255, 255, 255, 0.5) 92%,
-      rgba(255, 255, 255, 0) 100%
-    );
-
-    &:hover {
-      opacity: 1;
-      top: -30%;
-      left: -30%;
-      transition-property: left, top, opacity;
-      transition-duration: 0.7s, 0.7s, 0.15s;
-      transition-timing-function: ease;
-    }
-  }
 `
 function Scan() {
   const router = useRouter()
-  const { tx } = router.query
   const ctx = useEnvironmentCtx()
+  const { tx } = router.query
+  const { config } = useProjectConfig()
 
-  // step 1
   const [owner, setOwner] = useState<PublicKey | undefined>(undefined)
   const [error, setError] = useState<string | null>(null)
   const [executeResult, setExecuteResult] = useState<
@@ -174,16 +67,13 @@ function Scan() {
   >(undefined)
 
   useEffect(() => {
-    if (tx) {
-      handleExecute()
-    }
+    handleExecute()
   }, [setError, tx])
 
   const handleExecute = async () => {
     const executePromise: Promise<VerficationResult> = new Promise(
       async (res) => {
         try {
-          // get owner from signature and check ownership
           const buffer = Buffer.from(
             decodeURIComponent(firstParam(tx)),
             'base64'
@@ -195,7 +85,6 @@ function Scan() {
             transaction.serialize(),
             { commitment: 'singleGossip' }
           )
-          console.log('TX: ', txid)
           return res({ status: VerificationStatus.SUCCESS })
         } catch (e: any) {
           console.log(e)
@@ -212,15 +101,26 @@ function Scan() {
   return (
     <>
       <Header />
-      <VerificationStepsOuter>
-        <VerificationStep visible={true} status={executeResult?.status}>
-          <div className="header">
-            <div className="step-name">Using Asset</div>
-            <div className="addresses">
-              {/* {decodeURIComponent(firstParam(tx))} */}
-            </div>
+      <div
+        style={{
+          paddingTop: 'calc(50vh - 300px)',
+        }}
+        className="flex flex-col"
+      >
+        <VerificationStep
+          visible={true}
+          status={executeResult?.status}
+          className="relative mx-auto flex w-11/12 max-w-[500px] flex-col items-center rounded-xl text-white"
+        >
+          <div
+            className="py-5 text-center"
+            style={{
+              fontFamily: 'Oswald, sans-serif',
+            }}
+          >
+            <div className="text-[28px] uppercase">Using Asset</div>
           </div>
-          <div className="content">
+          <div className="absolute top-[55%] left-1/2 flex h-[400px] w-[400px] -translate-x-1/2 -translate-y-1/2 items-center justify-center">
             <LoadingPulseWrapped loading={!executeResult}>
               {executeResult?.status === VerificationStatus.SUCCESS ? (
                 <>
@@ -233,7 +133,7 @@ function Scan() {
                   >
                     <FaCheckCircle />
                   </div>
-                  <div className="footer" style={{ marginTop: '25px' }}>
+                  <div style={{ marginTop: '25px' }}>
                     Use transaction signed by{' '}
                     <a
                       className="address"
@@ -247,17 +147,16 @@ function Scan() {
                 </>
               ) : (
                 <>
-                  <div
-                    style={{
-                      fontSize: '170px',
-                      display: 'flex',
-                      justifyContent: 'center',
-                    }}
-                  >
+                  <div className="flex justify-center text-[170px]">
                     <FaQuestionCircle />
                   </div>
                   {error && (
-                    <div className="footer" style={{ marginTop: '25px' }}>
+                    <div
+                      className="mt-8 text-center font-extralight"
+                      style={{
+                        fontFamily: 'Oswald, sans-serif',
+                      }}
+                    >
                       {formatError(`${error}`)}
                     </div>
                   )}
@@ -266,8 +165,8 @@ function Scan() {
             </LoadingPulseWrapped>
           </div>
         </VerificationStep>
-      </VerificationStepsOuter>
-      <StyledBackground />
+      </div>
+      <StyledBackground colors={config.colors} />
     </>
   )
 }
