@@ -3,7 +3,6 @@ import { StyledBackground } from 'common/StyledBackground'
 import { transparentize } from 'polished'
 import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
 import React, { useEffect, useState } from 'react'
-import { QRCodeOuter } from 'rental-components/common/QRCode'
 
 function Scanner() {
   const { config } = useProjectConfig()
@@ -35,29 +34,25 @@ function Scanner() {
       <Header />
       <div
         style={{
-          paddingTop: 'calc(50vh - 250px)',
+          paddingTop: 'calc(50vh - 220px)',
         }}
-        className="flex flex-col items-center text-white"
+        className="relative flex flex-col items-center text-white"
       >
-        <div className="mb-5 text-[28px]">
-          Scan to verify a {config.name} NFT
+        <img
+          height="300px"
+          className="rounded-3xl p-3"
+          src={QRCode}
+          alt="qr-code"
+          style={{
+            boxShadow: `0 0 80px 50px ${transparentize(
+              0.8,
+              config.colors.secondary
+            )}`,
+          }}
+        />
+        <div className="absolute -bottom-10">
+          Ensure you hold a {config.name} NFT in your mobile wallet
         </div>
-        <QRCodeOuter>
-          <img
-            height="300px"
-            src={QRCode}
-            alt="qr-code"
-            style={{
-              boxShadow: `0 0 80px 50px ${transparentize(
-                0.8,
-                config.colors.secondary
-              )}`,
-            }}
-          />
-          <div className="disclaimer">
-            Ensure you hold the NFT in your mobile wallet
-          </div>
-        </QRCodeOuter>
       </div>
       <StyledBackground colors={config.colors} />
     </>
