@@ -67,7 +67,6 @@ export const useFilteredTokenManagers = () => {
           ////
           const step3 = Date.now()
           console.log('3', step3 - step2)
-          console.log(tokenManagerDatas)
           const tokenDatas = await getTokenDatas(
             connection,
             tokenManagerDatas,
