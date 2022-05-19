@@ -101,7 +101,7 @@ function Scanner() {
           <LoadingSpinner />
         ) : (
           <>
-            <div className="flex w-full flex-row items-center justify-center px-5">
+            <div className="relative flex w-full flex-row items-center justify-center px-5">
               <div className="py-3 text-gray-500">
                 {keypair?.publicKey.toString()}
               </div>
