@@ -101,12 +101,11 @@ function Scanner() {
           <LoadingSpinner />
         ) : (
           <>
-            <div className="flex w-full items-center justify-center px-5">
+            <div className="relative flex w-full items-center justify-center px-5">
               <div className="py-3 text-gray-500">
                 {keypair?.publicKey.toString()}
               </div>
-              <div className="absolute right-0 h-[30px] w-[30px]">
-                {/* <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400 opacity-75"></span> */}
+              <div className="absolute -right-5 h-[30px] w-[30px]">
                 {recentSignatures.refreshing && (
                   <LoadingSpinner height="30px" />
                 )}
