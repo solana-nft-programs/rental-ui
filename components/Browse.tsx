@@ -316,6 +316,13 @@ export const Browse = () => {
           tokenData.timeInvalidator.parsed.expiration.toNumber() -
           Date.now() / 1000
       }
+      if (tokenData.timeInvalidator?.parsed.maxExpiration) {
+        duration = Math.min(
+          duration,
+          tokenData.timeInvalidator.parsed.maxExpiration.toNumber() -
+            Date.now() / 1000
+        )
+      }
       return (price.toNumber() / duration) * rate
     }
   }
@@ -385,16 +392,16 @@ export const Browse = () => {
         return []
     }
 
-    sortedTokens = [
-      ...sortedTokens.filter(
-        (token) =>
-          token.timeInvalidator?.parsed.durationSeconds?.toNumber() === 0
-      ),
-      ...sortedTokens.filter(
-        (token) =>
-          token.timeInvalidator?.parsed.durationSeconds?.toNumber() !== 0
-      ),
-    ]
+    // sortedTokens = [
+    //   ...sortedTokens.filter(
+    //     (token) =>
+    //       token.timeInvalidator?.parsed.durationSeconds?.toNumber() === 0
+    //   ),
+    //   ...sortedTokens.filter(
+    //     (token) =>
+    //       token.timeInvalidator?.parsed.durationSeconds?.toNumber() !== 0
+    //   ),
+    // ]
 
     return [
       ...sortedTokens.filter(
