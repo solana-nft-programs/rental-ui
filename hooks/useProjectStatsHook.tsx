@@ -1,9 +1,8 @@
 import { ApolloClient, gql, InMemoryCache } from '@apollo/client'
-import { BN } from '@project-serum/anchor'
-import { fmtMintAmount, getMintDecimalAmount } from 'common/units'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { usePaymentMints } from 'providers/PaymentMintsProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
+
 import { useDataHook } from './useDataHook'
 
 export type ProjectStats = {
@@ -82,7 +81,7 @@ export const useProjectStats = () => {
         if (claimEvents.length === 0) {
           return {}
         }
-    
+
         // const getTotalRentalVolume = () => {
         //   return claimEvents
         //     .map((claimEvent: ClaimEvent) => {

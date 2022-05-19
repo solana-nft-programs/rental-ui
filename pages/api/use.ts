@@ -1,24 +1,56 @@
-import { Connection } from '@solana/web3.js'
+import { close } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator/instruction'
+import { utils } from '@project-serum/anchor'
+import { Connection, Keypair, Transaction } from '@solana/web3.js'
 import type { TokenData } from 'api/api'
 import { getTokenAccountsWithData } from 'api/api'
 import { tryPublicKey } from 'api/utils'
 import { firstParam } from 'common/utils'
 import { projectConfigs } from 'config/config'
-import type { NextApiRequest, NextApiResponse } from 'next'
+import type { NextApiHandler } from 'next'
 import { ENVIRONMENTS } from 'providers/EnvironmentProvider'
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  const { cluster: clusterParam, collection: collectionParam } = req.query
+interface GetResponse {
+  label: string
+  icon: string
+}
+
+const get: NextApiHandler<GetResponse> = async (req, res) => {
+  const { label: labelParam, collection: collectionParam } = req.query
+
+  const config =
+    projectConfigs[firstParam(collectionParam)] || projectConfigs['default']!
+
+  const icon = config.logoImage.includes('http')
+    ? config.logoImage
+    : `https://${req.headers.host}${config.logoImage}`
+  res.status(200).send({
+    label: firstParam(labelParam) || 'Unknown label',
+    icon,
+  })
+}
+
+interface PostResponse {
+  transaction?: string
+  message?: string
+  error?: string
+}
+
+const post: NextApiHandler<PostResponse> = async (req, res) => {
+  const {
+    cluster: clusterParam,
+    collection: collectionParam,
+    keypair: keypairParam,
+  } = req.query
   const { account } = req.body
   const foundEnvironment = ENVIRONMENTS.find(
-    (e) => e.label === firstParam(clusterParam) || 'mainnet'
+    (e) => e.label === (firstParam(clusterParam) || 'mainnet')
   )
   if (!foundEnvironment)
     return res.status(400).json({ error: 'Invalid cluster' })
 
+  const keypair = Keypair.fromSecretKey(
+    utils.bytes.bs58.decode(firstParam(keypairParam))
+  )
   const accountId = tryPublicKey(account)
   if (!accountId) return res.status(400).json({ error: 'Invalid account' })
 
@@ -35,16 +67,75 @@ export default async function handler(
       foundEnvironment.label
     )
   } catch (e) {
-    res.status(500).json({ error: 'Failed to get token accounts' })
+    console.log('Failed to get toke accounts: ', e)
+    return res.status(500).json({ error: 'Failed to get token accounts' })
   }
 
   const foundToken = tokenDatas.find((tk) => tk.timeInvalidator)
-
   if (!foundToken) {
-    res.status(404).json({
+    return res.status(404).json({
       error: `No valid tokens found in wallet for config ${config.name}`,
     })
   }
 
-  res.status(200).json({ transaction: '' })
+  // Serialize and deserialize the transaction. This ensures consistent ordering of the account keys for signing.
+  let transaction = new Transaction()
+  const instruction = close(
+    connection,
+    {
+      signTransaction: async (tx: Transaction) => tx,
+      signAllTransactions: async (txs: Transaction[]) => txs,
+      publicKey: accountId,
+    },
+    foundToken.timeInvalidator!.pubkey,
+    foundToken.tokenManager!.pubkey
+  )
+  transaction.instructions = [
+    {
+      ...instruction,
+      keys: [
+        ...instruction.keys,
+        { pubkey: keypair.publicKey, isSigner: false, isWritable: false },
+      ],
+    },
+  ]
+
+  transaction.feePayer = accountId
+  transaction.recentBlockhash = (
+    await connection.getRecentBlockhash('max')
+  ).blockhash
+  transaction = Transaction.from(
+    transaction.serialize({
+      verifySignatures: false,
+      requireAllSignatures: false,
+    })
+  )
+  // Serialize and return the unsigned transaction.
+  const serialized = transaction.serialize({
+    verifySignatures: false,
+    requireAllSignatures: false,
+  })
+  const base64 = serialized.toString('base64')
+  res.status(200).send({
+    transaction: base64,
+    message: `Verifying ownership of a ${config.name} NFT`,
+  })
 }
+
+const index: NextApiHandler<GetResponse | PostResponse> = async (
+  request,
+  response
+) => {
+  response.setHeader('Access-Control-Allow-Origin', '*')
+  response.setHeader('Access-Control-Allow-Methods', '*')
+  response.setHeader('Access-Control-Allow-Headers', '*')
+  response.setHeader('Access-Control-Allow-Credentials', 'true')
+  if (request.method === 'OPTIONS') {
+    return response.status(200).json({})
+  }
+  if (request.method === 'GET') return get(request, response)
+  if (request.method === 'POST') return post(request, response)
+  throw new Error(`Unexpected method ${request.method}`)
+}
+
+export default index
