@@ -8,11 +8,12 @@ import type { ProjectConfig } from 'config/config'
 import { lighten } from 'polished'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
-import React from 'react'
+import React, { useState } from 'react'
 import { FaEllipsisH } from 'react-icons/fa'
 import { FiExternalLink, FiSend } from 'react-icons/fi'
 import { IoClose, IoQrCodeOutline } from 'react-icons/io5'
 import { getColorByBgColor } from 'rental-components/common/Button'
+import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 import { useQRCode } from 'rental-components/QRCodeProvider'
 import { useRentalModal } from 'rental-components/RentalModalProvider'
 
@@ -83,6 +84,7 @@ interface NFTProps {
 }
 
 export function NFT({ tokenData, onClick }: NFTProps) {
+  const [loading, setLoading] = useState(false)
   const ctx = useEnvironmentCtx()
   const wallet = useWallet()
   const { show } = useQRCode()
@@ -162,8 +164,9 @@ export function NFT({ tokenData, onClick }: NFTProps) {
               <PopoverItem>
                 <div
                   className="flex cursor-pointer items-center justify-between gap-2"
-                  onClick={async () =>
-                    tokenData?.tokenManager &&
+                  onClick={async () => {
+                    if (!tokenData?.tokenManager) return
+                    setLoading(true)
                     executeTransaction(
                       ctx.connection,
                       asWallet(wallet),
@@ -173,10 +176,12 @@ export function NFT({ tokenData, onClick }: NFTProps) {
                         tokenData?.tokenManager?.parsed.mint
                       ),
                       {
+                        notificationConfig: {},
                         silent: true,
+                        callback: () => setLoading(false),
                       }
                     )
-                  }
+                  }}
                 >
                   Delist
                   <IoClose />
@@ -207,7 +212,7 @@ export function NFT({ tokenData, onClick }: NFTProps) {
       >
         <div
           // TODO fix this color
-          className={`absolute top-[8px] right-[8px] z-50 flex cursor-pointer items-center justify-center rounded-full p-2 text-xl text-white hover:bg-[${lighten(
+          className={`absolute top-[8px] right-[8px] z-50 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full p-2 text-xl text-white hover:bg-[${lighten(
             0.3,
             config.colors.main
           )}]`}
@@ -217,7 +222,7 @@ export function NFT({ tokenData, onClick }: NFTProps) {
           }}
           key={tokenAccount?.pubkey.toString()}
         >
-          <FaEllipsisH />
+          {loading ? <LoadingSpinner height="26px" /> : <FaEllipsisH />}
         </div>
       </Popover>
       <div
