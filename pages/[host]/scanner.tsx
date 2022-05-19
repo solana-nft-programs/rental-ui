@@ -19,7 +19,7 @@ function Scanner() {
   const generateQrCode = async () => {
     console.log(
       'Generating QR code for request: ',
-      `phantom:${encodeURIComponent(
+      `solana:${encodeURIComponent(
         getLink(
           `/api/use?collection=${config.name}&keypair=${utils.bytes.bs58.encode(
             keypair.secretKey
@@ -32,7 +32,7 @@ function Scanner() {
       width: 500,
       height: 500,
       type: 'svg',
-      data: `phantom:${encodeURIComponent(
+      data: `solana:${encodeURIComponent(
         getLink(
           `/api/use?collection=${config.name}&keypair=${utils.bytes.bs58.encode(
             keypair.secretKey
