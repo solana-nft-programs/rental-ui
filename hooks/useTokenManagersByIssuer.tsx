@@ -16,7 +16,7 @@ export const useTokenManagersByIssuer = () => {
   return useDataHook<TokenData[] | undefined>(
     async () => {
       if (!walletId) return
-      if (environment.index) {
+      if (environment.index && config.indexEnabled) {
         const response = await environment.index.query({
           query: gql`
             query GetTokenManagersForIssuer(

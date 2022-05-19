@@ -452,6 +452,7 @@ export async function getTokenDatas(
   filter?: TokenFilter,
   cluster?: string
 ): Promise<TokenData[]> {
+  tokenManagerDatas = tokenManagerDatas.filter((tm) => tm.parsed)
   if (filter?.type === 'issuer') {
     tokenManagerDatas = tokenManagerDatas.filter((tm) =>
       filter.value.includes(tm.parsed.issuer.toString())

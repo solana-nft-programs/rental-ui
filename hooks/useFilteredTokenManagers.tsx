@@ -19,39 +19,22 @@ export const useFilteredTokenManagers = () => {
   return useDataHook<TokenData[] | undefined>(
     async () => {
       console.log('Fetching for config', config.name)
-      if (environment.index) {
+      if (environment.index && config.indexEnabled) {
         if (config.filter?.type === 'creators') {
-          const step0 = Date.now()
-          const filteredNftMetadata = await environment.index.query({
-            query: gql`
-              query GetNfts(
-                $creators: [PublicKey!]!
-                $limit: Int!
-                $offset: Int!
-              ) {
-                nfts(creators: $creators, limit: $limit, offset: $offset) {
-                  mintAddress
-                }
-              }
-            `,
-            variables: {
-              creators: config.filter.value,
-              offset: 0,
-              limit: 10000,
-            },
-          })
-
           /////
           const step1 = Date.now()
-          console.log('1', step1 - step0, filteredNftMetadata)
-
-          const mintIds = filteredNftMetadata.data['nfts'].map(
-            (metadata: { mintAddress: string }) => metadata.mintAddress
-          )
           const tokenManagerResponse = await environment.index.query({
             query: gql`
-              query GetTokenManagers($mintIds: [String!]!) {
-                cardinal_token_managers(where: { mint: { _in: $mintIds } }) {
+              query GetTokenManagers($creators: [String!]!) {
+                cardinal_token_managers(
+                  where: {
+                    mint_address_nfts: {
+                      metadatas_attributes: {
+                        first_verified_creator: { _in: $creators }
+                      }
+                    }
+                  }
+                ) {
                   address
                   mint
                   state
@@ -60,7 +43,7 @@ export const useFilteredTokenManagers = () => {
               }
             `,
             variables: {
-              mintIds: mintIds,
+              creators: config.filter.value,
             },
           })
 
@@ -68,13 +51,13 @@ export const useFilteredTokenManagers = () => {
           const step2 = Date.now()
           console.log('2', step2 - step1, tokenManagerResponse)
 
-          const tokenManagerIds = tokenManagerResponse.data[
+          const tokenManagerIds: PublicKey[] = tokenManagerResponse.data[
             'cardinal_token_managers'
           ]
             .map((data: { mint: string; address: string }) =>
               tryPublicKey(data.address)
             )
-            .filter((pk: PublicKey | null) => pk)
+            .filter((id: PublicKey | null): id is PublicKey => id !== null)
 
           const tokenManagerDatas = await getTokenManagers(
             connection,
@@ -95,7 +78,6 @@ export const useFilteredTokenManagers = () => {
           ////
           const step4 = Date.now()
           console.log('4', step4 - step3)
-
           return tokenDatas
         }
         return []
