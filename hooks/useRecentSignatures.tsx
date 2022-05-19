@@ -45,6 +45,6 @@ export const useRecentSignatures = (address: PublicKey | undefined) => {
       )
     },
     [address?.toString()],
-    { name: 'useRecentSignatures', refreshInterval: 5000 }
+    { name: 'useRecentSignatures', refreshInterval: 3000 }
   )
 }

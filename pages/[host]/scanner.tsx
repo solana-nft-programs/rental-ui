@@ -101,15 +101,16 @@ function Scanner() {
           <LoadingSpinner />
         ) : (
           <>
-            <div className="relative flex w-full items-center justify-center px-5">
+            <div className="flex w-full flex-row items-center justify-center px-5">
               <div className="py-3 text-gray-500">
                 {keypair?.publicKey.toString()}
               </div>
-              <div className="absolute -right-5 h-[30px] w-[30px]">
-                {recentSignatures.refreshing && (
-                  <LoadingSpinner height="30px" />
-                )}
-              </div>
+              {recentSignatures.refreshing && (
+                <div className="absolute right-4 h-[10px] w-[10px] animate-ping rounded-full bg-white"></div>
+                // <div className="absolute right-4 h-[20px] w-[20px] rounded-full">
+                //   <LoadingPulse loading />
+                // </div>
+              )}
             </div>
             <div className="relative flex h-[350px] w-[350px] items-center justify-center rounded-2xl text-[170px] md:h-[500px] md:w-[500px]">
               {showSuccess && (
