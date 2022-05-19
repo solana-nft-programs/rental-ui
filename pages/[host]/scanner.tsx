@@ -8,7 +8,6 @@ import { useRecentSignatures } from 'hooks/useRecentSignatures'
 import { transparentize } from 'polished'
 import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 
 function Scanner() {
   const { config } = useProjectConfig()
@@ -98,7 +97,7 @@ function Scanner() {
         className="relative mx-auto flex w-[93%] max-w-[450px] flex-col items-center text-white"
       >
         {!QRCode ? (
-          <LoadingSpinner />
+          <></>
         ) : (
           <>
             <div className="relative flex w-full flex-row items-center justify-center px-5">
