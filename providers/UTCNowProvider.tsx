@@ -1,5 +1,5 @@
-import type { ReactChild } from 'react';
-import React, { useContext, useEffect,useState } from 'react'
+import type { ReactChild } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 
 export interface UTCNowContextValues {
   UTCNow: number

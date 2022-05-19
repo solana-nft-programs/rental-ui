@@ -105,7 +105,10 @@ function Scanner() {
                 {keypair?.publicKey.toString()}
               </div>
               {recentSignatures.refreshing && (
-                <div className="absolute right-4 h-[10px] w-[10px] animate-ping rounded-full bg-white"></div>
+                <div
+                  className="absolute right-0 top-3 h-[10px] w-[10px] animate-ping rounded-full"
+                  style={{ background: config.colors.secondary }}
+                ></div>
                 // <div className="absolute right-4 h-[20px] w-[20px] rounded-full">
                 //   <LoadingPulse loading />
                 // </div>
