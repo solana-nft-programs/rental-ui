@@ -33,6 +33,7 @@
     "@saberhq/solana-contrib": "^1.12.36",
     "@saberhq/token-utils": "^1.12.36",
     "@solana/buffer-layout": "^4.0.0",
+    "@solana/qr-code-styling": "^1.6.0-beta.0",
     "@solana/wallet-adapter-react": "^0.15.3",
     "@solana/wallet-adapter-react-ui": "^0.9.5",
     "@solana/wallet-adapter-wallets": "^0.15.1",

@@ -1,23 +1,23 @@
 import { utils } from '@project-serum/anchor'
+import QRCodeStyling from '@solana/qr-code-styling'
 import { Keypair } from '@solana/web3.js'
+import { AnimatedCheckmark } from 'common/AnimatedCheckmark'
 import { Header } from 'common/Header'
 import { StyledBackground } from 'common/StyledBackground'
 import { useRecentSignatures } from 'hooks/useRecentSignatures'
 import { transparentize } from 'polished'
 import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
-import React, { useEffect, useMemo, useState } from 'react'
-import { FaCheckCircle } from 'react-icons/fa'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 
 function Scanner() {
   const { config } = useProjectConfig()
-  const [QRCode, setQRCode] = useState()
+  const [QRCode, setQRCode] = useState<QRCodeStyling>()
   const [keypair, setKeypair] = useState<Keypair>(Keypair.generate())
   const [showSuccess, setShowSuccess] = useState(false)
   const recentSignatures = useRecentSignatures(keypair.publicKey)
 
   const generateQrCode = async () => {
-    const { AwesomeQR } = await import('awesome-qr')
     console.log(
       'Generating QR code for request: ',
       `solana:${encodeURIComponent(
@@ -28,23 +28,45 @@ function Scanner() {
         )
       )}`
     )
-    const qrbuffer = await new AwesomeQR({
-      text: `solana:${encodeURIComponent(
+
+    const qrCode = new QRCodeStyling({
+      width: 500,
+      height: 500,
+      type: 'svg',
+      data: `solana:${encodeURIComponent(
         getLink(
           `/api/use?collection=${config.name}&keypair=${utils.bytes.bs58.encode(
             keypair.secretKey
           )}&label=${config.name}`
         )
       )}`,
-      colorDark: '#000000',
-      colorLight: '#555555',
-      backgroundDimming: 'rgba(0, 0, 0, 4)',
-      margin: 0,
-    }).draw()
-    // @ts-ignore
-    setQRCode(qrbuffer)
+      image: config.logoImage,
+      dotsOptions: {
+        color: config.colors.secondary,
+        type: 'extra-rounded',
+      },
+      cornersSquareOptions: {
+        type: 'extra-rounded',
+      },
+      backgroundOptions: {
+        color: 'none',
+      },
+      imageOptions: {
+        crossOrigin: 'anonymous',
+        margin: 20,
+      },
+    })
+    setQRCode(qrCode)
     setKeypair(keypair)
   }
+
+  const ref = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (ref.current && QRCode) {
+      ref.current.firstChild && ref.current.removeChild(ref.current.firstChild)
+      QRCode.append(ref.current)
+    }
+  }, [ref, QRCode])
 
   useMemo(() => {
     if (typeof window !== 'undefined') {
@@ -62,7 +84,7 @@ function Scanner() {
       setTimeout(() => {
         setShowSuccess(false)
         setKeypair(Keypair.generate())
-      }, 3000)
+      }, 4000)
     }
   }, [recentSignature])
 
@@ -71,7 +93,7 @@ function Scanner() {
       <Header />
       <div
         style={{
-          paddingTop: 'calc(50vh - 220px)',
+          paddingTop: 'calc(50vh - 275px)',
         }}
         className="relative mx-auto flex w-[93%] max-w-[450px] flex-col items-center text-white"
       >
@@ -90,36 +112,35 @@ function Scanner() {
                 )}
               </div>
             </div>
-            {showSuccess ? (
+            <div className="relative flex h-[350px] w-[350px] items-center justify-center rounded-2xl text-[170px] md:h-[500px] md:w-[500px]">
+              {showSuccess && (
+                <div
+                  className="absolute z-10 flex h-full w-full items-center justify-center rounded-2xl"
+                  style={{
+                    color: config.colors.secondary,
+                    fontSize: '170px',
+                    boxShadow: `0 0 80px 50px ${transparentize(
+                      0.8,
+                      config.colors.secondary
+                    )}`,
+                  }}
+                >
+                  <AnimatedCheckmark
+                    color={config.colors.secondary}
+                    className="h-[200px] w-[200px]"
+                  />
+                </div>
+              )}
               <div
-                className="flex h-[450px] w-full items-center justify-center rounded-3xl"
-                style={{
-                  fontSize: '170px',
-                  boxShadow: `0 0 80px 50px ${transparentize(
-                    0.8,
-                    config.colors.secondary
-                  )}`,
-                }}
-              >
-                <FaCheckCircle />
-              </div>
-            ) : (
-              <img
-                className="w-full rounded-3xl p-3"
-                src={QRCode}
-                alt="qr-code"
-                style={{
-                  boxShadow: `0 0 80px 50px ${transparentize(
-                    0.8,
-                    config.colors.secondary
-                  )}`,
-                }}
+                ref={ref}
+                style={{ opacity: showSuccess ? 0.3 : 1 }}
+                className="scale-[.7] transition-opacity md:scale-100"
               />
-            )}
+            </div>
             <div className="py-3 text-gray-500">
               Ensure you hold a {config.name} NFT in your mobile wallet
             </div>
-            <div>
+            <div className="text-gray-500">
               {recentSignatures.data?.map((sig) => (
                 <div key={sig.signature}>{sig.signature}</div>
               ))}

@@ -743,7 +743,7 @@ export const Browse = () => {
             >
               <StyledSelect>
                 <Select
-                  className=" block h-[30px] w-full rounded-[4px] bg-black text-gray-700 lg:mr-20 xl:mr-4"
+                  className="block h-[30px] w-full rounded-[4px] bg-black text-gray-700 lg:mr-20 xl:mr-4"
                   onChange={(e) => {
                     setSelectedOrderCategory(e)
                   }}
