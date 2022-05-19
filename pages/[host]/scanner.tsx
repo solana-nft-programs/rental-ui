@@ -132,18 +132,18 @@ function Scanner() {
               )}
               <div
                 ref={ref}
-                style={{ opacity: showSuccess ? 0.3 : 1 }}
-                className="scale-[.7] transition-opacity md:scale-100"
+                style={{ opacity: showSuccess ? 0.3 : 1, transition: '1s all' }}
+                className="scale-[.7] md:scale-100"
               />
             </div>
             <div className="py-3 text-gray-500">
               Ensure you hold a {config.name} NFT in your mobile wallet
             </div>
-            <div className="text-gray-500">
+            {/* <div className="text-gray-500">
               {recentSignatures.data?.map((sig) => (
                 <div key={sig.signature}>{sig.signature}</div>
               ))}
-            </div>
+            </div> */}
           </>
         )}
       </div>
