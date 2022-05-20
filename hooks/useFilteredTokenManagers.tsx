@@ -19,67 +19,64 @@ export const useFilteredTokenManagers = () => {
   return useDataHook<TokenData[] | undefined>(
     async () => {
       console.log('Fetching for config', config.name)
-      if (environment.index && config.indexEnabled) {
-        if (config.filter?.type === 'creators') {
-          /////
-          const step1 = Date.now()
-          const tokenManagerResponse = await environment.index.query({
-            query: gql`
-              query GetTokenManagers($creators: [String!]!) {
-                cardinal_token_managers(
-                  where: {
-                    mint_address_nfts: {
-                      metadatas_attributes: {
-                        first_verified_creator: { _in: $creators }
-                      }
+      if (environment.index && config.filter?.type === 'creators') {
+        /////
+        const step1 = Date.now()
+        const tokenManagerResponse = await environment.index.query({
+          query: gql`
+            query GetTokenManagers($creators: [String!]!) {
+              cardinal_token_managers(
+                where: {
+                  mint_address_nfts: {
+                    metadatas_attributes: {
+                      first_verified_creator: { _in: $creators }
                     }
                   }
-                ) {
-                  address
-                  mint
-                  state
-                  state_changed_at
                 }
+              ) {
+                address
+                mint
+                state
+                state_changed_at
               }
-            `,
-            variables: {
-              creators: config.filter.value,
-            },
-          })
+            }
+          `,
+          variables: {
+            creators: config.filter.value,
+          },
+        })
 
-          /////
-          const step2 = Date.now()
-          console.log('2', step2 - step1, tokenManagerResponse)
+        /////
+        const step2 = Date.now()
+        console.log('2', step2 - step1, tokenManagerResponse)
 
-          const tokenManagerIds: PublicKey[] = tokenManagerResponse.data[
-            'cardinal_token_managers'
-          ]
-            .map((data: { mint: string; address: string }) =>
-              tryPublicKey(data.address)
-            )
-            .filter((id: PublicKey | null): id is PublicKey => id !== null)
-
-          const tokenManagerDatas = await getTokenManagers(
-            connection,
-            tokenManagerIds
+        const tokenManagerIds: PublicKey[] = tokenManagerResponse.data[
+          'cardinal_token_managers'
+        ]
+          .map((data: { mint: string; address: string }) =>
+            tryPublicKey(data.address)
           )
+          .filter((id: PublicKey | null): id is PublicKey => id !== null)
 
-          ////
-          const step3 = Date.now()
-          console.log('3', step3 - step2)
-          const tokenDatas = await getTokenDatas(
-            connection,
-            tokenManagerDatas,
-            config.filter,
-            environment.label
-          )
+        const tokenManagerDatas = await getTokenManagers(
+          connection,
+          tokenManagerIds
+        )
 
-          ////
-          const step4 = Date.now()
-          console.log('4', step4 - step3)
-          return tokenDatas
-        }
-        return []
+        ////
+        const step3 = Date.now()
+        console.log('3', step3 - step2)
+        const tokenDatas = await getTokenDatas(
+          connection,
+          tokenManagerDatas,
+          config.filter,
+          environment.label
+        )
+
+        ////
+        const step4 = Date.now()
+        console.log('4', step4 - step3)
+        return tokenDatas
       } else if (environment.api) {
         const response = await fetch(
           `${environment.api}/tokenManagersByState?cluster=${environment.label}&collection=${config.name}`

@@ -23,7 +23,6 @@ export type ProjectConfig = {
   name: string
   websiteUrl: string
   logoImage: string
-  indexEnabled?: boolean
   colors: Colors
   disableListing?: boolean
   filter?: TokenFilter
@@ -251,7 +250,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     type: 'Collection',
     websiteUrl: 'https://theportal.to/',
     logoImage: '/logos/portals.svg',
-    indexEnabled: true,
     colors: {
       main: '#000',
       secondary: '#80ddef',

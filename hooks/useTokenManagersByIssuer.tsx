@@ -9,6 +9,8 @@ import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useDataHook } from './useDataHook'
 import { useWalletId } from './useWalletId'
 
+const INDEX_ENABLED_MANAGER = false
+
 export const useTokenManagersByIssuer = () => {
   const walletId = useWalletId()
   const { config } = useProjectConfig()
@@ -16,7 +18,7 @@ export const useTokenManagersByIssuer = () => {
   return useDataHook<TokenData[] | undefined>(
     async () => {
       if (!walletId) return
-      if (environment.index && config.indexEnabled) {
+      if (environment.index && INDEX_ENABLED_MANAGER) {
         const response = await environment.index.query({
           query: gql`
             query GetTokenManagersForIssuer(
