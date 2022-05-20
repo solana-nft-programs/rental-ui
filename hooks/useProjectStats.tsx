@@ -133,6 +133,42 @@ export const useProjectStats = () => {
           totalRentalDuration: null,
         }
         return stats
+      } else if (!config.filter) {
+        const collectionClaimEvents = await index.query({
+          query: gql`
+            query GetCardinalClaimEvents($creators: [String!]) {
+              cardinal_claim_events {
+                mint_address_nfts {
+                  name
+                  symbol
+                }
+                state_changed_at
+                issuer
+                mint
+                time_invalidator_duration_seconds
+                time_invalidator_expiration
+                time_invalidator_extension_payment_mint
+                time_invalidator_extension_payment_amount
+                time_invalidator_extension_duration_seconds
+                token_manager_address
+                paid_claim_approver_payment_amount
+                paid_claim_approver_payment_mint
+              }
+            }
+          `,
+        })
+
+        const claimEvents = collectionClaimEvents.data['cardinal_claim_events']
+
+        if (claimEvents.length === 0) {
+          return {}
+        }
+        const stats = {
+          totalRentalCount: claimEvents.length,
+          totalRentalVolume: null,
+          totalRentalDuration: null,
+        }
+        return stats
       } else {
         return {
           totalRentalCount: null,

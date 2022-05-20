@@ -20,7 +20,7 @@ import { secondsToString } from 'common/utils'
 import { asWallet } from 'common/Wallets'
 import type { ProjectConfig } from 'config/config'
 import { useFilteredTokenManagers } from 'hooks/useFilteredTokenManagers'
-import { useProjectStats } from 'hooks/useProjectStatsHook'
+import { useProjectStats } from 'hooks/useProjectStats'
 import { lighten } from 'polished'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import {

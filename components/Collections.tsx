@@ -39,14 +39,14 @@ export const Collections = ({ setTab }: { setTab: (s: string) => void }) => {
           { name: 'Browse', anchor: 'browse' },
         ]}
       />
-      <div className="container mx-auto px-10 md:px-0">
+      <div className="container mx-auto mt-10 px-10 md:px-0">
         {Object.entries(categories).map(([type, configs], i) => (
           <div key={type}>
-            <div className="mt-10 mb-5 text-lg font-semibold text-white">
-              {/* {type} */}
-            </div>
+            {/* <div className="mb-5 text-lg font-semibold text-white"> */}
+            {/* {type} */}
+            {/* </div> */}
             {i > 0 && (
-              <div className="mx-auto mb-10 h-[2px] w-[90%] rounded-lg bg-gray-500 opacity-50"></div>
+              <div className="mx-auto mt-10 mb-10 h-[2px] w-[90%] rounded-lg bg-gray-500 opacity-50"></div>
             )}
             <div className="grid grid-cols-1 flex-wrap gap-4 md:grid-cols-3 lg:grid-cols-4">
               {configs.map((config) => (
@@ -54,7 +54,9 @@ export const Collections = ({ setTab }: { setTab: (s: string) => void }) => {
                   key={config.name}
                   style={{ background: lighten(0.07, config.colors.main) }}
                   className={`flex h-[200px] min-w-[200px] cursor-pointer items-center justify-center rounded-xl p-10 shadow-2xl transition-all duration-200 hover:scale-[1.02]`}
-                  onClick={() => { setProjectConfig(config.name) }}
+                  onClick={() => {
+                    setProjectConfig(config.name)
+                  }}
                 >
                   <img
                     className="max-h-full"
@@ -66,12 +68,14 @@ export const Collections = ({ setTab }: { setTab: (s: string) => void }) => {
               {i === 0 && (
                 <div
                   key={config.name}
-                  style={{ background: lighten(0.07, "rgb(26, 27, 32)")}}
-                  className={`flex flex-col h-[200px] min-w-[200px] cursor-pointer items-center justify-center rounded-xl p-10 shadow-2xl transition-all duration-200 hover:scale-[1.02]`}
-                  onClick={() => { window.open('https://forms.gle/7K1EQ9SWGE93sWHUA')}}
+                  style={{ background: lighten(0.07, 'rgb(26, 27, 32)') }}
+                  className={`flex h-[200px] min-w-[200px] cursor-pointer flex-col items-center justify-center rounded-xl p-10 shadow-2xl transition-all duration-200 hover:scale-[1.02]`}
+                  onClick={() => {
+                    window.open('https://forms.gle/7K1EQ9SWGE93sWHUA')
+                  }}
                 >
-                  <AiFillPlusCircle color="#E5E5E5" className="w-20 h-20"/>
-                  <p className="text-white mt-2">Add Your Collection</p>
+                  <AiFillPlusCircle color="#E5E5E5" className="h-20 w-20" />
+                  <p className="mt-2 text-white">Add Your Collection</p>
                 </div>
               )}
             </div>
