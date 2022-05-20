@@ -20,13 +20,13 @@ export const Button = styled.button<ButtonProps>`
   opacity: ${({ disabled }) => (disabled ? '0.5' : '1')};
   border: none;
   outline: none;
-  min-height: 26px;
   font-size: 12px;
   mix-blend-mode: normal;
   box-shadow: ${({ boxShadow }) =>
     boxShadow ? '0px 4px 4px rgba(0, 0, 0, 0.25)' : ''};
   border-radius: 4px;
-  padding: 0 12px;
+  padding: 4px 12px;
+  white-space: break-spaces;
   transition: 0.2s background;
   ${({ variant = 'primary', disabled, bgColor = undefined }) => {
     return bgColor
