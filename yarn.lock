@@ -1423,10 +1423,10 @@
     "@solana/spl-token" "^0.1.8"
     typescript "^4.5.4"
 
-"@cardinal/scanner@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@cardinal/scanner/-/scanner-0.1.0.tgz#a8f05ed9f564832d29643f42da21eef6adda63a7"
-  integrity sha512-89U9JmB/0OohdE2M+qzu4HwVYPiFYkeSTcea26nMNcBJVC4Mfa63YSoa7Vf9TeYrZ4AAJQRV/3dsFx8bZ4SoEw==
+"@cardinal/scanner@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@cardinal/scanner/-/scanner-0.1.1.tgz#3bbf36dc65d01654d163f2f57375725446aea5cc"
+  integrity sha512-4igXQUetvDLjOIOimpFDe4RyeVFGahoy82a4Xcqd1LMlcw2f54mkqgFhOE7oJqiX/uwpn/8ZbbuXXeUFT9uuLg==
   dependencies:
     "@cardinal/common" "^1.0.10"
 

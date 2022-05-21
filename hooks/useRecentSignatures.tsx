@@ -1,6 +1,8 @@
+// import type { Wallet } from '@saberhq/solana-contrib'
 // import { useWallet } from '@solana/wallet-adapter-react'
 import type { ConfirmedSignatureInfo, PublicKey } from '@solana/web3.js'
 import { Connection } from '@solana/web3.js'
+// import { executeTransaction } from 'common/Transactions'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 
 import { useDataHook } from './useDataHook'
@@ -33,7 +35,7 @@ export const useRecentSignatures = (address: PublicKey | undefined) => {
       // const tx = Transaction.from(buffer)
       // console.log(tx.instructions[0]!.keys.map((k) => k.pubkey.toString()))
       // const txid = await sendAndConfirmRawTransaction(
-      //   ctx.connection,
+      //   connection,
       //   transaction.serialize(),
       //   { commitment: 'singleGossip' }
       // )

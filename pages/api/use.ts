@@ -85,7 +85,6 @@ const post: NextApiHandler<PostResponse> = async (req, res) => {
   }
 
   let transaction = new Transaction()
-
   if (!foundToken.timeInvalidator && !foundToken.useInvalidator) {
     const instruction = scan(
       connection,
