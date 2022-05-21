@@ -20,6 +20,7 @@ export type ProjectConfig = {
     publicKeyString?: string
   }
   hidden?: boolean
+  indexDisabled?: boolean
   issuedOnly?: boolean
   name: string
   displayName?: string
@@ -604,6 +605,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     websiteUrl: 'https://www.empiredao.xyz',
     logoImage: '/logos/empiredao.png',
     hidden: true,
+    indexDisabled: true,
     colors: {
       main: '#131E29',
       secondary: '#48729C',

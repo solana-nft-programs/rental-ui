@@ -19,7 +19,11 @@ export const useFilteredTokenManagers = () => {
   return useDataHook<TokenData[] | undefined>(
     async () => {
       console.log('Fetching for config', config.name)
-      if (environment.index && config.filter?.type === 'creators') {
+      if (
+        environment.index &&
+        config.filter?.type === 'creators' &&
+        !config.indexDisabled
+      ) {
         /////
         const step1 = Date.now()
         const tokenManagerResponse = await environment.index.query({
