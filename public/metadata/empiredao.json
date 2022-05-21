@@ -1,0 +1,44 @@
+{
+    "name": "[Monday] EmpireDAO Desk #0",
+    "symbol": "EDAO",
+    "description": "Welcome to the Empire DAO. Scan this access pass on your mobile wallet at the door to 190 Bowery St, New York, New York 10001 for entry.",
+    "seller_fee_basis_points": 0,
+    "image": "https://rent.cardinal.so/metadata/empiredao.png",
+    "attributes": [
+        {
+            "trait_type": "day",
+            "value": "Monday",
+            "display_type": "Day"
+        },
+        {
+            "trait_type": "seat",
+            "value": "#0",
+            "display_type": "Seat"
+        },
+        {
+            "trait_type": "standing_desk",
+            "value": "true",
+            "display_type": "Standing Desk"
+        },
+        {
+            "trait_type": "monitors",
+            "value": "3",
+            "display_type": "Monitors"
+        }
+    ],
+    "properties": {
+        "files": [
+            {
+                "uri": "https://rent.cardinal.so/metadata/empiredao.png",
+                "type": "image/png"
+            }
+        ],
+        "category": "image",
+        "creators": [
+            {
+                "address": "DNVVBNkdyv6tMentHdjVz5cpYmjQYcquLfYkz1fApT7Q",
+                "share": 100
+            }
+        ]
+    }
+}

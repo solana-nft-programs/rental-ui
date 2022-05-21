@@ -598,6 +598,44 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       },
     ],
   },
+  empiredao: {
+    name: 'empiredao',
+    type: 'Collection',
+    websiteUrl: 'https://www.empiredao.xyz',
+    logoImage: '/logos/empiredao.png',
+    hidden: true,
+    colors: {
+      main: '#131E29',
+      secondary: '#48729C',
+    },
+    filter: {
+      type: 'creators',
+      value: ['edaoJQRZZ3hfNottaxe9z5o2owJDJgL1bUChiPk15KN'],
+    },
+    rentalCard: {
+      invalidators: ['expiration'],
+      invalidationOptions: {
+        visibilities: ['public'],
+        durationOptions: ['minutes', 'hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '3 weeks',
+          value: 7258000,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+    airdrops: [
+      {
+        name: '[Monday] EmpireDAO Desk #0',
+        symbol: 'EDAO',
+        uri: 'https://arweave.net/l9VXqVWCsiKW-R8ShX8jknFPgBibrhQI1JRgUI9uvbw',
+      },
+    ],
+  },
   ['all-starz']: {
     name: 'all-starz',
     type: 'Guild',
