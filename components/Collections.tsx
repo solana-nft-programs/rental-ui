@@ -13,7 +13,7 @@ export const Collections = ({ setTab }: { setTab: (s: string) => void }) => {
 
   const categories = Object.entries(projectConfigs).reduce(
     (acc, [k, config]) => {
-      if (config.name === 'default' || config.name === 'vault') return acc
+      if (config.hidden) return acc
       return {
         ...acc,
         [config.type]: [...(acc[config.type] || []), config],

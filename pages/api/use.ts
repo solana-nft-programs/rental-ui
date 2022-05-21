@@ -1,4 +1,6 @@
+import { scan } from '@cardinal/scanner/dist/cjs/programs/cardinalScanner'
 import { close } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator/instruction'
+import { incrementUsages } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator/instruction'
 import { utils } from '@project-serum/anchor'
 import { Connection, Keypair, Transaction } from '@solana/web3.js'
 import type { TokenData } from 'api/api'
@@ -71,34 +73,80 @@ const post: NextApiHandler<PostResponse> = async (req, res) => {
     return res.status(500).json({ error: 'Failed to get token accounts' })
   }
 
-  const foundToken = tokenDatas.find((tk) => tk.timeInvalidator)
+  const foundToken =
+    tokenDatas.find((tk) => !tk.timeInvalidator && !tk.useInvalidator) ||
+    tokenDatas.find((tk) => tk.timeInvalidator) ||
+    tokenDatas.find((tk) => tk.useInvalidator)
+
   if (!foundToken) {
     return res.status(404).json({
       error: `No valid tokens found in wallet for config ${config.name}`,
     })
   }
 
-  // Serialize and deserialize the transaction. This ensures consistent ordering of the account keys for signing.
   let transaction = new Transaction()
-  const instruction = close(
-    connection,
-    {
-      signTransaction: async (tx: Transaction) => tx,
-      signAllTransactions: async (txs: Transaction[]) => txs,
-      publicKey: accountId,
-    },
-    foundToken.timeInvalidator!.pubkey,
-    foundToken.tokenManager!.pubkey
-  )
-  transaction.instructions = [
-    {
-      ...instruction,
-      keys: [
-        ...instruction.keys,
-        { pubkey: keypair.publicKey, isSigner: false, isWritable: false },
-      ],
-    },
-  ]
+
+  if (!foundToken.timeInvalidator && !foundToken.useInvalidator) {
+    const instruction = scan(
+      connection,
+      {
+        signTransaction: async (tx: Transaction) => tx,
+        signAllTransactions: async (txs: Transaction[]) => txs,
+        publicKey: accountId,
+      },
+      accountId
+    )
+    transaction.instructions = [
+      {
+        ...instruction,
+        keys: [
+          ...instruction.keys,
+          { pubkey: keypair.publicKey, isSigner: false, isWritable: false },
+        ],
+      },
+    ]
+  } else if (foundToken.timeInvalidator) {
+    const instruction = close(
+      connection,
+      {
+        signTransaction: async (tx: Transaction) => tx,
+        signAllTransactions: async (txs: Transaction[]) => txs,
+        publicKey: accountId,
+      },
+      foundToken.timeInvalidator!.pubkey,
+      foundToken.tokenManager!.pubkey
+    )
+    transaction.instructions = [
+      {
+        ...instruction,
+        keys: [
+          ...instruction.keys,
+          { pubkey: keypair.publicKey, isSigner: false, isWritable: false },
+        ],
+      },
+    ]
+  } else if (foundToken.useInvalidator) {
+    const instruction = await incrementUsages(
+      connection,
+      {
+        signTransaction: async (tx: Transaction) => tx,
+        signAllTransactions: async (txs: Transaction[]) => txs,
+        publicKey: accountId,
+      },
+      foundToken.tokenManager!.pubkey,
+      foundToken.tokenAccount!.pubkey,
+      1
+    )
+    transaction.instructions = [
+      {
+        ...instruction,
+        keys: [
+          ...instruction.keys,
+          { pubkey: keypair.publicKey, isSigner: false, isWritable: false },
+        ],
+      },
+    ]
+  }
 
   transaction.feePayer = accountId
   transaction.recentBlockhash = (

@@ -1423,6 +1423,13 @@
     "@solana/spl-token" "^0.1.8"
     typescript "^4.5.4"
 
+"@cardinal/scanner@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@cardinal/scanner/-/scanner-0.1.0.tgz#a8f05ed9f564832d29643f42da21eef6adda63a7"
+  integrity sha512-89U9JmB/0OohdE2M+qzu4HwVYPiFYkeSTcea26nMNcBJVC4Mfa63YSoa7Vf9TeYrZ4AAJQRV/3dsFx8bZ4SoEw==
+  dependencies:
+    "@cardinal/common" "^1.0.10"
+
 "@cardinal/stake-pool@^1.1.1":
   version "1.1.9"
   resolved "https://registry.yarnpkg.com/@cardinal/stake-pool/-/stake-pool-1.1.9.tgz#aa148066779dfec17bef58d5f612b5225ae85739"

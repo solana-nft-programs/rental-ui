@@ -19,6 +19,7 @@ export type ProjectConfig = {
   issuer?: {
     publicKeyString?: string
   }
+  hidden?: boolean
   issuedOnly?: boolean
   name: string
   websiteUrl: string
@@ -38,6 +39,7 @@ export type ProjectConfig = {
 export const projectConfigs: { [key: string]: ProjectConfig } = {
   default: {
     name: 'default',
+    hidden: true,
     type: 'Collection',
     websiteUrl: 'https://cardinal.so',
     logoImage: 'https://main.cardinal.so/assets/cardinal-titled.png',
@@ -105,6 +107,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
   },
   vault: {
     name: 'vault',
+    hidden: true,
     type: 'Collection',
     websiteUrl: 'https://cardinal.so',
     logoImage: 'https://main.cardinal.so/assets/cardinal-titled.png',
@@ -552,6 +555,44 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       },
     ],
     marketplaceRate: 'days',
+  },
+  thugbirdz: {
+    name: 'thugbirdz',
+    type: 'Collection',
+    websiteUrl: 'https://www.thugbirdz.com/#/',
+    logoImage: 'https://www.thugbirdz.com/icon.png',
+    hidden: true,
+    colors: {
+      main: 'rgb(26, 27, 32)',
+      secondary: '#9c74fc',
+    },
+    filter: {
+      type: 'creators',
+      value: ['CzrE3LhijwcmvsXZa8YavqgR9EzW3UGqoSWZKwGpZVqM'],
+    },
+    rentalCard: {
+      invalidators: ['rate'],
+      invalidationOptions: {
+        visibilities: ['public'],
+        durationOptions: ['minutes', 'hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+    airdrops: [
+      {
+        name: 'Thugbirdz',
+        symbol: 'THUG',
+        uri: 'https://arweave.net/l9VXqVWCsiKW-R8ShX8jknFPgBibrhQI1JRgUI9uvbw',
+      },
+    ],
   },
   ['all-starz']: {
     name: 'all-starz',
