@@ -17,8 +17,7 @@ interface GetResponse {
 }
 
 const get: NextApiHandler<GetResponse> = async (req, res) => {
-  const { label: labelParam, collection: collectionParam } = req.query
-
+  const { collection: collectionParam } = req.query
   const config =
     projectConfigs[firstParam(collectionParam)] || projectConfigs['default']!
 
@@ -26,7 +25,7 @@ const get: NextApiHandler<GetResponse> = async (req, res) => {
     ? config.logoImage
     : `https://${req.headers.host}${config.logoImage}`
   res.status(200).send({
-    label: firstParam(labelParam) || 'Unknown label',
+    label: config.displayName || config.name || 'Unknown project',
     icon,
   })
 }

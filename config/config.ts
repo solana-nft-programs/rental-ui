@@ -22,6 +22,7 @@ export type ProjectConfig = {
   hidden?: boolean
   issuedOnly?: boolean
   name: string
+  displayName?: string
   websiteUrl: string
   logoImage: string
   colors: Colors
@@ -250,6 +251,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
   },
   portals: {
     name: 'portals',
+    displayName: 'Portals',
     type: 'Collection',
     websiteUrl: 'https://theportal.to/',
     logoImage: '/logos/portals.svg',
@@ -302,6 +304,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
   },
   monke: {
     name: 'monke',
+    displayName: 'Monke',
     type: 'Collection',
     websiteUrl: 'https://market.solanamonkey.business/',
     logoImage: 'https://market.solanamonkey.business/logo/smb-market.svg',
@@ -358,6 +361,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
   },
   br1: {
     name: 'br1',
+    displayName: 'BR1',
     type: 'Collection',
     websiteUrl: 'https://www.br1game.com/',
     logoImage:

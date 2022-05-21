@@ -20,11 +20,7 @@ function Scanner() {
     console.log(
       'Generating QR code for request: ',
       `solana:${encodeURIComponent(
-        getLink(
-          `/api/use?collection=${config.name}&keypair=${utils.bytes.bs58.encode(
-            keypair.secretKey
-          )}&label=${config.name}`
-        )
+        getLink(`/api/scan?collection=${config.name}`)
       )}`
     )
 
@@ -34,9 +30,9 @@ function Scanner() {
       type: 'svg',
       data: `solana:${encodeURIComponent(
         getLink(
-          `/api/use?collection=${config.name}&keypair=${utils.bytes.bs58.encode(
-            keypair.secretKey
-          )}&label=${config.name}`
+          `/api/scan?collection=${
+            config.name
+          }&keypair=${utils.bytes.bs58.encode(keypair.secretKey)}`
         )
       )}`,
       image: config.logoImage,
