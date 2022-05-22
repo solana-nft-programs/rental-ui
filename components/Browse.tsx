@@ -672,7 +672,6 @@ export const Browse = () => {
   const sortedAttributes = getAllAttributes(tokenManagersForConfig ?? [])
 
   const handleBrowseClick = async (tokenData: TokenData) => {
-    let passedConfig = true
     if (config.allowOneByCreators && tokenManagers.data) {
       for (const creator of config.allowOneByCreators) {
         if (creator.enforceTwitter && !twitterAddress.displayName) {
@@ -682,8 +681,7 @@ export const Browse = () => {
               'You need to connect your twitter account to rent an NFT from this issuer',
             type: 'error',
           })
-          passedConfig = false
-          break
+          return
         }
         if (
           tokenManagers.data.filter(
@@ -699,12 +697,11 @@ export const Browse = () => {
               'The issuer of this NFT has limited only one NFT rental per user',
             type: 'error',
           })
-          passedConfig = false
-          break
+          return
         }
       }
     }
-    if (wallet.publicKey && passedConfig) {
+    if (wallet.publicKey) {
       if (tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber() === 0) {
         rentalRateModal.show(
           asWallet(wallet),
