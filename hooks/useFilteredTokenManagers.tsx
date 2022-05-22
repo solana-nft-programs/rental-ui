@@ -3,6 +3,7 @@ import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tok
 import {
   getTokenManagers,
   getTokenManagersByState,
+  getTokenManagersForIssuer,
 } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/accounts'
 import type { PublicKey } from '@solana/web3.js'
 import type { TokenData } from 'api/api'
@@ -88,10 +89,26 @@ export const useFilteredTokenManagers = () => {
         const json = (await response.json()) as { data: TokenData[] }
         return json.data.map((tokenData) => convertStringsToPubkeys(tokenData))
       } else {
-        const tokenManagerDatas = await getTokenManagersByState(
-          connection,
-          config.issuedOnly ? TokenManagerState.Issued : null
-        )
+        let tokenManagerDatas = []
+        if (config.filter?.type === 'issuer') {
+          // TODO unsafe loop of network calls
+          const tokenManagerDatasByIssuer = await Promise.all(
+            config.filter.value.map((issuerString) =>
+              tryPublicKey(issuerString)
+                ? getTokenManagersForIssuer(
+                    connection,
+                    tryPublicKey(issuerString)!
+                  )
+                : []
+            )
+          )
+          tokenManagerDatas = tokenManagerDatasByIssuer.flat()
+        } else {
+          tokenManagerDatas = await getTokenManagersByState(
+            connection,
+            config.issuedOnly ? TokenManagerState.Issued : null
+          )
+        }
         const tokenDatas = await getTokenDatas(
           connection,
           tokenManagerDatas,
