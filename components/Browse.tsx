@@ -1,4 +1,4 @@
-import { DisplayAddress } from '@cardinal/namespaces-components'
+import { DisplayAddress, useAddressName } from '@cardinal/namespaces-components'
 import { invalidate, withClaimToken } from '@cardinal/token-manager'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import styled from '@emotion/styled'
@@ -216,6 +216,10 @@ export const Browse = () => {
   const tokenManagers = useFilteredTokenManagers()
   const tokenManagersForConfig = tokenManagers.data || []
   const projectStats = useProjectStats()
+  const twitterAddress = useAddressName(
+    connection,
+    wallet.publicKey ?? undefined
+  )
 
   const [userPaymentTokenAccount, _setUserPaymentTokenAccount] =
     useState<splToken.AccountInfo | null>(null)
@@ -667,6 +671,54 @@ export const Browse = () => {
 
   const sortedAttributes = getAllAttributes(tokenManagersForConfig ?? [])
 
+  const handleBrowseClick = async (tokenData: TokenData) => {
+    let passedConfig = true
+    if (config.allowOneByCreators && tokenManagers.data) {
+      for (const creator of config.allowOneByCreators) {
+        if (creator.enforceTwitter && !twitterAddress.displayName) {
+          notify({
+            message: 'Error renting this NFT',
+            description:
+              'You need to connect your twitter account to rent an NFT from this issuer',
+            type: 'error',
+          })
+          passedConfig = false
+          break
+        }
+        if (
+          tokenManagers.data.filter(
+            (tm) =>
+              tm.tokenManager?.parsed.issuer.toString() === creator.address &&
+              tm.recipientTokenAccount?.owner.toString() ===
+                wallet.publicKey?.toString()
+          ).length > 0
+        ) {
+          notify({
+            message: 'Error renting this NFT',
+            description:
+              'The issuer of this NFT has limited only one NFT rental per user',
+            type: 'error',
+          })
+          passedConfig = false
+          break
+        }
+      }
+    }
+    if (wallet.publicKey && passedConfig) {
+      if (tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber() === 0) {
+        rentalRateModal.show(
+          asWallet(wallet),
+          connection,
+          environment.label,
+          tokenData,
+          true
+        )
+      } else {
+        await handleClaim(tokenData)
+      }
+    }
+  }
+
   return (
     <>
       <Header
@@ -980,24 +1032,9 @@ export const Browse = () => {
                                       variant="primary"
                                       disabled={!wallet.publicKey}
                                       className="my-auto inline-block max-w-[45%] flex-none overflow-scroll text-xs"
-                                      handleClick={async () => {
-                                        if (wallet.publicKey) {
-                                          if (
-                                            tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber() ===
-                                            0
-                                          ) {
-                                            rentalRateModal.show(
-                                              asWallet(wallet),
-                                              connection,
-                                              environment.label,
-                                              tokenData,
-                                              true
-                                            )
-                                          } else {
-                                            await handleClaim(tokenData)
-                                          }
-                                        }
-                                      }}
+                                      handleClick={() =>
+                                        handleBrowseClick(tokenData)
+                                      }
                                     >
                                       {tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber() ===
                                       0 ? (

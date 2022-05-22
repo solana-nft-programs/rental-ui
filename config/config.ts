@@ -36,6 +36,7 @@ export type ProjectConfig = {
   }
   marketplaceRate?: DurationOption
   paymentManager?: string
+  allowOneByCreators?: { address: string; enforceTwitter: boolean }[]
 }
 
 export const projectConfigs: { [key: string]: ProjectConfig } = {
@@ -302,6 +303,12 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       },
     ],
     marketplaceRate: 'days',
+    allowOneByCreators: [
+      {
+        address: '7KJ322BQnje7oPN315dRNK7Arioom7d8mAPhAJFME2MA',
+        enforceTwitter: true,
+      },
+    ],
   },
   monke: {
     name: 'monke',
