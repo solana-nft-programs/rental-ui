@@ -311,7 +311,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     logoImage: '/logos/smb.svg',
     colors: {
       main: '#202225',
-      secondary: '#0ea5e9',
+      secondary: '#CCCDFF',
     },
     filter: {
       type: 'creators',
