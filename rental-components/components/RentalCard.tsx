@@ -1200,7 +1200,7 @@ export const RentalCard = ({
                   message={
                     <>
                       <div
-                        className="cursor-pointer"
+                        className="cursor-pointer break-words"
                         onClick={() => setError(undefined)}
                       >
                         {error}
