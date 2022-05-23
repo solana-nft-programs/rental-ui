@@ -10,7 +10,7 @@ export type Colors = {
 }
 
 export type TokenFilter = {
-  type: 'creators' | 'symbol' | 'issuer'
+  type: 'creators' | 'symbol' | 'issuer' | 'mintList'
   value: string[]
 }
 
@@ -619,13 +619,15 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       secondary: '#FFB60C',
     },
     filter: {
-      type: 'creators',
-      value: [
-        'CbPuZtVMAWwPySvsUAEbZhe8y9rkeAZ5qLhsGBVvtau9',
-        'EoYTpE5HuTaXkN2AWDAgGA3JbhtPdeqnUiY9rdG7hMf',
-        'EpgYkzyAXPDq11G5ngctWcjq7pKSfUtEnjVcYPs2jhGY',
-        '3TVyY5Tw9CuKj7EJwaawacDqBM5jnbeL1kRUvhDPvxH4',
-      ],
+      // type: 'creators',
+      // value: [
+      //   'CbPuZtVMAWwPySvsUAEbZhe8y9rkeAZ5qLhsGBVvtau9',
+      //   'EoYTpE5HuTaXkN2AWDAgGA3JbhtPdeqnUiY9rdG7hMf',
+      //   'EpgYkzyAXPDq11G5ngctWcjq7pKSfUtEnjVcYPs2jhGY',
+      //   '3TVyY5Tw9CuKj7EJwaawacDqBM5jnbeL1kRUvhDPvxH4',
+      // ],
+      type: 'mintList',
+      value: ['/mintLists/miniroyale.json'],
     },
     rentalCard: {
       invalidators: ['rate'],

@@ -344,6 +344,15 @@ export async function getTokenAccountsWithData(
     )
   }
 
+  if (filter?.type === 'mintList' && filter.value.length > 0) {
+    // filter by mintList
+    const response = await fetch(filter.value[0]!)
+    const mintList = (await response.json()).list
+    tokenAccounts = tokenAccounts.filter((tk) =>
+      mintList.includes(tk.account.data.parsed.info.mint.toString())
+    )
+  }
+
   // lookup delegates and
   const delegateIds = tokenAccounts.map((tokenAccount) =>
     tryPublicKey(tokenAccount.account.data.parsed.info.delegate)
@@ -491,6 +500,15 @@ export async function getTokenDatas(
           filter.value.includes(creator.address.toString()) &&
           (cluster === 'devnet' || creator.verified)
       )
+    )
+  }
+
+  if (filter?.type === 'mintList' && filter.value.length > 0) {
+    // filter by mintList
+    const response = await fetch(filter.value[0]!)
+    const mintList = (await response.json()).list
+    tokenManagerDatas = tokenManagerDatas.filter((tm) =>
+      mintList.includes(tm.parsed.mint.toString())
     )
   }
 
