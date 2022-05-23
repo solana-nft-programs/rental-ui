@@ -599,6 +599,65 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       },
     ],
   },
+  miniroyale: {
+    name: 'miniroyale',
+    displayName: 'Mini Royale',
+    type: 'Collection',
+    websiteUrl: 'https://miniroyale.io/',
+    logoImage: '/logos/miniroyale.png',
+    hidden: true,
+    colors: {
+      main: '#192836',
+      secondary: '#FFB60C',
+    },
+    filter: {
+      type: 'creators',
+      value: [
+        'CbPuZtVMAWwPySvsUAEbZhe8y9rkeAZ5qLhsGBVvtau9',
+        'EoYTpE5HuTaXkN2AWDAgGA3JbhtPdeqnUiY9rdG7hMf',
+        'EpgYkzyAXPDq11G5ngctWcjq7pKSfUtEnjVcYPs2jhGY',
+        '3TVyY5Tw9CuKj7EJwaawacDqBM5jnbeL1kRUvhDPvxH4',
+      ],
+    },
+    rentalCard: {
+      invalidators: ['rate'],
+      invalidationOptions: {
+        visibilities: ['public'],
+        durationOptions: ['minutes', 'hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '3 weeks',
+          value: 7258000,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+    airdrops: [
+      {
+        name: 'Miniverse Hero #03016',
+        symbol: 'MINIROYALE',
+        uri: 'https://arweave.net/QfhzPB4a2txBl1Myumyq4431klq6HjDUwacPfS07W4Y',
+      },
+      {
+        name: 'Miniverse Weapon #184776',
+        symbol: 'MINIROYALE',
+        uri: 'https://arweave.net/amSCKytNSZy5cxuoJx-PSY0qMQK6ZAZzD4QnzyMzvBk',
+      },
+      {
+        name: 'Miniverse Hero #0720',
+        symbol: 'MINIROYALE',
+        uri: 'https://bafybeiat55vtqutsbtyz5u3ufjru7iiv6giete4bdu3mbgqhaxjvnelc7u.ipfs.nftstorage.link/89.json',
+      },
+      {
+        name: 'Miniverse Weapon #27339',
+        symbol: 'MINIROYALE',
+        uri: 'https://tokens.miniroyale.io/token-data?expires=4806495451&id=904c950a-309b-4fee-9bd4-504771ed2df9&token=BhknUWE6vXAElVhxWKE-YX6_4_acumpPP8q3ZQnsvR8',
+      },
+    ],
+  },
   empiredao: {
     name: 'empiredao',
     displayName: 'Empire DAO',
