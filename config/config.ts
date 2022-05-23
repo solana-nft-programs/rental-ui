@@ -308,7 +308,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     displayName: 'Monke',
     type: 'Collection',
     websiteUrl: 'https://market.solanamonkey.business/',
-    logoImage: '/logos/monke.svg',
+    logoImage: '/logos/smb.svg',
     colors: {
       main: '#202225',
       secondary: '#0ea5e9',
