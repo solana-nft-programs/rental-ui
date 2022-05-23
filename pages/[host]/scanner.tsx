@@ -124,7 +124,7 @@ function Scanner() {
                   }}
                 >
                   <AnimatedCheckmark
-                    color={config.colors.secondary}
+                    color={config.colors.main}
                     className="h-[200px] w-[200px]"
                   />
                 </div>
