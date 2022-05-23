@@ -601,6 +601,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
   },
   empiredao: {
     name: 'empiredao',
+    displayName: 'Empire DAO',
     type: 'Collection',
     websiteUrl: 'https://www.empiredao.xyz',
     logoImage: '/logos/empiredao.png',
@@ -611,8 +612,11 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       secondary: '#48729C',
     },
     filter: {
-      type: 'creators',
-      value: ['edaoJQRZZ3hfNottaxe9z5o2owJDJgL1bUChiPk15KN'],
+      type: 'issuer',
+      value: [
+        'edaoJQRZZ3hfNottaxe9z5o2owJDJgL1bUChiPk15KN',
+        'A8QV7mbxF3N7bhyYTPgcZQeVXTpCGJYnXHWSP4j7Lvj8',
+      ],
     },
     rentalCard: {
       invalidators: ['expiration'],
@@ -630,13 +634,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       },
     },
     marketplaceRate: 'days',
-    airdrops: [
-      {
-        name: '[Monday] EmpireDAO Desk #0',
-        symbol: 'EDAO',
-        uri: 'https://arweave.net/l9VXqVWCsiKW-R8ShX8jknFPgBibrhQI1JRgUI9uvbw',
-      },
-    ],
+    airdrops: [],
   },
   ['all-starz']: {
     name: 'all-starz',
