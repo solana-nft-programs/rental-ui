@@ -131,15 +131,9 @@ export default function Home() {
           <StyledSplash>
             <div className="title">
               <img className="mx-auto w-24" src={config.logoImage} alt="logo" />
-              <p className="mt-3 text-2xl">
-                {config.name.charAt(0).toUpperCase() +
-                  config.name.substring(1, config.name.length)}
-              </p>
+              <p className="mt-3 text-2xl">{config.displayName}</p>
               <p className="text-md mt-3">
-                The Rental Marketplace for all{' '}
-                {config.name.charAt(0).toUpperCase() +
-                  config.name.substring(1, config.name.length)}{' '}
-                NFTs
+                The Rental Marketplace for all {config.displayName} NFTs
               </p>
             </div>
             <div className="mt-5 flex items-center justify-center">

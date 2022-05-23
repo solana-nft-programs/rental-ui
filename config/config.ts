@@ -23,7 +23,7 @@ export type ProjectConfig = {
   indexDisabled?: boolean
   issuedOnly?: boolean
   name: string
-  displayName?: string
+  displayName: string
   websiteUrl: string
   logoImage: string
   colors: Colors
@@ -41,6 +41,7 @@ export type ProjectConfig = {
 export const projectConfigs: { [key: string]: ProjectConfig } = {
   default: {
     name: 'default',
+    displayName: 'default',
     hidden: true,
     type: 'Collection',
     websiteUrl: 'https://cardinal.so',
@@ -109,6 +110,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
   },
   vault: {
     name: 'vault',
+    displayName: 'vault',
     hidden: true,
     type: 'Collection',
     websiteUrl: 'https://cardinal.so',
@@ -177,6 +179,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
   },
   all: {
     name: 'all',
+    displayName: 'all',
     type: 'Collection',
     websiteUrl: 'https://cardinal.so',
     logoImage: '/logos/all.svg',
@@ -401,6 +404,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
   },
   defiland: {
     name: 'defiland',
+    displayName: 'Defi Land',
     type: 'Collection',
     websiteUrl: 'https://www.defiland.app/',
     logoImage: 'https://defiland.app/_nuxt/img/defiland.74b3850.svg',
@@ -441,6 +445,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
   },
   metaops: {
     name: 'metaops',
+    displayName: 'Meta Ops',
     type: 'Collection',
     websiteUrl: 'https://metaopsgaming.com/',
     logoImage: '/logos/metaops.png',
@@ -501,6 +506,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
   },
   psyker: {
     name: 'psyker',
+    displayName: 'Psyker',
     type: 'Collection',
     websiteUrl: 'https://psyker.game/',
     logoImage: '/logos/psyker.png',
@@ -563,6 +569,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
   },
   thugbirdz: {
     name: 'thugbirdz',
+    displayName: 'Thugbirdz',
     type: 'Collection',
     websiteUrl: 'https://www.thugbirdz.com/#/',
     logoImage: 'https://www.thugbirdz.com/icon.png',
@@ -606,6 +613,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     websiteUrl: 'https://miniroyale.io/',
     logoImage: '/logos/miniroyale.png',
     hidden: true,
+    indexDisabled: true,
     colors: {
       main: '#192836',
       secondary: '#FFB60C',
@@ -697,6 +705,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
   },
   ['all-starz']: {
     name: 'all-starz',
+    displayName: 'All Starz',
     type: 'Guild',
     websiteUrl: 'https://all-starz.gitbook.io/all-starz/',
     logoImage: '/logos/all-starz.jpg',
@@ -731,6 +740,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
   },
   ['3dgamersguild']: {
     name: '3dgamersguild',
+    displayName: '3D Gamers Guild',
     type: 'Guild',
     websiteUrl: 'https://www.3dgamersguild.com/',
     logoImage:
