@@ -234,6 +234,7 @@ export const Browse = () => {
     0,
     Infinity,
   ])
+  const [claimingRental, setClaimingRental] = useState<boolean>(false)
   const rentalRateModal = useRentalRateModal()
   const currentTime = Date.now() / 1000
 
@@ -508,6 +509,7 @@ export const Browse = () => {
 
   const handleClaim = async (tokenData: TokenData) => {
     try {
+      setClaimingRental(true)
       if (!tokenData.tokenManager) throw new Error('No token manager data')
       if (!wallet.publicKey) throw new Error('Wallet not connected')
       // wrap sol if there is payment required
@@ -551,6 +553,7 @@ export const Browse = () => {
       })
       console.log(e)
     } finally {
+      setClaimingRental(false)
       tokenManagers.refresh()
     }
   }
@@ -674,6 +677,15 @@ export const Browse = () => {
   const handleBrowseClick = async (tokenData: TokenData) => {
     if (config.allowOneByCreators && tokenManagers.data) {
       for (const creator of config.allowOneByCreators) {
+        if (creator.preventMultipleClaims && claimingRental) {
+          notify({
+            message: 'Error renting this NFT',
+            description:
+              'This issuer has prevented simultaneous rentals, please wait until the current rental claim is approved',
+            type: 'error',
+          })
+          return
+        }
         if (creator.enforceTwitter && !twitterAddress.displayName) {
           notify({
             message: 'Error renting this NFT',
