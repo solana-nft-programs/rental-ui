@@ -380,7 +380,7 @@ export const RentalExtensionCard = ({
                     style={{ height: 'auto' }}
                     message={
                       <>
-                        <div>{error}</div>
+                        <div style={{ wordBreak: 'break-word' }}>{error}</div>
                       </>
                     }
                     type="error"
