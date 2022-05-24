@@ -36,7 +36,11 @@ export type ProjectConfig = {
   }
   marketplaceRate?: DurationOption
   paymentManager?: string
-  allowOneByCreators?: { address: string; enforceTwitter: boolean }[]
+  allowOneByCreators?: {
+    address: string
+    enforceTwitter: boolean
+    preventMultipleClaims: boolean
+  }[]
 }
 
 export const projectConfigs: { [key: string]: ProjectConfig } = {
@@ -310,6 +314,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       {
         address: '7KJ322BQnje7oPN315dRNK7Arioom7d8mAPhAJFME2MA',
         enforceTwitter: true,
+        preventMultipleClaims: true,
       },
     ],
   },
