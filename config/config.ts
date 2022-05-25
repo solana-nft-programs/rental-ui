@@ -1,3 +1,5 @@
+import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
+import type { TokenData } from 'api/api'
 import type { AirdropMetadata } from 'common/Airdrop'
 import type {
   DurationOption,
@@ -10,8 +12,16 @@ export type Colors = {
 }
 
 export type TokenFilter = {
-  type: 'creators' | 'symbol' | 'issuer'
+  type: 'creators' | 'symbol' | 'issuer' | 'state'
   value: string[]
+}
+
+export type TokenSection = {
+  header?: string
+  description?: string
+  icon?: 'time' | 'featured' | 'listed'
+  filter?: TokenFilter
+  tokens?: TokenData[]
 }
 
 export type ProjectConfig = {
@@ -29,6 +39,7 @@ export type ProjectConfig = {
   colors: Colors
   disableListing?: boolean
   filter?: TokenFilter
+  sections?: TokenSection[]
   rentalCard: RentalCardConfig
   airdrops?: AirdropMetadata[]
   browse?: {
@@ -268,6 +279,33 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       main: '#000',
       secondary: '#80ddef',
     },
+    sections: [
+      {
+        header: 'Featured',
+        description: 'Cardinal Room Design Competition',
+        icon: 'featured',
+        filter: {
+          type: 'issuer',
+          value: ['7KJ322BQnje7oPN315dRNK7Arioom7d8mAPhAJFME2MA'],
+        },
+      },
+      {
+        header: 'Listed',
+        icon: 'listed',
+        filter: {
+          type: 'state',
+          value: [TokenManagerState.Issued.toString()],
+        },
+      },
+      {
+        header: 'Claimed',
+        icon: 'time',
+        filter: {
+          type: 'state',
+          value: [TokenManagerState.Claimed.toString()],
+        },
+      },
+    ],
     filter: {
       type: 'creators',
       value: ['5grvMeoBqv5ZdHq9JMy5RrxLPNAt1nzc9cpqYWFUwizz'],
