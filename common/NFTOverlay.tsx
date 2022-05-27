@@ -193,7 +193,6 @@ export function NFTOverlay({
 }: NFTOverlayProps) {
   const { UTCNow } = useUTCNow()
   const { paymentMintInfos } = usePaymentMints()
-
   return (
     <StyledOverlay
       shadow={shadow}

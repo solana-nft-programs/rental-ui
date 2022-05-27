@@ -88,7 +88,7 @@ function Scanner() {
       <Header />
       <div
         style={{
-          paddingTop: 'calc(50vh - 275px)',
+          paddingTop: 'calc(50vh - 425px)',
         }}
         className="relative mx-auto flex w-[93%] max-w-[450px] flex-col items-center text-white"
       >

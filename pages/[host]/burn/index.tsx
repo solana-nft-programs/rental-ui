@@ -93,7 +93,7 @@ function Burn() {
   return (
     <>
       <Header />
-      <TokensOuter style={{ marginTop: '120px' }}>
+      <TokensOuter style={{ marginTop: '20px' }}>
         {!loaded ? (
           <>
             <NFTPlaceholder />
