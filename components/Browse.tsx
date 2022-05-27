@@ -575,7 +575,7 @@ export const Browse = () => {
         let price = new BigNumber(0)
         let duration = 0
 
-        if (tokenData.timeInvalidator?.parsed) {
+        if (paymentMintInfos && tokenData.timeInvalidator?.parsed) {
           if (
             tokenData.timeInvalidator.parsed.durationSeconds?.toNumber() === 0
           ) {

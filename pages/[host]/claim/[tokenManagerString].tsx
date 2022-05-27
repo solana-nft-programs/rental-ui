@@ -110,6 +110,7 @@ function Claim() {
       setTokenDataError(null)
       setTokenData(null)
       const data = await getTokenData(ctx.connection, tokenManagerId!)
+      console.log('Data: ', data)
       if (
         !data.metadata &&
         !data.metaplexData &&
@@ -266,7 +267,7 @@ function Claim() {
       <Header homeButton />
       <div
         style={{
-          paddingTop: 'calc(50vh - 300px)',
+          paddingTop: 'calc(50vh - 400px)',
         }}
         className="flex flex-col"
       >
