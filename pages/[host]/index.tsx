@@ -105,10 +105,7 @@ export default function Home() {
       </Head>
       {tab ? (
         <>
-          <div
-            className="pt-[100px]"
-            style={{ minHeight: 'calc(100vh - 337px)' }}
-          >
+          <div style={{ minHeight: 'calc(100vh - 337px)' }}>
             {(() => {
               switch (tab) {
                 case 'browse':

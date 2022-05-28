@@ -103,7 +103,7 @@ function Scan() {
       <Header />
       <div
         style={{
-          paddingTop: 'calc(50vh - 300px)',
+          paddingTop: 'calc(50vh - 425px)',
         }}
         className="flex flex-col"
       >
