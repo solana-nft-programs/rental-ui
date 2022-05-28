@@ -160,6 +160,7 @@ export type RentalCardConfig = {
   invalidationOptions?: {
     durationOptions?: DurationOption[]
     invalidationTypes?: InvalidationTypeOption[]
+    customInvalidationTypes?: { [address: string]: InvalidationTypeOption[] }
     paymentMints?: string[]
     freezeRentalDuration?: { durationOption?: DurationOption; value?: string }
     freezeRentalRateDuration?: {
@@ -232,12 +233,23 @@ export const RentalCard = ({
   const visibilities =
     rentalCardConfig.invalidationOptions?.visibilities || VISIBILITY_OPTIONS
 
-  const invalidationTypes = rentalCardConfig.invalidationOptions
-    ?.invalidationTypes
-    ? INVALIDATION_TYPES.filter(({ label }) =>
-        rentalCardConfig.invalidationOptions?.invalidationTypes?.includes(label)
-      )
-    : INVALIDATION_TYPES
+  const invalidationTypes =
+    rentalCardConfig.invalidationOptions?.customInvalidationTypes &&
+    wallet.publicKey &&
+    wallet.publicKey.toString() in
+      rentalCardConfig.invalidationOptions.customInvalidationTypes
+      ? INVALIDATION_TYPES.filter(({ label }) =>
+          rentalCardConfig.invalidationOptions?.customInvalidationTypes?.[
+            wallet.publicKey.toString()
+          ]?.includes(label)
+        )
+      : rentalCardConfig.invalidationOptions?.invalidationTypes
+      ? INVALIDATION_TYPES.filter(({ label }) =>
+          rentalCardConfig.invalidationOptions?.invalidationTypes?.includes(
+            label
+          )
+        )
+      : INVALIDATION_TYPES
 
   const durationData = rentalCardConfig.invalidationOptions?.durationOptions
     ? Object.keys(DURATION_DATA)

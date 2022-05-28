@@ -89,6 +89,19 @@ export const Wallet = () => {
     }
   }
 
+  const confirmReturnConfig = (tokenData: TokenData) => {
+    if (config.allowOneByCreators && tokenData.tokenManager) {
+      const creatorConfig = config.allowOneByCreators.filter(
+        (creator) =>
+          creator.address === tokenData.tokenManager?.parsed.issuer.toString()
+      )
+      if (creatorConfig && creatorConfig[0]?.disableReturn) {
+        return false
+      }
+    } 
+    return true
+  }
+
   return (
     <>
       <Header
@@ -198,7 +211,8 @@ export const Wallet = () => {
                       (tokenData.tokenManager.parsed.invalidationType ===
                         InvalidationType.Reissue ||
                         tokenData.tokenManager.parsed.invalidationType ===
-                          InvalidationType.Return) && (
+                          InvalidationType.Return) &&
+                      confirmReturnConfig(tokenData) && (
                         <AsyncButton
                           variant="primary"
                           className=" float-right my-auto"

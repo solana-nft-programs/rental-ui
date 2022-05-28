@@ -40,6 +40,7 @@ export type ProjectConfig = {
     address: string
     enforceTwitter: boolean
     preventMultipleClaims: boolean
+    disableReturn: boolean
   }[]
 }
 
@@ -282,6 +283,9 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         visibilities: ['public'],
         durationOptions: ['minutes', 'hours', 'days', 'weeks'],
         invalidationTypes: ['reissue'],
+        customInvalidationTypes: {
+          '7KJ322BQnje7oPN315dRNK7Arioom7d8mAPhAJFME2MA': ['return']
+        },
         paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
@@ -315,6 +319,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         address: '7KJ322BQnje7oPN315dRNK7Arioom7d8mAPhAJFME2MA',
         enforceTwitter: true,
         preventMultipleClaims: true,
+        disableReturn: true        
       },
     ],
   },
