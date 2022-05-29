@@ -15,6 +15,7 @@ import { lighten } from 'polished'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useUserTokenData } from 'providers/TokenDataProvider'
+import { useUTCNow } from 'providers/UTCNowProvider'
 import { FaLink } from 'react-icons/fa'
 import { AsyncButton } from 'rental-components/common/Button'
 
@@ -26,6 +27,7 @@ export const Manage = () => {
   const wallet = useWallet()
   const { refreshTokenAccounts } = useUserTokenData()
   const tokenManagerByIssuer = useTokenManagersByIssuer()
+  const { UTCNow } = useUTCNow()
 
   return (
     <>
@@ -97,7 +99,7 @@ export const Manage = () => {
                           tokenData.useInvalidator?.parsed ? (
                             <Tag state={TokenManagerState.Issued}>
                               <div className="flex flex-col">
-                                <div>{getDurationText(tokenData)}</div>
+                                <div>{getDurationText(tokenData, UTCNow)}</div>
                                 <DisplayAddress
                                   connection={connection}
                                   address={

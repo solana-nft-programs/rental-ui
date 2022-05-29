@@ -33,6 +33,7 @@ import {
   getLink,
   useProjectConfig,
 } from 'providers/ProjectConfigProvider'
+import { useUTCNow } from 'providers/UTCNowProvider'
 import React, { useState } from 'react'
 import { AiFillStar } from 'react-icons/ai'
 import { FaLink, FaListUl } from 'react-icons/fa'
@@ -106,11 +107,10 @@ const getAllAttributes = (tokens: TokenData[]) => {
   return sortedAttributes
 }
 
-export const getTokenMaxDuration = (tokenData: TokenData) => {
+export const getTokenMaxDuration = (tokenData: TokenData, UTCNow: number) => {
   if (tokenData.timeInvalidator?.parsed.maxExpiration) {
     const maxDuration =
-      tokenData.timeInvalidator?.parsed.maxExpiration?.toNumber() -
-      Date.now() / 1000
+      tokenData.timeInvalidator?.parsed.maxExpiration?.toNumber() - UTCNow
     return {
       value: maxDuration,
       displayText: secondsToString(maxDuration, false),
@@ -120,14 +120,15 @@ export const getTokenMaxDuration = (tokenData: TokenData) => {
   }
 }
 
-export const getDurationText = (tokenData: TokenData) => {
+export const getDurationText = (tokenData: TokenData, UTCNow: number) => {
   return tokenData.timeInvalidator?.parsed ? (
     <div className="float-left">
       {tokenData.timeInvalidator?.parsed.maxExpiration ? (
         <p
           className={`float-left inline-block text-ellipsis whitespace-nowrap`}
         >
-          Max Duration: <b>{getTokenMaxDuration(tokenData).displayText}</b>
+          Max Duration:{' '}
+          <b>{getTokenMaxDuration(tokenData, UTCNow).displayText}</b>
         </p>
       ) : (
         <p className="float-left inline-block text-ellipsis whitespace-nowrap">
@@ -141,7 +142,7 @@ export const getDurationText = (tokenData: TokenData) => {
               : tokenData.timeInvalidator?.parsed.expiration
               ? secondsToString(
                   tokenData.timeInvalidator?.parsed.expiration?.toNumber() -
-                    Date.now() / 1000,
+                    UTCNow,
                   false
                 )
               : null}
@@ -221,6 +222,7 @@ export const Browse = () => {
   const tokenManagers = useFilteredTokenManagers()
   const tokenManagersForConfig = tokenManagers.data || []
   const projectStats = useProjectStats()
+  const { UTCNow } = useUTCNow()
   const twitterAddress = useAddressName(
     connection,
     wallet.publicKey ?? undefined
@@ -241,7 +243,6 @@ export const Browse = () => {
   ])
   const [claimingRental, setClaimingRental] = useState<boolean>(false)
   const rentalRateModal = useRentalRateModal()
-  const currentTime = Date.now() / 1000
 
   const globalRate = DURATION_DATA[config.marketplaceRate ?? 'days']
 
@@ -340,13 +341,11 @@ export const Browse = () => {
 
   const getRentalDuration = (tokenData: TokenData) => {
     if (tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber() === 0) {
-      return getTokenMaxDuration(tokenData).value
+      return getTokenMaxDuration(tokenData, UTCNow).value
     } else if (tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber()) {
       return tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber()
     } else if (tokenData.timeInvalidator?.parsed.expiration?.toNumber()) {
-      return (
-        tokenData.timeInvalidator?.parsed.expiration?.toNumber() - currentTime
-      )
+      return tokenData.timeInvalidator?.parsed.expiration?.toNumber() - UTCNow
     } else {
       return 0
     }
@@ -421,11 +420,9 @@ export const Browse = () => {
       token.timeInvalidator?.parsed.durationSeconds?.toNumber() === 0 &&
       token.timeInvalidator?.parsed?.maxExpiration?.toNumber()
     ) {
-      return (
-        token.timeInvalidator?.parsed?.maxExpiration?.toNumber() - currentTime
-      )
+      return token.timeInvalidator?.parsed?.maxExpiration?.toNumber() - UTCNow
     } else if (token.timeInvalidator?.parsed?.expiration?.toNumber()) {
-      return token.timeInvalidator?.parsed?.expiration?.toNumber() - currentTime
+      return token.timeInvalidator?.parsed?.expiration?.toNumber() - UTCNow
     } else {
       return token.timeInvalidator?.parsed?.durationSeconds?.toNumber()
     }
@@ -1036,7 +1033,10 @@ export const Browse = () => {
                                         <Tag state={TokenManagerState.Issued}>
                                           <div className="flex flex-col">
                                             <div>
-                                              {getDurationText(tokenData)}
+                                              {getDurationText(
+                                                tokenData,
+                                                UTCNow
+                                              )}
                                             </div>
                                             <DisplayAddress
                                               connection={connection}

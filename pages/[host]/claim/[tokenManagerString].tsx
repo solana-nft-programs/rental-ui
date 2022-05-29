@@ -33,6 +33,7 @@ import {
   WRAPPED_SOL_MINT,
 } from 'providers/PaymentMintsProvider'
 import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
+import { useUTCNow } from 'providers/UTCNowProvider'
 import type { ReactElement } from 'react'
 import React, { useEffect, useState } from 'react'
 import { FaLink, FaQuestionCircle } from 'react-icons/fa'
@@ -88,6 +89,7 @@ function Claim() {
   const { paymentMintInfos } = usePaymentMints()
   const [loadingImage, setLoadingImage] = useState(false)
   const [claimed, setClaimed] = useState(false)
+  const { UTCNow } = useUTCNow()
 
   const [tokenData, setTokenData] = useState<TokenData | null>(null)
   const [tokenDataError, setTokenDataError] = useState<string | null>(null)
@@ -111,6 +113,7 @@ function Claim() {
       setTokenData(null)
       const data = await getTokenData(ctx.connection, tokenManagerId!)
       console.log('Data: ', data)
+      console.log(data.timeInvalidator?.parsed.maxExpiration?.toString())
       if (
         !data.metadata &&
         !data.metaplexData &&
@@ -342,7 +345,9 @@ function Claim() {
                             tokenData.useInvalidator?.parsed ? (
                               <Tag state={TokenManagerState.Issued}>
                                 <div className="flex flex-col">
-                                  <div>{getDurationText(tokenData)}</div>
+                                  <div>
+                                    {getDurationText(tokenData, UTCNow)}
+                                  </div>
                                   <DisplayAddress
                                     connection={ctx.connection}
                                     address={
