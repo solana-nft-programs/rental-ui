@@ -692,9 +692,11 @@ export const Browse = () => {
         if (
           tokenManagers.data.filter(
             (tm) =>
-              tm.tokenManager?.parsed.issuer.toString() === creator.address &&
+              tokenData.tokenManager?.parsed.issuer.toString() ===
+                creator.address &&
               tm.recipientTokenAccount?.owner.toString() ===
-                wallet.publicKey?.toString()
+                wallet.publicKey?.toString() &&
+              tm.tokenManager?.parsed.issuer.toString() === creator.address
           ).length > 0
         ) {
           notify({
