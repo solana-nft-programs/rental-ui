@@ -123,32 +123,38 @@ export const getTokenMaxDuration = (tokenData: TokenData, UTCNow: number) => {
 export const getDurationText = (tokenData: TokenData, UTCNow: number) => {
   return tokenData.timeInvalidator?.parsed ? (
     <div className="float-left">
-      {tokenData.timeInvalidator?.parsed.maxExpiration ? (
+      {tokenData.timeInvalidator?.parsed.durationSeconds &&
+      tokenData.timeInvalidator?.parsed.durationSeconds.eq(new BN(0)) &&
+      tokenData.timeInvalidator?.parsed.extensionDurationSeconds ? (
         <p
           className={`float-left inline-block text-ellipsis whitespace-nowrap`}
         >
           Max Duration:{' '}
           <b>{getTokenMaxDuration(tokenData, UTCNow).displayText}</b>
         </p>
-      ) : (
+      ) : tokenData.timeInvalidator?.parsed.durationSeconds ? (
         <p className="float-left inline-block text-ellipsis whitespace-nowrap">
           Fixed Duration:{' '}
           <b>
-            {tokenData.timeInvalidator?.parsed.durationSeconds
+            {tokenData.timeInvalidator?.parsed.durationSeconds.toNumber()
               ? secondsToString(
-                  tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber(),
+                  tokenData.timeInvalidator?.parsed.durationSeconds.toNumber(),
                   false
                 )
-              : tokenData.timeInvalidator?.parsed.expiration
-              ? secondsToString(
-                  tokenData.timeInvalidator?.parsed.expiration?.toNumber() -
-                    UTCNow,
-                  false
-                )
-              : null}
+              : '∞'}
           </b>
         </p>
-      )}
+      ) : tokenData.timeInvalidator?.parsed.expiration ? (
+        <p className="float-left inline-block text-ellipsis whitespace-nowrap">
+          Fixed Duration:{' '}
+          <b>
+            {secondsToString(
+              tokenData.timeInvalidator?.parsed.expiration?.toNumber() - UTCNow,
+              false
+            )}
+          </b>
+        </p>
+      ) : null}
     </div>
   ) : null
 }
