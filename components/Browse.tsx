@@ -506,7 +506,6 @@ export const Browse = () => {
   )
 
   const groupedFilteredAndSortedTokens = groupTokens(filteredAndSortedTokens)
-  console.log(groupedFilteredAndSortedTokens)
   const handleClaim = async (tokenData: TokenData) => {
     try {
       setClaimingRental(true)
@@ -542,7 +541,10 @@ export const Browse = () => {
         tokenData.tokenManager?.pubkey
       )
       await executeTransaction(connection, asWallet(wallet), transaction, {
-        confirmOptions: { commitment: 'confirmed', maxRetries: 3 },
+        confirmOptions: {
+          commitment: 'confirmed',
+          maxRetries: 3,
+        },
         signers: [],
         notificationConfig: {},
       })
