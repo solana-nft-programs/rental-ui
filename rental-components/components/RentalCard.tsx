@@ -1,5 +1,6 @@
 import type { IssueParameters } from '@cardinal/token-manager'
 import { claimLinks, issueToken } from '@cardinal/token-manager'
+import { findPaymentManagerAddress } from '@cardinal/token-manager/dist/cjs/programs/paymentManager/pda'
 import {
   InvalidationType,
   TokenManagerKind,
@@ -442,6 +443,16 @@ export const RentalCard = ({
               ? {
                   paymentAmount: price,
                   paymentMint: new PublicKey(paymentMint),
+                  paymentManager: rentalCardConfig.paymentManager
+                    ? tryPublicKey(rentalCardConfig.paymentManager) ||
+                      new PublicKey(
+                        (
+                          await findPaymentManagerAddress(
+                            rentalCardConfig.paymentManager
+                          )
+                        )[0]
+                      )
+                    : undefined,
                 }
               : undefined,
           timeInvalidation:
@@ -469,12 +480,31 @@ export const RentalCard = ({
                       }
                     : undefined,
                   paymentManager: rentalCardConfig.paymentManager
-                    ? new PublicKey(rentalCardConfig.paymentManager)
+                    ? tryPublicKey(rentalCardConfig.paymentManager) ||
+                      new PublicKey(
+                        (
+                          await findPaymentManagerAddress(
+                            rentalCardConfig.paymentManager
+                          )
+                        )[0]
+                      )
                     : undefined,
                 }
               : undefined,
           useInvalidation: totalUsages
-            ? { totalUsages: totalUsages }
+            ? {
+                totalUsages: totalUsages,
+                paymentManager: rentalCardConfig.paymentManager
+                  ? tryPublicKey(rentalCardConfig.paymentManager) ||
+                    new PublicKey(
+                      (
+                        await findPaymentManagerAddress(
+                          rentalCardConfig.paymentManager
+                        )
+                      )[0]
+                    )
+                  : undefined,
+              }
             : undefined,
           mint: rentalMint,
           issuerTokenAccountId: tokenAccount?.pubkey,
