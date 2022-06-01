@@ -708,7 +708,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     type: 'Collection',
     websiteUrl: 'https://www.degods.com/',
     logoImage:
-      'https://uploads-ssl.webflow.com/61f2155bfe47bd05cae702bb/61f21670d6560ecc93050888_New%20Logo.png',
+      '/logos/degods.png',
     hidden: true,
     colors: {
       main: '#0F0F0F',
