@@ -708,7 +708,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     type: 'Collection',
     websiteUrl: 'https://www.degods.com/',
     logoImage:
-      '/logos/degods.png',
+      '/logos/degods.svg',
     hidden: true,
     colors: {
       main: '#0F0F0F',
