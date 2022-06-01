@@ -702,6 +702,43 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     marketplaceRate: 'days',
     airdrops: [],
   },
+  degods: {
+    name: 'degods',
+    displayName: 'DeGods',
+    type: 'Collection',
+    websiteUrl: 'https://www.degods.com/',
+    logoImage:
+      'https://uploads-ssl.webflow.com/61f2155bfe47bd05cae702bb/61f21670d6560ecc93050888_New%20Logo.png',
+    hidden: true,
+    colors: {
+      main: '#0F0F0F',
+      secondary: '#6001FF',
+    },
+    filter: {
+      type: 'creators',
+      value: ['AxFuniPo7RaDgPH6Gizf4GZmLQFc4M5ipckeeZfkrPNn'],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration'],
+      invalidationOptions: {
+        freezeRentalRateDuration: {
+          value: '1',
+          durationOption: 'days',
+        },
+        durationOptions: ['hours', 'days', 'weeks', 'years'],
+        visibilities: ['public'],
+        invalidationTypes: ['reissue'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        setClaimRentalReceipt: true,
+        showClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
   ['all-starz']: {
     name: 'all-starz',
     displayName: 'All Starz',
