@@ -46,7 +46,6 @@ export type ProjectConfig = {
     hideFilters?: boolean
   }
   marketplaceRate?: DurationOption
-  paymentManager?: string
   allowOneByCreators?: {
     address: string
     enforceTwitter: boolean
@@ -322,7 +321,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         durationOptions: ['minutes', 'hours', 'days', 'weeks'],
         invalidationTypes: ['reissue'],
         customInvalidationTypes: {
-          '7KJ322BQnje7oPN315dRNK7Arioom7d8mAPhAJFME2MA': ['return']
+          '7KJ322BQnje7oPN315dRNK7Arioom7d8mAPhAJFME2MA': ['return'],
         },
         paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,
@@ -357,7 +356,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         address: '7KJ322BQnje7oPN315dRNK7Arioom7d8mAPhAJFME2MA',
         enforceTwitter: true,
         preventMultipleClaims: true,
-        disableReturn: true        
+        disableReturn: true,
       },
     ],
   },
@@ -678,10 +677,11 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         'CbPuZtVMAWwPySvsUAEbZhe8y9rkeAZ5qLhsGBVvtau9',
         'EoYTpE5HuTaXkN2AWDAgGA3JbhtPdeqnUiY9rdG7hMf',
         'EpgYkzyAXPDq11G5ngctWcjq7pKSfUtEnjVcYPs2jhGY',
-        '3TVyY5Tw9CuKj7EJwaawacDqBM5jnbeL1kRUvhDPvxH4',
+        // '3TVyY5Tw9CuKj7EJwaawacDqBM5jnbeL1kRUvhDPvxH4',
       ],
     },
     rentalCard: {
+      paymentManager: 'cardinal-mini-royale',
       invalidators: ['rate'],
       invalidationOptions: {
         visibilities: ['public'],
