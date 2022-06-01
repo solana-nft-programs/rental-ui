@@ -681,7 +681,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       ],
     },
     rentalCard: {
-      paymentManager: 'cardinal-mini-royale',
+      paymentManager: 'mainnet-cardinal-mini-royale',
       invalidators: ['rate'],
       invalidationOptions: {
         visibilities: ['public'],
