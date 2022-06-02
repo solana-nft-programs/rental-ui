@@ -1,4 +1,4 @@
-import { withInvalidate, withResetExpiration } from '@cardinal/token-manager'
+import { withResetExpiration, withReturn } from '@cardinal/token-manager'
 import { InvalidationType } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { Transaction } from '@solana/web3.js'
@@ -34,17 +34,17 @@ export const Wallet = () => {
     config.filter
   )
 
-  const revokeRental = async (tokenData: TokenData) => {
+  const returnRental = async (tokenData: TokenData) => {
     if (!tokenData.tokenManager) throw new Error('Invalid token manager')
     if (!wallet.publicKey) throw new Error('Wallet not connected')
 
     const transaction = new Transaction()
 
-    await withInvalidate(
+    await withReturn(
       transaction,
       ctx.connection,
       asWallet(wallet),
-      tokenData.tokenManager?.parsed.mint
+      tokenData.tokenManager
     )
 
     if (tokenData.timeInvalidator) {
@@ -98,7 +98,7 @@ export const Wallet = () => {
       if (creatorConfig && creatorConfig[0]?.disableReturn) {
         return false
       }
-    } 
+    }
     return true
   }
 
@@ -218,7 +218,7 @@ export const Wallet = () => {
                           className=" float-right my-auto"
                           handleClick={async () => {
                             try {
-                              await revokeRental(tokenData)
+                              await returnRental(tokenData)
                             } catch (e) {
                               notify({
                                 message: `Return failed: ${e}`,
