@@ -510,6 +510,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     filter: {
       type: 'creators',
       value: [
+        'HZSQf9Qvdmmn1B5e7YBxWnyoafTUFtqjrw8SqvSRwace',
         'GU2nTh3aWQz4AA8Gaih5AmV8WmKt3Y8P6iwy5t9347h',
         '8CWFS9nzXtLd3LGE3GaSLYTAEUzkAoUPwmtq32nJFkSZ',
         'HMduKVo3A19U5EpQdEhPjo9hq9zfZXn8aGVYZp7Vc7fX',
@@ -762,8 +763,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     displayName: 'DeGods',
     type: 'Collection',
     websiteUrl: 'https://www.degods.com/',
-    logoImage:
-      '/logos/degods.svg',
+    logoImage: '/logos/degods.svg',
     hidden: true,
     colors: {
       main: '#0F0F0F',
