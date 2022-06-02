@@ -58,6 +58,11 @@ export const Wallet = () => {
 
     await executeTransaction(ctx.connection, asWallet(wallet), transaction, {
       silent: false,
+      confirmOptions: {
+        commitment: 'confirmed',
+        maxRetries: 3,
+      },
+      notificationConfig: {},
       callback: refreshTokenAccounts,
     })
   }

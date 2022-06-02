@@ -1,5 +1,6 @@
 import { DisplayAddress, useAddressName } from '@cardinal/namespaces-components'
 import { invalidate, withClaimToken } from '@cardinal/token-manager'
+import { shouldTimeInvalidate } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator/utils'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import styled from '@emotion/styled'
 import { BN } from '@project-serum/anchor'
@@ -1180,10 +1181,11 @@ export const Browse = () => {
                                             wallet.publicKey?.toString()
                                           )) ||
                                         (tokenData.timeInvalidator &&
-                                          tokenData.timeInvalidator.parsed
-                                            .expiration &&
-                                          tokenData.timeInvalidator.parsed.expiration.lte(
-                                            new BN(Date.now() / 1000)
+                                          tokenData.tokenManager &&
+                                          shouldTimeInvalidate(
+                                            tokenData.tokenManager,
+                                            tokenData.timeInvalidator,
+                                            UTCNow
                                           )) ||
                                         (tokenData.useInvalidator &&
                                           tokenData.useInvalidator.parsed
