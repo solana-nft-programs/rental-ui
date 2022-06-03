@@ -33,8 +33,12 @@ export const useFilteredTokenManagers = () => {
               cardinal_token_managers(
                 where: {
                   mint_address_nfts: {
-                    metadatas_attributes: {
-                      first_verified_creator: { _in: $creators }
+                    metadatas_metadata_creators: {
+                      _and: {
+                        creator_address: { _in: $creators }
+                        position: { _eq: 0 }
+                        _and: { verified: { _eq: true } }
+                      }
                     }
                   }
                 }
