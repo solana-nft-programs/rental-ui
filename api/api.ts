@@ -497,7 +497,7 @@ export async function getTokenDatas(
   // filter by known invalidators
   const knownTokenManagers = []
   for (const tm of tokenManagerDatas) {
-    const [[timeInvalidatorId, useInvalidatorId]] = await Promise.all([
+    const [[timeInvalidatorId], [useInvalidatorId]] = await Promise.all([
       findTimeInvalidatorAddress(tm.pubkey),
       findUseInvalidatorAddress(tm.pubkey),
     ])
