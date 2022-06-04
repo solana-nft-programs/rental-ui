@@ -25,20 +25,25 @@ export const Collections = ({ setTab }: { setTab: (s: string) => void }) => {
   return (
     <>
       <Header
-        tabs={[
-          {
-            name: 'Wallet',
-            anchor: wallet.publicKey?.toBase58() || 'wallet',
-            disabled: !wallet.connected,
-          },
-          {
-            name: 'Manage',
-            anchor: 'manage',
-            disabled: !wallet.connected || config.disableListing,
-          },
-          { name: 'Browse', anchor: 'browse' },
-        ]}
+        tabs={
+          config.displayName !== 'default'
+            ? [
+                {
+                  name: 'Wallet',
+                  anchor: wallet.publicKey?.toBase58() || 'wallet',
+                  disabled: !wallet.connected,
+                },
+                {
+                  name: 'Manage',
+                  anchor: 'manage',
+                  disabled: !wallet.connected || config.disableListing,
+                },
+                { name: 'Browse', anchor: 'browse' },
+              ]
+            : []
+        }
       />
+
       <div className="container mx-auto mt-10 px-10 md:px-0">
         {Object.entries(categories).map(([type, configs], i) => (
           <div key={type}>
