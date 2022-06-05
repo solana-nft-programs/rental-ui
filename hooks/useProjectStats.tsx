@@ -1,9 +1,7 @@
 import { ApolloClient, gql, InMemoryCache } from '@apollo/client'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
-import { usePaymentMints } from 'providers/PaymentMintsProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
-
-import { useDataHook } from './useDataHook'
+import { useQuery } from 'react-query'
 
 export type ProjectStats = {
   totalRentalCount?: number
@@ -31,10 +29,10 @@ export type ClaimEvent = {
 
 export const useProjectStats = () => {
   const { config } = useProjectConfig()
-  const { connection, environment } = useEnvironmentCtx()
-  const { paymentMintInfos } = usePaymentMints()
+  const { environment } = useEnvironmentCtx()
 
-  return useDataHook<ProjectStats | undefined>(
+  return useQuery<ProjectStats | undefined>(
+    ['useProjectStats', environment.index],
     async () => {
       const index = new ApolloClient({
         uri: 'https://prod-holaplex.hasura.app/v1/graphql',
@@ -177,7 +175,8 @@ export const useProjectStats = () => {
         }
       }
     },
-    [environment.index],
-    { name: 'useProjectStats', refreshInterval: 60000 }
+    {
+      refetchInterval: 60000,
+    }
   )
 }
