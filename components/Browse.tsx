@@ -557,7 +557,7 @@ export const Browse = () => {
       console.log(e)
     } finally {
       setClaimingRental(false)
-      tokenManagers.refresh()
+      tokenManagers.refetch()
     }
   }
 
@@ -736,7 +736,7 @@ export const Browse = () => {
   return (
     <>
       <Header
-        loading={tokenManagers.loaded && tokenManagers.refreshing}
+        loading={tokenManagers.isFetched && tokenManagers.isRefetching}
         tabs={[
           {
             name: 'Wallet',
@@ -958,7 +958,7 @@ export const Browse = () => {
             </div>
           </div>
           <div className="w-full">
-            {!tokenManagers.loaded ? (
+            {!tokenManagers.isFetched ? (
               <TokensOuter>
                 <NFTPlaceholder />
                 <NFTPlaceholder />
@@ -1210,7 +1210,7 @@ export const Browse = () => {
                                                 ),
                                                 {
                                                   callback:
-                                                    tokenManagers.refresh,
+                                                    tokenManagers.refetch,
                                                   silent: true,
                                                 }
                                               )

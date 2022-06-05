@@ -11,13 +11,13 @@ import { convertStringsToPubkeys, getTokenDatas } from 'api/api'
 import { tryPublicKey } from 'api/utils'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
-
-import { useDataHook } from './useDataHook'
+import { useQuery } from 'react-query'
 
 export const useFilteredTokenManagers = () => {
   const { config } = useProjectConfig()
   const { connection, environment } = useEnvironmentCtx()
-  return useDataHook<TokenData[] | undefined>(
+  return useQuery<TokenData[] | undefined>(
+    ['useFilteredTokenManagers', config.name],
     async () => {
       console.log('Fetching for config', config.name)
       if (
@@ -122,7 +122,8 @@ export const useFilteredTokenManagers = () => {
         return tokenDatas
       }
     },
-    [config.name],
-    { name: 'useFilteredTokenManagers', refreshInterval: 12000 }
+    {
+      refetchInterval: 1200,
+    }
   )
 }

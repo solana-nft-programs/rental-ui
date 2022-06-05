@@ -18,12 +18,18 @@ import {
 } from 'providers/ProjectConfigProvider'
 import { TokenAccountsProvider } from 'providers/TokenDataProvider'
 import { UTCNowProvider } from 'providers/UTCNowProvider'
+import { QueryClient, QueryClientProvider } from 'react-query'
+import { ReactQueryDevtools } from 'react-query/devtools'
 import { QRCodeProvider } from 'rental-components/QRCodeProvider'
 import { RentalExtensionModalProvider } from 'rental-components/RentalExtensionModalProvider'
 import { RentalModalProvider } from 'rental-components/RentalModalProvider'
 import { RentalRateModalProvider } from 'rental-components/RentalRateModalProvider'
 
 require('@solana/wallet-adapter-react-ui/styles.css')
+
+export const queryClient = new QueryClient()
+
+export const DEBUG = false
 
 const App = ({
   Component,
@@ -42,10 +48,15 @@ const App = ({
                     <RentalExtensionModalProvider>
                       <RentalRateModalProvider>
                         <WalletModalProvider>
-                          <>
-                            <ToastContainer />
-                            <Component {...pageProps} />
-                          </>
+                          <QueryClientProvider client={queryClient}>
+                            <>
+                              <ToastContainer />
+                              <Component {...pageProps} />
+                              {DEBUG && (
+                                <ReactQueryDevtools initialIsOpen={false} />
+                              )}
+                            </>
+                          </QueryClientProvider>
                         </WalletModalProvider>
                       </RentalRateModalProvider>
                     </RentalExtensionModalProvider>
