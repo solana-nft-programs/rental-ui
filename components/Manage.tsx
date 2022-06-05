@@ -32,7 +32,9 @@ export const Manage = () => {
   return (
     <>
       <Header
-        loading={tokenManagerByIssuer.loaded && tokenManagerByIssuer.refreshing}
+        loading={
+          tokenManagerByIssuer.isFetched && tokenManagerByIssuer.isFetching
+        }
         tabs={[
           {
             name: 'Wallet',
@@ -49,7 +51,7 @@ export const Manage = () => {
       />
       <div className="mt-10">
         <TokensOuter>
-          {!tokenManagerByIssuer.loaded ? (
+          {!tokenManagerByIssuer.isFetched ? (
             <>
               <NFTPlaceholder />
               <NFTPlaceholder />
@@ -256,7 +258,7 @@ export const Manage = () => {
                                       tokenData?.tokenManager?.parsed.mint
                                     ),
                                     {
-                                      callback: tokenManagerByIssuer.refresh,
+                                      callback: tokenManagerByIssuer.refetch,
                                       silent: true,
                                     }
                                   )

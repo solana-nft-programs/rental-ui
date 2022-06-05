@@ -4,9 +4,8 @@ import type { TokenData } from 'api/api'
 import { convertStringsToPubkeys, getTokenDatas } from 'api/api'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
+import { useQuery } from 'react-query'
 
-// import { filterTokens, useProjectConfig } from 'providers/ProjectConfigProvider'
-import { useDataHook } from './useDataHook'
 import { useWalletId } from './useWalletId'
 
 const INDEX_ENABLED_MANAGER = false
@@ -15,7 +14,8 @@ export const useTokenManagersByIssuer = () => {
   const walletId = useWalletId()
   const { config } = useProjectConfig()
   const { connection, environment } = useEnvironmentCtx()
-  return useDataHook<TokenData[] | undefined>(
+  return useQuery<TokenData[] | undefined>(
+    ['useTokenManagersByIssuer', walletId?.toString()],
     async () => {
       if (!walletId) return
       if (environment.index && INDEX_ENABLED_MANAGER) {
@@ -71,7 +71,6 @@ export const useTokenManagersByIssuer = () => {
         return tokenDatas
       }
     },
-    [walletId?.toString()],
-    { name: 'useTokenManagersByIssuer', refreshInterval: 10000 }
+    { refetchInterval: 10000 }
   )
 }
