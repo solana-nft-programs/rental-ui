@@ -1,6 +1,4 @@
-import styled from '@emotion/styled'
 import { useWallet } from '@solana/wallet-adapter-react'
-import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
 import { Footer } from 'common/Footer'
 import { Browse } from 'components/Browse'
 import { Collections } from 'components/Collections'
@@ -11,30 +9,6 @@ import { useRouter } from 'next/router'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useUserTokenData } from 'providers/TokenDataProvider'
 import { useEffect, useState } from 'react'
-
-const StyledSplash = styled.div`
-  margin-top: 30vh;
-  width: 70%;
-  max-width: 400px;
-  position: relative;
-  color: rgba(255, 255, 255, 0.8);
-
-  .title {
-    text-align: center;
-    position: relative;
-  }
-
-  .subscript {
-    font-size: 10px;
-    font-style: italic;
-    position: absolute;
-    right: -35px;
-    bottom: 5px;
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: 6px;
-    padding: 3px 5px;
-  }
-`
 
 export default function Home() {
   const { config } = useProjectConfig()
@@ -59,19 +33,24 @@ export default function Home() {
           cluster ? `&cluster=${cluster}` : ''
         }#browse`
       )
-    } else if (config.name === 'default') {
+    } else {
       router.push(
-        `${location.pathname}${cluster ? `?cluster=${cluster}` : ''}#browse`
+        `${location.pathname}${cluster ? `?cluster=${cluster}` : ''}${
+          config.name !== 'default' ? '#browse' : ''
+        }`
       )
     }
   }, [config])
 
-  const { setAddress, loaded, refreshing } = useUserTokenData()
+  const { setAddress } = useUserTokenData()
   useEffect(() => {
     if (wallet && wallet.connected && wallet.publicKey) {
       setAddress(wallet.publicKey.toBase58())
-      setTab('browse')
-      router.push(`${location.pathname}${location.search}#browse`)
+      router.push(
+        `${location.pathname}${location.search}${
+          config.name !== 'default' ? '#browse' : ''
+        }`
+      )
     }
   }, [wallet.publicKey])
 
@@ -103,14 +82,16 @@ export default function Home() {
           rel="stylesheet"
         />
       </Head>
-      {tab ? (
+      {config.name === 'default' ? (
+        <Collections />
+      ) : (
         <>
           <div style={{ minHeight: 'calc(100vh - 337px)' }}>
             {(() => {
               switch (tab) {
                 case 'browse':
                   return config.name === 'default' ? (
-                    <Collections setTab={setTab} />
+                    <Collections />
                   ) : (
                     <Browse />
                   )
@@ -123,31 +104,6 @@ export default function Home() {
           </div>
           <Footer bgColor={config.colors.main} />
         </>
-      ) : (
-        <div className="flex min-h-screen flex-col items-center">
-          <StyledSplash>
-            <div className="title">
-              <img className="mx-auto w-24" src={config.logoImage} alt="logo" />
-              <p className="mt-3 text-2xl">{config.displayName}</p>
-              <p className="text-md mt-3">
-                The Rental Marketplace for all {config.displayName} NFTs
-              </p>
-            </div>
-            <div className="mt-5 flex items-center justify-center">
-              <WalletMultiButton
-                style={{
-                  color: 'rgba(255,255,255,0.8)',
-                  fontSize: '14px',
-                  zIndex: 10,
-                  height: '38px',
-                  border: 'none',
-                  background: 'none',
-                  backgroundColor: 'none',
-                }}
-              />
-            </div>
-          </StyledSplash>
-        </div>
       )}
     </div>
   )

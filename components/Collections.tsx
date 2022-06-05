@@ -1,4 +1,3 @@
-import { useWallet } from '@solana/wallet-adapter-react'
 import { Header } from 'common/Header'
 import type { ProjectConfig } from 'config/config'
 import { projectConfigs } from 'config/config'
@@ -7,12 +6,11 @@ import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import React from 'react'
 import { AiFillPlusCircle } from 'react-icons/ai'
 
-export const Collections = ({ setTab }: { setTab: (s: string) => void }) => {
+export const Collections = () => {
   const { setProjectConfig, config } = useProjectConfig()
-  const wallet = useWallet()
 
   const categories = Object.entries(projectConfigs).reduce(
-    (acc, [k, config]) => {
+    (acc, [, config]) => {
       if (config.hidden) return acc
       return {
         ...acc,
@@ -24,27 +22,10 @@ export const Collections = ({ setTab }: { setTab: (s: string) => void }) => {
 
   return (
     <>
-      <Header
-        tabs={[
-          {
-            name: 'Wallet',
-            anchor: wallet.publicKey?.toBase58() || 'wallet',
-            disabled: !wallet.connected,
-          },
-          {
-            name: 'Manage',
-            anchor: 'manage',
-            disabled: !wallet.connected || config.disableListing,
-          },
-          { name: 'Browse', anchor: 'browse' },
-        ]}
-      />
+      <Header />
       <div className="container mx-auto mt-10 px-10 md:px-0">
         {Object.entries(categories).map(([type, configs], i) => (
           <div key={type}>
-            {/* <div className="mb-5 text-lg font-semibold text-white"> */}
-            {/* {type} */}
-            {/* </div> */}
             {i > 0 && (
               <div className="mx-auto mt-10 mb-10 h-[2px] w-[90%] rounded-lg bg-gray-500 opacity-50"></div>
             )}
