@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { ApolloClient, gql, InMemoryCache } from '@apollo/client'
 import { getTokenManagersForIssuer } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/accounts'
 import type { TokenData } from 'api/api'
 import { convertStringsToPubkeys, getTokenDatas } from 'api/api'
@@ -19,7 +19,11 @@ export const useTokenManagersByIssuer = () => {
     async () => {
       if (!walletId) return
       if (environment.index && INDEX_ENABLED_MANAGER) {
-        const response = await environment.index.query({
+        const indexer = new ApolloClient({
+          uri: environment.index,
+          cache: new InMemoryCache({ resultCaching: false }),
+        })
+        const response = await indexer.query({
           query: gql`
             query GetTokenManagersForIssuer(
               $issuer: String!

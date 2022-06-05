@@ -14,7 +14,7 @@ export default function Home() {
   const { config } = useProjectConfig()
   const wallet = useWallet()
   const router = useRouter()
-  const [tab, setTab] = useState<string>('')
+  const [tab, setTab] = useState<string>()
 
   useEffect(() => {
     const anchor = router.asPath.split('#')[1]
@@ -31,13 +31,7 @@ export default function Home() {
       router.push(
         `${location.pathname}?collection=${config.name}${
           cluster ? `&cluster=${cluster}` : ''
-        }#browse`
-      )
-    } else {
-      router.push(
-        `${location.pathname}${cluster ? `?cluster=${cluster}` : ''}${
-          config.name !== 'default' ? '#browse' : ''
-        }`
+        }#${tab || 'browse'}`
       )
     }
   }, [config])
@@ -48,7 +42,7 @@ export default function Home() {
       setAddress(wallet.publicKey.toBase58())
       router.push(
         `${location.pathname}${location.search}${
-          config.name !== 'default' ? '#browse' : ''
+          config.name !== 'default' ? `#${tab || 'browse'}` : ''
         }`
       )
     }
@@ -88,17 +82,16 @@ export default function Home() {
         <>
           <div style={{ minHeight: 'calc(100vh - 337px)' }}>
             {(() => {
-              switch (tab) {
-                case 'browse':
-                  return config.name === 'default' ? (
-                    <Collections />
-                  ) : (
-                    <Browse />
-                  )
-                case 'manage':
-                  return <Manage />
-                default:
-                  return <Wallet />
+              if (!tab) return <Browse />
+              else {
+                switch (tab) {
+                  case 'browse':
+                    return <Browse />
+                  case 'manage':
+                    return <Manage />
+                  default:
+                    return <Wallet />
+                }
               }
             })()}
           </div>

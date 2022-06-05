@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { ApolloClient, gql, InMemoryCache } from '@apollo/client'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import {
   getTokenManagers,
@@ -27,7 +27,11 @@ export const useFilteredTokenManagers = () => {
       ) {
         /////
         const step1 = Date.now()
-        const tokenManagerResponse = await environment.index.query({
+        const indexer = new ApolloClient({
+          uri: environment.index,
+          cache: new InMemoryCache({ resultCaching: false }),
+        })
+        const tokenManagerResponse = await indexer.query({
           query: gql`
             query GetTokenManagers($creators: [String!]!) {
               cardinal_token_managers(

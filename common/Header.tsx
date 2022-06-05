@@ -173,7 +173,13 @@ export const Header = ({
               <div
                 className="mr-2 flex cursor-pointer items-center justify-center text-lg text-white transition-all duration-200 hover:scale-[1.02]"
                 onClick={() => {
+                  const { cluster } = router.query
                   setProjectConfig('default')
+                  router.push(
+                    `${location.pathname}${
+                      cluster ? `&cluster=${cluster}` : ''
+                    }`
+                  )
                   homeButton ?? router.push(`/${location.search}#browse`)
                 }}
               >
