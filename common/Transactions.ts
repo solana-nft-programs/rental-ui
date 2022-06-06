@@ -49,7 +49,7 @@ export const executeTransaction = async (
       })
   } catch (e) {
     console.log('Failed transaction: ', e)
-    const errorMessage = handleError(e)
+    const errorMessage = handleError(e, `${e}`)
     config.notificationConfig &&
       notify({
         message: 'Failed transaction',

@@ -29,6 +29,10 @@ type ErrorCode = {
 export const nativeErrors: ErrorCode[] = [
   // token program errors
   {
+    code: '0',
+    message: 'Lamport balance below rent-exempt threshold',
+  },
+  {
     code: '1',
     message:
       'Insufficient funds. User does not have enough balance of token to complete the transaction',

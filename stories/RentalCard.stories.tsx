@@ -8,8 +8,6 @@ import React from 'react'
 
 import { RentalCard } from '../rental-components/components/RentalCard'
 
-const connection = new Connection('https://api.devnet.solana.com')
-
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
   title: 'Rentals/RentalCard',

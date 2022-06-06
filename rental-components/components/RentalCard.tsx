@@ -38,6 +38,7 @@ import { FiSend } from 'react-icons/fi'
 import { GiRobotGrab } from 'react-icons/gi'
 import { GrReturn } from 'react-icons/gr'
 import { ImPriceTags } from 'react-icons/im'
+import { IoMdClose } from 'react-icons/io'
 import { Alert } from 'rental-components/common/Alert'
 import { Button } from 'rental-components/common/Button'
 import { ButtonWithFooter } from 'rental-components/common/ButtonWithFooter'
@@ -188,15 +189,11 @@ export type RentalCardProps = {
 
 export const RentalCard = ({
   appName,
-  appTwitter,
-  dev,
   cluster,
   connection,
   wallet,
   tokenDatas,
   rentalCardConfig,
-  notify,
-  onComplete,
 }: RentalCardProps) => {
   const [error, setError] = useState<string>()
   const [loading, setLoading] = useState(false)
@@ -1214,18 +1211,15 @@ export const RentalCard = ({
                 <Alert
                   style={{ height: 'auto' }}
                   message={
-                    <>
-                      <div
-                        className="cursor-pointer"
-                        style={{ wordBreak: 'break-word' }}
-                        onClick={() => setError(undefined)}
-                      >
-                        {error}
-                        <div className="float-right mt-3 text-xs">
-                          <ButtonLight>Close</ButtonLight>
-                        </div>
+                    <div
+                      className="flex w-full cursor-pointer flex-row justify-between"
+                      onClick={() => setError(undefined)}
+                    >
+                      <div style={{ wordBreak: 'break-word' }}>{error}</div>
+                      <div className="float-right mt-[3px]">
+                        <IoMdClose />
                       </div>
-                    </>
+                    </div>
                   }
                   type="error"
                   showIcon
