@@ -14,6 +14,7 @@ import { DatePicker, InputNumber, Select } from 'antd'
 import type { TokenData } from 'api/api'
 import type { EditionInfo } from 'api/editions'
 import getEditionInfo from 'api/editions'
+import { handleError } from 'api/errors'
 import { tryPublicKey } from 'api/utils'
 import { NFTOverlay } from 'common/NFTOverlay'
 import { notify } from 'common/Notification'
@@ -86,13 +87,6 @@ function getEditionPill(editionInfo: EditionInfo) {
       }`}</span>
     </div>
   )
-}
-
-const formatError = (error: string) => {
-  if (error.includes('0x1780')) {
-    return 'This mint is not elligible for rent'
-  }
-  return error
 }
 
 export type InvalidatorOption =
@@ -547,6 +541,9 @@ export const RentalCard = ({
           silent: false,
           callback: userTokenData.refetch,
           signers: claimRentalReceipt ? [receiptMintKeypair] : [],
+          confirmOptions: {
+            maxRetries: 3,
+          },
         })
         setTotalListed(i + 1)
 
@@ -562,7 +559,7 @@ export const RentalCard = ({
     } catch (e) {
       console.log('Error handling rental', e)
       setConfirmRentalTerms(false)
-      setError(`Error handling rental: ${formatError(`${e}`)}`)
+      setError(`Error handling rental: ${handleError(e)}`)
     } finally {
       setLoading(false)
     }
