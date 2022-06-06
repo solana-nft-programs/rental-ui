@@ -159,35 +159,37 @@ export function NFT({ tokenData, onClick }: NFTProps) {
                 </div>
               </PopoverItem>
             )}
-            {tokenManager?.parsed.issuer.toString() ===
-              wallet.publicKey?.toString() && (
-              <PopoverItem>
-                <div
-                  className="flex cursor-pointer items-center justify-between gap-2"
-                  onClick={async () => {
-                    if (!tokenData?.tokenManager) return
-                    setLoading(true)
-                    executeTransaction(
-                      ctx.connection,
-                      asWallet(wallet),
-                      await unissueToken(
+            {tokenManager &&
+              tokenManager?.parsed.issuer.toString() ===
+                wallet.publicKey?.toString() &&
+              tokenManager.parsed.state !== TokenManagerState.Claimed && (
+                <PopoverItem>
+                  <div
+                    className="flex cursor-pointer items-center justify-between gap-2"
+                    onClick={async () => {
+                      if (!tokenData?.tokenManager) return
+                      setLoading(true)
+                      executeTransaction(
                         ctx.connection,
                         asWallet(wallet),
-                        tokenData?.tokenManager?.parsed.mint
-                      ),
-                      {
-                        notificationConfig: {},
-                        silent: true,
-                        callback: () => setLoading(false),
-                      }
-                    )
-                  }}
-                >
-                  Delist
-                  <IoClose />
-                </div>
-              </PopoverItem>
-            )}
+                        await unissueToken(
+                          ctx.connection,
+                          asWallet(wallet),
+                          tokenData?.tokenManager?.parsed.mint
+                        ),
+                        {
+                          notificationConfig: {},
+                          silent: true,
+                          callback: () => setLoading(false),
+                        }
+                      )
+                    }}
+                  >
+                    Delist
+                    <IoClose />
+                  </div>
+                </PopoverItem>
+              )}
             {tokenManager &&
               tokenManager.parsed.state === TokenManagerState.Claimed && (
                 <PopoverItem>
