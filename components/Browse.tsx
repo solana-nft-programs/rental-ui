@@ -219,6 +219,49 @@ export function getTokenRentalRate(
   }
 }
 
+const StyledSelect = styled.div<{ colors: { main: string } }>`
+  .ant-select-selector {
+    height: 40px;
+    min-width: 180px;
+    border: 1px solid ${({ colors }) => lighten(0.3, colors.main)} !important;
+    background-color: ${({ colors }) => lighten(0.07, colors.main)} !important;
+    color: #ffffff !important;
+  }
+  .ant-select-arrow {
+    color: #ffffff !important;
+  }
+`
+
+const StyledSelectMultiple = styled.div<{
+  colors: { main: string; secondary: string }
+}>`
+  .ant-select-selector {
+    min-width: 180px;
+    border: 1px solid ${({ colors }) => lighten(0.3, colors.main)} !important;
+    background-color: ${({ colors }) => lighten(0.07, colors.main)} !important;
+    color: ${({ colors }) => colors.secondary} !important;
+  }
+
+  .ant-select-selection-item {
+    background-color: ${({ colors }) => lighten(0.07, colors.main)} !important;
+    border: 1px solid ${({ colors }) => lighten(0.3, colors.main)} !important;
+  }
+
+  .ant-select-selection-item-remove {
+    color: ${({ colors }) => lighten(0.1, colors.secondary)} !important;
+    margin-top: -2px;
+    margin-left: 3px;
+  }
+
+  .ant-select-arrow {
+    color: ${({ colors }) => colors.secondary} !important;
+  }
+
+  .ant-select-clear {
+    background: none;
+  }
+`
+
 export const Browse = () => {
   const { connection, environment } = useEnvironmentCtx()
   const wallet = useWallet()
@@ -249,47 +292,6 @@ export const Browse = () => {
   const rentalRateModal = useRentalRateModal()
 
   const globalRate = DURATION_DATA[config.marketplaceRate ?? 'days']
-
-  const StyledSelect = styled.div`
-    .ant-select-selector {
-      height: 40px;
-      min-width: 180px;
-      border: 1px solid ${lighten(0.3, config.colors.main)} !important;
-      background-color: ${lighten(0.07, config.colors.main)} !important;
-      color: #ffffff !important;
-    }
-    .ant-select-arrow {
-      color: #ffffff !important;
-    }
-  `
-
-  const StyledSelectMultiple = styled.div`
-    .ant-select-selector {
-      min-width: 180px;
-      border: 1px solid ${lighten(0.3, config.colors.main)} !important;
-      background-color: ${lighten(0.07, config.colors.main)} !important;
-      color: ${config.colors.secondary} !important;
-    }
-
-    .ant-select-selection-item {
-      background-color: ${lighten(0.07, config.colors.main)} !important;
-      border: 1px solid ${lighten(0.3, config.colors.main)} !important;
-    }
-
-    .ant-select-selection-item-remove {
-      color: ${lighten(0.1, config.colors.secondary)} !important;
-      margin-top: -2px;
-      margin-left: 3px;
-    }
-
-    .ant-select-arrow {
-      color: ${config.colors.secondary} !important;
-    }
-
-    .ant-select-clear {
-      background: none;
-    }
-  `
 
   const getPriceFromTokenData = (tokenData: TokenData) => {
     if (
@@ -855,7 +857,7 @@ export const Browse = () => {
               className="max-h-[70vh] w-[280px] overflow-y-auto rounded-lg py-4 px-8 text-left"
               style={{ background: lighten(0.07, config.colors.main) }}
             >
-              <StyledSelect>
+              <StyledSelect colors={config.colors}>
                 <Select
                   className="block h-[30px] w-full rounded-[4px] bg-black text-gray-700 lg:mr-20 xl:mr-4"
                   onChange={(e) => {
@@ -920,7 +922,10 @@ export const Browse = () => {
                             selectedFilters[traitType]!.length > 0 && (
                               <p className="mb-1 text-gray-100">{traitType}</p>
                             )}
-                          <StyledSelectMultiple className="mb-5">
+                          <StyledSelectMultiple
+                            colors={config.colors}
+                            className="mb-5"
+                          >
                             <Select
                               mode="multiple"
                               dropdownStyle={{
@@ -1072,7 +1077,7 @@ export const Browse = () => {
                                         bgColor={config.colors.secondary}
                                         variant="primary"
                                         disabled={!wallet.publicKey}
-                                        className="my-auto inline-block max-w-[45%] flex-none overflow-scroll text-xs"
+                                        className="my-auto inline-block max-w-[45%] flex-none text-xs"
                                         handleClick={() =>
                                           handleBrowseClick(tokenData)
                                         }

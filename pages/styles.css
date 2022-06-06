@@ -2,6 +2,7 @@ body {
   margin: 0;
   background-color: rgb(26, 27, 32) !important;
   font-family: 'SFHello', sans-serif;
+  color-scheme: dark;
 }
 
 .ant-tag {
