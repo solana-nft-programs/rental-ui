@@ -26,11 +26,8 @@ import {
   secondsToString,
 } from 'common/utils'
 import type { ProjectConfig } from 'config/config'
+import { usePaymentMints, WRAPPED_SOL_MINT } from 'hooks/usePaymentMints'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
-import {
-  usePaymentMints,
-  WRAPPED_SOL_MINT,
-} from 'providers/PaymentMintsProvider'
 import { useEffect, useState } from 'react'
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai'
 import { BiTimer } from 'react-icons/bi'
@@ -133,7 +130,7 @@ export const RentalRateCard = ({
     getEdition()
   }, [metaplexData])
 
-  const { paymentMintInfos } = usePaymentMints()
+  const paymentMintInfos = usePaymentMints()
 
   // form
   const {
@@ -274,15 +271,17 @@ export const RentalRateCard = ({
   }
 
   const loadRate = () => {
-    return `${fmtMintAmount(
-      paymentMintInfos[extensionPaymentMint.toString()],
-      new anchor.BN(extensionPaymentAmount)
-    )}
+    return paymentMintInfos.data
+      ? `${fmtMintAmount(
+          paymentMintInfos.data[extensionPaymentMint.toString()],
+          new anchor.BN(extensionPaymentAmount)
+        )}
     ${
       PAYMENT_MINTS.find((obj) => obj.mint === extensionPaymentMint.toString())
         ?.symbol
     }
     / ${secondsToString(extensionDurationSeconds?.toNumber())}`
+      : 0
   }
 
   const exceedMaxExpiration = () => {
@@ -545,10 +544,13 @@ export const RentalRateCard = ({
                     style={{ height: 'auto' }}
                     message={
                       <div className="ml-2">
-                        {paymentAmount !== 0 ||
-                        extensionPaymentAmount?.toNumber() === 0
+                        {paymentMintInfos.data &&
+                        (paymentAmount !== 0 ||
+                          extensionPaymentAmount?.toNumber() === 0)
                           ? `Pay ${fmtMintAmount(
-                              paymentMintInfos[extensionPaymentMint.toString()],
+                              paymentMintInfos.data[
+                                extensionPaymentMint.toString()
+                              ],
                               new anchor.BN(paymentAmount)
                             )}
                       ${

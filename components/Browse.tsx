@@ -21,14 +21,14 @@ import { secondsToString } from 'common/utils'
 import { asWallet } from 'common/Wallets'
 import type { ProjectConfig, TokenSection } from 'config/config'
 import { useFilteredTokenManagers } from 'hooks/useFilteredTokenManagers'
-import { useProjectStats } from 'hooks/useProjectStats'
-import { lighten } from 'polished'
-import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import {
   PAYMENT_MINTS,
   usePaymentMints,
   WRAPPED_SOL_MINT,
-} from 'providers/PaymentMintsProvider'
+} from 'hooks/usePaymentMints'
+import { useProjectStats } from 'hooks/useProjectStats'
+import { lighten } from 'polished'
+import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import {
   filterTokens,
   getLink,
@@ -280,7 +280,7 @@ export const Browse = () => {
 
   const [userPaymentTokenAccount, _setUserPaymentTokenAccount] =
     useState<splToken.AccountInfo | null>(null)
-  const { paymentMintInfos } = usePaymentMints()
+  const paymentMintInfos = usePaymentMints()
   const [selectedOrderCategory, setSelectedOrderCategory] =
     useState<OrderCategories>(OrderCategories.RateLowToHigh)
   const [selectedFilters, setSelectedFilters] = useState<{
@@ -299,10 +299,11 @@ export const Browse = () => {
   const getPriceFromTokenData = (tokenData: TokenData) => {
     if (
       tokenData.claimApprover?.parsed &&
-      tokenData.claimApprover?.parsed?.paymentMint.toString()
+      tokenData.claimApprover?.parsed?.paymentMint.toString() &&
+      paymentMintInfos.data
     ) {
       const mintInfo =
-        paymentMintInfos[
+        paymentMintInfos.data[
           tokenData.claimApprover?.parsed?.paymentMint.toString()
         ]
       if (mintInfo) {
@@ -323,8 +324,13 @@ export const Browse = () => {
     rate: number = globalRate
   ) => {
     let price: BigNumber | undefined = new BigNumber(0)
-    if (tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber() === 0) {
-      return getTokenRentalRate(config, paymentMintInfos, tokenData)?.rate ?? 0
+    if (
+      tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber() === 0 &&
+      paymentMintInfos.data
+    ) {
+      return (
+        getTokenRentalRate(config, paymentMintInfos.data, tokenData)?.rate ?? 0
+      )
     } else {
       price = getPriceFromTokenData(tokenData)
       if (price.toNumber() === 0) return 0
@@ -590,10 +596,11 @@ export const Browse = () => {
             if (
               tokenData.timeInvalidator.parsed.extensionPaymentAmount &&
               tokenData.timeInvalidator.parsed.extensionDurationSeconds &&
-              tokenData.timeInvalidator?.parsed?.extensionPaymentMint
+              tokenData.timeInvalidator?.parsed?.extensionPaymentMint &&
+              paymentMintInfos.data
             ) {
               price = getMintDecimalAmount(
-                paymentMintInfos[
+                paymentMintInfos.data[
                   tokenData.timeInvalidator?.parsed?.extensionPaymentMint.toString()
                 ]!,
                 tokenData.timeInvalidator?.parsed?.extensionPaymentAmount
@@ -605,7 +612,8 @@ export const Browse = () => {
             if (
               tokenData.claimApprover?.parsed?.paymentMint &&
               paymentMintInfos &&
-              paymentMintInfos[
+              paymentMintInfos.data &&
+              paymentMintInfos.data[
                 tokenData.claimApprover?.parsed?.paymentMint.toString()
               ]
             ) {
@@ -1078,12 +1086,12 @@ export const Browse = () => {
                                         }
                                       >
                                         {tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber() ===
-                                        0 ? (
+                                          0 && paymentMintInfos.data ? (
                                           <>
                                             {
                                               getTokenRentalRate(
                                                 config,
-                                                paymentMintInfos,
+                                                paymentMintInfos.data,
                                                 tokenData
                                               )?.displayText
                                             }{' '}
