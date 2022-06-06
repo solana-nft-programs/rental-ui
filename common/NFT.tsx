@@ -237,7 +237,9 @@ export function NFT({ tokenData, onClick }: NFTProps) {
           <NFTOverlay
             state={tokenManager?.parsed.state}
             expiration={
-              timeInvalidator?.parsed?.expiration?.toNumber() || undefined
+              timeInvalidator?.parsed?.expiration?.toNumber() ||
+              timeInvalidator?.parsed?.maxExpiration?.toNumber() ||
+              undefined
             }
             durationSeconds={
               timeInvalidator?.parsed?.durationSeconds?.toNumber() || undefined
