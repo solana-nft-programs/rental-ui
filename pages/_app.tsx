@@ -36,17 +36,17 @@ const App = ({
   config,
 }: AppProps & { config: ProjectConfig }) => (
   <EnvironmentProvider>
-    <WalletProvider wallets={getWalletAdapters()} autoConnect>
-      <WalletIdentityProvider>
-        <ProjectConfigProvider defaultConfig={config}>
-          <PaymentMintsProvider>
-            <QRCodeProvider>
-              <UTCNowProvider>
-                <RentalModalProvider>
-                  <RentalExtensionModalProvider>
-                    <RentalRateModalProvider>
-                      <WalletModalProvider>
-                        <QueryClientProvider client={queryClient}>
+    <UTCNowProvider>
+      <WalletProvider wallets={getWalletAdapters()} autoConnect>
+        <WalletIdentityProvider>
+          <ProjectConfigProvider defaultConfig={config}>
+            <PaymentMintsProvider>
+              <QueryClientProvider client={queryClient}>
+                <QRCodeProvider>
+                  <RentalModalProvider>
+                    <RentalExtensionModalProvider>
+                      <RentalRateModalProvider>
+                        <WalletModalProvider>
                           <>
                             <ToastContainer />
                             <Component {...pageProps} />
@@ -54,17 +54,17 @@ const App = ({
                               <ReactQueryDevtools initialIsOpen={false} />
                             )}
                           </>
-                        </QueryClientProvider>
-                      </WalletModalProvider>
-                    </RentalRateModalProvider>
-                  </RentalExtensionModalProvider>
-                </RentalModalProvider>
-              </UTCNowProvider>
-            </QRCodeProvider>
-          </PaymentMintsProvider>
-        </ProjectConfigProvider>
-      </WalletIdentityProvider>
-    </WalletProvider>
+                        </WalletModalProvider>
+                      </RentalRateModalProvider>
+                    </RentalExtensionModalProvider>
+                  </RentalModalProvider>
+                </QRCodeProvider>
+              </QueryClientProvider>
+            </PaymentMintsProvider>
+          </ProjectConfigProvider>
+        </WalletIdentityProvider>
+      </WalletProvider>
+    </UTCNowProvider>
   </EnvironmentProvider>
 )
 
