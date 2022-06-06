@@ -559,7 +559,7 @@ export const RentalCard = ({
     } catch (e) {
       console.log('Error handling rental', e)
       setConfirmRentalTerms(false)
-      setError(`Error handling rental: ${handleError(e)}`)
+      setError(`${e}`)
     } finally {
       setLoading(false)
     }

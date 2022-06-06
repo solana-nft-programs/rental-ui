@@ -6,6 +6,7 @@ import type {
   Transaction,
 } from '@solana/web3.js'
 import { sendAndConfirmRawTransaction } from '@solana/web3.js'
+import { handleError } from 'api/errors'
 import { notify } from 'common/Notification'
 
 export const executeTransaction = async (
@@ -48,14 +49,15 @@ export const executeTransaction = async (
       })
   } catch (e) {
     console.log('Failed transaction: ', e)
+    const errorMessage = handleError(e)
     config.notificationConfig &&
       notify({
         message: 'Failed transaction',
-        description: config.notificationConfig.errorMessage ?? `${e}`,
+        description: config.notificationConfig.errorMessage ?? errorMessage,
         txid,
         type: 'error',
       })
-    if (!config.silent) throw new Error(`${e}`)
+    if (!config.silent) throw new Error(errorMessage)
   } finally {
     config.callback && config.callback()
   }

@@ -27,6 +27,13 @@ type ErrorCode = {
 }
 
 export const nativeErrors: ErrorCode[] = [
+  // token program errors
+  {
+    code: '1',
+    message:
+      'Insufficient funds. User does not have enough balance of token to complete the transaction',
+  },
+  // anchor errors
   {
     code: '100',
     message: 'InstructionMissing: 8 byte instruction identifier not provided',
