@@ -1246,7 +1246,8 @@ export const RentalCard = ({
                   message={
                     <>
                       <div
-                        className="cursor-pointer break-words"
+                        className="cursor-pointer"
+                        style={{ wordBreak: 'break-word' }}
                         onClick={() => setError(undefined)}
                       >
                         {error}

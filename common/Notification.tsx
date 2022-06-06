@@ -105,6 +105,7 @@ export function ToastContainer() {
                 borderColor: config.colors.secondary,
                 backgroundColor: lighten(0.07, config.colors.main),
                 color: getColorByBgColor(config.colors.main),
+                wordBreak: 'break-word',
               }}
             >
               {resolveValue(t.message, t)}
