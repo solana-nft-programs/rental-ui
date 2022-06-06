@@ -24,14 +24,11 @@ import {
   getTokenRentalRate,
   handleCopy,
 } from 'components/Browse'
+import { usePaymentMints } from 'hooks/usePaymentMints'
 import { useRouter } from 'next/router'
 import { lighten, transparentize } from 'polished'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
-import {
-  PAYMENT_MINTS,
-  usePaymentMints,
-  WRAPPED_SOL_MINT,
-} from 'providers/PaymentMintsProvider'
+import { PAYMENT_MINTS, WRAPPED_SOL_MINT } from 'providers/PaymentMintsProvider'
 import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useUTCNow } from 'providers/UTCNowProvider'
 import type { ReactElement } from 'react'
@@ -86,7 +83,7 @@ function Claim() {
   const rentalRateModal = useRentalRateModal()
   const [error, setError] = useState<ReactElement | null>(null)
   const [loadingClaim, setLoadingClaim] = useState(false)
-  const { paymentMintInfos } = usePaymentMints()
+  const paymentMintInfos = usePaymentMints()
   const [loadingImage, setLoadingImage] = useState(false)
   const [claimed, setClaimed] = useState(false)
   const { UTCNow } = useUTCNow()
@@ -390,12 +387,12 @@ function Claim() {
                               }}
                             >
                               {tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber() ===
-                              0 ? (
+                                0 && paymentMintInfos.data ? (
                                 <>
                                   {
                                     getTokenRentalRate(
                                       config,
-                                      paymentMintInfos,
+                                      paymentMintInfos.data,
                                       tokenData
                                     )?.displayText
                                   }{' '}

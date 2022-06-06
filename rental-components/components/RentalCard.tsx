@@ -27,9 +27,9 @@ import {
   shortDateString,
   shortPubKey,
 } from 'common/utils'
+import { usePaymentMints } from 'hooks/usePaymentMints'
 import { useUserTokenData } from 'hooks/useUserTokenData'
 import moment from 'moment'
-import { usePaymentMints } from 'providers/PaymentMintsProvider'
 import { getLink } from 'providers/ProjectConfigProvider'
 import React, { useEffect, useState } from 'react'
 import { BiQrScan, BiTimer } from 'react-icons/bi'
@@ -209,7 +209,7 @@ export const RentalCard = ({
   const [loading, setLoading] = useState(false)
   const [link, setLink] = useState<string | null>(null)
   const userTokenData = useUserTokenData()
-  const { paymentMintInfos } = usePaymentMints()
+  const paymentMintInfos = usePaymentMints()
 
   // TODO get this from tokenData
   const [editionInfos, setEditionInfos] = useState<(EditionInfo | null)[]>([])
@@ -391,10 +391,14 @@ export const RentalCard = ({
   }
 
   const extensionRate = () => {
-    return `${fmtMintAmount(
-      paymentMintInfos[extensionPaymentMint.toString()],
-      new anchor.BN(extensionPaymentAmount)
-    )} ${
+    return `${
+      paymentMintInfos.data
+        ? fmtMintAmount(
+            paymentMintInfos.data[extensionPaymentMint.toString()],
+            new anchor.BN(extensionPaymentAmount)
+          )
+        : 0
+    } ${
       paymentMintData.find((obj) => obj.mint === extensionPaymentMint)?.symbol
     } / ${extensionDurationOption
       ?.toLowerCase()
@@ -1337,9 +1341,10 @@ export const RentalCard = ({
                           extensionPaymentAmount &&
                           extensionDurationAmount &&
                           extensionPaymentMint &&
+                          paymentMintInfos.data &&
                           durationAmount !== 0
                             ? ` The claimer can choose to extend the rental at the rate of ${fmtMintAmount(
-                                paymentMintInfos[
+                                paymentMintInfos.data[
                                   extensionPaymentMint.toString()
                                 ],
                                 new anchor.BN(extensionPaymentAmount)
@@ -1372,10 +1377,14 @@ export const RentalCard = ({
                             ) : (
                               <p>
                                 <b>Price: </b>{' '}
-                                {fmtMintAmount(
-                                  paymentMintInfos[paymentMint.toString()],
-                                  new anchor.BN(price)
-                                )}{' '}
+                                {paymentMintInfos.data
+                                  ? fmtMintAmount(
+                                      paymentMintInfos.data[
+                                        paymentMint.toString()
+                                      ],
+                                      new anchor.BN(price)
+                                    )
+                                  : 0}{' '}
                                 {
                                   paymentMintData.find(
                                     (obj) => obj.mint === extensionPaymentMint

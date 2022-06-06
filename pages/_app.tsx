@@ -11,7 +11,6 @@ import { ToastContainer } from 'common/Notification'
 import type { ProjectConfig } from 'config/config'
 import type { AppProps } from 'next/app'
 import { EnvironmentProvider } from 'providers/EnvironmentProvider'
-import { PaymentMintsProvider } from 'providers/PaymentMintsProvider'
 import {
   getInitialProps,
   ProjectConfigProvider,
@@ -39,29 +38,27 @@ const App = ({
     <WalletProvider wallets={getWalletAdapters()} autoConnect>
       <WalletIdentityProvider>
         <ProjectConfigProvider defaultConfig={config}>
-          <PaymentMintsProvider>
-            <QRCodeProvider>
-              <UTCNowProvider>
-                <RentalModalProvider>
-                  <RentalExtensionModalProvider>
-                    <RentalRateModalProvider>
-                      <WalletModalProvider>
-                        <QueryClientProvider client={queryClient}>
-                          <>
-                            <ToastContainer />
-                            <Component {...pageProps} />
-                            {DEBUG && (
-                              <ReactQueryDevtools initialIsOpen={false} />
-                            )}
-                          </>
-                        </QueryClientProvider>
-                      </WalletModalProvider>
-                    </RentalRateModalProvider>
-                  </RentalExtensionModalProvider>
-                </RentalModalProvider>
-              </UTCNowProvider>
-            </QRCodeProvider>
-          </PaymentMintsProvider>
+          <QRCodeProvider>
+            <UTCNowProvider>
+              <RentalModalProvider>
+                <RentalExtensionModalProvider>
+                  <RentalRateModalProvider>
+                    <WalletModalProvider>
+                      <QueryClientProvider client={queryClient}>
+                        <>
+                          <ToastContainer />
+                          <Component {...pageProps} />
+                          {DEBUG && (
+                            <ReactQueryDevtools initialIsOpen={false} />
+                          )}
+                        </>
+                      </QueryClientProvider>
+                    </WalletModalProvider>
+                  </RentalRateModalProvider>
+                </RentalExtensionModalProvider>
+              </RentalModalProvider>
+            </UTCNowProvider>
+          </QRCodeProvider>
         </ProjectConfigProvider>
       </WalletIdentityProvider>
     </WalletProvider>

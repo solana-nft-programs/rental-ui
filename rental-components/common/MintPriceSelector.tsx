@@ -2,7 +2,8 @@ import styled from '@emotion/styled'
 import { BN } from '@project-serum/anchor'
 import { InputNumber, Select } from 'antd'
 import { fmtMintAmount, parseMintNaturalAmountFromDecimal } from 'common/units'
-import { PAYMENT_MINTS, usePaymentMints } from 'providers/PaymentMintsProvider'
+import { usePaymentMints } from 'hooks/usePaymentMints'
+import { PAYMENT_MINTS } from 'providers/PaymentMintsProvider'
 import React from 'react'
 
 const { Option } = Select
@@ -27,8 +28,10 @@ export const MintPriceSelector = ({
   handlePrice: (p: number) => void
   handleMint: (m: string) => void
 }) => {
-  const { paymentMintInfos } = usePaymentMints()
-  const paymentMintInfo = paymentMintInfos[mint]
+  const paymentMintInfos = usePaymentMints()
+  const paymentMintInfo = paymentMintInfos.data
+    ? paymentMintInfos.data[mint]
+    : null
 
   return (
     <SelectorOuter>
@@ -57,7 +60,8 @@ export const MintPriceSelector = ({
       >
         {(paymentMintData ?? PAYMENT_MINTS).map(
           ({ mint, symbol }) =>
-            paymentMintInfos[mint] && (
+            paymentMintInfos.data &&
+            paymentMintInfos.data[mint] && (
               <Option key={mint} value={mint}>
                 {symbol}
               </Option>

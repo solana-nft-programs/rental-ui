@@ -15,11 +15,9 @@ import { notify } from 'common/Notification'
 import { executeTransaction } from 'common/Transactions'
 import { fmtMintAmount } from 'common/units'
 import { getQueryParam, secondsToString } from 'common/utils'
+import { usePaymentMints } from 'hooks/usePaymentMints'
 import { useUserTokenData } from 'hooks/useUserTokenData'
-import {
-  usePaymentMints,
-  WRAPPED_SOL_MINT,
-} from 'providers/PaymentMintsProvider'
+import { WRAPPED_SOL_MINT } from 'providers/PaymentMintsProvider'
 import React, { useEffect, useState } from 'react'
 import { FiSend } from 'react-icons/fi'
 import { ImPriceTags } from 'react-icons/im'
@@ -120,7 +118,7 @@ export const RentalExtensionCard = ({
     getEdition()
   }, [metaplexData])
 
-  const { paymentMintInfos } = usePaymentMints()
+  const paymentMintInfos = usePaymentMints()
 
   // form
   const {
@@ -202,15 +200,17 @@ export const RentalExtensionCard = ({
   }
 
   const loadRate = () => {
-    return `${fmtMintAmount(
-      paymentMintInfos[extensionPaymentMint.toString()],
-      new anchor.BN(extensionPaymentAmount)
-    )}
+    return paymentMintInfos.data
+      ? `${fmtMintAmount(
+          paymentMintInfos.data[extensionPaymentMint.toString()],
+          new anchor.BN(extensionPaymentAmount)
+        )}
     ${
       PAYMENT_MINTS.find((obj) => obj.mint === extensionPaymentMint.toString())
         ?.symbol
     }
     / ${secondsToString(extensionDurationSeconds?.toNumber())}`
+      : 0
   }
 
   const exceedMaxExpiration = () => {
@@ -393,9 +393,11 @@ export const RentalExtensionCard = ({
                     style={{ height: 'auto' }}
                     message={
                       <>
-                        {paymentAmount !== 0
+                        {paymentAmount !== 0 && paymentMintInfos.data
                           ? `Pay ${fmtMintAmount(
-                              paymentMintInfos[extensionPaymentMint.toString()],
+                              paymentMintInfos.data[
+                                extensionPaymentMint.toString()
+                              ],
                               new anchor.BN(paymentAmount)
                             )}
                       ${

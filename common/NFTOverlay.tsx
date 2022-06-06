@@ -8,7 +8,8 @@ import type { TokenData } from 'api/api'
 import { Extendable, Returnable, Revocable } from 'common/icons'
 import { fmtMintAmount } from 'common/units'
 import * as utils from 'common/utils'
-import { PAYMENT_MINTS, usePaymentMints } from 'providers/PaymentMintsProvider'
+import { usePaymentMints } from 'hooks/usePaymentMints'
+import { PAYMENT_MINTS } from 'providers/PaymentMintsProvider'
 import { useUTCNow } from 'providers/UTCNowProvider'
 
 const StyledOverlay = styled.div<{
@@ -192,7 +193,7 @@ export function NFTOverlay({
   additionalInvalidators,
 }: NFTOverlayProps) {
   const { UTCNow } = useUTCNow()
-  const { paymentMintInfos } = usePaymentMints()
+  const paymentMintInfos = usePaymentMints()
   return (
     <StyledOverlay
       shadow={shadow}
@@ -235,11 +236,11 @@ export function NFTOverlay({
         {paymentMint &&
           paymentAmount &&
           paymentAmount > 0 &&
-          paymentMintInfos &&
-          paymentMintInfos[paymentMint.toString()] && (
+          paymentMintInfos.data &&
+          paymentMintInfos.data[paymentMint.toString()] && (
             <div className="expiration">
               {fmtMintAmount(
-                paymentMintInfos[paymentMint.toString()],
+                paymentMintInfos.data[paymentMint.toString()],
                 new anchor.BN(paymentAmount)
               )}{' '}
               {PAYMENT_MINTS.find(
