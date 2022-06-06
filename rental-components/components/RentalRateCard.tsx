@@ -26,9 +26,8 @@ import {
   secondsToString,
 } from 'common/utils'
 import type { ProjectConfig } from 'config/config'
-import { usePaymentMints } from 'hooks/usePaymentMints'
+import { usePaymentMints, WRAPPED_SOL_MINT } from 'hooks/usePaymentMints'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
-import { WRAPPED_SOL_MINT } from 'providers/PaymentMintsProvider'
 import { useEffect, useState } from 'react'
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai'
 import { BiTimer } from 'react-icons/bi'

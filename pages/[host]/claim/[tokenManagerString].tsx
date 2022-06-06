@@ -24,11 +24,14 @@ import {
   getTokenRentalRate,
   handleCopy,
 } from 'components/Browse'
-import { usePaymentMints } from 'hooks/usePaymentMints'
+import {
+  PAYMENT_MINTS,
+  usePaymentMints,
+  WRAPPED_SOL_MINT,
+} from 'hooks/usePaymentMints'
 import { useRouter } from 'next/router'
 import { lighten, transparentize } from 'polished'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
-import { PAYMENT_MINTS, WRAPPED_SOL_MINT } from 'providers/PaymentMintsProvider'
 import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useUTCNow } from 'providers/UTCNowProvider'
 import type { ReactElement } from 'react'

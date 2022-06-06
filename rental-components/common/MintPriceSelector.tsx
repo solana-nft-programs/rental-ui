@@ -2,8 +2,7 @@ import styled from '@emotion/styled'
 import { BN } from '@project-serum/anchor'
 import { InputNumber, Select } from 'antd'
 import { fmtMintAmount, parseMintNaturalAmountFromDecimal } from 'common/units'
-import { usePaymentMints } from 'hooks/usePaymentMints'
-import { PAYMENT_MINTS } from 'providers/PaymentMintsProvider'
+import { PAYMENT_MINTS, usePaymentMints } from 'hooks/usePaymentMints'
 import React from 'react'
 
 const { Option } = Select

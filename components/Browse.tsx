@@ -21,11 +21,14 @@ import { secondsToString } from 'common/utils'
 import { asWallet } from 'common/Wallets'
 import type { ProjectConfig, TokenSection } from 'config/config'
 import { useFilteredTokenManagers } from 'hooks/useFilteredTokenManagers'
-import { usePaymentMints } from 'hooks/usePaymentMints'
+import {
+  PAYMENT_MINTS,
+  usePaymentMints,
+  WRAPPED_SOL_MINT,
+} from 'hooks/usePaymentMints'
 import { useProjectStats } from 'hooks/useProjectStats'
 import { lighten } from 'polished'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
-import { PAYMENT_MINTS, WRAPPED_SOL_MINT } from 'providers/PaymentMintsProvider'
 import {
   filterTokens,
   getLink,

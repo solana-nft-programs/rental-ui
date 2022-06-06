@@ -8,8 +8,7 @@ import type { TokenData } from 'api/api'
 import { Extendable, Returnable, Revocable } from 'common/icons'
 import { fmtMintAmount } from 'common/units'
 import * as utils from 'common/utils'
-import { usePaymentMints } from 'hooks/usePaymentMints'
-import { PAYMENT_MINTS } from 'providers/PaymentMintsProvider'
+import { PAYMENT_MINTS, usePaymentMints } from 'hooks/usePaymentMints'
 import { useUTCNow } from 'providers/UTCNowProvider'
 
 const StyledOverlay = styled.div<{
