@@ -15,11 +15,11 @@ import { notify } from 'common/Notification'
 import { executeTransaction } from 'common/Transactions'
 import { fmtMintAmount } from 'common/units'
 import { getQueryParam, secondsToString } from 'common/utils'
+import { useUserTokenData } from 'hooks/useUserTokenData'
 import {
   usePaymentMints,
   WRAPPED_SOL_MINT,
 } from 'providers/PaymentMintsProvider'
-import { useUserTokenData } from 'providers/TokenDataProvider'
 import React, { useEffect, useState } from 'react'
 import { FiSend } from 'react-icons/fi'
 import { ImPriceTags } from 'react-icons/im'
@@ -97,7 +97,7 @@ export const RentalExtensionCard = ({
   const [error, setError] = useState<string>()
   const [loading, setLoading] = useState(false)
   const [link, setLink] = useState<string | null>(null)
-  const { refreshTokenAccounts } = useUserTokenData()
+  const userTokenData = useUserTokenData()
   const { tokenAccount, metaplexData, metadata, tokenManager } = tokenData
   const customImageUri = getQueryParam(metadata?.data?.image, 'uri')
   const [userPaymentTokenAccount, setUserPaymentTokenAccount] =
@@ -169,7 +169,7 @@ export const RentalExtensionCard = ({
 
       await executeTransaction(connection, wallet, transaction, {
         silent: false,
-        callback: refreshTokenAccounts,
+        callback: userTokenData.refetch,
       })
       setExtensionSuccess(true)
     } catch (e) {

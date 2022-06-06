@@ -7,7 +7,6 @@ import { Wallet } from 'components/Wallet'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
-import { useUserTokenData } from 'providers/TokenDataProvider'
 import { useEffect, useState } from 'react'
 
 export default function Home() {
@@ -36,10 +35,8 @@ export default function Home() {
     }
   }, [config])
 
-  const { setAddress } = useUserTokenData()
   useEffect(() => {
     if (wallet && wallet.connected && wallet.publicKey) {
-      setAddress(wallet.publicKey.toBase58())
       router.push(
         `${location.pathname}${location.search}${
           config.name !== 'default' ? `#${tab || 'browse'}` : ''

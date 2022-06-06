@@ -9,10 +9,10 @@ import { elligibleForRent, NFT, NFTPlaceholder, TokensOuter } from 'common/NFT'
 import { notify } from 'common/Notification'
 import { executeTransaction } from 'common/Transactions'
 import { asWallet } from 'common/Wallets'
+import { useUserTokenData } from 'hooks/useUserTokenData'
 import { lighten } from 'polished'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { filterTokens, useProjectConfig } from 'providers/ProjectConfigProvider'
-import { useUserTokenData } from 'providers/TokenDataProvider'
 import { useState } from 'react'
 import { AsyncButton, Button } from 'rental-components/common/Button'
 import { useRentalModal } from 'rental-components/RentalModalProvider'
@@ -22,15 +22,14 @@ export const Wallet = () => {
   const ctx = useEnvironmentCtx()
   const wallet = useWallet()
   const { config } = useProjectConfig()
-  const { tokenDatas, loaded, refreshing, refreshTokenAccounts } =
-    useUserTokenData()
+  const tokenDatas = useUserTokenData()
   const rentalModal = useRentalModal()
   const rentalRateModal = useRentalRateModal()
   const [selectedTokens, setSelectedTokens] = useState<TokenData[]>([])
 
   const filteredTokenDatas = filterTokens(
     ctx.environment.label,
-    tokenDatas,
+    tokenDatas.data || [],
     config.filter
   )
 
@@ -63,7 +62,7 @@ export const Wallet = () => {
         maxRetries: 3,
       },
       notificationConfig: {},
-      callback: refreshTokenAccounts,
+      callback: tokenDatas.refetch,
     })
   }
 
@@ -110,7 +109,7 @@ export const Wallet = () => {
   return (
     <>
       <Header
-        loading={loaded && refreshing}
+        loading={tokenDatas.isFetched && tokenDatas.isFetching}
         tabs={[
           {
             name: 'Wallet',
@@ -150,7 +149,7 @@ export const Wallet = () => {
           </div>
         )}
         <TokensOuter>
-          {!loaded ? (
+          {!tokenDatas.isFetched ? (
             <>
               <NFTPlaceholder />
               <NFTPlaceholder />

@@ -16,9 +16,9 @@ import { Keypair, LAMPORTS_PER_SOL, Transaction } from '@solana/web3.js'
 import { notify } from 'common/Notification'
 import { asWallet } from 'common/Wallets'
 import type { ProjectConfig } from 'config/config'
+import { useUserTokenData } from 'hooks/useUserTokenData'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
-import { useUserTokenData } from 'providers/TokenDataProvider'
 import { AsyncButton } from 'rental-components/common/Button'
 
 import { executeTransaction } from './Transactions'
@@ -136,7 +136,7 @@ export async function airdropNFT(
 export const Airdrop = () => {
   const { connection } = useEnvironmentCtx()
   const wallet = useWallet()
-  const { refreshTokenAccounts } = useUserTokenData()
+  const userTokenData = useUserTokenData()
   const { config } = useProjectConfig()
 
   return (
@@ -148,7 +148,7 @@ export const Airdrop = () => {
         if (!wallet.connected) return
         try {
           await airdropNFT(connection, asWallet(wallet), config)
-          await refreshTokenAccounts()
+          await userTokenData.refetch()
         } catch (e) {
           notify({ message: `Airdrop failed: ${e}`, type: 'error' })
         }
@@ -162,7 +162,7 @@ export const Airdrop = () => {
 export const AirdropSol = () => {
   const { connection } = useEnvironmentCtx()
   const wallet = useWallet()
-  const { refreshTokenAccounts } = useUserTokenData()
+  const userTokenData = useUserTokenData()
   const { config } = useProjectConfig()
 
   return (
@@ -175,7 +175,7 @@ export const AirdropSol = () => {
         try {
           await connection.requestAirdrop(wallet.publicKey!, LAMPORTS_PER_SOL)
           notify({ message: 'Airdropped 1 sol successfully' })
-          await refreshTokenAccounts()
+          await userTokenData.refetch()
         } catch (e) {
           notify({ message: `Airdrop failed: ${e}`, type: 'error' })
         }

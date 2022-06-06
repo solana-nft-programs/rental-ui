@@ -1,6 +1,14 @@
 import { ApolloClient, gql, InMemoryCache } from '@apollo/client'
+import type { AccountData } from '@cardinal/common'
+import type { PaidClaimApproverData } from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
+import type { TimeInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
+import type { TokenManagerData } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { getTokenManagersForIssuer } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/accounts'
-import type { TokenData } from 'api/api'
+import type { UseInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
+import type * as metaplex from '@metaplex-foundation/mpl-token-metadata'
+import type * as spl from '@solana/spl-token'
+import type { AccountInfo, ParsedAccountData, PublicKey } from '@solana/web3.js'
+import type { EditionInfo, TokenData } from 'api/api'
 import { convertStringsToPubkeys, getTokenDatas } from 'api/api'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
@@ -10,14 +18,29 @@ import { useWalletId } from './useWalletId'
 
 const INDEX_ENABLED_MANAGER = false
 
-export const useTokenManagersByIssuer = () => {
+export type ManagedTokenData = {
+  tokenAccount?: {
+    pubkey: PublicKey
+    account: AccountInfo<ParsedAccountData>
+  }
+  tokenManager?: AccountData<TokenManagerData>
+  metaplexData?: { pubkey: PublicKey; data: metaplex.MetadataData } | null
+  editionData?: EditionInfo | null
+  metadata?: any
+  claimApprover?: AccountData<PaidClaimApproverData> | null
+  useInvalidator?: AccountData<UseInvalidatorData> | null
+  timeInvalidator?: AccountData<TimeInvalidatorData> | null
+  recipientTokenAccount?: spl.AccountInfo | null
+}
+
+export const useManagedTokens = () => {
   const walletId = useWalletId()
   const { config } = useProjectConfig()
   const { connection, environment } = useEnvironmentCtx()
-  return useQuery<TokenData[] | undefined>(
-    ['useTokenManagersByIssuer', walletId?.toString()],
+  return useQuery<ManagedTokenData[]>(
+    ['useManagedTokens', walletId?.toString()],
     async () => {
-      if (!walletId) return
+      if (!walletId) return []
       if (environment.index && INDEX_ENABLED_MANAGER) {
         const indexer = new ApolloClient({
           uri: environment.index,
@@ -75,6 +98,6 @@ export const useTokenManagersByIssuer = () => {
         return tokenDatas
       }
     },
-    { refetchInterval: 10000 }
+    { enabled: !!walletId, refetchInterval: 10000 }
   )
 }

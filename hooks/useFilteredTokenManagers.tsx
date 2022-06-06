@@ -1,22 +1,44 @@
 import { ApolloClient, gql, InMemoryCache } from '@apollo/client'
+import type { AccountData } from '@cardinal/common'
+import type { PaidClaimApproverData } from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
+import type { TimeInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
+import type { TokenManagerData } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import {
   getTokenManagers,
   getTokenManagersByState,
   getTokenManagersForIssuer,
 } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/accounts'
-import type { PublicKey } from '@solana/web3.js'
-import type { TokenData } from 'api/api'
+import type { UseInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
+import type * as metaplex from '@metaplex-foundation/mpl-token-metadata'
+import type * as spl from '@solana/spl-token'
+import type { AccountInfo, ParsedAccountData, PublicKey } from '@solana/web3.js'
+import type { EditionInfo, TokenData } from 'api/api'
 import { convertStringsToPubkeys, getTokenDatas } from 'api/api'
 import { tryPublicKey } from 'api/utils'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useQuery } from 'react-query'
 
+export type FilteredTokenManagerData = {
+  tokenAccount?: {
+    pubkey: PublicKey
+    account: AccountInfo<ParsedAccountData>
+  }
+  tokenManager?: AccountData<TokenManagerData>
+  metaplexData?: { pubkey: PublicKey; data: metaplex.MetadataData } | null
+  editionData?: EditionInfo | null
+  metadata?: any
+  claimApprover?: AccountData<PaidClaimApproverData> | null
+  useInvalidator?: AccountData<UseInvalidatorData> | null
+  timeInvalidator?: AccountData<TimeInvalidatorData> | null
+  recipientTokenAccount?: spl.AccountInfo | null
+}
+
 export const useFilteredTokenManagers = () => {
   const { config } = useProjectConfig()
   const { connection, environment } = useEnvironmentCtx()
-  return useQuery<TokenData[] | undefined>(
+  return useQuery<FilteredTokenManagerData[]>(
     ['useFilteredTokenManagers', config.name],
     async () => {
       console.log('Fetching for config', config.name)
@@ -128,6 +150,7 @@ export const useFilteredTokenManagers = () => {
     },
     {
       refetchInterval: 1200,
+      enabled: !!config,
     }
   )
 }

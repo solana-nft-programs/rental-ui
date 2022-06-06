@@ -27,10 +27,10 @@ import {
   shortDateString,
   shortPubKey,
 } from 'common/utils'
+import { useUserTokenData } from 'hooks/useUserTokenData'
 import moment from 'moment'
 import { usePaymentMints } from 'providers/PaymentMintsProvider'
 import { getLink } from 'providers/ProjectConfigProvider'
-import { useUserTokenData } from 'providers/TokenDataProvider'
 import React, { useEffect, useState } from 'react'
 import { BiQrScan, BiTimer } from 'react-icons/bi'
 import { FaEye, FaLink } from 'react-icons/fa'
@@ -208,7 +208,7 @@ export const RentalCard = ({
   const [error, setError] = useState<string>()
   const [loading, setLoading] = useState(false)
   const [link, setLink] = useState<string | null>(null)
-  const { refreshTokenAccounts } = useUserTokenData()
+  const userTokenData = useUserTokenData()
   const { paymentMintInfos } = usePaymentMints()
 
   // TODO get this from tokenData
@@ -541,7 +541,7 @@ export const RentalCard = ({
         )
         await executeTransaction(connection, wallet, transaction, {
           silent: false,
-          callback: refreshTokenAccounts,
+          callback: userTokenData.refetch,
           signers: claimRentalReceipt ? [receiptMintKeypair] : [],
         })
         setTotalListed(i + 1)

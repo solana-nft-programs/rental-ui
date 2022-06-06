@@ -16,7 +16,6 @@ import {
   getInitialProps,
   ProjectConfigProvider,
 } from 'providers/ProjectConfigProvider'
-import { TokenAccountsProvider } from 'providers/TokenDataProvider'
 import { UTCNowProvider } from 'providers/UTCNowProvider'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
@@ -43,25 +42,23 @@ const App = ({
           <PaymentMintsProvider>
             <QRCodeProvider>
               <UTCNowProvider>
-                <TokenAccountsProvider>
-                  <RentalModalProvider>
-                    <RentalExtensionModalProvider>
-                      <RentalRateModalProvider>
-                        <WalletModalProvider>
-                          <QueryClientProvider client={queryClient}>
-                            <>
-                              <ToastContainer />
-                              <Component {...pageProps} />
-                              {DEBUG && (
-                                <ReactQueryDevtools initialIsOpen={false} />
-                              )}
-                            </>
-                          </QueryClientProvider>
-                        </WalletModalProvider>
-                      </RentalRateModalProvider>
-                    </RentalExtensionModalProvider>
-                  </RentalModalProvider>
-                </TokenAccountsProvider>
+                <RentalModalProvider>
+                  <RentalExtensionModalProvider>
+                    <RentalRateModalProvider>
+                      <WalletModalProvider>
+                        <QueryClientProvider client={queryClient}>
+                          <>
+                            <ToastContainer />
+                            <Component {...pageProps} />
+                            {DEBUG && (
+                              <ReactQueryDevtools initialIsOpen={false} />
+                            )}
+                          </>
+                        </QueryClientProvider>
+                      </WalletModalProvider>
+                    </RentalRateModalProvider>
+                  </RentalExtensionModalProvider>
+                </RentalModalProvider>
               </UTCNowProvider>
             </QRCodeProvider>
           </PaymentMintsProvider>

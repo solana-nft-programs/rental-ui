@@ -10,11 +10,11 @@ import { notify } from 'common/Notification'
 import { Tag } from 'common/Tags'
 import { executeTransaction } from 'common/Transactions'
 import { asWallet } from 'common/Wallets'
-import { useTokenManagersByIssuer } from 'hooks/useTokenManagersByIssuer'
+import { useManagedTokens } from 'hooks/useManagedTokens'
+import { useUserTokenData } from 'hooks/useUserTokenData'
 import { lighten } from 'polished'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
-import { useUserTokenData } from 'providers/TokenDataProvider'
 import { useUTCNow } from 'providers/UTCNowProvider'
 import { FaLink } from 'react-icons/fa'
 import { AsyncButton } from 'rental-components/common/Button'
@@ -25,8 +25,8 @@ export const Manage = () => {
   const { config } = useProjectConfig()
   const { connection } = useEnvironmentCtx()
   const wallet = useWallet()
-  const { refreshTokenAccounts } = useUserTokenData()
-  const tokenManagerByIssuer = useTokenManagersByIssuer()
+  const userTokenData = useUserTokenData()
+  const tokenManagerByIssuer = useManagedTokens()
   const { UTCNow } = useUTCNow()
 
   return (
@@ -137,7 +137,7 @@ export const Manage = () => {
                                       tokenData?.tokenManager?.parsed.mint
                                     ),
                                     {
-                                      callback: refreshTokenAccounts,
+                                      callback: userTokenData.refetch,
                                       notificationConfig: {},
                                       silent: true,
                                     }

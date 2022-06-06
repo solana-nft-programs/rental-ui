@@ -9,24 +9,16 @@ import { NFT, NFTPlaceholder, TokensOuter } from 'common/NFT'
 import { notify } from 'common/Notification'
 import { executeTransaction } from 'common/Transactions'
 import { asWallet } from 'common/Wallets'
+import { useUserTokenData } from 'hooks/useUserTokenData'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
-import { useUserTokenData } from 'providers/TokenDataProvider'
-import { useEffect } from 'react'
 import { AsyncButton, Button } from 'rental-components/common/Button'
 import { useRentalExtensionModal } from 'rental-components/RentalExtensionModalProvider'
 
 function Burn() {
   const ctx = useEnvironmentCtx()
   const wallet = useWallet()
-  const { tokenDatas, setAddress, loaded, refreshTokenAccounts } =
-    useUserTokenData()
+  const userTokenData = useUserTokenData()
   const rentalExtensionModal = useRentalExtensionModal()
-
-  useEffect(() => {
-    if (wallet.publicKey) {
-      setAddress(wallet.publicKey.toString())
-    }
-  }, [wallet.publicKey])
 
   const revokeRental = async (tokenData: TokenData) => {
     const transaction = new Transaction()
@@ -70,7 +62,7 @@ function Burn() {
 
     await executeTransaction(ctx.connection, asWallet(wallet), transaction, {
       silent: false,
-      callback: refreshTokenAccounts,
+      callback: userTokenData.refetch,
       notificationConfig: {},
     })
   }
@@ -88,13 +80,13 @@ function Burn() {
     return datas
   }
 
-  const expiredTokens: TokenData[] = getExpiredTokens(tokenDatas)
+  const expiredTokens: TokenData[] = getExpiredTokens(userTokenData.data || [])
 
   return (
     <>
       <Header />
       <TokensOuter style={{ marginTop: '20px' }}>
-        {!loaded ? (
+        {!userTokenData.isFetched ? (
           <>
             <NFTPlaceholder />
             <NFTPlaceholder />
