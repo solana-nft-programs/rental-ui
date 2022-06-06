@@ -855,7 +855,7 @@ export const Browse = () => {
           <div className="md:w-1/5"></div>
         </div>
         <div className="flex flex-wrap justify-center gap-5 md:flex-nowrap lg:flex lg:flex-row">
-          <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-5" style={{ colorScheme: 'dark' }}>
             <div
               className="max-h-[70vh] w-[280px] overflow-y-auto rounded-lg py-4 px-8 text-left"
               style={{ background: lighten(0.07, config.colors.main) }}

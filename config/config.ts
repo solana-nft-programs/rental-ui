@@ -317,7 +317,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
           value: '1',
           durationOption: 'days',
         },
-        visibilities: ['public'],
+        visibilities: ['public', 'private'],
         durationOptions: ['minutes', 'hours', 'days', 'weeks'],
         invalidationTypes: ['reissue'],
         customInvalidationTypes: {
