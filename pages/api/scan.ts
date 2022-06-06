@@ -55,7 +55,7 @@ const post: NextApiHandler<PostResponse> = async (req, res) => {
   const accountId = tryPublicKey(account)
   if (!accountId) return res.status(400).json({ error: 'Invalid account' })
 
-  const connection = new Connection(foundEnvironment!.value)
+  const connection = new Connection(foundEnvironment!.primary)
   const config =
     projectConfigs[firstParam(collectionParam)] || projectConfigs['default']!
 

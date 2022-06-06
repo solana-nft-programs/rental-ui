@@ -5,8 +5,8 @@ import React, { useContext, useMemo, useState } from 'react'
 
 export interface Environment {
   label: Cluster | 'mainnet' | 'localnet'
-  value: string
-  override?: string
+  primary: string
+  secondary?: string
   api?: string
   index?: string
 }
@@ -15,6 +15,7 @@ export interface EnvironmentContextValues {
   environment: Environment
   setEnvironment: (newEnvironment: Environment) => void
   connection: Connection
+  secondaryConnection: Connection
 }
 
 const INDEX_ENABLED = true
@@ -22,9 +23,9 @@ const INDEX_ENABLED = true
 export const ENVIRONMENTS: Environment[] = [
   {
     label: 'mainnet',
-    value:
+    primary:
       'https://solana-api.syndica.io/access-token/bkBr4li7aGVa3euVG0q4iSI6uuMiEo2jYQD35r8ytGZrksM7pdJi2a57pmlYRqCw',
-    override: 'https://ssc-dao.genesysgo.net',
+    secondary: 'https://ssc-dao.genesysgo.net',
     index: INDEX_ENABLED
       ? 'https://prod-holaplex.hasura.app/v1/graphql'
       : undefined,
@@ -32,16 +33,11 @@ export const ENVIRONMENTS: Environment[] = [
   },
   {
     label: 'testnet',
-    value: 'https://api.testnet.solana.com',
+    primary: 'https://api.testnet.solana.com',
   },
   {
     label: 'devnet',
-    value:
-      'https://purple-old-lake.solana-devnet.quiknode.pro/13480a1cc2033abc1d3523523bc1acabd97b6874/',
-  },
-  {
-    label: 'localnet',
-    value: 'http://127.0.0.1:8899',
+    primary: 'https://api.devnet.solana.com',
   },
 ]
 
@@ -64,11 +60,19 @@ export function EnvironmentProvider({
 
   useMemo(() => {
     const foundEnvironment = ENVIRONMENTS.find((e) => e.label === cluster)
-    setEnvironment(foundEnvironment ?? ENVIRONMENTS[2]!)
+    setEnvironment(foundEnvironment ?? ENVIRONMENTS[0]!)
   }, [cluster])
 
   const connection = useMemo(
-    () => new Connection(environment.value, { commitment: 'recent' }),
+    () => new Connection(environment.primary, { commitment: 'recent' }),
+    [environment]
+  )
+
+  const secondaryConnection = useMemo(
+    () =>
+      new Connection(environment.secondary ?? environment.primary, {
+        commitment: 'recent',
+      }),
     [environment]
   )
 
@@ -78,6 +82,7 @@ export function EnvironmentProvider({
         environment,
         setEnvironment,
         connection,
+        secondaryConnection,
       }}
     >
       {children}

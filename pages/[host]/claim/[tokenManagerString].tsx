@@ -5,7 +5,7 @@ import styled from '@emotion/styled'
 import { BN } from '@project-serum/anchor'
 import type * as splToken from '@solana/spl-token'
 import { useWallet } from '@solana/wallet-adapter-react'
-import { Connection, PublicKey, Transaction } from '@solana/web3.js'
+import { PublicKey, Transaction } from '@solana/web3.js'
 import type { TokenData } from 'api/api'
 import { getTokenData } from 'api/api'
 import { getATokenAccountInfo, tryPublicKey } from 'api/utils'
@@ -81,7 +81,7 @@ const VerificationStep = styled.div<Verifiable>`
 function Claim() {
   const { config } = useProjectConfig()
   const router = useRouter()
-  const ctx = useEnvironmentCtx()
+  const { connection, secondaryConnection, environment } = useEnvironmentCtx()
   const wallet = useWallet()
   const rentalRateModal = useRentalRateModal()
   const [error, setError] = useState<ReactElement | null>(null)
@@ -111,7 +111,7 @@ function Claim() {
     try {
       setTokenDataError(null)
       setTokenData(null)
-      const data = await getTokenData(ctx.connection, tokenManagerId!)
+      const data = await getTokenData(connection, tokenManagerId!)
       console.log('Data: ', data)
       console.log(data.timeInvalidator?.parsed.maxExpiration?.toString())
       if (
@@ -141,7 +141,7 @@ function Claim() {
     if (wallet.publicKey && tokenData?.claimApprover?.parsed.paymentMint) {
       try {
         const userPaymentTokenAccountData = await getATokenAccountInfo(
-          ctx.connection,
+          connection,
           tokenData?.claimApprover?.parsed.paymentMint,
           wallet.publicKey
         )
@@ -162,11 +162,11 @@ function Claim() {
     if (tokenManagerId) {
       getMetadata()
     }
-  }, [ctx.connection, tokenManagerString])
+  }, [connection, tokenManagerString])
 
   useEffect(() => {
     getUserPaymentTokenAccount()
-  }, [ctx.connection, wallet.publicKey, tokenData])
+  }, [connection, wallet.publicKey, tokenData])
 
   const handleError = (e: Error) => {
     if (e.message.includes('0x1')) {
@@ -231,26 +231,24 @@ function Claim() {
         if (amountToWrap.gt(new BN(0))) {
           await withWrapSol(
             transaction,
-            ctx.connection,
+            connection,
             asWallet(wallet),
             amountToWrap.toNumber()
           )
         }
       }
-      const overrideCollection =
-        ctx.environment.override && tokenData?.tokenManager?.parsed.receiptMint
-          ? new Connection(ctx.environment.override)
-          : ctx.connection
       await withClaimToken(
         transaction,
-        overrideCollection,
+        secondaryConnection && tokenData?.tokenManager?.parsed.receiptMint
+          ? secondaryConnection
+          : connection,
         asWallet(wallet),
         tokenManagerId!,
         {
           otpKeypair: otp,
         }
       )
-      await executeTransaction(ctx.connection, asWallet(wallet), transaction, {
+      await executeTransaction(connection, asWallet(wallet), transaction, {
         confirmOptions: { commitment: 'confirmed', maxRetries: 3 },
         signers: otp ? [otp] : [],
         notificationConfig: {},
@@ -291,7 +289,7 @@ function Claim() {
               <a
                 href={pubKeyUrl(
                   tokenData?.tokenManager?.parsed.mint,
-                  ctx.environment.label
+                  environment.label
                 )}
                 target="_blank"
                 rel="noreferrer"
@@ -349,7 +347,7 @@ function Claim() {
                                     {getDurationText(tokenData, UTCNow)}
                                   </div>
                                   <DisplayAddress
-                                    connection={ctx.connection}
+                                    connection={secondaryConnection}
                                     address={
                                       tokenData.tokenManager?.parsed.issuer ||
                                       undefined
@@ -379,8 +377,8 @@ function Claim() {
                                   ) {
                                     rentalRateModal.show(
                                       asWallet(wallet),
-                                      ctx.connection,
-                                      ctx.environment.label,
+                                      connection,
+                                      environment.label,
                                       tokenData
                                     )
                                   } else {
@@ -452,7 +450,7 @@ function Claim() {
                                         color: '#52c41a !important',
                                         display: 'inline',
                                       }}
-                                      connection={ctx.connection}
+                                      connection={secondaryConnection}
                                       address={
                                         new PublicKey(
                                           tokenData.recipientTokenAccount?.owner
@@ -472,7 +470,7 @@ function Claim() {
                                         color: '#52c41a !important',
                                         display: 'inline',
                                       }}
-                                      connection={ctx.connection}
+                                      connection={secondaryConnection}
                                       address={
                                         tokenData.tokenManager?.parsed.issuer
                                       }

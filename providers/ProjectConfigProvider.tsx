@@ -31,9 +31,6 @@ export const getInitialProps = async ({
     ? 'devnet'
     : ctx.query.cluster || process.env.BASE_CLUSTER
   const foundEnvironment = ENVIRONMENTS.find((e) => e.label === cluster)!
-  const overrideCollection = foundEnvironment.override
-    ? new Connection(foundEnvironment.override)
-    : new Connection(foundEnvironment.value, { commitment: 'recent' })
 
   const namespaceName = 'twitter'
   let publicKey
@@ -44,7 +41,11 @@ export const getInitialProps = async ({
       publicKey = tryPublicKey(project)
       if (!publicKey) {
         nameEntryData = await getNameEntryData(
-          overrideCollection,
+          foundEnvironment.secondary
+            ? new Connection(foundEnvironment.secondary)
+            : new Connection(foundEnvironment.primary, {
+                commitment: 'recent',
+              }),
           namespaceName,
           profile?.username || project
         )

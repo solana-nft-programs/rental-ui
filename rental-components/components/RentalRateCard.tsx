@@ -207,8 +207,8 @@ export const RentalRateCard = ({
         }
         await withClaimToken(
           transaction,
-          environment.override
-            ? new Connection(environment.override)
+          environment.secondary
+            ? new Connection(environment.secondary)
             : connection,
           wallet,
           tokenData.tokenManager?.pubkey

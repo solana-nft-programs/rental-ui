@@ -23,7 +23,7 @@ import { getDurationText, handleCopy } from './Browse'
 
 export const Manage = () => {
   const { config } = useProjectConfig()
-  const { connection } = useEnvironmentCtx()
+  const { connection, secondaryConnection } = useEnvironmentCtx()
   const wallet = useWallet()
   const userTokenData = useUserTokenData()
   const tokenManagerByIssuer = useManagedTokens()
@@ -103,7 +103,7 @@ export const Manage = () => {
                               <div className="flex flex-col">
                                 <div>{getDurationText(tokenData, UTCNow)}</div>
                                 <DisplayAddress
-                                  connection={connection}
+                                  connection={secondaryConnection}
                                   address={
                                     tokenData.tokenManager?.parsed.issuer ||
                                     undefined
@@ -197,7 +197,7 @@ export const Manage = () => {
                                       color: '#52c41a !important',
                                       display: 'inline',
                                     }}
-                                    connection={connection}
+                                    connection={secondaryConnection}
                                     address={
                                       new PublicKey(
                                         tokenData.recipientTokenAccount?.owner
@@ -217,7 +217,7 @@ export const Manage = () => {
                                       color: '#52c41a !important',
                                       display: 'inline',
                                     }}
-                                    connection={connection}
+                                    connection={secondaryConnection}
                                     address={
                                       tokenData.tokenManager?.parsed.issuer
                                     }

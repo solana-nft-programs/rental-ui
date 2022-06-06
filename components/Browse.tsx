@@ -277,7 +277,7 @@ const StyledSelectMultiple = styled.div<{
 `
 
 export const Browse = () => {
-  const { connection, environment } = useEnvironmentCtx()
+  const { connection, secondaryConnection, environment } = useEnvironmentCtx()
   const wallet = useWallet()
   const { config } = useProjectConfig()
   const tokenManagers = useFilteredTokenManagers()
@@ -554,8 +554,8 @@ export const Browse = () => {
       console.log('Claiming token manager', tokenData)
       await withClaimToken(
         transaction,
-        environment.override
-          ? new Connection(environment.override)
+        environment.secondary
+          ? new Connection(environment.secondary)
           : connection,
         asWallet(wallet),
         tokenData.tokenManager?.pubkey
@@ -1074,7 +1074,7 @@ export const Browse = () => {
                                               )}
                                             </div>
                                             <DisplayAddress
-                                              connection={connection}
+                                              connection={secondaryConnection}
                                               address={
                                                 tokenData.tokenManager?.parsed
                                                   .issuer || undefined
@@ -1163,7 +1163,7 @@ export const Browse = () => {
                                                   color: '#52c41a !important',
                                                   display: 'inline',
                                                 }}
-                                                connection={connection}
+                                                connection={secondaryConnection}
                                                 address={
                                                   new PublicKey(
                                                     tokenData.recipientTokenAccount?.owner
@@ -1183,7 +1183,7 @@ export const Browse = () => {
                                                   color: '#52c41a !important',
                                                   display: 'inline',
                                                 }}
-                                                connection={connection}
+                                                connection={secondaryConnection}
                                                 address={
                                                   tokenData.tokenManager?.parsed
                                                     .issuer
