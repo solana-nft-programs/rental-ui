@@ -14,7 +14,6 @@ import { DatePicker, InputNumber, Select } from 'antd'
 import type { TokenData } from 'api/api'
 import type { EditionInfo } from 'api/editions'
 import getEditionInfo from 'api/editions'
-import { handleError } from 'api/errors'
 import { tryPublicKey } from 'api/utils'
 import { NFTOverlay } from 'common/NFTOverlay'
 import { notify } from 'common/Notification'
@@ -654,15 +653,7 @@ export const RentalCard = ({
                               selectedInvalidators.filter((o) => o !== 'rate')
                             )
                           } else {
-                            setSelectedInvalidators([
-                              ...selectedInvalidators.filter(
-                                (o) =>
-                                  o !== 'manual' &&
-                                  o !== 'expiration' &&
-                                  o !== 'duration'
-                              ),
-                              'rate',
-                            ])
+                            setSelectedInvalidators(['rate'])
                           }
                         }}
                       >
@@ -685,15 +676,7 @@ export const RentalCard = ({
                               )
                             )
                           } else {
-                            setSelectedInvalidators([
-                              ...selectedInvalidators.filter(
-                                (o) =>
-                                  o !== 'manual' &&
-                                  o !== 'expiration' &&
-                                  o !== 'rate'
-                              ),
-                              'duration',
-                            ])
+                            setSelectedInvalidators(['duration'])
                           }
                         }}
                       >
@@ -716,12 +699,7 @@ export const RentalCard = ({
                               )
                             )
                           } else {
-                            setSelectedInvalidators([
-                              ...selectedInvalidators.filter(
-                                (o) => o !== 'manual' && o !== 'duration'
-                              ),
-                              'expiration',
-                            ])
+                            setSelectedInvalidators(['expiration'])
                           }
                         }}
                       >
@@ -742,12 +720,7 @@ export const RentalCard = ({
                               selectedInvalidators.filter((o) => o !== 'usages')
                             )
                           } else {
-                            setSelectedInvalidators([
-                              ...selectedInvalidators.filter(
-                                (o) => o !== 'manual'
-                              ),
-                              'usages',
-                            ])
+                            setSelectedInvalidators(['usages'])
                           }
                         }}
                       >
