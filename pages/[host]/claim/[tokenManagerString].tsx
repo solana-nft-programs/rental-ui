@@ -287,7 +287,7 @@ function Claim() {
             }}
           >
             <div className="text-[28px] uppercase">Claim Asset</div>
-            <div className="overflow-scroll font-extralight">
+            <div className="font-extralight">
               <a
                 href={pubKeyUrl(
                   tokenData?.tokenManager?.parsed.mint,
