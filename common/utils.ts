@@ -120,7 +120,7 @@ export const secondsToString = (
   requiredSeconds: number | undefined | null,
   showSeconds = true
 ) => {
-  if (!requiredSeconds || requiredSeconds === 0) return '0'
+  if (!requiredSeconds || requiredSeconds <= 0) return '0'
   const weeks = Math.floor(requiredSeconds / 60 / 60 / 24 / 7)
   const days = Math.floor((requiredSeconds / 60 / 60 / 24) % 7)
   const hours = Math.floor((requiredSeconds / 60 / 60) % 24)

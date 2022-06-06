@@ -155,6 +155,17 @@ export const getDurationText = (tokenData: TokenData, UTCNow: number) => {
             )}
           </b>
         </p>
+      ) : tokenData.timeInvalidator?.parsed.maxExpiration ? (
+        <p className="float-left inline-block text-ellipsis whitespace-nowrap">
+          Fixed Duration:{' '}
+          <b>
+            {secondsToString(
+              tokenData.timeInvalidator?.parsed.maxExpiration?.toNumber() -
+                UTCNow,
+              false
+            )}
+          </b>
+        </p>
       ) : null}
     </div>
   ) : null
