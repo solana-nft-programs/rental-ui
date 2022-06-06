@@ -5,7 +5,7 @@ import { useQuery } from 'react-query'
 
 export const useRecentSignatures = (address: PublicKey | undefined) => {
   const { environment } = useEnvironmentCtx()
-  const connection = new Connection(environment.value, {
+  const connection = new Connection(environment.primary, {
     commitment: 'confirmed',
   })
   return useQuery<ConfirmedSignatureInfo[] | undefined>(
