@@ -1072,7 +1072,7 @@ export const Browse = () => {
                                         bgColor={config.colors.secondary}
                                         variant="primary"
                                         disabled={!wallet.publicKey}
-                                        className="my-auto inline-block max-w-[45%] flex-none overflow-scroll text-xs"
+                                        className="my-auto inline-block max-w-[45%] flex-none text-xs"
                                         handleClick={() =>
                                           handleBrowseClick(tokenData)
                                         }
