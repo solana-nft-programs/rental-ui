@@ -9,7 +9,13 @@ import styled from '@emotion/styled'
 import * as anchor from '@project-serum/anchor'
 import type { Wallet } from '@saberhq/solana-contrib'
 import type { Connection } from '@solana/web3.js'
-import { Keypair, PublicKey } from '@solana/web3.js'
+import {
+  Keypair,
+  LAMPORTS_PER_SOL,
+  PublicKey,
+  SystemProgram,
+  Transaction,
+} from '@solana/web3.js'
 import { DatePicker, InputNumber, Select } from 'antd'
 import type { TokenData } from 'api/api'
 import type { EditionInfo } from 'api/editions'
@@ -528,11 +534,22 @@ export const RentalCard = ({
             : undefined,
         }
 
-        const [transaction, tokenManagerId, otpKeypair] = await issueToken(
+        const [issueTransaction, tokenManagerId, otpKeypair] = await issueToken(
           connection,
           wallet,
           issueParams
         )
+        const transaction = new Transaction()
+        transaction.instructions = otpKeypair
+          ? [
+              ...issueTransaction.instructions,
+              SystemProgram.transfer({
+                fromPubkey: wallet.publicKey,
+                toPubkey: otpKeypair.publicKey,
+                lamports: 0.001 * LAMPORTS_PER_SOL,
+              }),
+            ]
+          : issueTransaction.instructions
         await executeTransaction(connection, wallet, transaction, {
           silent: false,
           callback: userTokenData.refetch,

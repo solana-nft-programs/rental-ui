@@ -128,6 +128,7 @@ const post: NextApiHandler<PostResponse> = async (req, res) => {
   transaction.recentBlockhash = (
     await connection.getRecentBlockhash('max')
   ).blockhash
+  transaction.sign(keypair)
   transaction = Transaction.from(
     transaction.serialize({
       verifySignatures: false,
@@ -139,7 +140,6 @@ const post: NextApiHandler<PostResponse> = async (req, res) => {
     verifySignatures: false,
     requireAllSignatures: false,
   })
-  transaction.sign(keypair)
   const base64 = serialized.toString('base64')
   res.status(200).send({
     transaction: base64,
