@@ -817,9 +817,9 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     rentalCard: {
       invalidators: ['expiration'],
       invalidationOptions: {
-        visibilities: ['public'],
+        visibilities: ['public', 'private'],
         durationOptions: ['minutes', 'hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
+        invalidationTypes: ['reissue', 'release'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
