@@ -105,9 +105,6 @@ function Scanner() {
                   className="absolute right-0 top-3 h-[10px] w-[10px] animate-ping rounded-full"
                   style={{ background: config.colors.secondary }}
                 ></div>
-                // <div className="absolute right-4 h-[20px] w-[20px] rounded-full">
-                //   <LoadingPulse loading />
-                // </div>
               )}
             </div>
             <div className="relative flex h-[350px] w-[350px] items-center justify-center rounded-2xl text-[170px] md:h-[500px] md:w-[500px]">
@@ -138,11 +135,6 @@ function Scanner() {
             <div className="py-3 text-gray-500">
               Ensure you hold a {config.name} NFT in your mobile wallet
             </div>
-            {/* <div className="text-gray-500">
-              {recentSignatures.data?.map((sig) => (
-                <div key={sig.signature}>{sig.signature}</div>
-              ))}
-            </div> */}
           </>
         )}
       </div>
