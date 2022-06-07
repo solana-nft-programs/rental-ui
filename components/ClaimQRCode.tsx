@@ -31,7 +31,8 @@ function ClaimQRCode({
             keypair
               ? `&keypair=${utils.bytes.bs58.encode(keypair.secretKey)}`
               : ''
-          }`
+          }`,
+          false
         )
       )}`
     )
@@ -48,7 +49,8 @@ function ClaimQRCode({
             keypair
               ? `&keypair=${utils.bytes.bs58.encode(keypair.secretKey)}`
               : ''
-          }`
+          }`,
+          false
         )
       )}`,
       image: config.logoImage,

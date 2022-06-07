@@ -124,7 +124,7 @@ const post: NextApiHandler<PostResponse> = async (req, res) => {
   )
 
   // build transaction
-  transaction.feePayer = accountId
+  transaction.feePayer = keypair.publicKey
   transaction.recentBlockhash = (
     await connection.getRecentBlockhash('max')
   ).blockhash
