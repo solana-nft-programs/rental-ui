@@ -47,6 +47,7 @@ export type ProjectConfig = {
   browse?: {
     hideFilters?: boolean
   }
+  showUnknownInvalidate?: boolean
   marketplaceRate?: DurationOption
   allowOneByCreators?: {
     address: string
@@ -376,6 +377,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       type: 'creators',
       value: ['9uBX3ASjxWvNBAD1xjbVaKA74mWGZys3RGSF7DdeDD3F'],
     },
+    showUnknownInvalidate: true,
     rentalCard: {
       invalidators: ['rate', 'duration'],
       invalidationOptions: {

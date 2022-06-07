@@ -115,7 +115,10 @@ export const useFilteredTokenManagers = () => {
           if (!tokenManagerId) return acc
           let filter = false
           data.invalidator_address.forEach(({ invalidator }) => {
-            if (!knownInvalidators[i]?.includes(invalidator)) {
+            if (
+              !config.showUnknownInvalidate &&
+              !knownInvalidators[i]?.includes(invalidator)
+            ) {
               filter = true
             }
           })
