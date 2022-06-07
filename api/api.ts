@@ -504,7 +504,7 @@ export async function getTokenDatas(
     const knownInvalidators = [
       timeInvalidatorId.toString(),
       useInvalidatorId.toString(),
-      // tm.parsed.issuer.toString(),
+      tm.parsed.issuer.toString(),
     ]
     let filter = false
     tm.parsed.invalidators.forEach((i) => {

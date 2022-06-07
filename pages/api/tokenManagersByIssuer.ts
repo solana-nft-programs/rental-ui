@@ -24,7 +24,7 @@ export default async function handler(
   if (!foundEnvironment)
     return res.status(400).json({ error: 'Invalid cluster' })
 
-  const connection = new Connection(foundEnvironment!.value)
+  const connection = new Connection(foundEnvironment!.primary)
   const tokenManagerDatas = await getTokenManagersForIssuer(
     connection,
     issuerId

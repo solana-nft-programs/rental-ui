@@ -727,14 +727,14 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     name: 'empiredao',
     displayName: 'Empire DAO',
     type: 'Collection',
-    websiteUrl: 'https://www.empiredao.xyz',
-    logoImage: '/logos/empiredao.png',
+    websiteUrl: 'https://market.solanamonkey.business/',
+    logoImage: '/logos/monkenftnyc.png',
+    colors: {
+      main: '#202225',
+      secondary: '#CCCDFF',
+    },
     hidden: true,
     indexDisabled: true,
-    colors: {
-      main: '#131E29',
-      secondary: '#48729C',
-    },
     filter: {
       type: 'issuer',
       value: [
@@ -795,6 +795,46 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       },
     },
     marketplaceRate: 'days',
+  },
+  monkenftnyc: {
+    name: 'monkenftnyc',
+    displayName: 'Monke NFT NYC',
+    type: 'Collection',
+    websiteUrl: 'https://www.empiredao.xyz',
+    logoImage: '/logos/monkenftnyc.png',
+    hidden: true,
+    indexDisabled: true,
+    colors: {
+      main: '#202225',
+      secondary: '#CCCDFF',
+    },
+    filter: {
+      type: 'issuer',
+      value: ['mdaoH4C9SBQu2CQqudPbbct4uyo6PRrid1NNZsbSxef'],
+    },
+    rentalCard: {
+      invalidators: ['expiration'],
+      invalidationOptions: {
+        visibilities: ['public'],
+        durationOptions: ['minutes', 'hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '3 weeks',
+          value: 7258000,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+    airdrops: [
+      {
+        name: 'MonkeDAO NFT NYC Ticket',
+        symbol: 'SMBNFT',
+        uri: '/metadata/monkenftnyc.json',
+      },
+    ],
   },
   ['all-starz']: {
     name: 'all-starz',

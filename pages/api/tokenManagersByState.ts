@@ -29,7 +29,7 @@ export default async function handler(
   } catch (e) {
     console.log('Invalid state')
   }
-  const connection = new Connection(foundEnvironment!.value)
+  const connection = new Connection(foundEnvironment!.primary)
   const tokenManagerDatas = await getTokenManagersByState(
     connection,
     state ?? null
