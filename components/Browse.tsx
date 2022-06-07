@@ -36,9 +36,9 @@ import {
 } from 'providers/ProjectConfigProvider'
 import { useUTCNow } from 'providers/UTCNowProvider'
 import React, { useState } from 'react'
-import { AiFillStar } from 'react-icons/ai'
+import { AiFillStar, AiOutlineShoppingCart } from 'react-icons/ai'
 import { FaLink, FaListUl } from 'react-icons/fa'
-import { MdAccessTimeFilled } from 'react-icons/md'
+import { MdAccessTimeFilled, MdSell } from 'react-icons/md'
 import { AsyncButton } from 'rental-components/common/Button'
 import { DURATION_DATA } from 'rental-components/components/RentalCard'
 import { useRentalRateModal } from 'rental-components/RentalRateModalProvider'
@@ -155,17 +155,6 @@ export const getDurationText = (tokenData: TokenData, UTCNow: number) => {
             )}
           </b>
         </p>
-      ) : tokenData.timeInvalidator?.parsed.maxExpiration ? (
-        <p className="float-left inline-block text-ellipsis whitespace-nowrap">
-          Fixed Duration:{' '}
-          <b>
-            {secondsToString(
-              tokenData.timeInvalidator?.parsed.maxExpiration?.toNumber() -
-                UTCNow,
-              false
-            )}
-          </b>
-        </p>
       ) : null}
     </div>
   ) : null
@@ -277,7 +266,7 @@ const StyledSelectMultiple = styled.div<{
 `
 
 export const Browse = () => {
-  const { connection, secondaryConnection, environment } = useEnvironmentCtx()
+  const { connection, environment } = useEnvironmentCtx()
   const wallet = useWallet()
   const { config } = useProjectConfig()
   const tokenManagers = useFilteredTokenManagers()
@@ -427,17 +416,6 @@ export const Browse = () => {
       default:
         return []
     }
-
-    // sortedTokens = [
-    //   ...sortedTokens.filter(
-    //     (token) =>
-    //       token.timeInvalidator?.parsed.durationSeconds?.toNumber() === 0
-    //   ),
-    //   ...sortedTokens.filter(
-    //     (token) =>
-    //       token.timeInvalidator?.parsed.durationSeconds?.toNumber() !== 0
-    //   ),
-    // ]
     return sortedTokens
   }
 
@@ -1005,6 +983,8 @@ export const Browse = () => {
                               time: <MdAccessTimeFilled />,
                               featured: <AiFillStar />,
                               listed: <FaListUl />,
+                              rented: <AiOutlineShoppingCart />,
+                              available: <MdSell />,
                             }[tokenGroup.icon]}
                           {tokenGroup.header}
                         </div>
@@ -1074,7 +1054,7 @@ export const Browse = () => {
                                               )}
                                             </div>
                                             <DisplayAddress
-                                              connection={secondaryConnection}
+                                              connection={connection}
                                               address={
                                                 tokenData.tokenManager?.parsed
                                                   .issuer || undefined
@@ -1163,7 +1143,7 @@ export const Browse = () => {
                                                   color: '#52c41a !important',
                                                   display: 'inline',
                                                 }}
-                                                connection={secondaryConnection}
+                                                connection={connection}
                                                 address={
                                                   new PublicKey(
                                                     tokenData.recipientTokenAccount?.owner
@@ -1183,7 +1163,7 @@ export const Browse = () => {
                                                   color: '#52c41a !important',
                                                   display: 'inline',
                                                 }}
-                                                connection={secondaryConnection}
+                                                connection={connection}
                                                 address={
                                                   tokenData.tokenManager?.parsed
                                                     .issuer

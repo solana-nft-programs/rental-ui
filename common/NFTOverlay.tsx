@@ -26,7 +26,6 @@ const StyledOverlay = styled.div<{
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  box-shadow: 0 0 15px 15px rgba(255, 255, 255, 0.2);
   font-size: ${({ lineHeight }) => lineHeight}px;
 
   background: ${({ shadow }) =>
@@ -89,37 +88,6 @@ export const stateColor = (state: TokenManagerState, light = false): string => {
   }
 }
 
-function getBoxShadow(
-  state: TokenManagerState,
-  expiration: number | undefined,
-  usages: number | undefined,
-  totalUsages: number | undefined,
-  lineHeight: number
-) {
-  return '0 0 0 0'
-  // if (
-  //   state === TokenManagerState.Invalidated ||
-  //   (totalUsages && usages && usages >= totalUsages) ||
-  //   (expiration && expiration <= Math.floor(Date.now() / 1000))
-  // ) {
-  //   return `0 0 ${0.4 * lineHeight}px ${0.4 * lineHeight}px ${stateColor(
-  //     TokenManagerState.Invalidated
-  //   )}`
-  // } else if (state === TokenManagerState.Issued) {
-  //   return `0 0 ${0.4 * lineHeight}px ${0.4 * lineHeight}px ${stateColor(
-  //     TokenManagerState.Issued
-  //   )}`
-  // } else if (state === TokenManagerState.Claimed) {
-  //   return `0 0 ${0.4 * lineHeight}px ${0.4 * lineHeight}px ${stateColor(
-  //     TokenManagerState.Claimed
-  //   )}`
-  // } else {
-  //   return `0 0 ${0.4 * lineHeight}px ${0.4 * lineHeight}px ${stateColor(
-  //     state
-  //   )}`
-  // }
-}
-
 export function TokenDataOverlay({
   tokenData,
   lineHeight,
@@ -175,7 +143,6 @@ interface NFTOverlayProps {
 }
 
 export function NFTOverlay({
-  shadow = true,
   state = 0,
   paymentAmount,
   paymentMint,
@@ -194,25 +161,7 @@ export function NFTOverlay({
   const { UTCNow } = useUTCNow()
   const paymentMintInfos = usePaymentMints()
   return (
-    <StyledOverlay
-      shadow={shadow}
-      lineHeight={lineHeight}
-      style={{
-        boxShadow: getBoxShadow(
-          state,
-          expiration ||
-            (durationSeconds &&
-            stateChangedAt &&
-            state === TokenManagerState.Claimed
-              ? durationSeconds + stateChangedAt
-              : undefined),
-          usages,
-          totalUsages,
-          lineHeight
-        ),
-      }}
-      borderRadius={borderRadius ?? 0}
-    >
+    <StyledOverlay lineHeight={lineHeight} borderRadius={borderRadius ?? 0}>
       <div className="top-right">
         {revocable && (
           <div className="badge">

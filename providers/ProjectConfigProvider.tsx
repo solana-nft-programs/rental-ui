@@ -73,7 +73,7 @@ export const filterTokens = (
   cluster: string,
   tokens: TokenData[],
   filter?: {
-    type: 'creators' | 'symbol' | 'issuer' | 'state'
+    type: 'creators' | 'symbol' | 'issuer' | 'state' | 'claimer' | 'owner'
     value: string[]
   },
   issuer?: PublicKey | null
@@ -105,6 +105,21 @@ export const filterTokens = (
         filter.type === 'state' &&
         token.tokenManager?.parsed &&
         filter.value.includes(token.tokenManager?.parsed.state.toString())
+      ) {
+        filtered = true
+      } else if (
+        filter.type === 'claimer' &&
+        token.recipientTokenAccount &&
+        filter.value.includes(token.recipientTokenAccount.owner.toString())
+      ) {
+        filtered = true
+      } else if (
+        filter.type === 'owner' &&
+        token.tokenAccount &&
+        filter.value.includes(
+          token.tokenAccount?.account.data.parsed.info.owner.toString()
+        ) &&
+        !token.tokenManager
       ) {
         filtered = true
       }

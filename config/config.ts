@@ -6,22 +6,24 @@ import type {
   RentalCardConfig,
 } from 'rental-components/components/RentalCard'
 
+import type { UserTokenData } from '../hooks/useUserTokenData'
+
 export type Colors = {
   main: string
   secondary: string
 }
 
 export type TokenFilter = {
-  type: 'creators' | 'symbol' | 'issuer' | 'state'
+  type: 'creators' | 'symbol' | 'issuer' | 'state' | 'claimer' | 'owner'
   value: string[]
 }
 
 export type TokenSection = {
   header?: string
   description?: string
-  icon?: 'time' | 'featured' | 'listed'
+  icon?: 'time' | 'featured' | 'listed' | 'rented' | 'available'
   filter?: TokenFilter
-  tokens?: TokenData[]
+  tokens?: TokenData[] | UserTokenData[]
 }
 
 export type ProjectConfig = {
