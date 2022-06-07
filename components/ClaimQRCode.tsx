@@ -25,7 +25,7 @@ function ClaimQRCode({
       'Generating QR code for request: ',
       `solana:${encodeURIComponent(
         getLink(
-          `/api/claim${tokenData?.tokenManager?.pubkey.toString()}${
+          `/api/claim/${tokenData?.tokenManager?.pubkey.toString()}${
             keypair ? `?otp=${utils.bytes.bs58.encode(keypair.secretKey)}` : ''
           }`
         )
