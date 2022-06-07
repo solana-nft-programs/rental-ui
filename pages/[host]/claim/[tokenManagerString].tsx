@@ -7,8 +7,6 @@ import type * as splToken from '@solana/spl-token'
 import { useWallet } from '@solana/wallet-adapter-react'
 import type { Keypair } from '@solana/web3.js'
 import { PublicKey, Transaction } from '@solana/web3.js'
-import type { TokenData } from 'api/api'
-import { getTokenData } from 'api/api'
 import { handleError } from 'api/errors'
 import { getATokenAccountInfo, tryPublicKey } from 'api/utils'
 import { withWrapSol } from 'api/wrappedSol'
@@ -28,6 +26,7 @@ import {
 } from 'components/Browse'
 import ClaimQRCode from 'components/ClaimQRCode'
 import { usePaymentMints, WRAPPED_SOL_MINT } from 'hooks/usePaymentMints'
+import { useTokenData } from 'hooks/useTokenData'
 import { useRouter } from 'next/router'
 import { lighten, transparentize } from 'polished'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
@@ -92,13 +91,6 @@ function Claim() {
   const [claimed, setClaimed] = useState(false)
   const { UTCNow } = useUTCNow()
 
-  const [tokenData, setTokenData] = useState<TokenData | null>(null)
-  const [tokenDataError, setTokenDataError] = useState<string | null>(null)
-  const [tokenDataStatus, setTokenDataStatus] = useState<{
-    status: VerificationStatus
-    data?: TokenData
-  } | null>(null)
-
   const [userPaymentTokenAccount, setUserPaymentTokenAccount] =
     useState<splToken.AccountInfo | null>(null)
   const [paymentTokenAccountError, setPaymentTokenAccountError] = useState<
@@ -107,48 +99,52 @@ function Claim() {
 
   const { tokenManagerString, qrcode } = router.query
   const tokenManagerId = tryPublicKey(tokenManagerString)
+  const tokenData = useTokenData(tokenManagerId ?? undefined, 5000)
 
-  async function getMetadata() {
-    try {
-      setTokenDataError(null)
-      setTokenData(null)
-      const data = await getTokenData(connection, tokenManagerId!)
-      if (
-        !data.metadata &&
-        !data.metaplexData &&
-        !data.tokenAccount &&
-        !data.tokenManager
-      ) {
-        throw new Error('No token found')
-      }
-      setTokenData(data)
-      if (data?.metadata?.data?.image) {
-        setLoadingImage(true)
-      }
-      if (data?.tokenManager?.parsed?.state === TokenManagerState.Claimed) {
-        setTokenDataStatus({ status: VerificationStatus.WARNING, data })
-      } else {
-        setTokenDataStatus({ status: VerificationStatus.SUCCESS, data })
-      }
-    } catch (e: any) {
-      setTokenDataError(e.toString())
-      setTokenDataStatus({ status: VerificationStatus.ERROR })
-    }
-  }
+  // async function getMetadata() {
+  //   try {
+  //     setTokenDataError(null)
+  //     setTokenData(null)
+  //     const data = await getTokenData(connection, tokenManagerId!)
+  //     if (
+  //       !data.metadata &&
+  //       !data.metaplexData &&
+  //       !data.tokenAccount &&
+  //       !data.tokenManager
+  //     ) {
+  //       throw new Error('No token found')
+  //     }
+  //     setTokenData(data)
+  //     if (data?.metadata?.data?.image) {
+  //       setLoadingImage(true)
+  //     }
+  //     if (data?.tokenManager?.parsed?.state === TokenManagerState.Claimed) {
+  //       setTokenDataStatus({ status: VerificationStatus.WARNING, data })
+  //     } else {
+  //       setTokenDataStatus({ status: VerificationStatus.SUCCESS, data })
+  //     }
+  //   } catch (e: any) {
+  //     setTokenDataError(e.toString())
+  //     setTokenDataStatus({ status: VerificationStatus.ERROR })
+  //   }
+  // }
 
   async function getUserPaymentTokenAccount() {
-    if (wallet.publicKey && tokenData?.claimApprover?.parsed.paymentMint) {
+    if (
+      wallet.publicKey &&
+      tokenData?.data?.claimApprover?.parsed.paymentMint
+    ) {
       try {
         const userPaymentTokenAccountData = await getATokenAccountInfo(
           connection,
-          tokenData?.claimApprover?.parsed.paymentMint,
+          tokenData?.data?.claimApprover?.parsed.paymentMint,
           wallet.publicKey
         )
         setUserPaymentTokenAccount(userPaymentTokenAccountData)
       } catch (e) {
         console.log(e)
         if (
-          tokenData?.claimApprover?.parsed.paymentMint.toString() !==
+          tokenData?.data?.claimApprover?.parsed.paymentMint.toString() !==
           WRAPPED_SOL_MINT
         ) {
           setPaymentTokenAccountError(true)
@@ -169,12 +165,13 @@ function Claim() {
     }
   }, [router.asPath])
 
-  useEffect(() => {
-    if (tokenManagerId) {
-      getMetadata()
-    }
-  }, [connection, tokenManagerString])
+  // useEffect(() => {
+  //   if (tokenManagerId) {
+  //     getMetadata()
+  //   }
+  // }, [connection, tokenManagerString])
 
+  console.log(tokenData)
   useEffect(() => {
     getUserPaymentTokenAccount()
   }, [connection, wallet.publicKey, tokenData])
@@ -182,19 +179,18 @@ function Claim() {
   const handleClaim = async () => {
     try {
       setError(null)
-      setTokenDataStatus(null)
-
       // wrap sol if there is payment required
       const transaction = new Transaction()
       if (
-        tokenData?.claimApprover?.parsed.paymentAmount &&
-        tokenData?.claimApprover.parsed.paymentMint.toString() ===
+        tokenData?.data?.claimApprover?.parsed.paymentAmount &&
+        tokenData?.data?.claimApprover.parsed.paymentMint.toString() ===
           WRAPPED_SOL_MINT.toString() &&
-        tokenData?.claimApprover.parsed.paymentAmount.gt(new BN(0))
+        tokenData?.data?.claimApprover.parsed.paymentAmount.gt(new BN(0))
       ) {
-        const amountToWrap = tokenData?.claimApprover.parsed.paymentAmount.sub(
-          userPaymentTokenAccount?.amount || new BN(0)
-        )
+        const amountToWrap =
+          tokenData?.data?.claimApprover.parsed.paymentAmount.sub(
+            userPaymentTokenAccount?.amount || new BN(0)
+          )
         if (amountToWrap.gt(new BN(0))) {
           await withWrapSol(
             transaction,
@@ -206,7 +202,7 @@ function Claim() {
       }
       await withClaimToken(
         transaction,
-        secondaryConnection && tokenData?.tokenManager?.parsed.receiptMint
+        secondaryConnection && tokenData?.data?.tokenManager?.parsed.receiptMint
           ? secondaryConnection
           : connection,
         asWallet(wallet),
@@ -222,10 +218,9 @@ function Claim() {
       })
       setClaimed(true)
     } catch (e: any) {
-      setTokenDataStatus({ status: VerificationStatus.ERROR })
       setError(<div>{handleError(e)}</div>)
     } finally {
-      getMetadata()
+      tokenData.refetch()
     }
   }
 
@@ -240,7 +235,14 @@ function Claim() {
       >
         <VerificationStep
           visible={true}
-          status={tokenDataStatus?.status}
+          status={
+            tokenData.isFetched && !tokenData.data
+              ? VerificationStatus.ERROR
+              : tokenData.data?.tokenManager?.parsed.state ===
+                TokenManagerState.Claimed
+              ? VerificationStatus.WARNING
+              : VerificationStatus.SUCCESS
+          }
           colors={config.colors}
           className="relative mx-auto flex w-11/12 max-w-[500px] flex-col items-center rounded-xl text-white"
         >
@@ -254,35 +256,44 @@ function Claim() {
             <div className="font-extralight">
               <a
                 href={pubKeyUrl(
-                  tokenData?.tokenManager?.parsed.mint,
+                  tokenData?.data?.tokenManager?.parsed.mint,
                   environment.label
                 )}
                 target="_blank"
                 rel="noreferrer"
               >
                 {tokenManagerId &&
-                  tokenData?.tokenManager?.parsed.mint &&
-                  tokenData?.tokenManager?.parsed.mint.toString()}
+                  tokenData?.data?.tokenManager?.parsed.mint &&
+                  tokenData?.data?.tokenManager?.parsed.mint.toString()}
               </a>
             </div>
           </div>
+          {tokenData.isFetched && tokenData.isRefetching && (
+            <div
+              className="absolute right-5 top-5 h-[10px] w-[10px] animate-ping rounded-full"
+              style={{ background: config.colors.secondary }}
+            />
+          )}
           <div className="absolute top-[55%] left-1/2 flex h-[400px] w-[400px] -translate-x-1/2 -translate-y-1/2 items-center justify-center">
-            {tokenDataStatus === null || !tokenData ? (
+            {!tokenData.isFetched || !tokenData.data ? (
               <LoadingPulse loading />
-            ) : tokenData && showQRCode ? (
+            ) : tokenData &&
+              showQRCode &&
+              tokenData.data.tokenManager?.parsed.state !==
+                TokenManagerState.Claimed ? (
               <ClaimQRCode
-                tokenData={tokenData}
+                tokenData={tokenData.data}
                 keypair={otp}
                 setShowQRCode={setShowQRCode}
               />
-            ) : tokenData ? (
+            ) : tokenData.data ? (
               <div
-                key={tokenData.tokenManager?.pubkey.toString()}
+                key={tokenData.data?.tokenManager?.pubkey.toString()}
                 className="flex flex-col items-center"
               >
                 <NFT
-                  key={tokenData?.tokenManager?.pubkey.toBase58()}
-                  tokenData={tokenData}
+                  key={tokenData?.data?.tokenManager?.pubkey.toBase58()}
+                  tokenData={tokenData.data}
                 />
                 {
                   {
@@ -299,13 +310,13 @@ function Claim() {
                           onClick={() =>
                             handleCopy(
                               getLink(
-                                `/claim/${tokenData.tokenManager?.pubkey.toBase58()}`
+                                `/claim/${tokenData.data?.tokenManager?.pubkey.toBase58()}`
                               )
                             )
                           }
                         >
                           <p className="flex w-fit overflow-hidden text-ellipsis whitespace-nowrap text-left">
-                            {tokenData.metadata?.data?.name}
+                            {tokenData.data?.metadata?.data?.name}
                           </p>
                           <div className="ml-[6px] mt-[2px] flex w-fit">
                             <FaLink />
@@ -313,16 +324,18 @@ function Claim() {
                         </div>
 
                         <div className="flex w-full flex-row justify-between text-xs">
-                          {tokenData.timeInvalidator?.parsed ||
-                          tokenData.useInvalidator?.parsed ? (
+                          {tokenData.data?.timeInvalidator?.parsed ||
+                          tokenData.data?.useInvalidator?.parsed ? (
                             <Tag state={TokenManagerState.Issued}>
                               <div className="flex flex-col">
-                                <div>{getDurationText(tokenData, UTCNow)}</div>
+                                <div>
+                                  {getDurationText(tokenData.data, UTCNow)}
+                                </div>
                                 <DisplayAddress
                                   connection={secondaryConnection}
                                   address={
-                                    tokenData.tokenManager?.parsed.issuer ||
-                                    undefined
+                                    tokenData.data?.tokenManager?.parsed
+                                      .issuer || undefined
                                   }
                                   height="18px"
                                   width="100px"
@@ -359,14 +372,14 @@ function Claim() {
                               handleClick={async () => {
                                 if (wallet.publicKey) {
                                   if (
-                                    tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber() ===
+                                    tokenData.data?.timeInvalidator?.parsed.durationSeconds?.toNumber() ===
                                     0
                                   ) {
                                     rentalRateModal.show(
                                       asWallet(wallet),
                                       connection,
                                       environment.label,
-                                      tokenData
+                                      tokenData.data
                                     )
                                   } else {
                                     await handleClaim()
@@ -374,23 +387,23 @@ function Claim() {
                                 }
                               }}
                             >
-                              {tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber() ===
+                              {tokenData.data?.timeInvalidator?.parsed.durationSeconds?.toNumber() ===
                                 0 && paymentMintInfos.data ? (
                                 <>
                                   {
                                     getTokenRentalRate(
                                       config,
                                       paymentMintInfos.data,
-                                      tokenData
+                                      tokenData.data
                                     )?.displayText
                                   }{' '}
                                 </>
                               ) : (
                                 <>
                                   Claim{' '}
-                                  {(tokenData.claimApprover?.parsed?.paymentAmount.toNumber() ??
+                                  {(tokenData.data?.claimApprover?.parsed?.paymentAmount.toNumber() ??
                                     0) / 1000000000}{' '}
-                                  {getSymbolFromTokenData(tokenData)}{' '}
+                                  {getSymbolFromTokenData(tokenData.data)}{' '}
                                 </>
                               )}
                             </AsyncButton>
@@ -410,13 +423,13 @@ function Claim() {
                           onClick={() =>
                             handleCopy(
                               getLink(
-                                `/claim/${tokenData.tokenManager?.pubkey.toBase58()}`
+                                `/claim/${tokenData.data?.tokenManager?.pubkey.toBase58()}`
                               )
                             )
                           }
                         >
                           <p className="flex w-fit overflow-hidden text-ellipsis whitespace-nowrap text-left">
-                            {tokenData.metadata?.data?.name}
+                            {tokenData.data?.metadata?.data?.name}
                           </p>
                           <div className="ml-[6px] mt-[2px] flex w-fit">
                             <span className="flex w-full text-left">
@@ -426,7 +439,7 @@ function Claim() {
                         </div>
 
                         <div className="flex flex-row justify-between text-xs">
-                          {tokenData.recipientTokenAccount?.owner && (
+                          {tokenData.data?.recipientTokenAccount?.owner && (
                             <Tag state={TokenManagerState.Claimed}>
                               <div className="flex flex-col">
                                 <div className="flex">
@@ -441,7 +454,7 @@ function Claim() {
                                     connection={secondaryConnection}
                                     address={
                                       new PublicKey(
-                                        tokenData.recipientTokenAccount?.owner
+                                        tokenData.data?.recipientTokenAccount?.owner
                                       )
                                     }
                                     height="18px"
@@ -460,7 +473,8 @@ function Claim() {
                                     }}
                                     connection={secondaryConnection}
                                     address={
-                                      tokenData.tokenManager?.parsed.issuer
+                                      tokenData.data?.tokenManager?.parsed
+                                        .issuer
                                     }
                                     height="18px"
                                     width="100px"
@@ -478,7 +492,10 @@ function Claim() {
                         Invalidated
                       </Tag>
                     ),
-                  }[tokenData?.tokenManager?.parsed.state as TokenManagerState]
+                  }[
+                    tokenData?.data?.tokenManager?.parsed
+                      .state as TokenManagerState
+                  ]
                 }
               </div>
             ) : (
@@ -486,13 +503,13 @@ function Claim() {
                 <FaQuestionCircle
                   style={{ fontSize: '170px', margin: '0px auto' }}
                 />
-                {tokenDataError && (
+                {tokenData.error && (
                   <div
                     className="mt-8 text-center font-extralight"
                     style={{
                       fontFamily: 'Oswald, sans-serif',
                     }}
-                  >{`${tokenDataError}`}</div>
+                  >{`${handleError(tokenData.error)}`}</div>
                 )}
               </>
             )}
