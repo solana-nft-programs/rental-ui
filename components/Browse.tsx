@@ -155,6 +155,17 @@ export const getDurationText = (tokenData: TokenData, UTCNow: number) => {
             )}
           </b>
         </p>
+      ) : tokenData.timeInvalidator?.parsed.maxExpiration ? (
+        <p className="float-left inline-block text-ellipsis whitespace-nowrap">
+          Fixed Duration:{' '}
+          <b>
+            {secondsToString(
+              tokenData.timeInvalidator?.parsed.maxExpiration?.toNumber() -
+                UTCNow,
+              false
+            )}
+          </b>
+        </p>
       ) : null}
     </div>
   ) : null
@@ -266,7 +277,7 @@ const StyledSelectMultiple = styled.div<{
 `
 
 export const Browse = () => {
-  const { connection, environment } = useEnvironmentCtx()
+  const { connection, secondaryConnection, environment } = useEnvironmentCtx()
   const wallet = useWallet()
   const { config } = useProjectConfig()
   const tokenManagers = useFilteredTokenManagers()
@@ -1054,7 +1065,7 @@ export const Browse = () => {
                                               )}
                                             </div>
                                             <DisplayAddress
-                                              connection={connection}
+                                              connection={secondaryConnection}
                                               address={
                                                 tokenData.tokenManager?.parsed
                                                   .issuer || undefined
@@ -1143,7 +1154,7 @@ export const Browse = () => {
                                                   color: '#52c41a !important',
                                                   display: 'inline',
                                                 }}
-                                                connection={connection}
+                                                connection={secondaryConnection}
                                                 address={
                                                   new PublicKey(
                                                     tokenData.recipientTokenAccount?.owner
@@ -1163,7 +1174,7 @@ export const Browse = () => {
                                                   color: '#52c41a !important',
                                                   display: 'inline',
                                                 }}
-                                                connection={connection}
+                                                connection={secondaryConnection}
                                                 address={
                                                   tokenData.tokenManager?.parsed
                                                     .issuer
