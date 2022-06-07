@@ -139,6 +139,7 @@ const post: NextApiHandler<PostResponse> = async (req, res) => {
     verifySignatures: false,
     requireAllSignatures: false,
   })
+  transaction.sign(keypair)
   const base64 = serialized.toString('base64')
   res.status(200).send({
     transaction: base64,
