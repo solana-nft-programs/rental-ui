@@ -1,17 +1,15 @@
 import { DisplayAddress } from '@cardinal/namespaces-components'
-import { invalidate, unissueToken } from '@cardinal/token-manager'
+import { invalidate } from '@cardinal/token-manager'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { BN } from '@project-serum/anchor'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { PublicKey } from '@solana/web3.js'
 import { Header } from 'common/Header'
 import { NFT, NFTPlaceholder, TokensOuter } from 'common/NFT'
-import { notify } from 'common/Notification'
 import { Tag } from 'common/Tags'
 import { executeTransaction } from 'common/Transactions'
 import { asWallet } from 'common/Wallets'
 import { useManagedTokens } from 'hooks/useManagedTokens'
-import { useUserTokenData } from 'hooks/useUserTokenData'
 import { lighten } from 'polished'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
@@ -25,7 +23,6 @@ export const Manage = () => {
   const { config } = useProjectConfig()
   const { connection, secondaryConnection } = useEnvironmentCtx()
   const wallet = useWallet()
-  const userTokenData = useUserTokenData()
   const tokenManagerByIssuer = useManagedTokens()
   const { UTCNow } = useUTCNow()
 
@@ -119,41 +116,6 @@ export const Manage = () => {
                               Private
                             </div>
                           )}
-
-                          <AsyncButton
-                            bgColor={config.colors.secondary}
-                            variant="primary"
-                            disabled={!wallet.connected}
-                            className="my-auto inline-block flex-none text-xs"
-                            handleClick={async () => {
-                              try {
-                                if (tokenData?.tokenManager) {
-                                  await executeTransaction(
-                                    connection,
-                                    asWallet(wallet),
-                                    await unissueToken(
-                                      connection,
-                                      asWallet(wallet),
-                                      tokenData?.tokenManager?.parsed.mint
-                                    ),
-                                    {
-                                      callback: userTokenData.refetch,
-                                      notificationConfig: {},
-                                      silent: true,
-                                    }
-                                  )
-                                }
-                              } catch (e) {
-                                notify({
-                                  message: `Unissue failed: ${e}`,
-                                  type: 'error',
-                                })
-                                console.log(e)
-                              }
-                            }}
-                          >
-                            Unissue
-                          </AsyncButton>
                         </div>
                       </div>
                     ),

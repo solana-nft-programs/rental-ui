@@ -1,23 +1,36 @@
-import { unissueToken } from '@cardinal/token-manager'
-import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
+import {
+  unissueToken,
+  withResetExpiration,
+  withReturn,
+} from '@cardinal/token-manager'
+import {
+  InvalidationType,
+  TokenManagerState,
+} from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import styled from '@emotion/styled'
+import Tooltip from '@mui/material/Tooltip'
 import { useWallet } from '@solana/wallet-adapter-react'
+import { Transaction } from '@solana/web3.js'
 import type { TokenData } from 'api/api'
 import { pubKeyUrl } from 'common/utils'
 import type { ProjectConfig } from 'config/config'
+import { useUserTokenData } from 'hooks/useUserTokenData'
 import { lighten } from 'polished'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import React, { useState } from 'react'
+import { BsArrowReturnLeft } from 'react-icons/bs'
 import { FaEllipsisH } from 'react-icons/fa'
 import { FiExternalLink, FiSend } from 'react-icons/fi'
-import { IoClose, IoQrCodeOutline } from 'react-icons/io5'
+import { IoAddSharp, IoClose, IoQrCodeOutline } from 'react-icons/io5'
 import { getColorByBgColor } from 'rental-components/common/Button'
 import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 import { useQRCode } from 'rental-components/QRCodeProvider'
 import { useRentalModal } from 'rental-components/RentalModalProvider'
+import { useRentalRateModal } from 'rental-components/RentalRateModalProvider'
 
 import { NFTOverlay } from './NFTOverlay'
+import { notify } from './Notification'
 import { Popover, PopoverItem } from './Popover'
 import { executeTransaction } from './Transactions'
 import { asWallet } from './Wallets'
@@ -90,6 +103,8 @@ export function NFT({ tokenData, onClick }: NFTProps) {
   const { show } = useQRCode()
   const rentalModal = useRentalModal()
   const { config } = useProjectConfig()
+  const tokenDatas = useUserTokenData()
+  const rentalRateModal = useRentalRateModal()
 
   const {
     tokenAccount,
@@ -97,7 +112,54 @@ export function NFT({ tokenData, onClick }: NFTProps) {
     tokenManager,
     timeInvalidator,
     useInvalidator,
+    recipientTokenAccount,
   } = tokenData
+
+  const returnRental = async (tokenData: TokenData) => {
+    if (!tokenData.tokenManager) throw new Error('Invalid token manager')
+    if (!wallet.publicKey) throw new Error('Wallet not connected')
+
+    const transaction = new Transaction()
+
+    await withReturn(
+      transaction,
+      ctx.connection,
+      asWallet(wallet),
+      tokenData.tokenManager
+    )
+
+    if (tokenData.timeInvalidator) {
+      await withResetExpiration(
+        transaction,
+        ctx.connection,
+        asWallet(wallet),
+        tokenData.tokenManager?.pubkey
+      )
+    }
+
+    await executeTransaction(ctx.connection, asWallet(wallet), transaction, {
+      silent: false,
+      confirmOptions: {
+        commitment: 'confirmed',
+        maxRetries: 3,
+      },
+      notificationConfig: {},
+      callback: tokenDatas.refetch,
+    })
+  }
+
+  const confirmReturnConfig = (tokenData: TokenData) => {
+    if (config.allowOneByCreators && tokenData.tokenManager) {
+      const creatorConfig = config.allowOneByCreators.filter(
+        (creator) =>
+          creator.address === tokenData.tokenManager?.parsed.issuer.toString()
+      )
+      if (creatorConfig && creatorConfig[0]?.disableReturn) {
+        return false
+      }
+    }
+    return true
+  }
 
   return (
     <div
@@ -123,6 +185,7 @@ export function NFT({ tokenData, onClick }: NFTProps) {
                   gap: '10px',
                   color: 'white',
                 }}
+                className="justify-between"
                 href={pubKeyUrl(
                   tokenManager?.parsed.mint ??
                     tokenAccount?.account.data.parsed.info.mint,
@@ -209,23 +272,73 @@ export function NFT({ tokenData, onClick }: NFTProps) {
                   </div>
                 </PopoverItem>
               )}
+            {recipientTokenAccount?.owner.toString() ===
+              wallet.publicKey?.toString() &&
+              tokenManager &&
+              (tokenManager.parsed.invalidationType ===
+                InvalidationType.Reissue ||
+                tokenManager.parsed.invalidationType ===
+                  InvalidationType.Return) &&
+              confirmReturnConfig(tokenData) && (
+                <PopoverItem>
+                  <div
+                    className="flex cursor-pointer items-center justify-between gap-2"
+                    onClick={async () => {
+                      try {
+                        await returnRental(tokenData)
+                      } catch (e) {
+                        notify({
+                          message: `Return failed: ${e}`,
+                          type: 'error',
+                        })
+                      }
+                    }}
+                  >
+                    Return
+                    <BsArrowReturnLeft />
+                  </div>
+                </PopoverItem>
+              )}
+            {recipientTokenAccount?.owner.toString() ===
+              wallet.publicKey?.toString() &&
+              timeInvalidator?.parsed?.extensionDurationSeconds &&
+              tokenManager && (
+                <PopoverItem>
+                  <div
+                    className="flex cursor-pointer items-center justify-between gap-2"
+                    onClick={async () => {
+                      rentalRateModal.show(
+                        asWallet(wallet),
+                        ctx.connection,
+                        ctx.environment.label,
+                        tokenData,
+                        false
+                      )
+                    }}
+                  >
+                    Add Duration
+                    <IoAddSharp />
+                  </div>
+                </PopoverItem>
+              )}
           </div>
         }
       >
-        <div
-          // TODO fix this color
-          className={`absolute top-[8px] right-[8px] z-50 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full p-2 text-xl text-white hover:bg-[${lighten(
-            0.3,
-            config.colors.main
-          )}]`}
-          style={{
-            transition: '0.2s all',
-            background: lighten(0.07, config.colors.main),
-          }}
-          key={tokenAccount?.pubkey.toString()}
-        >
-          {loading ? <LoadingSpinner height="26px" /> : <FaEllipsisH />}
-        </div>
+        <Tooltip placement="bottom-start" title="Quick Actions">
+          <div
+            className={`absolute top-[8px] right-[8px] z-50 flex h-7 w-7 cursor-pointer items-center justify-center rounded-md text-white hover:bg-[${lighten(
+              0.3,
+              config.colors.main
+            )}]`}
+            style={{
+              transition: '0.2s all',
+              background: lighten(0.07, config.colors.main),
+            }}
+            key={tokenAccount?.pubkey.toString()}
+          >
+            {loading ? <LoadingSpinner height="26px" /> : <FaEllipsisH />}
+          </div>
+        </Tooltip>
       </Popover>
       <div
         className={`z-0 flex h-[280px] max-w-full cursor-pointer items-center justify-center`}

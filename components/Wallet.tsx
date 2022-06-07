@@ -1,70 +1,39 @@
-import { withResetExpiration, withReturn } from '@cardinal/token-manager'
-import { InvalidationType } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
+import { DisplayAddress } from '@cardinal/namespaces-components'
+import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { useWallet } from '@solana/wallet-adapter-react'
-import { Transaction } from '@solana/web3.js'
 import type { TokenData } from 'api/api'
 import { Airdrop } from 'common/Airdrop'
 import { Header } from 'common/Header'
 import { elligibleForRent, NFT, NFTPlaceholder, TokensOuter } from 'common/NFT'
 import { notify } from 'common/Notification'
-import { executeTransaction } from 'common/Transactions'
+import { Tag } from 'common/Tags'
 import { asWallet } from 'common/Wallets'
+import type { TokenSection } from 'config/config'
+import type { UserTokenData } from 'hooks/useUserTokenData'
 import { useUserTokenData } from 'hooks/useUserTokenData'
 import { lighten } from 'polished'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { filterTokens, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useState } from 'react'
-import { AsyncButton, Button } from 'rental-components/common/Button'
+import { AiFillStar, AiOutlineShoppingCart } from 'react-icons/ai'
+import { FaListUl } from 'react-icons/fa'
+import { MdAccessTimeFilled, MdOutlineSell } from 'react-icons/md'
+import { Button } from 'rental-components/common/Button'
 import { useRentalModal } from 'rental-components/RentalModalProvider'
-import { useRentalRateModal } from 'rental-components/RentalRateModalProvider'
 
 export const Wallet = () => {
-  const ctx = useEnvironmentCtx()
+  const { connection, secondaryConnection, environment } = useEnvironmentCtx()
   const wallet = useWallet()
   const { config } = useProjectConfig()
   const tokenDatas = useUserTokenData()
   const rentalModal = useRentalModal()
-  const rentalRateModal = useRentalRateModal()
   const [selectedTokens, setSelectedTokens] = useState<TokenData[]>([])
 
   const filteredTokenDatas = filterTokens(
-    ctx.environment.label,
+    environment.label,
     tokenDatas.data || [],
     config.filter
   )
-
-  const returnRental = async (tokenData: TokenData) => {
-    if (!tokenData.tokenManager) throw new Error('Invalid token manager')
-    if (!wallet.publicKey) throw new Error('Wallet not connected')
-
-    const transaction = new Transaction()
-
-    await withReturn(
-      transaction,
-      ctx.connection,
-      asWallet(wallet),
-      tokenData.tokenManager
-    )
-
-    if (tokenData.timeInvalidator) {
-      await withResetExpiration(
-        transaction,
-        ctx.connection,
-        asWallet(wallet),
-        tokenData.tokenManager?.pubkey
-      )
-    }
-
-    await executeTransaction(ctx.connection, asWallet(wallet), transaction, {
-      silent: false,
-      confirmOptions: {
-        commitment: 'confirmed',
-        maxRetries: 3,
-      },
-      notificationConfig: {},
-      callback: tokenDatas.refetch,
-    })
-  }
 
   const isSelected = (tokenData: TokenData) => {
     return selectedTokens.some(
@@ -93,19 +62,50 @@ export const Wallet = () => {
     }
   }
 
-  const confirmReturnConfig = (tokenData: TokenData) => {
-    if (config.allowOneByCreators && tokenData.tokenManager) {
-      const creatorConfig = config.allowOneByCreators.filter(
-        (creator) =>
-          creator.address === tokenData.tokenManager?.parsed.issuer.toString()
-      )
-      if (creatorConfig && creatorConfig[0]?.disableReturn) {
-        return false
-      }
-    }
-    return true
+  const groupTokens = (tokens: UserTokenData[]): TokenSection[] =>
+    tokens.reduce(
+      (acc, tk) => {
+        let isPlaced = false
+        return acc.map((section) => {
+          const filteredToken = !isPlaced
+            ? filterTokens(environment.label, [tk], section.filter)
+            : []
+          if (filteredToken.length === 0 && !isPlaced) {
+            isPlaced = true
+            return {
+              ...section,
+              tokens: [...(section.tokens ?? []), tk],
+            }
+          }
+          return section
+        })
+      },
+      [
+        {
+          header: 'Available For Rent',
+          icon: 'available',
+          filter: {
+            type: 'owner',
+            value: [wallet.publicKey?.toString() || ''],
+          },
+        } as TokenSection,
+        {
+          header: 'Rented Tokens',
+          icon: 'rented',
+          filter: {
+            type: 'claimer',
+            value: [wallet.publicKey?.toString() || ''],
+          },
+        } as TokenSection,
+      ]
+    )
+
+  const sortTokens = (tokens: UserTokenData[]): UserTokenData[] => {
+    return tokens
   }
 
+  const filteredAndSortedTokens: TokenData[] = sortTokens(filteredTokenDatas)
+  const groupedFilteredAndSortedTokens = groupTokens(filteredAndSortedTokens)
   return (
     <>
       <Header
@@ -124,7 +124,7 @@ export const Wallet = () => {
           { name: 'Browse', anchor: 'browse' },
         ]}
       />
-      <div className="mt-5 flex flex-col">
+      <div className="mt-10">
         {filteredTokenDatas && filteredTokenDatas.length > 0 && (
           <div className="container mx-auto mb-5 flex items-end justify-end">
             <Button
@@ -135,8 +135,8 @@ export const Wallet = () => {
               onClick={() =>
                 rentalModal.show(
                   asWallet(wallet),
-                  ctx.connection,
-                  ctx.environment.label,
+                  connection,
+                  environment.label,
                   selectedTokens,
                   config.rentalCard
                 )
@@ -148,105 +148,129 @@ export const Wallet = () => {
             </Button>
           </div>
         )}
-        <TokensOuter>
-          {!tokenDatas.isFetched ? (
-            <>
-              <NFTPlaceholder />
-              <NFTPlaceholder />
-              <NFTPlaceholder />
-              <NFTPlaceholder />
-              <NFTPlaceholder />
-              <NFTPlaceholder />
-            </>
-          ) : filteredTokenDatas && filteredTokenDatas.length > 0 ? (
-            filteredTokenDatas.map((tokenData) => (
-              <div
-                key={tokenData.tokenAccount?.pubkey.toString()}
-                className="relative"
-              >
-                <NFT
-                  key={tokenData?.tokenAccount?.pubkey.toBase58()}
-                  tokenData={tokenData}
-                  onClick={() => handleNFTSelect(tokenData)}
-                />
-                {elligibleForRent(config, tokenData) && (
-                  <input
-                    autoComplete="off"
-                    type={'checkbox'}
-                    className={`absolute top-3 left-3 h-5 w-5  rounded-sm font-medium text-black focus:outline-none`}
-                    id={tokenData?.tokenAccount?.pubkey.toBase58()}
-                    name={tokenData?.tokenAccount?.pubkey.toBase58()}
-                    checked={isSelected(tokenData)}
-                    onChange={(e) => {
-                      handleNFTSelect(tokenData)
-                    }}
-                  />
-                )}
-                <div
-                  style={{
-                    background: lighten(0.07, config.colors.main),
-                  }}
-                  className="flex w-[280px] flex-row justify-between rounded-bl-md rounded-br-md p-3"
-                >
-                  <p className="overflow-hidden text-ellipsis whitespace-nowrap pr-5 text-white">
-                    {tokenData.metadata.data.name}
-                  </p>
-                  <div className="my-auto flex-col justify-items-end">
-                    {tokenData.timeInvalidator?.parsed
-                      ?.extensionDurationSeconds &&
-                      tokenData.tokenManager && (
-                        <Button
-                          variant="primary"
-                          className=" float-right mb-3"
-                          onClick={() =>
-                            rentalRateModal.show(
-                              asWallet(wallet),
-                              ctx.connection,
-                              ctx.environment.label,
-                              tokenData,
-                              false
-                            )
-                          }
-                        >
-                          Add Duration
-                        </Button>
-                      )}
-                    {tokenData.tokenManager?.parsed &&
-                      (tokenData.tokenManager.parsed.invalidationType ===
-                        InvalidationType.Reissue ||
-                        tokenData.tokenManager.parsed.invalidationType ===
-                          InvalidationType.Return) &&
-                      confirmReturnConfig(tokenData) && (
-                        <AsyncButton
-                          variant="primary"
-                          className=" float-right my-auto"
-                          handleClick={async () => {
-                            try {
-                              await returnRental(tokenData)
-                            } catch (e) {
-                              notify({
-                                message: `Return failed: ${e}`,
-                                type: 'error',
-                              })
-                            }
-                          }}
-                        >
-                          Return
-                        </AsyncButton>
-                      )}
+        {!tokenDatas.isFetched ? (
+          <TokensOuter>
+            <NFTPlaceholder />
+            <NFTPlaceholder />
+            <NFTPlaceholder />
+            <NFTPlaceholder />
+            <NFTPlaceholder />
+            <NFTPlaceholder />
+          </TokensOuter>
+        ) : (
+          filteredTokenDatas &&
+          filteredTokenDatas.length > 0 &&
+          groupedFilteredAndSortedTokens.map(
+            (tokenGroup) =>
+              tokenGroup.tokens &&
+              tokenGroup.tokens.length > 0 && (
+                <>
+                  <div className="mx-5 mb-10">
+                    <div className="flex items-center gap-2 text-2xl text-white">
+                      {tokenGroup.icon &&
+                        {
+                          time: <MdAccessTimeFilled />,
+                          featured: <AiFillStar />,
+                          listed: <FaListUl />,
+                          rented: <AiOutlineShoppingCart />,
+                          available: <MdOutlineSell />,
+                        }[tokenGroup.icon]}
+                      {tokenGroup.header}
+                    </div>
+                    <div
+                      className="text-lg"
+                      style={{
+                        color: lighten(0.4, config.colors.main),
+                      }}
+                    >
+                      {tokenGroup.description}
+                    </div>
                   </div>
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="white mt-5 flex w-full flex-col items-center justify-center gap-1">
-              <div className="text-gray-500">
-                No {config.displayName} NFTs found in wallet...
-              </div>
-              {ctx.environment.label === 'devnet' && <Airdrop />}
+                  <TokensOuter>
+                    {tokenGroup.tokens.map((tokenData) => (
+                      <div
+                        key={tokenData.tokenAccount?.pubkey.toString()}
+                        className="relative"
+                      >
+                        <NFT
+                          key={tokenData?.tokenAccount?.pubkey.toBase58()}
+                          tokenData={tokenData}
+                          onClick={() => handleNFTSelect(tokenData)}
+                        />
+                        {elligibleForRent(config, tokenData) && (
+                          <input
+                            autoComplete="off"
+                            type={'checkbox'}
+                            className={`absolute top-3 left-3 h-5 w-5  rounded-sm font-medium text-black focus:outline-none`}
+                            id={tokenData?.tokenAccount?.pubkey.toBase58()}
+                            name={tokenData?.tokenAccount?.pubkey.toBase58()}
+                            checked={isSelected(tokenData)}
+                            onChange={(e) => {
+                              handleNFTSelect(tokenData)
+                            }}
+                          />
+                        )}
+                        <div
+                          style={{
+                            background: lighten(0.07, config.colors.main),
+                          }}
+                          className={`flex w-[280px] flex-col rounded-b-md p-3`}
+                        >
+                          <div className="mb-2 flex w-full cursor-pointer flex-row text-xs font-bold text-white">
+                            <p className="flex w-fit overflow-hidden text-ellipsis whitespace-nowrap text-left">
+                              {tokenData.metadata.data.name}
+                            </p>
+                          </div>
+                          <div className="flex flex-row justify-between text-xs">
+                            {tokenData.recipientTokenAccount?.owner ? (
+                              <Tag state={TokenManagerState.Claimed}>
+                                <div className="flex flex-col">
+                                  <div className="flex">
+                                    <span className="inline-block">
+                                      Issued by&nbsp;
+                                    </span>
+                                    <DisplayAddress
+                                      style={{
+                                        color: '#52c41a !important',
+                                        display: 'inline',
+                                      }}
+                                      connection={secondaryConnection}
+                                      address={
+                                        tokenData.tokenManager?.parsed.issuer
+                                      }
+                                      height="18px"
+                                      width="100px"
+                                      dark={true}
+                                    />
+                                  </div>
+                                </div>
+                              </Tag>
+                            ) : (
+                              <div className="flex flex-col text-white">
+                                <div className="flex">
+                                  <span className="inline-block">
+                                    Available for rental
+                                  </span>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </TokensOuter>
+                </>
+              )
+          )
+        )}
+        {filteredAndSortedTokens.length === 0 && (
+          <div className="white mt-5 flex w-full flex-col items-center justify-center gap-1">
+            <div className="text-gray-500">
+              No {config.displayName} NFTs found in wallet...
             </div>
-          )}
-        </TokensOuter>
+            {environment.label === 'devnet' && <Airdrop />}
+          </div>
+        )}
       </div>
     </>
   )

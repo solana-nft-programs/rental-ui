@@ -27,6 +27,7 @@
     "@google/model-viewer": "^1.10.1",
     "@headlessui/react": "^1.6.0",
     "@metaplex-foundation/mpl-token-metadata": "^1.2.0",
+    "@mui/material": "^5.8.2",
     "@project-serum/anchor": "^0.24.2",
     "@reach/dialog": "^0.16.2",
     "@react-spring/web": "^9.4.4",
