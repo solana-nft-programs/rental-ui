@@ -2,6 +2,7 @@ import { ApolloClient, gql, InMemoryCache } from '@apollo/client'
 import type { AccountData } from '@cardinal/common'
 import type { PaidClaimApproverData } from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
 import type { TimeInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
+import { findTimeInvalidatorAddress } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator/pda'
 import type { TokenManagerData } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import {
@@ -10,6 +11,7 @@ import {
   getTokenManagersForIssuer,
 } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/accounts'
 import type { UseInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
+import { findUseInvalidatorAddress } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator/pda'
 import type * as metaplex from '@metaplex-foundation/mpl-token-metadata'
 import type * as spl from '@solana/spl-token'
 import type { AccountInfo, ParsedAccountData, PublicKey } from '@solana/web3.js'
@@ -48,7 +50,6 @@ export const useFilteredTokenManagers = () => {
         !config.indexDisabled
       ) {
         /////
-        const step1 = Date.now()
         const indexer = new ApolloClient({
           uri: environment.index,
           cache: new InMemoryCache({ resultCaching: false }),
@@ -73,6 +74,9 @@ export const useFilteredTokenManagers = () => {
                 mint
                 state
                 state_changed_at
+                invalidator_address {
+                  invalidator
+                }
               }
             }
           `,
@@ -82,16 +86,41 @@ export const useFilteredTokenManagers = () => {
         })
 
         /////
-        const step2 = Date.now()
-        console.log('2', step2 - step1, tokenManagerResponse)
-
-        const tokenManagerIds: PublicKey[] = tokenManagerResponse.data[
-          'cardinal_token_managers'
-        ]
-          .map((data: { mint: string; address: string }) =>
-            tryPublicKey(data.address)
+        const knownInvalidators: string[][] = await Promise.all(
+          tokenManagerResponse.data['cardinal_token_managers'].map(
+            async (data: {
+              mint: string
+              address: string
+            }): Promise<string[]> => {
+              const tokenManagerId = tryPublicKey(data.address)
+              if (!tokenManagerId) return []
+              const [[timeInvalidatorId], [useInvalidatorId]] =
+                await Promise.all([
+                  findTimeInvalidatorAddress(tokenManagerId),
+                  findUseInvalidatorAddress(tokenManagerId),
+                ])
+              return [timeInvalidatorId.toString(), useInvalidatorId.toString()]
+            }
           )
-          .filter((id: PublicKey | null): id is PublicKey => id !== null)
+        )
+
+        const tokenManagerIds: PublicKey[] = (
+          tokenManagerResponse.data['cardinal_token_managers'] as {
+            mint: string
+            address: string
+            invalidator_address: { invalidator: string }[]
+          }[]
+        ).reduce((acc, data, i) => {
+          const tokenManagerId = tryPublicKey(data.address)
+          if (!tokenManagerId) return acc
+          let filter = false
+          data.invalidator_address.forEach(({ invalidator }) => {
+            if (!knownInvalidators[i]?.includes(invalidator)) {
+              filter = true
+            }
+          })
+          return filter ? acc : [...acc, tokenManagerId]
+        }, [] as PublicKey[])
 
         const tokenManagerDatas = await getTokenManagers(
           connection,
@@ -99,8 +128,6 @@ export const useFilteredTokenManagers = () => {
         )
 
         ////
-        const step3 = Date.now()
-        console.log('3', step3 - step2)
         const tokenDatas = await getTokenDatas(
           connection,
           tokenManagerDatas,
@@ -108,9 +135,6 @@ export const useFilteredTokenManagers = () => {
           environment.label
         )
 
-        ////
-        const step4 = Date.now()
-        console.log('4', step4 - step3)
         return tokenDatas
       } else if (environment.api) {
         const response = await fetch(
