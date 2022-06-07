@@ -15,9 +15,11 @@ export function getExpirationString(expiration: number, UTCSecondsNow: number) {
   minute = minute < 0 ? 0 : minute
   second = second < 0 ? 0 : second
 
-  return `${floorOrCeil(day)}d ${floorOrCeil(hour)}h ${floorOrCeil(
-    minute
-  )}m ${floorOrCeil(second)}s`
+  return `${floorOrCeil(day) ? `${floorOrCeil(day)}d` : ''} ${
+    floorOrCeil(hour) ? `${floorOrCeil(hour)}h` : ''
+  } ${floorOrCeil(minute) ? `${floorOrCeil(minute)}m` : ''} ${
+    floorOrCeil(second) ? `${floorOrCeil(second)}s` : ''
+  }`
 }
 
 export function shortPubKey(

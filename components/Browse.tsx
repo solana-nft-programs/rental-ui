@@ -17,7 +17,7 @@ import { notify } from 'common/Notification'
 import { Tag } from 'common/Tags'
 import { executeTransaction } from 'common/Transactions'
 import { fmtMintAmount, getMintDecimalAmount } from 'common/units'
-import { secondsToString } from 'common/utils'
+import { getExpirationString, secondsToString } from 'common/utils'
 import { asWallet } from 'common/Wallets'
 import type { ProjectConfig, TokenSection } from 'config/config'
 import { useFilteredTokenManagers } from 'hooks/useFilteredTokenManagers'
@@ -147,22 +147,21 @@ export const getDurationText = (tokenData: TokenData, UTCNow: number) => {
         </p>
       ) : tokenData.timeInvalidator?.parsed.expiration ? (
         <p className="float-left inline-block text-ellipsis whitespace-nowrap">
-          Fixed Duration:{' '}
+          Expires:{' '}
           <b>
-            {secondsToString(
-              tokenData.timeInvalidator?.parsed.expiration?.toNumber() - UTCNow,
-              false
+            {getExpirationString(
+              tokenData.timeInvalidator?.parsed.expiration?.toNumber(),
+              UTCNow
             )}
           </b>
         </p>
       ) : tokenData.timeInvalidator?.parsed.maxExpiration ? (
         <p className="float-left inline-block text-ellipsis whitespace-nowrap">
-          Fixed Duration:{' '}
+          Expires:{' '}
           <b>
-            {secondsToString(
-              tokenData.timeInvalidator?.parsed.maxExpiration?.toNumber() -
-                UTCNow,
-              false
+            {getExpirationString(
+              tokenData.timeInvalidator?.parsed.maxExpiration?.toNumber(),
+              UTCNow
             )}
           </b>
         </p>
