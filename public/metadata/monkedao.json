@@ -1,0 +1,22 @@
+{
+  "name": "MonkeDao NFT NYC Ticket",
+  "description": "Holding this ticket gets you entry to MonkeDAO's NFT NYC event.",
+  "seller_fee_basis_points": 0,
+  "image": "https://monke.cardinal.so/metadata/monkedao.png",
+  "attributes": [
+      {
+          "trait_type": "tier",
+          "value": "Tier 1",
+          "display_type": "Tier"
+      }
+  ],
+  "properties": {
+      "category": "image",
+      "creators": [
+          {
+              "address": "mdaoH4C9SBQu2CQqudPbbct4uyo6PRrid1NNZsbSxef",
+              "share": 100
+          }
+      ]
+  }
+}
