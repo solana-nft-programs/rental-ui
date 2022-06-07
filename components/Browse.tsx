@@ -703,7 +703,7 @@ export const Browse = () => {
           notify({
             message: 'Error renting this NFT',
             description:
-              'You need to connect your twitter account to rent an NFT from this issuer',
+              'You need to connect your twitter account to rent an NFT from this issuer. Click your profile on the top right corner to connect.',
             type: 'error',
           })
           return
