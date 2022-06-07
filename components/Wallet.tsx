@@ -124,7 +124,7 @@ export const Wallet = () => {
           { name: 'Browse', anchor: 'browse' },
         ]}
       />
-      <div className="mt-10">
+      <div className="mt-10 px-20">
         {filteredTokenDatas && filteredTokenDatas.length > 0 && (
           <div className="container mx-auto mb-5 flex items-end justify-end">
             <Button

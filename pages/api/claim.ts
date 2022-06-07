@@ -44,7 +44,7 @@ const emptyWallet = (accountId: PublicKey) => ({
 
 const post: NextApiHandler<PostResponse> = async (req, res) => {
   const {
-    tokenManagerString,
+    id: tokenManagerParam,
     cluster: clusterParam,
     collection: collectionParam,
     keypair: keypairParam,
@@ -68,7 +68,7 @@ const post: NextApiHandler<PostResponse> = async (req, res) => {
   const connection = new Connection(foundEnvironment!.primary)
 
   // get token data
-  const tokenManagerId = tryPublicKey(tokenManagerString)
+  const tokenManagerId = tryPublicKey(tokenManagerParam)
   const tokenData = await getTokenData(connection, tokenManagerId!)
   if (
     !tokenData.metadata &&

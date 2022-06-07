@@ -25,8 +25,12 @@ function ClaimQRCode({
       'Generating QR code for request: ',
       `solana:${encodeURIComponent(
         getLink(
-          `/api/claim/${tokenData?.tokenManager?.pubkey.toString()}${
-            keypair ? `?otp=${utils.bytes.bs58.encode(keypair.secretKey)}` : ''
+          `/api/claim?id=${tokenData?.tokenManager?.pubkey.toString()}&collection=${
+            config.name
+          }${
+            keypair
+              ? `&keypair=${utils.bytes.bs58.encode(keypair.secretKey)}`
+              : ''
           }`
         )
       )}`
@@ -38,8 +42,12 @@ function ClaimQRCode({
       type: 'svg',
       data: `solana:${encodeURIComponent(
         getLink(
-          `/api/claim${tokenData?.tokenManager?.pubkey.toString()}${
-            keypair ? `?otp=${utils.bytes.bs58.encode(keypair.secretKey)}` : ''
+          `/api/claim?id=${tokenData?.tokenManager?.pubkey.toString()}&collection=${
+            config.name
+          }${
+            keypair
+              ? `&keypair=${utils.bytes.bs58.encode(keypair.secretKey)}`
+              : ''
           }`
         )
       )}`,
