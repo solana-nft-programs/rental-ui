@@ -130,8 +130,7 @@ export const getDurationText = (tokenData: TokenData, UTCNow: number) => {
         <p
           className={`float-left inline-block text-ellipsis whitespace-nowrap`}
         >
-          Max Duration:{' '}
-          <b>{getTokenMaxDuration(tokenData, UTCNow).displayText}</b>
+          Max: <b>{getTokenMaxDuration(tokenData, UTCNow).displayText}</b>
         </p>
       ) : tokenData.timeInvalidator?.parsed.durationSeconds ? (
         <p className="float-left inline-block text-ellipsis whitespace-nowrap">
