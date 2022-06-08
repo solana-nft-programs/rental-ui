@@ -36,7 +36,17 @@ export function pubKeyUrl(
   cluster: string
 ) {
   if (!pubkey) return 'https://explorer.solana.com'
-  return `https://explorer.solana.com/address/${pubkey.toString()}${
+  return `https://explorer.solana.com/address/${pubkey.toString()}/metadata${
+    cluster === 'devnet' ? '?cluster=devnet' : ''
+  }`
+}
+
+export function metadataUrl(
+  pubkey: web3.PublicKey | null | undefined,
+  cluster: string
+) {
+  if (!pubkey) return 'https://www.magiceden.io/item-details/'
+  return `https://www.magiceden.io/item-details/${pubkey.toString()}${
     cluster === 'devnet' ? '?cluster=devnet' : ''
   }`
 }
