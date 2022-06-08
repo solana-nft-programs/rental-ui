@@ -379,7 +379,8 @@ function Claim() {
                                       asWallet(wallet),
                                       connection,
                                       environment.label,
-                                      tokenData.data
+                                      tokenData.data,
+                                      true
                                     )
                                   } else {
                                     await handleClaim()
