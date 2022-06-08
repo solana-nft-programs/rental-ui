@@ -101,34 +101,6 @@ function Claim() {
   const tokenManagerId = tryPublicKey(tokenManagerString)
   const tokenData = useTokenData(tokenManagerId ?? undefined, 5000)
 
-  // async function getMetadata() {
-  //   try {
-  //     setTokenDataError(null)
-  //     setTokenData(null)
-  //     const data = await getTokenData(connection, tokenManagerId!)
-  //     if (
-  //       !data.metadata &&
-  //       !data.metaplexData &&
-  //       !data.tokenAccount &&
-  //       !data.tokenManager
-  //     ) {
-  //       throw new Error('No token found')
-  //     }
-  //     setTokenData(data)
-  //     if (data?.metadata?.data?.image) {
-  //       setLoadingImage(true)
-  //     }
-  //     if (data?.tokenManager?.parsed?.state === TokenManagerState.Claimed) {
-  //       setTokenDataStatus({ status: VerificationStatus.WARNING, data })
-  //     } else {
-  //       setTokenDataStatus({ status: VerificationStatus.SUCCESS, data })
-  //     }
-  //   } catch (e: any) {
-  //     setTokenDataError(e.toString())
-  //     setTokenDataStatus({ status: VerificationStatus.ERROR })
-  //   }
-  // }
-
   async function getUserPaymentTokenAccount() {
     if (
       wallet.publicKey &&
@@ -275,9 +247,9 @@ function Claim() {
             />
           )}
           <div className="absolute top-[55%] left-1/2 flex h-[400px] w-[400px] -translate-x-1/2 -translate-y-1/2 items-center justify-center">
-            {!tokenData.isFetched || !tokenData.data ? (
+            {!tokenData.isFetched ? (
               <LoadingPulse loading />
-            ) : tokenData &&
+            ) : tokenData.data &&
               showQRCode &&
               tokenData.data.tokenManager?.parsed.state !==
                 TokenManagerState.Claimed ? (
@@ -500,22 +472,21 @@ function Claim() {
                 }
               </div>
             ) : (
-              <>
+              <div className="flex flex-col">
                 <FaQuestionCircle
                   style={{ fontSize: '170px', margin: '0px auto' }}
                 />
-                {tokenData.error && (
-                  <div
-                    className="mt-8 text-center font-extralight"
-                    style={{
-                      fontFamily: 'Oswald, sans-serif',
-                    }}
-                  >{`${handleError(tokenData.error)}`}</div>
-                )}
-              </>
+                <div className="mt-5 text-center">Token not found</div>
+              </div>
             )}
           </div>
         </VerificationStep>
+        {tokenData.error && (
+          <div className="mt-8 text-center text-xs text-gray-300">{`${handleError(
+            tokenData.error,
+            ''
+          )}`}</div>
+        )}
         {qrcode && (
           <div className="mx-auto mt-10 max-w-[500px] py-3 px-10 text-center text-xs text-gray-300">
             Click the scan button to claim this NFT with your mobile wallet and
