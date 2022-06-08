@@ -24,6 +24,7 @@ export type TokenSection = {
   icon?: 'time' | 'featured' | 'listed' | 'rented' | 'available'
   filter?: TokenFilter
   tokens?: TokenData[] | UserTokenData[]
+  showEmpty?: boolean
 }
 
 export type ProjectConfig = {
