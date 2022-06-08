@@ -731,7 +731,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     displayName: 'Empire DAO',
     type: 'Collection',
     websiteUrl: 'https://market.solanamonkey.business/',
-    logoImage: '/logos/monkenftnyc.png',
+    logoImage: '/logos/empiredao.png',
     colors: {
       main: '#202225',
       secondary: '#CCCDFF',

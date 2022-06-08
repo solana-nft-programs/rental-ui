@@ -20,7 +20,7 @@ import { DatePicker, InputNumber, Select } from 'antd'
 import type { TokenData } from 'api/api'
 import type { EditionInfo } from 'api/editions'
 import getEditionInfo from 'api/editions'
-import { tryPublicKey } from 'api/utils'
+import { executeAllTransactions, tryPublicKey } from 'api/utils'
 import { NFTOverlay } from 'common/NFTOverlay'
 import { notify } from 'common/Notification'
 import { executeTransaction } from 'common/Transactions'
@@ -206,12 +206,37 @@ export const RentalCard = ({
   const [link, setLink] = useState<string | null>(null)
   const userTokenData = useUserTokenData()
   const paymentMintInfos = usePaymentMints()
+  const [selectedTokenDatas, setSelectedTokenDatas] =
+    useState<TokenData[]>(tokenDatas)
+
+  if (
+    userTokenData.data &&
+    userTokenData.data.length > 0 &&
+    selectedTokenDatas.filter((token) =>
+      userTokenData.data
+        ?.map((t) => t.tokenAccount?.account.data.parsed.info.mint.toString())
+        .includes(token.tokenAccount?.account.data.parsed.info.mint.toString())
+    ).length !== selectedTokenDatas.length
+  ) {
+    const filteredTokens = selectedTokenDatas.filter((token) =>
+      userTokenData.data
+        ?.map((t) => t.tokenAccount?.account.data.parsed.info.mint.toString())
+        .includes(token.tokenAccount?.account.data.parsed.info.mint.toString())
+    )
+    console.log(selectedTokenDatas)
+    console.log(
+      userTokenData.data?.map((t) =>
+        t.tokenAccount?.account.data.parsed.info.mint.toString()
+      )
+    )
+    setSelectedTokenDatas(filteredTokens)
+  }
 
   // TODO get this from tokenData
   const [editionInfos, setEditionInfos] = useState<(EditionInfo | null)[]>([])
   const getEdition = async () => {
     const editionData = []
-    for (const token of tokenDatas) {
+    for (const token of selectedTokenDatas) {
       try {
         const editionInfo = await getEditionInfo(token.metaplexData, connection)
         editionData.push(editionInfo)
@@ -224,7 +249,7 @@ export const RentalCard = ({
   }
   useEffect(() => {
     getEdition()
-  }, [tokenDatas])
+  }, [selectedTokenDatas])
 
   // Pull overrides from config
   const visibilities =
@@ -434,8 +459,12 @@ export const RentalCard = ({
         }
       }
 
-      for (let i = 0; i < tokenDatas.length; i = i + 1) {
-        const { tokenAccount } = tokenDatas[i]!
+      const transactions = []
+      const receiptMintKeypairs = []
+      const tokenManagerIds = []
+      const otpKeypairs = []
+      for (let i = 0; i < selectedTokenDatas.length; i = i + 1) {
+        const { tokenAccount } = selectedTokenDatas[i]!
         const editionInfo = editionInfos[i]
         if (!tokenAccount) {
           throw 'Token acount not found'
@@ -449,6 +478,7 @@ export const RentalCard = ({
           tokenAccount?.account.data.parsed.info.mint
         )
         const receiptMintKeypair = Keypair.generate()
+        receiptMintKeypairs.push(receiptMintKeypair)
         const issueParams: IssueParameters = {
           claimPayment:
             price && paymentMint
@@ -539,6 +569,10 @@ export const RentalCard = ({
           wallet,
           issueParams
         )
+
+        tokenManagerIds.push(tokenManagerId)
+        otpKeypairs.push(otpKeypair)
+
         const transaction = new Transaction()
         transaction.instructions = otpKeypair
           ? [
@@ -550,24 +584,35 @@ export const RentalCard = ({
               }),
             ]
           : issueTransaction.instructions
-        await executeTransaction(connection, wallet, transaction, {
-          silent: false,
-          callback: userTokenData.refetch,
-          signers: claimRentalReceipt ? [receiptMintKeypair] : [],
-          confirmOptions: {
-            maxRetries: 3,
-          },
-        })
-        setTotalListed(i + 1)
-
+        transactions.push(transaction)
+      }
+      let totalSuccessfulTransactions = 0
+      await executeAllTransactions(connection, wallet, transactions, {
+        callback: async (successfulTxs: number) => {
+          userTokenData.refetch()
+          totalSuccessfulTransactions = successfulTxs
+        },
+        signers: claimRentalReceipt ? [receiptMintKeypairs] : [],
+        confirmOptions: {
+          maxRetries: 3,
+        },
+        notificationConfig: {
+          successSummary: true,
+          message: 'Successfully rented out NFTs',
+          description: 'These NFTs are now available to rent in the browse tab',
+        },
+      })
+      setTotalListed(totalSuccessfulTransactions)
+      if (selectedTokenDatas.length === 1 && tokenManagerIds[0]) {
         const link = claimLinks.getLink(
-          tokenManagerId,
-          otpKeypair,
+          tokenManagerIds[0],
+          otpKeypairs[0],
           cluster,
           getLink('/claim', false)
         )
         setLink(link)
-        handleCopy(link)
+      } else {
+        setLink('success')
       }
     } catch (e) {
       console.log('Error handling rental', e)
@@ -599,10 +644,10 @@ export const RentalCard = ({
         <div
           className={
             `flex w-full gap-4 overflow-x-auto ` +
-            (tokenDatas.length <= 2 ? 'justify-center' : '')
+            (selectedTokenDatas.length <= 2 ? 'justify-center' : '')
           }
         >
-          {tokenDatas.map((tokenData, i) => (
+          {selectedTokenDatas.map((tokenData, i) => (
             <ImageWrapper key={i}>
               <NFTOuter>
                 <NFTOverlay
@@ -1190,7 +1235,12 @@ export const RentalCard = ({
         <ButtonWithFooter
           loading={loading}
           complete={false}
-          disabled={!confirmRentalTerms}
+          disabled={
+            !confirmRentalTerms ||
+            (link === 'success' &&
+              (totalListed === selectedTokenDatas.length ||
+                selectedTokenDatas.length === 0))
+          }
           message={
             link ? (
               <StyledAlert>
@@ -1201,22 +1251,30 @@ export const RentalCard = ({
                   }}
                   message={
                     <>
-                      <div>
-                        Successfully listed: ({totalListed} /{' '}
-                        {tokenDatas.length})
-                        <br />
-                        Link created {link.substring(0, 20)}
-                        ...
-                        {visibility === 'private' && (
-                          <>
-                            {link.substring(link.length - 5)}
-                            <div>
-                              This link can only be used once and cannot be
-                              regenerated
-                            </div>
-                          </>
-                        )}
-                      </div>
+                      {selectedTokenDatas.length === 1 && totalListed === 1 ? (
+                        <div>
+                          Successfully listed: ({totalListed} /{' '}
+                          {selectedTokenDatas.length})
+                          <br />
+                          Link created {link.substring(0, 20)}
+                          ...
+                          {visibility === 'private' && (
+                            <>
+                              {link.substring(link.length - 5)}
+                              <div>
+                                This link can only be used once and cannot be
+                                regenerated
+                              </div>
+                            </>
+                          )}
+                        </div>
+                      ) : (
+                        <div>
+                          {' '}
+                          Successfully listed: ({totalListed} /{' '}
+                          {selectedTokenDatas.length}){' '}
+                        </div>
+                      )}
                     </>
                   }
                   type="success"
@@ -1423,7 +1481,7 @@ export const RentalCard = ({
           onClick={link ? () => handleCopy(link) : handleRental}
           footer={<PoweredByFooter />}
         >
-          {link ? (
+          {link && link !== 'success' ? (
             <div
               style={{ gap: '5px', fontWeight: '300' }}
               className="flex items-center justify-center"
