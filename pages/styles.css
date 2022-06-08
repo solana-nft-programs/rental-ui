@@ -7,3 +7,11 @@ body {
 .ant-tag {
   margin: 0px;
 }
+
+.ant-picker-ranges .ant-picker-ok button {
+  color: black;
+}
+
+.ant-picker-ranges .ant-picker-ok button:hover {
+  color: white;
+}
