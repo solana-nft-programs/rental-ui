@@ -36,7 +36,7 @@ export function pubKeyUrl(
   cluster: string
 ) {
   if (!pubkey) return 'https://explorer.solana.com'
-  return `https://explorer.solana.com/address/${pubkey.toString()}${
+  return `https://explorer.solana.com/address/${pubkey.toString()}/metadata${
     cluster === 'devnet' ? '?cluster=devnet' : ''
   }`
 }

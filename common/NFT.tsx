@@ -19,6 +19,7 @@ import { lighten } from 'polished'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import React, { useState } from 'react'
+import { AiOutlineDatabase } from 'react-icons/ai'
 import { BsArrowReturnLeft } from 'react-icons/bs'
 import { FaEllipsisH } from 'react-icons/fa'
 import { FiExternalLink, FiSend } from 'react-icons/fi'
@@ -113,6 +114,7 @@ export function NFT({ tokenData, onClick }: NFTProps) {
     timeInvalidator,
     useInvalidator,
     recipientTokenAccount,
+    metaplexData,
   } = tokenData
 
   const returnRental = async (tokenData: TokenData) => {
@@ -198,6 +200,25 @@ export function NFT({ tokenData, onClick }: NFTProps) {
                 <FiExternalLink />
               </a>
             </PopoverItem>
+            {metaplexData && metaplexData.data.data.uri && (
+              <PopoverItem>
+                <a
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    color: 'white',
+                  }}
+                  className="justify-between"
+                  href={metaplexData.data.data.uri}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Metadata
+                  <AiOutlineDatabase />
+                </a>
+              </PopoverItem>
+            )}
             {!tokenManager && (
               <PopoverItem>
                 <div
