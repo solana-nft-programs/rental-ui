@@ -1,5 +1,4 @@
 import { getBatchedMultiplAccounts as getBatchedMultipleAccounts } from '@cardinal/common'
-import { STAKE_POOL_ADDRESS } from '@cardinal/staking/dist/cjs/programs/stakePool'
 import type { AccountData } from '@cardinal/token-manager'
 import { tokenManager } from '@cardinal/token-manager/dist/cjs/programs'
 import type { PaidClaimApproverData } from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
@@ -214,16 +213,6 @@ export const deserializeAccountInfos = (
         try {
           acc[accountIds[i]!.toString()] = {
             type: 'tokenAccount',
-            ...((accountInfo?.data as ParsedAccountData).parsed
-              ?.info as spl.AccountInfo),
-          }
-        } catch (e) {}
-        return acc
-      case STAKE_POOL_ADDRESS.toString():
-        try {
-          acc[accountIds[i]!.toString()] = {
-            type: 'stakePool',
-            displayName: 'Staked',
             ...((accountInfo?.data as ParsedAccountData).parsed
               ?.info as spl.AccountInfo),
           }
