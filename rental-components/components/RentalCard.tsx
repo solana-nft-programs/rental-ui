@@ -23,7 +23,6 @@ import getEditionInfo from 'api/editions'
 import { executeAllTransactions, tryPublicKey } from 'api/utils'
 import { NFTOverlay } from 'common/NFTOverlay'
 import { notify } from 'common/Notification'
-import { executeTransaction } from 'common/Transactions'
 import { fmtMintAmount } from 'common/units'
 import {
   capitalizeFirstLetter,
@@ -211,7 +210,6 @@ export const RentalCard = ({
   const [totalTokens, setTotalTokens] = useState(tokenDatas.length)
   if (
     userTokenData.data &&
-    userTokenData.data.length > 0 &&
     selectedTokenDatas.filter((token) =>
       userTokenData.data
         ?.map((t) => t.tokenAccount?.account.data.parsed.info.mint.toString())

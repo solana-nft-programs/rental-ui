@@ -28,17 +28,6 @@ export const Wallet = () => {
   const rentalModal = useRentalModal()
   const [selectedTokens, setSelectedTokens] = useState<TokenData[]>([])
 
-  // useEffect(() => {
-  //   const selectedUserTokens = selectedTokens.filter((token) =>
-  //     tokenDatas.data
-  //       ?.map((t) => t.tokenAccount?.account.data.parsed.info.mint.toString())
-  //       .includes(token.tokenAccount?.account.data.parsed.info.mint.toString())
-  //   )
-  //   if (selectedUserTokens.length !== selectedTokens.length) {
-  //     setSelectedTokens(selectedUserTokens)
-  //   }
-  // }, [tokenDatas])
-
   const filteredTokenDatas = filterTokens(
     environment.label,
     tokenDatas.data || [],
