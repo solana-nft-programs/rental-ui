@@ -189,14 +189,19 @@ export const Wallet = () => {
                     {tokenGroup.tokens.map((tokenData) => (
                       <div
                         key={tokenData.tokenAccount?.pubkey.toString()}
-                        className="relative"
+                        className="relative cursor-pointer rounded-xl"
+                        style={{
+                          boxShadow: selectedTokens.includes(tokenData)
+                            ? `0px 0px 30px ${config.colors.secondary}`
+                            : '',
+                        }}
                       >
                         <NFT
                           key={tokenData?.tokenAccount?.pubkey.toBase58()}
                           tokenData={tokenData}
                           onClick={() => handleNFTSelect(tokenData)}
                         />
-                        {elligibleForRent(config, tokenData) && (
+                        {/* {elligibleForRent(config, tokenData) && (
                           <input
                             autoComplete="off"
                             type={'checkbox'}
@@ -208,7 +213,7 @@ export const Wallet = () => {
                               handleNFTSelect(tokenData)
                             }}
                           />
-                        )}
+                        )} */}
                         <div
                           style={{
                             background: lighten(0.07, config.colors.main),

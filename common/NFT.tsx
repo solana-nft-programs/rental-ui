@@ -165,7 +165,7 @@ export function NFT({ tokenData, onClick }: NFTProps) {
 
   return (
     <div
-      className="relative w-[280px]"
+      className="relative w-[280px] rounded-xl"
       style={{
         background: lighten(0.02, config.colors.main),
       }}
@@ -173,7 +173,7 @@ export function NFT({ tokenData, onClick }: NFTProps) {
       <Popover
         content={
           <div
-            className="flex flex-col rounded-md px-1 py-1"
+            className="flex flex-col px-1 py-1"
             style={{
               background: lighten(0.07, config.colors.main),
               color: getColorByBgColor(config.colors.main),
@@ -402,7 +402,7 @@ export function NFT({ tokenData, onClick }: NFTProps) {
             src={metadata.data.image}
             // src={customImageUri || metadata.data.image}
             alt={metadata.data.name}
-            className={`h-full rounded-t-[10px] object-contain`}
+            className={`h-full rounded-t-xl object-contain`}
           />
         )}
       </div>
