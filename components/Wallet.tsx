@@ -201,19 +201,6 @@ export const Wallet = () => {
                           tokenData={tokenData}
                           onClick={() => handleNFTSelect(tokenData)}
                         />
-                        {/* {elligibleForRent(config, tokenData) && (
-                          <input
-                            autoComplete="off"
-                            type={'checkbox'}
-                            className={`absolute top-3 left-3 h-5 w-5  rounded-sm font-medium text-black focus:outline-none`}
-                            id={tokenData?.tokenAccount?.pubkey.toBase58()}
-                            name={tokenData?.tokenAccount?.pubkey.toBase58()}
-                            checked={isSelected(tokenData)}
-                            onChange={(e) => {
-                              handleNFTSelect(tokenData)
-                            }}
-                          />
-                        )} */}
                         <div
                           style={{
                             background: lighten(0.07, config.colors.main),
@@ -226,7 +213,7 @@ export const Wallet = () => {
                             </p>
                           </div>
                           <div className="flex flex-row justify-between text-xs">
-                            {tokenData.recipientTokenAccount?.owner ? (
+                            {tokenData.recipientTokenAccount?.owner && (
                               <Tag state={TokenManagerState.Claimed}>
                                 <div className="flex flex-col">
                                   <div className="flex">
@@ -249,14 +236,6 @@ export const Wallet = () => {
                                   </div>
                                 </div>
                               </Tag>
-                            ) : (
-                              <div className="flex flex-col text-white">
-                                <div className="flex">
-                                  <span className="inline-block">
-                                    Available for rental
-                                  </span>
-                                </div>
-                              </div>
                             )}
                           </div>
                         </div>
