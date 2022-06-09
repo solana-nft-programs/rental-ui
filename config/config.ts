@@ -24,6 +24,7 @@ export type TokenSection = {
   icon?: 'time' | 'featured' | 'listed' | 'rented' | 'available'
   filter?: TokenFilter
   tokens?: TokenData[] | UserTokenData[]
+  showEmpty?: boolean
 }
 
 export type ProjectConfig = {
@@ -730,7 +731,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     name: 'empiredao',
     displayName: 'Empire DAO',
     type: 'Collection',
-    websiteUrl: 'https://market.solanamonkey.business/',
+    websiteUrl: 'https://empiredao.xyz/',
     logoImage: '/logos/empiredao.png',
     colors: {
       main: '#202225',

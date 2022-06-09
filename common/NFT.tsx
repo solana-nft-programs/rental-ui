@@ -12,13 +12,14 @@ import Tooltip from '@mui/material/Tooltip'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { Transaction } from '@solana/web3.js'
 import type { TokenData } from 'api/api'
-import { pubKeyUrl } from 'common/utils'
+import { metadataUrl, pubKeyUrl } from 'common/utils'
 import type { ProjectConfig } from 'config/config'
 import { useUserTokenData } from 'hooks/useUserTokenData'
 import { lighten } from 'polished'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import React, { useState } from 'react'
+import { AiOutlineDatabase } from 'react-icons/ai'
 import { BsArrowReturnLeft } from 'react-icons/bs'
 import { FaEllipsisH } from 'react-icons/fa'
 import { FiExternalLink, FiSend } from 'react-icons/fi'
@@ -113,6 +114,7 @@ export function NFT({ tokenData, onClick }: NFTProps) {
     timeInvalidator,
     useInvalidator,
     recipientTokenAccount,
+    metaplexData,
   } = tokenData
 
   const returnRental = async (tokenData: TokenData) => {
@@ -198,6 +200,29 @@ export function NFT({ tokenData, onClick }: NFTProps) {
                 <FiExternalLink />
               </a>
             </PopoverItem>
+            {ctx.environment.label !== 'devnet' && (
+              <PopoverItem>
+                <a
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    color: 'white',
+                  }}
+                  className="justify-between"
+                  href={metadataUrl(
+                    tokenManager?.parsed.mint ??
+                      tokenAccount?.account.data.parsed.info.mint,
+                    ctx.environment.label
+                  )}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Metadata
+                  <AiOutlineDatabase />
+                </a>
+              </PopoverItem>
+            )}
             {!tokenManager && (
               <PopoverItem>
                 <div

@@ -16,7 +16,6 @@ import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { filterTokens, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useState } from 'react'
 import { AiFillStar, AiOutlineShoppingCart } from 'react-icons/ai'
-import { FaListUl } from 'react-icons/fa'
 import { MdAccessTimeFilled, MdOutlineSell } from 'react-icons/md'
 import { Button } from 'rental-components/common/Button'
 import { useRentalModal } from 'rental-components/RentalModalProvider'
@@ -176,13 +175,13 @@ export const Wallet = () => {
               tokenGroup.tokens &&
               tokenGroup.tokens.length > 0 && (
                 <>
-                  <div className="mx-5 mb-10">
+                  <div className="mb-10">
                     <div className="flex items-center gap-2 text-2xl text-white">
                       {tokenGroup.icon &&
                         {
                           time: <MdAccessTimeFilled />,
                           featured: <AiFillStar />,
-                          listed: <FaListUl />,
+                          listed: <AiOutlineShoppingCart />,
                           rented: <AiOutlineShoppingCart />,
                           available: <MdOutlineSell />,
                         }[tokenGroup.icon]}

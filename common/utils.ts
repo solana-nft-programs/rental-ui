@@ -15,9 +15,11 @@ export function getExpirationString(expiration: number, UTCSecondsNow: number) {
   minute = minute < 0 ? 0 : minute
   second = second < 0 ? 0 : second
 
-  return `${floorOrCeil(day)}d ${floorOrCeil(hour)}h ${floorOrCeil(
-    minute
-  )}m ${floorOrCeil(second)}s`
+  return `${floorOrCeil(day) ? `${floorOrCeil(day)}d` : ''} ${
+    floorOrCeil(hour) ? `${floorOrCeil(hour)}h` : ''
+  } ${floorOrCeil(minute) ? `${floorOrCeil(minute)}m` : ''} ${
+    floorOrCeil(second) ? `${floorOrCeil(second)}s` : ''
+  }`
 }
 
 export function shortPubKey(
@@ -34,7 +36,17 @@ export function pubKeyUrl(
   cluster: string
 ) {
   if (!pubkey) return 'https://explorer.solana.com'
-  return `https://explorer.solana.com/address/${pubkey.toString()}${
+  return `https://explorer.solana.com/address/${pubkey.toString()}/metadata${
+    cluster === 'devnet' ? '?cluster=devnet' : ''
+  }`
+}
+
+export function metadataUrl(
+  pubkey: web3.PublicKey | null | undefined,
+  cluster: string
+) {
+  if (!pubkey) return 'https://www.magiceden.io/item-details/'
+  return `https://www.magiceden.io/item-details/${pubkey.toString()}${
     cluster === 'devnet' ? '?cluster=devnet' : ''
   }`
 }

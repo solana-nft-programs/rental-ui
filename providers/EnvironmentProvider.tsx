@@ -23,8 +23,7 @@ const INDEX_ENABLED = true
 export const ENVIRONMENTS: Environment[] = [
   {
     label: 'mainnet',
-    primary:
-      'https://solana-api.syndica.io/access-token/bkBr4li7aGVa3euVG0q4iSI6uuMiEo2jYQD35r8ytGZrksM7pdJi2a57pmlYRqCw',
+    primary: process.env.MAINNET_PRIMARY || 'https://ssc-dao.genesysgo.net',
     secondary: 'https://ssc-dao.genesysgo.net',
     index: INDEX_ENABLED
       ? 'https://prod-holaplex.hasura.app/v1/graphql'

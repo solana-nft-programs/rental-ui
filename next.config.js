@@ -14,7 +14,7 @@ if (
 module.exports = {
   reactStrictMode: false,
   env: {
-    BASE_URL: process.env.BASE_URL || 'http://localhost:3000',
+    MAINNET_PRIMARY: process.env.MAINNET_PRIMARY,
     BASE_CLUSTER: process.env.BASE_CLUSTER || 'devnet',
   },
   async rewrites() {
