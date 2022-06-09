@@ -208,7 +208,7 @@ export const RentalCard = ({
   const paymentMintInfos = usePaymentMints()
   const [selectedTokenDatas, setSelectedTokenDatas] =
     useState<TokenData[]>(tokenDatas)
-
+  const [totalTokens, setTotalTokens] = useState(tokenDatas.length)
   if (
     userTokenData.data &&
     userTokenData.data.length > 0 &&
@@ -223,13 +223,9 @@ export const RentalCard = ({
         ?.map((t) => t.tokenAccount?.account.data.parsed.info.mint.toString())
         .includes(token.tokenAccount?.account.data.parsed.info.mint.toString())
     )
-    console.log(selectedTokenDatas)
-    console.log(
-      userTokenData.data?.map((t) =>
-        t.tokenAccount?.account.data.parsed.info.mint.toString()
-      )
-    )
-    setSelectedTokenDatas(filteredTokens)
+    if (filteredTokens.length !== 0) {
+      setSelectedTokenDatas(filteredTokens)
+    }
   }
 
   // TODO get this from tokenData
@@ -603,6 +599,7 @@ export const RentalCard = ({
         },
       })
       setTotalListed(totalSuccessfulTransactions)
+      setTotalTokens(selectedTokenDatas.length)
       if (selectedTokenDatas.length === 1 && tokenManagerIds[0]) {
         const link = claimLinks.getLink(
           tokenManagerIds[0],
@@ -1271,8 +1268,7 @@ export const RentalCard = ({
                       ) : (
                         <div>
                           {' '}
-                          Successfully listed: ({totalListed} /{' '}
-                          {selectedTokenDatas.length}){' '}
+                          Successfully listed: ({totalListed} / {totalTokens}){' '}
                         </div>
                       )}
                     </>
