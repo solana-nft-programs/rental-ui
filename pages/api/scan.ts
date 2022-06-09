@@ -1,16 +1,182 @@
+import { getBatchedMultiplAccounts as getBatchedMultipleAccounts } from '@cardinal/common'
 import { scan } from '@cardinal/scanner/dist/cjs/programs/cardinalScanner'
+import type { AccountData } from '@cardinal/token-manager'
+import type { PaidClaimApproverData } from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
+import type { TimeInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
 import { close } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator/instruction'
+import type { TokenManagerData } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
+import type { UseInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
 import { incrementUsages } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator/instruction'
+import * as metaplex from '@metaplex-foundation/mpl-token-metadata'
+import { Edition } from '@metaplex-foundation/mpl-token-metadata'
 import { utils } from '@project-serum/anchor'
-import { Connection, Keypair, Transaction } from '@solana/web3.js'
+import * as spl from '@solana/spl-token'
+import type { AccountInfo, ParsedAccountData } from '@solana/web3.js'
+import { Connection, Keypair, PublicKey, Transaction } from '@solana/web3.js'
 import type { TokenData } from 'api/api'
-import { getTokenAccountsWithData } from 'api/api'
+import { accountDataById } from 'api/api'
 import { tryPublicKey } from 'api/utils'
 import { firstParam } from 'common/utils'
+import type { TokenFilter } from 'config/config'
 import { projectConfigs } from 'config/config'
 import type { NextApiHandler } from 'next'
 import { ENVIRONMENTS } from 'providers/EnvironmentProvider'
 
+export type ScanTokenData = {
+  tokenAccount?: {
+    pubkey: PublicKey
+    account: AccountInfo<ParsedAccountData>
+  }
+  tokenManager?: AccountData<TokenManagerData>
+  metaplexData?: { pubkey: PublicKey; data: metaplex.MetadataData } | null
+  claimApprover?: AccountData<PaidClaimApproverData> | null
+  useInvalidator?: AccountData<UseInvalidatorData> | null
+  timeInvalidator?: AccountData<TimeInvalidatorData> | null
+}
+
+export async function getScanTokenAccounts(
+  connection: Connection,
+  addressId: string,
+  filter?: TokenFilter,
+  cluster?: string
+): Promise<ScanTokenData[]> {
+  const allTokenAccounts = await connection.getParsedTokenAccountsByOwner(
+    new PublicKey(addressId),
+    { programId: spl.TOKEN_PROGRAM_ID }
+  )
+  let tokenAccounts = allTokenAccounts.value
+    .filter(
+      (tokenAccount) =>
+        tokenAccount.account.data.parsed.info.tokenAmount.uiAmount > 0
+    )
+    .sort((a, b) => a.pubkey.toBase58().localeCompare(b.pubkey.toBase58()))
+
+  // lookup metaplex data
+  const metaplexIds = await Promise.all(
+    tokenAccounts.map(
+      async (tokenAccount) =>
+        (
+          await metaplex.MetadataProgram.find_metadata_account(
+            new PublicKey(tokenAccount.account.data.parsed.info.mint)
+          )
+        )[0]
+    )
+  )
+  // const metaplexMetadatas = await accountDataById(connection, metaplexIds)
+  // TODO use accountDataById?
+  const metaplexAccountInfos = await getBatchedMultipleAccounts(
+    connection,
+    metaplexIds
+  )
+  const metaplexData = metaplexAccountInfos.reduce((acc, accountInfo, i) => {
+    try {
+      acc[tokenAccounts[i]!.pubkey.toString()] = {
+        pubkey: metaplexIds[i]!,
+        ...accountInfo,
+        data: metaplex.MetadataData.deserialize(
+          accountInfo?.data as Buffer
+        ) as metaplex.MetadataData,
+      }
+    } catch (e) {}
+    return acc
+  }, {} as { [tokenAccountId: string]: { pubkey: PublicKey; data: metaplex.MetadataData } })
+
+  // filter by creators
+  if (filter?.type === 'creators') {
+    tokenAccounts = tokenAccounts.filter((tokenAccount) =>
+      metaplexData[tokenAccount.pubkey.toString()]?.data?.data?.creators?.some(
+        (creator) =>
+          filter.value.includes(creator.address.toString()) &&
+          (cluster === 'devnet' || creator.verified)
+      )
+    )
+  }
+
+  // lookup delegates and
+  const delegateIds = tokenAccounts.map((tokenAccount) =>
+    tryPublicKey(tokenAccount.account.data.parsed.info.delegate)
+  )
+  const tokenAccountDelegateData = await accountDataById(
+    connection,
+    delegateIds
+  )
+  const editionIds = await Promise.all(
+    tokenAccounts.map(async (tokenAccount) =>
+      Edition.getPDA(tokenAccount.account.data.parsed.info.mint)
+    )
+  )
+  const idsToFetch = Object.values(tokenAccountDelegateData).reduce(
+    (acc, accountData) => [
+      ...acc,
+      ...(accountData.type === 'tokenManager'
+        ? [
+            (accountData as AccountData<TokenManagerData>).parsed.claimApprover,
+            (accountData as AccountData<TokenManagerData>).parsed
+              .recipientTokenAccount,
+            ...(accountData as AccountData<TokenManagerData>).parsed
+              .invalidators,
+          ]
+        : []),
+    ],
+    [...editionIds] as (PublicKey | null)[]
+  )
+
+  const accountsById = {
+    ...tokenAccountDelegateData,
+    ...(await accountDataById(connection, idsToFetch)),
+  }
+
+  return tokenAccounts.reduce((acc, tokenAccount, i) => {
+    const delegateData =
+      accountsById[tokenAccount.account.data.parsed.info.delegate]
+
+    let tokenManagerData: AccountData<TokenManagerData> | undefined
+    let claimApproverId: PublicKey | undefined
+    let timeInvalidatorId: PublicKey | undefined
+    let useInvalidatorId: PublicKey | undefined
+    if (delegateData?.type === 'tokenManager') {
+      tokenManagerData = delegateData as AccountData<TokenManagerData>
+      claimApproverId = tokenManagerData.parsed.claimApprover ?? undefined
+      timeInvalidatorId = tokenManagerData.parsed.invalidators.filter(
+        (invalidator) =>
+          accountsById[invalidator.toString()]?.type === 'timeInvalidator'
+      )[0]
+      useInvalidatorId = tokenManagerData.parsed.invalidators.filter(
+        (invalidator) =>
+          accountsById[invalidator.toString()]?.type === 'useInvalidator'
+      )[0]
+    }
+    if (
+      filter?.type === 'issuer' &&
+      !filter.value.includes(tokenManagerData?.parsed?.issuer?.toString() ?? '')
+    ) {
+      return acc
+    }
+    return [
+      ...acc,
+      {
+        tokenAccount,
+        metaplexData: metaplexData[tokenAccount.pubkey.toString()],
+        tokenManager: tokenManagerData,
+        claimApprover: claimApproverId
+          ? (accountsById[
+              claimApproverId.toString()
+            ] as AccountData<PaidClaimApproverData>)
+          : undefined,
+        useInvalidator: useInvalidatorId
+          ? (accountsById[
+              useInvalidatorId.toString()
+            ] as AccountData<UseInvalidatorData>)
+          : undefined,
+        timeInvalidator: timeInvalidatorId
+          ? (accountsById[
+              timeInvalidatorId.toString()
+            ] as AccountData<TimeInvalidatorData>)
+          : undefined,
+      },
+    ]
+  }, [] as ScanTokenData[])
+}
 interface GetResponse {
   label: string
   icon: string
@@ -61,7 +227,7 @@ const post: NextApiHandler<PostResponse> = async (req, res) => {
 
   let tokenDatas: TokenData[] = []
   try {
-    tokenDatas = await getTokenAccountsWithData(
+    tokenDatas = await getScanTokenAccounts(
       connection,
       accountId.toString(),
       config.filter,
