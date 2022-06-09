@@ -781,7 +781,6 @@ export const RentalCard = ({
                     <div className="flex">
                       <div className="mr-2">
                         <MintPriceSelector
-                          disabled={visibility === 'private'}
                           price={extensionPaymentAmount}
                           mint={extensionPaymentMint}
                           paymentMintData={paymentMintData}
