@@ -37,6 +37,10 @@ export const nativeErrors: ErrorCode[] = [
     message:
       'Insufficient funds. User does not have enough balance of token to complete the transaction',
   },
+  {
+    code: '91',
+    message: 'Token is not ellgible for rent',
+  },
   // anchor errors
   {
     code: '100',
