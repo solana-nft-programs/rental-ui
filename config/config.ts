@@ -691,7 +691,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       paymentManager: 'mainnet-cardinal-mini-royale',
       invalidators: ['rate'],
       invalidationOptions: {
-        visibilities: ['public'],
+        visibilities: ['public', 'private'],
         durationOptions: ['minutes', 'hours', 'days', 'weeks'],
         invalidationTypes: ['reissue'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
