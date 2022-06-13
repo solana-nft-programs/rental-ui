@@ -210,15 +210,9 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       secondary: 'rgb(29, 155, 240)',
     },
     rentalCard: {
-      invalidators: ['rate', 'duration'],
+      invalidators: ['duration', 'usages', 'expiration', 'manual', 'rate'],
       extensionOptions: { showDisablePartialExtension: true },
       invalidationOptions: {
-        visibilities: ['public'],
-        invalidationTypes: ['reissue'],
-        freezeRentalRateDuration: {
-          value: '1',
-          durationOption: 'days',
-        },
         maxDurationAllowed: {
           displayText: '12 weeks',
           value: 7258000,
