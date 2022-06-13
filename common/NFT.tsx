@@ -88,7 +88,8 @@ export const elligibleForRent = (
     !config.disableListing &&
     !tokenData.tokenManager &&
     tokenData.tokenAccount?.account.data.parsed.info.state !== 'frozen' &&
-    Boolean(tokenData.editionData)
+    !!tokenData.editionData &&
+    (!tokenData.mint || !!tokenData.mint.freezeAuthority)
   )
 }
 

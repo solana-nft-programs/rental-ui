@@ -23,6 +23,7 @@ export type UserTokenData = {
     pubkey: PublicKey
     account: AccountInfo<ParsedAccountData>
   }
+  mint?: spl.MintInfo
   tokenManager?: AccountData<TokenManagerData>
   metaplexData?: { pubkey: PublicKey; data: metaplex.MetadataData } | null
   editionData?: EditionInfo | null
@@ -112,6 +113,9 @@ export const useUserTokenData = (filter?: TokenFilter, cluster?: string) => {
         connection,
         delegateIds
       )
+      const mintIds = tokenAccounts.map((tokenAccount) =>
+        tryPublicKey(tokenAccount.account.data.parsed.info.mint)
+      )
       const editionIds = await Promise.all(
         tokenAccounts.map(async (tokenAccount) =>
           Edition.getPDA(tokenAccount.account.data.parsed.info.mint)
@@ -131,7 +135,7 @@ export const useUserTokenData = (filter?: TokenFilter, cluster?: string) => {
               ]
             : []),
         ],
-        [...editionIds] as (PublicKey | null)[]
+        [...editionIds, ...mintIds] as (PublicKey | null)[]
       )
 
       const accountsById = {
@@ -174,6 +178,9 @@ export const useUserTokenData = (filter?: TokenFilter, cluster?: string) => {
         }
         return {
           tokenAccount,
+          mint: accountsById[
+            tokenAccount.account.data.parsed.info.mint
+          ] as spl.MintInfo,
           recipientTokenAccount: tokenManagerData?.parsed.recipientTokenAccount
             ? (accountsById[
                 tokenManagerData.parsed.recipientTokenAccount?.toString()

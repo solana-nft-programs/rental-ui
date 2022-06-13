@@ -69,6 +69,7 @@ export type TokenData = {
     pubkey: PublicKey
     account: AccountInfo<ParsedAccountData>
   }
+  mint?: spl.MintInfo
   tokenManager?: AccountData<TokenManagerData>
   metaplexData?: { pubkey: PublicKey; data: metaplex.MetadataData } | null
   editionData?: EditionInfo | null
@@ -106,6 +107,7 @@ export type AccountType =
   | 'metaplexMetadata'
   | 'editionData'
   | 'tokenManager'
+  | 'mint'
   | 'tokenAccount'
   | 'timeInvalidator'
   | 'paidClaimApprover'
@@ -126,6 +128,7 @@ export type AccountDataById = {
     | (AccountData<TimeInvalidatorData> & AccountInfo<Buffer> & AccountTypeData)
     | (AccountData<UseInvalidatorData> & AccountInfo<Buffer> & AccountTypeData)
     | (spl.AccountInfo & AccountTypeData)
+    | (spl.MintInfo & AccountTypeData)
     | (AccountData<metaplex.MetadataData> &
         AccountInfo<Buffer> &
         AccountTypeData)
@@ -210,13 +213,17 @@ export const deserializeAccountInfos = (
         } catch (e) {}
         return acc
       case TOKEN_PROGRAM_ID.toString():
-        try {
-          acc[accountIds[i]!.toString()] = {
-            type: 'tokenAccount',
-            ...((accountInfo?.data as ParsedAccountData).parsed
-              ?.info as spl.AccountInfo),
-          }
-        } catch (e) {}
+        const accountData = accountInfo?.data as ParsedAccountData
+        acc[accountIds[i]!.toString()] =
+          accountData.space === spl.MintLayout.span
+            ? {
+                type: 'mint',
+                ...(accountData.parsed?.info as spl.MintInfo),
+              }
+            : {
+                type: 'tokenAccount',
+                ...(accountData.parsed?.info as spl.AccountInfo),
+              }
         return acc
       case metaplex.MetadataProgram.PUBKEY.toString():
         try {
