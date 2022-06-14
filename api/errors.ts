@@ -28,7 +28,12 @@ type ErrorCode = {
 
 export const nativeErrors: ErrorCode[] = [
   {
-    code: '30.00 seconds',
+    code: 'Blockhash not found',
+    message:
+      'Blockhash not found. Transaction may or may not have gone through.',
+  },
+  {
+    code: 'Transaction was not confirmed in',
     message:
       'Transaction timed out waiting on confirmation from Solana. It may or may not have gone through.',
   },
