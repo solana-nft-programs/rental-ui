@@ -128,7 +128,7 @@ export type AccountDataById = {
     | (AccountData<TimeInvalidatorData> & AccountInfo<Buffer> & AccountTypeData)
     | (AccountData<UseInvalidatorData> & AccountInfo<Buffer> & AccountTypeData)
     | (spl.AccountInfo & AccountTypeData)
-    | (spl.MintInfo & AccountTypeData)
+    | (spl.MintInfo & AccountInfo<Buffer> & AccountTypeData)
     | (AccountData<metaplex.MetadataData> &
         AccountInfo<Buffer> &
         AccountTypeData)
@@ -219,10 +219,12 @@ export const deserializeAccountInfos = (
             ? {
                 type: 'mint',
                 ...(accountData.parsed?.info as spl.MintInfo),
+                ...(accountInfo as AccountInfo<Buffer>),
               }
             : {
                 type: 'tokenAccount',
                 ...(accountData.parsed?.info as spl.AccountInfo),
+                ...(accountInfo as AccountInfo<Buffer>),
               }
         return acc
       case metaplex.MetadataProgram.PUBKEY.toString():
