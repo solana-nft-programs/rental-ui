@@ -355,6 +355,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         address: '7KJ322BQnje7oPN315dRNK7Arioom7d8mAPhAJFME2MA',
         enforceTwitter: true,
         preventMultipleClaims: true,
+        disableReturn: false,
       },
     ],
   },

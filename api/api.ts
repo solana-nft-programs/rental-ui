@@ -218,13 +218,13 @@ export const deserializeAccountInfos = (
           accountData.space === spl.MintLayout.span
             ? {
                 type: 'mint',
-                ...(accountData.parsed?.info as spl.MintInfo),
                 ...(accountInfo as AccountInfo<Buffer>),
+                ...(accountData.parsed?.info as spl.MintInfo),
               }
             : {
                 type: 'tokenAccount',
-                ...(accountData.parsed?.info as spl.AccountInfo),
                 ...(accountInfo as AccountInfo<Buffer>),
+                ...(accountData.parsed?.info as spl.AccountInfo),
               }
         return acc
       case metaplex.MetadataProgram.PUBKEY.toString():
