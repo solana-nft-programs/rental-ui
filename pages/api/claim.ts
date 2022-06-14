@@ -128,13 +128,11 @@ const post: NextApiHandler<PostResponse> = async (req, res) => {
   )
 
   // build transaction
-  if (keypair) {
-    transaction.feePayer = keypair.publicKey
-    transaction.recentBlockhash = (
-      await connection.getRecentBlockhash('max')
-    ).blockhash
-    transaction.sign(keypair)
-  }
+  transaction.feePayer = keypair?.publicKey ?? accountId
+  transaction.recentBlockhash = (
+    await connection.getRecentBlockhash('max')
+  ).blockhash
+  keypair && transaction.sign(keypair)
   transaction = Transaction.from(
     transaction.serialize({
       verifySignatures: false,
