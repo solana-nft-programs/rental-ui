@@ -17,7 +17,7 @@ import type { ProjectConfig } from 'config/config'
 import { useUserTokenData } from 'hooks/useUserTokenData'
 import { lighten } from 'polished'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
-import { useProjectConfig } from 'providers/ProjectConfigProvider'
+import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
 import React, { useState } from 'react'
 import { AiOutlineDatabase } from 'react-icons/ai'
 import { BsArrowReturnLeft } from 'react-icons/bs'
@@ -29,6 +29,7 @@ import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 import { useQRCode } from 'rental-components/QRCodeProvider'
 import { useRentalModal } from 'rental-components/RentalModalProvider'
 import { useRentalRateModal } from 'rental-components/RentalRateModalProvider'
+import { FaLink } from 'react-icons/fa'
 
 import { NFTOverlay } from './NFTOverlay'
 import { notify } from './Notification'
@@ -221,6 +222,27 @@ export function NFT({ tokenData, onClick }: NFTProps) {
                 >
                   Metadata
                   <AiOutlineDatabase />
+                </a>
+              </PopoverItem>
+            )}
+            {ctx.environment.label !== 'devnet' && (
+              <PopoverItem>
+                <a
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    color: 'white',
+                  }}
+                  className="justify-between"
+                  href={getLink(
+                    `/claim/${tokenData.tokenManager?.pubkey.toBase58()}`
+                  )}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Claim Link
+                  <FaLink />
                 </a>
               </PopoverItem>
             )}

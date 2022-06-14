@@ -143,7 +143,6 @@ function Claim() {
   //   }
   // }, [connection, tokenManagerString])
 
-  console.log(tokenData)
   useEffect(() => {
     getUserPaymentTokenAccount()
   }, [connection, wallet.publicKey, tokenData])
