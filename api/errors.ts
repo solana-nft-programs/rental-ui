@@ -27,6 +27,11 @@ type ErrorCode = {
 }
 
 export const nativeErrors: ErrorCode[] = [
+  {
+    code: '30.00 seconds',
+    message:
+      'Transaction timed out waiting on confirmation from Solana. It may or may not have gone through.',
+  },
   // token program errors
   {
     code: '0',
