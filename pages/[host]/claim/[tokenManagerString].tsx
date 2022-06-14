@@ -1,3 +1,4 @@
+import { withFindOrInitAssociatedTokenAccount } from '@cardinal/common'
 import { DisplayAddress } from '@cardinal/namespaces-components'
 import { claimLinks, withClaimToken } from '@cardinal/token-manager'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
@@ -152,6 +153,9 @@ function Claim() {
       setError(null)
       // wrap sol if there is payment required
       const transaction = new Transaction()
+      const paymentMint =
+        tokenData?.data?.claimApprover?.parsed.paymentMint ||
+        tokenData?.data?.timeInvalidator?.parsed.extensionPaymentMint
       if (
         tokenData?.data?.claimApprover?.parsed.paymentAmount &&
         tokenData?.data?.claimApprover.parsed.paymentMint.toString() ===
@@ -170,6 +174,16 @@ function Claim() {
             amountToWrap.toNumber()
           )
         }
+      }
+      if (paymentMint) {
+        await withFindOrInitAssociatedTokenAccount(
+          transaction,
+          connection,
+          paymentMint,
+          wallet.publicKey!,
+          wallet.publicKey!,
+          true
+        )
       }
       await withClaimToken(
         transaction,

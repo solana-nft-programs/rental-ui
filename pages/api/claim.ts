@@ -109,7 +109,8 @@ const post: NextApiHandler<PostResponse> = async (req, res) => {
         amountToWrap.toNumber()
       )
     }
-  } else if (paymentMint) {
+  }
+  if (paymentMint) {
     await withFindOrInitAssociatedTokenAccount(
       transaction,
       connection,

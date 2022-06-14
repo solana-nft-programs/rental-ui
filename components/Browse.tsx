@@ -1,3 +1,4 @@
+import { withFindOrInitAssociatedTokenAccount } from '@cardinal/common'
 import { DisplayAddress, useAddressName } from '@cardinal/namespaces-components'
 import { invalidate, withClaimToken } from '@cardinal/token-manager'
 import { shouldTimeInvalidate } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator/utils'
@@ -523,6 +524,9 @@ export const Browse = () => {
       if (!wallet.publicKey) throw new Error('Wallet not connected')
       // wrap sol if there is payment required
       const transaction = new Transaction()
+      const paymentMint =
+        tokenData?.claimApprover?.parsed.paymentMint ||
+        tokenData?.timeInvalidator?.parsed.extensionPaymentMint
       if (
         tokenData?.claimApprover?.parsed.paymentAmount &&
         tokenData?.claimApprover?.parsed.paymentMint.toString() ===
@@ -541,7 +545,16 @@ export const Browse = () => {
           )
         }
       }
-      console.log('Claiming token manager', tokenData)
+      if (paymentMint) {
+        await withFindOrInitAssociatedTokenAccount(
+          transaction,
+          connection,
+          paymentMint,
+          wallet.publicKey!,
+          wallet.publicKey!,
+          true
+        )
+      }
       await withClaimToken(
         transaction,
         environment.secondary
