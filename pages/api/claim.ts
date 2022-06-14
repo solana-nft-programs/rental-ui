@@ -56,9 +56,6 @@ const post: NextApiHandler<PostResponse> = async (req, res) => {
   if (!foundEnvironment)
     return res.status(400).json({ error: 'Invalid cluster' })
 
-  const keypair = Keypair.fromSecretKey(
-    utils.bytes.bs58.decode(firstParam(keypairParam))
-  )
   const accountId = tryPublicKey(account)
   if (!accountId) return res.status(400).json({ error: 'Invalid account' })
 
@@ -111,6 +108,13 @@ const post: NextApiHandler<PostResponse> = async (req, res) => {
   }
 
   // transaction
+
+  let keypair
+  if (keypairParam) {
+    keypair = Keypair.fromSecretKey(
+      utils.bytes.bs58.decode(firstParam(keypairParam))
+    )
+  }
   await withClaimToken(
     transaction,
     foundEnvironment.secondary && tokenData?.tokenManager?.parsed.receiptMint
@@ -124,11 +128,13 @@ const post: NextApiHandler<PostResponse> = async (req, res) => {
   )
 
   // build transaction
-  transaction.feePayer = keypair.publicKey
-  transaction.recentBlockhash = (
-    await connection.getRecentBlockhash('max')
-  ).blockhash
-  transaction.sign(keypair)
+  if (keypair) {
+    transaction.feePayer = keypair.publicKey
+    transaction.recentBlockhash = (
+      await connection.getRecentBlockhash('max')
+    ).blockhash
+    transaction.sign(keypair)
+  }
   transaction = Transaction.from(
     transaction.serialize({
       verifySignatures: false,
