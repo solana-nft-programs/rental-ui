@@ -1,3 +1,4 @@
+import { withFindOrInitAssociatedTokenAccount } from '@cardinal/common'
 import { withClaimToken } from '@cardinal/token-manager'
 import { BN, utils } from '@project-serum/anchor'
 import type { PublicKey } from '@solana/web3.js'
@@ -88,6 +89,9 @@ const post: NextApiHandler<PostResponse> = async (req, res) => {
 
   // wrap sol if there is payment required
   let transaction = new Transaction()
+  const paymentMint =
+    tokenData.claimApprover?.parsed.paymentMint ||
+    tokenData.timeInvalidator?.parsed.extensionPaymentMint
   if (
     tokenData?.claimApprover?.parsed.paymentAmount &&
     tokenData?.claimApprover.parsed.paymentMint.toString() ===
@@ -105,6 +109,15 @@ const post: NextApiHandler<PostResponse> = async (req, res) => {
         amountToWrap.toNumber()
       )
     }
+  } else if (paymentMint) {
+    await withFindOrInitAssociatedTokenAccount(
+      transaction,
+      connection,
+      paymentMint,
+      accountId,
+      accountId,
+      true
+    )
   }
 
   // transaction
