@@ -1108,8 +1108,23 @@ export const Browse = () => {
                                       ) : (
                                         <>
                                           Claim{' '}
-                                          {(tokenData.claimApprover?.parsed?.paymentAmount.toNumber() ??
-                                            0) / 1000000000}{' '}
+                                          {tokenData.claimApprover?.parsed
+                                            ?.paymentMint &&
+                                          paymentMintInfos.data &&
+                                          paymentMintInfos.data[
+                                            tokenData.claimApprover?.parsed?.paymentMint.toString()
+                                          ]
+                                            ? parseFloat(
+                                                fmtMintAmount(
+                                                  paymentMintInfos.data[
+                                                    tokenData?.claimApprover?.parsed?.paymentMint.toString()
+                                                  ],
+                                                  tokenData.claimApprover
+                                                    ?.parsed?.paymentAmount ??
+                                                    new BN(0)
+                                                )
+                                              )
+                                            : ''}{' '}
                                           {getSymbolFromTokenData(tokenData)}{' '}
                                         </>
                                       )}

@@ -17,6 +17,7 @@ import { NFT } from 'common/NFT'
 import { StyledBackground } from 'common/StyledBackground'
 import { Tag } from 'common/Tags'
 import { executeTransaction } from 'common/Transactions'
+import { fmtMintAmount } from 'common/units'
 import { pubKeyUrl } from 'common/utils'
 import { asWallet } from 'common/Wallets'
 import {
@@ -387,8 +388,22 @@ function Claim() {
                               ) : (
                                 <>
                                   Claim{' '}
-                                  {(tokenData.data?.claimApprover?.parsed?.paymentAmount.toNumber() ??
-                                    0) / 1000000000}{' '}
+                                  {tokenData.data.claimApprover?.parsed
+                                    ?.paymentMint &&
+                                  paymentMintInfos.data &&
+                                  paymentMintInfos.data[
+                                    tokenData.data.claimApprover?.parsed?.paymentMint.toString()
+                                  ]
+                                    ? parseFloat(
+                                        fmtMintAmount(
+                                          paymentMintInfos.data[
+                                            tokenData.data.claimApprover?.parsed?.paymentMint.toString()
+                                          ],
+                                          tokenData.data.claimApprover?.parsed
+                                            ?.paymentAmount ?? new BN(0)
+                                        )
+                                      )
+                                    : ''}{' '}
                                   {getSymbolFromTokenData(tokenData.data)}{' '}
                                 </>
                               )}
