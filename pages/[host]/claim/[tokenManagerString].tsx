@@ -36,6 +36,7 @@ import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useUTCNow } from 'providers/UTCNowProvider'
 import type { ReactElement } from 'react'
 import React, { useEffect, useState } from 'react'
+import { isMobile } from 'react-device-detect'
 import { BiQr } from 'react-icons/bi'
 import { FaLink, FaQuestionCircle } from 'react-icons/fa'
 import { AsyncButton } from 'rental-components/common/Button'
@@ -341,7 +342,7 @@ function Claim() {
                               disabled={!wallet.publicKey}
                               className="my-auto inline-block flex-none text-xs"
                               handleClick={async () => {
-                                setShowQRCode(true)
+                                isMobile ? handleClaim() : setShowQRCode(true)
                               }}
                             >
                               <div className="flex items-center gap-1">
