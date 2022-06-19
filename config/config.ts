@@ -735,10 +735,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     indexDisabled: true,
     filter: {
       type: 'issuer',
-      value: [
-        'edaoJQRZZ3hfNottaxe9z5o2owJDJgL1bUChiPk15KN',
-        'A8QV7mbxF3N7bhyYTPgcZQeVXTpCGJYnXHWSP4j7Lvj8',
-      ],
+      value: ['edaoJQRZZ3hfNottaxe9z5o2owJDJgL1bUChiPk15KN'],
     },
     rentalCard: {
       invalidators: ['expiration'],

@@ -518,7 +518,7 @@ function Claim() {
         {qrcode && (
           <div className="mx-auto mt-10 max-w-[500px] py-3 px-10 text-center text-xs text-gray-300">
             Click the scan button to claim this NFT with your mobile wallet and
-            be prepared to present it at the event.
+            be prepared to present it at the front desk.
           </div>
         )}
         <div
