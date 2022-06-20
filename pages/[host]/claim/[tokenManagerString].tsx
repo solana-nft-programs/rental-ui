@@ -266,6 +266,7 @@ function Claim() {
               <LoadingPulse loading />
             ) : tokenData.data &&
               showQRCode &&
+              !isMobile &&
               tokenData.data.tokenManager?.parsed.state !==
                 TokenManagerState.Claimed ? (
               <ClaimQRCode
@@ -335,7 +336,7 @@ function Claim() {
                               Private
                             </div>
                           )}
-                          {qrcode ? (
+                          {qrcode && !isMobile ? (
                             <AsyncButton
                               bgColor={config.colors.secondary}
                               variant="primary"
@@ -388,7 +389,6 @@ function Claim() {
                                 </>
                               ) : (
                                 <>
-                                  Claim{' '}
                                   {tokenData.data.claimApprover?.parsed
                                     ?.paymentMint &&
                                   paymentMintInfos.data &&
