@@ -175,7 +175,7 @@ export function NFT({ tokenData, onClick }: NFTProps) {
       <Popover
         content={
           <div
-            className="flex flex-col px-1 py-1"
+            className="flex flex-col rounded-md px-1 py-1"
             style={{
               background: lighten(0.07, config.colors.main),
               color: getColorByBgColor(config.colors.main),
