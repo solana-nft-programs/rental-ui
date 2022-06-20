@@ -213,7 +213,7 @@ function Claim() {
 
   return (
     <>
-      <Header homeButton />
+      <Header homeButton transparent />
       <div
         style={{
           paddingTop: 'calc(50vh - 400px)',

@@ -69,10 +69,12 @@ export const Header = ({
   tabs,
   homeButton,
   loading,
+  transparent,
 }: {
   tabs?: { disabled?: boolean; name: string; anchor: string }[]
   homeButton?: boolean
   loading?: boolean
+  transparent?: boolean
 }) => {
   const ctx = useEnvironmentCtx()
   const wallet = useWallet()
@@ -129,7 +131,7 @@ export const Header = ({
         )}
         <div
           className="flex w-full items-center justify-between py-6 shadow-2xl"
-          // style={{ background: config.colors.main }}
+          style={{ background: transparent ? 'none' : config.colors.main }}
         >
           <div className="flex gap-5 pl-8 text-gray-300">
             <div className="title relative" style={{ marginRight: '40px' }}>
