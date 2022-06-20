@@ -340,7 +340,6 @@ function Claim() {
                             <AsyncButton
                               bgColor={config.colors.secondary}
                               variant="primary"
-                              disabled={!wallet.publicKey}
                               className="my-auto inline-block flex-none text-xs"
                               handleClick={async () => {
                                 isMobile ? handleClaim() : setShowQRCode(true)
