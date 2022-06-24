@@ -192,6 +192,21 @@ export const RentalRateCard = ({
         }
       }
 
+      if (
+        extensionPaymentMint &&
+        (extensionPaymentMint?.toString() !== WRAPPED_SOL_MINT.toString() ||
+          (transaction.instructions.length === 0 &&
+            extensionPaymentMint?.toString() === WRAPPED_SOL_MINT.toString()))
+      ) {
+        await withFindOrInitAssociatedTokenAccount(
+          transaction,
+          connection,
+          extensionPaymentMint,
+          wallet.publicKey,
+          wallet.publicKey
+        )
+      }
+
       console.log(
         `${claim ? 'Claiming' : 'Extending'} token manager`,
         tokenData
@@ -212,17 +227,6 @@ export const RentalRateCard = ({
             : connection,
           wallet,
           tokenData.tokenManager?.pubkey
-        )
-      }
-
-      if (extensionPaymentMint) {
-        // https://linear.app/cardinal-labs/issue/CRD-322/time-invalidator-requires-creation-of-payer-token-account-even-when
-        await withFindOrInitAssociatedTokenAccount(
-          transaction,
-          connection,
-          extensionPaymentMint,
-          wallet.publicKey,
-          wallet.publicKey
         )
       }
 
