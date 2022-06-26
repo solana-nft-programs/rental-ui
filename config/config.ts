@@ -667,7 +667,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     type: 'Collection',
     websiteUrl: 'https://miniroyale.io/',
     logoImage: '/logos/miniroyale.png',
-    hidden: true,
     colors: {
       main: '#192836',
       secondary: '#FFB60C',
