@@ -21,7 +21,7 @@ import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
 import React, { useState } from 'react'
 import { AiOutlineDatabase } from 'react-icons/ai'
 import { BsArrowReturnLeft } from 'react-icons/bs'
-import { FaEllipsisH } from 'react-icons/fa'
+import { FaEllipsisH, FaLink } from 'react-icons/fa'
 import { FiExternalLink, FiSend } from 'react-icons/fi'
 import { IoAddSharp, IoClose, IoQrCodeOutline } from 'react-icons/io5'
 import { getColorByBgColor } from 'rental-components/common/Button'
@@ -29,7 +29,6 @@ import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 import { useQRCode } from 'rental-components/QRCodeProvider'
 import { useRentalModal } from 'rental-components/RentalModalProvider'
 import { useRentalRateModal } from 'rental-components/RentalRateModalProvider'
-import { FaLink } from 'react-icons/fa'
 
 import { NFTOverlay } from './NFTOverlay'
 import { notify } from './Notification'
@@ -225,27 +224,25 @@ export function NFT({ tokenData, onClick }: NFTProps) {
                 </a>
               </PopoverItem>
             )}
-            {ctx.environment.label !== 'devnet' && (
-              <PopoverItem>
-                <a
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '10px',
-                    color: 'white',
-                  }}
-                  className="justify-between"
-                  href={getLink(
-                    `/claim/${tokenData.tokenManager?.pubkey.toBase58()}`
-                  )}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Claim Link
-                  <FaLink />
-                </a>
-              </PopoverItem>
-            )}
+            <PopoverItem>
+              <a
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  color: 'white',
+                }}
+                className="justify-between"
+                href={getLink(
+                  `/claim/${tokenData.tokenManager?.pubkey.toBase58()}`
+                )}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Claim Link
+                <FaLink />
+              </a>
+            </PopoverItem>
             {!tokenManager && (
               <PopoverItem>
                 <div

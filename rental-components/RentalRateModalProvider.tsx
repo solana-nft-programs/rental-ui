@@ -1,5 +1,5 @@
 import type { Wallet } from '@saberhq/solana-contrib'
-import type { Connection } from '@solana/web3.js'
+import type { Connection, Keypair } from '@solana/web3.js'
 import type { TokenData } from 'api/api'
 import { withSleep } from 'common/utils'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
@@ -14,7 +14,8 @@ interface RentalRateModal {
     connection: Connection,
     cluster: string,
     tokenData: TokenData,
-    claim?: boolean
+    claim?: boolean,
+    otpKeypair?: Keypair
   ) => void
   showRentalRateModal: boolean
   tokenData: TokenData | undefined
@@ -35,18 +36,20 @@ export const RentalRateModalProvider: React.FC<Props> = ({
   const [showRentalRateModal, setShowRentalRateModal] = useState<boolean>(false)
   const [tokenData, setTokenData] = useState<TokenData | undefined>(undefined)
   const [claim, setClaim] = useState(true)
+  const [otpKeypair, setOtpKeypair] = useState<Keypair | undefined>(undefined)
   const { config } = useProjectConfig()
 
   return (
     <RentalRateModalContext.Provider
       value={{
-        show: (wallet, connection, cluster, tokenData, claim) => {
+        show: (wallet, connection, cluster, tokenData, claim, otpKeypair) => {
           setWallet(wallet)
           setConnection(connection)
           setCluster(cluster)
           setTokenData(tokenData)
           setShowRentalRateModal(true)
           setClaim(claim ?? false)
+          setOtpKeypair(otpKeypair)
         },
         tokenData,
         showRentalRateModal,
@@ -65,6 +68,7 @@ export const RentalRateModalProvider: React.FC<Props> = ({
             tokenData={tokenData || {}}
             config={config}
             claim={claim}
+            otpKeypair={otpKeypair}
             onComplete={() => {
               withSleep(() => {
                 setShowRentalRateModal(false)
