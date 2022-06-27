@@ -367,7 +367,8 @@ function Claim() {
                                       connection,
                                       environment.label,
                                       tokenData.data,
-                                      true
+                                      true,
+                                      otp
                                     )
                                   } else {
                                     await handleClaim()
@@ -388,6 +389,7 @@ function Claim() {
                                 </>
                               ) : (
                                 <>
+                                  Claim{' '}
                                   {tokenData.data.claimApprover?.parsed
                                     ?.paymentMint &&
                                   paymentMintInfos.data &&

@@ -9,6 +9,7 @@ import styled from '@emotion/styled'
 import * as anchor from '@project-serum/anchor'
 import type { Wallet } from '@saberhq/solana-contrib'
 import type * as splToken from '@solana/spl-token'
+import type { Keypair } from '@solana/web3.js'
 import { Connection, Transaction } from '@solana/web3.js'
 import { InputNumber, Select } from 'antd'
 import { Option } from 'antd/lib/mentions'
@@ -93,6 +94,7 @@ export type RentalRateCardProps = {
   config?: ProjectConfig
   appName?: string
   appTwitter?: string
+  otpKeypair?: Keypair
   notify?: () => void
   onComplete?: (asrg0: string) => void
 }
@@ -103,6 +105,7 @@ export const RentalRateCard = ({
   wallet,
   tokenData,
   claim = true,
+  otpKeypair,
 }: RentalRateCardProps) => {
   const [error, setError] = useState<string>()
   const [loading, setLoading] = useState(false)
@@ -226,7 +229,10 @@ export const RentalRateCard = ({
             ? new Connection(environment.secondary)
             : connection,
           wallet,
-          tokenData.tokenManager?.pubkey
+          tokenData.tokenManager?.pubkey,
+          {
+            otpKeypair: otpKeypair,
+          }
         )
       }
 
@@ -239,7 +245,10 @@ export const RentalRateCard = ({
       )
 
       await executeTransaction(connection, wallet, transaction, {
-        confirmOptions: { commitment: 'confirmed', maxRetries: 3 },
+        confirmOptions: {
+          commitment: 'confirmed',
+          maxRetries: 3,
+        },
         signers: [],
         notificationConfig: {},
       })
