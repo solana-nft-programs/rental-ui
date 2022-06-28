@@ -285,7 +285,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         icon: 'featured',
         filter: {
           type: 'issuer',
-          value: ['7KJ322BQnje7oPN315dRNK7Arioom7d8mAPhAJFME2MA'],
+          value: ['41qJ9dJemw8mrry2BD1wU6B2aHXN4RoNY79bS7xwDPhM'],
         },
       },
       {
@@ -320,7 +320,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         durationOptions: ['minutes', 'hours', 'days', 'weeks'],
         invalidationTypes: ['reissue'],
         customInvalidationTypes: {
-          '7KJ322BQnje7oPN315dRNK7Arioom7d8mAPhAJFME2MA': ['return'],
+          '41qJ9dJemw8mrry2BD1wU6B2aHXN4RoNY79bS7xwDPhM': ['return'],
         },
         paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,
@@ -352,7 +352,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     marketplaceRate: 'days',
     allowOneByCreators: [
       {
-        address: '7KJ322BQnje7oPN315dRNK7Arioom7d8mAPhAJFME2MA',
+        address: '41qJ9dJemw8mrry2BD1wU6B2aHXN4RoNY79bS7xwDPhM',
         enforceTwitter: true,
         preventMultipleClaims: true,
         disableReturn: false,
