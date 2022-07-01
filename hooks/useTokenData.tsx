@@ -18,7 +18,7 @@ export const useTokenData = (
     },
     {
       enabled: !!tokenManagerId,
-      refetchInterval: refreshInterval,
+      refetchInterval: refreshInterval || 5000,
     }
   )
 }

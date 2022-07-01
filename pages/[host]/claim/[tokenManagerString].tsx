@@ -102,7 +102,7 @@ function Claim() {
 
   const { tokenManagerString, qrcode } = router.query
   const tokenManagerId = tryPublicKey(tokenManagerString)
-  const tokenData = useTokenData(tokenManagerId ?? undefined, 5000)
+  const tokenData = useTokenData(tokenManagerId ?? undefined)
 
   async function getUserPaymentTokenAccount() {
     if (

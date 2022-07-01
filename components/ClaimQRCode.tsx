@@ -22,7 +22,7 @@ function ClaimQRCode({
 
   const generateQrCode = async () => {
     console.log(
-      'Generating QR code for request: ',
+      'Generating QR code for request:/claim/ ',
       `solana:${encodeURIComponent(
         getLink(
           `/api/claim?id=${tokenData?.tokenManager?.pubkey.toString()}&collection=${
