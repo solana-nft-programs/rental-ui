@@ -25,7 +25,13 @@ import { RentalRateModalProvider } from 'rental-components/RentalRateModalProvid
 
 require('@solana/wallet-adapter-react-ui/styles.css')
 
-export const queryClient = new QueryClient()
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+})
 
 export const DEBUG = false
 
