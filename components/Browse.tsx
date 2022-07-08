@@ -173,7 +173,9 @@ export const getDurationText = (tokenData: TokenData, UTCNow: number) => {
 export const getSymbolFromTokenData = (tokenData: TokenData) => {
   const symbol = PAYMENT_MINTS.find(
     (mint) =>
-      mint.mint === tokenData.claimApprover?.parsed?.paymentMint.toString()
+      mint.mint ===
+      (tokenData.claimApprover?.parsed?.paymentMint.toString() ||
+        tokenData.timeInvalidator?.parsed.extensionPaymentMint?.toString())
   )?.symbol
   if (!symbol || symbol === 'SOL') {
     return '◎'

@@ -53,7 +53,11 @@ export const MintPriceSelector = ({
       />
       <Select
         onChange={(e) => handleMint(e)}
-        defaultValue={paymentMintData[0]?.symbol ?? PAYMENT_MINTS[0]!.symbol}
+        defaultValue={
+          mintDisabled
+            ? paymentMintData.find((m) => m.mint === mint)?.mint
+            : paymentMintData[0]?.symbol ?? PAYMENT_MINTS[0]!.symbol
+        }
         disabled={disabled || mintDisabled}
         showArrow={!mintDisabled}
       >
