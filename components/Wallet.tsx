@@ -32,6 +32,13 @@ export const Wallet = () => {
     environment.label,
     tokenDatas.data || [],
     config.filter
+  ).filter(
+    (tk) =>
+      !(config.type === 'Guild') ||
+      (config.type === 'Guild' &&
+        config.filter?.value.includes(
+          tk.tokenAccount?.account.data.parsed.info.owner.toString()
+        ))
   )
 
   const isSelected = (tokenData: TokenData) => {
@@ -249,7 +256,9 @@ export const Wallet = () => {
         {filteredAndSortedTokens.length === 0 && (
           <div className="white mt-5 flex w-full flex-col items-center justify-center gap-1">
             <div className="text-gray-500">
-              No {config.displayName} NFTs found in wallet...
+              {config.type === 'Guild'
+                ? "You can't list any tokens for rent as you are not the configured lister"
+                : ` No ${config.displayName} NFTs found in wallet...`}
             </div>
             {environment.label === 'devnet' && <Airdrop />}
           </div>
