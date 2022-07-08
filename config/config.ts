@@ -906,7 +906,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     name: 'udderchaos',
     displayName: 'Udder Chaos',
     type: 'Guild',
-    hidden: true,
     websiteUrl: 'https://www.udderchaos.io/',
     logoImage: 'logos/udderchaos-logo.png',
     colors: {
