@@ -5,16 +5,16 @@ import { useQuery } from 'react-query'
 
 export const PAYMENT_MINTS = [
   {
-    mint: 'So11111111111111111111111111111111111111112',
-    symbol: 'SOL',
-  },
-  {
     mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
     symbol: 'USDC',
   },
   {
-    mint: '2tWC4JAdL4AxEFJySziYJfsAnW2MHKRo98vbAPiRDSk8',
-    symbol: 'USDC',
+    mint: 'MLKmUCaj1dpBY881aFsrBwR9RUMoKic8SWT3u1q5Nkj',
+    symbol: 'MILK',
+  },
+  {
+    mint: 'So11111111111111111111111111111111111111112',
+    symbol: 'SOL',
   },
 ]
 

@@ -902,4 +902,39 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     },
     marketplaceRate: 'days',
   },
+  ['udderchaos']: {
+    name: 'udderchaos',
+    displayName: 'Udder Chaos',
+    type: 'Guild',
+    hidden: true,
+    websiteUrl: 'https://www.udderchaos.io/',
+    logoImage: 'logos/udderchaos-logo.png',
+    colors: {
+      main: 'rgb(26, 27, 32)',
+      secondary: '#a5b6f6',
+    },
+    filter: {
+      type: 'issuer',
+      value: ['F65oeXXQaDQYnmQKTmmMpZ5XaLBzoUC16pMTg59RfpK6'],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration'],
+      invalidationOptions: {
+        visibilities: ['public'],
+        durationOptions: ['minutes', 'hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: [
+          'MLKmUCaj1dpBY881aFsrBwR9RUMoKic8SWT3u1q5Nkj',
+          'So11111111111111111111111111111111111111112',
+        ],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
 }
