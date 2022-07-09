@@ -249,7 +249,7 @@ export const RentalRateCard = ({
           commitment: 'confirmed',
           maxRetries: 3,
         },
-        signers: [],
+        signers: otpKeypair ? [otpKeypair] : [],
         notificationConfig: {},
       })
 
@@ -257,7 +257,7 @@ export const RentalRateCard = ({
     } catch (e) {
       setExtensionSuccess(false)
       console.log('Error handling rental', e)
-      setError(`Error handling rental: ${formatError(`${e}`)}`)
+      setError(`${formatError(`${e}`)}`)
     } finally {
       setLoading(false)
     }
