@@ -88,7 +88,6 @@ function Claim() {
   const rentalRateModal = useRentalRateModal()
   const [error, setError] = useState<ReactElement | null>(null)
   const paymentMintInfos = usePaymentMints()
-  const [loadingImage, setLoadingImage] = useState(false)
   const [showQRCode, setShowQRCode] = useState(false)
   const [otp, setOtp] = useState<Keypair>()
   const [claimed, setClaimed] = useState(false)
@@ -396,14 +395,12 @@ function Claim() {
                                   paymentMintInfos.data[
                                     tokenData.data.claimApprover?.parsed?.paymentMint.toString()
                                   ]
-                                    ? parseFloat(
-                                        fmtMintAmount(
-                                          paymentMintInfos.data[
-                                            tokenData.data.claimApprover?.parsed?.paymentMint.toString()
-                                          ],
-                                          tokenData.data.claimApprover?.parsed
-                                            ?.paymentAmount ?? new BN(0)
-                                        )
+                                    ? fmtMintAmount(
+                                        paymentMintInfos.data[
+                                          tokenData.data.claimApprover?.parsed?.paymentMint.toString()
+                                        ],
+                                        tokenData.data.claimApprover?.parsed
+                                          ?.paymentAmount ?? new BN(0)
                                       )
                                     : ''}{' '}
                                   {getSymbolFromTokenData(tokenData.data)}{' '}
