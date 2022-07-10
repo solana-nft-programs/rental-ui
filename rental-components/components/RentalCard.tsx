@@ -1420,7 +1420,7 @@ export const RentalCard = ({
                                   : 0}{' '}
                                 {
                                   paymentMintData.find(
-                                    (obj) => obj.mint === extensionPaymentMint
+                                    (obj) => obj.mint === paymentMint
                                   )?.symbol
                                 }
                               </p>
