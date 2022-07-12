@@ -1,18 +1,11 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { DocsContainer as BaseContainer } from '@storybook/addon-docs/blocks'
 import { useDarkMode } from 'storybook-dark-mode'
 import { themes } from '@storybook/theming'
 
 export const DocsContainer = ({ children, context }) => {
   const dark = useDarkMode()
-  const [isDark, setIsDark] = useState(false)
-
-  // useEffect(() => {
-  //   applyTheme(dark ? 'dark' : 'base')
-  //   setIsDark((d) => !d)
-  // }, [dark])
-  // console.log(isDark)
-
+  document.documentElement.setAttribute('data-theme', dark ? 'dark' : '')
   return (
     <BaseContainer
       context={{

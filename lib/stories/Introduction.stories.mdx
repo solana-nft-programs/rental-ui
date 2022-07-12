@@ -11,6 +11,16 @@ import { AiOutlineGithub } from 'react-icons/ai'
 <Meta title="Components/Introduction" />
 
 <style>{`
+  html {
+    --hue: 0;
+    --text-color-normal: hsl(var(--hue), 0%, 17%);
+  }
+
+  html[data-theme='dark'] {
+    --hue: 0;
+    --text-color-normal: hsl(var(--hue), 0%, 62%);
+  }
+
   .subheading {
     --mediumdark: '#999999';
     font-weight: 900;
@@ -52,7 +62,7 @@ import { AiOutlineGithub } from 'react-icons/ai'
     border: 1px solid #00000010;
     border-radius: 5px;
     transition: background 150ms ease-out, border 150ms ease-out, transform 150ms ease-out;
-    color: #333333;
+    color: var(--text-color-normal);
     display: flex;
     align-items: flex-start;
   }
