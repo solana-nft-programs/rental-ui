@@ -1,6 +1,6 @@
 import type { ComponentMeta, ComponentStory } from '@storybook/react'
 
-import { Card } from '../src'
+import { ButtonSmall, Card } from '../src'
 import { Stats } from '../src/common/Stats'
 
 export default {
@@ -56,4 +56,24 @@ NFTCard.args = {
   header: 'SMB #123',
   subHeader: 'Max rate duration 3W 2D',
   content: <></>,
+}
+
+export const NFTCardRent = Template.bind({})
+NFTCardRent.args = {
+  hero: (
+    <img
+      className="w-full"
+      src="https://img-cdn.magiceden.dev/rs:fill:170:170:0:0/plain/https://i.imgur.com/bMH6qNc.png"
+      alt="text"
+    />
+  ),
+  badge: 'trending',
+  header: 'SMB #123',
+  subHeader: 'Max rate duration 3W 2D',
+  content: (
+    <div className="flex w-full items-center justify-between">
+      <ButtonSmall>Rent 0.1 ◎ / Day</ButtonSmall>
+      <div className="text-xs text-gray-400">≈10 USDC</div>
+    </div>
+  ),
 }

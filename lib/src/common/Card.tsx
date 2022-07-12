@@ -50,7 +50,7 @@ export const Card = ({
       <div className="text-xs" style={{ color: CONFIG.colors.primary }}>
         {subHeader}
       </div>
-      <div className="mx-auto mt-2">{content && content}</div>
+      <div className="mt-2">{content && content}</div>
     </div>
   )
 }

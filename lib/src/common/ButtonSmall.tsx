@@ -34,9 +34,9 @@ export const ButtonSmall = ({
   className,
   ...buttonProps
 }: {
-  children: JSX.Element
+  children: JSX.Element | string
   className?: string
-  handleClick: () => void
+  handleClick?: () => void
 } & ButtonSmallProps) => {
   const [loading, setLoading] = useState(false)
   return (
@@ -44,6 +44,7 @@ export const ButtonSmall = ({
       {...buttonProps}
       className={`flex items-center justify-center gap-1 rounded-2xl text-xs ${className}`}
       onClick={async () => {
+        if (!handleClick) return
         try {
           setLoading(true)
           await handleClick()
