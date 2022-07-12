@@ -1347,21 +1347,18 @@
     tiny-invariant "^1.2.0"
     tslib "^2.3.1"
 
-"@cardinal/common@^1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@cardinal/common/-/common-1.0.3.tgz#c097b1e2415194b1d4b88da65e4d1842629f982d"
-  integrity sha512-P1qtol7ve5HPWh/tfOeTeaUsmGgJQmE+QtF9FSgVRi9VeOr9Hg9smQTuk6lxfCgS7BzgvY1jyIQHAXYhAqcoNw==
+"@cardinal/common@^2.0.5":
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/@cardinal/common/-/common-2.0.5.tgz#562634f3517cf03d7f462e7b7cf9f05fd4c28b22"
+  integrity sha512-SGW9czHaCVICz3P2qtn0JtW5uY+0LxkrutI2N27+FgRmfx84QdocRv5LtMWcSVYifVEMUFgayKMqgmbfbaUJcA==
   dependencies:
-    "@cardinal/certificates" "^1.3.4"
-    "@cardinal/token-manager" "^0.2.11"
     "@metaplex-foundation/mpl-token-metadata" "^1.2.5"
-    "@project-serum/anchor" "^0.22.1"
+    "@project-serum/anchor" "^0.24.2"
     "@saberhq/anchor-contrib" "^1.12.48"
     "@saberhq/solana-contrib" "^1.12.48"
     "@saberhq/token-utils" "^1.12.48"
     "@solana/buffer-layout" "^4.0.0"
     "@solana/spl-token" "^0.1.8"
-    "@solana/wallet-adapter-react" "^0.15.3"
     "@ubeswap/token-math" "^4.4.4"
     tiny-invariant "^1.2.0"
     tslib "^2.3.1"
@@ -1453,19 +1450,6 @@
     mocha "^9.1.4"
     ts-mocha "^8.0.0"
     typescript "^4.5.5"
-
-"@cardinal/token-manager@^0.2.11":
-  version "0.2.17"
-  resolved "https://registry.yarnpkg.com/@cardinal/token-manager/-/token-manager-0.2.17.tgz#9352ed285c242d52b04fe0dfc7d1a258e7b05e47"
-  integrity sha512-ZTtoOz+vlx7ZDffCjG5H1hiJyjYOnZeNHojVCJ9wQK/7UyKSOxbnJsKbzMKoYweHW8ubSkTC+y+n5SWafRLcFQ==
-  dependencies:
-    "@metaplex-foundation/mpl-token-metadata" "^1.2.3"
-    "@solana/buffer-layout" "^4.0.0"
-    "@solana/spl-token" "^0.1.8"
-    borsh "^0.7.0"
-    bs58 "^4.0.1"
-    tiny-invariant "^1.2.0"
-    tslib "^2.3.1"
 
 "@cardinal/token-manager@^1.4.7":
   version "1.4.7"

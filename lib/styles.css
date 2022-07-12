@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('http://fonts.cdnfonts.com/css/euclid-circular-a');
+
+div {
+    font-family: Euclid Circular A;
+}

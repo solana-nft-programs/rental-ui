@@ -1,4 +1,4 @@
-import { getBatchedMultiplAccounts as getBatchedMultipleAccounts } from '@cardinal/common'
+import { getBatchedMultipleAccounts } from '@cardinal/common'
 import { scan } from '@cardinal/scanner/dist/cjs/programs/cardinalScanner'
 import type { AccountData } from '@cardinal/token-manager'
 import type { PaidClaimApproverData } from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
