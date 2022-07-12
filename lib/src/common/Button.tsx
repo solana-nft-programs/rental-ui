@@ -80,7 +80,7 @@ export const Button = ({
   icon?: JSX.Element
   count?: number
   className?: string
-  onClick: () => void
+  onClick?: () => void
 } & ButtonProps) => {
   const [loading, setLoading] = useState(false)
 
@@ -89,6 +89,7 @@ export const Button = ({
       {...buttonProps}
       className={className}
       onClick={async () => {
+        if (!onClick) return
         try {
           setLoading(true)
           await onClick()

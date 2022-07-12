@@ -13,7 +13,7 @@ export const Stats = ({
       }}
     >
       {stats?.map((stat, i) => (
-        <>
+        <div key={stat.header}>
           <div
             key={stat.header}
             className="flex w-[90px] flex-col items-center gap-[1px]"
@@ -29,7 +29,7 @@ export const Stats = ({
               style={{ background: CONFIG.colors['medium-4'] }}
             ></div>
           )}
-        </>
+        </div>
       ))}
     </div>
   )
