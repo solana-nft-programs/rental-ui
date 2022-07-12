@@ -1,6 +1,14 @@
 import { Meta } from '@storybook/addon-docs'
+import Colors from './assets/colors.svg'
+import discord from './assets/discord.svg'
+import Direction from './assets/direction.svg'
+import Flow from './assets/flow.svg'
+import Logo from './assets/logo-colored.png'
+import Repo from './assets/repo.svg'
+import Solana from './assets/solana.png'
+import { AiOutlineGithub } from 'react-icons/ai'
 
-<Meta title="Example/Introduction" />
+<Meta title="Components/Introduction" />
 
 <style>{`
   .subheading {
@@ -66,6 +74,7 @@ import { Meta } from '@storybook/addon-docs'
     margin-bottom: 2px;
   }
   
+  .link-item img, svg {
     height: 40px;
     width: 40px;
     margin-right: 15px;
@@ -105,90 +114,62 @@ import { Meta } from '@storybook/addon-docs'
   
 `}</style>
 
-# Welcome to Cardinal UI components
+# Welcome to Cardinal Rental Components
 
-Storybook helps you build UI components in isolation from your app's business logic, data, and context.
-That makes it easy to develop hard-to-reach states. Save these UI states as **stories** to revisit during development, testing, or QA.
-
-Browse example stories now by navigating to them in the sidebar.
-View their code in the `src/stories` directory to learn how they work.
-We recommend building UIs with a [**component-driven**](https://componentdriven.org) process starting with atomic components and ending with pages.
+Cardinal Rental UI components are UI components built to be drop-in and easy to use to enable rentals in your Solana based blockchain applications / dApps.
 
 <div className="subheading">Configure</div>
 
 <div className="link-list">
-  <a
-    className="link-item"
-    href="https://storybook.js.org/docs/react/addons/addon-types"
-    target="_blank"
-  >
+  <a className="link-item" href="https://cardinal.so" target="_blank">
+    <img src={Logo} alt="Logo" />
     <span>
-      <strong>Presets for popular tools</strong>
-      Easy setup for TypeScript, SCSS and more.
+      <strong>Website</strong>
+      Get to know Cardinal at a glance.
     </span>
   </a>
   <a
     className="link-item"
-    href="https://storybook.js.org/docs/react/configure/webpack"
+    href="https://github.com/cardinal-labs/cardinal-token-manager"
     target="_blank"
   >
+    <img src={Solana} alt="Build" />
     <span>
-      <strong>Build configuration</strong>
-      How to customize webpack and Babel
+      <strong>Smart Contracts</strong>
+      Learn about Cardinal Solana programs
+    </span>
+  </a>
+  <a className="link-item" href="/" target="_blank">
+    <img src={Colors} alt="colors" />
+    <span>
+      <strong>UI Components</strong>
+      You're in the right place
     </span>
   </a>
   <a
     className="link-item"
-    href="https://storybook.js.org/docs/react/configure/styling-and-css"
+    href="https://cardinal-labs.github.io/cardinal-token-manager/"
     target="_blank"
   >
+    <img src={Flow} alt="flow" />
     <span>
-      <strong>Styling</strong>
-      How to load and configure CSS libraries
+      <strong>Javascript SDK</strong>
+      Build your own UIs
     </span>
   </a>
   <a
     className="link-item"
-    href="https://storybook.js.org/docs/react/get-started/setup#configure-storybook-for-your-stack"
+    href="https://github.com/cardinal-labs/cardinal-token-manager"
     target="_blank"
   >
+    <AiOutlineGithub />
     <span>
-      <strong>Data</strong>
-      Providers and mocking for data libraries
-    </span>
-  </a>
-</div>
-
-<div className="subheading">Learn</div>
-
-<div className="link-list">
-  <a className="link-item" href="https://storybook.js.org/docs" target="_blank">
-    <span>
-      <strong>Storybook documentation</strong>
-      Configure, customize, and extend
-    </span>
-  </a>
-  <a
-    className="link-item"
-    href="https://storybook.js.org/tutorials/"
-    target="_blank"
-  >
-    <span>
-      <strong>In-depth guides</strong>
-      Best practices from leading teams
-    </span>
-  </a>
-  <a
-    className="link-item"
-    href="https://github.com/storybookjs/storybook"
-    target="_blank"
-  >
-    <span>
-      <strong>GitHub project</strong>
+      <strong>GitHub</strong>
       View the source and add issues
     </span>
   </a>
-  <a className="link-item" href="https://discord.gg/storybook" target="_blank">
+  <a className="link-item" href="https://discord.gg/byq6uNTugq" target="_blank">
+    <img src={discord} alt="discord" />
     <span>
       <strong>Discord chat</strong>
       Chat with maintainers and the community
@@ -197,6 +178,10 @@ We recommend building UIs with a [**component-driven**](https://componentdriven.
 </div>
 
 <div className="tip-wrapper">
-  <span className="tip">Tip</span>Edit the Markdown in{' '}
-  <code>src/stories/Introduction.stories.mdx</code>
+  <span className="tip">Tip</span>All this code is open source
+  <code>
+    <a href="https://github.com/cardinal-labs">
+      https://github.com/cardinal-labs
+    </a>
+  </code>
 </div>

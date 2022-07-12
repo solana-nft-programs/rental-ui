@@ -1,5 +1,5 @@
 import type { AccountData } from '@cardinal/common'
-import { getBatchedMultiplAccounts as getBatchedMultipleAccounts } from '@cardinal/common'
+import { getBatchedMultipleAccounts } from '@cardinal/common'
 import { tryPublicKey } from '@cardinal/namespaces-components'
 import type { PaidClaimApproverData } from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
 import type { TimeInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'

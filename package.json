@@ -12,7 +12,7 @@
   "dependencies": {
     "@apollo/client": "^3.6.0",
     "@babel/core": "^7.17.0",
-    "@cardinal/common": "^1.0.3",
+    "@cardinal/common": "^2.0.5",
     "@cardinal/eslint-config-react": "^1.0.10",
     "@cardinal/namespaces-components": "^3.0.2",
     "@cardinal/scanner": "^0.1.1",
