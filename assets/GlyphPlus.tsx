@@ -1,4 +1,4 @@
-export const Plus = () => (
+export const GlyphPlus = () => (
   <svg
     width="20"
     height="20"

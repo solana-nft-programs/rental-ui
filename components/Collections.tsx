@@ -1,16 +1,23 @@
 import { css } from '@emotion/react'
-import { Plus } from 'assets/plus'
-import { WalletGlyph } from 'assets/wallet'
+import { GlyphPlus } from 'assets/GlyphPlus'
+import { GlyphWallet } from 'assets/GlyphWallet'
+import { MoneyGlow } from 'assets/MoneyGlow'
+import { RentGlow } from 'assets/RentGlow'
+import { WalletGlow } from 'assets/WalletGlow'
 import { ButtonSmall } from 'common/ButtonSmall'
+import { Card } from 'common/Card'
 import { Glow } from 'common/Glow'
+import { Stats } from 'common/Stats'
 import type { ProjectConfig } from 'config/config'
 import { projectConfigs } from 'config/config'
-import { lighten } from 'polished'
+import { queryId, useGlobalStats } from 'hooks/useGlobalStats'
+import { lighten, transparentize } from 'polished'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 
 export const Collections = () => {
   const { setProjectConfig } = useProjectConfig()
-
+  const stats = useGlobalStats()
+  console.log(stats)
   const categories = Object.entries(projectConfigs).reduce(
     (acc, [, config]) => {
       if (config.hidden) return acc
@@ -41,14 +48,14 @@ export const Collections = () => {
             </div>
             <ButtonSmall>
               <>
-                <WalletGlyph />
+                <GlyphWallet />
                 <>Connect wallet</>
               </>
             </ButtonSmall>
           </div>
         </div>
-        <div className="flex justify-between px-10 py-28">
-          <Glow angle={130}>
+        <div className="flex justify-between px-16 py-28">
+          <Glow angle={130} scale={1.5}>
             <div className="flex flex-col gap-2">
               <div className="text-5xl text-light-0">Marketplace</div>
               <div className="text-lg text-medium-3">
@@ -57,8 +64,8 @@ export const Collections = () => {
               </div>
             </div>
           </Glow>
-          <div className="flex flex-col items-end justify-end gap-3 ">
-            <div className="flex items-center gap-4">
+          <div className="flex flex-col items-end justify-end gap-5 ">
+            <div className="flex items-center gap-6">
               <div className="text-lg text-medium-3">
                 Are you a product owner?
               </div>
@@ -69,18 +76,32 @@ export const Collections = () => {
                 }}
               >
                 <>Add your collection</>
-                <Plus />
+                <GlyphPlus />
               </div>
             </div>
             <div className="flex w-fit gap-3 rounded-xl border-[2px] border-border p-4">
-              <div>
-                <span className="text-medium-3">Volume </span>
-                <span className="text-light-0">1,234 USDC</span>
+              <div className="flex gap-2">
+                <div className="text-medium-3">Total rentals</div>
+                <div className="text-light-0">
+                  {stats.data &&
+                  stats.data[queryId('global', true)]?.aggregate.count ? (
+                    stats.data[queryId('global', true)]!.aggregate.count
+                  ) : (
+                    <div className="mt-[2px] h-5 w-12 animate-pulse rounded-md bg-border" />
+                  )}
+                </div>
               </div>
               <div className="w-[2px] bg-border"></div>
-              <div>
-                <span className="text-medium-3">Total rentals </span>
-                <span className="text-light-0">1,244</span>
+              <div className="flex gap-2">
+                <div className="text-medium-3">Listed rentals</div>
+                <div className="text-light-0">
+                  {stats.data &&
+                  stats.data[queryId('global', false)]?.aggregate.count ? (
+                    stats.data[queryId('global', false)]!.aggregate.count
+                  ) : (
+                    <div className="mt-[2px] h-5 w-12 animate-pulse rounded-md bg-border" />
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -96,22 +117,145 @@ export const Collections = () => {
               {configs.map((config) => (
                 <div
                   key={config.name}
-                  style={{ background: lighten(0.07, config.colors.main) }}
-                  className={`flex h-[300px] min-w-[200px] cursor-pointer items-center justify-center rounded-xl p-10 shadow-2xl transition-all duration-200 hover:scale-[1.02]`}
-                  onClick={() => {
-                    setProjectConfig(config.name)
-                  }}
+                  className="bg-opacity-1 cursor-pointer transition-colors"
+                  css={css`
+                    &:hover {
+                      background: ${transparentize(
+                        0.7,
+                        lighten(0.07, config.colors.main)
+                      )};
+                    }
+                  `}
+                  onClick={() => setProjectConfig(config.name)}
                 >
-                  <img
-                    className="max-h-full"
-                    src={config.logoImage}
-                    alt={config.name}
-                  />
+                  <Card
+                    badge={config.badge}
+                    hero={
+                      <div
+                        className="flex h-full w-full items-center justify-center p-12"
+                        css={css`
+                          background: ${lighten(0.07, config.colors.main)};
+                        `}
+                      >
+                        <img
+                          className="max-h-full"
+                          src={config.logoImage}
+                          alt={config.name}
+                        />
+                      </div>
+                    }
+                    header={config.displayName}
+                    content={
+                      <Stats
+                        stats={[
+                          {
+                            header: 'Total rentals',
+                            value:
+                              stats.data &&
+                              stats.data[queryId(config.name, true)]?.aggregate
+                                .count !== undefined ? (
+                                stats.data[
+                                  queryId(config.name, true)
+                                ]!.aggregate.count.toString()
+                              ) : (
+                                <div className="mt-1 h-5 w-12 animate-pulse rounded-md bg-border" />
+                              ),
+                          },
+                          {
+                            header: 'Listed rentals',
+                            value:
+                              stats.data &&
+                              stats.data[queryId(config.name, false)]?.aggregate
+                                .count !== undefined ? (
+                                stats.data[
+                                  queryId(config.name, false)
+                                ]!.aggregate.count.toString()
+                              ) : (
+                                <div className="mt-1 h-5 w-12 animate-pulse rounded-md bg-border" />
+                              ),
+                          },
+                        ]}
+                      />
+                    }
+                  ></Card>
                 </div>
               ))}
             </div>
           </div>
         ))}
+      </div>
+      <div className="my-40 px-12">
+        <div className="my-12 flex items-center justify-center text-4xl text-light-0">
+          How it Works
+        </div>
+        <div className="grid w-full grid-cols-1 flex-wrap gap-4 px-10 md:grid-cols-3">
+          {[
+            {
+              icon: <WalletGlow />,
+              header: 'Connect wallet',
+              description:
+                'Connect the Solana wallet of your choice by clicking the wallet icon in the top right corner',
+            },
+            {
+              icon: <RentGlow />,
+              header: 'Rent NFT',
+              description:
+                'Browse the collection and buy the NFT you want in a few clicks',
+            },
+            {
+              icon: <MoneyGlow />,
+              header: 'Generate revenue',
+              description:
+                'Set time based expiry or rate at which users can pay your to hold your NFT until it is securely returned back to you',
+            },
+          ].map(({ icon, header, description }) => (
+            <div
+              key={header}
+              className="min-h-80 flex flex-col items-center rounded-3xl bg-dark-6 py-12 px-4 xl:px-24"
+            >
+              <Glow blur={20} scale={3}>
+                <div
+                  className="flex h-16 w-16 items-center justify-center rounded-2xl p-3"
+                  css={css`
+                    background: linear-gradient(
+                      180deg,
+                      rgba(184, 95, 255, 0.25) 0%,
+                      rgba(184, 95, 255, 0) 100%
+                    );
+                    box-shadow: 0px 0px 0px 3px rgba(255, 255, 255, 0.1) inset;
+                  `}
+                >
+                  {icon}
+                </div>
+              </Glow>
+              <div className="my-4 text-3xl text-light-0">{header}</div>
+              <div className="text-center text-medium-3">{description}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="mt-14 w-full px-4 py-4">
+        <div className="flex justify-between rounded-xl py-4 px-8">
+          <div className="flex items-center">
+            <img
+              alt="Cardinal logo"
+              className="inline-block h-6"
+              src="./cardinal-crosshair.svg"
+            />
+            <span className="ml-2 text-2xl text-light-0">Cardinal</span>
+          </div>
+          <div className="flex gap-6 text-medium-4">
+            <div className="cursor-pointer transition-colors hover:text-medium-3">
+              Documentation
+            </div>
+            <div className="cursor-pointer transition-colors hover:text-medium-3">
+              Github
+            </div>
+            <div className="cursor-pointer transition-colors hover:text-medium-3">
+              Contact
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   )

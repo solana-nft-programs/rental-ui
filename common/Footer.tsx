@@ -34,15 +34,6 @@ export const Footer = ({
           </span>
         </div>
         <div className="flex gap-10 self-end text-center md:gap-20">
-          {/* <span className="flex flex-col items-start gap-1">
-            <div className="mb-2 text-lg font-semibold text-white">App</div>
-            <a href="/" className="text-gray-400">
-              Wallet
-            </a>
-            <a href="/admin" className="text-gray-400">
-              Manage
-            </a>
-          </span> */}
           <span className="flex flex-col items-start gap-1">
             <div className="mb-2 text-lg font-semibold text-white">
               Resources
@@ -78,7 +69,7 @@ export const Footer = ({
                 target="_blank"
                 rel="noreferrer"
                 style={{ color: accentColor }}
-                className={`hover:text-primary opacity-80 transition-opacity hover:opacity-100`}
+                className={`opacity-80 transition-opacity hover:text-primary hover:opacity-100`}
               >
                 {icon}
               </a>

@@ -1,25 +1,28 @@
-export const Card = ({
+import type { Badge } from 'config/config'
+
+export type Props = {
+  header: string
+  subHeader?: string
+  badge?: Badge
+  hero?: JSX.Element
+  content?: JSX.Element
+}
+
+export const Card: React.FC<Props> = ({
   header,
   subHeader,
   badge,
   hero,
   content,
-}: {
-  header: string
-  subHeader?: string
-  badge?: 'recent' | 'trending'
-  hero?: JSX.Element
-  content?: JSX.Element
-}) => {
+  ...props
+}: Props) => {
   return (
     <div
-      className="relative flex w-[200px] flex-col rounded-lg bg-white bg-opacity-5 p-2"
-      style={{
-        border: '1px solid rgba(221, 218, 218, 0.2)',
-      }}
+      {...props}
+      className="relative flex flex-col gap-2 rounded-lg border-[1px] border-border bg-white bg-opacity-5 p-4"
     >
       {badge && (
-        <div className="absolute right-4 top-4 rounded-md bg-dark-5 px-2 py-1 text-[8px]">
+        <div className="absolute right-6 top-6 rounded-md bg-dark-5 px-2 py-1 text-sm">
           {
             {
               recent: <span className="text-primary">👋 Recently listed</span>,
@@ -28,12 +31,12 @@ export const Card = ({
           }
         </div>
       )}
-      <div className="mb-2 h-[182px] w-[182px] overflow-hidden rounded-lg">
+      <div className="aspect-square w-full overflow-hidden rounded-lg">
         {hero}
       </div>
-      <div className="text-xs text-white">{header}</div>
-      <div className="text-xs text-primary">{subHeader}</div>
-      <div className="mt-2">{content && content}</div>
+      <div className="text-lg text-white">{header}</div>
+      <div className="text-lg text-primary">{subHeader}</div>
+      <div>{content && content}</div>
     </div>
   )
 }
