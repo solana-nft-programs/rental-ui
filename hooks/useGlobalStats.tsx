@@ -23,14 +23,15 @@ export const useGlobalStats = () => {
           query GetCardinalClaimEvents {
             ${Object.entries(projectConfigs)
               .filter(([, c]) => !c.hidden)
-              .map(
-                ([, c]) => `
+              .map(([, c]) =>
+                c.filter?.type === 'creators'
+                  ? `
               ${queryId(
                 c.name,
                 true
               )}: cardinal_claim_events_aggregate(where: {mint_address_nfts: {metadatas_attributes: {first_verified_creator: {_in: [${c.filter?.value
-                  .map((v) => `"${v}"`)
-                  .join(',')}]}}}}) {
+                      .map((v) => `"${v}"`)
+                      .join(',')}]}}}}) {
                 aggregate {
                   count
                 }
@@ -39,13 +40,37 @@ export const useGlobalStats = () => {
                 c.name,
                 false
               )}: cardinal_token_managers_aggregate(where: {state: {_eq: "1"}, mint_address_nfts: {metadatas_attributes: {first_verified_creator: {_in: [${c.filter?.value
-                  .map((v) => `"${v}"`)
-                  .join(',')}]}}}}) {
+                      .map((v) => `"${v}"`)
+                      .join(',')}]}}}}) {
                 aggregate {
                   count
                 }
               }
               `
+                  : c.filter?.type === 'issuer'
+                  ? `
+                  ${queryId(
+                    c.name,
+                    true
+                  )}: cardinal_claim_events_aggregate(where: {issuer: {_in: [${c.filter?.value
+                      .map((v) => `"${v}"`)
+                      .join(',')}]}}) {
+                    aggregate {
+                      count
+                    }
+                  }
+                  ${queryId(
+                    c.name,
+                    false
+                  )}: cardinal_token_managers_aggregate(where: {state: {_eq: "1"}, issuer: {_in: [${c.filter?.value
+                      .map((v) => `"${v}"`)
+                      .join(',')}]}}) {
+                    aggregate {
+                      count
+                    }
+                  }
+                  `
+                  : ''
               )
               .join('')}
             ${queryId('global', true)}: cardinal_claim_events_aggregate {
