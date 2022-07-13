@@ -1,4 +1,4 @@
-export const WalletGlyph = () => (
+export const GlyphWallet = () => (
   <svg
     style={{ height: '12px' }}
     width="22"

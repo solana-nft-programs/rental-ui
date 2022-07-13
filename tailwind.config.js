@@ -7,18 +7,21 @@ module.exports = {
     './components/**/*.{js,ts,jsx,tsx}',
     './common/**/*.{js,ts,jsx,tsx}',
     './rental-components/**/*.{js,ts,jsx,tsx}',
+    './assets/**/*.{js,ts,jsx,tsx}',
   ],
   purge: [
     './pages/**/*.{js,ts,jsx,tsx}',
     './components/**/*.{js,ts,jsx,tsx}',
     './common/**/*.{js,ts,jsx,tsx}',
     './rental-components/**/*.{js,ts,jsx,tsx}',
+    './assets/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
     extend: {
       fontFamily: {
         sans: ['Euclid Circular A', ...defaultTheme.fontFamily.sans],
       },
+      backgroundColor: '#000000',
       colors: {
         primary: '#907EFF',
         'primary-hover': '#7567CE',

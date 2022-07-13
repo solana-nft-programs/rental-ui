@@ -26,7 +26,7 @@ class AppDocument extends Document {
             rel="stylesheet"
           />
         </Head>
-        <body>
+        <body className="bg-dark-5">
           <Main />
           <NextScript />
         </body>
