@@ -1,5 +1,3 @@
-import { CONFIG } from './Color'
-
 export const Card = ({
   header,
   subHeader,
@@ -21,24 +19,11 @@ export const Card = ({
       }}
     >
       {badge && (
-        <div
-          className="absolute right-4 top-4 rounded-md px-2 py-1 text-[8px]"
-          style={{
-            background: CONFIG.colors['dark-5'],
-          }}
-        >
+        <div className="absolute right-4 top-4 rounded-md bg-dark-5 px-2 py-1 text-[8px]">
           {
             {
-              recent: (
-                <span style={{ color: CONFIG.colors.primary }}>
-                  👋 Recently listed
-                </span>
-              ),
-              trending: (
-                <span style={{ color: CONFIG.colors.primary }}>
-                  🔥 Trending
-                </span>
-              ),
+              recent: <span className="text-primary">👋 Recently listed</span>,
+              trending: <span className="text-primary">🔥 Trending</span>,
             }[badge]
           }
         </div>
@@ -47,9 +32,7 @@ export const Card = ({
         {hero}
       </div>
       <div className="text-xs text-white">{header}</div>
-      <div className="text-xs" style={{ color: CONFIG.colors.primary }}>
-        {subHeader}
-      </div>
+      <div className="text-xs text-primary">{subHeader}</div>
       <div className="mt-2">{content && content}</div>
     </div>
   )

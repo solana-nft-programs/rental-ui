@@ -192,9 +192,6 @@ const ModalWrapper = styled(animated(DialogContent))<{
   * {
     box-sizing: border-box;
   }
-  font-family: SFHello, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-    'Segoe UI Symbol';
   position: relative;
   box-shadow: 0px 4px 16px rgba(207, 207, 207, 0.25);
   max-width: ${({ maxWidth }) => maxWidth ?? '560px'};
