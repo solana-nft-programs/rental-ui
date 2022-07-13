@@ -1,7 +1,7 @@
 import { lighten } from 'polished'
 import { FaDiscord, FaGithub, FaMedium, FaTwitter } from 'react-icons/fa'
 
-const SOCIALS = {
+export const SOCIALS = {
   discord: { icon: <FaDiscord />, link: 'https://discord.gg/byq6uNTugq' },
   github: { icon: <FaGithub />, link: 'https://github.com/cardinal-labs' },
   medium: { icon: <FaMedium />, link: 'https://cardinal-labs.medium.com/' },

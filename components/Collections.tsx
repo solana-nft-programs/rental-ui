@@ -4,6 +4,7 @@ import { MoneyGlow } from 'assets/MoneyGlow'
 import { RentGlow } from 'assets/RentGlow'
 import { WalletGlow } from 'assets/WalletGlow'
 import { Card } from 'common/Card'
+import { FooterSlim } from 'common/FooterSlim'
 import { Glow } from 'common/Glow'
 import { HeaderSlim } from 'common/HeaderSlim'
 import { Stats } from 'common/Stats'
@@ -216,29 +217,7 @@ export const Collections = () => {
           ))}
         </div>
       </div>
-      <div className="mt-14 w-full px-4 py-4">
-        <div className="flex justify-between rounded-xl py-4 px-8">
-          <div className="flex items-center">
-            <img
-              alt="Cardinal logo"
-              className="inline-block h-6"
-              src="./cardinal-crosshair.svg"
-            />
-            <span className="ml-2 text-2xl text-light-0">Cardinal</span>
-          </div>
-          <div className="flex flex-col gap-6 text-medium-4 md:flex-row">
-            <div className="cursor-pointer transition-colors hover:text-medium-3">
-              Documentation
-            </div>
-            <div className="cursor-pointer transition-colors hover:text-medium-3">
-              Github
-            </div>
-            <div className="cursor-pointer transition-colors hover:text-medium-3">
-              Contact
-            </div>
-          </div>
-        </div>
-      </div>
+      <FooterSlim />
     </div>
   )
 }
