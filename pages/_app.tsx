@@ -1,4 +1,5 @@
 import './styles.css'
+import '@cardinal/namespaces-components/dist/esm/styles.css'
 import 'tailwindcss/tailwind.css'
 
 import { WalletIdentityProvider } from '@cardinal/namespaces-components'
@@ -37,8 +38,9 @@ const App = ({
   Component,
   pageProps,
   config,
-}: AppProps & { config: ProjectConfig }) => (
-  <EnvironmentProvider>
+  cluster,
+}: AppProps & { config: ProjectConfig; cluster: string }) => (
+  <EnvironmentProvider defaultCluster={cluster}>
     <UTCNowProvider>
       <WalletProvider wallets={getWalletAdapters()} autoConnect>
         <WalletIdentityProvider>

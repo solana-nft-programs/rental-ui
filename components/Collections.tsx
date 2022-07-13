@@ -1,12 +1,11 @@
 import { css } from '@emotion/react'
 import { GlyphPlus } from 'assets/GlyphPlus'
-import { GlyphWallet } from 'assets/GlyphWallet'
 import { MoneyGlow } from 'assets/MoneyGlow'
 import { RentGlow } from 'assets/RentGlow'
 import { WalletGlow } from 'assets/WalletGlow'
-import { ButtonSmall } from 'common/ButtonSmall'
 import { Card } from 'common/Card'
 import { Glow } from 'common/Glow'
+import { HeaderSlim } from 'common/HeaderSlim'
 import { Stats } from 'common/Stats'
 import type { ProjectConfig } from 'config/config'
 import { projectConfigs } from 'config/config'
@@ -36,24 +35,7 @@ export const Collections = () => {
           background: linear-gradient(180deg, #140a51 0%, #0b0b0b 100%);
         `}
       >
-        <div className="w-full px-4 py-4">
-          <div className="flex justify-between rounded-xl bg-white bg-opacity-5 py-4 px-8">
-            <div className="flex items-center">
-              <img
-                alt="Cardinal logo"
-                className="inline-block h-6"
-                src="./cardinal-crosshair.svg"
-              />
-              <span className="ml-2 text-2xl text-white">Cardinal</span>
-            </div>
-            <ButtonSmall>
-              <>
-                <GlyphWallet />
-                <>Connect wallet</>
-              </>
-            </ButtonSmall>
-          </div>
-        </div>
+        <HeaderSlim />
         <div className="flex flex-wrap justify-between gap-10 px-16 py-28">
           <Glow angle={130} scale={1.5}>
             <div className="flex flex-col gap-2">
