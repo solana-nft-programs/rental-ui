@@ -54,7 +54,7 @@ export const Collections = () => {
             </ButtonSmall>
           </div>
         </div>
-        <div className="flex justify-between px-16 py-28">
+        <div className="flex flex-wrap justify-between gap-10 px-16 py-28">
           <Glow angle={130} scale={1.5}>
             <div className="flex flex-col gap-2">
               <div className="text-5xl text-light-0">Marketplace</div>
@@ -184,7 +184,7 @@ export const Collections = () => {
           </div>
         ))}
       </div>
-      <div className="my-40 px-12">
+      <div className="my-40 px-2 md:px-12">
         <div className="my-12 flex items-center justify-center text-4xl text-light-0">
           How it Works
         </div>
@@ -244,7 +244,7 @@ export const Collections = () => {
             />
             <span className="ml-2 text-2xl text-light-0">Cardinal</span>
           </div>
-          <div className="flex gap-6 text-medium-4">
+          <div className="flex flex-col gap-6 text-medium-4 md:flex-row">
             <div className="cursor-pointer transition-colors hover:text-medium-3">
               Documentation
             </div>
