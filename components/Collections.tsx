@@ -17,7 +17,7 @@ import { useProjectConfig } from 'providers/ProjectConfigProvider'
 export const Collections = () => {
   const { setProjectConfig } = useProjectConfig()
   const stats = useGlobalStats()
-  console.log(stats)
+
   const categories = Object.entries(projectConfigs).reduce(
     (acc, [, config]) => {
       if (config.hidden) return acc
