@@ -28,7 +28,7 @@
     "@emotion/styled": "^11.6.0",
     "@google/model-viewer": "^1.10.1",
     "@headlessui/react": "^1.6.0",
-    "@metaplex-foundation/mpl-token-metadata": "^1.2.0",
+    "@metaplex-foundation/mpl-token-metadata": "^1.2.5",
     "@mui/material": "^5.8.2",
     "@project-serum/anchor": "^0.24.2",
     "@reach/dialog": "^0.16.2",

@@ -300,7 +300,7 @@ export async function getTokenDatas(
     tokenManagerDatas.map(
       async (tm) =>
         (
-          await metaplex.MetadataProgram.find_metadata_account(tm.parsed.mint)
+          await metaplex.MetadataProgram.findMetadataAccount(tm.parsed.mint)
         )[0]
     )
   )
@@ -439,7 +439,7 @@ export async function getTokenData(
     tokenManagerId
   )
 
-  const [metaplexId] = await metaplex.MetadataProgram.find_metadata_account(
+  const [metaplexId] = await metaplex.MetadataProgram.findMetadataAccount(
     tokenManagerData.parsed.mint
   )
   const metaplexData = await metaplex.Metadata.load(
@@ -453,7 +453,7 @@ export async function getTokenData(
   // TODO lookup metaplex in parallel
   const idsToFetch = [
     // (
-    //   await metaplex.MetadataProgram.find_metadata_account(
+    //   await metaplex.MetadataProgram.findMetadataAccount(
     //     tokenManagerData.parsed.mint
     //   )
     // )[0],
