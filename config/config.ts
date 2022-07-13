@@ -8,6 +8,19 @@ import type {
 
 import type { UserTokenData } from '../hooks/useUserTokenData'
 
+export const COLORS = {
+  primary: '#907EFF',
+  secondary: '#7EFFE8',
+  accent: '#CE81F4',
+  'light-0': '#FFFFFF',
+  'light-1': '#F5E2FF',
+  'light-2': '#B1AFBB',
+  'medium-3': '#8D8B9B',
+  'medium-4': '#6D6C7C',
+  'dark-5': '#0B0B0B',
+  'dark-6': '#000000',
+}
+
 export type Colors = {
   main: string
   secondary: string

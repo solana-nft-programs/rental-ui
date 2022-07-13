@@ -1,4 +1,10 @@
-export const Glow = ({ children }: { children: JSX.Element }) => {
+export const Glow = ({
+  angle = 35.64,
+  children,
+}: {
+  angle?: number
+  children: JSX.Element
+}) => {
   return (
     <div className="relative h-fit w-fit overflow-visible">
       <div
@@ -7,7 +13,7 @@ export const Glow = ({ children }: { children: JSX.Element }) => {
           background: '#7560FF',
           opacity: 0.7,
           filter: 'blur(50px)',
-          transform: 'rotate(35.65deg)',
+          transform: `rotate(${angle}deg)`,
         }}
       ></div>
       {children}

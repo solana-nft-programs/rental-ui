@@ -1,6 +1,4 @@
 import './styles.css'
-import 'antd/dist/antd.css'
-import '../styles/globals.css'
 import 'tailwindcss/tailwind.css'
 
 import { WalletIdentityProvider } from '@cardinal/namespaces-components'

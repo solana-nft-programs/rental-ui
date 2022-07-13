@@ -1,7 +1,6 @@
 import styled from '@emotion/styled'
 import { useState } from 'react'
-
-import { LoadingSpinner } from './LoadingSpinner'
+import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 
 export type ButtonSmallProps = {
   disabled?: boolean

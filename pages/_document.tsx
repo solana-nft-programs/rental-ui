@@ -7,8 +7,6 @@ class AppDocument extends Document {
         <Head>
           <title>Cardinal</title>
           <link rel="icon" href="/favicon.ico" />
-          <link href="/globals.css" rel="stylesheet" />
-
           <link
             href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"
             rel="stylesheet"
