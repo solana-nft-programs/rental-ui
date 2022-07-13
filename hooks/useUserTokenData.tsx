@@ -59,7 +59,7 @@ export const useUserTokenData = (filter?: TokenFilter, cluster?: string) => {
         tokenAccounts.map(
           async (tokenAccount) =>
             (
-              await metaplex.MetadataProgram.find_metadata_account(
+              await metaplex.MetadataProgram.findMetadataAccount(
                 new PublicKey(tokenAccount.account.data.parsed.info.mint)
               )
             )[0]
