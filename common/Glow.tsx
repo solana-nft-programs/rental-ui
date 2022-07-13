@@ -14,7 +14,7 @@ export const Glow = ({
   return (
     <div className={`relative h-fit w-fit overflow-visible ${className}`}>
       <div
-        className="absolute left-1/4 h-full w-1/2"
+        className="absolute left-1/4 top-0 h-full w-1/2"
         style={{
           background: '#7560FF',
           opacity: 0.7,
@@ -22,7 +22,7 @@ export const Glow = ({
           transform: `rotate(${angle}deg) scale(${scale})`,
         }}
       ></div>
-      {children}
+      <div className="relative">{children}</div>
     </div>
   )
 }

@@ -12,7 +12,8 @@ import { Select, Slider } from 'antd'
 import type { TokenData } from 'api/api'
 import { withWrapSol } from 'api/wrappedSol'
 import { BigNumber } from 'bignumber.js'
-import { Header } from 'common/Header'
+import { HeaderSlim } from 'common/HeaderSlim'
+import { HeroSmall } from 'common/HeroSmall'
 import { NFT, NFTPlaceholder, TokensOuter } from 'common/NFT'
 import { notify } from 'common/Notification'
 import { Tag } from 'common/Tags'
@@ -27,7 +28,6 @@ import {
   usePaymentMints,
   WRAPPED_SOL_MINT,
 } from 'hooks/usePaymentMints'
-import { useProjectStats } from 'hooks/useProjectStats'
 import { lighten } from 'polished'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import {
@@ -283,7 +283,6 @@ export const Browse = () => {
   const { config } = useProjectConfig()
   const tokenManagers = useFilteredTokenManagers()
   const tokenManagersForConfig = tokenManagers.data || []
-  const projectStats = useProjectStats()
   const { UTCNow } = useUTCNow()
   const twitterAddress = useAddressName(
     connection,
@@ -585,73 +584,6 @@ export const Browse = () => {
     }
   }
 
-  const calculateFloorPrice = (tokenDatas: TokenData[]): number => {
-    const onlyRateTokens = (tokenData: TokenData) => {
-      if (config.marketplaceRate) {
-        return (
-          tokenData.timeInvalidator?.parsed?.durationSeconds?.toNumber() === 0
-        )
-      } else {
-        return false
-      }
-    }
-
-    const rentalPrices = tokenDatas
-      .filter(
-        (tokenData) =>
-          tokenData.timeInvalidator?.parsed && onlyRateTokens(tokenData)
-      )
-      .map((tokenData) => {
-        let price = new BigNumber(0)
-        let duration = 0
-
-        if (paymentMintInfos && tokenData.timeInvalidator?.parsed) {
-          if (
-            tokenData.timeInvalidator.parsed.durationSeconds?.toNumber() === 0
-          ) {
-            if (
-              tokenData.timeInvalidator.parsed.extensionPaymentAmount &&
-              tokenData.timeInvalidator.parsed.extensionDurationSeconds &&
-              tokenData.timeInvalidator?.parsed?.extensionPaymentMint &&
-              paymentMintInfos.data
-            ) {
-              price = getMintDecimalAmount(
-                paymentMintInfos.data[
-                  tokenData.timeInvalidator?.parsed?.extensionPaymentMint.toString()
-                ]!,
-                tokenData.timeInvalidator?.parsed?.extensionPaymentAmount
-              )
-              duration =
-                tokenData.timeInvalidator.parsed.extensionDurationSeconds.toNumber()
-            }
-          } else {
-            if (
-              tokenData.claimApprover?.parsed?.paymentMint &&
-              paymentMintInfos &&
-              paymentMintInfos.data &&
-              paymentMintInfos.data[
-                tokenData.claimApprover?.parsed?.paymentMint.toString()
-              ]
-            ) {
-              price = getPriceFromTokenData(tokenData)
-            }
-            if (tokenData.timeInvalidator.parsed.durationSeconds) {
-              duration =
-                tokenData.timeInvalidator.parsed.durationSeconds.toNumber()
-            }
-            if (tokenData.timeInvalidator.parsed.expiration) {
-              duration =
-                tokenData.timeInvalidator.parsed.expiration.toNumber() -
-                Date.now() / 1000
-            }
-          }
-        }
-        return (price.toNumber() / duration) * globalRate
-      })
-    if (rentalPrices.length === 0) return 0
-    return Math.min(...rentalPrices)
-  }
-
   const updateFilters = (traitType: string, value: any[]) => {
     const filters = { ...selectedFilters }
     if (value.length === 0 && traitType in filters) {
@@ -761,7 +693,7 @@ export const Browse = () => {
 
   return (
     <>
-      <Header
+      <HeaderSlim
         loading={tokenManagers.isFetched && tokenManagers.isRefetching}
         tabs={[
           {
@@ -777,96 +709,8 @@ export const Browse = () => {
           { name: 'Browse', anchor: 'browse' },
         ]}
       />
+      <HeroSmall tokens={tokenManagers.data ? filteredAndSortedTokens : []} />
       <div className="container mx-auto pt-4">
-        <div className="mb-4 flex h-min w-full justify-center md:flex-row md:justify-center">
-          <div className="flex h-fit flex-col overflow-hidden rounded-lg sm:flex-row">
-            <div
-              className="d-block mb-2 flex-col py-3 px-5 sm:mb-0"
-              style={{ background: lighten(0.07, config.colors.main) }}
-            >
-              <p className="text-gray-400">
-                FLOOR PRICE /{' '}
-                {config.marketplaceRate
-                  ? config.marketplaceRate
-                      .substring(0, config.marketplaceRate.length - 1)
-                      .toUpperCase()
-                  : 'DAY'}
-              </p>
-              <h2 className="text-center font-bold text-gray-100">
-                {calculateFloorPrice(filteredAndSortedTokens).toFixed(2)}{' '}
-                {filteredAndSortedTokens.length > 0
-                  ? getSymbolFromTokenData(filteredAndSortedTokens[0]!)
-                  : '◎'}
-              </h2>
-            </div>
-            <div
-              className="w-[1px]"
-              style={{ background: lighten(0.4, config.colors.main) }}
-            ></div>
-            <div
-              className="d-block mb-2 flex-col py-3 px-5 sm:mb-0"
-              style={{ background: lighten(0.07, config.colors.main) }}
-            >
-              <p className="text-gray-400">TOTAL LISTED</p>
-              <h2 className="text-center font-bold text-gray-100">
-                {filteredAndSortedTokens.length}
-              </h2>
-            </div>
-
-            {projectStats && (
-              <>
-                {projectStats.data?.totalRentalCount && (
-                  <>
-                    <div
-                      className="w-[1px]"
-                      style={{ background: lighten(0.4, config.colors.main) }}
-                    ></div>
-                    <div
-                      className="d-block flex-col py-3 px-5"
-                      style={{ background: lighten(0.07, config.colors.main) }}
-                    >
-                      <p className="text-gray-400">TOTAL RENTALS (ALL-TIME)</p>
-                      <h2 className="text-center font-bold text-gray-100">
-                        {projectStats.data?.totalRentalCount}
-                      </h2>
-                    </div>
-                  </>
-                )}
-                {projectStats.data?.totalRentalDuration && (
-                  <>
-                    <div
-                      className="my-3 w-[1px]"
-                      style={{ background: lighten(0.4, config.colors.main) }}
-                    ></div>
-                    <div className="d-block flex-col py-3 px-5">
-                      <p className="text-gray-400">TOTAL DURATION (ALL-TIME)</p>
-                      <h2 className="text-center font-bold text-gray-100">
-                        {secondsToString(
-                          projectStats.data?.totalRentalDuration
-                        )}
-                      </h2>
-                    </div>
-                  </>
-                )}
-                {projectStats.data?.totalRentalVolume && (
-                  <>
-                    <div
-                      className="my-3 w-[1px]"
-                      style={{ background: lighten(0.4, config.colors.main) }}
-                    ></div>
-                    <div className="d-block flex-col py-3 px-5">
-                      <p className="text-gray-400">TOTAL VOLUME (ALL-TIME)</p>
-                      <h2 className="text-center font-bold text-gray-100">
-                        {secondsToString(projectStats.data?.totalRentalVolume)}{' '}
-                        ◎
-                      </h2>
-                    </div>
-                  </>
-                )}
-              </>
-            )}
-          </div>
-        </div>
         <div className="flex justify-center">
           <div className="md:w-1/5"></div>
         </div>
