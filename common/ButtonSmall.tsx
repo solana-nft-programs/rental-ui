@@ -41,7 +41,7 @@ export const ButtonSmall = ({
   return (
     <StyledButtonSmall
       {...buttonProps}
-      className={`flex items-center justify-center gap-1 rounded-2xl text-xs ${className}`}
+      className={`flex items-center justify-center gap-1 rounded-2xl bg-dark-6 text-xs ${className}`}
       onClick={async () => {
         if (!handleClick) return
         try {
