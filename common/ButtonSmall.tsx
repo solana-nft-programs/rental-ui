@@ -7,6 +7,12 @@ export type ButtonSmallProps = {
   bgColor?: string
 }
 
+export type Props = {
+  children: JSX.Element | string
+  className?: string
+  onClick?: () => void
+} & ButtonSmallProps
+
 export const StyledButtonSmall = styled.button<ButtonSmallProps>`
   color: white;
   cursor: ${({ disabled }) => !disabled && 'pointer'};
@@ -27,26 +33,22 @@ export const StyledButtonSmall = styled.button<ButtonSmallProps>`
   }
 `
 
-export const ButtonSmall = ({
+export const ButtonSmall: React.FC<Props> = ({
   children,
-  handleClick,
+  onClick,
   className,
   ...buttonProps
-}: {
-  children: JSX.Element | string
-  className?: string
-  handleClick?: () => void
-} & ButtonSmallProps) => {
+}: Props) => {
   const [loading, setLoading] = useState(false)
   return (
     <StyledButtonSmall
       {...buttonProps}
       className={`flex items-center justify-center gap-1 rounded-2xl bg-dark-6 text-xs ${className}`}
       onClick={async () => {
-        if (!handleClick) return
+        if (!onClick) return
         try {
           setLoading(true)
-          await handleClick()
+          await onClick()
         } finally {
           setLoading(false)
         }

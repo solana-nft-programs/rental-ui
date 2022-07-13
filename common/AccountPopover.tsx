@@ -72,7 +72,11 @@ export const AccountPopover = () => {
             <MenuItem
               onClick={async () =>
                 // TODO fix cluster including localnet and mainnet
-                show(wallet as Wallet, connection, environment.label as Cluster)
+                show({
+                  wallet: wallet as Wallet,
+                  connection,
+                  cluster: environment.label as Cluster,
+                })
               }
             >
               <FaTwitter />

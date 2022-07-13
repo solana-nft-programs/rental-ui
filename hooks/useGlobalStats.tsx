@@ -1,6 +1,5 @@
 import { ApolloClient, gql, InMemoryCache } from '@apollo/client'
 import { projectConfigs } from 'config/config'
-import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useQuery } from 'react-query'
 
 export const queryId = (s: string, historical: boolean) => {
@@ -10,10 +9,9 @@ export const queryId = (s: string, historical: boolean) => {
 }
 
 export const useGlobalStats = () => {
-  const { environment } = useEnvironmentCtx()
   return useQuery<
     { [key: string]: { aggregate: { count: number } } } | undefined
-  >(['useProjectStats', environment.index], async () => {
+  >(['useProjectStats'], async () => {
     const index = new ApolloClient({
       uri: 'https://prod-holaplex.hasura.app/v1/graphql',
       cache: new InMemoryCache({ resultCaching: false }),
