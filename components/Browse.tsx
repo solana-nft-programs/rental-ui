@@ -673,11 +673,13 @@ export const Browse = () => {
             name: 'Wallet',
             anchor: wallet.publicKey?.toBase58() || 'wallet',
             disabled: !wallet.connected,
+            tooltip: !wallet.connected ? 'Connect wallet' : undefined,
           },
           {
             name: 'Manage',
             anchor: 'manage',
             disabled: !wallet.connected || config.disableListing,
+            tooltip: !wallet.connected ? 'Connect wallet' : undefined,
           },
           { name: 'Browse', anchor: 'browse' },
         ]}

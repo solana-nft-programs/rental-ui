@@ -9,10 +9,16 @@ import { useEffect, useState } from 'react'
 
 import { ButtonSmall } from './ButtonSmall'
 import { LoadingPulse } from './LoadingPulse'
+import { Tooltip } from './Tooltip'
 import { asWallet } from './Wallets'
 
 type Props = {
-  tabs?: { disabled?: boolean; name: string; anchor: string }[]
+  tabs?: {
+    disabled?: boolean
+    name: string
+    anchor: string
+    tooltip?: string
+  }[]
   loading?: boolean
 }
 
@@ -66,31 +72,33 @@ export const HeaderSlim: React.FC<Props> = ({ tabs, loading }: Props) => {
         <div className="left-1/2 w-screen md:w-auto lg:absolute lg:-translate-x-1/2">
           {tabs && (
             <div className="mt-1 flex justify-center rounded-xl">
-              {tabs.map(({ disabled, name, anchor }) => (
-                <div key={anchor} className="flex flex-col items-center">
-                  <div
-                    className={`w-20 text-center text-light-0 lg:w-28
+              {tabs.map(({ disabled, name, anchor, tooltip }) => (
+                <Tooltip key={anchor} title={tooltip || ''}>
+                  <div className="flex flex-col items-center">
+                    <div
+                      className={`w-20 text-center text-light-0 lg:w-28
                       ${
                         tab === anchor
                           ? 'cursor-pointer opacity-100'
                           : disabled
-                          ? 'opacity-20'
+                          ? 'cursor-default opacity-20'
                           : 'cursor-pointer opacity-100 transition-opacity hover:opacity-100'
                       }`}
-                    onClick={() => {
-                      if (disabled) return
-                      setTab(anchor)
-                      router.push(
-                        `${location.pathname}${location.search}#${anchor}`
-                      )
-                    }}
-                  >
-                    {name}
+                      onClick={() => {
+                        if (disabled) return
+                        setTab(anchor)
+                        router.push(
+                          `${location.pathname}${location.search}#${anchor}`
+                        )
+                      }}
+                    >
+                      {name}
+                    </div>
+                    {tab === anchor && (
+                      <div className="h-1 w-1 rounded-full bg-light-0"></div>
+                    )}
                   </div>
-                  {tab === anchor && (
-                    <div className="h-1 w-1 rounded-full bg-light-0"></div>
-                  )}
-                </div>
+                </Tooltip>
               ))}
               <div className="absolute -right-10 top-1 h-5 w-5">
                 <LoadingPulse loading={loading ?? false} />
