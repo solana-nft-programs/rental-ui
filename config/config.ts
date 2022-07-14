@@ -232,7 +232,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         icon: 'featured',
         filter: {
           type: 'issuer',
-          value: ['41qJ9dJemw8mrry2BD1wU6B2aHXN4RoNY79bS7xwDPhM'],
+          value: ['5grvMeoBqv5ZdHq9JMy5RrxLPNAt1nzc9cpqYWFUwizz'],
         },
       },
       {
