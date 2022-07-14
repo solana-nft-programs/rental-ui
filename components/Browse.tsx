@@ -13,6 +13,7 @@ import { withWrapSol } from 'api/wrappedSol'
 import { GlyphActivity } from 'assets/GlyphActivity'
 import { GlyphBrowse } from 'assets/GlyphBrowse'
 import { BigNumber } from 'bignumber.js'
+import { Glow } from 'common/Glow'
 import { HeaderSlim } from 'common/HeaderSlim'
 import { HeroSmall } from 'common/HeroSmall'
 import { MultiSelector } from 'common/MultiSelector'
@@ -773,7 +774,9 @@ export const Browse = () => {
           />
         </div>
         <div className="flex">
-          <TabSelector defaultOption={PANE_TABS[0]} options={PANE_TABS} />
+          <Glow scale={1.5} opacity={1}>
+            <TabSelector defaultOption={PANE_TABS[0]} options={PANE_TABS} />
+          </Glow>
         </div>
       </div>
       <div className="container mx-auto pt-4">
