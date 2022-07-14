@@ -39,7 +39,6 @@ export const MultiSelector = <T,>({
     window.addEventListener('mousedown', handleClick)
     return () => window.removeEventListener('mousedown', handleClick)
   }, [ref])
-  console.log('-------+', defaultValue)
 
   return (
     <div className="relative z-40 text-sm" ref={ref}>

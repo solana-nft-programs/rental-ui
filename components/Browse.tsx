@@ -4,12 +4,10 @@ import { invalidate, withClaimToken } from '@cardinal/token-manager'
 import { shouldTimeInvalidate } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator/utils'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { css } from '@emotion/react'
-import styled from '@emotion/styled'
 import { BN } from '@project-serum/anchor'
 import type * as splToken from '@solana/spl-token'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { Connection, PublicKey, Transaction } from '@solana/web3.js'
-import { Select, Slider } from 'antd'
 import type { TokenData } from 'api/api'
 import { withWrapSol } from 'api/wrappedSol'
 import { BigNumber } from 'bignumber.js'
@@ -19,6 +17,7 @@ import { MultiSelector } from 'common/MultiSelector'
 import { NFT, NFTPlaceholder, TokensOuter } from 'common/NFT'
 import { notify } from 'common/Notification'
 import { Selector } from 'common/Selector'
+import { TabSelector } from 'common/TabSelector'
 import { Tag } from 'common/Tags'
 import { executeTransaction } from 'common/Transactions'
 import { fmtMintAmount, getMintDecimalAmount } from 'common/units'
@@ -63,6 +62,12 @@ enum OrderCategories {
   RateHighToLow = 'Rate: High to Low',
   DurationLowToHigh = 'Duration: Low to High',
   DurationHighToLow = 'Duration: High to Low',
+}
+
+enum TypeFilter {
+  All = 'All',
+  RateRentals = 'Rate rentals',
+  FixedDuration = 'Fixed duration',
 }
 
 const boundsToSeconds: { [key in number]: number } = {
@@ -654,8 +659,21 @@ export const Browse = () => {
         ]}
       />
       <HeroSmall tokens={tokenManagers.data ? filteredAndSortedTokens : []} />
-      <div className="mx-10 flex gap-4">
+      <div className="mx-10 mt-4 flex items-end gap-[4px] text-light-0">
+        <div>Results</div>
+        <div className="relative top-[0.6px] text-medium-4">
+          {filteredAndSortedTokens.length}{' '}
+        </div>
+      </div>
+      <div className="mx-10 mt-4 flex gap-4">
+        <TabSelector
+          defaultOption={{ value: TypeFilter.All, label: TypeFilter.All }}
+          options={(Object.values(TypeFilter) as Array<TypeFilter>).map(
+            (v) => ({ label: v, value: v })
+          )}
+        />
         <MultiSelector<string>
+          placeholder="Select filters"
           defaultValue={
             Object.values(selectedFilters).reduce(
               (acc, v) => acc + v.length,
