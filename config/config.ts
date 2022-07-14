@@ -226,15 +226,15 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       secondary: '#80ddef',
     },
     sections: [
-      {
-        header: 'Featured',
-        description: 'Cardinal Room Design Competition',
-        icon: 'featured',
-        filter: {
-          type: 'issuer',
-          value: ['5grvMeoBqv5ZdHq9JMy5RrxLPNAt1nzc9cpqYWFUwizz'],
-        },
-      },
+      // {
+      //   header: 'Featured',
+      //   description: 'Cardinal Room Design Competition',
+      //   icon: 'featured',
+      //   filter: {
+      //     type: 'issuer',
+      //     value: ['5grvMeoBqv5ZdHq9JMy5RrxLPNAt1nzc9cpqYWFUwizz'],
+      //   },
+      // },
       {
         header: 'Listed',
         icon: 'listed',
