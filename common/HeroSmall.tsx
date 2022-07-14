@@ -117,7 +117,7 @@ export const HeroSmall: React.FC<Props> = ({ tokens }: Props) => {
   const projectStats = useProjectStats()
   const paymentMints = usePaymentMints()
   return (
-    <div className="flex w-full items-center justify-between py-8 px-20">
+    <div className="flex w-full flex-wrap items-center justify-center gap-6 py-8 px-4 lg:justify-between lg:px-20">
       <Glow angle={160}>
         <div className="flex items-center gap-4">
           <div className="flex h-20 w-20 items-center justify-center rounded-full border-2 border-border bg-dark-6 bg-opacity-30 p-2">
@@ -136,8 +136,7 @@ export const HeroSmall: React.FC<Props> = ({ tokens }: Props) => {
               {calculateFloorPrice(tokens, config, paymentMints.data).toFixed(
                 2
               )}{' '}
-              {tokens.length > 0 ? getSymbolFromTokenData(tokens[0]!) : '◎'}
-              10{' '}
+              {tokens.length > 0 ? getSymbolFromTokenData(tokens[0]!) : '◎'}{' '}
               {config.marketplaceRate
                 ? config.marketplaceRate
                     .substring(0, config.marketplaceRate.length - 1)

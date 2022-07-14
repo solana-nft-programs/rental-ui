@@ -689,8 +689,8 @@ export const Browse = () => {
           {filteredAndSortedTokens.length}{' '}
         </div>
       </div>
-      <div className="mx-10 mt-4 flex justify-between">
-        <div className="flex gap-4">
+      <div className="mx-10 mt-4 flex flex-wrap justify-between gap-4">
+        <div className="flex flex-wrap gap-4">
           <TabSelector
             defaultOption={{
               value: 0,
