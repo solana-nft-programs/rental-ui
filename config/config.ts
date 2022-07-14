@@ -34,7 +34,7 @@ export type TokenFilter = {
 export type TokenSection = {
   header?: string
   description?: string
-  icon?: 'time' | 'featured' | 'listed' | 'rented' | 'available'
+  icon?: 'time' | 'featured' | 'listed' | 'rented' | 'available' | 'info'
   filter?: TokenFilter
   tokens?: TokenData[] | UserTokenData[]
   showEmpty?: boolean
@@ -225,33 +225,33 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       main: '#000',
       secondary: '#80ddef',
     },
-    sections: [
-      // {
-      //   header: 'Featured',
-      //   description: 'Cardinal Room Design Competition',
-      //   icon: 'featured',
-      //   filter: {
-      //     type: 'issuer',
-      //     value: ['5grvMeoBqv5ZdHq9JMy5RrxLPNAt1nzc9cpqYWFUwizz'],
-      //   },
-      // },
-      {
-        header: 'Listed',
-        icon: 'listed',
-        filter: {
-          type: 'state',
-          value: [TokenManagerState.Issued.toString()],
-        },
-      },
-      {
-        header: 'Claimed',
-        icon: 'time',
-        filter: {
-          type: 'state',
-          value: [TokenManagerState.Claimed.toString()],
-        },
-      },
-    ],
+    // sections: [
+    // {
+    //   header: 'Featured',
+    //   description: 'Cardinal Room Design Competition',
+    //   icon: 'featured',
+    //   filter: {
+    //     type: 'issuer',
+    //     value: ['5grvMeoBqv5ZdHq9JMy5RrxLPNAt1nzc9cpqYWFUwizz'],
+    //   },
+    // },
+    // {
+    //   header: 'Listed',
+    //   icon: 'listed',
+    //   filter: {
+    //     type: 'state',
+    //     value: [TokenManagerState.Issued.toString()],
+    //   },
+    // },
+    // {
+    //   header: 'Claimed',
+    //   icon: 'time',
+    //   filter: {
+    //     type: 'state',
+    //     value: [TokenManagerState.Claimed.toString()],
+    //   },
+    // },
+    // ],
     filter: {
       type: 'creators',
       value: ['5grvMeoBqv5ZdHq9JMy5RrxLPNAt1nzc9cpqYWFUwizz'],
