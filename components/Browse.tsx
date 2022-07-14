@@ -82,7 +82,8 @@ const PANE_TABS = [
       </div>
     ),
     value: 'activity',
-    disabled: 'Coming soon',
+    disabled: true,
+    tooltip: 'Coming soon',
   },
 ]
 
