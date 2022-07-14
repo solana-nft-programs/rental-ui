@@ -2,6 +2,7 @@ import { DisplayAddress } from '@cardinal/namespaces-components'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { useWallet } from '@solana/wallet-adapter-react'
 import type { TokenData } from 'api/api'
+import { GlyphQuestion } from 'assets/GlyphQuestion'
 import { Airdrop } from 'common/Airdrop'
 import { HeaderSlim } from 'common/HeaderSlim'
 import { elligibleForRent, NFT, NFTPlaceholder, TokensOuter } from 'common/NFT'
@@ -180,6 +181,7 @@ export const Wallet = () => {
                           listed: <AiOutlineShoppingCart />,
                           rented: <AiOutlineShoppingCart />,
                           available: <MdOutlineSell />,
+                          info: <GlyphQuestion />,
                         }[tokenGroup.icon]}
                       {tokenGroup.header}
                     </div>
