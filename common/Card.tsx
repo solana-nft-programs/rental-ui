@@ -1,8 +1,8 @@
 import type { Badge } from 'config/config'
 
 export type Props = {
-  header: string
-  subHeader?: string
+  header: string | JSX.Element
+  subHeader?: string | JSX.Element
   badge?: Badge
   hero?: JSX.Element
   content?: JSX.Element
@@ -35,7 +35,7 @@ export const Card: React.FC<Props> = ({
         {hero}
       </div>
       <div className="text-lg text-white">{header}</div>
-      <div className="text-lg text-primary">{subHeader}</div>
+      {subHeader && <div className="text-lg text-primary">{subHeader}</div>}
       <div>{content && content}</div>
     </div>
   )
