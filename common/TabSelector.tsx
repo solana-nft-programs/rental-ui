@@ -3,7 +3,12 @@ import { lighten } from 'polished'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useState } from 'react'
 
-type Option<T> = { label: string; value: T }
+type Option<T> = {
+  label: string | React.ReactNode
+  value: T
+  disabled?: boolean
+}
+
 type Props<T> = {
   placeholder?: string
   options: Option<T>[]
@@ -18,7 +23,6 @@ export const TabSelector = <T,>({
 }: Props<T>) => {
   const { config } = useProjectConfig()
   const [value, setValue] = useState<Option<T> | undefined>(defaultOption)
-  console.log(value)
   return (
     <div
       className="flex rounded-lg border-[1px] border-border"
@@ -28,14 +32,17 @@ export const TabSelector = <T,>({
     >
       {options.map((o) => (
         <div
-          key={o.label}
-          className="flex cursor-pointer items-center justify-between rounded-lg px-5 py-2 text-sm text-light-0 transition-colors hover:text-primary"
+          key={o.label?.toString()}
+          className={`flex items-center justify-between rounded-lg px-5 py-2 text-sm text-light-0 transition-colors ${
+            o.disabled ? 'opacity-25' : 'cursor-pointer hover:text-primary'
+          }`}
           css={css`
             background: ${value?.value === o.value
               ? lighten(0.03, config.colors.main)
               : ''};
           `}
           onClick={() => {
+            if (o.disabled) return
             setValue(o)
             onChange && onChange(o)
           }}
