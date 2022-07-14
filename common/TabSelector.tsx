@@ -6,7 +6,7 @@ import { useState } from 'react'
 type Option<T> = {
   label: string | React.ReactNode
   value: T
-  disabled?: boolean
+  disabled?: string
 }
 
 type Props<T> = {

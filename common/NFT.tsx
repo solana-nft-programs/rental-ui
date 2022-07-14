@@ -371,7 +371,7 @@ export function NFT({ tokenData, onClick }: NFTProps) {
       >
         <Tooltip placement="bottom-start" title="Quick Actions">
           <div
-            className={`absolute top-[8px] right-[8px] z-50 flex h-7 w-7 cursor-pointer items-center justify-center rounded-md text-white hover:bg-[${lighten(
+            className={`absolute top-[8px] right-[8px] z-20 flex h-7 w-7 cursor-pointer items-center justify-center rounded-md text-white hover:bg-[${lighten(
               0.3,
               config.colors.main
             )}]`}

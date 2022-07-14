@@ -43,7 +43,7 @@ import {
   useProjectConfig,
 } from 'providers/ProjectConfigProvider'
 import { useUTCNow } from 'providers/UTCNowProvider'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { AiFillStar, AiOutlineShoppingCart } from 'react-icons/ai'
 import { FaLink } from 'react-icons/fa'
 import { MdAccessTimeFilled, MdSell } from 'react-icons/md'
@@ -82,7 +82,7 @@ const PANE_TABS = [
       </div>
     ),
     value: 'activity',
-    disabled: true,
+    disabled: 'Coming soon',
   },
 ]
 
@@ -1010,6 +1010,7 @@ export const Browse = () => {
             ))}
           </div>
         ) : (
+          groupedTokens &&
           groupedTokens.showEmpty && (
             <>
               <div className="flex items-center gap-2 text-2xl text-white">
