@@ -117,7 +117,7 @@ export const HeroSmall: React.FC<Props> = ({ tokens }: Props) => {
   const projectStats = useProjectStats()
   const paymentMints = usePaymentMints()
   return (
-    <div className="flex w-full items-center justify-between py-8 px-10">
+    <div className="flex w-full items-center justify-between py-8 px-20">
       <Glow angle={160}>
         <div className="flex items-center gap-4">
           <div className="flex h-20 w-20 items-center justify-center rounded-full border-2 border-border bg-dark-6 bg-opacity-30 p-2">
