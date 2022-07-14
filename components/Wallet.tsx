@@ -4,6 +4,7 @@ import { useWallet } from '@solana/wallet-adapter-react'
 import type { TokenData } from 'api/api'
 import { Airdrop } from 'common/Airdrop'
 import { Header } from 'common/Header'
+import { HeaderSlim } from 'common/HeaderSlim'
 import { elligibleForRent, NFT, NFTPlaceholder, TokensOuter } from 'common/NFT'
 import { notify } from 'common/Notification'
 import { Tag } from 'common/Tags'
@@ -114,7 +115,7 @@ export const Wallet = () => {
   const groupedFilteredAndSortedTokens = groupTokens(filteredAndSortedTokens)
   return (
     <>
-      <Header
+      <HeaderSlim
         loading={tokenDatas.isFetched && tokenDatas.isFetching}
         tabs={[
           {
