@@ -97,7 +97,9 @@ export const filterTokens = (
         filtered = true
       } else if (
         filter.type === 'issuer' &&
-        token.tokenManager?.parsed.issuer
+        filter.value.includes(
+          token.tokenManager?.parsed.issuer.toString() ?? ''
+        )
       ) {
         filtered = true
       } else if (

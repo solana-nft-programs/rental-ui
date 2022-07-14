@@ -30,9 +30,9 @@ export const TabSelector = <T,>({
         background: ${lighten(0.08, config.colors.main)};
       `}
     >
-      {options.map((o) => (
+      {options.map((o, i) => (
         <div
-          key={o.label?.toString()}
+          key={i}
           className={`flex items-center justify-between rounded-lg px-5 py-2 text-sm text-light-0 transition-colors ${
             o.disabled ? 'opacity-25' : 'cursor-pointer hover:text-primary'
           }`}

@@ -1,4 +1,7 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
+import { lighten } from 'polished'
+import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useState } from 'react'
 import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 
@@ -40,10 +43,14 @@ export const ButtonSmall: React.FC<Props> = ({
   ...buttonProps
 }: Props) => {
   const [loading, setLoading] = useState(false)
+  const { config } = useProjectConfig()
   return (
     <StyledButtonSmall
       {...buttonProps}
-      className={`flex items-center justify-center gap-1 rounded-2xl bg-dark-6 text-xs ${className}`}
+      className={`flex items-center justify-center gap-1 rounded-2xl text-xs ${className}`}
+      css={css`
+        background: ${lighten(0.15, config.colors.main)};
+      `}
       onClick={async () => {
         if (!onClick) return
         try {
