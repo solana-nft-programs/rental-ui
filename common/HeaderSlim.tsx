@@ -6,7 +6,6 @@ import { useRouter } from 'next/router'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useEffect, useState } from 'react'
-import { isMobile } from 'react-device-detect'
 
 import { ButtonSmall } from './ButtonSmall'
 import { LoadingPulse } from './LoadingPulse'
@@ -33,7 +32,7 @@ export const HeaderSlim: React.FC<Props> = ({ tabs, loading }: Props) => {
 
   return (
     <div className="w-full px-4 py-4">
-      <div className="flex min-h-[72px] flex-wrap items-center justify-between gap-4 rounded-xl bg-white bg-opacity-5 py-4 px-8">
+      <div className="flex min-h-[72px] flex-wrap items-center justify-center gap-4 rounded-xl bg-white bg-opacity-5 py-4 px-8 lg:justify-between">
         <div className="flex items-center gap-5">
           <div className="flex items-center">
             <img
@@ -64,13 +63,13 @@ export const HeaderSlim: React.FC<Props> = ({ tabs, loading }: Props) => {
             </div>
           )}
         </div>
-        <div className="absolute left-1/2 w-screen -translate-x-1/2 md:w-auto">
-          {tabs && !isMobile && (
-            <div className="mt-1 flex justify-start rounded-xl">
+        <div className="left-1/2 w-screen md:w-auto lg:absolute lg:-translate-x-1/2">
+          {tabs && (
+            <div className="mt-1 flex justify-center rounded-xl">
               {tabs.map(({ disabled, name, anchor }) => (
                 <div key={anchor} className="flex flex-col items-center">
                   <div
-                    className={`w-28 text-center text-light-0
+                    className={`w-20 text-center text-light-0 lg:w-28
                       ${
                         tab === anchor
                           ? 'cursor-pointer opacity-100'
