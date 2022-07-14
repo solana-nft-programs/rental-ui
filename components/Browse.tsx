@@ -779,7 +779,7 @@ export const Browse = () => {
           </Glow>
         </div>
       </div>
-      <div className="container mx-auto pt-4">
+      <div className="container mx-auto mt-12">
         {!tokenManagers.isFetched ? (
           <TokensOuter>
             <NFTPlaceholder />
@@ -815,7 +815,7 @@ export const Browse = () => {
                     {tokenGroup.description}
                   </div>
                 </div>
-                <TokensOuter>
+                <div className="flex flex-wrap justify-center gap-4 md:justify-start">
                   {tokenGroup.tokens.map((tokenData) => (
                     <div key={tokenData.tokenManager?.pubkey.toString()}>
                       <NFT tokenData={tokenData} />
@@ -1048,7 +1048,7 @@ export const Browse = () => {
                       }
                     </div>
                   ))}
-                </TokensOuter>
+                </div>
               </div>
             ) : (
               tokenGroup.showEmpty && (
@@ -1075,128 +1075,6 @@ export const Browse = () => {
           )
         )}
       </div>
-      {/* <div className="container mx-auto pt-4">
-        <div className="flex justify-center">
-          <div className="md:w-1/5"></div>
-        </div>
-        <div className="flex flex-wrap justify-center gap-5 md:flex-nowrap lg:flex lg:flex-row">
-          <div className="flex flex-col gap-5" style={{ colorScheme: 'dark' }}>
-            <div
-              className="max-h-[70vh] w-[280px] overflow-y-auto rounded-lg py-4 px-8 text-left"
-              style={{ background: lighten(0.07, config.colors.main) }}
-            >
-              <StyledSelect colors={config.colors}>
-                <Select
-                  className="block h-[30px] w-full rounded-[4px] bg-black text-gray-700 lg:mr-20 xl:mr-4"
-                  onChange={(e) => {
-                    setSelectedOrderCategory(e)
-                  }}
-                  defaultValue={selectedOrderCategory}
-                  dropdownStyle={{
-                    backgroundColor: lighten(0.07, config.colors.main),
-                  }}
-                >
-                  {allOrderCategories.map((category) => (
-                    <Option
-                      className="hover:brightness-125"
-                      key={category}
-                      value={category}
-                      style={{
-                        color: '#ffffff',
-                        background: lighten(0.07, config.colors.main),
-                      }}
-                    >
-                      {category}
-                    </Option>
-                  ))}
-                </Select>
-              </StyledSelect>
-            </div>
-            <div
-              className="max-h-[70vh] w-[280px] overflow-y-auto rounded-lg py-5 px-8 text-left"
-              style={{ background: lighten(0.07, config.colors.main) }}
-            >
-              <div className="text-white">
-                <p className="mb-5 text-lg text-gray-300">Duration Range:</p>
-                <Slider
-                  onChange={(bounds) =>
-                    setMaxDurationBounds([
-                      boundsToSeconds[bounds[0]]!,
-                      boundsToSeconds[bounds[1]]!,
-                    ])
-                  }
-                  trackStyle={[{ backgroundColor: config.colors.secondary }]}
-                  handleStyle={[{ borderColor: config.colors.secondary }]}
-                  range
-                  marks={marks}
-                  step={null}
-                  defaultValue={[0, 100]}
-                />
-              </div>
-
-              {!config.browse?.hideFilters && (
-                <div className="mx-auto mt-10">
-                  <div
-                    onClick={() => setShowFilters(!showFilters)}
-                    className="my-3 mx-auto text-lg text-gray-300 hover:cursor-pointer hover:text-gray-100"
-                  >
-                    {showFilters ? 'Filters [-]' : 'Filters [+]'}
-                  </div>
-                  {showFilters && (
-                    <div className="mx-auto flex flex-col">
-                      {Object.keys(sortedAttributes).map((traitType) => (
-                        <div key={traitType}>
-                          {selectedFilters[traitType] !== undefined &&
-                            selectedFilters[traitType]!.length > 0 && (
-                              <p className="mb-1 text-gray-100">{traitType}</p>
-                            )}
-                          <StyledSelectMultiple
-                            colors={config.colors}
-                            className="mb-5"
-                          >
-                            <Select
-                              mode="multiple"
-                              dropdownStyle={{
-                                backgroundColor: lighten(
-                                  0.07,
-                                  config.colors.main
-                                ),
-                              }}
-                              allowClear
-                              style={{ width: '100%' }}
-                              placeholder={traitType}
-                              defaultValue={selectedFilters[traitType] ?? []}
-                              onChange={(e) => {
-                                updateFilters(traitType, e)
-                              }}
-                            >
-                              {sortedAttributes[traitType]!.map((value) => (
-                                <Option
-                                  key={value}
-                                  value={value}
-                                  style={{
-                                    color: config.colors.secondary,
-                                    background: lighten(
-                                      0.07,
-                                      config.colors.main
-                                    ),
-                                  }}
-                                >
-                                  {value}
-                                </Option>
-                              ))}
-                            </Select>
-                          </StyledSelectMultiple>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </div> */}
     </>
   )
 }

@@ -4,7 +4,7 @@ import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tok
 import { BN } from '@project-serum/anchor'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { PublicKey } from '@solana/web3.js'
-import { Header } from 'common/Header'
+import { HeaderSlim } from 'common/HeaderSlim'
 import { NFT, NFTPlaceholder, TokensOuter } from 'common/NFT'
 import { Tag } from 'common/Tags'
 import { executeTransaction } from 'common/Transactions'
@@ -28,7 +28,7 @@ export const Manage = () => {
 
   return (
     <>
-      <Header
+      <HeaderSlim
         loading={
           tokenManagerByIssuer.isFetched && tokenManagerByIssuer.isFetching
         }
