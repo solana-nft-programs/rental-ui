@@ -67,12 +67,6 @@ enum OrderCategories {
   DurationHighToLow = 'Duration: High to Low',
 }
 
-enum TypeFilter {
-  All = 'All',
-  RateRentals = 'Rate rentals',
-  FixedDuration = 'Fixed duration',
-}
-
 const PANE_TABS = [
   {
     label: <GlyphBrowse />,
@@ -270,6 +264,7 @@ export const Browse = () => {
   const [selectedFilters, setSelectedFilters] = useState<{
     [filterName: string]: string[]
   }>({})
+  const [selectedGroup, setSelectedGroup] = useState(0)
   const [maxDurationBounds, setMaxDurationBounds] = useState<[number, number]>([
     0,
     Infinity,
@@ -688,10 +683,15 @@ export const Browse = () => {
       <div className="mx-10 mt-4 flex justify-between">
         <div className="flex gap-4">
           <TabSelector
-            defaultOption={{ value: TypeFilter.All, label: TypeFilter.All }}
-            options={(Object.values(TypeFilter) as Array<TypeFilter>).map(
-              (v) => ({ label: v, value: v })
-            )}
+            defaultOption={{
+              value: 0,
+              label: groupedFilteredAndSortedTokens[0]?.header,
+            }}
+            options={groupedFilteredAndSortedTokens.map((g, i) => ({
+              label: g.header,
+              value: i,
+            }))}
+            onChange={(o) => setSelectedGroup(o.value)}
           />
           <MultiSelector<string>
             placeholder="Select filters"
@@ -777,6 +777,26 @@ export const Browse = () => {
           <Glow scale={1.5} opacity={1}>
             <TabSelector defaultOption={PANE_TABS[0]} options={PANE_TABS} />
           </Glow>
+        </div>
+      </div>
+      <div className="mx-10 mt-10 flex items-center gap-4">
+        <div className="text-white">
+          {groupedFilteredAndSortedTokens[selectedGroup]?.icon &&
+            {
+              time: <MdAccessTimeFilled />,
+              featured: <AiFillStar />,
+              listed: <AiOutlineShoppingCart />,
+              rented: <AiOutlineShoppingCart />,
+              available: <MdSell />,
+            }[groupedFilteredAndSortedTokens[selectedGroup]!.icon!]}
+        </div>
+        <div className="flex flex-col">
+          <div className="text-medium-3">
+            {groupedFilteredAndSortedTokens[selectedGroup]?.header}
+          </div>
+          <div className="text-light-0">
+            {groupedFilteredAndSortedTokens[selectedGroup]?.description}
+          </div>
         </div>
       </div>
       <div className="container mx-auto mt-12">
