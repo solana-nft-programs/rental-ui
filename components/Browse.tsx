@@ -1012,25 +1012,11 @@ export const Browse = () => {
         ) : (
           groupedTokens &&
           groupedTokens.showEmpty && (
-            <>
-              <div className="flex items-center gap-2 text-2xl text-white">
-                {groupedTokens.icon &&
-                  {
-                    time: <MdAccessTimeFilled />,
-                    featured: <AiFillStar />,
-                    listed: <AiOutlineShoppingCart />,
-                    rented: <AiOutlineShoppingCart />,
-                    available: <MdSell />,
-                    info: <GlyphQuestion />,
-                  }[groupedTokens.icon]}
-                {groupedTokens.header}
+            <div className="my-10 flex w-full flex-col items-center justify-center gap-1">
+              <div className="text-gray-500">
+                No active rentals at this moment...
               </div>
-              <div className="my-10 flex w-full flex-col items-center justify-center gap-1">
-                <div className="text-gray-500">
-                  No active rentals at this moment...
-                </div>
-              </div>
-            </>
+            </div>
           )
         )}
       </div>
