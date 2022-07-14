@@ -810,14 +810,14 @@ export const Browse = () => {
       </div>
       <div className="mx-auto mt-12 max-w-[1634px]">
         {!tokenManagers.isFetched ? (
-          <TokensOuter>
-            <NFTPlaceholder />
-            <NFTPlaceholder />
-            <NFTPlaceholder />
-            <NFTPlaceholder />
-            <NFTPlaceholder />
-            <NFTPlaceholder />
-          </TokensOuter>
+          <div className="flex flex-wrap justify-center gap-4 xl:justify-start">
+            <Card placeholder header={<></>} subHeader={<></>} />
+            <Card placeholder header={<></>} subHeader={<></>} />
+            <Card placeholder header={<></>} subHeader={<></>} />
+            <Card placeholder header={<></>} subHeader={<></>} />
+            <Card placeholder header={<></>} subHeader={<></>} />
+            <Card placeholder header={<></>} subHeader={<></>} />
+          </div>
         ) : groupedTokens?.tokens && groupedTokens.tokens.length > 0 ? (
           <div className="flex flex-wrap justify-center gap-4 xl:justify-start">
             {groupedTokens?.tokens?.map((tokenData) => (

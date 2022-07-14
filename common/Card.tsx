@@ -1,11 +1,12 @@
 import type { Badge } from 'config/config'
 
 export type Props = {
-  header: string | JSX.Element
+  header?: string | JSX.Element
   subHeader?: string | JSX.Element
   badge?: Badge
   hero?: JSX.Element
   content?: JSX.Element
+  placeholder?: boolean
 }
 
 export const Card: React.FC<Props> = ({
@@ -14,6 +15,7 @@ export const Card: React.FC<Props> = ({
   badge,
   hero,
   content,
+  placeholder,
   ...props
 }: Props) => {
   return (
@@ -32,11 +34,39 @@ export const Card: React.FC<Props> = ({
         </div>
       )}
       <div className="aspect-square w-full overflow-hidden rounded-lg">
-        {hero}
+        {placeholder ? (
+          <div className="h-full w-[280px] bg-border"></div>
+        ) : (
+          hero
+        )}
       </div>
-      <div className="text-lg text-white">{header}</div>
-      {subHeader && <div className="text-lg text-primary">{subHeader}</div>}
-      <div>{content && content}</div>
+      {header && (
+        <div className="text-lg text-white">
+          {placeholder ? (
+            <div className="h-6 w-[65%] rounded-md bg-border"></div>
+          ) : (
+            header
+          )}
+        </div>
+      )}
+      {subHeader && (
+        <div className="text-lg text-primary">
+          {placeholder ? (
+            <div className="h-6 w-[40%] rounded-md bg-border"></div>
+          ) : (
+            subHeader
+          )}
+        </div>
+      )}
+      {content && (
+        <div>
+          {placeholder ? (
+            <div className="h-8 w-full rounded-md bg-border"></div>
+          ) : (
+            content
+          )}
+        </div>
+      )}
     </div>
   )
 }
