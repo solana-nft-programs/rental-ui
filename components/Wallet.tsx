@@ -3,7 +3,6 @@ import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tok
 import { useWallet } from '@solana/wallet-adapter-react'
 import type { TokenData } from 'api/api'
 import { Airdrop } from 'common/Airdrop'
-import { Header } from 'common/Header'
 import { HeaderSlim } from 'common/HeaderSlim'
 import { elligibleForRent, NFT, NFTPlaceholder, TokensOuter } from 'common/NFT'
 import { notify } from 'common/Notification'
