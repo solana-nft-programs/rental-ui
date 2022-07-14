@@ -20,7 +20,7 @@ import { Glow } from 'common/Glow'
 import { HeaderSlim } from 'common/HeaderSlim'
 import { HeroSmall } from 'common/HeroSmall'
 import { MultiSelector } from 'common/MultiSelector'
-import { NFT, NFTPlaceholder, TokensOuter } from 'common/NFT'
+import { NFT } from 'common/NFT'
 import { notify } from 'common/Notification'
 import { Selector } from 'common/Selector'
 import { TabSelector } from 'common/TabSelector'
@@ -61,10 +61,10 @@ export const handleCopy = (shareUrl: string) => {
 
 enum OrderCategories {
   RecentlyListed = 'Recently Listed',
-  PriceLowToHigh = 'Price: Low to High',
-  PriceHighToLow = 'Price: High to Low',
   RateLowToHigh = 'Rate: Low to High',
   RateHighToLow = 'Rate: High to Low',
+  PriceLowToHigh = 'Price: Low to High',
+  PriceHighToLow = 'Price: High to Low',
   DurationLowToHigh = 'Duration: Low to High',
   DurationHighToLow = 'Duration: High to Low',
 }
@@ -717,7 +717,7 @@ export const Browse = () => {
                 </div>
               ) : undefined
             }
-            options={Object.keys(sortedAttributes).map((traitType) => ({
+            groups={Object.keys(sortedAttributes).map((traitType) => ({
               label: traitType,
               content: (
                 <div key={traitType} className="px-3 pb-3 text-xs">

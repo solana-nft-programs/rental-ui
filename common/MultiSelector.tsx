@@ -9,7 +9,7 @@ type Option<T> = { label: string; value: T }
 type Props<T> = {
   placeholder?: string
   defaultValue?: React.ReactNode
-  options: {
+  groups: {
     type?: 'radio'
     label: string
     content?: React.ReactNode
@@ -22,7 +22,7 @@ export const MultiSelector = <T,>({
   placeholder = 'Select',
   defaultValue,
   onChange,
-  options = [],
+  groups = [],
 }: Props<T>) => {
   const { config } = useProjectConfig()
   const [isOpen, setIsOpen] = useState(false)
@@ -65,11 +65,15 @@ export const MultiSelector = <T,>({
             background: ${darken(0.03, config.colors.main)};
           `}
         >
-          {options.map(({ type, label, options, content }, i) =>
+          {groups.map(({ type, label, options, content }, i) =>
             !openSelectors.includes(label) ? (
               <div
                 key={i}
-                className="flex cursor-pointer items-center justify-between border-b-[1px] border-b-border p-3 text-light-0 transition-colors hover:text-primary"
+                className="flex cursor-pointer items-center justify-between border-b-border p-3 text-light-0 transition-colors hover:text-primary"
+                css={css`
+                  background: ${darken(0.01, config.colors.main)};
+                  border-bottom-width: ${i < groups?.length - 1 ? '1px' : ''};
+                `}
                 onClick={() => setOpenSelectors((v) => [...v, label])}
               >
                 <div>{label}</div>
@@ -77,9 +81,10 @@ export const MultiSelector = <T,>({
               </div>
             ) : (
               <div
-                className="border-b-[1px] border-b-border"
+                className="border-b-border"
                 css={css`
                   background: ${darken(0.01, config.colors.main)};
+                  border-bottom-width: ${i < groups?.length - 1 ? '1px' : ''};
                 `}
               >
                 <div
