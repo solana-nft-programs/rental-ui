@@ -3,10 +3,13 @@ import { lighten } from 'polished'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useState } from 'react'
 
+import { Tooltip } from './Tooltip'
+
 type Option<T> = {
   label: string | React.ReactNode
   value: T
-  disabled?: string
+  tooltip?: string
+  disabled?: boolean
 }
 
 type Props<T> = {
@@ -31,24 +34,27 @@ export const TabSelector = <T,>({
       `}
     >
       {options.map((o, i) => (
-        <div
-          key={i}
-          className={`flex items-center justify-between rounded-lg px-5 py-2 text-sm text-light-0 transition-colors ${
-            o.disabled ? 'opacity-25' : 'cursor-pointer hover:text-primary'
-          }`}
-          css={css`
-            background: ${value?.value === o.value
-              ? lighten(0.03, config.colors.main)
-              : ''};
-          `}
-          onClick={() => {
-            if (o.disabled) return
-            setValue(o)
-            onChange && onChange(o)
-          }}
-        >
-          <div>{o.label}</div>
-        </div>
+        <Tooltip key={i} title={o.tooltip || ''}>
+          <div
+            className={`flex items-center justify-between rounded-lg px-5 py-2 text-sm text-light-0 transition-colors ${
+              o.disabled
+                ? 'cursor-default opacity-25'
+                : 'cursor-pointer hover:text-primary'
+            }`}
+            css={css`
+              background: ${value?.value === o.value
+                ? lighten(0.03, config.colors.main)
+                : ''};
+            `}
+            onClick={() => {
+              if (o.disabled) return
+              setValue(o)
+              onChange && onChange(o)
+            }}
+          >
+            <div>{o.label}</div>
+          </div>
+        </Tooltip>
       ))}
     </div>
   )
