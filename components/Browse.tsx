@@ -10,6 +10,8 @@ import { useWallet } from '@solana/wallet-adapter-react'
 import { Connection, PublicKey, Transaction } from '@solana/web3.js'
 import type { TokenData } from 'api/api'
 import { withWrapSol } from 'api/wrappedSol'
+import { GlyphActivity } from 'assets/GlyphActivity'
+import { GlyphBrowse } from 'assets/GlyphBrowse'
 import { BigNumber } from 'bignumber.js'
 import { HeaderSlim } from 'common/HeaderSlim'
 import { HeroSmall } from 'common/HeroSmall'
@@ -69,6 +71,23 @@ enum TypeFilter {
   RateRentals = 'Rate rentals',
   FixedDuration = 'Fixed duration',
 }
+
+const PANE_TABS = [
+  {
+    label: <GlyphBrowse />,
+    value: 'browse',
+  },
+  {
+    label: (
+      <div className="flex items-center gap-2">
+        <GlyphActivity />
+        Activity
+      </div>
+    ),
+    value: 'activity',
+    disabled: true,
+  },
+]
 
 const boundsToSeconds: { [key in number]: number } = {
   0: 0,
@@ -665,91 +684,97 @@ export const Browse = () => {
           {filteredAndSortedTokens.length}{' '}
         </div>
       </div>
-      <div className="mx-10 mt-4 flex gap-4">
-        <TabSelector
-          defaultOption={{ value: TypeFilter.All, label: TypeFilter.All }}
-          options={(Object.values(TypeFilter) as Array<TypeFilter>).map(
-            (v) => ({ label: v, value: v })
-          )}
-        />
-        <MultiSelector<string>
-          placeholder="Select filters"
-          defaultValue={
-            Object.values(selectedFilters).reduce(
-              (acc, v) => acc + v.length,
-              0
-            ) > 0 ? (
-              <div className="text-light-0">
-                {Object.values(selectedFilters).reduce(
-                  (acc, v) => acc + v.length,
-                  0
-                )}{' '}
-                filter applied
-              </div>
-            ) : undefined
-          }
-          options={Object.keys(sortedAttributes).map((traitType) => ({
-            label: traitType,
-            content: (
-              <div key={traitType} className="px-3 pb-3 text-xs">
-                {sortedAttributes[traitType]!.map((value) => (
-                  <div
-                    key={`${traitType}-${value}`}
-                    className="flex items-center justify-between"
-                    onClick={() =>
-                      setSelectedFilters((filters) => ({
-                        ...filters,
-                        [traitType]: filters[traitType]?.includes(value)
-                          ? filters[traitType]?.filter((v) => v !== value) ?? []
-                          : [...(filters[traitType] ?? []), value],
-                      }))
-                    }
-                  >
+      <div className="mx-10 mt-4 flex justify-between">
+        <div className="flex gap-4">
+          <TabSelector
+            defaultOption={{ value: TypeFilter.All, label: TypeFilter.All }}
+            options={(Object.values(TypeFilter) as Array<TypeFilter>).map(
+              (v) => ({ label: v, value: v })
+            )}
+          />
+          <MultiSelector<string>
+            placeholder="Select filters"
+            defaultValue={
+              Object.values(selectedFilters).reduce(
+                (acc, v) => acc + v.length,
+                0
+              ) > 0 ? (
+                <div className="text-light-0">
+                  {Object.values(selectedFilters).reduce(
+                    (acc, v) => acc + v.length,
+                    0
+                  )}{' '}
+                  filter applied
+                </div>
+              ) : undefined
+            }
+            options={Object.keys(sortedAttributes).map((traitType) => ({
+              label: traitType,
+              content: (
+                <div key={traitType} className="px-3 pb-3 text-xs">
+                  {sortedAttributes[traitType]!.map((value) => (
                     <div
-                      className="flex cursor-pointer items-center gap-2 py-[2px] text-light-0 transition-colors hover:text-primary"
-                      css={css`
-                        &:hover {
-                          div {
-                            border-color: rgb(
-                              144 126 255 / var(--tw-border-opacity)
-                            );
-                          }
-                        }
-                      `}
+                      key={`${traitType}-${value}`}
+                      className="flex items-center justify-between"
+                      onClick={() =>
+                        setSelectedFilters((filters) => ({
+                          ...filters,
+                          [traitType]: filters[traitType]?.includes(value)
+                            ? filters[traitType]?.filter((v) => v !== value) ??
+                              []
+                            : [...(filters[traitType] ?? []), value],
+                        }))
+                      }
                     >
                       <div
-                        className={`h-3 w-3 rounded-sm border-[.5px] border-light-1 transition-all`}
+                        className="flex cursor-pointer items-center gap-2 py-[2px] text-light-0 transition-colors hover:text-primary"
                         css={css`
-                          background: ${selectedFilters[traitType]?.includes(
-                            value
-                          )
-                            ? config.colors.secondary
-                            : ''};
+                          &:hover {
+                            div {
+                              border-color: rgb(
+                                144 126 255 / var(--tw-border-opacity)
+                              );
+                            }
+                          }
                         `}
                       >
-                        {}
+                        <div
+                          className={`h-3 w-3 rounded-sm border-[.5px] border-light-1 transition-all`}
+                          css={css`
+                            background: ${selectedFilters[traitType]?.includes(
+                              value
+                            )
+                              ? config.colors.secondary
+                              : ''};
+                          `}
+                        >
+                          {}
+                        </div>
+                        <div>{value}</div>
                       </div>
-                      <div>{value}</div>
+                      <div></div>
                     </div>
-                    <div></div>
-                  </div>
-                ))}
-              </div>
-            ),
-          }))}
-        />
-        <Selector<OrderCategories>
-          defaultOption={{
-            label: OrderCategories.RateLowToHigh,
-            value: OrderCategories.RateLowToHigh,
-          }}
-          onChange={(e) => {
-            setSelectedOrderCategory(e.value)
-          }}
-          options={(
-            Object.values(OrderCategories) as Array<OrderCategories>
-          ).map((v) => ({ label: v, value: v }))}
-        />
+                  ))}
+                </div>
+              ),
+            }))}
+          />
+          <Selector<OrderCategories>
+            defaultOption={{
+              label: OrderCategories.RateLowToHigh,
+              value: OrderCategories.RateLowToHigh,
+            }}
+            onChange={(e) => {
+              setSelectedOrderCategory(e.value)
+            }}
+            options={(
+              Object.values(OrderCategories) as Array<OrderCategories>
+            ).map((v) => ({ label: v, value: v }))}
+          />
+        </div>
+        <div className="flex">
+          <TabSelector defaultOption={PANE_TABS[0]} options={PANE_TABS} />
+        </div>
       </div>
       <div className="container mx-auto pt-4">
         {!tokenManagers.isFetched ? (
