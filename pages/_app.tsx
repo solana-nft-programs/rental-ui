@@ -1,3 +1,4 @@
+import 'antd/dist/antd.css'
 import './styles.css'
 import '@cardinal/namespaces-components/dist/esm/styles.css'
 import 'tailwindcss/tailwind.css'
