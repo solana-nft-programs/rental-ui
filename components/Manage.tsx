@@ -4,8 +4,10 @@ import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tok
 import { BN } from '@project-serum/anchor'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { PublicKey } from '@solana/web3.js'
+import { Card } from 'common/Card'
 import { HeaderSlim } from 'common/HeaderSlim'
-import { NFT, NFTPlaceholder, TokensOuter } from 'common/NFT'
+import { HeroSmall } from 'common/HeroSmall'
+import { NFT, TokensOuter } from 'common/NFT'
 import { Tag } from 'common/Tags'
 import { executeTransaction } from 'common/Transactions'
 import { asWallet } from 'common/Wallets'
@@ -46,17 +48,18 @@ export const Manage = () => {
           { name: 'Browse', anchor: 'browse' },
         ]}
       />
+      <HeroSmall />
       <div className="mt-10">
         <TokensOuter>
           {!tokenManagerByIssuer.isFetched ? (
-            <>
-              <NFTPlaceholder />
-              <NFTPlaceholder />
-              <NFTPlaceholder />
-              <NFTPlaceholder />
-              <NFTPlaceholder />
-              <NFTPlaceholder />
-            </>
+            <div className="flex flex-wrap justify-center gap-4 xl:justify-start">
+              <Card placeholder header={<></>} subHeader={<></>} />
+              <Card placeholder header={<></>} subHeader={<></>} />
+              <Card placeholder header={<></>} subHeader={<></>} />
+              <Card placeholder header={<></>} subHeader={<></>} />
+              <Card placeholder header={<></>} subHeader={<></>} />
+              <Card placeholder header={<></>} subHeader={<></>} />
+            </div>
           ) : tokenManagerByIssuer.data &&
             tokenManagerByIssuer.data.length > 0 ? (
             tokenManagerByIssuer.data.map((tokenData) => (
