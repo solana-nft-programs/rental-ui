@@ -310,7 +310,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       value: ['5grvMeoBqv5ZdHq9JMy5RrxLPNAt1nzc9cpqYWFUwizz'],
     },
     rentalCard: {
-      invalidators: ['rate', 'expiration'],
+      invalidators: ['rate', 'expiration', 'manual'],
       invalidationOptions: {
         freezeRentalRateDuration: {
           value: '1',
@@ -319,9 +319,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         visibilities: ['public', 'private'],
         durationOptions: ['minutes', 'hours', 'days', 'weeks'],
         invalidationTypes: ['reissue'],
-        customInvalidationTypes: {
-          '41qJ9dJemw8mrry2BD1wU6B2aHXN4RoNY79bS7xwDPhM': ['return'],
-        },
         paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
@@ -350,14 +347,14 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       },
     ],
     marketplaceRate: 'days',
-    allowOneByCreators: [
-      {
-        address: '41qJ9dJemw8mrry2BD1wU6B2aHXN4RoNY79bS7xwDPhM',
-        enforceTwitter: true,
-        preventMultipleClaims: true,
-        disableReturn: false,
-      },
-    ],
+    // allowOneByCreators: [
+    //   {
+    //     address: '41qJ9dJemw8mrry2BD1wU6B2aHXN4RoNY79bS7xwDPhM',
+    //     enforceTwitter: true,
+    //     preventMultipleClaims: true,
+    //     disableReturn: false,
+    //   },
+    // ],
   },
   monke: {
     name: 'monke',
@@ -375,7 +372,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     },
     showUnknownInvalidate: true,
     rentalCard: {
-      invalidators: ['rate', 'duration'],
+      invalidators: ['rate', 'duration', 'manual'],
       invalidationOptions: {
         visibilities: ['public', 'private'],
         durationOptions: ['minutes', 'hours', 'days', 'weeks'],

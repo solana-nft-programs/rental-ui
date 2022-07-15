@@ -3,6 +3,7 @@ import * as splToken from '@solana/spl-token'
 import type { Connection } from '@solana/web3.js'
 import * as web3 from '@solana/web3.js'
 import { notify } from 'common/Notification'
+import { handleError } from './errors'
 
 export async function getATokenAccountInfo(
   connection: Connection,
@@ -94,12 +95,13 @@ export const executeAllTransactions = async (
           (e as web3.SendTransactionError).logs,
           e
         )
+        const errorMessage = handleError(e, `${e}`)
         config.notificationConfig &&
           notify({
             message: `${
               config.notificationConfig.errorMessage ?? 'Failed transaction'
             } ${index + 1}/${transactions.length}`,
-            description: `Transaction failed: ${e}`,
+            description: config.notificationConfig.errorMessage ?? errorMessage,
             txid: '',
             type: 'error',
           })
