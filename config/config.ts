@@ -153,12 +153,12 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
   },
   all: {
     name: 'all',
-    displayName: 'all',
+    displayName: 'All',
     type: 'Collection',
     websiteUrl: 'https://cardinal.so',
     logoImage: '/logos/all.svg',
-    hidden: true,
     issuedOnly: true,
+    hidden: true,
     colors: {
       main: 'rgb(26, 27, 32)',
       secondary: 'rgb(29, 155, 240)',
@@ -688,7 +688,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       main: '#202225',
       secondary: '#CCCDFF',
     },
-    hidden: true,
     indexDisabled: true,
     filter: {
       type: 'issuer',
