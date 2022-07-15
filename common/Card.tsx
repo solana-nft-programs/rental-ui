@@ -35,7 +35,7 @@ export const Card: React.FC<Props> = ({
       )}
       <div className="aspect-square w-full overflow-hidden rounded-lg">
         {placeholder ? (
-          <div className="h-full w-[280px] bg-border"></div>
+          <div className="h-full w-[280px] animate-pulse bg-border"></div>
         ) : (
           hero
         )}
@@ -43,7 +43,7 @@ export const Card: React.FC<Props> = ({
       {header && (
         <div className="text-lg text-white">
           {placeholder ? (
-            <div className="h-6 w-[65%] rounded-md bg-border"></div>
+            <div className="h-6 w-[65%] animate-pulse rounded-md bg-border"></div>
           ) : (
             header
           )}
@@ -52,7 +52,7 @@ export const Card: React.FC<Props> = ({
       {subHeader && (
         <div className="text-lg text-primary">
           {placeholder ? (
-            <div className="h-6 w-[40%] rounded-md bg-border"></div>
+            <div className="h-6 w-[40%] animate-pulse rounded-md bg-border"></div>
           ) : (
             subHeader
           )}
@@ -61,7 +61,7 @@ export const Card: React.FC<Props> = ({
       {content && (
         <div>
           {placeholder ? (
-            <div className="h-8 w-full rounded-md bg-border"></div>
+            <div className="h-8 w-full animate-pulse rounded-md bg-border"></div>
           ) : (
             content
           )}

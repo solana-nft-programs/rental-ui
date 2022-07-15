@@ -120,7 +120,7 @@ export const HeroSmall: React.FC<Props> = ({ tokens }: Props) => {
     <div className="flex w-full flex-wrap items-center justify-center gap-6 py-8 px-4 lg:justify-between lg:px-20">
       <Glow angle={160}>
         <div className="flex items-center gap-4">
-          <div className="flex h-20 w-20 items-center justify-center rounded-full border-2 border-border bg-dark-6 bg-opacity-30 p-2">
+          <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-full border-2 border-border bg-dark-6 bg-opacity-30 p-2">
             <img className="w-full" src={config.logoImage} alt={config.name} />
           </div>
           <div className="text-2xl text-light-0">{config.displayName}</div>
