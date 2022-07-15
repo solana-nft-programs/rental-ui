@@ -59,6 +59,7 @@ export type ProjectConfig = {
   name: string
   displayName: string
   websiteUrl: string
+  hero?: string
   logoImage: string
   colors: Colors
   badge?: Badge
@@ -612,6 +613,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     displayName: 'Mini Royale',
     type: 'Collection',
     websiteUrl: 'https://miniroyale.io/',
+    hero: '/logos/miniroyale-hero.png',
     logoImage: '/logos/miniroyale.png',
     colors: {
       main: '#192836',
