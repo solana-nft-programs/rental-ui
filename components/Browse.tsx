@@ -12,13 +12,13 @@ import type { TokenData } from 'api/api'
 import { withWrapSol } from 'api/wrappedSol'
 import { GlyphActivity } from 'assets/GlyphActivity'
 import { GlyphBrowse } from 'assets/GlyphBrowse'
-import { GlyphQuestion } from 'assets/GlyphQuestion'
 import { BigNumber } from 'bignumber.js'
 import { ButtonSmall } from 'common/ButtonSmall'
 import { Card } from 'common/Card'
 import { Glow } from 'common/Glow'
 import { HeaderSlim } from 'common/HeaderSlim'
 import { HeroSmall } from 'common/HeroSmall'
+import { Info } from 'common/Info'
 import { MultiSelector } from 'common/MultiSelector'
 import { NFT } from 'common/NFT'
 import { notify } from 'common/Notification'
@@ -44,9 +44,7 @@ import {
 } from 'providers/ProjectConfigProvider'
 import { useUTCNow } from 'providers/UTCNowProvider'
 import { useState } from 'react'
-import { AiFillStar, AiOutlineShoppingCart } from 'react-icons/ai'
 import { FaLink } from 'react-icons/fa'
-import { MdAccessTimeFilled, MdSell } from 'react-icons/md'
 import { AsyncButton } from 'rental-components/common/Button'
 import { DURATION_DATA } from 'rental-components/components/RentalCard'
 import { useRentalRateModal } from 'rental-components/RentalRateModalProvider'
@@ -69,7 +67,7 @@ enum OrderCategories {
   DurationHighToLow = 'Duration: High to Low',
 }
 
-const PANE_TABS = [
+export const PANE_TABS = [
   {
     label: <GlyphBrowse />,
     value: 'browse',
@@ -469,7 +467,7 @@ export const Browse = () => {
       },
       config.sections ?? [
         {
-          header: 'Active Rentals',
+          header: 'Available',
           icon: 'info',
           description:
             'All listed tokens currently available to rent are displayed below',
@@ -660,8 +658,6 @@ export const Browse = () => {
     }
   }
 
-  console.log(groupedFilteredAndSortedTokens)
-
   const groupedTokens = groupedFilteredAndSortedTokens[selectedGroup]
 
   return (
@@ -790,27 +786,7 @@ export const Browse = () => {
           </Glow>
         </div>
       </div>
-      <div className="mx-10 mt-10 flex items-center gap-4 text-xl">
-        <div className="text-white">
-          {groupedFilteredAndSortedTokens[selectedGroup]?.icon &&
-            {
-              time: <MdAccessTimeFilled />,
-              featured: <AiFillStar />,
-              listed: <AiOutlineShoppingCart />,
-              rented: <AiOutlineShoppingCart />,
-              available: <MdSell />,
-              info: <GlyphQuestion />,
-            }[groupedFilteredAndSortedTokens[selectedGroup]!.icon!]}
-        </div>
-        <div className="flex flex-col">
-          <div className="text-medium-3">
-            {groupedFilteredAndSortedTokens[selectedGroup]?.header}
-          </div>
-          <div className="text-light-0">
-            {groupedFilteredAndSortedTokens[selectedGroup]?.description}
-          </div>
-        </div>
-      </div>
+      <Info section={groupedFilteredAndSortedTokens[selectedGroup]} />
       <div className="mx-auto mt-12 max-w-[1634px]">
         {!tokenManagers.isFetched ? (
           <div className="flex flex-wrap justify-center gap-4 xl:justify-start">
