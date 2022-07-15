@@ -14,7 +14,6 @@ import { Transaction } from '@solana/web3.js'
 import type { TokenData } from 'api/api'
 import { metadataUrl, pubKeyUrl } from 'common/utils'
 import type { ProjectConfig } from 'config/config'
-import { useUserTokenData } from 'hooks/useUserTokenData'
 import { lighten } from 'polished'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
@@ -105,7 +104,6 @@ export function NFT({ tokenData, onClick }: NFTProps) {
   const { show } = useQRCode()
   const rentalModal = useRentalModal()
   const { config } = useProjectConfig()
-  const tokenDatas = useUserTokenData()
   const rentalRateModal = useRentalRateModal()
 
   const {
@@ -147,7 +145,6 @@ export function NFT({ tokenData, onClick }: NFTProps) {
         maxRetries: 3,
       },
       notificationConfig: {},
-      callback: tokenDatas.refetch,
     })
   }
 
@@ -419,6 +416,7 @@ export function NFT({ tokenData, onClick }: NFTProps) {
         )}
         {metadata && metadata.data && (
           <img
+            loading="lazy"
             src={metadata.data.image}
             // src={customImageUri || metadata.data.image}
             alt={metadata.data.name}

@@ -176,7 +176,7 @@ export const useFilteredTokenManagers = () => {
       }
     },
     {
-      refetchInterval: 12000,
+      // refetchInterval: 12000,
       enabled: !!config,
     }
   )

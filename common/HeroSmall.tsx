@@ -12,7 +12,7 @@ import { Glow } from './Glow'
 import { getMintDecimalAmount } from './units'
 
 type Props = {
-  tokens: TokenData[]
+  tokens?: TokenData[]
 }
 
 const getPriceFromTokenData = (

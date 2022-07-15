@@ -2,11 +2,15 @@ import { DisplayAddress } from '@cardinal/namespaces-components'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { useWallet } from '@solana/wallet-adapter-react'
 import type { TokenData } from 'api/api'
-import { GlyphQuestion } from 'assets/GlyphQuestion'
 import { Airdrop } from 'common/Airdrop'
+import { Card } from 'common/Card'
+import { Glow } from 'common/Glow'
 import { HeaderSlim } from 'common/HeaderSlim'
-import { elligibleForRent, NFT, NFTPlaceholder, TokensOuter } from 'common/NFT'
+import { HeroSmall } from 'common/HeroSmall'
+import { Info } from 'common/Info'
+import { elligibleForRent, NFT } from 'common/NFT'
 import { notify } from 'common/Notification'
+import { TabSelector } from 'common/TabSelector'
 import { Tag } from 'common/Tags'
 import { asWallet } from 'common/Wallets'
 import type { TokenSection } from 'config/config'
@@ -16,10 +20,10 @@ import { lighten } from 'polished'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { filterTokens, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useState } from 'react'
-import { AiFillStar, AiOutlineShoppingCart } from 'react-icons/ai'
-import { MdAccessTimeFilled, MdOutlineSell } from 'react-icons/md'
 import { Button } from 'rental-components/common/Button'
 import { useRentalModal } from 'rental-components/RentalModalProvider'
+
+import { PANE_TABS } from './Browse'
 
 export const Wallet = () => {
   const { connection, secondaryConnection, environment } = useEnvironmentCtx()
@@ -28,6 +32,7 @@ export const Wallet = () => {
   const tokenDatas = useUserTokenData()
   const rentalModal = useRentalModal()
   const [selectedTokens, setSelectedTokens] = useState<TokenData[]>([])
+  const [selectedGroup, setSelectedGroup] = useState(0)
 
   const filteredTokenDatas = filterTokens(
     environment.label,
@@ -90,6 +95,8 @@ export const Wallet = () => {
       [
         {
           header: 'Available For Rent',
+          description:
+            'View and select all tokens available for rent on this marketplace',
           icon: 'available',
           filter: {
             type: 'owner',
@@ -98,7 +105,9 @@ export const Wallet = () => {
         } as TokenSection,
         {
           header: 'Rented Tokens',
-          icon: 'rented',
+          description:
+            'View all your currently rented tokens on this marketplace',
+          icon: 'performance',
           filter: {
             type: 'claimer',
             value: [wallet.publicKey?.toString() || ''],
@@ -113,6 +122,8 @@ export const Wallet = () => {
 
   const filteredAndSortedTokens: TokenData[] = sortTokens(filteredTokenDatas)
   const groupedFilteredAndSortedTokens = groupTokens(filteredAndSortedTokens)
+  const groupedTokens = groupedFilteredAndSortedTokens[selectedGroup]
+
   return (
     <>
       <HeaderSlim
@@ -131,131 +142,124 @@ export const Wallet = () => {
           { name: 'Browse', anchor: 'browse' },
         ]}
       />
-      <div className="mt-10 px-5">
-        {filteredTokenDatas && filteredTokenDatas.length > 0 && (
-          <div className="container mx-auto mb-5 flex items-end justify-end">
-            <Button
-              disabled={selectedTokens.length === 0}
-              variant="primary"
-              className="mr-5"
-              bgColor={config.colors.secondary}
-              onClick={() =>
-                rentalModal.show(
-                  asWallet(wallet),
-                  connection,
-                  environment.label,
-                  selectedTokens,
-                  config.rentalCard
-                )
-              }
-            >
-              {`Bulk Upload ${
-                selectedTokens.length ? `(${selectedTokens.length})` : ''
-              }`}
-            </Button>
-          </div>
-        )}
+      <HeroSmall tokens={[]} />
+      <div className="mx-10 mt-4 flex items-end gap-[4px] text-light-0">
+        <div>Results</div>
+        <div className="relative top-[0.6px] text-medium-4">
+          {filteredAndSortedTokens.length}{' '}
+        </div>
+      </div>
+      <div className="mx-10 mt-4 flex flex-wrap justify-between gap-4">
+        <div className="flex flex-wrap gap-4">
+          <TabSelector
+            defaultOption={{
+              value: 0,
+              label: groupedFilteredAndSortedTokens[0]?.header,
+            }}
+            options={groupedFilteredAndSortedTokens.map((g, i) => ({
+              label: g.header,
+              value: i,
+            }))}
+            onChange={(o) => setSelectedGroup(o.value)}
+          />
+        </div>
+        <div className="flex">
+          <Glow scale={1.5} opacity={1}>
+            <TabSelector defaultOption={PANE_TABS[0]} options={PANE_TABS} />
+          </Glow>
+        </div>
+      </div>
+      <Info section={groupedFilteredAndSortedTokens[selectedGroup]} />
+      {filteredTokenDatas && filteredTokenDatas.length > 0 && (
+        <div className="container mx-auto mb-5 flex items-end justify-end">
+          <Button
+            disabled={selectedTokens.length === 0}
+            variant="primary"
+            className="mr-5"
+            bgColor={config.colors.secondary}
+            onClick={() =>
+              rentalModal.show(
+                asWallet(wallet),
+                connection,
+                environment.label,
+                selectedTokens,
+                config.rentalCard
+              )
+            }
+          >
+            {`Bulk Upload ${
+              selectedTokens.length ? `(${selectedTokens.length})` : ''
+            }`}
+          </Button>
+        </div>
+      )}
+      <div className="mx-auto mt-12 max-w-[1634px]">
         {!tokenDatas.isFetched ? (
-          <TokensOuter>
-            <NFTPlaceholder />
-            <NFTPlaceholder />
-            <NFTPlaceholder />
-            <NFTPlaceholder />
-            <NFTPlaceholder />
-            <NFTPlaceholder />
-          </TokensOuter>
-        ) : (
-          filteredTokenDatas &&
-          filteredTokenDatas.length > 0 &&
-          groupedFilteredAndSortedTokens.map(
-            (tokenGroup) =>
-              tokenGroup.tokens &&
-              tokenGroup.tokens.length > 0 && (
-                <>
-                  <div className="mb-10">
-                    <div className="flex items-center gap-2 text-2xl text-white">
-                      {tokenGroup.icon &&
-                        {
-                          time: <MdAccessTimeFilled />,
-                          featured: <AiFillStar />,
-                          listed: <AiOutlineShoppingCart />,
-                          rented: <AiOutlineShoppingCart />,
-                          available: <MdOutlineSell />,
-                          info: <GlyphQuestion />,
-                        }[tokenGroup.icon]}
-                      {tokenGroup.header}
-                    </div>
-                    <div
-                      className="text-lg"
-                      style={{
-                        color: lighten(0.4, config.colors.main),
-                      }}
-                    >
-                      {tokenGroup.description}
-                    </div>
+          <div className="flex flex-wrap justify-center gap-4 xl:justify-start">
+            <Card placeholder header={<></>} subHeader={<></>} />
+            <Card placeholder header={<></>} subHeader={<></>} />
+            <Card placeholder header={<></>} subHeader={<></>} />
+            <Card placeholder header={<></>} subHeader={<></>} />
+            <Card placeholder header={<></>} subHeader={<></>} />
+            <Card placeholder header={<></>} subHeader={<></>} />
+          </div>
+        ) : groupedTokens?.tokens && groupedTokens.tokens.length > 0 ? (
+          <div className="flex flex-wrap justify-center gap-4 xl:justify-start">
+            {groupedTokens?.tokens?.map((tokenData) => (
+              <div
+                key={tokenData.tokenAccount?.pubkey.toString()}
+                className="relative cursor-pointer rounded-xl"
+                style={{
+                  boxShadow: selectedTokens.includes(tokenData)
+                    ? `0px 0px 30px ${config.colors.secondary}`
+                    : '',
+                }}
+              >
+                <NFT
+                  key={tokenData?.tokenAccount?.pubkey.toBase58()}
+                  tokenData={tokenData}
+                  onClick={() => handleNFTSelect(tokenData)}
+                />
+                <div
+                  style={{
+                    background: lighten(0.07, config.colors.main),
+                  }}
+                  className={`flex w-[280px] flex-col rounded-b-md p-3`}
+                >
+                  <div className="mb-2 flex w-full cursor-pointer flex-row text-xs font-bold text-white">
+                    <p className="flex w-fit overflow-hidden text-ellipsis whitespace-nowrap text-left">
+                      {tokenData.metadata.data.name}
+                    </p>
                   </div>
-                  <TokensOuter>
-                    {tokenGroup.tokens.map((tokenData) => (
-                      <div
-                        key={tokenData.tokenAccount?.pubkey.toString()}
-                        className="relative cursor-pointer rounded-xl"
-                        style={{
-                          boxShadow: selectedTokens.includes(tokenData)
-                            ? `0px 0px 30px ${config.colors.secondary}`
-                            : '',
-                        }}
-                      >
-                        <NFT
-                          key={tokenData?.tokenAccount?.pubkey.toBase58()}
-                          tokenData={tokenData}
-                          onClick={() => handleNFTSelect(tokenData)}
-                        />
-                        <div
-                          style={{
-                            background: lighten(0.07, config.colors.main),
-                          }}
-                          className={`flex w-[280px] flex-col rounded-b-md p-3`}
-                        >
-                          <div className="mb-2 flex w-full cursor-pointer flex-row text-xs font-bold text-white">
-                            <p className="flex w-fit overflow-hidden text-ellipsis whitespace-nowrap text-left">
-                              {tokenData.metadata.data.name}
-                            </p>
-                          </div>
-                          <div className="flex flex-row justify-between text-xs">
-                            {tokenData.recipientTokenAccount?.owner && (
-                              <Tag state={TokenManagerState.Claimed}>
-                                <div className="flex flex-col">
-                                  <div className="flex">
-                                    <span className="inline-block">
-                                      Issued by&nbsp;
-                                    </span>
-                                    <DisplayAddress
-                                      style={{
-                                        color: '#52c41a !important',
-                                        display: 'inline',
-                                      }}
-                                      connection={secondaryConnection}
-                                      address={
-                                        tokenData.tokenManager?.parsed.issuer
-                                      }
-                                      height="18px"
-                                      width="100px"
-                                      dark={true}
-                                    />
-                                  </div>
-                                </div>
-                              </Tag>
-                            )}
+                  <div className="flex flex-row justify-between text-xs">
+                    {tokenData.recipientTokenAccount?.owner && (
+                      <Tag state={TokenManagerState.Claimed}>
+                        <div className="flex flex-col">
+                          <div className="flex">
+                            <span className="inline-block">
+                              Issued by&nbsp;
+                            </span>
+                            <DisplayAddress
+                              style={{
+                                color: '#52c41a !important',
+                                display: 'inline',
+                              }}
+                              connection={secondaryConnection}
+                              address={tokenData.tokenManager?.parsed.issuer}
+                              height="18px"
+                              width="100px"
+                              dark={true}
+                            />
                           </div>
                         </div>
-                      </div>
-                    ))}
-                  </TokensOuter>
-                </>
-              )
-          )
-        )}
-        {filteredAndSortedTokens.length === 0 && (
+                      </Tag>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
           <div className="white mt-5 flex w-full flex-col items-center justify-center gap-1">
             <div className="text-gray-500">
               {config.type === 'Guild'

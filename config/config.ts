@@ -33,7 +33,14 @@ export type TokenFilter = {
 export type TokenSection = {
   header?: string
   description?: string
-  icon?: 'time' | 'featured' | 'listed' | 'rented' | 'available' | 'info'
+  icon?:
+    | 'time'
+    | 'featured'
+    | 'listed'
+    | 'rented'
+    | 'available'
+    | 'info'
+    | 'performance'
   filter?: TokenFilter
   tokens?: TokenData[] | UserTokenData[]
   showEmpty?: boolean
