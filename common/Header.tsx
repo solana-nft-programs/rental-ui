@@ -105,6 +105,17 @@ export const Header = ({
         className="fixed top-0 z-[100] flex w-full flex-col justify-center shadow-2xl"
         // style={{ background: config.colors.main }}
       >
+        <div
+          className="flex w-full items-center justify-center rounded-md py-2 text-center"
+          style={{
+            color: config.colors?.secondary,
+            background: lighten(0.15, config.colors.main),
+          }}
+        >
+          <div className="text-xs font-semibold text-yellow-500">
+            👀 UI redesign coming soon...
+          </div>
+        </div>
         {clockDrift && (
           <div
             className="flex w-full items-center justify-center rounded-md py-2 text-center"
