@@ -73,7 +73,7 @@ export type TokenData = {
   tokenManager?: AccountData<TokenManagerData>
   metaplexData?: { pubkey: PublicKey; data: metaplex.MetadataData } | null
   editionData?: EditionInfo | null
-  metadata?: any
+  metadata?: { pubkey: PublicKey; data: any } | null
   claimApprover?: AccountData<PaidClaimApproverData> | null
   useInvalidator?: AccountData<UseInvalidatorData> | null
   timeInvalidator?: AccountData<TimeInvalidatorData> | null

@@ -17,7 +17,9 @@ export const Info: React.FC<Props> = ({ section }: Props) => {
             featured: <AiFillStar />,
             listed: <AiOutlineShoppingCart />,
             rented: <AiOutlineShoppingCart />,
-            available: <MdSell />,
+            available: (
+              <MdSell className="h-[68px] w-[68px] rounded-full border-[2px] border-medium-4 p-3" />
+            ),
             info: <GlyphQuestion />,
             performance: <GlyphPerformance />,
           }[section!.icon!]}

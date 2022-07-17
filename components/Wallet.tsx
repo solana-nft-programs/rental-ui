@@ -9,6 +9,7 @@ import { Glow } from 'common/Glow'
 import { HeaderSlim } from 'common/HeaderSlim'
 import { HeroSmall } from 'common/HeroSmall'
 import { Info } from 'common/Info'
+import { MultiSelector } from 'common/MultiSelector'
 import { elligibleForRent, NFT } from 'common/NFT'
 import { stateColor } from 'common/NFTOverlay'
 import { notify } from 'common/Notification'
@@ -24,29 +25,19 @@ import { useState } from 'react'
 import { Button } from 'rental-components/common/Button'
 import { useRentalModal } from 'rental-components/RentalModalProvider'
 
-import { PANE_TABS } from './Browse'
+import { filterTokensByAttributes, getAllAttributes, PANE_TABS } from './Browse'
 
 export const Wallet = () => {
   const { connection, secondaryConnection, environment } = useEnvironmentCtx()
   const wallet = useWallet()
   const { config } = useProjectConfig()
-  const tokenDatas = useUserTokenData()
+  const userTokenDatas = useUserTokenData(config.filter)
   const rentalModal = useRentalModal()
   const [selectedTokens, setSelectedTokens] = useState<TokenData[]>([])
   const [selectedGroup, setSelectedGroup] = useState(0)
-
-  const filteredTokenDatas = filterTokens(
-    environment.label,
-    tokenDatas.data || [],
-    config.filter
-  ).filter(
-    (tk) =>
-      !(config.type === 'Guild') ||
-      (config.type === 'Guild' &&
-        config.filter?.value.includes(
-          tk.tokenAccount?.account.data.parsed.info.owner.toString()
-        ))
-  )
+  const [selectedFilters, setSelectedFilters] = useState<{
+    [filterName: string]: string[]
+  }>({})
 
   const isSelected = (tokenData: TokenData) => {
     return selectedTokens.some(
@@ -95,7 +86,7 @@ export const Wallet = () => {
       },
       [
         {
-          header: 'Available For Rent',
+          header: 'Available',
           description:
             'View and select all tokens available for rent on this marketplace',
           icon: 'available',
@@ -105,7 +96,7 @@ export const Wallet = () => {
           },
         } as TokenSection,
         {
-          header: 'Rented Tokens',
+          header: 'Rented',
           description:
             'View all your currently rented tokens on this marketplace',
           icon: 'performance',
@@ -117,18 +108,18 @@ export const Wallet = () => {
       ]
     )
 
-  const sortTokens = (tokens: UserTokenData[]): UserTokenData[] => {
-    return tokens
-  }
-
-  const filteredAndSortedTokens: TokenData[] = sortTokens(filteredTokenDatas)
+  const sortedAttributes = getAllAttributes(userTokenDatas.data ?? [])
+  const filteredAndSortedTokens: TokenData[] = filterTokensByAttributes(
+    userTokenDatas.data ?? [],
+    selectedFilters
+  )
   const groupedFilteredAndSortedTokens = groupTokens(filteredAndSortedTokens)
   const groupedTokens = groupedFilteredAndSortedTokens[selectedGroup]
 
   return (
     <>
       <HeaderSlim
-        loading={tokenDatas.isFetched && tokenDatas.isFetching}
+        loading={userTokenDatas.isFetched && userTokenDatas.isFetching}
         tabs={[
           {
             name: 'Wallet',
@@ -163,6 +154,73 @@ export const Wallet = () => {
             }))}
             onChange={(o) => setSelectedGroup(o.value)}
           />
+          <MultiSelector<string>
+            placeholder="Select filters"
+            defaultValue={
+              Object.values(selectedFilters).reduce(
+                (acc, v) => acc + v.length,
+                0
+              ) > 0 ? (
+                <div className="text-light-0">
+                  {Object.values(selectedFilters).reduce(
+                    (acc, v) => acc + v.length,
+                    0
+                  )}{' '}
+                  filter applied
+                </div>
+              ) : undefined
+            }
+            groups={Object.keys(sortedAttributes).map((traitType) => ({
+              label: traitType,
+              content: (
+                <div key={traitType} className="px-3 pb-3 text-xs">
+                  {sortedAttributes[traitType]!.map((value) => (
+                    <div
+                      key={`${traitType}-${value}`}
+                      className="flex items-center justify-between"
+                      onClick={() =>
+                        setSelectedFilters((filters) => ({
+                          ...filters,
+                          [traitType]: filters[traitType]?.includes(value)
+                            ? filters[traitType]?.filter((v) => v !== value) ??
+                              []
+                            : [...(filters[traitType] ?? []), value],
+                        }))
+                      }
+                    >
+                      <div
+                        className="flex cursor-pointer items-center gap-2 py-[2px] text-light-0 transition-colors hover:text-primary"
+                        css={css`
+                          &:hover {
+                            div {
+                              border-color: rgb(
+                                144 126 255 / var(--tw-border-opacity)
+                              );
+                            }
+                          }
+                        `}
+                      >
+                        <div
+                          className={`h-3 w-3 rounded-sm border-[.5px] border-light-1 transition-all`}
+                          css={css`
+                            background: ${selectedFilters[traitType]?.includes(
+                              value
+                            )
+                              ? config.colors.secondary
+                              : ''};
+                          `}
+                        >
+                          {}
+                        </div>
+                        <div>{value}</div>
+                      </div>
+                      <div></div>
+                    </div>
+                  ))}
+                </div>
+              ),
+            }))}
+          />
         </div>
         <div className="flex">
           <Glow scale={1.5} opacity={1}>
@@ -171,7 +229,7 @@ export const Wallet = () => {
         </div>
       </div>
       <Info section={groupedFilteredAndSortedTokens[selectedGroup]} />
-      {filteredTokenDatas && filteredTokenDatas.length > 0 && (
+      {userTokenDatas.data && userTokenDatas?.data.length > 0 && (
         <div className="container mx-auto mb-5 flex items-end justify-end">
           <Button
             disabled={selectedTokens.length === 0}
@@ -195,7 +253,7 @@ export const Wallet = () => {
         </div>
       )}
       <div className="mx-auto mt-12 max-w-[1634px]">
-        {!tokenDatas.isFetched ? (
+        {!userTokenDatas.isFetched ? (
           <div className="flex flex-wrap justify-center gap-4 xl:justify-start">
             <Card placeholder header={<></>} subHeader={<></>} />
             <Card placeholder header={<></>} subHeader={<></>} />
@@ -229,7 +287,7 @@ export const Wallet = () => {
                 >
                   <div className="mb-2 flex w-full cursor-pointer flex-row text-xs font-bold text-white">
                     <p className="flex w-fit overflow-hidden text-ellipsis whitespace-nowrap text-left">
-                      {tokenData.metadata.data.name}
+                      {tokenData.metadata?.data.name}
                     </p>
                   </div>
                   <div className="flex flex-row justify-between text-xs">
