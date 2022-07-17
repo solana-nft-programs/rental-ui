@@ -97,7 +97,7 @@ const boundsToSeconds: { [key in number]: number } = {
   100: Infinity,
 }
 
-const getAllAttributes = (tokens: TokenData[]) => {
+export const getAllAttributes = (tokens: TokenData[]) => {
   const allAttributes: { [traitType: string]: Set<any> } = {}
   tokens.forEach((tokenData) => {
     if (
@@ -246,6 +246,40 @@ export function getTokenRentalRate(
   } catch (e) {
     return null
   }
+}
+
+export const filterTokensByAttributes = (
+  tokens: TokenData[],
+  filters: { [filterName: string]: string[] }
+): TokenData[] => {
+  if (
+    Object.keys(filters).length <= 0 ||
+    Object.values(filters).filter((v) => v.length > 0).length <= 0
+  ) {
+    return tokens
+  }
+  const attributeFilteredTokens: TokenData[] = []
+  tokens.forEach((token) => {
+    let addToken = false
+    Object.keys(filters).forEach((filterName) => {
+      if (filters[filterName]!.length > 0) {
+        filters[filterName]!.forEach((val) => {
+          if (
+            token.metadata?.data.attributes.filter(
+              (a: { trait_type: string; value: any }) =>
+                a.trait_type === filterName && a.value === val
+            ).length > 0
+          ) {
+            addToken = true
+          }
+        })
+      }
+    })
+    if (addToken) {
+      attributeFilteredTokens.push(token)
+    }
+  })
+  return attributeFilteredTokens
 }
 
 export const Browse = () => {
@@ -402,55 +436,6 @@ export const Browse = () => {
     return sortedTokens
   }
 
-  const durationAmount = (token: TokenData) => {
-    if (
-      token.timeInvalidator?.parsed.durationSeconds?.toNumber() === 0 &&
-      token.timeInvalidator?.parsed?.maxExpiration?.toNumber()
-    ) {
-      return token.timeInvalidator?.parsed?.maxExpiration?.toNumber() - UTCNow
-    } else if (token.timeInvalidator?.parsed?.expiration?.toNumber()) {
-      return token.timeInvalidator?.parsed?.expiration?.toNumber() - UTCNow
-    } else {
-      return token.timeInvalidator?.parsed?.durationSeconds?.toNumber()
-    }
-  }
-
-  const filterTokensByAttributes = (tokens: TokenData[]): TokenData[] => {
-    const durationTokens = tokens.filter(
-      (token) =>
-        maxDurationBounds[0] <= (durationAmount(token) ?? Infinity) &&
-        maxDurationBounds[1] >= (durationAmount(token) ?? Infinity)
-    )
-    if (
-      Object.keys(selectedFilters).length <= 0 ||
-      Object.values(selectedFilters).filter((v) => v.length > 0).length <= 0
-    ) {
-      return durationTokens
-    }
-    const attributeFilteredTokens: TokenData[] = []
-    durationTokens.forEach((token) => {
-      let addToken = false
-      Object.keys(selectedFilters).forEach((filterName) => {
-        if (selectedFilters[filterName]!.length > 0) {
-          selectedFilters[filterName]!.forEach((val) => {
-            if (
-              token.metadata?.data.attributes.filter(
-                (a: { trait_type: string; value: any }) =>
-                  a.trait_type === filterName && a.value === val
-              ).length > 0
-            ) {
-              addToken = true
-            }
-          })
-        }
-      })
-      if (addToken) {
-        attributeFilteredTokens.push(token)
-      }
-    })
-    return attributeFilteredTokens
-  }
-
   const groupTokens = (tokens: TokenData[]): TokenSection[] => {
     return tokens.reduce(
       (acc, tk) => {
@@ -495,7 +480,7 @@ export const Browse = () => {
   }
 
   const filteredAndSortedTokens: TokenData[] = sortTokens(
-    filterTokensByAttributes(tokenManagersForConfig)
+    filterTokensByAttributes(tokenManagersForConfig, selectedFilters)
   )
 
   const groupedFilteredAndSortedTokens = groupTokens(filteredAndSortedTokens)

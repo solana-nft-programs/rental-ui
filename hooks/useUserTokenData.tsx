@@ -113,6 +113,24 @@ export const useUserTokenData = (filter?: TokenFilter, cluster?: string) => {
         connection,
         delegateIds
       )
+
+      // filter by issuer
+      if (filter?.type === 'issuer') {
+        tokenAccounts = tokenAccounts.filter(
+          (tokenAccount) =>
+            tokenAccountDelegateData[
+              tokenAccount.account.data.parsed.info.delegate
+            ]?.type === 'tokenManager' &&
+            filter.value.includes(
+              (
+                tokenAccountDelegateData[
+                  tokenAccount.account.data.parsed.info.delegate
+                ] as AccountData<TokenManagerData>
+              ).parsed.issuer.toString()
+            )
+        )
+      }
+
       const mintIds = tokenAccounts.map((tokenAccount) =>
         tryPublicKey(tokenAccount.account.data.parsed.info.mint)
       )
