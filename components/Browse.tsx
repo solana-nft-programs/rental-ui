@@ -895,13 +895,12 @@ export const Browse = () => {
                               </>
                             ) : (
                               <>
-                                Claim{' '}
                                 {tokenData.claimApprover?.parsed?.paymentMint &&
                                 paymentMintInfos.data &&
                                 paymentMintInfos.data[
                                   tokenData.claimApprover?.parsed?.paymentMint.toString()
                                 ]
-                                  ? parseFloat(
+                                  ? `Claim ${parseFloat(
                                       fmtMintAmount(
                                         paymentMintInfos.data[
                                           tokenData?.claimApprover?.parsed?.paymentMint.toString()
@@ -909,9 +908,8 @@ export const Browse = () => {
                                         tokenData.claimApprover?.parsed
                                           ?.paymentAmount ?? new BN(0)
                                       )
-                                    )
-                                  : ''}{' '}
-                                {getSymbolFromTokenData(tokenData)}{' '}
+                                    )}${getSymbolFromTokenData(tokenData)}`
+                                  : 'FREE'}
                               </>
                             )}
                           </ButtonSmall>
