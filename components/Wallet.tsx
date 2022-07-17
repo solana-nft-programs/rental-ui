@@ -1,5 +1,6 @@
 import { DisplayAddress } from '@cardinal/namespaces-components'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
+import { css } from '@emotion/react'
 import { useWallet } from '@solana/wallet-adapter-react'
 import type { TokenData } from 'api/api'
 import { Airdrop } from 'common/Airdrop'
@@ -9,9 +10,9 @@ import { HeaderSlim } from 'common/HeaderSlim'
 import { HeroSmall } from 'common/HeroSmall'
 import { Info } from 'common/Info'
 import { elligibleForRent, NFT } from 'common/NFT'
+import { stateColor } from 'common/NFTOverlay'
 import { notify } from 'common/Notification'
 import { TabSelector } from 'common/TabSelector'
-import { Tag } from 'common/Tags'
 import { asWallet } from 'common/Wallets'
 import type { TokenSection } from 'config/config'
 import type { UserTokenData } from 'hooks/useUserTokenData'
@@ -233,26 +234,27 @@ export const Wallet = () => {
                   </div>
                   <div className="flex flex-row justify-between text-xs">
                     {tokenData.recipientTokenAccount?.owner && (
-                      <Tag state={TokenManagerState.Claimed}>
-                        <div className="flex flex-col">
-                          <div className="flex">
-                            <span className="inline-block">
-                              Issued by&nbsp;
-                            </span>
-                            <DisplayAddress
-                              style={{
-                                color: '#52c41a !important',
-                                display: 'inline',
-                              }}
-                              connection={secondaryConnection}
-                              address={tokenData.tokenManager?.parsed.issuer}
-                              height="18px"
-                              width="100px"
-                              dark={true}
-                            />
-                          </div>
+                      <div
+                        className="flex flex-col"
+                        css={css`
+                          color: ${stateColor(TokenManagerState.Claimed, true)};
+                        `}
+                      >
+                        <div className="flex">
+                          <span className="inline-block">Issued by&nbsp;</span>
+                          <DisplayAddress
+                            style={{
+                              color: '#52c41a !important',
+                              display: 'inline',
+                            }}
+                            connection={secondaryConnection}
+                            address={tokenData.tokenManager?.parsed.issuer}
+                            height="18px"
+                            width="100px"
+                            dark={true}
+                          />
                         </div>
-                      </Tag>
+                      </div>
                     )}
                   </div>
                 </div>
