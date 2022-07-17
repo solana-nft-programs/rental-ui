@@ -12,7 +12,6 @@ import type { TokenData } from 'api/api'
 import { withWrapSol } from 'api/wrappedSol'
 import { GlyphActivity } from 'assets/GlyphActivity'
 import { GlyphBrowse } from 'assets/GlyphBrowse'
-import { BigNumber } from 'bignumber.js'
 import { ButtonSmall } from 'common/ButtonSmall'
 import { Card } from 'common/Card'
 import { Glow } from 'common/Glow'
@@ -310,7 +309,7 @@ export const Browse = () => {
   const rentalRateModal = useRentalRateModal()
   const globalRate = DURATION_DATA[config.marketplaceRate ?? 'days']
 
-  const getPriceFromTokenData = (tokenData: TokenData) => {
+  const getPriceFromTokenData = (tokenData: TokenData): number => {
     if (
       tokenData.claimApprover?.parsed &&
       tokenData.claimApprover?.parsed?.paymentMint.toString() &&
@@ -324,12 +323,12 @@ export const Browse = () => {
         return getMintDecimalAmount(
           mintInfo,
           tokenData.claimApprover?.parsed?.paymentAmount
-        )
+        ).toNumber()
       } else {
-        return new BigNumber(0)
+        return 0
       }
     } else {
-      return new BigNumber(0)
+      return 0
     }
   }
 
@@ -337,7 +336,7 @@ export const Browse = () => {
     tokenData: TokenData,
     rate: number = globalRate
   ) => {
-    let price: BigNumber | undefined = new BigNumber(0)
+    let price = 0
     if (
       tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber() === 0 &&
       paymentMintInfos.data
@@ -347,7 +346,7 @@ export const Browse = () => {
       )
     } else {
       price = getPriceFromTokenData(tokenData)
-      if (price.toNumber() === 0) return 0
+      if (price === 0) return 0
       let duration = 0
       if (tokenData.timeInvalidator?.parsed.durationSeconds) {
         duration = tokenData.timeInvalidator.parsed.durationSeconds.toNumber()
@@ -364,7 +363,7 @@ export const Browse = () => {
             Date.now() / 1000
         )
       }
-      return (price.toNumber() / duration) * rate
+      return (price / duration) * rate
     }
   }
 
