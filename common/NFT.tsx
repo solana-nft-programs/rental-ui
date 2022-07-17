@@ -56,12 +56,7 @@ export function NFTPlaceholder() {
       <div
         className="flex h-[280px] w-full animate-pulse items-center justify-center rounded-t-md p-0"
         style={{ background: lighten(0.04, config.colors.main) }}
-      >
-        {/* <div
-          className="h-full w-full animate-pulse rounded-md"
-          style={{ background: lighten(0.04, config.colors.main) }}
-        ></div> */}
-      </div>
+      ></div>
       <div
         style={{ background: lighten(0.07, config.colors.main) }}
         className={`flex min-h-[82px] w-[280px] flex-col gap-3 rounded-b-md p-3`}

@@ -21,10 +21,10 @@ import { HeroSmall } from 'common/HeroSmall'
 import { Info } from 'common/Info'
 import { MultiSelector } from 'common/MultiSelector'
 import { NFT } from 'common/NFT'
+import { stateColor } from 'common/NFTOverlay'
 import { notify } from 'common/Notification'
 import { Selector } from 'common/Selector'
 import { TabSelector } from 'common/TabSelector'
-import { Tag } from 'common/Tags'
 import { executeTransaction } from 'common/Transactions'
 import { fmtMintAmount, getMintDecimalAmount } from 'common/units'
 import { getExpirationString, secondsToString } from 'common/utils'
@@ -860,21 +860,27 @@ export const Browse = () => {
                               Private
                             </div>
                           ) : (
-                            <Tag state={TokenManagerState.Issued}>
-                              <div className="flex flex-col">
-                                <div>{getDurationText(tokenData, UTCNow)}</div>
-                                <DisplayAddress
-                                  connection={secondaryConnection}
-                                  address={
-                                    tokenData.tokenManager?.parsed.issuer ||
-                                    undefined
-                                  }
-                                  height="18px"
-                                  width="100px"
-                                  dark={true}
-                                />
-                              </div>
-                            </Tag>
+                            <div
+                              className="flex flex-col"
+                              css={css`
+                                color: ${stateColor(
+                                  TokenManagerState.Issued,
+                                  true
+                                )};
+                              `}
+                            >
+                              <div>{getDurationText(tokenData, UTCNow)}</div>
+                              <DisplayAddress
+                                connection={secondaryConnection}
+                                address={
+                                  tokenData.tokenManager?.parsed.issuer ||
+                                  undefined
+                                }
+                                height="18px"
+                                width="100px"
+                                dark={true}
+                              />
+                            </div>
                           )}
 
                           <ButtonSmall
@@ -918,48 +924,54 @@ export const Browse = () => {
                       [TokenManagerState.Claimed]: (
                         <div className="flex flex-row justify-between text-sm">
                           {tokenData.recipientTokenAccount?.owner && (
-                            <Tag state={TokenManagerState.Claimed}>
-                              <div className="flex flex-col">
-                                <div className="flex">
-                                  <span className="inline-block">
-                                    Claimed by&nbsp;
-                                  </span>
-                                  <DisplayAddress
-                                    style={{
-                                      color: '#52c41a !important',
-                                      display: 'inline',
-                                    }}
-                                    connection={secondaryConnection}
-                                    address={
-                                      new PublicKey(
-                                        tokenData.recipientTokenAccount?.owner
-                                      )
-                                    }
-                                    height="18px"
-                                    width="100px"
-                                    dark={true}
-                                  />
-                                </div>
-                                <div className="flex">
-                                  <span className="inline-block">
-                                    Issued by&nbsp;
-                                  </span>
-                                  <DisplayAddress
-                                    style={{
-                                      color: '#52c41a !important',
-                                      display: 'inline',
-                                    }}
-                                    connection={secondaryConnection}
-                                    address={
-                                      tokenData.tokenManager?.parsed.issuer
-                                    }
-                                    height="18px"
-                                    width="100px"
-                                    dark={true}
-                                  />
-                                </div>
+                            <div
+                              className="flex flex-col"
+                              css={css`
+                                color: ${stateColor(
+                                  TokenManagerState.Claimed,
+                                  true
+                                )};
+                              `}
+                            >
+                              <div className="flex">
+                                <span className="inline-block">
+                                  Claimed by&nbsp;
+                                </span>
+                                <DisplayAddress
+                                  style={{
+                                    color: '#52c41a !important',
+                                    display: 'inline',
+                                  }}
+                                  connection={secondaryConnection}
+                                  address={
+                                    new PublicKey(
+                                      tokenData.recipientTokenAccount?.owner
+                                    )
+                                  }
+                                  height="18px"
+                                  width="100px"
+                                  dark={true}
+                                />
                               </div>
-                            </Tag>
+                              <div className="flex">
+                                <span className="inline-block">
+                                  Issued by&nbsp;
+                                </span>
+                                <DisplayAddress
+                                  style={{
+                                    color: '#52c41a !important',
+                                    display: 'inline',
+                                  }}
+                                  connection={secondaryConnection}
+                                  address={
+                                    tokenData.tokenManager?.parsed.issuer
+                                  }
+                                  height="18px"
+                                  width="100px"
+                                  dark={true}
+                                />
+                              </div>
+                            </div>
                           )}
                           {((wallet.publicKey &&
                             tokenData?.tokenManager?.parsed.invalidators &&
@@ -1004,9 +1016,16 @@ export const Browse = () => {
                         </div>
                       ),
                       [TokenManagerState.Invalidated]: (
-                        <Tag state={TokenManagerState.Invalidated}>
+                        <div
+                          css={css`
+                            color: ${stateColor(
+                              TokenManagerState.Claimed,
+                              true
+                            )};
+                          `}
+                        >
                           Invalidated
-                        </Tag>
+                        </div>
                       ),
                     }[
                       tokenData?.tokenManager?.parsed.state as TokenManagerState
