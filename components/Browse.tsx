@@ -69,7 +69,6 @@ enum OrderCategories {
 
 export const PAGE_SIZE = 5
 export const DEFAULT_PAGE: [number, number] = [2, 0]
-
 export const PANE_TABS = [
   {
     label: <GlyphBrowse />,
@@ -87,15 +86,6 @@ export const PANE_TABS = [
     tooltip: 'Coming soon',
   },
 ]
-
-const boundsToSeconds: { [key in number]: number } = {
-  0: 0,
-  20: 3600,
-  40: 86400,
-  60: 604800,
-  80: 2419200,
-  100: Infinity,
-}
 
 export const getAllAttributes = (tokens: TokenData[]) => {
   const allAttributes: { [traitType: string]: Set<any> } = {}
@@ -282,6 +272,18 @@ export const filterTokensByAttributes = (
   return attributeFilteredTokens
 }
 
+const getRentalDuration = (tokenData: TokenData, UTCNow: number) => {
+  if (tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber() === 0) {
+    return getTokenMaxDuration(tokenData, UTCNow).value
+  } else if (tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber()) {
+    return tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber()
+  } else if (tokenData.timeInvalidator?.parsed.expiration?.toNumber()) {
+    return tokenData.timeInvalidator?.parsed.expiration?.toNumber() - UTCNow
+  } else {
+    return 0
+  }
+}
+
 export const Browse = () => {
   const { connection, secondaryConnection, environment } = useEnvironmentCtx()
   const wallet = useWallet()
@@ -304,13 +306,8 @@ export const Browse = () => {
     [filterName: string]: string[]
   }>({})
   const [selectedGroup, setSelectedGroup] = useState(0)
-  const [maxDurationBounds, setMaxDurationBounds] = useState<[number, number]>([
-    0,
-    Infinity,
-  ])
   const [claimingRental, setClaimingRental] = useState<boolean>(false)
   const rentalRateModal = useRentalRateModal()
-
   const globalRate = DURATION_DATA[config.marketplaceRate ?? 'days']
 
   const getPriceFromTokenData = (tokenData: TokenData) => {
@@ -371,18 +368,6 @@ export const Browse = () => {
     }
   }
 
-  const getRentalDuration = (tokenData: TokenData) => {
-    if (tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber() === 0) {
-      return getTokenMaxDuration(tokenData, UTCNow).value
-    } else if (tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber()) {
-      return tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber()
-    } else if (tokenData.timeInvalidator?.parsed.expiration?.toNumber()) {
-      return tokenData.timeInvalidator?.parsed.expiration?.toNumber() - UTCNow
-    } else {
-      return 0
-    }
-  }
-
   const sortTokens = (tokens: TokenData[]): TokenData[] => {
     let sortedTokens
     switch (selectedOrderCategory) {
@@ -422,12 +407,12 @@ export const Browse = () => {
         break
       case OrderCategories.DurationLowToHigh:
         sortedTokens = tokens.sort((a, b) => {
-          return getRentalDuration(a) - getRentalDuration(b)
+          return getRentalDuration(a, UTCNow) - getRentalDuration(b, UTCNow)
         })
         break
       case OrderCategories.DurationHighToLow:
         sortedTokens = tokens.sort((a, b) => {
-          return getRentalDuration(b) - getRentalDuration(a)
+          return getRentalDuration(b, UTCNow) - getRentalDuration(a, UTCNow)
         })
         break
       default:
@@ -479,11 +464,6 @@ export const Browse = () => {
     )
   }
 
-  const filteredAndSortedTokens: TokenData[] = sortTokens(
-    filterTokensByAttributes(tokenManagersForConfig, selectedFilters)
-  )
-
-  const groupedFilteredAndSortedTokens = groupTokens(filteredAndSortedTokens)
   const handleClaim = async (tokenData: TokenData) => {
     try {
       setClaimingRental(true)
@@ -549,47 +529,6 @@ export const Browse = () => {
       tokenManagers.refetch()
     }
   }
-
-  const marks = {
-    0: {
-      style: {
-        color: '#fff',
-      },
-      label: <span>0</span>,
-    },
-    20: {
-      style: {
-        color: '#fff',
-      },
-      label: <span>1h</span>,
-    },
-    40: {
-      style: {
-        color: '#fff',
-      },
-      label: <span>1d</span>,
-    },
-    60: {
-      style: {
-        color: '#fff',
-      },
-      label: <span>1w</span>,
-    },
-    80: {
-      style: {
-        color: '#fff',
-      },
-      label: <span>4w</span>,
-    },
-    100: {
-      style: {
-        color: '#fff',
-      },
-      label: <span>∞</span>,
-    },
-  }
-
-  const sortedAttributes = getAllAttributes(tokenManagersForConfig ?? [])
 
   const handleBrowseClick = async (tokenData: TokenData) => {
     if (config.allowOneByCreators && tokenManagers.data) {
@@ -664,6 +603,11 @@ export const Browse = () => {
     return () => document.removeEventListener('scroll', onScroll)
   }, [pageNum])
 
+  const sortedAttributes = getAllAttributes(tokenManagersForConfig ?? [])
+  const filteredAndSortedTokens: TokenData[] = sortTokens(
+    filterTokensByAttributes(tokenManagersForConfig, selectedFilters)
+  )
+  const groupedFilteredAndSortedTokens = groupTokens(filteredAndSortedTokens)
   const groupedTokens = groupedFilteredAndSortedTokens[selectedGroup]
 
   return (
