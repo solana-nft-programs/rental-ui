@@ -1,12 +1,13 @@
 import type { Badge } from 'config/config'
 
-export type Props = {
+interface Props extends React.HTMLAttributes<HTMLDivElement> {
   header?: string | JSX.Element
   subHeader?: string | JSX.Element
   badge?: Badge
   hero?: JSX.Element
   content?: JSX.Element
-  placeholder?: boolean
+  skeleton?: boolean
+  className?: string
 }
 
 export const Card: React.FC<Props> = ({
@@ -15,13 +16,14 @@ export const Card: React.FC<Props> = ({
   badge,
   hero,
   content,
-  placeholder,
+  skeleton,
+  className,
   ...props
 }: Props) => {
   return (
     <div
       {...props}
-      className="relative flex flex-col gap-2 rounded-lg border-[1px] border-border bg-white bg-opacity-5 p-4"
+      className={`${className} relative flex flex-col gap-2 rounded-lg border-[1px] border-border bg-white bg-opacity-5 p-4`}
     >
       {badge && (
         <div className="absolute right-6 top-6 rounded-md bg-dark-5 px-2 py-1 text-sm">
@@ -34,7 +36,7 @@ export const Card: React.FC<Props> = ({
         </div>
       )}
       <div className="aspect-square w-full overflow-hidden rounded-lg">
-        {placeholder ? (
+        {skeleton ? (
           <div className="h-full w-[280px] animate-pulse bg-border"></div>
         ) : (
           hero
@@ -42,7 +44,7 @@ export const Card: React.FC<Props> = ({
       </div>
       {header && (
         <div className="text-lg text-white">
-          {placeholder ? (
+          {skeleton ? (
             <div className="h-6 w-[65%] animate-pulse rounded-md bg-border"></div>
           ) : (
             header
@@ -51,7 +53,7 @@ export const Card: React.FC<Props> = ({
       )}
       {subHeader && (
         <div className="text-lg text-primary">
-          {placeholder ? (
+          {skeleton ? (
             <div className="h-6 w-[40%] animate-pulse rounded-md bg-border"></div>
           ) : (
             subHeader
@@ -60,7 +62,7 @@ export const Card: React.FC<Props> = ({
       )}
       {content && (
         <div>
-          {placeholder ? (
+          {skeleton ? (
             <div className="h-8 w-full animate-pulse rounded-md bg-border"></div>
           ) : (
             content

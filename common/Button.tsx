@@ -1,15 +1,7 @@
 import { useState } from 'react'
 import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 
-export const Button = ({
-  children,
-  onClick,
-  className,
-  icon,
-  count,
-  disabled,
-  variant,
-}: {
+type Props = {
   children: string | JSX.Element
   icon?: JSX.Element
   count?: number
@@ -17,11 +9,23 @@ export const Button = ({
   variant: 'primary' | 'secondary' | 'tertiary'
   disabled?: boolean
   onClick?: () => void
-}) => {
+}
+
+export const Button: React.FC<Props> = ({
+  children,
+  onClick,
+  className,
+  icon,
+  count,
+  disabled,
+  variant,
+  ...rest
+}: Props) => {
   const [loading, setLoading] = useState(false)
 
   return (
     <div
+      {...rest}
       className={`flex items-center justify-center gap-5 rounded-md transition-all ${className} ${
         disabled
           ? 'bg-medium-4'
