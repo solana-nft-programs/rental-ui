@@ -170,7 +170,6 @@ export const RentalCard = ({
   rentalCardConfig,
 }: RentalCardProps) => {
   const [error, setError] = useState<string>()
-  const [loading, setLoading] = useState(false)
   const [link, setLink] = useState<string | null>()
   const userTokenData = useUserTokenData()
   const paymentMintInfos = usePaymentMints()
@@ -424,7 +423,6 @@ export const RentalCard = ({
           throw 'Edition info not found'
         }
 
-        setLoading(true)
         const rentalMint = new PublicKey(
           tokenAccount?.account.data.parsed.info.mint
         )
@@ -569,8 +567,6 @@ export const RentalCard = ({
       console.log('Error handling rental', e)
       setConfirmRentalTerms(false)
       setError(`${e}`)
-    } finally {
-      setLoading(false)
     }
   }
   return (
@@ -1149,7 +1145,7 @@ export const RentalCard = ({
                   onClick={() => setError(undefined)}
                 >
                   <div style={{ wordBreak: 'break-word' }}>{error}</div>
-                  <div className="absolute top-2 right-2">
+                  <div className="absolute top-4 right-4">
                     <IoMdClose />
                   </div>
                 </div>

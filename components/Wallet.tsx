@@ -186,7 +186,10 @@ export const Wallet = () => {
               label: g.header,
               value: i,
             }))}
-            onChange={(o) => setSelectedGroup(o.value)}
+            onChange={(o) => {
+              setSelectedGroup(o.value)
+              setSelectedTokens([])
+            }}
           />
           <MultiSelector<string>
             placeholder="Select filters"
@@ -280,9 +283,9 @@ export const Wallet = () => {
             {groupedTokens?.tokens?.map((tokenData) => (
               <Card
                 key={tokenData.tokenAccount?.pubkey.toString()}
-                className={
+                className={`cursor-pointer ${
                   isSelected(tokenData) ? 'border-[1px] border-secondary' : ''
-                }
+                }`}
                 css={css`
                   box-shadow: ${isSelected(tokenData)
                     ? `0px 0px 30px ${config.colors.secondary}`
