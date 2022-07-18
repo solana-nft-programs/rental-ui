@@ -264,7 +264,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       value: ['5grvMeoBqv5ZdHq9JMy5RrxLPNAt1nzc9cpqYWFUwizz'],
     },
     rentalCard: {
-      invalidators: ['rate', 'expiration'],
+      invalidators: ['rate', 'expiration', 'manual'],
       invalidationOptions: {
         freezeRentalRateDuration: {
           value: '1',

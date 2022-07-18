@@ -44,10 +44,8 @@ import { useEffect, useState } from 'react'
 import { BiQrScan, BiTimer } from 'react-icons/bi'
 import { FaLink } from 'react-icons/fa'
 import { FiSend } from 'react-icons/fi'
-import { GiRobotGrab } from 'react-icons/gi'
 import { ImPriceTags } from 'react-icons/im'
 import { IoMdClose } from 'react-icons/io'
-import { Alert } from 'rental-components/common/Alert'
 import { PAYMENT_MINTS } from 'rental-components/common/Constants'
 import {
   Fieldset,
@@ -173,7 +171,7 @@ export const RentalCard = ({
 }: RentalCardProps) => {
   const [error, setError] = useState<string>()
   const [loading, setLoading] = useState(false)
-  const [link, setLink] = useState<string | null>(null)
+  const [link, setLink] = useState<string | null>()
   const userTokenData = useUserTokenData()
   const paymentMintInfos = usePaymentMints()
   const [selectedTokenDatas, setSelectedTokenDatas] =
@@ -242,8 +240,6 @@ export const RentalCard = ({
       )
     : PAYMENT_MINTS
 
-  // console.log(paymentMintData)
-
   const showClaimRentalReceipt =
     rentalCardConfig.invalidationOptions?.showClaimRentalReceipt
 
@@ -303,7 +299,7 @@ export const RentalCard = ({
 
   const [selectedInvalidators, setSelectedInvalidators] = useState<
     InvalidatorOption[]
-  >(rentalCardConfig.invalidators[0] ? [rentalCardConfig.invalidators[0]] : [])
+  >([])
   const [showAdditionalOptions, setShowAdditionalOptions] = useState(false)
   const [showExtendDuration, setShowExtendDuration] = useState(false)
   const [confirmRentalTerms, setConfirmRentalTerms] = useState(false)
@@ -332,10 +328,12 @@ export const RentalCard = ({
     }
     if (selectedInvalidators.includes('rate')) {
       setExtensionDurationAmount(
-        parseInt(
-          rentalCardConfig.invalidationOptions?.freezeRentalRateDuration
-            ?.value ?? '1'
-        )
+        rentalCardConfig.invalidationOptions?.freezeRentalRateDuration?.value
+          ? parseInt(
+              rentalCardConfig.invalidationOptions?.freezeRentalRateDuration
+                ?.value
+            )
+          : null
       )
       setExtensionPaymentMint(defaultPaymentMint.mint)
       setExtensionPaymentAmount(0)
@@ -861,34 +859,34 @@ export const RentalCard = ({
               </div>
             )}
             {selectedInvalidators.includes('manual') && (
-              <StepDetail
-                icon={<GiRobotGrab />}
-                title="Manual Revocation Pubkey"
-                description={
-                  <div className="flex">
-                    <Fieldset>
-                      <InputBorder>
-                        <Input
-                          className="overflow-ellipsis"
-                          name="tweet"
-                          value={customInvalidator}
-                          placeholder={shortPubKey(wallet.publicKey)}
-                          onChange={(e) => setCustomInvalidator(e.target.value)}
-                        />
-                      </InputBorder>
-                    </Fieldset>
-                    <Button
-                      variant={'primary'}
-                      className="ml-2 h-[31px]"
-                      onClick={() =>
-                        setCustomInvalidator(wallet.publicKey.toString())
-                      }
-                    >
-                      Me
-                    </Button>
-                  </div>
-                }
-              />
+              <div>
+                <div className="mb-1 text-light-0">
+                  Manual revocation pubkey
+                </div>
+                <div className="relative flex">
+                  <input
+                    className="w-full rounded-md border border-border bg-dark-4 py-2 px-3 text-light-0 placeholder-medium-3 transition-all focus:border-primary focus:outline-none"
+                    css={css`
+                      line-height: 20px;
+                    `}
+                    value={customInvalidator}
+                    placeholder={shortPubKey(wallet.publicKey)}
+                    onChange={(e) => setCustomInvalidator(e.target.value)}
+                  />
+                  <Button
+                    variant={'primary'}
+                    className="absolute right-0 top-[1px] w-16"
+                    css={css`
+                      height: calc(100% - 2px);
+                    `}
+                    onClick={() =>
+                      setCustomInvalidator(wallet.publicKey.toString())
+                    }
+                  >
+                    Me
+                  </Button>
+                </div>
+              </div>
             )}
             {selectedInvalidators.includes('usages') && (
               <StepDetail
@@ -1107,65 +1105,51 @@ export const RentalCard = ({
                 </>
               )}
             {link ? (
-              <div>
-                <Alert
-                  style={{
-                    height: 'auto',
-                    cursor: 'pointer',
-                  }}
-                  message={
-                    <>
-                      {selectedTokenDatas.length === 1 && totalListed === 1 ? (
-                        <div>
-                          Successfully listed: ({totalListed} /{' '}
-                          {selectedTokenDatas.length})
-                          <br />
-                          Link created {link.substring(0, 20)}
-                          ...
-                          {visibility === 'private' && (
-                            <>
-                              {link.substring(link.length - 5)}
-                              <div>
-                                This link can only be used once and cannot be
-                                regenerated
-                              </div>
-                            </>
-                          )}
-                        </div>
-                      ) : (
-                        <div>
-                          {' '}
-                          Successfully listed: ({totalListed} / {totalTokens}){' '}
-                        </div>
+              <div className="rounded-md bg-dark-4">
+                <div
+                  className="flex cursor-pointer items-center justify-center p-4"
+                  onClick={() => setError(undefined)}
+                >
+                  {selectedTokenDatas.length === 1 && totalListed === 1 ? (
+                    <div>
+                      Successfully listed: ({totalListed} /{' '}
+                      {selectedTokenDatas.length})
+                      <br />
+                      Link created {link.substring(0, 20)}
+                      ...
+                      {visibility === 'private' && (
+                        <>
+                          {link.substring(link.length - 5)}
+                          <div>
+                            This link can only be used once and cannot be
+                            regenerated
+                          </div>
+                        </>
                       )}
-                    </>
-                  }
-                  type="success"
-                  showIcon
-                />
+                    </div>
+                  ) : (
+                    <div>
+                      {' '}
+                      Successfully listed: ({totalListed} / {totalTokens}){' '}
+                    </div>
+                  )}
+                </div>
               </div>
             ) : error ? (
-              <div>
-                <Alert
-                  style={{ height: 'auto' }}
-                  message={
-                    <div
-                      className="flex w-full cursor-pointer flex-row justify-between"
-                      onClick={() => setError(undefined)}
-                    >
-                      <div style={{ wordBreak: 'break-word' }}>{error}</div>
-                      <div className="float-right mt-[3px]">
-                        <IoMdClose />
-                      </div>
-                    </div>
-                  }
-                  type="error"
-                  showIcon
-                />
+              <div className="relative rounded-md border-[1px] border-red-500 bg-red-500 bg-opacity-25">
+                <div
+                  className="flex cursor-pointer items-center justify-center p-4"
+                  onClick={() => setError(undefined)}
+                >
+                  <div style={{ wordBreak: 'break-word' }}>{error}</div>
+                  <div className="absolute top-2 right-2">
+                    <IoMdClose />
+                  </div>
+                </div>
               </div>
             ) : (
               <div className="rounded-md bg-dark-4">
-                <div className="p-4 text-center">
+                <div className="flex items-center justify-center p-4">
                   Whoever claims this rental may own the asset{' '}
                   {totalUsages && extensionMaxExpiration ? (
                     `for either ${totalUsages} uses or until ${longDateString(
@@ -1236,38 +1220,39 @@ export const RentalCard = ({
                       ).toLocaleString('en-US')}.`
                     : ''}
                   {showExtendDuration &&
-                  extensionPaymentAmount &&
-                  extensionDurationAmount &&
-                  extensionPaymentMint &&
-                  paymentMintInfos.data &&
-                  durationAmount !== 0
-                    ? ` The claimer can choose to extend the rental at the rate of ${fmtMintAmount(
-                        paymentMintInfos.data[extensionPaymentMint.toString()],
-                        new anchor.BN(extensionPaymentAmount)
-                      )} ${
-                        paymentMintData.find(
-                          (obj) => obj.mint === extensionPaymentMint
-                        )?.symbol
-                      } / ${extensionDurationAmount} ${
-                        extensionDurationAmount === 1
-                          ? extensionDurationOption
-                              ?.toLowerCase()
-                              .substring(0, extensionDurationOption.length - 1)
-                          : extensionDurationOption?.toLowerCase()
-                      }${
-                        extensionMaxExpiration
-                          ? ` up until ${new Date(
-                              extensionMaxExpiration * 1000
-                            ).toLocaleString('en-US')}.`
-                          : '.'
-                      } `
-                    : null}
-                  <div className="mt-2 flex gap-3">
-                    {selectedInvalidators.includes('rate') ? (
-                      <p>
-                        <b>Rate: </b> {extensionRate()}
-                      </p>
-                    ) : (
+                    extensionPaymentAmount &&
+                    extensionDurationAmount &&
+                    extensionPaymentMint &&
+                    paymentMintInfos.data &&
+                    durationAmount !== 0 &&
+                    ` The claimer can choose to extend the rental at the rate of ${fmtMintAmount(
+                      paymentMintInfos.data[extensionPaymentMint.toString()],
+                      new anchor.BN(extensionPaymentAmount)
+                    )} ${
+                      paymentMintData.find(
+                        (obj) => obj.mint === extensionPaymentMint
+                      )?.symbol
+                    } / ${extensionDurationAmount} ${
+                      extensionDurationAmount === 1
+                        ? extensionDurationOption
+                            ?.toLowerCase()
+                            .substring(0, extensionDurationOption.length - 1)
+                        : extensionDurationOption?.toLowerCase()
+                    }${
+                      extensionMaxExpiration
+                        ? ` up until ${new Date(
+                            extensionMaxExpiration * 1000
+                          ).toLocaleString('en-US')}.`
+                        : '.'
+                    } `}
+                </div>
+                <div className="flex gap-3 border-t-[1px] border-border p-4">
+                  {selectedInvalidators.includes('rate') ? (
+                    <p>
+                      <b>Rate: </b> {extensionRate()}
+                    </p>
+                  ) : (
+                    price > 0 && (
                       <p>
                         <b>Price: </b>{' '}
                         {paymentMintInfos.data
@@ -1282,36 +1267,38 @@ export const RentalCard = ({
                           )?.symbol
                         }
                       </p>
-                    )}
-
-                    {durationAmount && durationOption ? (
-                      <p>
-                        <b>Duration: </b> {durationAmount}{' '}
-                        {durationAmount !== 1
-                          ? durationOption.toLocaleLowerCase()
-                          : durationOption
-                              .toLocaleLowerCase()
-                              .substring(0, durationOption.length - 1)}
-                      </p>
-                    ) : null}
-                    {extensionMaxExpiration && (
-                      <p>
-                        <b>Expiration: </b>{' '}
-                        {shortDateString(extensionMaxExpiration)}
-                      </p>
-                    )}
-                    {totalUsages && (
-                      <p>
-                        <b>Usages: </b> {totalUsages}
-                      </p>
-                    )}
-                  </div>
+                    )
+                  )}
+                  {durationAmount && durationOption ? (
+                    <p>
+                      <b>Duration: </b> {durationAmount}{' '}
+                      {durationAmount !== 1
+                        ? durationOption.toLocaleLowerCase()
+                        : durationOption
+                            .toLocaleLowerCase()
+                            .substring(0, durationOption.length - 1)}
+                    </p>
+                  ) : null}
+                  {extensionMaxExpiration && (
+                    <p>
+                      <b>Expiration: </b>{' '}
+                      {shortDateString(extensionMaxExpiration)}
+                    </p>
+                  )}
+                  {totalUsages && (
+                    <p>
+                      <b>Usages: </b> {totalUsages}
+                    </p>
+                  )}
                 </div>
               </div>
             )}
             <div
               className="flex cursor-pointer gap-2"
-              onClick={() => setConfirmRentalTerms(!confirmRentalTerms)}
+              onClick={() => {
+                setConfirmRentalTerms(!confirmRentalTerms)
+                setError(undefined)
+              }}
             >
               <div
                 className={`h-5 w-5 shrink-0 rounded-md border-[.5px] border-light-1 transition-all ${
@@ -1325,13 +1312,16 @@ export const RentalCard = ({
             </div>
             <Button
               variant="primary"
+              className="h-12"
               disabled={
                 !confirmRentalTerms ||
                 (link === 'success' &&
                   (totalListed === selectedTokenDatas.length ||
                     selectedTokenDatas.length === 0))
               }
-              onClick={link ? () => handleCopy(link) : handleRental}
+              onClick={async () => {
+                link ? handleCopy(link) : await handleRental()
+              }}
             >
               {link && link !== 'success' ? (
                 <div className="flex items-center justify-center gap-[5px] text-lg">

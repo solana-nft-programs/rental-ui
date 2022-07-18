@@ -52,12 +52,14 @@ export const Manage = () => {
       <div className="mx-auto mt-12 max-w-[1634px]">
         {!tokenManagerByIssuer.isFetched ? (
           <div className="flex flex-wrap justify-center gap-4 xl:justify-start">
-            <Card placeholder header={<></>} subHeader={<></>} />
-            <Card placeholder header={<></>} subHeader={<></>} />
-            <Card placeholder header={<></>} subHeader={<></>} />
-            <Card placeholder header={<></>} subHeader={<></>} />
-            <Card placeholder header={<></>} subHeader={<></>} />
-            <Card placeholder header={<></>} subHeader={<></>} />
+            <Card skeleton header={<></>} subHeader={<></>} />
+            <Card skeleton header={<></>} subHeader={<></>} />
+            <Card skeleton header={<></>} subHeader={<></>} />
+            <Card skeleton header={<></>} subHeader={<></>} />
+            <Card skeleton header={<></>} subHeader={<></>} />
+            <Card skeleton header={<></>} subHeader={<></>} />
+            <Card skeleton header={<></>} subHeader={<></>} />
+            <Card skeleton header={<></>} subHeader={<></>} />
           </div>
         ) : tokenManagerByIssuer.data &&
           tokenManagerByIssuer.data.length > 0 ? (

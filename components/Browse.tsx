@@ -744,12 +744,12 @@ export const Browse = () => {
       <div className="mx-auto mt-12 max-w-[1634px]">
         {!tokenManagers.isFetched ? (
           <div className="flex flex-wrap justify-center gap-4 xl:justify-start">
-            <Card placeholder header={<></>} subHeader={<></>} />
-            <Card placeholder header={<></>} subHeader={<></>} />
-            <Card placeholder header={<></>} subHeader={<></>} />
-            <Card placeholder header={<></>} subHeader={<></>} />
-            <Card placeholder header={<></>} subHeader={<></>} />
-            <Card placeholder header={<></>} subHeader={<></>} />
+            <Card skeleton header={<></>} subHeader={<></>} />
+            <Card skeleton header={<></>} subHeader={<></>} />
+            <Card skeleton header={<></>} subHeader={<></>} />
+            <Card skeleton header={<></>} subHeader={<></>} />
+            <Card skeleton header={<></>} subHeader={<></>} />
+            <Card skeleton header={<></>} subHeader={<></>} />
           </div>
         ) : groupedTokens?.tokens && groupedTokens.tokens.length > 0 ? (
           <div className="flex flex-wrap justify-center gap-4 xl:justify-start">

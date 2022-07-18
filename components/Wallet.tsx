@@ -3,7 +3,9 @@ import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tok
 import { css } from '@emotion/react'
 import { useWallet } from '@solana/wallet-adapter-react'
 import type { TokenData } from 'api/api'
+import { GlyphClose } from 'assets/GlyphClose'
 import { Airdrop } from 'common/Airdrop'
+import { Button } from 'common/Button'
 import { Card } from 'common/Card'
 import { Glow } from 'common/Glow'
 import { HeaderSlim } from 'common/HeaderSlim'
@@ -18,11 +20,9 @@ import { asWallet } from 'common/Wallets'
 import type { TokenSection } from 'config/config'
 import type { UserTokenData } from 'hooks/useUserTokenData'
 import { useUserTokenData } from 'hooks/useUserTokenData'
-import { lighten } from 'polished'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { filterTokens, useProjectConfig } from 'providers/ProjectConfigProvider'
-import { useEffect, useState } from 'react'
-import { Button } from 'rental-components/common/Button'
+import { useState } from 'react'
 import { useRentalModal } from 'rental-components/RentalModalProvider'
 
 import { filterTokensByAttributes, getAllAttributes, PANE_TABS } from './Browse'
@@ -38,16 +38,6 @@ export const Wallet = () => {
   const [selectedFilters, setSelectedFilters] = useState<{
     [filterName: string]: string[]
   }>({})
-
-  useEffect(() => {
-    rentalModal.show(
-      asWallet(wallet),
-      connection,
-      environment.label,
-      userTokenDatas.data || [],
-      config.rentalCard
-    )
-  }, [userTokenDatas.data?.length])
 
   const isSelected = (tokenData: TokenData) => {
     return selectedTokens.some(
@@ -128,6 +118,40 @@ export const Wallet = () => {
 
   return (
     <>
+      <div
+        className={`fixed z-30 flex w-full items-center justify-between bg-dark-6 px-12 py-8 transition-all ${
+          selectedTokens.length > 0 ? 'bottom-0' : '-bottom-32'
+        }`}
+        css={css`
+          box-shadow: 0px 144px 100px 200px rgba(12, 12, 13, 1);
+        `}
+      >
+        <div className="text-lg">
+          You selected{' '}
+          {selectedTokens.length ? `(${selectedTokens.length})` : ''} items
+        </div>
+        <div className="flex items-center gap-6">
+          <Button
+            disabled={selectedTokens.length === 0}
+            variant="primary"
+            className="mr-5 px-8"
+            onClick={() =>
+              rentalModal.show(
+                asWallet(wallet),
+                connection,
+                environment.label,
+                selectedTokens,
+                config.rentalCard
+              )
+            }
+          >
+            Rent out
+          </Button>
+          <div className="cursor-pointer" onClick={() => setSelectedTokens([])}>
+            <GlyphClose />
+          </div>
+        </div>
+      </div>
       <HeaderSlim
         loading={userTokenDatas.isFetched && userTokenDatas.isFetching}
         tabs={[
@@ -239,67 +263,41 @@ export const Wallet = () => {
         </div>
       </div>
       <Info section={groupedFilteredAndSortedTokens[selectedGroup]} />
-      {userTokenDatas.data && userTokenDatas?.data.length > 0 && (
-        <div className="container mx-auto mb-5 flex items-end justify-end">
-          <Button
-            disabled={selectedTokens.length === 0}
-            variant="primary"
-            className="mr-5"
-            bgColor={config.colors.secondary}
-            onClick={() =>
-              rentalModal.show(
-                asWallet(wallet),
-                connection,
-                environment.label,
-                selectedTokens,
-                config.rentalCard
-              )
-            }
-          >
-            {`Bulk Upload ${
-              selectedTokens.length ? `(${selectedTokens.length})` : ''
-            }`}
-          </Button>
-        </div>
-      )}
       <div className="mx-auto mt-12 max-w-[1634px]">
         {!userTokenDatas.isFetched ? (
           <div className="flex flex-wrap justify-center gap-4 xl:justify-start">
-            <Card placeholder header={<></>} subHeader={<></>} />
-            <Card placeholder header={<></>} subHeader={<></>} />
-            <Card placeholder header={<></>} subHeader={<></>} />
-            <Card placeholder header={<></>} subHeader={<></>} />
-            <Card placeholder header={<></>} subHeader={<></>} />
-            <Card placeholder header={<></>} subHeader={<></>} />
+            <Card skeleton header={<></>} subHeader={<></>} />
+            <Card skeleton header={<></>} subHeader={<></>} />
+            <Card skeleton header={<></>} subHeader={<></>} />
+            <Card skeleton header={<></>} subHeader={<></>} />
+            <Card skeleton header={<></>} subHeader={<></>} />
+            <Card skeleton header={<></>} subHeader={<></>} />
+            <Card skeleton header={<></>} subHeader={<></>} />
+            <Card skeleton header={<></>} subHeader={<></>} />
           </div>
         ) : groupedTokens?.tokens && groupedTokens.tokens.length > 0 ? (
           <div className="flex flex-wrap justify-center gap-4 xl:justify-start">
             {groupedTokens?.tokens?.map((tokenData) => (
-              <div
+              <Card
                 key={tokenData.tokenAccount?.pubkey.toString()}
-                className="relative cursor-pointer rounded-xl"
-                style={{
-                  boxShadow: selectedTokens.includes(tokenData)
+                className={
+                  isSelected(tokenData) ? 'border-[1px] border-secondary' : ''
+                }
+                css={css`
+                  box-shadow: ${isSelected(tokenData)
                     ? `0px 0px 30px ${config.colors.secondary}`
-                    : '',
-                }}
-              >
-                <NFT
-                  key={tokenData?.tokenAccount?.pubkey.toBase58()}
-                  tokenData={tokenData}
-                  onClick={() => handleNFTSelect(tokenData)}
-                />
-                <div
-                  style={{
-                    background: lighten(0.07, config.colors.main),
-                  }}
-                  className={`flex w-[280px] flex-col rounded-b-md p-3`}
-                >
-                  <div className="mb-2 flex w-full cursor-pointer flex-row text-xs font-bold text-white">
+                    : ''};
+                `}
+                onClick={() => handleNFTSelect(tokenData)}
+                hero={<NFT tokenData={tokenData} />}
+                header={
+                  <div className="flex w-full cursor-pointer flex-row text-sm font-bold text-white">
                     <p className="flex w-fit overflow-hidden text-ellipsis whitespace-nowrap text-left">
-                      {tokenData.metadata?.data.name}
+                      {tokenData.metadata?.data?.name}
                     </p>
                   </div>
+                }
+                content={
                   <div className="flex flex-row justify-between text-xs">
                     {tokenData.recipientTokenAccount?.owner && (
                       <div
@@ -325,8 +323,8 @@ export const Wallet = () => {
                       </div>
                     )}
                   </div>
-                </div>
-              </div>
+                }
+              />
             ))}
           </div>
         ) : (

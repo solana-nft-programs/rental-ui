@@ -180,7 +180,6 @@ export function NFT({ tokenData, onClick }: NFTProps) {
                   gap: '10px',
                   color: 'white',
                 }}
-                className="justify-between"
                 href={pubKeyUrl(
                   tokenManager?.parsed.mint ??
                     tokenAccount?.account.data.parsed.info.mint,
@@ -189,8 +188,8 @@ export function NFT({ tokenData, onClick }: NFTProps) {
                 target="_blank"
                 rel="noreferrer"
               >
-                View
                 <FiExternalLink />
+                View
               </a>
             </PopoverItem>
             {ctx.environment.label !== 'devnet' && (
@@ -202,7 +201,6 @@ export function NFT({ tokenData, onClick }: NFTProps) {
                     gap: '10px',
                     color: 'white',
                   }}
-                  className="justify-between"
                   href={metadataUrl(
                     tokenManager?.parsed.mint ??
                       tokenAccount?.account.data.parsed.info.mint,
@@ -211,8 +209,8 @@ export function NFT({ tokenData, onClick }: NFTProps) {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  Metadata
                   <AiOutlineDatabase />
+                  Metadata
                 </a>
               </PopoverItem>
             )}
@@ -224,15 +222,14 @@ export function NFT({ tokenData, onClick }: NFTProps) {
                   gap: '10px',
                   color: 'white',
                 }}
-                className="justify-between"
                 href={getLink(
                   `/claim/${tokenData.tokenManager?.pubkey.toBase58()}`
                 )}
                 target="_blank"
                 rel="noreferrer"
               >
-                Claim Link
                 <FaLink />
+                Claim Link
               </a>
             </PopoverItem>
             {!tokenManager && (
@@ -242,7 +239,7 @@ export function NFT({ tokenData, onClick }: NFTProps) {
                     elligibleForRent(config, tokenData)
                       ? 'cursor-pointer'
                       : 'cursor-default opacity-20'
-                  } flex items-center justify-between gap-2`}
+                  } flex items-center gap-2`}
                   onClick={() => {
                     elligibleForRent(config, tokenData) &&
                       rentalModal.show(
@@ -254,8 +251,8 @@ export function NFT({ tokenData, onClick }: NFTProps) {
                       )
                   }}
                 >
-                  Rent
                   <FiSend />
+                  Rent
                 </div>
               </PopoverItem>
             )}
@@ -285,8 +282,8 @@ export function NFT({ tokenData, onClick }: NFTProps) {
                       )
                     }}
                   >
-                    Delist
                     <IoClose />
+                    Delist
                   </div>
                 </PopoverItem>
               )}
@@ -304,8 +301,8 @@ export function NFT({ tokenData, onClick }: NFTProps) {
                       )
                     }
                   >
-                    Scan
                     <IoQrCodeOutline />
+                    Scan
                   </div>
                 </PopoverItem>
               )}
@@ -331,8 +328,8 @@ export function NFT({ tokenData, onClick }: NFTProps) {
                       }
                     }}
                   >
-                    Return
                     <BsArrowReturnLeft />
+                    Return
                   </div>
                 </PopoverItem>
               )}
@@ -353,8 +350,8 @@ export function NFT({ tokenData, onClick }: NFTProps) {
                       )
                     }}
                   >
-                    Add Duration
                     <IoAddSharp />
+                    Add Duration
                   </div>
                 </PopoverItem>
               )}
