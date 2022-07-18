@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 
 export const Button = ({
-  text,
+  children,
   onClick,
   className,
   icon,
@@ -10,7 +10,7 @@ export const Button = ({
   disabled,
   variant,
 }: {
-  text: string
+  children: string | JSX.Element
   icon?: JSX.Element
   count?: number
   className?: string
@@ -22,7 +22,7 @@ export const Button = ({
 
   return (
     <div
-      className={`flex items-center justify-center gap-5 ${className} ${
+      className={`flex items-center justify-center gap-5 rounded-md transition-all ${className} ${
         disabled
           ? 'bg-medium-4'
           : variant === 'primary'
@@ -43,7 +43,13 @@ export const Button = ({
         <LoadingSpinner height="25px" />
       ) : (
         <div className="flex items-center justify-center gap-1">
-          {text && <div>{text}</div>}
+          {children && (
+            <div
+              className={`py-3 ${disabled ? 'text-medium-3' : 'text-light-0'}`}
+            >
+              {children}
+            </div>
+          )}
           {count && (
             <div className="color-primary h-4 w-4 rounded-full bg-white text-xs text-transparent">
               {count}

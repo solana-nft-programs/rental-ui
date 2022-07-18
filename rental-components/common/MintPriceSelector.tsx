@@ -1,11 +1,8 @@
-import styled from '@emotion/styled'
+import { css } from '@emotion/react'
 import { BN } from '@project-serum/anchor'
-import { InputNumber, Select } from 'antd'
+import { Selector } from 'common/Selector'
 import { fmtMintAmount, parseMintNaturalAmountFromDecimal } from 'common/units'
 import { PAYMENT_MINTS, usePaymentMints } from 'hooks/usePaymentMints'
-import React from 'react'
-
-const { Option } = Select
 
 export const MintPriceSelector = ({
   price,
@@ -33,54 +30,49 @@ export const MintPriceSelector = ({
     : null
 
   return (
-    <SelectorOuter>
-      <InputNumber
-        className="rounded-[4px]"
-        style={{ width: '100%' }}
-        placeholder="Price"
-        stringMode
+    <div className="relative flex w-full items-center gap-2">
+      <input
+        className="w-full rounded-md border border-border bg-dark-4 py-2 px-3 text-light-0 placeholder-medium-3 focus:border-primary focus:outline-none"
+        css={css`
+          line-height: 20px;
+        `}
+        type="number"
+        placeholder={'Price'}
         disabled={disabled}
+        min={0}
         value={
-          paymentMintInfo ? fmtMintAmount(paymentMintInfo, new BN(price)) : '0'
+          paymentMintInfo
+            ? `${fmtMintAmount(paymentMintInfo, new BN(price))}`
+            : '0'
         }
-        min="0"
-        step={1 / 10 ** 4}
         onChange={(e) =>
           handlePrice(
-            parseMintNaturalAmountFromDecimal(e, paymentMintInfo?.decimals || 1)
+            parseMintNaturalAmountFromDecimal(
+              e.target.value,
+              paymentMintInfo?.decimals || 1
+            )
           )
         }
       />
-      <Select
-        onChange={(e) => handleMint(e)}
-        defaultValue={
-          mintDisabled
-            ? paymentMintData.find((m) => m.mint === mint)?.mint
-            : paymentMintData[0]?.symbol ?? PAYMENT_MINTS[0]!.symbol
-        }
-        disabled={disabled || mintDisabled}
-        showArrow={!mintDisabled}
-      >
-        {(paymentMintData ?? PAYMENT_MINTS).map(
-          ({ mint, symbol }) =>
-            paymentMintInfos.data &&
-            paymentMintInfos.data[mint] && (
-              <Option key={mint} value={mint}>
-                {symbol}
-              </Option>
-            )
-        )}
-      </Select>
-    </SelectorOuter>
+      {paymentMintData.length > 1 ? (
+        <Selector<string>
+          disabled={mintDisabled}
+          defaultOption={{
+            value:
+              paymentMintData.find((m) => m.mint === mint)?.mint ||
+              (paymentMintData[0] || PAYMENT_MINTS[0])!.mint,
+            label:
+              paymentMintData.find((m) => m.mint === mint)?.symbol ||
+              (paymentMintData[0] || PAYMENT_MINTS[0])!.symbol,
+          }}
+          onChange={(e) => handleMint(e.value)}
+          options={(paymentMintData || PAYMENT_MINTS).map(
+            ({ mint, symbol }) => ({ label: symbol, value: mint })
+          )}
+        />
+      ) : (
+        <div className="absolute right-3">{paymentMintData[0]?.symbol}</div>
+      )}
+    </div>
   )
 }
-
-const SelectorOuter = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 10px;
-
-  .ant-select-selector {
-    border-radius: 4px;
-  }
-`

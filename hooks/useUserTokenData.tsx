@@ -10,7 +10,6 @@ import { Edition } from '@metaplex-foundation/mpl-token-metadata'
 import * as spl from '@solana/spl-token'
 import type { AccountInfo, ParsedAccountData } from '@solana/web3.js'
 import { PublicKey } from '@solana/web3.js'
-import type { EditionInfo } from 'api/api'
 import { accountDataById } from 'api/api'
 import type { TokenFilter } from 'config/config'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
@@ -26,7 +25,7 @@ export type UserTokenData = {
   mint?: spl.MintInfo
   tokenManager?: AccountData<TokenManagerData>
   metaplexData?: { pubkey: PublicKey; data: metaplex.MetadataData } | null
-  editionData?: EditionInfo | null
+  editionData?: AccountData<metaplex.EditionData | metaplex.MasterEditionData>
   metadata?: any
   claimApprover?: AccountData<PaidClaimApproverData> | null
   useInvalidator?: AccountData<UseInvalidatorData> | null
@@ -39,7 +38,7 @@ export const useUserTokenData = (filter?: TokenFilter, cluster?: string) => {
   const { connection } = useEnvironmentCtx()
 
   return useQuery<UserTokenData[]>(
-    ['useUserTokenData', walletId],
+    ['useUserTokenData', walletId, filter?.value],
     async () => {
       if (!walletId) return []
 

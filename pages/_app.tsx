@@ -1,4 +1,4 @@
-import 'antd/dist/antd.css'
+import 'antd/dist/antd.dark.css'
 import './styles.css'
 import '@cardinal/namespaces-components/dist/esm/styles.css'
 import 'tailwindcss/tailwind.css'
@@ -33,7 +33,7 @@ export const queryClient = new QueryClient({
   },
 })
 
-export const DEBUG = false
+export const DEBUG = true
 
 const App = ({
   Component,

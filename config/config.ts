@@ -272,7 +272,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         },
         visibilities: ['public', 'private'],
         durationOptions: ['minutes', 'hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
+        invalidationTypes: ['reissue', 'return'],
         customInvalidationTypes: {
           '41qJ9dJemw8mrry2BD1wU6B2aHXN4RoNY79bS7xwDPhM': ['return'],
         },

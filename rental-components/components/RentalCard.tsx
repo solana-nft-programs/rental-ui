@@ -5,7 +5,7 @@ import {
   InvalidationType,
   TokenManagerKind,
 } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
-import styled from '@emotion/styled'
+import { css } from '@emotion/react'
 import * as anchor from '@project-serum/anchor'
 import type { Wallet } from '@saberhq/solana-contrib'
 import type { Connection } from '@solana/web3.js'
@@ -18,11 +18,14 @@ import {
 } from '@solana/web3.js'
 import { DatePicker, InputNumber, Select } from 'antd'
 import type { TokenData } from 'api/api'
-import type { EditionInfo } from 'api/editions'
-import getEditionInfo from 'api/editions'
 import { executeAllTransactions, tryPublicKey } from 'api/utils'
-import { NFTOverlay } from 'common/NFTOverlay'
+import { GlyphEdit } from 'assets/GlyphEdit'
+import { Button } from 'common/Button'
 import { notify } from 'common/Notification'
+import { Selector } from 'common/Selector'
+import { Switch } from 'common/Switch'
+import { Toggle } from 'common/Toggle'
+import { Tooltip } from 'common/Tooltip'
 import { fmtMintAmount } from 'common/units'
 import {
   capitalizeFirstLetter,
@@ -35,18 +38,16 @@ import {
 import { usePaymentMints } from 'hooks/usePaymentMints'
 import { useUserTokenData } from 'hooks/useUserTokenData'
 import moment from 'moment'
+import { lighten } from 'polished'
 import { getLink } from 'providers/ProjectConfigProvider'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { BiQrScan, BiTimer } from 'react-icons/bi'
-import { FaEye, FaLink } from 'react-icons/fa'
+import { FaLink } from 'react-icons/fa'
 import { FiSend } from 'react-icons/fi'
 import { GiRobotGrab } from 'react-icons/gi'
-import { GrReturn } from 'react-icons/gr'
 import { ImPriceTags } from 'react-icons/im'
 import { IoMdClose } from 'react-icons/io'
 import { Alert } from 'rental-components/common/Alert'
-import { Button } from 'rental-components/common/Button'
-import { ButtonWithFooter } from 'rental-components/common/ButtonWithFooter'
 import { PAYMENT_MINTS } from 'rental-components/common/Constants'
 import {
   Fieldset,
@@ -59,39 +60,9 @@ import { StepDetail } from 'rental-components/common/StepDetail'
 
 const { Option } = Select
 
-const NFTOuter = styled.div`
-  margin: 20px auto 0px auto;
-  height: 200px;
-  width: 200px;
-  position: relative;
-  border-radius: 10px;
-
-  .media {
-    border-radius: 10px;
-    height: 100%;
-  }
-`
-
 const handleCopy = (shareUrl: string) => {
   navigator.clipboard.writeText(shareUrl)
   notify({ message: 'Share link copied' })
-}
-
-function getEditionPill(editionInfo: EditionInfo) {
-  const masterEdition = editionInfo.masterEdition
-  const edition = editionInfo.edition
-
-  return (
-    <div className="ms-2 mx-auto flex justify-center">
-      <span className="badge badge-pill bg-dark">{`${
-        edition && masterEdition
-          ? `Edition ${edition.edition.toNumber()} / ${masterEdition.supply.toNumber()}`
-          : masterEdition
-          ? 'Master Edition'
-          : 'No Master Edition Information'
-      }`}</span>
-    </div>
-  )
 }
 
 export type InvalidatorOption =
@@ -208,6 +179,7 @@ export const RentalCard = ({
   const [selectedTokenDatas, setSelectedTokenDatas] =
     useState<TokenData[]>(tokenDatas)
   const [totalTokens, setTotalTokens] = useState(tokenDatas.length)
+
   if (
     userTokenData.data &&
     selectedTokenDatas.filter((token) =>
@@ -225,25 +197,6 @@ export const RentalCard = ({
       setSelectedTokenDatas(filteredTokens)
     }
   }
-
-  // TODO get this from tokenData
-  const [editionInfos, setEditionInfos] = useState<(EditionInfo | null)[]>([])
-  const getEdition = async () => {
-    const editionData = []
-    for (const token of selectedTokenDatas) {
-      try {
-        const editionInfo = await getEditionInfo(token.metaplexData, connection)
-        editionData.push(editionInfo)
-      } catch (e) {
-        editionData.push(null)
-        console.log(e)
-      }
-    }
-    setEditionInfos(editionData)
-  }
-  useEffect(() => {
-    getEdition()
-  }, [selectedTokenDatas])
 
   // Pull overrides from config
   const visibilities =
@@ -458,12 +411,11 @@ export const RentalCard = ({
       const tokenManagerIds = []
       const otpKeypairs = []
       for (let i = 0; i < selectedTokenDatas.length; i = i + 1) {
-        const { tokenAccount } = selectedTokenDatas[i]!
-        const editionInfo = editionInfos[i]
+        const { tokenAccount, editionData } = selectedTokenDatas[i]!
         if (!tokenAccount) {
           throw 'Token acount not found'
         }
-        if (!editionInfo) {
+        if (!editionData) {
           throw 'Edition info not found'
         }
 
@@ -544,10 +496,9 @@ export const RentalCard = ({
             : undefined,
           mint: rentalMint,
           issuerTokenAccountId: tokenAccount?.pubkey,
-          kind:
-            editionInfo.edition || editionInfo.masterEdition
-              ? TokenManagerKind.Edition
-              : TokenManagerKind.Managed,
+          kind: editionData
+            ? TokenManagerKind.Edition
+            : TokenManagerKind.Managed,
           invalidationType,
           visibility,
           customInvalidators: customInvalidator
@@ -618,288 +569,297 @@ export const RentalCard = ({
     }
   }
   return (
-    <RentalCardOuter>
-      <Wrapper>
-        <Instruction>
-          {appName ? `${appName} uses` : 'Use'} Cardinal to rent out this NFT on{' '}
-          <strong>Solana</strong>.
-        </Instruction>
-        {(!wallet?.publicKey || !connection) && (
-          <Alert
-            style={{ marginBottom: '20px' }}
-            message={
-              <>
-                <div>Connect wallet to continue</div>
-              </>
-            }
-            type="warning"
-            showIcon
-          />
-        )}
-        <div
-          className={
-            `flex w-full gap-4 overflow-x-auto ` +
-            (selectedTokenDatas.length <= 2 ? 'justify-center' : '')
-          }
-        >
-          {selectedTokenDatas.map((tokenData, i) => (
-            <ImageWrapper key={i}>
-              <NFTOuter>
-                <NFTOverlay
-                  state={tokenData.tokenManager?.parsed.state}
-                  paymentAmount={price || undefined}
-                  paymentMint={paymentMint || undefined}
-                  expiration={extensionMaxExpiration || undefined}
-                  durationSeconds={
-                    durationAmount && durationOption
-                      ? durationAmount * (durationData[durationOption] || 0)
-                      : undefined
-                  }
-                  usages={totalUsages ? 0 : undefined}
-                  totalUsages={totalUsages || undefined}
-                  extendable={hasAllExtensionProperties()}
-                  returnable={invalidationType === InvalidationType.Return}
-                  revocable={customInvalidator ? true : false}
-                  lineHeight={12}
-                  borderRadius={10}
-                />
-                {tokenData.metadata && tokenData.metadata.data && (
-                  // (metadata.data.animation_url ? (
-                  //   // @ts-ignore
-                  //   <video
-                  //     className="media"
-                  //     auto-rotate-delay="0"
-                  //     auto-rotate="true"
-                  //     auto-play="true"
-                  //     src={metadata.data.animation_url}
-                  //     // arStatus="not-presenting"
-                  //     // @ts-ignore
-                  //   ></video>
-                  // ) : (
-                  <img
-                    className="media"
-                    src={
-                      getQueryParam(tokenData.metadata?.data?.image, 'uri') ||
-                      tokenData.metadata.data.image
+    <div className="rounded-lg bg-dark-6 p-6">
+      <div className="text-center text-xl text-light-0">
+        Rent out{' '}
+        {tokenDatas.length > 1
+          ? `(${tokenDatas.length})`
+          : tokenDatas[0]
+          ? tokenDatas[0].metadata?.data.name
+          : ''}
+      </div>
+      <div
+        className={
+          `flex w-full gap-4 overflow-scroll overflow-x-auto py-4 ` +
+          (tokenDatas.length <= 2 ? 'justify-center' : '')
+        }
+      >
+        {tokenDatas.map((tokenData, i) => (
+          <div
+            key={i}
+            className="w-1/2 flex-shrink-0 overflow-hidden rounded-lg bg-medium-4"
+          >
+            {tokenData.metadata && tokenData.metadata.data && (
+              <img
+                src={
+                  getQueryParam(tokenData.metadata?.data?.image, 'uri') ||
+                  tokenData.metadata.data.image
+                }
+                alt={tokenData.metadata.data.name}
+              />
+            )}
+          </div>
+        ))}
+      </div>
+      <div>
+        {rentalCardConfig.invalidators.length > 1 && (
+          <div className="flex items-center justify-between border-t-[2px] border-border py-4">
+            <div
+              className={`flex flex-col transition-opacity ${
+                selectedInvalidators.length > 0 ? 'opacity-50' : ''
+              }`}
+            >
+              <div className="text-lg text-medium-3">Step 1</div>
+              <div className="text-2xl leading-6 text-light-0">Rent for</div>
+            </div>
+            <div className="flex gap-1">
+              {selectedInvalidators.length === 0 ? (
+                rentalCardConfig.invalidators.map((invalidator) => (
+                  <div
+                    key={invalidator}
+                    className="cursor-pointer rounded-lg border-[1px] border-border bg-dark-4 px-2 py-2 text-lg transition-colors"
+                    css={css`
+                      &:hover {
+                        background-color: ${lighten(0.1, '#000')};
+                      }
+                    `}
+                    onClick={() => setSelectedInvalidators([invalidator])}
+                  >
+                    {capitalizeFirstLetter(invalidator)}
+                  </div>
+                ))
+              ) : (
+                <div
+                  className="flex cursor-pointer items-center gap-3 rounded-lg border-[1px] border-border bg-dark-5 px-2 py-2 text-lg transition-colors"
+                  css={css`
+                    &:hover {
+                      background-color: ${lighten(0.1, '#000')};
                     }
-                    alt={tokenData.metadata.data.name}
-                  />
-                )}
-              </NFTOuter>
-              {editionInfos[i] &&
-                editionInfos[i] !== undefined &&
-                getEditionPill(editionInfos[i]!)}
-            </ImageWrapper>
-          ))}
-        </div>
-        <DetailsWrapper>
-          {rentalCardConfig.invalidators.length > 1 && (
-            <div className="flex justify-center">
-              {rentalCardConfig.invalidators.map(
-                (invalidator) =>
-                  ({
-                    rate: (
-                      <div
-                        className="mr-4 flex cursor-pointer"
-                        onClick={() => {
-                          if (selectedInvalidators.includes('rate')) {
-                            setSelectedInvalidators(
-                              selectedInvalidators.filter((o) => o !== 'rate')
-                            )
-                          } else {
-                            setSelectedInvalidators(['rate'])
-                          }
-                        }}
-                      >
-                        <input
-                          className="my-auto mr-1 cursor-pointer"
-                          type="checkbox"
-                          checked={selectedInvalidators.includes('rate')}
-                        />
-                        <span className="">Rate</span>
-                      </div>
-                    ),
-                    duration: (
-                      <div
-                        className="mr-4 flex cursor-pointer"
-                        onClick={() => {
-                          if (selectedInvalidators.includes('duration')) {
-                            setSelectedInvalidators(
-                              selectedInvalidators.filter(
-                                (o) => o !== 'duration'
-                              )
-                            )
-                          } else {
-                            setSelectedInvalidators(['duration'])
-                          }
-                        }}
-                      >
-                        <input
-                          className="my-auto mr-1 cursor-pointer"
-                          type="checkbox"
-                          checked={selectedInvalidators.includes('duration')}
-                        />
-                        <span className="">Duration</span>
-                      </div>
-                    ),
-                    expiration: (
-                      <div
-                        className="mr-4 flex cursor-pointer"
-                        onClick={() => {
-                          if (selectedInvalidators.includes('expiration')) {
-                            setSelectedInvalidators(
-                              selectedInvalidators.filter(
-                                (o) => o !== 'expiration'
-                              )
-                            )
-                          } else {
-                            setSelectedInvalidators(['expiration'])
-                          }
-                        }}
-                      >
-                        <input
-                          className="my-auto mr-1 cursor-pointer"
-                          type="checkbox"
-                          checked={selectedInvalidators.includes('expiration')}
-                        />
-                        <span className="">Expiration</span>
-                      </div>
-                    ),
-                    usages: (
-                      <div
-                        className="mr-4 flex cursor-pointer"
-                        onClick={() => {
-                          if (selectedInvalidators.includes('usages')) {
-                            setSelectedInvalidators(
-                              selectedInvalidators.filter((o) => o !== 'usages')
-                            )
-                          } else {
-                            setSelectedInvalidators(['usages'])
-                          }
-                        }}
-                      >
-                        <input
-                          className="my-auto mr-1 cursor-pointer"
-                          type="checkbox"
-                          checked={selectedInvalidators.includes('usages')}
-                        />
-                        <span className="">Usages</span>
-                      </div>
-                    ),
-                    manual: (
-                      <div
-                        className="mr-4 flex cursor-pointer"
-                        onClick={() => {
-                          if (selectedInvalidators.includes('manual')) {
-                            setSelectedInvalidators(
-                              selectedInvalidators.filter((o) => o !== 'manual')
-                            )
-                          } else {
-                            setSelectedInvalidators(['manual'])
-                          }
-                        }}
-                      >
-                        <input
-                          className="my-auto mr-1 cursor-pointer"
-                          type="checkbox"
-                          checked={selectedInvalidators.includes('manual')}
-                        />
-                        <span className="">Manual</span>
-                      </div>
-                    ),
-                  }[invalidator])
+                  `}
+                  onClick={() => setSelectedInvalidators([])}
+                >
+                  {capitalizeFirstLetter(selectedInvalidators[0] || '')}
+                  <GlyphEdit />
+                </div>
               )}
             </div>
-          )}
-          <div className="grid grid-cols-2 gap-4">
-            {selectedInvalidators.includes('rate') && (
-              <>
-                <StepDetail
-                  icon={<ImPriceTags />}
-                  title="Rental Rate"
-                  description={
-                    <div className="flex">
-                      <div className="mr-2">
-                        <MintPriceSelector
-                          price={extensionPaymentAmount}
-                          mint={extensionPaymentMint}
-                          paymentMintData={paymentMintData}
-                          mintDisabled={paymentMintData.length === 1}
-                          handlePrice={setExtensionPaymentAmount}
-                          handleMint={setExtensionPaymentMint}
-                        />
-                      </div>
-                      <div>
-                        <Select
-                          className="w-max rounded-[4px]"
-                          onChange={(e) => setDurationOption(e)}
-                          value={durationOption}
-                          defaultValue={defaultDurationOption}
-                          disabled={
-                            rentalCardConfig.invalidationOptions
-                              ?.freezeRentalRateDuration
-                              ? true
-                              : false
-                          }
-                        >
-                          {Object.keys(durationData).map((option) => (
-                            <Option key={option} value={option}>
-                              {capitalizeFirstLetter(option).substring(
-                                0,
-                                option.length - 1
-                              )}
-                            </Option>
-                          ))}
-                        </Select>{' '}
-                      </div>
-                    </div>
-                  }
-                />
-                <StepDetail
-                  icon={<BiTimer />}
-                  title="Max Rental Duration"
-                  description={
-                    <div>
-                      <DatePicker
-                        className="rounded-[4px]"
-                        style={{
-                          zIndex: 99999,
-                        }}
+          </div>
+        )}
+        <div
+          className={`mb-2 flex items-center justify-between border-t-[2px] border-border py-4 ${
+            selectedInvalidators.length === 0 ? 'border-b-[2px]' : ''
+          }`}
+        >
+          <div
+            className={`flex flex-col transition-opacity ${
+              selectedInvalidators.length === 0 ? 'opacity-50' : ''
+            }`}
+          >
+            <div className="text-lg text-medium-3">Step 2</div>
+            <div className="text-2xl leading-6 text-light-0">
+              Rental settings
+            </div>
+          </div>
+          <div className="flex gap-1">
+            {selectedInvalidators.length > 0 &&
+              (visibilities.length > 1 || showClaimRentalReceipt) && (
+                <Tooltip title="Set up your reccuring listing or listing visibility">
+                  <div
+                    className="cursor-pointer text-lg text-primary"
+                    onClick={() =>
+                      setShowAdditionalOptions(!showAdditionalOptions)
+                    }
+                  >
+                    {showAdditionalOptions ? '[-]' : '[+]'} Advanced settings
+                  </div>
+                </Tooltip>
+              )}
+          </div>
+        </div>
+        {selectedInvalidators.length > 0 && (
+          <div className="flex flex-col gap-4">
+            <div
+              className={`flex overflow-hidden rounded-md border-[1px] border-primary-hover bg-primary-light transition-all ${
+                showAdditionalOptions ? 'h-auto opacity-100' : 'h-0 opacity-0'
+              }`}
+            >
+              {invalidationTypes.length > 1 && (
+                <div
+                  className="flex w-1/2 flex-col gap-3 border-r-[2px] p-5"
+                  css={css`
+                    border-color: rgba(200, 138, 244, 0.12);
+                  `}
+                >
+                  <div className="text-lg text-light-0">Recurring Listing:</div>
+                  <div>
+                    {invalidationTypes.length === 2 &&
+                    invalidationTypes
+                      .map((v) => v.type)
+                      .includes(InvalidationType.Reissue) &&
+                    invalidationTypes
+                      .map((v) => v.type)
+                      .includes(InvalidationType.Return) ? (
+                      <Toggle
                         defaultValue={
-                          extensionMaxExpiration
-                            ? moment(extensionMaxExpiration * 1000)
-                            : undefined
+                          invalidationType === InvalidationType.Reissue
                         }
-                        showTime
-                        onChange={(e) =>
-                          setExtensionMaxExpiration(
-                            e ? e.valueOf() / 1000 : null
+                        onChange={(v) =>
+                          setInvalidationType(
+                            v
+                              ? InvalidationType.Reissue
+                              : InvalidationType.Return
                           )
                         }
                       />
-                    </div>
-                  }
-                />
-              </>
-            )}
-            {!selectedInvalidators.includes('manual') &&
-              !selectedInvalidators.includes('rate') && (
-                <StepDetail
-                  icon={<ImPriceTags />}
-                  title="Rental Price"
-                  description={
-                    <MintPriceSelector
-                      disabled={visibility === 'private'}
-                      price={price}
-                      mint={paymentMint}
-                      mintDisabled={paymentMintData.length === 1}
-                      paymentMintData={paymentMintData}
-                      handlePrice={setPrice}
-                      handleMint={setPaymentMint}
-                    />
-                  }
-                />
+                    ) : (
+                      <Switch<InvalidationType>
+                        defaultOption={{
+                          value: invalidationType,
+                          label: INVALIDATION_TYPES.find(
+                            (v) => v.type === invalidationType
+                          )?.label,
+                        }}
+                        onChange={(v) => setInvalidationType(v.value)}
+                        options={invalidationTypes.map(({ label, type }) => ({
+                          label: capitalizeFirstLetter(label),
+                          value: type,
+                        }))}
+                      />
+                    )}
+                  </div>
+                  <div>
+                    {
+                      {
+                        [InvalidationType.Reissue]:
+                          'After the rental expiration this NFT will be automatically relisted on the Marketplace.',
+                        [InvalidationType.Return]:
+                          'Upon the rental expiration this NFT will be securely returned into your wallet.',
+                        [InvalidationType.Release]:
+                          'Upon the rental expiration this NFT will be released to the current renter to own.',
+                        [InvalidationType.Invalidate]:
+                          'Upon the rental expiration this NFT will be marked as invalid forever.',
+                      }[invalidationType]
+                    }
+                  </div>
+                </div>
               )}
+              {visibilities.length > 1 && (
+                <div className="flex w-1/2 flex-col gap-3 p-5">
+                  <div className="text-lg text-light-0">Visibility:</div>
+                  <div>
+                    <Switch<VisibilityOption>
+                      defaultOption={{
+                        value: visibility,
+                        label: capitalizeFirstLetter(visibility),
+                      }}
+                      onChange={(v) => setVisibiliy(v.value)}
+                      options={visibilities.map((value) => ({
+                        label: capitalizeFirstLetter(value),
+                        value: value,
+                      }))}
+                    />
+                  </div>
+                  <div>
+                    {visibility === 'private'
+                      ? 'Your will receive a private one-time rental claim link to share.'
+                      : 'Your NFT listing will be available to everyone.'}
+                  </div>
+                </div>
+              )}
+              {showClaimRentalReceipt && (
+                <div
+                  className="flex w-1/2 flex-col gap-3 border-r-[2px] p-5"
+                  css={css`
+                    border-color: rgba(200, 138, 244, 0.12);
+                  `}
+                >
+                  <div className="text-lg text-light-0">Rent receipt:</div>
+                  <div>
+                    <Toggle
+                      defaultValue={claimRentalReceipt}
+                      onChange={(v) => setClaimRentalReceipt(v)}
+                    />
+                  </div>
+                  <div>
+                    If selected, a receipt mint will be generated for the
+                    rental. The owner of the receipt mint will act as the
+                    issuer.
+                  </div>
+                </div>
+              )}
+            </div>
+            {selectedInvalidators.includes('rate') && (
+              <div className="flex gap-6">
+                <div className="w-3/4">
+                  <div className="mb-1 text-light-0">Rental rate</div>
+                  <div className="flex gap-1">
+                    <MintPriceSelector
+                      price={extensionPaymentAmount}
+                      mint={extensionPaymentMint}
+                      paymentMintData={paymentMintData}
+                      mintDisabled={paymentMintData.length === 1}
+                      handlePrice={setExtensionPaymentAmount}
+                      handleMint={setExtensionPaymentMint}
+                    />
+                    <div>
+                      <Selector<DurationOption>
+                        className="w-max rounded-[4px]"
+                        onChange={(e) => setDurationOption(e.value)}
+                        defaultOption={{
+                          value: defaultDurationOption,
+                          label: capitalizeFirstLetter(
+                            defaultDurationOption
+                          ).substring(0, defaultDurationOption.length - 1),
+                        }}
+                        disabled={
+                          rentalCardConfig.invalidationOptions
+                            ?.freezeRentalRateDuration
+                            ? true
+                            : false
+                        }
+                        options={Object.keys(durationData).map((option) => ({
+                          label: capitalizeFirstLetter(option).substring(
+                            0,
+                            option.length - 1
+                          ),
+                          value: option as DurationOption,
+                        }))}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div className="mb-1 text-light-0">Max rental duration</div>
+                  {/* <input
+                  css={css`
+                    color-scheme: dark;
+                  `}
+                  type="datetime-local"
+                  className="rounded-md border border-border bg-dark-4 py-2 px-3 text-light-0 placeholder-gray-500 focus:bg-gray-800 focus:outline-none"
+                  defaultValue={
+                    extensionMaxExpiration
+                      ? moment(extensionMaxExpiration * 1000)
+                      : undefined
+                  }
+                  onChange={(e) =>
+                    setExtensionMaxExpiration(e ? e.valueOf() / 1000 : null)
+                  }
+                /> */}
+                  <DatePicker
+                    className="rounded-[4px] bg-dark-4"
+                    defaultValue={
+                      extensionMaxExpiration
+                        ? moment(extensionMaxExpiration * 1000)
+                        : undefined
+                    }
+                    showTime
+                    onChange={(e) =>
+                      setExtensionMaxExpiration(e ? e.valueOf() / 1000 : null)
+                    }
+                  />
+                </div>
+              </div>
+            )}
             {selectedInvalidators.includes('manual') && (
               <StepDetail
                 icon={<GiRobotGrab />}
@@ -930,7 +890,7 @@ export const RentalCard = ({
                 }
               />
             )}
-            {selectedInvalidators.includes('usages') ? (
+            {selectedInvalidators.includes('usages') && (
               <StepDetail
                 icon={<BiQrScan />}
                 title="Uses"
@@ -948,26 +908,34 @@ export const RentalCard = ({
                   </Fieldset>
                 }
               />
-            ) : null}
+            )}
             {selectedInvalidators.includes('expiration') && (
-              <StepDetail
-                icon={<BiTimer />}
-                title="Expiration"
-                description={
-                  <div>
-                    <DatePicker
-                      style={{
-                        borderRadius: '4px',
-                        zIndex: 99999,
-                      }}
-                      showTime
-                      onChange={(e) =>
-                        setExtensionMaxExpiration(e ? e.valueOf() / 1000 : null)
-                      }
-                    />
-                  </div>
-                }
-              />
+              <div className="flex gap-6">
+                <div className="w-3/4">
+                  <div className="mb-1 text-light-0">Rental price</div>
+                  <MintPriceSelector
+                    price={price}
+                    mint={paymentMint}
+                    mintDisabled={paymentMintData.length === 1}
+                    paymentMintData={paymentMintData}
+                    handlePrice={setPrice}
+                    handleMint={setPaymentMint}
+                  />
+                </div>
+                <div>
+                  <div className="mb-1 text-light-0">Expiration</div>
+                  <DatePicker
+                    style={{
+                      borderRadius: '4px',
+                      zIndex: 99999,
+                    }}
+                    showTime
+                    onChange={(e) =>
+                      setExtensionMaxExpiration(e ? e.valueOf() / 1000 : null)
+                    }
+                  />
+                </div>
+              </div>
             )}
             {selectedInvalidators.includes('duration') && (
               <StepDetail
@@ -1024,8 +992,6 @@ export const RentalCard = ({
                 }
               />
             )}
-          </div>
-          <div>
             {selectedInvalidators.includes('duration') &&
               rentalCardConfig.extensionOptions && (
                 <>
@@ -1140,104 +1106,8 @@ export const RentalCard = ({
                   )}
                 </>
               )}
-            {(invalidationTypes.length > 1 ||
-              visibilities.length > 1 ||
-              showClaimRentalReceipt) && (
-              <>
-                <button
-                  className="mb-2 block text-blue-500"
-                  onClick={() =>
-                    setShowAdditionalOptions(!showAdditionalOptions)
-                  }
-                >
-                  {showAdditionalOptions ? '[-]' : '[+]'} Additional Options
-                </button>
-                {showAdditionalOptions && (
-                  <div className="grid grid-cols-2 gap-4 py-2">
-                    {invalidationTypes.length > 1 && (
-                      <StepDetail
-                        icon={<GrReturn />}
-                        title="Invalidation"
-                        description={
-                          <Select
-                            disabled={invalidationTypes.length === 1}
-                            style={{ width: '100%' }}
-                            onChange={(e) => setInvalidationType(e)}
-                            defaultValue={invalidationType}
-                          >
-                            {invalidationTypes.map(({ label, type }) => (
-                              <Option key={type} value={type}>
-                                {capitalizeFirstLetter(label)}
-                              </Option>
-                            ))}
-                          </Select>
-                        }
-                      />
-                    )}
-                    {visibilities.length > 1 && (
-                      <StepDetail
-                        icon={<FaEye />}
-                        title="Visibility"
-                        description={
-                          <Select
-                            style={{ width: '100%' }}
-                            onChange={(v) => {
-                              setVisibiliy(v)
-                              if (v === 'private') setPrice(0)
-                            }}
-                            defaultValue={visibility}
-                          >
-                            {visibilities.map((value) => (
-                              <Option key={value} value={value}>
-                                {capitalizeFirstLetter(value)}
-                              </Option>
-                            ))}
-                          </Select>
-                        }
-                      />
-                    )}
-                    {showClaimRentalReceipt && (
-                      <div className="mt-1">
-                        <span
-                          className="cursor-pointer"
-                          onClick={() =>
-                            setClaimRentalReceipt(!claimRentalReceipt)
-                          }
-                        >
-                          <input
-                            className="my-auto inline-block cursor-pointer"
-                            type="checkbox"
-                            checked={claimRentalReceipt}
-                          />
-                          <p className="mb-1 ml-3 inline-block text-[14px] font-bold text-black">
-                            Claim Rental Receipt
-                          </p>
-                        </span>
-                        <p className="mb-2 ml-6 inline-block text-[12px] text-gray-700">
-                          If selected, a receipt mint will be generated for the
-                          rental. The owner of the receipt mint will act as the
-                          issuer.
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </>
-            )}
-          </div>
-        </DetailsWrapper>
-        <ButtonWithFooter
-          loading={loading}
-          complete={false}
-          disabled={
-            !confirmRentalTerms ||
-            (link === 'success' &&
-              (totalListed === selectedTokenDatas.length ||
-                selectedTokenDatas.length === 0))
-          }
-          message={
-            link ? (
-              <StyledAlert>
+            {link ? (
+              <div>
                 <Alert
                   style={{
                     height: 'auto',
@@ -1273,9 +1143,9 @@ export const RentalCard = ({
                   type="success"
                   showIcon
                 />
-              </StyledAlert>
+              </div>
             ) : error ? (
-              <StyledAlert>
+              <div>
                 <Alert
                   style={{ height: 'auto' }}
                   message={
@@ -1292,274 +1162,197 @@ export const RentalCard = ({
                   type="error"
                   showIcon
                 />
-              </StyledAlert>
+              </div>
             ) : (
-              <>
-                <StyledAlert>
-                  <Alert
-                    style={{ height: 'auto' }}
-                    message={
-                      <>
-                        <div>
-                          Whoever claims this rental may own the asset{' '}
-                          {totalUsages && extensionMaxExpiration ? (
-                            `for either ${totalUsages} uses or until ${longDateString(
-                              extensionMaxExpiration
-                            )} and then it will be ${
-                              invalidationType === InvalidationType.Return
-                                ? 'securely returned to you.'
-                                : invalidationType === InvalidationType.Release
-                                ? 'released to whoever claims it.'
-                                : invalidationType === InvalidationType.Reissue
-                                ? 'relisted back in the marketplace.'
-                                : 'invalid forever.'
-                            }`
-                          ) : totalUsages ? (
-                            `for ${totalUsages} uses and then it will be ${
-                              invalidationType === InvalidationType.Return
-                                ? 'securely returned to you.'
-                                : invalidationType === InvalidationType.Release
-                                ? 'released to whoever claims it.'
-                                : invalidationType === InvalidationType.Reissue
-                                ? 'relisted back in the marketplace.'
-                                : 'invalid forever.'
-                            }`
-                          ) : durationAmount && durationOption ? (
-                            `
+              <div className="rounded-md bg-dark-4">
+                <div className="p-4 text-center">
+                  Whoever claims this rental may own the asset{' '}
+                  {totalUsages && extensionMaxExpiration ? (
+                    `for either ${totalUsages} uses or until ${longDateString(
+                      extensionMaxExpiration
+                    )} and then it will be ${
+                      invalidationType === InvalidationType.Return
+                        ? 'securely returned to you.'
+                        : invalidationType === InvalidationType.Release
+                        ? 'released to whoever claims it.'
+                        : invalidationType === InvalidationType.Reissue
+                        ? 'relisted back in the marketplace.'
+                        : 'invalid forever.'
+                    }`
+                  ) : totalUsages ? (
+                    `for ${totalUsages} uses and then it will be ${
+                      invalidationType === InvalidationType.Return
+                        ? 'securely returned to you.'
+                        : invalidationType === InvalidationType.Release
+                        ? 'released to whoever claims it.'
+                        : invalidationType === InvalidationType.Reissue
+                        ? 'relisted back in the marketplace.'
+                        : 'invalid forever.'
+                    }`
+                  ) : durationAmount && durationOption ? (
+                    `
                             for ${durationAmount} ${
-                              durationAmount !== 1
-                                ? durationOption.toLocaleLowerCase()
-                                : durationOption
-                                    .toLocaleLowerCase()
-                                    .substring(0, durationOption.length - 1)
-                            } and then it will be ${
-                              invalidationType === InvalidationType.Return
-                                ? 'securely returned to you.'
-                                : invalidationType === InvalidationType.Release
-                                ? 'released to whoever claims it.'
-                                : invalidationType === InvalidationType.Reissue
-                                ? 'relisted back in the marketplace.'
-                                : 'invalid forever.'
-                            }`
-                          ) : customInvalidator ? (
-                            <>
-                              until{' '}
-                              {
-                                <a
-                                  target="_blank"
-                                  rel="noreferrer"
-                                  href={pubKeyUrl(
-                                    new PublicKey(customInvalidator),
-                                    cluster || 'mainnet'
-                                  )}
-                                >
-                                  {shortPubKey(customInvalidator)}
-                                </a>
-                              }{' '}
-                              revokes it
-                            </>
-                          ) : selectedInvalidators.includes('rate') ? (
-                            `at the rate of  ${extensionRate()}.`
-                          ) : !extensionMaxExpiration ? (
-                            'forever.'
-                          ) : (
-                            '.'
+                      durationAmount !== 1
+                        ? durationOption.toLocaleLowerCase()
+                        : durationOption
+                            .toLocaleLowerCase()
+                            .substring(0, durationOption.length - 1)
+                    } and then it will be ${
+                      invalidationType === InvalidationType.Return
+                        ? 'securely returned to you.'
+                        : invalidationType === InvalidationType.Release
+                        ? 'released to whoever claims it.'
+                        : invalidationType === InvalidationType.Reissue
+                        ? 'relisted back in the marketplace.'
+                        : 'invalid forever.'
+                    }`
+                  ) : customInvalidator ? (
+                    <>
+                      until{' '}
+                      {
+                        <a
+                          target="_blank"
+                          rel="noreferrer"
+                          href={pubKeyUrl(
+                            new PublicKey(customInvalidator),
+                            cluster || 'mainnet'
                           )}
-                          {extensionMaxExpiration
-                            ? ` This rental will be returned to your wallet at ${new Date(
-                                extensionMaxExpiration * 1000
-                              ).toLocaleString('en-US')}.`
-                            : ''}
-                          {showExtendDuration &&
-                          extensionPaymentAmount &&
-                          extensionDurationAmount &&
-                          extensionPaymentMint &&
-                          paymentMintInfos.data &&
-                          durationAmount !== 0
-                            ? ` The claimer can choose to extend the rental at the rate of ${fmtMintAmount(
-                                paymentMintInfos.data[
-                                  extensionPaymentMint.toString()
-                                ],
-                                new anchor.BN(extensionPaymentAmount)
-                              )} ${
-                                paymentMintData.find(
-                                  (obj) => obj.mint === extensionPaymentMint
-                                )?.symbol
-                              } / ${extensionDurationAmount} ${
-                                extensionDurationAmount === 1
-                                  ? extensionDurationOption
-                                      ?.toLowerCase()
-                                      .substring(
-                                        0,
-                                        extensionDurationOption.length - 1
-                                      )
-                                  : extensionDurationOption?.toLowerCase()
-                              }${
-                                extensionMaxExpiration
-                                  ? ` up until ${new Date(
-                                      extensionMaxExpiration * 1000
-                                    ).toLocaleString('en-US')}.`
-                                  : '.'
-                              } `
-                            : null}
-                          <div className="mt-2 flex gap-3">
-                            {selectedInvalidators.includes('rate') ? (
-                              <p>
-                                <b>Rate: </b> {extensionRate()}
-                              </p>
-                            ) : (
-                              <p>
-                                <b>Price: </b>{' '}
-                                {paymentMintInfos.data
-                                  ? fmtMintAmount(
-                                      paymentMintInfos.data[
-                                        paymentMint.toString()
-                                      ],
-                                      new anchor.BN(price)
-                                    )
-                                  : 0}{' '}
-                                {
-                                  paymentMintData.find(
-                                    (obj) => obj.mint === paymentMint
-                                  )?.symbol
-                                }
-                              </p>
-                            )}
+                        >
+                          {shortPubKey(customInvalidator)}
+                        </a>
+                      }{' '}
+                      revokes it
+                    </>
+                  ) : selectedInvalidators.includes('rate') ? (
+                    `at the rate of  ${extensionRate()}.`
+                  ) : !extensionMaxExpiration ? (
+                    'forever.'
+                  ) : (
+                    '.'
+                  )}
+                  {extensionMaxExpiration
+                    ? ` This rental will be returned to your wallet at ${new Date(
+                        extensionMaxExpiration * 1000
+                      ).toLocaleString('en-US')}.`
+                    : ''}
+                  {showExtendDuration &&
+                  extensionPaymentAmount &&
+                  extensionDurationAmount &&
+                  extensionPaymentMint &&
+                  paymentMintInfos.data &&
+                  durationAmount !== 0
+                    ? ` The claimer can choose to extend the rental at the rate of ${fmtMintAmount(
+                        paymentMintInfos.data[extensionPaymentMint.toString()],
+                        new anchor.BN(extensionPaymentAmount)
+                      )} ${
+                        paymentMintData.find(
+                          (obj) => obj.mint === extensionPaymentMint
+                        )?.symbol
+                      } / ${extensionDurationAmount} ${
+                        extensionDurationAmount === 1
+                          ? extensionDurationOption
+                              ?.toLowerCase()
+                              .substring(0, extensionDurationOption.length - 1)
+                          : extensionDurationOption?.toLowerCase()
+                      }${
+                        extensionMaxExpiration
+                          ? ` up until ${new Date(
+                              extensionMaxExpiration * 1000
+                            ).toLocaleString('en-US')}.`
+                          : '.'
+                      } `
+                    : null}
+                  <div className="mt-2 flex gap-3">
+                    {selectedInvalidators.includes('rate') ? (
+                      <p>
+                        <b>Rate: </b> {extensionRate()}
+                      </p>
+                    ) : (
+                      <p>
+                        <b>Price: </b>{' '}
+                        {paymentMintInfos.data
+                          ? fmtMintAmount(
+                              paymentMintInfos.data[paymentMint.toString()],
+                              new anchor.BN(price)
+                            )
+                          : 0}{' '}
+                        {
+                          paymentMintData.find(
+                            (obj) => obj.mint === paymentMint
+                          )?.symbol
+                        }
+                      </p>
+                    )}
 
-                            {durationAmount && durationOption ? (
-                              <p>
-                                <b>Duration: </b> {durationAmount}{' '}
-                                {durationAmount !== 1
-                                  ? durationOption.toLocaleLowerCase()
-                                  : durationOption
-                                      .toLocaleLowerCase()
-                                      .substring(0, durationOption.length - 1)}
-                              </p>
-                            ) : null}
-                            {extensionMaxExpiration && (
-                              <p>
-                                <b>Expiration: </b>{' '}
-                                {shortDateString(extensionMaxExpiration)}
-                              </p>
-                            )}
-                            {totalUsages && (
-                              <p>
-                                <b>Usages: </b> {totalUsages}
-                              </p>
-                            )}
-                          </div>
-                        </div>
-                      </>
-                    }
-                    type="info"
-                    showIcon
-                  />
-                </StyledAlert>
-                <div className="flex w-full justify-end">
-                  <div
-                    className="flex cursor-pointer"
-                    onClick={() => setConfirmRentalTerms(!confirmRentalTerms)}
-                  >
-                    <input
-                      type="checkbox"
-                      className="my-auto mr-2 inline-block cursor-pointer"
-                      checked={confirmRentalTerms}
-                    />
-                    <p>I agree to the above rental terms</p>
+                    {durationAmount && durationOption ? (
+                      <p>
+                        <b>Duration: </b> {durationAmount}{' '}
+                        {durationAmount !== 1
+                          ? durationOption.toLocaleLowerCase()
+                          : durationOption
+                              .toLocaleLowerCase()
+                              .substring(0, durationOption.length - 1)}
+                      </p>
+                    ) : null}
+                    {extensionMaxExpiration && (
+                      <p>
+                        <b>Expiration: </b>{' '}
+                        {shortDateString(extensionMaxExpiration)}
+                      </p>
+                    )}
+                    {totalUsages && (
+                      <p>
+                        <b>Usages: </b> {totalUsages}
+                      </p>
+                    )}
                   </div>
                 </div>
-              </>
-            )
-          }
-          onClick={link ? () => handleCopy(link) : handleRental}
-          footer={<PoweredByFooter />}
-        >
-          {link && link !== 'success' ? (
+              </div>
+            )}
             <div
-              style={{ gap: '5px', fontWeight: '300' }}
-              className="flex items-center justify-center"
+              className="flex cursor-pointer gap-2"
+              onClick={() => setConfirmRentalTerms(!confirmRentalTerms)}
             >
-              <FaLink />
-              {link.substring(0, 40)}
-              ...
-              {link.substring(link.length - 10)}
+              <div
+                className={`h-5 w-5 shrink-0 rounded-md border-[.5px] border-light-1 transition-all ${
+                  confirmRentalTerms ? 'bg-primary' : ''
+                }`}
+              />
+              <div>
+                I have read, understood and agree to Risk Disclaimer, as well as
+                I agree to the rental terms displayed here.
+              </div>
             </div>
-          ) : (
-            <div
-              style={{ gap: '5px' }}
-              className="flex items-center justify-center"
+            <Button
+              variant="primary"
+              disabled={
+                !confirmRentalTerms ||
+                (link === 'success' &&
+                  (totalListed === selectedTokenDatas.length ||
+                    selectedTokenDatas.length === 0))
+              }
+              onClick={link ? () => handleCopy(link) : handleRental}
             >
-              {visibility === 'private' ? 'Get private link' : 'List for rent'}
-              <FiSend />
-            </div>
-          )}
-        </ButtonWithFooter>
-      </Wrapper>
-    </RentalCardOuter>
+              {link && link !== 'success' ? (
+                <div className="flex items-center justify-center gap-[5px] text-lg">
+                  <FaLink />
+                  {link.substring(0, 40)}
+                  ...
+                  {link.substring(link.length - 10)}
+                </div>
+              ) : (
+                <div className="flex items-center justify-center gap-[5px] text-lg">
+                  {visibility === 'private'
+                    ? 'Get private link'
+                    : 'List for rent'}
+                  <FiSend />
+                </div>
+              )}
+            </Button>
+          </div>
+        )}
+        <PoweredByFooter />
+      </div>
+    </div>
   )
 }
-
-const ButtonLight = styled.div`
-  border-radius: 5px;
-  padding: 5px 8px;
-  border: none;
-  background: #eee;
-  color: #777;
-  cursor: pointer;
-  transition: 0.1s all;
-  &:hover {
-    background: #ddd;
-  }
-`
-
-const BigIcon = styled.div<{ selected: boolean }>`
-  font-size: 50px;
-  background-color: ${({ selected }) => (selected ? 'black' : '#888')};
-  color: white;
-  padding: 10px;
-  cursor: pointer;
-  transition: transform 0.2s;
-  height: 50px;
-  width: 50px;
-  display: flex;
-  margin: 20px auto 0px auto;
-  border-radius: 50%;
-  align-items: center;
-  justify-content: center;
-
-  &:hover {
-    transform: scale(1.05);
-  }
-`
-
-const StyledAlert = styled.div`
-  width: 100%;
-`
-
-const Wrapper = styled.div`
-  padding: 10px 28px 28px 28px;
-`
-
-const Instruction = styled.h2`
-  margin-top: 0px;
-  font-weight: normal;
-  font-size: 24px;
-  line-height: 30px;
-  text-align: center;
-  letter-spacing: -0.02em;
-  color: #000000;
-`
-
-const DetailsWrapper = styled.div`
-  margin-top: 20px;
-  display: grid;
-  grid-row-gap: 28px;
-`
-
-const ImageWrapper = styled.div`
-  display: grid;
-  grid-row-gap: 10px;
-  margin-bottom: 20px;
-`
-
-export const RentalCardOuter = styled.div``

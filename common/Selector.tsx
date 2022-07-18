@@ -9,6 +9,8 @@ type Option<T> = { label: string; value: T }
 type Props<T> = {
   placeholder?: string
   options: Option<T>[]
+  className?: string
+  disabled?: boolean
   defaultOption?: Option<T>
   onChange?: (arg: Option<T>) => void
 }
@@ -16,6 +18,8 @@ type Props<T> = {
 export const Selector = <T,>({
   placeholder = 'Select',
   defaultOption,
+  disabled,
+  className,
   onChange,
   options = [],
 }: Props<T>) => {
@@ -37,11 +41,15 @@ export const Selector = <T,>({
   return (
     <div className="relative z-40" ref={ref}>
       <div
-        className="flex min-w-[190px] cursor-pointer justify-between rounded-md border-[1px] border-border px-3 py-2 transition-all hover:border-primary"
+        className={`${className} flex justify-between gap-1 rounded-md border-[1px] border-border px-3 py-2 transition-all ${
+          disabled
+            ? 'cursor-default opacity-50'
+            : 'cursor-pointer hover:border-primary'
+        }`}
         css={css`
           background: ${darken(0.03, config.colors.main)};
         `}
-        onClick={() => setIsOpen((v) => !v)}
+        onClick={() => !disabled && setIsOpen((v) => !v)}
       >
         {value ? (
           <div className="text-sm text-light-0">{value.label}</div>

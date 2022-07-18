@@ -720,6 +720,7 @@ export const Browse = () => {
             }))}
           />
           <Selector<OrderCategories>
+            className="mint-w-[190px]"
             defaultOption={{
               label: OrderCategories.RateLowToHigh,
               value: OrderCategories.RateLowToHigh,

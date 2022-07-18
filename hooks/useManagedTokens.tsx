@@ -14,7 +14,7 @@ import { findUseInvalidatorAddress } from '@cardinal/token-manager/dist/cjs/prog
 import type * as metaplex from '@metaplex-foundation/mpl-token-metadata'
 import type * as spl from '@solana/spl-token'
 import type { AccountInfo, ParsedAccountData, PublicKey } from '@solana/web3.js'
-import type { EditionInfo, TokenData } from 'api/api'
+import type { TokenData } from 'api/api'
 import { convertStringsToPubkeys, getTokenDatas } from 'api/api'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
@@ -31,7 +31,7 @@ export type ManagedTokenData = {
   }
   tokenManager?: AccountData<TokenManagerData>
   metaplexData?: { pubkey: PublicKey; data: metaplex.MetadataData } | null
-  editionData?: EditionInfo | null
+  editionData?: AccountData<metaplex.EditionData | metaplex.MasterEditionData>
   metadata?: any
   claimApprover?: AccountData<PaidClaimApproverData> | null
   useInvalidator?: AccountData<UseInvalidatorData> | null
