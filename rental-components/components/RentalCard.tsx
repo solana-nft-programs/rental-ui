@@ -20,6 +20,7 @@ import { DatePicker, InputNumber, Select } from 'antd'
 import type { TokenData } from 'api/api'
 import { executeAllTransactions, tryPublicKey } from 'api/utils'
 import { GlyphEdit } from 'assets/GlyphEdit'
+import { Alert } from 'common/Alert'
 import { Button } from 'common/Button'
 import { notify } from 'common/Notification'
 import { Selector } from 'common/Selector'
@@ -45,7 +46,6 @@ import { BiQrScan, BiTimer } from 'react-icons/bi'
 import { FaLink } from 'react-icons/fa'
 import { FiSend } from 'react-icons/fi'
 import { ImPriceTags } from 'react-icons/im'
-import { IoMdClose } from 'react-icons/io'
 import { PAYMENT_MINTS } from 'rental-components/common/Constants'
 import {
   Fieldset,
@@ -1139,17 +1139,13 @@ export const RentalCard = ({
                 </div>
               </div>
             ) : error ? (
-              <div className="relative rounded-md border-[1px] border-red-500 bg-red-500 bg-opacity-25">
-                <div
-                  className="flex cursor-pointer items-center justify-center p-4"
-                  onClick={() => setError(undefined)}
-                >
-                  <div style={{ wordBreak: 'break-word' }}>{error}</div>
-                  <div className="absolute top-4 right-4">
-                    <IoMdClose />
-                  </div>
-                </div>
-              </div>
+              <Alert
+                variant="error"
+                showClose
+                onClick={() => setError(undefined)}
+              >
+                {error}
+              </Alert>
             ) : (
               <div className="rounded-md bg-dark-4">
                 <div className="flex items-center justify-center p-4">
