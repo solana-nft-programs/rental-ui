@@ -1,41 +1,23 @@
-import { withFindOrInitAssociatedTokenAccount } from '@cardinal/common'
-import {
-  withClaimToken,
-  withExtendExpiration,
-  withResetExpiration,
-} from '@cardinal/token-manager'
-import { withWrapSol } from '@cardinal/token-manager/dist/cjs/wrappedSol'
 import { css } from '@emotion/react'
 import type { Wallet } from '@saberhq/solana-contrib'
-import type * as splToken from '@solana/spl-token'
-import type { Keypair } from '@solana/web3.js'
-import { Connection, Transaction } from '@solana/web3.js'
+import type { Connection, Keypair } from '@solana/web3.js'
 import type { TokenData } from 'api/api'
-import { getATokenAccountInfo } from 'api/utils'
 import { Alert } from 'common/Alert'
 import { Button } from 'common/Button'
 import { Selector } from 'common/Selector'
-import { executeTransaction } from 'common/Transactions'
 import { capitalizeFirstLetter, getQueryParam } from 'common/utils'
 import type { ProjectConfig } from 'config/config'
-import { WRAPPED_SOL_MINT } from 'hooks/usePaymentMints'
-import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
+import { useHandleRateRental } from 'handlers/useHandleRateRental'
 import { useEffect, useState } from 'react'
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai'
 import { FiSend } from 'react-icons/fi'
 import { PAYMENT_MINTS } from 'rental-components/common/Constants'
+import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 import { MintPriceSelector } from 'rental-components/common/MintPriceSelector'
 import { PoweredByFooter } from 'rental-components/common/PoweredByFooter'
 
 import type { DurationOption } from './RentalCard'
 import { DURATION_DATA, SECONDS_TO_DURATION } from './RentalCard'
-
-const formatError = (error: string) => {
-  if (error.includes('0x1780')) {
-    return 'This mint is not elligible for rent'
-  }
-  return error
-}
 
 export type RentalRateCardProps = {
   claim?: boolean
@@ -60,13 +42,8 @@ export const RentalRateCard = ({
   otpKeypair,
 }: RentalRateCardProps) => {
   const [error, setError] = useState<string>()
-  const [userPaymentTokenAccount, setUserPaymentTokenAccount] =
-    useState<splToken.AccountInfo | null>(null)
-  const [paymentTokenAccountError, setPaymentTokenAccountError] = useState<
-    boolean | null
-  >(null)
-  const [extensionSuccess, setExtensionSuccess] = useState(false)
-  const { environment } = useEnvironmentCtx()
+  const [txid, setTxid] = useState<string>()
+  const handleRateRental = useHandleRateRental()
 
   // form
   const {
@@ -87,10 +64,9 @@ export const RentalRateCard = ({
   const [currentExtensionSeconds, setCurrentExtensionSeconds] = useState<
     number | undefined | null
   >(0)
-
-  useEffect(() => {
-    getUserPaymentTokenAccount()
-  }, [connection, wallet.publicKey, tokenData.tokenManager?.pubkey.toString()])
+  // const userPaymentTokenAccount = useUserPaymentTokenAccount(
+  //   tokenData?.timeInvalidator?.parsed.extensionPaymentMint ?? undefined
+  // )
 
   useEffect(() => {
     const newDuration = durationAmount * DURATION_DATA[durationOption]
@@ -106,92 +82,6 @@ export const RentalRateCard = ({
     extensionPaymentAmount,
     extensionDurationSeconds,
   ])
-
-  const handleRateRental = async () => {
-    try {
-      setError(undefined)
-      setExtensionSuccess(false)
-      if (!tokenData.tokenManager) throw 'Token manager not found'
-      if (!currentExtensionSeconds) throw 'No duration specified'
-      // wrap sol if there is payment required
-      const transaction = new Transaction()
-
-      if (
-        extensionPaymentMint?.toString() === WRAPPED_SOL_MINT.toString() &&
-        paymentAmount > 0
-      ) {
-        const amountToWrap =
-          paymentAmount - (userPaymentTokenAccount?.amount.toNumber() || 0)
-        if (amountToWrap > 0) {
-          await withWrapSol(transaction, connection, wallet, amountToWrap)
-        }
-      }
-
-      if (
-        extensionPaymentMint &&
-        (extensionPaymentMint?.toString() !== WRAPPED_SOL_MINT.toString() ||
-          (transaction.instructions.length === 0 &&
-            extensionPaymentMint?.toString() === WRAPPED_SOL_MINT.toString()))
-      ) {
-        await withFindOrInitAssociatedTokenAccount(
-          transaction,
-          connection,
-          extensionPaymentMint,
-          wallet.publicKey,
-          wallet.publicKey
-        )
-      }
-
-      console.log(
-        `${claim ? 'Claiming' : 'Extending'} token manager`,
-        tokenData
-      )
-      if (claim) {
-        if (tokenData.timeInvalidator) {
-          await withResetExpiration(
-            transaction,
-            connection,
-            wallet,
-            tokenData.tokenManager?.pubkey
-          )
-        }
-        await withClaimToken(
-          transaction,
-          environment.secondary
-            ? new Connection(environment.secondary)
-            : connection,
-          wallet,
-          tokenData.tokenManager?.pubkey,
-          {
-            otpKeypair: otpKeypair,
-          }
-        )
-      }
-
-      await withExtendExpiration(
-        transaction,
-        connection,
-        wallet,
-        tokenData.tokenManager?.pubkey,
-        currentExtensionSeconds
-      )
-
-      await executeTransaction(connection, wallet, transaction, {
-        confirmOptions: {
-          commitment: 'confirmed',
-          maxRetries: 3,
-        },
-        signers: otpKeypair ? [otpKeypair] : [],
-        notificationConfig: {},
-      })
-
-      setExtensionSuccess(true)
-    } catch (e) {
-      setExtensionSuccess(false)
-      console.log('Error handling rental', e)
-      setError(`${formatError(`${e}`)}`)
-    }
-  }
 
   const handlePaymentAmountChange = (value: number) => {
     setPaymentAmount(value)
@@ -223,30 +113,6 @@ export const RentalRateCard = ({
           durationSeconds.toNumber() +
           currentExtensionSeconds
     )
-  }
-
-  async function getUserPaymentTokenAccount() {
-    if (
-      wallet.publicKey &&
-      tokenData?.timeInvalidator?.parsed.extensionPaymentMint
-    ) {
-      try {
-        const userPaymentTokenAccountData = await getATokenAccountInfo(
-          connection,
-          tokenData?.timeInvalidator?.parsed.extensionPaymentMint,
-          wallet.publicKey
-        )
-        setUserPaymentTokenAccount(userPaymentTokenAccountData)
-      } catch (e) {
-        console.log(e)
-        if (
-          tokenData?.timeInvalidator?.parsed.extensionPaymentMint.toString() !==
-          WRAPPED_SOL_MINT
-        ) {
-          setPaymentTokenAccountError(true)
-        }
-      }
-    }
   }
 
   return (
@@ -397,15 +263,40 @@ export const RentalRateCard = ({
             exceedMaxExpiration() ||
             (paymentAmount === 0 && extensionPaymentAmount.toNumber() !== 0)
           }
-          onClick={() => handleRateRental()}
+          onClick={() =>
+            handleRateRental.mutate(
+              {
+                tokenData: {
+                  tokenManager: tokenData.tokenManager,
+                  timeInvalidator: tokenData.timeInvalidator,
+                },
+                extensionSeconds: currentExtensionSeconds,
+                claim,
+                otpKeypair,
+              },
+              {
+                onSuccess: (txid) => {
+                  setTxid(txid)
+                },
+                onError: (e) => {
+                  setTxid(undefined)
+                  setError(`${e}`)
+                },
+              }
+            )
+          }
         >
-          <div
-            style={{ gap: '5px' }}
-            className="flex items-center justify-center"
-          >
-            {claim ? 'Rent NFT' : 'Extend Rental'}
-            <FiSend />
-          </div>
+          {handleRateRental.isLoading ? (
+            <LoadingSpinner height="25px" />
+          ) : (
+            <div
+              style={{ gap: '5px' }}
+              className="flex items-center justify-center"
+            >
+              {claim ? 'Rent NFT' : 'Extend Rental'}
+              <FiSend />
+            </div>
+          )}
         </Button>
       </div>
       <PoweredByFooter />
