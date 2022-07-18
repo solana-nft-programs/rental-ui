@@ -59,11 +59,6 @@ export async function findAssociatedTokenAddress(
   )[0]
 }
 
-export type EditionInfo = {
-  pubkey: PublicKey
-  parsed: metaplex.EditionData | metaplex.MasterEditionData
-}
-
 export type TokenData = {
   tokenAccount?: {
     pubkey: PublicKey
@@ -72,7 +67,7 @@ export type TokenData = {
   mint?: spl.MintInfo
   tokenManager?: AccountData<TokenManagerData>
   metaplexData?: { pubkey: PublicKey; data: metaplex.MetadataData } | null
-  editionData?: EditionInfo | null
+  editionData?: AccountData<metaplex.EditionData | metaplex.MasterEditionData>
   metadata?: { pubkey: PublicKey; data: any } | null
   claimApprover?: AccountData<PaidClaimApproverData> | null
   useInvalidator?: AccountData<UseInvalidatorData> | null

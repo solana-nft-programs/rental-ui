@@ -39,7 +39,9 @@ export const RentalModalProvider: React.FC<Props> = ({
   const [cluster, setCluster] = useState<string | undefined>(undefined)
   const [dev, setDev] = useState<boolean | undefined>(undefined)
   const [showRentalModal, setShowRentalModal] = useState<boolean>(false)
-  const [tokenDatas, setTokenDatas] = useState<TokenData[] | undefined>(undefined)
+  const [tokenDatas, setTokenDatas] = useState<TokenData[] | undefined>(
+    undefined
+  )
   const [rentalCardConfig, setRentalCardConfig] = useState<
     RentalCardConfig | undefined
   >(undefined)
@@ -71,6 +73,7 @@ export const RentalModalProvider: React.FC<Props> = ({
         isOpen={showRentalModal}
         onDismiss={() => setShowRentalModal(false)}
         darkenOverlay={true}
+        topArea={false}
       >
         {wallet && connection && (
           <RentalCard

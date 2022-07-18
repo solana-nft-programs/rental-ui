@@ -21,7 +21,7 @@ import { useUserTokenData } from 'hooks/useUserTokenData'
 import { lighten } from 'polished'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { filterTokens, useProjectConfig } from 'providers/ProjectConfigProvider'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button } from 'rental-components/common/Button'
 import { useRentalModal } from 'rental-components/RentalModalProvider'
 
@@ -38,6 +38,16 @@ export const Wallet = () => {
   const [selectedFilters, setSelectedFilters] = useState<{
     [filterName: string]: string[]
   }>({})
+
+  useEffect(() => {
+    rentalModal.show(
+      asWallet(wallet),
+      connection,
+      environment.label,
+      userTokenDatas.data || [],
+      config.rentalCard
+    )
+  }, [userTokenDatas.data?.length])
 
   const isSelected = (tokenData: TokenData) => {
     return selectedTokens.some(

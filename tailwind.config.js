@@ -25,6 +25,7 @@ module.exports = {
       colors: {
         primary: '#907EFF',
         'primary-hover': '#7567CE',
+        'primary-light': 'rgba(200, 138, 244, 0.12)',
         border: 'rgba(221, 218, 218, 0.2)',
         secondary: '#7EFFE8',
         accent: '#CE81F4',
@@ -33,6 +34,7 @@ module.exports = {
         'light-2': '#B1AFBB',
         'medium-3': '#8D8B9B',
         'medium-4': '#6D6C7C',
+        'dark-4': '#161616',
         'dark-5': '#0B0B0B',
         'dark-6': '#000000',
       },
