@@ -58,29 +58,29 @@ export const Selector = <T,>({
         )}
         <ChevronDown />
       </div>
-      {isOpen && (
-        <div
-          className="absolute w-full rounded-md"
-          css={css`
-            background: ${darken(0.03, config.colors.main)};
-          `}
-        >
-          {options.map((o) => (
-            <div
-              key={o.label}
-              className="flex cursor-pointer items-center justify-between p-3 text-sm text-light-0 transition-colors hover:text-primary"
-              onClick={() => {
-                setValue(o)
-                setIsOpen((v) => !v)
-                onChange && onChange(o)
-              }}
-            >
-              <div>{o.label}</div>
-              <ChevronRight />
-            </div>
-          ))}
-        </div>
-      )}
+      <div
+        className={`absolute w-full rounded-md transition-all ${
+          isOpen ? 'h-auto opacity-100' : 'h-0 overflow-hidden opacity-0'
+        }`}
+        css={css`
+          background: ${darken(0.03, config.colors.main)};
+        `}
+      >
+        {options.map((o) => (
+          <div
+            key={o.label}
+            className="flex cursor-pointer items-center justify-between p-3 text-sm text-light-0 transition-colors hover:text-primary"
+            onClick={() => {
+              setValue(o)
+              setIsOpen((v) => !v)
+              onChange && onChange(o)
+            }}
+          >
+            <div>{o.label}</div>
+            <ChevronRight />
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
