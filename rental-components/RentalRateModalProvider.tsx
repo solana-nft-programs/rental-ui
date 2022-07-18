@@ -59,6 +59,7 @@ export const RentalRateModalProvider: React.FC<Props> = ({
         isOpen={showRentalRateModal}
         onDismiss={() => setShowRentalRateModal(false)}
         darkenOverlay={true}
+        topArea={false}
       >
         {wallet && connection && (
           <RentalRateCard

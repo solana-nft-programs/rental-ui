@@ -32,7 +32,7 @@ export const MintPriceSelector = ({
   return (
     <div className="relative flex w-full items-center gap-2">
       <input
-        className="w-full rounded-md border border-border bg-dark-4 py-2 px-3 text-light-0 placeholder-medium-3 transition-all focus:border-primary focus:outline-none"
+        className="w-full rounded-md border border-border bg-dark-4 py-2 px-3 text-light-0 placeholder-medium-3 outline-none transition-all focus:border-primary"
         css={css`
           line-height: 20px;
         `}

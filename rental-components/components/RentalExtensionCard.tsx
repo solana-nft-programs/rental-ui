@@ -275,18 +275,6 @@ export const RentalExtensionCard = ({
               borderRadius={10}
             />
             {metadata && metadata.data && (
-              // (metadata.data.animation_url ? (
-              //   // @ts-ignore
-              //   <video
-              //     className="media"
-              //     auto-rotate-delay="0"
-              //     auto-rotate="true"
-              //     auto-play="true"
-              //     src={metadata.data.animation_url}
-              //     // arStatus="not-presenting"
-              //     // @ts-ignore
-              //   ></video>
-              // ) : (
               <img
                 className="media"
                 src={customImageUri || metadata.data.image}

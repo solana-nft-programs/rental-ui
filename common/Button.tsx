@@ -28,13 +28,13 @@ export const Button: React.FC<Props> = ({
       {...rest}
       className={`flex items-center justify-center gap-5 rounded-md transition-all ${className} ${
         disabled
-          ? 'bg-medium-4'
+          ? 'cursor-default bg-medium-4'
           : variant === 'primary'
           ? 'cursor-pointer bg-primary hover:bg-primary-hover'
           : 'cursor-pointer border-[1px] border-medium-4 hover:border-primary'
       }`}
       onClick={async () => {
-        if (!onClick) return
+        if (!onClick || disabled) return
         try {
           setLoading(true)
           await onClick()
