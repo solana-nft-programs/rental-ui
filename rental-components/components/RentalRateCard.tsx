@@ -1,23 +1,18 @@
-import { css } from '@emotion/react'
 import type { Wallet } from '@saberhq/solana-contrib'
 import type { Connection, Keypair } from '@solana/web3.js'
 import type { TokenData } from 'api/api'
 import { Alert } from 'common/Alert'
 import { Button } from 'common/Button'
-import { Selector } from 'common/Selector'
-import { capitalizeFirstLetter, getQueryParam } from 'common/utils'
+import { DurationInput } from 'common/DurationInput'
+import { getQueryParam } from 'common/utils'
 import type { ProjectConfig } from 'config/config'
 import { useHandleRateRental } from 'handlers/useHandleRateRental'
 import { useEffect, useState } from 'react'
-import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai'
 import { FiSend } from 'react-icons/fi'
 import { PAYMENT_MINTS } from 'rental-components/common/Constants'
 import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 import { MintPriceSelector } from 'rental-components/common/MintPriceSelector'
 import { PoweredByFooter } from 'rental-components/common/PoweredByFooter'
-
-import type { DurationOption } from './RentalCard'
-import { DURATION_DATA, SECONDS_TO_DURATION } from './RentalCard'
 
 export type RentalRateCardProps = {
   claim?: boolean
@@ -55,12 +50,6 @@ export const RentalRateCard = ({
   } = tokenData.timeInvalidator?.parsed || {}
 
   const [paymentAmount, setPaymentAmount] = useState<number>(0)
-  const [durationAmount, setDurationAmount] = useState<number>(1)
-  const [durationOption, setDurationOption] = useState<DurationOption>(
-    SECONDS_TO_DURATION[
-      extensionDurationSeconds?.toNumber() ?? 86400
-    ] as DurationOption
-  )
   const [currentExtensionSeconds, setCurrentExtensionSeconds] = useState<
     number | undefined | null
   >(0)
@@ -68,19 +57,19 @@ export const RentalRateCard = ({
   //   tokenData?.timeInvalidator?.parsed.extensionPaymentMint ?? undefined
   // )
 
+  console.log(currentExtensionSeconds)
+
   useEffect(() => {
-    const newDuration = durationAmount * DURATION_DATA[durationOption]
-    setCurrentExtensionSeconds(newDuration)
-    setPaymentAmount(
-      ((extensionPaymentAmount?.toNumber() ?? 0) /
-        (extensionDurationSeconds?.toNumber() ?? 0)) *
-        newDuration
-    )
+    currentExtensionSeconds &&
+      setPaymentAmount(
+        ((extensionPaymentAmount?.toNumber() ?? 0) /
+          (extensionDurationSeconds?.toNumber() ?? 0)) *
+          currentExtensionSeconds
+      )
   }, [
-    durationAmount,
-    durationOption,
     extensionPaymentAmount,
     extensionDurationSeconds,
+    currentExtensionSeconds,
   ])
 
   const handlePaymentAmountChange = (value: number) => {
@@ -159,65 +148,9 @@ export const RentalRateCard = ({
         <div className="flex gap-6">
           <div>
             <div className="mb-1 text-light-0">Rental duration</div>
-            <div className="flex gap-1">
-              <div className="relative flex">
-                <input
-                  className="w-full rounded-md border border-border bg-dark-4 py-2 px-3 text-light-0 placeholder-medium-3 outline-none transition-all focus:border-primary"
-                  type="text"
-                  inputMode="numeric"
-                  css={css`
-                    line-height: 20px;
-                  `}
-                  placeholder="# of..."
-                  min="0"
-                  step={1}
-                  value={`${durationAmount}`}
-                  onChange={(e) =>
-                    setDurationAmount(parseInt(e.target.value) || 0)
-                  }
-                />
-                <div className="absolute right-3 top-1/2 flex -translate-y-1/2 transform items-center justify-center gap-1">
-                  <button
-                    onClick={() =>
-                      setDurationAmount(Math.max(0, durationAmount - 1))
-                    }
-                  >
-                    <AiOutlineMinus
-                      className="opacity-50 hover:opacity-100"
-                      style={{ height: '16px', width: '16px' }}
-                    />
-                  </button>
-                  <button
-                    onClick={() =>
-                      setDurationAmount(Math.max(0, durationAmount + 1))
-                    }
-                  >
-                    <AiOutlinePlus
-                      className="opacity-50 hover:opacity-100"
-                      style={{ height: '16px', width: '16px' }}
-                    />
-                  </button>
-                </div>
-              </div>
-              <Selector<DurationOption>
-                className="w-max rounded-[4px]"
-                onChange={(e) => setDurationOption(e.value)}
-                defaultOption={{
-                  value: durationOption,
-                  label: capitalizeFirstLetter(durationOption).substring(
-                    0,
-                    durationOption.length - 1
-                  ),
-                }}
-                options={Object.keys(DURATION_DATA).map((option) => ({
-                  label: capitalizeFirstLetter(option).substring(
-                    0,
-                    option.length - 1
-                  ),
-                  value: option as DurationOption,
-                }))}
-              />
-            </div>
+            <DurationInput
+              handleChange={(v) => setCurrentExtensionSeconds(v)}
+            />
           </div>
           <div>
             <div className="mb-1 text-light-0">Rental rate</div>
