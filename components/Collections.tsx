@@ -112,7 +112,7 @@ export const Collections = () => {
                   onClick={() => setProjectConfig(config.name)}
                 >
                   <Card
-                    badge={config.badge}
+                    badges={config.badges}
                     hero={
                       <div
                         className="flex h-full w-full items-center justify-center p-12"

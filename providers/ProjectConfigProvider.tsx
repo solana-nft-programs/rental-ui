@@ -30,7 +30,8 @@ export const getInitialProps = async ({
   const cluster = (ctx.query.cluster || ctx.req?.headers.host)?.includes('dev')
     ? 'devnet'
     : ctx.query.cluster || process.env.BASE_CLUSTER
-  const foundEnvironment = ENVIRONMENTS.find((e) => e.label === cluster)!
+  const foundEnvironment =
+    ENVIRONMENTS.find((e) => e.label === cluster) || ENVIRONMENTS[0]!
 
   const namespaceName = 'twitter'
   let publicKey

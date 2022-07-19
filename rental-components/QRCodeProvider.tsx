@@ -1,10 +1,10 @@
 import type { Wallet } from '@saberhq/solana-contrib'
 import type { Connection } from '@solana/web3.js'
 import type { TokenData } from 'api/api'
+import { Modal } from 'common/Modal'
 import React, { useContext, useState } from 'react'
 
 import QRCode from './common/QRCode'
-import { Modal } from './modal'
 
 export interface QRCode {
   show: (
@@ -32,35 +32,24 @@ export const QRCodeProvider: React.FC<Props> = ({ children }: Props) => {
     undefined
   )
   const [cluster, setCluster] = useState<string | undefined>(undefined)
-  const [dev, setDev] = useState<boolean | undefined>(undefined)
   const [showQRCode, setShowQRCode] = useState<boolean>(false)
   const [tokenData, setTokenData] = useState<TokenData | undefined>(undefined)
 
   return (
     <QRCodeContext.Provider
       value={{
-        show: (connection, wallet, tokenData, cluster, dev) => {
+        show: (connection, wallet, tokenData, cluster) => {
           setConnection(connection)
           setWallet(wallet)
           setTokenData(tokenData)
           setCluster(cluster)
-          setDev(dev)
           setShowQRCode(true)
         },
         tokenData,
         showQRCode,
       }}
     >
-      <Modal
-        isOpen={showQRCode}
-        onDismiss={() => setShowQRCode(false)}
-        darkenOverlay={true}
-        topArea={false}
-        fitContent={true}
-        borderRadius="30px"
-        maxWidth="90vw"
-        dark={true}
-      >
+      <Modal isOpen={showQRCode} onDismiss={() => setShowQRCode(false)}>
         <QRCode
           connection={connection}
           wallet={wallet}
