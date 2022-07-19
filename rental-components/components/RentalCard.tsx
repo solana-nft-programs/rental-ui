@@ -1,11 +1,10 @@
-import { secondstoDuration } from '@cardinal/common'
+import { secondstoDuration, tryPublicKey } from '@cardinal/common'
 import { claimLinks } from '@cardinal/token-manager'
 import { InvalidationType } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { css } from '@emotion/react'
 import * as anchor from '@project-serum/anchor'
 import type { Wallet } from '@saberhq/solana-contrib'
 import type { Connection } from '@solana/web3.js'
-import { PublicKey } from '@solana/web3.js'
 import { DatePicker } from 'antd'
 import type { TokenData } from 'api/api'
 import { GlyphEdit } from 'assets/GlyphEdit'
@@ -258,6 +257,7 @@ export const RentalCard = ({
 
   // reset
   useEffect(() => {
+    setShowAdditionalOptions(false)
     if (!selectedInvalidators.includes('duration')) {
       setExtensionDurationSeconds(undefined)
       setDurationSeconds(undefined)
@@ -324,7 +324,7 @@ export const RentalCard = ({
   }
 
   return (
-    <div className="rounded-lg bg-dark-6 p-6">
+    <div className="rounded-xl bg-dark-6 p-6">
       <div className="text-center text-xl text-light-0">
         Rent out{' '}
         {tokenDatas.length > 1
@@ -364,15 +364,15 @@ export const RentalCard = ({
                 selectedInvalidators.length > 0 ? 'opacity-50' : ''
               }`}
             >
-              <div className="text-lg text-medium-3">Step 1</div>
-              <div className="text-2xl leading-6 text-light-0">Rent for</div>
+              <div className="text-base text-medium-3">Step 1</div>
+              <div className="text-2xl text-light-0">Rent for</div>
             </div>
-            <div className="flex gap-1">
+            <div className="flex flex-wrap gap-1">
               {selectedInvalidators.length === 0 ? (
                 rentalCardConfig.invalidators.map((invalidator) => (
                   <div
                     key={invalidator}
-                    className="cursor-pointer rounded-lg border-[1px] border-border bg-dark-4 px-2 py-2 text-lg transition-colors"
+                    className="cursor-pointer rounded-xl border-[2px] border-border bg-dark-4 px-3 py-2 text-base transition-colors"
                     css={css`
                       &:hover {
                         background-color: ${lighten(0.1, '#000')};
@@ -385,7 +385,7 @@ export const RentalCard = ({
                 ))
               ) : (
                 <div
-                  className="flex cursor-pointer items-center gap-3 rounded-lg border-[1px] border-border bg-dark-5 px-2 py-2 text-lg transition-colors"
+                  className="flex cursor-pointer items-center gap-3 rounded-xl border-[2px] border-border bg-dark-5 px-2 py-2 text-base transition-colors"
                   css={css`
                     &:hover {
                       background-color: ${lighten(0.1, '#000')};
@@ -401,7 +401,7 @@ export const RentalCard = ({
           </div>
         )}
         <div
-          className={`mb-2 flex items-center justify-between border-t-[2px] border-border py-4 ${
+          className={`flex items-center justify-between border-t-[2px] border-border py-4 ${
             selectedInvalidators.length === 0 ? 'border-b-[2px]' : ''
           }`}
         >
@@ -410,17 +410,15 @@ export const RentalCard = ({
               selectedInvalidators.length === 0 ? 'opacity-50' : ''
             }`}
           >
-            <div className="text-lg text-medium-3">Step 2</div>
-            <div className="text-2xl leading-6 text-light-0">
-              Rental settings
-            </div>
+            <div className="text-base text-medium-3">Step 2</div>
+            <div className="text-2xl text-light-0">Rental settings</div>
           </div>
           <div className="flex gap-1">
             {selectedInvalidators.length > 0 &&
               (visibilities.length > 1 || showClaimRentalReceipt) && (
                 <Tooltip title="Set up your reccuring listing or listing visibility">
                   <div
-                    className="cursor-pointer text-lg text-primary"
+                    className="cursor-pointer text-base text-primary"
                     onClick={() =>
                       setShowAdditionalOptions(!showAdditionalOptions)
                     }
@@ -434,8 +432,10 @@ export const RentalCard = ({
         {selectedInvalidators.length > 0 && (
           <div className="flex flex-col gap-4">
             <div
-              className={`flex overflow-hidden rounded-md border-[1px] border-primary-hover bg-primary-light transition-all ${
-                showAdditionalOptions ? 'h-auto opacity-100' : 'h-0 opacity-0'
+              className={`flex overflow-hidden rounded-xl border-[1px] border-primary-hover bg-primary-light transition-all ${
+                showAdditionalOptions
+                  ? 'mb-0 h-auto opacity-100'
+                  : '-mb-4 h-0 opacity-0'
               }`}
             >
               {invalidationTypes.length > 1 && (
@@ -445,7 +445,9 @@ export const RentalCard = ({
                     border-color: rgba(200, 138, 244, 0.12);
                   `}
                 >
-                  <div className="text-lg text-light-0">Recurring Listing:</div>
+                  <div className="text-base text-light-0">
+                    Recurring Listing:
+                  </div>
                   <div>
                     {invalidationTypes.length === 2 &&
                     invalidationTypes
@@ -500,7 +502,7 @@ export const RentalCard = ({
               )}
               {visibilities.length > 1 && (
                 <div className="flex w-1/2 flex-col gap-3 p-5">
-                  <div className="text-lg text-light-0">Visibility:</div>
+                  <div className="text-base text-light-0">Visibility:</div>
                   <div>
                     <Switch<VisibilityOption>
                       defaultOption={{
@@ -528,7 +530,7 @@ export const RentalCard = ({
                     border-color: rgba(200, 138, 244, 0.12);
                   `}
                 >
-                  <div className="text-lg text-light-0">Rent receipt:</div>
+                  <div className="text-base text-light-0">Rent receipt:</div>
                   <div>
                     <Toggle
                       defaultValue={claimRentalReceipt}
@@ -544,9 +546,9 @@ export const RentalCard = ({
               )}
             </div>
             {selectedInvalidators.includes('rate') && (
-              <div className="flex gap-6">
+              <div className="flex gap-4">
                 <div className="w-3/4">
-                  <div className="mb-1 text-light-0">Rental rate</div>
+                  <div className="mb-1 text-base text-light-0">Rental rate</div>
                   <div className="flex gap-1">
                     <MintPriceSelector
                       price={extensionPaymentAmount}
@@ -558,7 +560,7 @@ export const RentalCard = ({
                     />
                     <div>
                       <Selector<DurationOption>
-                        className="w-max rounded-[4px]"
+                        className="w-max rounded-xl"
                         onChange={(e) =>
                           setExtensionDurationSeconds(DURATION_DATA[e.value])
                         }
@@ -586,7 +588,9 @@ export const RentalCard = ({
                   </div>
                 </div>
                 <div>
-                  <div className="mb-1 text-light-0">Max rental duration</div>
+                  <div className="mb-1 text-base text-light-0">
+                    Max rental duration
+                  </div>
                   {/* <input
                   css={css`
                     color-scheme: dark;
@@ -603,7 +607,12 @@ export const RentalCard = ({
                   }
                 /> */}
                   <DatePicker
-                    className="rounded-[4px] bg-dark-4"
+                    className="rounded-xl bg-dark-4 py-2 px-3 text-base"
+                    css={css`
+                      input {
+                        line-height: 1.5rem !important;
+                      }
+                    `}
                     value={
                       maxExpiration ? moment(maxExpiration * 1000) : undefined
                     }
@@ -617,22 +626,19 @@ export const RentalCard = ({
             )}
             {selectedInvalidators.includes('manual') && (
               <div>
-                <div className="mb-1 text-light-0">
+                <div className="mb-1 text-base text-light-0">
                   Manual revocation pubkey
                 </div>
                 <div className="relative flex">
                   <input
-                    className="w-full rounded-md border border-border bg-dark-4 py-2 px-3 text-light-0 placeholder-medium-3 transition-all focus:border-primary focus:outline-none"
-                    css={css`
-                      line-height: 20px;
-                    `}
+                    className="w-full rounded-xl border border-border bg-dark-4 py-2 px-3 text-light-0 placeholder-medium-3 transition-all focus:border-primary focus:outline-none"
                     value={customInvalidator}
                     placeholder={shortPubKey(wallet.publicKey)}
                     onChange={(e) => setCustomInvalidator(e.target.value)}
                   />
                   <Button
                     variant={'primary'}
-                    className="absolute right-0 top-[1px] w-16"
+                    className="absolute right-0 top-[1px] w-16 rounded-xl"
                     css={css`
                       height: calc(100% - 2px);
                     `}
@@ -665,9 +671,11 @@ export const RentalCard = ({
               />
             )}
             {selectedInvalidators.includes('expiration') && (
-              <div className="flex gap-6">
+              <div className="flex gap-4">
                 <div className="w-3/4">
-                  <div className="mb-1 text-light-0">Rental price</div>
+                  <div className="mb-1 text-base text-light-0">
+                    Rental price
+                  </div>
                   <MintPriceSelector
                     price={price}
                     mint={paymentMint}
@@ -678,12 +686,14 @@ export const RentalCard = ({
                   />
                 </div>
                 <div>
-                  <div className="mb-1 text-light-0">Expiration</div>
+                  <div className="mb-1 text-base text-light-0">Expiration</div>
                   <DatePicker
-                    style={{
-                      borderRadius: '4px',
-                      zIndex: 99999,
-                    }}
+                    className="rounded-xl bg-dark-4 py-2 px-3 text-base"
+                    css={css`
+                      input {
+                        line-height: 1.5rem !important;
+                      }
+                    `}
                     showTime
                     onChange={(e) =>
                       setMaxExpiration(e ? e.valueOf() / 1000 : undefined)
@@ -694,9 +704,11 @@ export const RentalCard = ({
             )}
             {selectedInvalidators.includes('duration') && (
               <>
-                <div className="flex gap-6">
+                <div className="flex gap-4">
                   <div className="w-3/4">
-                    <div className="mb-1 text-light-0">Rental price</div>
+                    <div className="mb-1 text-base text-light-0">
+                      Rental price
+                    </div>
                     <MintPriceSelector
                       price={price}
                       mint={paymentMint}
@@ -707,7 +719,7 @@ export const RentalCard = ({
                     />
                   </div>
                   <div className="">
-                    <div className="mb-1 text-light-0">Duration</div>
+                    <div className="mb-1 text-base text-light-0">Duration</div>
                     <DurationInput
                       handleChange={(v) => setDurationSeconds(v)}
                       defaultAmount={
@@ -758,7 +770,7 @@ export const RentalCard = ({
                           }
                         />
                         <div>
-                          <div className="mb-1 text-light-0">
+                          <div className="mb-1 text-base text-light-0">
                             Extension duration
                           </div>
                           <DurationInput
@@ -773,10 +785,12 @@ export const RentalCard = ({
                           description={
                             <div>
                               <DatePicker
-                                className="rounded-[4px]"
-                                style={{
-                                  zIndex: 99999,
-                                }}
+                                className="rounded-xl bg-dark-4 py-2 px-3 text-base"
+                                css={css`
+                                  input {
+                                    line-height: 1.5rem !important;
+                                  }
+                                `}
                                 showTime
                                 onChange={(e) =>
                                   setMaxExpiration(
@@ -820,7 +834,7 @@ export const RentalCard = ({
               </>
             )}
             {link ? (
-              <div className="rounded-md bg-dark-4">
+              <div className="rounded-xl bg-dark-4">
                 <div
                   className="flex cursor-pointer items-center justify-center p-4"
                   onClick={() => setError(undefined)}
@@ -858,7 +872,7 @@ export const RentalCard = ({
                 {error}
               </Alert>
             ) : (
-              <div className="rounded-md bg-dark-4">
+              <div className="rounded-xl bg-dark-4">
                 <div className="flex items-center justify-center p-4">
                   Whoever claims this rental may own the asset{' '}
                   {totalUsages && maxExpiration ? (
@@ -902,8 +916,9 @@ export const RentalCard = ({
                         <a
                           target="_blank"
                           rel="noreferrer"
+                          className="mx-[3px]"
                           href={pubKeyUrl(
-                            new PublicKey(customInvalidator),
+                            tryPublicKey(customInvalidator),
                             cluster || 'mainnet'
                           )}
                         >
@@ -986,7 +1001,7 @@ export const RentalCard = ({
               </div>
             )}
             <div
-              className="flex cursor-pointer gap-2"
+              className="flex cursor-pointer gap-3 text-sm"
               onClick={() => {
                 setConfirmRentalTerms(!confirmRentalTerms)
                 setError(undefined)
@@ -1061,14 +1076,14 @@ export const RentalCard = ({
               }}
             >
               {link && link !== 'success' ? (
-                <div className="flex items-center justify-center gap-[5px] text-lg">
+                <div className="flex items-center justify-center gap-[5px] text-base">
                   <FaLink />
                   {link.substring(0, 40)}
                   ...
                   {link.substring(link.length - 10)}
                 </div>
               ) : (
-                <div className="flex items-center justify-center gap-[5px] text-lg">
+                <div className="flex items-center justify-center gap-[5px] text-base">
                   {visibility === 'private'
                     ? 'Get private link'
                     : 'List for rent'}

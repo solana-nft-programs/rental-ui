@@ -69,7 +69,7 @@ export const DurationInput: React.FC<Props> = ({
       <div className="relative flex">
         <input
           disabled={disabled}
-          className="w-full rounded-md border border-border bg-dark-4 py-2 px-3 text-light-0 placeholder-medium-3 outline-none transition-all focus:border-primary"
+          className="w-full rounded-xl border border-border bg-dark-4 py-2 px-3 text-light-0 placeholder-medium-3 outline-none transition-all focus:border-primary"
           type="text"
           inputMode="numeric"
           css={css`
@@ -102,7 +102,7 @@ export const DurationInput: React.FC<Props> = ({
       </div>
       <Selector<DurationOption>
         disabled={disabled}
-        className="w-max rounded-[4px]"
+        className="w-max rounded-xl"
         onChange={(e) => setDurationOption(e.value)}
         defaultOption={{
           value: durationOption,

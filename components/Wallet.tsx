@@ -119,7 +119,7 @@ export const Wallet = () => {
   return (
     <>
       <div
-        className={`fixed z-30 flex w-full items-center justify-between bg-dark-6 px-12 py-8 transition-all ${
+        className={`fixed z-30 flex w-full items-center justify-between gap-4 bg-dark-6 px-4 py-8 transition-all lg:px-12 ${
           selectedTokens.length > 0 ? 'bottom-0' : '-bottom-32'
         }`}
         css={css`
@@ -130,11 +130,11 @@ export const Wallet = () => {
           You selected{' '}
           {selectedTokens.length ? `(${selectedTokens.length})` : ''} items
         </div>
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-2">
           <Button
             disabled={selectedTokens.length === 0}
             variant="primary"
-            className="mr-5 px-8"
+            className="px-4 lg:px-8"
             onClick={() =>
               rentalModal.show(
                 asWallet(wallet),
@@ -147,6 +147,7 @@ export const Wallet = () => {
           >
             Rent out
           </Button>
+          <div className="mx-4 h-8 w-[2px] bg-border"></div>
           <div className="cursor-pointer" onClick={() => setSelectedTokens([])}>
             <GlyphClose />
           </div>

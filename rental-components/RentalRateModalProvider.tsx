@@ -1,12 +1,12 @@
 import type { Wallet } from '@saberhq/solana-contrib'
 import type { Connection, Keypair } from '@solana/web3.js'
 import type { TokenData } from 'api/api'
+import { Modal } from 'common/Modal'
 import { withSleep } from 'common/utils'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import React, { useContext, useState } from 'react'
 
 import { RentalRateCard } from './components/RentalRateCard'
-import { Modal } from './modal'
 
 interface RentalRateModal {
   show: (
@@ -58,8 +58,6 @@ export const RentalRateModalProvider: React.FC<Props> = ({
       <Modal
         isOpen={showRentalRateModal}
         onDismiss={() => setShowRentalRateModal(false)}
-        darkenOverlay={true}
-        topArea={false}
       >
         {wallet && connection && (
           <RentalRateCard

@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
 import { ChevronDown } from 'assets/ChevronDown'
 import { ChevronRight } from 'assets/ChevronRight'
-import { darken } from 'polished'
+import { lighten } from 'polished'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useEffect, useRef, useState } from 'react'
 
@@ -41,11 +41,11 @@ export const MultiSelector = <T,>({
   }, [ref])
 
   return (
-    <div className="relative z-40 text-sm" ref={ref}>
+    <div className="relative z-40 text-base" ref={ref}>
       <div
-        className="flex min-w-[250px] cursor-pointer justify-between rounded-md border-[1px] border-border px-3 py-2 transition-all hover:border-primary"
+        className="flex min-w-[250px] cursor-pointer justify-between rounded-lg border-[1px] border-border px-3 py-2 transition-all hover:border-primary"
         css={css`
-          background: ${darken(0.03, config.colors.main)};
+          background: ${lighten(0.08, config.colors.main)};
         `}
         onClick={() => setIsOpen((v) => !v)}
       >
@@ -64,7 +64,7 @@ export const MultiSelector = <T,>({
             isOpen ? 'h-auto opacity-100' : 'h-0 overflow-hidden opacity-0'
           }`}
           css={css`
-            background: ${darken(0.03, config.colors.main)};
+            background: ${lighten(0.03, config.colors.main)};
           `}
         >
           {groups.map(({ type, label, options, content }, i) =>
@@ -73,7 +73,7 @@ export const MultiSelector = <T,>({
                 key={i}
                 className="flex cursor-pointer items-center justify-between border-b-border p-3 text-light-0 transition-colors hover:text-primary"
                 css={css`
-                  background: ${darken(0.01, config.colors.main)};
+                  background: ${lighten(0.03, config.colors.main)};
                   border-bottom-width: ${i < groups?.length - 1 ? '1px' : ''};
                 `}
                 onClick={() => setOpenSelectors((v) => [...v, label])}
@@ -85,7 +85,7 @@ export const MultiSelector = <T,>({
               <div
                 className="border-b-border"
                 css={css`
-                  background: ${darken(0.01, config.colors.main)};
+                  background: ${lighten(0.08, config.colors.main)};
                   border-bottom-width: ${i < groups?.length - 1 ? '1px' : ''};
                 `}
               >

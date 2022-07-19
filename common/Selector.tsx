@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
 import { ChevronDown } from 'assets/ChevronDown'
 import { ChevronRight } from 'assets/ChevronRight'
-import { darken } from 'polished'
+import { lighten } from 'polished'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useEffect, useRef, useState } from 'react'
 
@@ -39,22 +39,22 @@ export const Selector = <T,>({
   }, [ref])
 
   return (
-    <div className="relative z-40" ref={ref}>
+    <div className="relative z-40 text-base" ref={ref}>
       <div
-        className={`${className} flex justify-between gap-1 rounded-md border-[1px] border-border px-3 py-2 transition-all ${
+        className={`flex justify-between gap-1 rounded-lg border-[1px] border-border px-3 py-2 transition-all ${
           disabled
             ? 'cursor-default opacity-50'
             : 'cursor-pointer hover:border-primary'
-        }`}
+        } ${className}`}
         css={css`
-          background: ${darken(0.03, config.colors.main)};
+          background: ${lighten(0.08, config.colors.main)};
         `}
         onClick={() => !disabled && setIsOpen((v) => !v)}
       >
         {value ? (
-          <div className="text-sm text-light-0">{value.label}</div>
+          <div className="text-light-0">{value.label}</div>
         ) : (
-          <div className="text-sm text-medium-3">{placeholder}</div>
+          <div className="text-medium-3">{placeholder}</div>
         )}
         <ChevronDown />
       </div>
@@ -63,13 +63,13 @@ export const Selector = <T,>({
           isOpen ? 'h-auto opacity-100' : 'h-0 overflow-hidden opacity-0'
         }`}
         css={css`
-          background: ${darken(0.03, config.colors.main)};
+          background: ${lighten(0.08, config.colors.main)};
         `}
       >
         {options.map((o) => (
           <div
             key={o.label}
-            className="flex cursor-pointer items-center justify-between p-3 text-sm text-light-0 transition-colors hover:text-primary"
+            className="flex cursor-pointer items-center justify-between p-3 text-light-0 transition-colors hover:text-primary"
             onClick={() => {
               setValue(o)
               setIsOpen((v) => !v)

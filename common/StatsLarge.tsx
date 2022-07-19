@@ -4,7 +4,7 @@ export const Stats = ({
   stats: { header: string; value: string | JSX.Element }[]
 }) => {
   return (
-    <div className="text-md flex w-full justify-evenly rounded-lg bg-dark-6 py-2">
+    <div className="flex w-full justify-evenly rounded-lg bg-dark-6 py-2">
       {stats?.map((stat, i) => (
         <div key={stat.header} className="flex w-full justify-center">
           <div
