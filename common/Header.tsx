@@ -100,7 +100,7 @@ export const Header = ({
 
   const issuer = tryPublicKey(config.issuer?.publicKeyString)
   return (
-    <div style={{ height: clockDrift ? '120px' : '88px' }}>
+    <div style={{ height: clockDrift ? '152px' : '120px' }}>
       <div
         className="fixed top-0 z-[100] flex w-full flex-col justify-center shadow-2xl"
         // style={{ background: config.colors.main }}

@@ -429,6 +429,7 @@ export const RentalCard = ({
       if (!extensionPaymentMintPublicKey) {
         throw 'Invalid payment mint'
       }
+
       if (rentalCardConfig.invalidationOptions?.maxDurationAllowed) {
         if (
           durationAmount &&
@@ -451,6 +452,12 @@ export const RentalCard = ({
             rentalCardConfig.invalidationOptions?.maxDurationAllowed.displayText
           )
         }
+      }
+      if (
+        extensionMaxExpiration &&
+        extensionMaxExpiration <= Date.now() / 1000
+      ) {
+        throw 'Expiration is before current date'
       }
 
       const transactions = []
