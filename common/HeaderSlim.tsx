@@ -69,7 +69,7 @@ export const HeaderSlim: React.FC<Props> = ({ tabs, loading }: Props) => {
             </div>
           )}
         </div>
-        <div className="left-1/2 w-screen md:w-auto lg:absolute lg:-translate-x-1/2">
+        <div className="relative">
           {tabs && (
             <div className="mt-1 flex justify-center rounded-xl">
               {tabs.map(({ disabled, name, anchor, tooltip }) => (

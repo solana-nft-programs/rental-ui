@@ -161,10 +161,14 @@ export const useUserTokenData = (filter?: TokenFilter, cluster?: string) => {
       }
 
       const metadata = await Promise.all(
-        Object.values(metaplexData).map(async (md) => {
+        tokenAccounts.map(async (tokenAccount) => {
           try {
-            if (!md?.data.data.uri) return null
-            const json = await fetch(md.data.data.uri).then((r) => r.json())
+            const md = metaplexData[tokenAccount.pubkey.toString()]
+            const uri = md?.data.data.uri
+            if (!md || !uri) {
+              return null
+            }
+            const json = await fetch(uri).then((r) => r.json())
             return {
               pubkey: md.pubkey,
               data: json,

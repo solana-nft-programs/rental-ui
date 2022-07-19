@@ -196,7 +196,7 @@ const ModalWrapper = styled(animated(DialogContent))<{
   box-shadow: 0px 4px 16px rgba(207, 207, 207, 0.25);
   max-width: ${({ maxWidth }) => maxWidth ?? '560px'};
   width: ${({ fitContent }) => (fitContent ? 'fit-content' : '100%')};
-  border-radius: ${({ borderRadius }) => borderRadius ?? '8px'};
+  border-radius: ${({ borderRadius }) => borderRadius ?? '12px'};
   background: ${({ dark }) => (dark ? 'rgb(26, 27, 32)' : '#FFF')};
   color: #696969;
   font-weight: normal;

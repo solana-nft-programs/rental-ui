@@ -145,15 +145,15 @@ export const RentalRateCard = ({
       </p>
 
       <div className="flex flex-col gap-4">
-        <div className="flex gap-6">
+        <div className="flex gap-4">
           <div>
-            <div className="mb-1 text-light-0">Rental duration</div>
+            <div className="mb-1 text-base text-light-0">Rental duration</div>
             <DurationInput
               handleChange={(v) => setCurrentExtensionSeconds(v)}
             />
           </div>
           <div>
-            <div className="mb-1 text-light-0">Rental rate</div>
+            <div className="mb-1 text-base text-light-0">Price</div>
             <MintPriceSelector
               price={paymentAmount}
               handlePrice={handlePaymentAmountChange}
@@ -224,7 +224,7 @@ export const RentalRateCard = ({
           ) : (
             <div
               style={{ gap: '5px' }}
-              className="flex items-center justify-center"
+              className="flex items-center justify-center text-base"
             >
               {claim ? 'Rent NFT' : 'Extend Rental'}
               <FiSend />

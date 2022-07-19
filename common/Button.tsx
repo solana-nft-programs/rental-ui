@@ -28,7 +28,7 @@ export const Button: React.FC<Props> = ({
   return (
     <div
       {...rest}
-      className={`flex items-center justify-center gap-5 rounded-md transition-all ${className} ${
+      className={`flex items-center justify-center gap-5 rounded-xl transition-all ${className} ${
         disabled
           ? 'cursor-default bg-medium-4'
           : variant === 'primary'

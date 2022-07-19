@@ -54,7 +54,7 @@ export const Footer = ({
         </div>
       </div>
       <div
-        className="text-md flex items-center justify-between border-t py-8 text-gray-400"
+        className="flex items-center justify-between border-t py-8 text-sm text-gray-400"
         style={{ borderColor: lighten(0.2, bgColor) }}
       >
         <div className="flex items-center justify-center gap-2 text-gray-400">

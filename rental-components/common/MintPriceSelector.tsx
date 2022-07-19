@@ -1,7 +1,9 @@
-import { css } from '@emotion/react'
 import { BN } from '@project-serum/anchor'
 import { Selector } from 'common/Selector'
-import { fmtMintAmount, parseMintNaturalAmountFromDecimal } from 'common/units'
+import {
+  getMintDecimalAmountFromNatural,
+  parseMintNaturalAmountFromDecimal,
+} from 'common/units'
 import { PAYMENT_MINTS, usePaymentMints } from 'hooks/usePaymentMints'
 
 export const MintPriceSelector = ({
@@ -30,19 +32,21 @@ export const MintPriceSelector = ({
     : null
 
   return (
-    <div className="relative flex w-full items-center gap-2">
+    <div className="relative flex w-full items-center gap-2 text-base">
       <input
-        className="w-full rounded-md border border-border bg-dark-4 py-2 px-3 text-light-0 placeholder-medium-3 outline-none transition-all focus:border-primary"
-        css={css`
-          line-height: 20px;
-        `}
+        className={`w-full rounded-xl border border-border bg-dark-4 py-2 px-3 text-light-0 placeholder-medium-3 outline-none transition-all focus:border-primary ${
+          disabled ? 'cursor-default opacity-50' : 'cursor-pointer'
+        }`}
         type="number"
         placeholder={'Price'}
         disabled={disabled}
         min={0}
         value={
           paymentMintInfo
-            ? `${fmtMintAmount(paymentMintInfo, new BN(price))}`
+            ? `${getMintDecimalAmountFromNatural(
+                paymentMintInfo,
+                new BN(price)
+              )}`
             : '0'
         }
         onChange={(e) =>
