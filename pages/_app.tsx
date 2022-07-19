@@ -19,7 +19,6 @@ import { UTCNowProvider } from 'providers/UTCNowProvider'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
 import { QRCodeProvider } from 'rental-components/QRCodeProvider'
-import { RentalExtensionModalProvider } from 'rental-components/RentalExtensionModalProvider'
 import { RentalModalProvider } from 'rental-components/RentalModalProvider'
 import { RentalRateModalProvider } from 'rental-components/RentalRateModalProvider'
 
@@ -49,19 +48,15 @@ const App = ({
             <QueryClientProvider client={queryClient}>
               <QRCodeProvider>
                 <RentalModalProvider>
-                  <RentalExtensionModalProvider>
-                    <RentalRateModalProvider>
-                      <WalletModalProvider>
-                        <>
-                          <ToastContainer />
-                          <Component {...pageProps} />
-                          {DEBUG && (
-                            <ReactQueryDevtools initialIsOpen={false} />
-                          )}
-                        </>
-                      </WalletModalProvider>
-                    </RentalRateModalProvider>
-                  </RentalExtensionModalProvider>
+                  <RentalRateModalProvider>
+                    <WalletModalProvider>
+                      <>
+                        <ToastContainer />
+                        <Component {...pageProps} />
+                        {DEBUG && <ReactQueryDevtools initialIsOpen={false} />}
+                      </>
+                    </WalletModalProvider>
+                  </RentalRateModalProvider>
                 </RentalModalProvider>
               </QRCodeProvider>
             </QueryClientProvider>

@@ -86,7 +86,7 @@ export const Popover: React.FC<PopoverProps> = ({
       </HeadlessPopover.Button>
       <HeadlessPopover.Panel
         ref={setPopperElement}
-        style={{ ...styles.popper, zIndex: 100 }}
+        style={{ ...styles.popper, zIndex: 40 }}
         {...attributes.popper}
       >
         {content}

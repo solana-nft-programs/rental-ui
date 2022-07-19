@@ -4,6 +4,7 @@ import { issueToken } from '@cardinal/token-manager'
 import { findPaymentManagerAddress } from '@cardinal/token-manager/dist/cjs/programs/paymentManager/pda'
 import type { InvalidationType } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { TokenManagerKind } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
+import type { BN } from '@project-serum/anchor'
 import { useWallet } from '@solana/wallet-adapter-react'
 import {
   Keypair,
@@ -23,13 +24,13 @@ export interface HandleIssueRentalParams {
   tokenDatas: TokenData[]
   rentalCardConfig: RentalCardConfig
   //
-  price?: number
+  price?: BN
   paymentMint?: string
   durationSeconds?: number
   maxExpiration?: number
   //
   extensionPaymentMint?: string
-  extensionPaymentAmount?: number
+  extensionPaymentAmount?: BN
   extensionDurationSeconds?: number
   //
   totalUsages?: number
@@ -68,6 +69,10 @@ export const useHandleIssueRental = () => {
       if (!wallet.publicKey) {
         throw 'Wallet not connected'
       }
+      if (maxExpiration && maxExpiration < Date.now() / 1000) {
+        throw 'Rental expiration has already passed select a value after the current date.'
+      }
+
       if (rentalCardConfig.invalidationOptions?.maxDurationAllowed) {
         if (
           durationSeconds &&
@@ -123,7 +128,7 @@ export const useHandleIssueRental = () => {
           claimPayment:
             price && paymentMint
               ? {
-                  paymentAmount: price,
+                  paymentAmount: price.toNumber(),
                   paymentMint: new PublicKey(paymentMint),
                   paymentManager: rentalCardConfig.paymentManager
                     ? tryPublicKey(rentalCardConfig.paymentManager) ||
@@ -140,14 +145,15 @@ export const useHandleIssueRental = () => {
           timeInvalidation:
             maxExpiration || durationSeconds !== undefined
               ? {
-                  durationSeconds,
+                  durationSeconds: durationSeconds ?? 0,
                   maxExpiration,
                   extension:
                     extensionPaymentAmount !== undefined &&
                     extensionDurationSeconds !== undefined &&
                     extensionPaymentMint
                       ? {
-                          extensionPaymentAmount,
+                          extensionPaymentAmount:
+                            extensionPaymentAmount.toNumber(),
                           extensionDurationSeconds,
                           extensionPaymentMint:
                             tryPublicKey(extensionPaymentMint)!,

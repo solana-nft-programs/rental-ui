@@ -26,7 +26,7 @@ const getPriceFromTokenData = (
   ) {
     const mintInfo =
       paymentMints[tokenData.claimApprover?.parsed?.paymentMint.toString()]
-    if (mintInfo && mintInfo.decimals) {
+    if (mintInfo && mintInfo.decimals !== NaN) {
       return getMintDecimalAmount(
         mintInfo,
         tokenData.claimApprover?.parsed?.paymentAmount

@@ -240,7 +240,8 @@ export function NFT({ tokenData, onClick }: NFTProps) {
                       ? 'cursor-pointer'
                       : 'cursor-default opacity-20'
                   } flex items-center gap-2`}
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation()
                     elligibleForRent(config, tokenData) &&
                       rentalModal.show(
                         asWallet(wallet),
@@ -262,8 +263,9 @@ export function NFT({ tokenData, onClick }: NFTProps) {
               tokenManager.parsed.state !== TokenManagerState.Claimed && (
                 <PopoverItem>
                   <div
-                    className="flex cursor-pointer items-center justify-between gap-2"
-                    onClick={async () => {
+                    className="flex cursor-pointer items-center gap-2"
+                    onClick={async (e) => {
+                      e.stopPropagation()
                       if (!tokenData?.tokenManager) return
                       setLoading(true)
                       executeTransaction(
@@ -291,15 +293,16 @@ export function NFT({ tokenData, onClick }: NFTProps) {
               tokenManager.parsed.state === TokenManagerState.Claimed && (
                 <PopoverItem>
                   <div
-                    className="flex cursor-pointer items-center justify-between gap-2"
-                    onClick={() =>
+                    className="flex cursor-pointer items-center gap-2"
+                    onClick={(e) => {
+                      e.stopPropagation()
                       show(
                         ctx.connection,
                         asWallet(wallet),
                         tokenData,
                         ctx.environment.label
                       )
-                    }
+                    }}
                   >
                     <IoQrCodeOutline />
                     Scan
@@ -316,8 +319,9 @@ export function NFT({ tokenData, onClick }: NFTProps) {
               confirmReturnConfig(tokenData) && (
                 <PopoverItem>
                   <div
-                    className="flex cursor-pointer items-center justify-between gap-2"
-                    onClick={async () => {
+                    className="flex cursor-pointer items-center gap-2"
+                    onClick={async (e) => {
+                      e.stopPropagation()
                       try {
                         await returnRental(tokenData)
                       } catch (e) {
@@ -340,7 +344,8 @@ export function NFT({ tokenData, onClick }: NFTProps) {
                 <PopoverItem>
                   <div
                     className="flex cursor-pointer items-center justify-between gap-2"
-                    onClick={async () => {
+                    onClick={async (e) => {
+                      e.stopPropagation()
                       rentalRateModal.show(
                         asWallet(wallet),
                         ctx.connection,
