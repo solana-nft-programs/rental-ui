@@ -46,7 +46,11 @@ export type TokenSection = {
   showEmpty?: boolean
 }
 
-export type Badge = 'recent' | 'trending'
+export type Badge = {
+  badgeType: 'recent' | 'trending'
+  position?: 'top-right' | 'top-left' | 'bottom-left' | 'bottom-right'
+  content?: JSX.Element
+}
 
 export type ProjectConfig = {
   type: 'Collection' | 'Guild'
@@ -62,7 +66,7 @@ export type ProjectConfig = {
   hero?: string
   logoImage: string
   colors: Colors
-  badge?: Badge
+  badges?: Badge[]
   disableListing?: boolean
   filter?: TokenFilter
   sections?: TokenSection[]
@@ -626,7 +630,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       main: '#192836',
       secondary: '#FFB60C',
     },
-    badge: 'trending',
+    badges: [{ badgeType: 'trending' }],
     filter: {
       type: 'creators',
       value: [
@@ -868,7 +872,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       main: 'rgb(26, 27, 32)',
       secondary: '#a5b6f6',
     },
-    badge: 'recent',
+    badges: [{ badgeType: 'recent' }],
     filter: {
       type: 'issuer',
       value: ['F65oeXXQaDQYnmQKTmmMpZ5XaLBzoUC16pMTg59RfpK6'],

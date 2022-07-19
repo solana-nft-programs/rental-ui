@@ -4,8 +4,9 @@ import { useWallet } from '@solana/wallet-adapter-react'
 import { PublicKey, Transaction } from '@solana/web3.js'
 import type { TokenData } from 'api/api'
 import { Airdrop } from 'common/Airdrop'
-import { Header } from 'common/Header'
-import { NFT, NFTPlaceholder, TokensOuter } from 'common/NFT'
+import { Card } from 'common/Card'
+import { HeaderSlim } from 'common/HeaderSlim'
+import { NFT } from 'common/NFT'
 import { notify } from 'common/Notification'
 import { executeTransaction } from 'common/Transactions'
 import { asWallet } from 'common/Wallets'
@@ -82,17 +83,19 @@ function Burn() {
 
   return (
     <>
-      <Header />
-      <TokensOuter style={{ marginTop: '20px' }}>
+      <HeaderSlim />
+      <div className="mx-auto mt-12 max-w-[1634px]">
         {!userTokenData.isFetched ? (
-          <>
-            <NFTPlaceholder />
-            <NFTPlaceholder />
-            <NFTPlaceholder />
-            <NFTPlaceholder />
-            <NFTPlaceholder />
-            <NFTPlaceholder />
-          </>
+          <div className="flex flex-wrap justify-center gap-4 xl:justify-start">
+            <Card skeleton header={<></>} subHeader={<></>} />
+            <Card skeleton header={<></>} subHeader={<></>} />
+            <Card skeleton header={<></>} subHeader={<></>} />
+            <Card skeleton header={<></>} subHeader={<></>} />
+            <Card skeleton header={<></>} subHeader={<></>} />
+            <Card skeleton header={<></>} subHeader={<></>} />
+            <Card skeleton header={<></>} subHeader={<></>} />
+            <Card skeleton header={<></>} subHeader={<></>} />
+          </div>
         ) : expiredTokens && expiredTokens.length > 0 ? (
           expiredTokens.map((tokenData) => (
             <div key={tokenData.tokenAccount?.pubkey.toString()}>
@@ -124,7 +127,7 @@ function Burn() {
             {ctx.environment.label === 'devnet' && <Airdrop />}
           </div>
         )}
-      </TokensOuter>
+      </div>
     </>
   )
 }

@@ -3,7 +3,7 @@ import type { Badge } from 'config/config'
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   header?: string | JSX.Element
   subHeader?: string | JSX.Element
-  badge?: Badge
+  badges?: Badge[]
   hero?: JSX.Element
   content?: JSX.Element
   skeleton?: boolean
@@ -13,7 +13,7 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
 export const Card: React.FC<Props> = ({
   header,
   subHeader,
-  badge,
+  badges,
   hero,
   content,
   skeleton,
@@ -25,16 +25,25 @@ export const Card: React.FC<Props> = ({
       {...props}
       className={`${className} relative flex flex-col gap-2 rounded-lg border-[1px] border-border bg-white bg-opacity-5 p-4`}
     >
-      {badge && (
-        <div className="absolute right-6 top-6 rounded-md bg-dark-5 px-2 py-1 text-sm">
-          {
+      {badges?.map(({ badgeType, position, content }, i) => (
+        <div
+          key={i}
+          className={`absolute right-6 top-6 rounded-md bg-dark-5 px-2 py-1 text-sm ${
+            {
+              'top-right': 'right-6 top-6',
+              'top-left': 'left-6 top-6',
+              'bottom-right': 'right-6 bottom-6',
+              'bottom-left': 'left-6 bottom-6',
+            }[position ?? 'top-right']
+          }`}
+        >
+          {content ??
             {
               recent: <span className="text-primary">👋 Recently listed</span>,
               trending: <span className="text-primary">🔥 Trending</span>,
-            }[badge]
-          }
+            }[badgeType]}
         </div>
-      )}
+      ))}
       <div className="aspect-square w-full overflow-hidden rounded-lg">
         {skeleton ? (
           <div className="h-full w-[280px] animate-pulse bg-border"></div>

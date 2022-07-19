@@ -70,7 +70,7 @@ export const useHandleIssueRental = () => {
         throw 'Wallet not connected'
       }
       if (maxExpiration && maxExpiration < Date.now() / 1000) {
-        throw 'Rental expiration has already passed select a value after the current date.'
+        throw 'Rental expiration has already passed. Please select a value after the current date.'
       }
 
       if (rentalCardConfig.invalidationOptions?.maxDurationAllowed) {

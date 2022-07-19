@@ -31,19 +31,11 @@ import moment from 'moment'
 import { lighten } from 'polished'
 import { getLink } from 'providers/ProjectConfigProvider'
 import { useEffect, useState } from 'react'
-import { BiQrScan, BiTimer } from 'react-icons/bi'
 import { FaLink } from 'react-icons/fa'
 import { FiSend } from 'react-icons/fi'
-import { ImPriceTags } from 'react-icons/im'
 import { PAYMENT_MINTS } from 'rental-components/common/Constants'
-import {
-  Fieldset,
-  Input,
-  InputBorder,
-} from 'rental-components/common/LabeledInput'
 import { MintPriceSelector } from 'rental-components/common/MintPriceSelector'
 import { PoweredByFooter } from 'rental-components/common/PoweredByFooter'
-import { StepDetail } from 'rental-components/common/StepDetail'
 
 const handleCopy = (shareUrl: string) => {
   navigator.clipboard.writeText(shareUrl)
@@ -655,23 +647,16 @@ export const RentalCard = ({
               </div>
             )}
             {selectedInvalidators.includes('usages') && (
-              <StepDetail
-                icon={<BiQrScan />}
-                title="Uses"
-                description={
-                  <Fieldset>
-                    <InputBorder>
-                      <Input
-                        name="tweet"
-                        type="number"
-                        onChange={(e) =>
-                          setTotalUsages(parseInt(e.target.value))
-                        }
-                      />
-                    </InputBorder>
-                  </Fieldset>
-                }
-              />
+              <div>
+                <div className="mb-1 text-base text-light-0">Usages</div>
+                <input
+                  className="w-full rounded-xl border border-border bg-dark-4 py-2 px-3 text-light-0 placeholder-medium-3 transition-all focus:border-primary focus:outline-none"
+                  value={customInvalidator}
+                  type="number"
+                  placeholder={'Number of usages'}
+                  onChange={(e) => setTotalUsages(parseInt(e.target.value))}
+                />
+              </div>
             )}
             {selectedInvalidators.includes('expiration') && (
               <div className="flex gap-4">
@@ -758,26 +743,23 @@ export const RentalCard = ({
                       {showExtendDuration ? '[-]' : '[+]'} Extendability
                     </button>
                     {showExtendDuration && (
-                      <div className="grid grid-cols-2 gap-4 py-2">
-                        <StepDetail
-                          icon={<ImPriceTags />}
-                          title="Extension Price"
-                          description={
-                            <>
-                              <MintPriceSelector
-                                disabled={visibility === 'private'}
-                                defaultPrice={extensionPaymentAmount}
-                                defaultMint={extensionPaymentMint}
-                                mintDisabled={paymentMintData.length === 1}
-                                paymentMintData={paymentMintData}
-                                handleValue={(v) => {
-                                  setExtensionPaymentAmount(v.price.value)
-                                  setExtensionPaymentMint(v.mint.value)
-                                }}
-                              />
-                            </>
-                          }
-                        />
+                      <div className="flex gap-4">
+                        <div className="w-3/4">
+                          <div className="mb-1 text-base text-light-0">
+                            Extension price
+                          </div>
+                          <MintPriceSelector
+                            disabled={visibility === 'private'}
+                            defaultPrice={extensionPaymentAmount}
+                            defaultMint={extensionPaymentMint}
+                            mintDisabled={paymentMintData.length === 1}
+                            paymentMintData={paymentMintData}
+                            handleValue={(v) => {
+                              setExtensionPaymentAmount(v.price.value)
+                              setExtensionPaymentMint(v.mint.value)
+                            }}
+                          />
+                        </div>
                         <div>
                           <div className="mb-1 text-base text-light-0">
                             Extension duration
@@ -788,28 +770,30 @@ export const RentalCard = ({
                             defaultOption={defaultDurationOption}
                           />
                         </div>
-                        <StepDetail
-                          icon={<BiTimer />}
-                          title="Max Expiration"
-                          description={
-                            <div>
-                              <DatePicker
-                                className="rounded-xl bg-dark-4 py-2 px-3 text-base"
-                                css={css`
-                                  input {
-                                    line-height: 1.5rem !important;
-                                  }
-                                `}
-                                showTime
-                                onChange={(e) =>
-                                  setMaxExpiration(
-                                    e ? e.valueOf() / 1000 : undefined
-                                  )
-                                }
-                              />
-                            </div>
-                          }
-                        />
+                        <div>
+                          <div className="mb-1 text-base text-light-0">
+                            Max rental duration
+                          </div>
+                          <DatePicker
+                            className="rounded-xl bg-dark-4 py-2 px-3 text-base"
+                            css={css`
+                              input {
+                                line-height: 1.5rem !important;
+                              }
+                            `}
+                            value={
+                              maxExpiration
+                                ? moment(maxExpiration * 1000)
+                                : undefined
+                            }
+                            showTime
+                            onChange={(e) =>
+                              setMaxExpiration(
+                                e ? e.valueOf() / 1000 : undefined
+                              )
+                            }
+                          />
+                        </div>
                         {rentalCardConfig.extensionOptions
                           ?.showDisablePartialExtension && (
                           <div className="mt-1">
@@ -1013,7 +997,7 @@ export const RentalCard = ({
               }}
             >
               <div
-                className={`h-5 w-5 shrink-0 rounded-md border-[.5px] border-light-1 transition-all ${
+                className={`h-5 w-5 shrink-0 rounded-md border-[2px] border-border transition-all ${
                   confirmRentalTerms ? 'bg-primary' : ''
                 }`}
               />
