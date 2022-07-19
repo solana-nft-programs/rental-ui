@@ -532,41 +532,45 @@ export const Browse = () => {
   const handleBrowseClick = async (tokenData: TokenData) => {
     if (config.allowOneByCreators && tokenManagers.data) {
       for (const creator of config.allowOneByCreators) {
-        if (creator.preventMultipleClaims && claimingRental) {
-          notify({
-            message: 'Error renting this NFT',
-            description:
-              'This issuer has prevented simultaneous rentals, please wait until the current rental claim is approved',
-            type: 'error',
-          })
-          return
-        }
-        if (creator.enforceTwitter && !twitterAddress.displayName) {
-          notify({
-            message: 'Error renting this NFT',
-            description:
-              'You need to connect your twitter account to rent an NFT from this issuer. Click your profile on the top right corner to connect.',
-            type: 'error',
-          })
-          return
-        }
         if (
-          tokenManagers.data.filter(
-            (tm) =>
-              tokenData.tokenManager?.parsed.issuer.toString() ===
-                creator.address &&
-              tm.recipientTokenAccount?.owner.toString() ===
-                wallet.publicKey?.toString() &&
-              tm.tokenManager?.parsed.issuer.toString() === creator.address
-          ).length > 0
+          tokenData.tokenManager?.parsed.issuer.toString() === creator.address
         ) {
-          notify({
-            message: 'Error renting this NFT',
-            description:
-              'The issuer of this NFT has limited only one NFT rental per user',
-            type: 'error',
-          })
-          return
+          if (creator.preventMultipleClaims && claimingRental) {
+            notify({
+              message: 'Error renting this NFT',
+              description:
+                'This issuer has prevented simultaneous rentals, please wait until the current rental claim is approved',
+              type: 'error',
+            })
+            return
+          }
+          if (creator.enforceTwitter && !twitterAddress.displayName) {
+            notify({
+              message: 'Error renting this NFT',
+              description:
+                'You need to connect your twitter account to rent an NFT from this issuer. Click your profile on the top right corner to connect.',
+              type: 'error',
+            })
+            return
+          }
+          if (
+            tokenManagers.data.filter(
+              (tm) =>
+                tokenData.tokenManager?.parsed.issuer.toString() ===
+                  creator.address &&
+                tm.recipientTokenAccount?.owner.toString() ===
+                  wallet.publicKey?.toString() &&
+                tm.tokenManager?.parsed.issuer.toString() === creator.address
+            ).length > 0
+          ) {
+            notify({
+              message: 'Error renting this NFT',
+              description:
+                'The issuer of this NFT has limited only one NFT rental per user',
+              type: 'error',
+            })
+            return
+          }
         }
       }
     }

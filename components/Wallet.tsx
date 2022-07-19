@@ -302,7 +302,7 @@ export const Wallet = () => {
                   </div>
                 }
                 content={
-                  <div className="flex flex-row justify-between text-xs">
+                  <div className="flex flex-row justify-between text-sm">
                     {tokenData.recipientTokenAccount?.owner && (
                       <div
                         className="flex flex-col"

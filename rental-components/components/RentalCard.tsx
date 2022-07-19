@@ -216,12 +216,13 @@ export const RentalCard = ({
   const defaultInvalidationType = invalidationTypes[0]!.type
 
   // state
-  const [price, setPrice] = useState(0)
+  const [price, setPrice] = useState<anchor.BN>()
   const [paymentMint, setPaymentMint] = useState<string>(
     defaultPaymentMint.mint
   )
   const [durationSeconds, setDurationSeconds] = useState<number>()
-  const [extensionPaymentAmount, setExtensionPaymentAmount] = useState(0)
+  const [extensionPaymentAmount, setExtensionPaymentAmount] =
+    useState<anchor.BN>()
   const [extensionPaymentMint, setExtensionPaymentMint] = useState(
     defaultPaymentMint.mint
   )
@@ -294,7 +295,7 @@ export const RentalCard = ({
         )
       }
       setExtensionPaymentMint(defaultPaymentMint.mint)
-      setExtensionPaymentAmount(0)
+      setExtensionPaymentAmount(undefined)
       setMaxExpiration(
         rentalCardConfig.invalidationOptions?.maxDurationAllowed?.value
           ? Date.now() / 1000 +
@@ -312,10 +313,10 @@ export const RentalCard = ({
       : '?'
 
     return `${
-      paymentMintInfos.data
+      paymentMintInfos.data && extensionPaymentAmount
         ? fmtMintAmount(
             paymentMintInfos.data[extensionPaymentMint.toString()],
-            new anchor.BN(extensionPaymentAmount)
+            extensionPaymentAmount
           )
         : 0
     } ${
@@ -551,12 +552,14 @@ export const RentalCard = ({
                   <div className="mb-1 text-base text-light-0">Rental rate</div>
                   <div className="flex gap-1">
                     <MintPriceSelector
-                      price={extensionPaymentAmount}
-                      mint={extensionPaymentMint}
+                      defaultPrice={extensionPaymentAmount}
+                      defaultMint={extensionPaymentMint}
                       paymentMintData={paymentMintData}
                       mintDisabled={paymentMintData.length === 1}
-                      handlePrice={setExtensionPaymentAmount}
-                      handleMint={setExtensionPaymentMint}
+                      handleValue={(v) => {
+                        setExtensionPaymentAmount(v.price.value)
+                        setExtensionPaymentMint(v.mint.value)
+                      }}
                     />
                     <div>
                       <Selector<DurationOption>
@@ -677,12 +680,14 @@ export const RentalCard = ({
                     Rental price
                   </div>
                   <MintPriceSelector
-                    price={price}
-                    mint={paymentMint}
+                    defaultPrice={price}
+                    defaultMint={paymentMint}
                     mintDisabled={paymentMintData.length === 1}
                     paymentMintData={paymentMintData}
-                    handlePrice={setPrice}
-                    handleMint={setPaymentMint}
+                    handleValue={(v) => {
+                      setPrice(v.price.value)
+                      setPaymentMint(v.mint.value)
+                    }}
                   />
                 </div>
                 <div>
@@ -710,12 +715,14 @@ export const RentalCard = ({
                       Rental price
                     </div>
                     <MintPriceSelector
-                      price={price}
-                      mint={paymentMint}
+                      defaultPrice={price}
+                      defaultMint={paymentMint}
                       mintDisabled={paymentMintData.length === 1}
                       paymentMintData={paymentMintData}
-                      handlePrice={setPrice}
-                      handleMint={setPaymentMint}
+                      handleValue={(v) => {
+                        setPrice(v.price.value)
+                        setPaymentMint(v.mint.value)
+                      }}
                     />
                   </div>
                   <div className="">
@@ -759,12 +766,14 @@ export const RentalCard = ({
                             <>
                               <MintPriceSelector
                                 disabled={visibility === 'private'}
-                                price={extensionPaymentAmount}
-                                mint={extensionPaymentMint}
+                                defaultPrice={extensionPaymentAmount}
+                                defaultMint={extensionPaymentMint}
                                 mintDisabled={paymentMintData.length === 1}
                                 paymentMintData={paymentMintData}
-                                handlePrice={setExtensionPaymentAmount}
-                                handleMint={setExtensionPaymentMint}
+                                handleValue={(v) => {
+                                  setExtensionPaymentAmount(v.price.value)
+                                  setExtensionPaymentMint(v.mint.value)
+                                }}
                               />
                             </>
                           }
@@ -834,35 +843,30 @@ export const RentalCard = ({
               </>
             )}
             {link ? (
-              <div className="rounded-xl bg-dark-4">
-                <div
-                  className="flex cursor-pointer items-center justify-center p-4"
-                  onClick={() => setError(undefined)}
-                >
-                  {tokenDatas.length === 1 && totalListed === 1 ? (
-                    <div>
-                      Successfully listed: ({totalListed} / {tokenDatas.length})
-                      <br />
-                      Link created {link.substring(0, 20)}
-                      ...
-                      {visibility === 'private' && (
-                        <>
-                          {link.substring(link.length - 5)}
-                          <div>
-                            This link can only be used once and cannot be
-                            regenerated
-                          </div>
-                        </>
-                      )}
-                    </div>
-                  ) : (
-                    <div>
-                      {' '}
-                      Successfully listed: ({totalListed} / {totalTokens}){' '}
-                    </div>
-                  )}
-                </div>
-              </div>
+              <Alert variant="success">
+                {tokenDatas.length === 1 && totalListed === 1 ? (
+                  <div>
+                    Successfully listed: ({totalListed} / {tokenDatas.length})
+                    <br />
+                    Link created {link.substring(0, 20)}
+                    ...
+                    {visibility === 'private' && (
+                      <>
+                        {link.substring(link.length - 5)}
+                        <div>
+                          This link can only be used once and cannot be
+                          regenerated
+                        </div>
+                      </>
+                    )}
+                  </div>
+                ) : (
+                  <div>
+                    {' '}
+                    Successfully listed: ({totalListed} / {totalTokens}){' '}
+                  </div>
+                )}
+              </Alert>
             ) : error ? (
               <Alert
                 variant="error"
@@ -965,13 +969,14 @@ export const RentalCard = ({
                       <b>Rate: </b> {extensionRate()}
                     </p>
                   ) : (
-                    price > 0 && (
+                    price &&
+                    price.gt(new anchor.BN(0)) && (
                       <p>
                         <b>Price: </b>{' '}
                         {paymentMintInfos.data
                           ? fmtMintAmount(
                               paymentMintInfos.data[paymentMint.toString()],
-                              new anchor.BN(price)
+                              price
                             )
                           : 0}{' '}
                         {

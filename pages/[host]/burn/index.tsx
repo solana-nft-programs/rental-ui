@@ -11,14 +11,12 @@ import { executeTransaction } from 'common/Transactions'
 import { asWallet } from 'common/Wallets'
 import { useUserTokenData } from 'hooks/useUserTokenData'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
-import { AsyncButton, Button } from 'rental-components/common/Button'
-import { useRentalExtensionModal } from 'rental-components/RentalExtensionModalProvider'
+import { AsyncButton } from 'rental-components/common/Button'
 
 function Burn() {
   const ctx = useEnvironmentCtx()
   const wallet = useWallet()
   const userTokenData = useUserTokenData()
-  const rentalExtensionModal = useRentalExtensionModal()
 
   const revokeRental = async (tokenData: TokenData) => {
     const transaction = new Transaction()
@@ -102,23 +100,6 @@ function Burn() {
                 key={tokenData?.tokenAccount?.pubkey.toBase58()}
                 tokenData={tokenData}
               ></NFT>
-              {tokenData.timeInvalidator?.parsed?.extensionDurationSeconds ? (
-                <Button
-                  variant="primary"
-                  className="mx-auto mt-4"
-                  onClick={() =>
-                    rentalExtensionModal.show(
-                      asWallet(wallet),
-                      ctx.connection,
-                      ctx.environment.label,
-                      tokenData
-                    )
-                  }
-                >
-                  Increase Duration
-                </Button>
-              ) : null}
-
               <AsyncButton
                 variant="primary"
                 className="mx-auto mt-3"

@@ -1,3 +1,4 @@
+import { BN } from '@project-serum/anchor'
 import type { Wallet } from '@saberhq/solana-contrib'
 import type { Connection, Keypair } from '@solana/web3.js'
 import type { TokenData } from 'api/api'
@@ -7,6 +8,7 @@ import { DurationInput } from 'common/DurationInput'
 import { getQueryParam } from 'common/utils'
 import type { ProjectConfig } from 'config/config'
 import { useHandleRateRental } from 'handlers/useHandleRateRental'
+import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useEffect, useState } from 'react'
 import { FiSend } from 'react-icons/fi'
 import { PAYMENT_MINTS } from 'rental-components/common/Constants'
@@ -39,8 +41,8 @@ export const RentalRateCard = ({
   const [error, setError] = useState<string>()
   const [txid, setTxid] = useState<string>()
   const handleRateRental = useHandleRateRental()
+  const { environment } = useEnvironmentCtx()
 
-  // form
   const {
     extensionPaymentAmount,
     extensionPaymentMint,
@@ -49,7 +51,7 @@ export const RentalRateCard = ({
     maxExpiration,
   } = tokenData.timeInvalidator?.parsed || {}
 
-  const [paymentAmount, setPaymentAmount] = useState<number>(0)
+  const [paymentAmount, setPaymentAmount] = useState(new BN(0))
   const [currentExtensionSeconds, setCurrentExtensionSeconds] = useState<
     number | undefined | null
   >(0)
@@ -57,36 +59,19 @@ export const RentalRateCard = ({
   //   tokenData?.timeInvalidator?.parsed.extensionPaymentMint ?? undefined
   // )
 
-  console.log(currentExtensionSeconds)
-
   useEffect(() => {
-    currentExtensionSeconds &&
+    currentExtensionSeconds !== null &&
+      currentExtensionSeconds !== undefined &&
       setPaymentAmount(
-        ((extensionPaymentAmount?.toNumber() ?? 0) /
-          (extensionDurationSeconds?.toNumber() ?? 0)) *
-          currentExtensionSeconds
+        (extensionPaymentAmount ?? new BN(0))
+          .mul(new BN(currentExtensionSeconds))
+          .div(extensionDurationSeconds ?? new BN(1))
       )
   }, [
-    extensionPaymentAmount,
+    extensionPaymentAmount?.toNumber(),
     extensionDurationSeconds,
     currentExtensionSeconds,
   ])
-
-  const handlePaymentAmountChange = (value: number) => {
-    setPaymentAmount(value)
-    const extensionSeconds = paymentAmountToSeconds(value)
-    setCurrentExtensionSeconds(extensionSeconds)
-  }
-
-  const paymentAmountToSeconds = (paymentAmount: number) => {
-    return (
-      extensionDurationSeconds &&
-      extensionPaymentAmount &&
-      (extensionDurationSeconds.toNumber() /
-        extensionPaymentAmount.toNumber()) *
-        paymentAmount
-    )
-  }
 
   if (!extensionPaymentAmount || !extensionPaymentMint || !durationSeconds) {
     return <>Incorrect extension parameters</>
@@ -107,7 +92,7 @@ export const RentalRateCard = ({
   return (
     <div className="rounded-lg bg-dark-6 p-6">
       <div className="text-center text-xl text-light-0">
-        Rent out {tokenData.metadata?.data.name}
+        Rent {tokenData.metadata?.data.name}
       </div>
       <div
         className={`flex w-full justify-center gap-4 overflow-scroll overflow-x-auto py-4`}
@@ -149,6 +134,7 @@ export const RentalRateCard = ({
           <div>
             <div className="mb-1 text-base text-light-0">Rental duration</div>
             <DurationInput
+              defaultAmount={0}
               handleChange={(v) => setCurrentExtensionSeconds(v)}
             />
           </div>
@@ -156,10 +142,9 @@ export const RentalRateCard = ({
             <div className="mb-1 text-base text-light-0">Price</div>
             <MintPriceSelector
               price={paymentAmount}
-              handlePrice={handlePaymentAmountChange}
+              defaultPrice={paymentAmount}
+              defaultMint={extensionPaymentMint?.toString()}
               paymentMintData={PAYMENT_MINTS}
-              mint={extensionPaymentMint?.toString()}
-              handleMint={() => {}}
               disabled={true}
               mintDisabled={true}
             />
@@ -184,6 +169,22 @@ export const RentalRateCard = ({
         {exceedMaxExpiration() && (
           <Alert variant="error">Extension amount exceeds max expiration</Alert>
         )}
+        {txid && (
+          <Alert variant="success">
+            Congratulations! You have succesfully{' '}
+            {claim ? 'claimed ' : 'extended '}your rental with transaction shown{' '}
+            <a
+              className="text-blue-500"
+              href={`https://explorer.solana.com/tx/${txid}?cluster=${
+                environment.label?.toString() ?? ''
+              }`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              here
+            </a>
+          </Alert>
+        )}
         {error && (
           <Alert variant="error" showClose onClick={() => setError(undefined)}>
             {error}
@@ -194,7 +195,7 @@ export const RentalRateCard = ({
           className="h-12"
           disabled={
             exceedMaxExpiration() ||
-            (paymentAmount === 0 && extensionPaymentAmount.toNumber() !== 0)
+            (paymentAmount.isZero() && extensionPaymentAmount.toNumber() !== 0)
           }
           onClick={() =>
             handleRateRental.mutate(
