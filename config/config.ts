@@ -47,9 +47,9 @@ export type TokenSection = {
 }
 
 export type Badge = {
-  badgeType: 'recent' | 'trending'
+  badgeType: 'recent' | 'trending' | 'expiration'
   position?: 'top-right' | 'top-left' | 'bottom-left' | 'bottom-right'
-  content?: JSX.Element
+  content?: JSX.Element | string
 }
 
 export type ProjectConfig = {

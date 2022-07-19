@@ -28,7 +28,7 @@ export const Card: React.FC<Props> = ({
       {badges?.map(({ badgeType, position, content }, i) => (
         <div
           key={i}
-          className={`absolute right-6 top-6 rounded-md bg-dark-5 px-2 py-1 text-sm ${
+          className={`absolute z-20 rounded-md bg-dark-5 px-2 py-1 text-sm ${
             {
               'top-right': 'right-6 top-6',
               'top-left': 'left-6 top-6',
@@ -37,11 +37,14 @@ export const Card: React.FC<Props> = ({
             }[position ?? 'top-right']
           }`}
         >
-          {content ??
+          {
             {
               recent: <span className="text-primary">👋 Recently listed</span>,
               trending: <span className="text-primary">🔥 Trending</span>,
-            }[badgeType]}
+              expiration: <span className="text-light-0">⏰ {content}</span>,
+              content: { content },
+            }[badgeType]
+          }
         </div>
       ))}
       <div className="aspect-square w-full overflow-hidden rounded-lg">

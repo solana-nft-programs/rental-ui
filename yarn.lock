@@ -1349,10 +1349,26 @@
     tiny-invariant "^1.2.0"
     tslib "^2.3.1"
 
-"@cardinal/common@^2.0.1", "@cardinal/common@^2.0.4", "@cardinal/common@^2.0.5":
+"@cardinal/common@^2.0.1", "@cardinal/common@^2.0.4":
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/@cardinal/common/-/common-2.0.5.tgz#562634f3517cf03d7f462e7b7cf9f05fd4c28b22"
   integrity sha512-SGW9czHaCVICz3P2qtn0JtW5uY+0LxkrutI2N27+FgRmfx84QdocRv5LtMWcSVYifVEMUFgayKMqgmbfbaUJcA==
+  dependencies:
+    "@metaplex-foundation/mpl-token-metadata" "^1.2.5"
+    "@project-serum/anchor" "^0.24.2"
+    "@saberhq/anchor-contrib" "^1.12.48"
+    "@saberhq/solana-contrib" "^1.12.48"
+    "@saberhq/token-utils" "^1.12.48"
+    "@solana/buffer-layout" "^4.0.0"
+    "@solana/spl-token" "^0.1.8"
+    "@ubeswap/token-math" "^4.4.4"
+    tiny-invariant "^1.2.0"
+    tslib "^2.3.1"
+
+"@cardinal/common@^2.0.6":
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/@cardinal/common/-/common-2.0.6.tgz#6ae8a2658139fe8657d74a3b785efc5e77c04ac0"
+  integrity sha512-7CZfDBMkgWUleYmOuyldHxOur+oPdXyT1egfft5N/jkERlqfqvE7VVUKA3vnWkCB657LhZIrzEneQHegOVgFFg==
   dependencies:
     "@metaplex-foundation/mpl-token-metadata" "^1.2.5"
     "@project-serum/anchor" "^0.24.2"
