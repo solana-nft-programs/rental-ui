@@ -39,7 +39,7 @@ export const HeaderSlim: React.FC<Props> = ({ tabs, loading }: Props) => {
   return (
     <div className="w-full px-4 py-4">
       <div className="flex min-h-[72px] flex-wrap items-center justify-center gap-4 rounded-xl bg-white bg-opacity-5 py-4 px-8 lg:justify-between">
-        <div className="flex items-center gap-5">
+        <div className="flex w-56 items-center gap-5">
           <div className="flex items-center">
             <img
               alt="Cardinal logo"
@@ -94,9 +94,11 @@ export const HeaderSlim: React.FC<Props> = ({ tabs, loading }: Props) => {
                     >
                       {name}
                     </div>
-                    {tab === anchor && (
-                      <div className="h-1 w-1 rounded-full bg-light-0"></div>
-                    )}
+                    <div
+                      className={`h-1 w-1 rounded-full ${
+                        tab === anchor ? 'bg-light-0' : ''
+                      }`}
+                    ></div>
                   </div>
                 </Tooltip>
               ))}
@@ -107,13 +109,15 @@ export const HeaderSlim: React.FC<Props> = ({ tabs, loading }: Props) => {
           )}
         </div>
         {wallet.connected && wallet.publicKey ? (
-          <AccountConnect
-            dark={true}
-            connection={secondaryConnection}
-            environment={environment.label}
-            handleDisconnect={() => wallet.disconnect()}
-            wallet={asWallet(wallet)}
-          />
+          <div className="flex w-56 justify-end">
+            <AccountConnect
+              dark={true}
+              connection={secondaryConnection}
+              environment={environment.label}
+              handleDisconnect={() => wallet.disconnect()}
+              wallet={asWallet(wallet)}
+            />
+          </div>
         ) : (
           <ButtonSmall onClick={() => walletModal.setVisible(true)}>
             <>
