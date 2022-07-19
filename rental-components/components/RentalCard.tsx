@@ -36,6 +36,7 @@ import {
   shortDateString,
   shortPubKey,
 } from 'common/utils'
+import { useHandleIssueRental } from 'handlers/useHandleIssueRental'
 import { usePaymentMints } from 'hooks/usePaymentMints'
 import { useUserTokenData } from 'hooks/useUserTokenData'
 import moment from 'moment'
@@ -176,6 +177,7 @@ export const RentalCard = ({
   const [selectedTokenDatas, setSelectedTokenDatas] =
     useState<TokenData[]>(tokenDatas)
   const [totalTokens, setTotalTokens] = useState(tokenDatas.length)
+  const handleIssueRental = useHandleIssueRental()
 
   if (
     userTokenData.data &&
@@ -273,17 +275,16 @@ export const RentalCard = ({
   const [extensionDurationOption, setExtensionDurationOption] =
     useState<DurationOption>(defaultDurationOption)
   const [extensionMaxExpiration, setExtensionMaxExpiration] = useState<
-    number | null
+    number | undefined
   >(
     rentalCardConfig.invalidationOptions?.maxDurationAllowed?.value
       ? Date.now() / 1000 +
           rentalCardConfig.invalidationOptions?.maxDurationAllowed?.value
-      : null
+      : undefined
   )
-  const [disablePartialExtension, setDisablePartialExtension] = useState<
-    boolean | null
-  >(null)
-  const [totalUsages, setTotalUsages] = useState<number | null>(null)
+  const [disablePartialExtension, setDisablePartialExtension] =
+    useState<boolean>()
+  const [totalUsages, setTotalUsages] = useState<number>()
   const [visibility, setVisibiliy] =
     useState<VisibilityOption>(defaultVisibility)
   const [invalidationType, setInvalidationType] = useState(
@@ -313,16 +314,16 @@ export const RentalCard = ({
       setDurationAmount(null)
     }
     if (!selectedInvalidators.includes('expiration')) {
-      setExtensionMaxExpiration(null)
+      setExtensionMaxExpiration(undefined)
     }
     if (!selectedInvalidators.includes('manual')) {
       setCustomInvalidator(undefined)
     }
     if (!selectedInvalidators.includes('usages')) {
-      setTotalUsages(null)
+      setTotalUsages(undefined)
     }
     if (!selectedInvalidators.includes('rate')) {
-      setExtensionMaxExpiration(null)
+      setExtensionMaxExpiration(undefined)
       setExtensionDurationAmount(null)
     }
     if (selectedInvalidators.includes('rate')) {
@@ -341,7 +342,7 @@ export const RentalCard = ({
         rentalCardConfig.invalidationOptions?.maxDurationAllowed?.value
           ? Date.now() / 1000 +
               rentalCardConfig.invalidationOptions?.maxDurationAllowed?.value
-          : null
+          : undefined
       )
     }
   }, [selectedInvalidators])
@@ -848,14 +849,16 @@ export const RentalCard = ({
                 /> */}
                   <DatePicker
                     className="rounded-[4px] bg-dark-4"
-                    defaultValue={
+                    value={
                       extensionMaxExpiration
                         ? moment(extensionMaxExpiration * 1000)
                         : undefined
                     }
                     showTime
                     onChange={(e) =>
-                      setExtensionMaxExpiration(e ? e.valueOf() / 1000 : null)
+                      setExtensionMaxExpiration(
+                        e ? e.valueOf() / 1000 : undefined
+                      )
                     }
                   />
                 </div>
@@ -932,7 +935,9 @@ export const RentalCard = ({
                     }}
                     showTime
                     onChange={(e) =>
-                      setExtensionMaxExpiration(e ? e.valueOf() / 1000 : null)
+                      setExtensionMaxExpiration(
+                        e ? e.valueOf() / 1000 : undefined
+                      )
                     }
                   />
                 </div>
@@ -1070,7 +1075,7 @@ export const RentalCard = ({
                               showTime
                               onChange={(e) =>
                                 setExtensionMaxExpiration(
-                                  e ? e.valueOf() / 1000 : null
+                                  e ? e.valueOf() / 1000 : undefined
                                 )
                               }
                             />
@@ -1318,8 +1323,61 @@ export const RentalCard = ({
                   (totalListed === selectedTokenDatas.length ||
                     selectedTokenDatas.length === 0))
               }
+              loading={handleIssueRental.isLoading}
               onClick={async () => {
-                link ? handleCopy(link) : await handleRental()
+                link
+                  ? handleCopy(link)
+                  : handleIssueRental.mutate(
+                      {
+                        tokenDatas: selectedTokenDatas,
+                        rentalCardConfig,
+                        price,
+                        paymentMint,
+                        durationSeconds:
+                          durationAmount && durationData[durationOption]
+                            ? durationAmount * durationData[durationOption]!
+                            : undefined,
+                        maxExpiration: extensionMaxExpiration,
+                        extensionPaymentMint,
+                        extensionPaymentAmount,
+                        extensionDurationSeconds:
+                          extensionDurationAmount &&
+                          durationData[extensionDurationOption]
+                            ? extensionDurationAmount *
+                              durationData[extensionDurationOption]!
+                            : undefined,
+                        totalUsages: totalUsages ?? undefined,
+                        invalidationType,
+                        visibility,
+                        customInvalidator: customInvalidator ?? undefined,
+                        disablePartialExtension,
+                        claimRentalReceipt,
+                      },
+                      {
+                        onSuccess: ({
+                          otpKeypairs,
+                          tokenManagerIds,
+                          totalSuccessfulTransactions,
+                        }) => {
+                          setTotalListed(totalSuccessfulTransactions)
+                          setTotalTokens(tokenDatas.length)
+                          if (tokenDatas.length === 1 && tokenManagerIds[0]) {
+                            const link = claimLinks.getLink(
+                              tokenManagerIds[0],
+                              otpKeypairs[0],
+                              cluster,
+                              getLink('/claim', false)
+                            )
+                            setLink(link)
+                          } else {
+                            setLink('success')
+                          }
+                        },
+                        onError: (e) => {
+                          setError(`${e}`)
+                        },
+                      }
+                    )
               }}
             >
               {link && link !== 'success' ? (

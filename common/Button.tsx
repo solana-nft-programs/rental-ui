@@ -8,6 +8,7 @@ type Props = {
   className?: string
   variant: 'primary' | 'secondary' | 'tertiary'
   disabled?: boolean
+  loading?: boolean
   onClick?: () => void
 }
 
@@ -19,9 +20,10 @@ export const Button: React.FC<Props> = ({
   count,
   disabled,
   variant,
+  loading,
   ...rest
 }: Props) => {
-  const [loading, setLoading] = useState(false)
+  const [loadingClick, setLoadingClick] = useState(false)
 
   return (
     <div
@@ -36,14 +38,14 @@ export const Button: React.FC<Props> = ({
       onClick={async () => {
         if (!onClick || disabled) return
         try {
-          setLoading(true)
+          setLoadingClick(true)
           await onClick()
         } finally {
-          setLoading(false)
+          setLoadingClick(false)
         }
       }}
     >
-      {loading ? (
+      {loading || loadingClick ? (
         <LoadingSpinner height="25px" />
       ) : (
         <div className="flex items-center justify-center gap-1">
