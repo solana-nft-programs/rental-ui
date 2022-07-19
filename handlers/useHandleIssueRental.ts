@@ -65,24 +65,20 @@ export const useHandleIssueRental = () => {
       otpKeypairs: (Keypair | undefined)[]
       totalSuccessfulTransactions: number
     }> => {
-      // console.log(
-      //   extensionDurationSeconds,
-      //   extensionPaymentAmount,
-      //   extensionPaymentMint
-      // )
-      // if (
-      //   (extensionPaymentAmount !== undefined ||
-      //     extensionDurationSeconds !== undefined) &&
-      //   (extensionPaymentAmount === undefined ||
-      //     extensionDurationSeconds === undefined ||
-      //     extensionPaymentMint === undefined)
-      // ) {
-      //   throw 'Please fill out all extension time and price fields'
-      // }
       if (!wallet.publicKey) {
         throw 'Wallet not connected'
       }
       if (rentalCardConfig.invalidationOptions?.maxDurationAllowed) {
+        if (
+          durationSeconds &&
+          durationSeconds >
+            rentalCardConfig.invalidationOptions?.maxDurationAllowed.value
+        ) {
+          throw (
+            'Duration of rental exceeds max allowed. Max duration allowed is ' +
+            rentalCardConfig.invalidationOptions?.maxDurationAllowed.displayText
+          )
+        }
         if (
           extensionDurationSeconds &&
           extensionDurationSeconds >
@@ -95,7 +91,7 @@ export const useHandleIssueRental = () => {
         }
         if (
           maxExpiration &&
-          maxExpiration - Date.now() >
+          maxExpiration - Date.now() / 1000 >
             rentalCardConfig.invalidationOptions?.maxDurationAllowed.value
         ) {
           throw (
@@ -200,7 +196,7 @@ export const useHandleIssueRental = () => {
             : undefined,
         }
 
-        console.log(issueParams)
+        console.log('----', issueParams)
         const [issueTransaction, tokenManagerId, otpKeypair] = await issueToken(
           connection,
           asWallet(wallet),
