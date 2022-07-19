@@ -14,7 +14,7 @@ export const Alert: React.FC<Props> = ({
   return {
     error: (
       <div
-        className="relative flex cursor-pointer items-center justify-center rounded-md border-[1px] border-red-500 bg-red-500 bg-opacity-25 p-4"
+        className="relative flex cursor-pointer items-center justify-center rounded-md border-[1px] border-red-500 bg-red-500 bg-opacity-25 p-4 text-light-2"
         onClick={onClick}
       >
         <div style={{ wordBreak: 'break-word' }}>{children}</div>
