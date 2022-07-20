@@ -64,6 +64,7 @@ export type ProjectConfig = {
   displayName: string
   websiteUrl: string
   hero?: string
+  description?: string
   logoImage: string
   colors: Colors
   badges?: Badge[]
@@ -625,6 +626,8 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     type: 'Collection',
     websiteUrl: 'https://miniroyale.io/',
     hero: '/logos/miniroyale-hero.png',
+    description:
+      'MiniRoyale is a web browser game with battle royale game mode. The game comes with 3D graphics and unique style.',
     logoImage: '/logos/miniroyale.png',
     colors: {
       main: '#192836',

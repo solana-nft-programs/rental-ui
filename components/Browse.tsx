@@ -14,7 +14,7 @@ import { ButtonSmall } from 'common/ButtonSmall'
 import { Card } from 'common/Card'
 import { Glow } from 'common/Glow'
 import { HeaderSlim } from 'common/HeaderSlim'
-import { HeroSmall } from 'common/HeroSmall'
+import { HeroLarge } from 'common/HeroLarge'
 import { Info } from 'common/Info'
 import { MultiSelector } from 'common/MultiSelector'
 import { getAllAttributes, NFT, stateColor } from 'common/NFT'
@@ -208,7 +208,7 @@ export function getTokenRentalRate(
   }
 }
 
-const getPriceFromTokenData = (
+export const getPriceFromTokenData = (
   tokenData: TokenData,
   paymentMintInfos: { [name: string]: splToken.MintInfo }
 ): number => {
@@ -512,7 +512,9 @@ export const Browse = () => {
           { name: 'Browse', anchor: 'browse' },
         ]}
       />
-      <HeroSmall tokens={tokenManagers.data ? filteredAndSortedTokens : []} />
+      <HeroLarge
+        tokenDatas={tokenManagers.data ? filteredAndSortedTokens : []}
+      />
       <div className="mx-10 mt-4 flex items-end gap-[4px] text-light-0">
         <div>Results</div>
         <div className="relative top-[0.6px] text-medium-4">
@@ -590,9 +592,7 @@ export const Browse = () => {
                               ? config.colors.secondary
                               : ''};
                           `}
-                        >
-                          {}
-                        </div>
+                        />
                         <div>{value}</div>
                       </div>
                       <div></div>
