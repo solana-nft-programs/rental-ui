@@ -6,6 +6,7 @@ import {
   getSymbolFromTokenData,
 } from 'components/Browse'
 import type { ProjectConfig } from 'config/config'
+import { useFilteredTokenManagers } from 'hooks/useFilteredTokenManagers'
 import { usePaymentMints } from 'hooks/usePaymentMints'
 import { useProjectStats } from 'hooks/useProjectStats'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
@@ -86,16 +87,14 @@ const calculateFloorPrice = (
   return Math.min(...rentalPrices)
 }
 
-interface Props extends React.HTMLAttributes<HTMLDivElement> {
-  tokenDatas?: TokenData[]
-}
-export const HeroStats: React.FC<Props> = ({
-  tokenDatas,
+export const HeroStats: React.FC = ({
   className,
-}: Props) => {
+}: React.HTMLAttributes<HTMLDivElement>) => {
   const { config } = useProjectConfig()
   const projectStats = useProjectStats()
   const paymentMints = usePaymentMints()
+  const tokenManagers = useFilteredTokenManagers()
+  const tokenDatas = tokenManagers.data ?? []
   return (
     <div className={`flex ${className}`}>
       <div className="flex flex-col items-center justify-center px-16">
