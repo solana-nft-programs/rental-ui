@@ -14,6 +14,7 @@ import { Info } from 'common/Info'
 import { MultiSelector } from 'common/MultiSelector'
 import { NFT } from 'common/NFT'
 import {
+  filterTokensByAttributes,
   getAllAttributes,
   getNFTAtrributeFilters,
 } from 'common/NFTAttributeFilters'
@@ -208,40 +209,6 @@ const getPriceOrRentalRate = (
   }
 }
 
-export const filterTokensByAttributes = (
-  tokens: TokenData[],
-  filters: { [filterName: string]: string[] }
-): TokenData[] => {
-  if (
-    Object.keys(filters).length <= 0 ||
-    Object.values(filters).filter((v) => v.length > 0).length <= 0
-  ) {
-    return tokens
-  }
-  const attributeFilteredTokens: TokenData[] = []
-  tokens.forEach((token) => {
-    let addToken = false
-    Object.keys(filters).forEach((filterName) => {
-      if (filters[filterName]!.length > 0) {
-        filters[filterName]!.forEach((val) => {
-          if (
-            token.metadata?.data.attributes.filter(
-              (a: { trait_type: string; value: any }) =>
-                a.trait_type === filterName && a.value === val
-            ).length > 0
-          ) {
-            addToken = true
-          }
-        })
-      }
-    })
-    if (addToken) {
-      attributeFilteredTokens.push(token)
-    }
-  })
-  return attributeFilteredTokens
-}
-
 const getRentalDuration = (tokenData: TokenData, UTCNow: number) => {
   if (tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber() === 0) {
     return getTokenMaxDuration(tokenData, UTCNow).value
@@ -349,6 +316,7 @@ export const Browse = () => {
       },
       config.sections ?? [
         {
+          id: 'available',
           header: 'Available',
           icon: 'info',
           description:
@@ -360,6 +328,7 @@ export const Browse = () => {
           showEmpty: true,
         },
         {
+          id: 'claimed',
           header: 'Claimed',
           icon: 'info',
           description: 'All currently claimed rentals are displayed below',
@@ -402,21 +371,22 @@ export const Browse = () => {
       <HeaderSlim
         loading={tokenManagers.isFetched && tokenManagers.isRefetching}
         tabs={[
-          {
-            name: 'Wallet',
-            anchor: wallet.publicKey?.toBase58() || 'wallet',
-            disabled: !wallet.connected,
-            tooltip: !wallet.connected ? 'Connect wallet' : undefined,
-          },
+          // {
+          //   name: 'Wallet',
+          //   anchor: wallet.publicKey?.toBase58() || 'wallet',
+          //   disabled: !wallet.connected,
+          //   tooltip: !wallet.connected ? 'Connect wallet' : undefined,
+          // },
+          { name: 'Browse', anchor: 'browse' },
           {
             name: 'Manage',
             anchor: 'manage',
             disabled: !wallet.connected || config.disableListing,
             tooltip: !wallet.connected ? 'Connect wallet' : undefined,
           },
-          { name: 'Browse', anchor: 'browse' },
         ]}
       />
+
       <HeroLarge
         tokenDatas={tokenManagers.data ? filteredAndSortedTokens : []}
       />

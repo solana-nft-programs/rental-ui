@@ -2,7 +2,6 @@ import { firstParam } from '@cardinal/common'
 import { Footer } from 'common/Footer'
 import { Browse } from 'components/Browse'
 import { Manage } from 'components/Manage'
-import { Wallet } from 'components/Wallet'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
@@ -59,16 +58,11 @@ export default function Home() {
       </Head>
       <div style={{ minHeight: 'calc(100vh - 337px)' }}>
         {(() => {
-          if (!tab) return <Browse />
-          else {
-            switch (tab) {
-              case 'browse':
-                return <Browse />
-              case 'manage':
-                return <Manage />
-              default:
-                return <Wallet />
-            }
+          switch (tab) {
+            case 'manage':
+              return <Manage />
+            default:
+              return <Browse />
           }
         })()}
       </div>

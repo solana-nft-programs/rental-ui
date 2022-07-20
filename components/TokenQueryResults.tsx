@@ -7,9 +7,9 @@ import { Glow } from 'common/Glow'
 import { Info } from 'common/Info'
 import { MultiSelector } from 'common/MultiSelector'
 import { elligibleForRent, NFT } from 'common/NFT'
+import type { NFTAtrributeFilterValues } from 'common/NFTAttributeFilters'
 import {
   filterTokensByAttributes,
-  getAllAttributes,
   getNFTAtrributeFilters,
 } from 'common/NFTAttributeFilters'
 import { NFTHeader } from 'common/NFTHeader'
@@ -29,8 +29,9 @@ import { tokenGroups } from './Manage'
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   setSelectedGroup: (id: ManageTokenGroupId) => void
-  useTokenQuery: () => () => UseQueryResult<TokenData[], unknown>
+  tokenQuery: UseQueryResult<TokenData[], unknown>
   tokenGroup: ManageTokenGroup
+  attributeFilterOptions: NFTAtrributeFilterValues
 }
 
 const isSelected = (tokenData: TokenData, selectedTokens: TokenData[]) => {
@@ -41,20 +42,19 @@ const isSelected = (tokenData: TokenData, selectedTokens: TokenData[]) => {
   )
 }
 
-export const ManageAll: React.FC<Props> = ({
+export const TokenQueryResults: React.FC<Props> = ({
   setSelectedGroup,
-  useTokenQuery,
+  tokenQuery,
   tokenGroup,
+  attributeFilterOptions,
 }: Props) => {
   const { config } = useProjectConfig()
   const walletId = useWalletId()
-  const tokenQuery = useTokenQuery()()
+
   const [selectedTokens, setSelectedTokens] = useState<TokenData[]>([])
-  const [selectedFilters, setSelectedFilters] = useState<{
-    [filterName: string]: string[]
-  }>({})
+  const [selectedFilters, setSelectedFilters] =
+    useState<NFTAtrributeFilterValues>({})
   const allTokens = tokenQuery.data ?? []
-  const sortedAttributes = getAllAttributes(allTokens)
   const filteredAndSortedTokens = filterTokensByAttributes(
     allTokens,
     selectedFilters
@@ -83,6 +83,7 @@ export const ManageAll: React.FC<Props> = ({
               value: g.id,
             }))}
             onChange={(o) => {
+              setSelectedTokens([])
               setSelectedGroup(o.value)
             }}
           />
@@ -104,7 +105,7 @@ export const ManageAll: React.FC<Props> = ({
             }
             groups={getNFTAtrributeFilters({
               config,
-              sortedAttributes,
+              sortedAttributes: attributeFilterOptions,
               selectedFilters,
               setSelectedFilters,
             })}

@@ -25,7 +25,7 @@ export const SelecterDrawer: React.FC<Props> = ({
   return (
     <div
       className={`fixed z-30 flex w-full items-center justify-between gap-4 bg-dark-6 px-4 py-8 transition-all lg:px-12 ${
-        selectedTokens.length > 0 ? 'bottom-0' : '-bottom-32'
+        selectedTokens.length > 0 ? 'bottom-0' : '-bottom-52'
       }`}
       css={css`
         box-shadow: 0px 144px 100px 200px rgba(12, 12, 13, 1);
