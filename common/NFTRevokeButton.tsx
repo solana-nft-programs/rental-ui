@@ -4,8 +4,8 @@ import { useWallet } from '@solana/wallet-adapter-react'
 import type { TokenData } from 'api/api'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useUTCNow } from 'providers/UTCNowProvider'
-import { AsyncButton } from 'rental-components/common/Button'
 
+import { ButtonSmall } from './ButtonSmall'
 import { executeTransaction } from './Transactions'
 import { asWallet } from './Wallets'
 
@@ -41,10 +41,9 @@ export const NFTRevokeButton: React.FC<NFTRevokeButtonProps> = ({
           tokenData.useInvalidator.parsed.usages.gte(
             tokenData.useInvalidator.parsed.maxUsages
           ))) && (
-        <AsyncButton
-          variant="primary"
+        <ButtonSmall
           disabled={!wallet.connected}
-          handleClick={async () => {
+          onClick={async () => {
             tokenData?.tokenManager &&
               executeTransaction(
                 connection,
@@ -62,7 +61,7 @@ export const NFTRevokeButton: React.FC<NFTRevokeButtonProps> = ({
           }}
         >
           Revoke
-        </AsyncButton>
+        </ButtonSmall>
       )}
     </>
   )

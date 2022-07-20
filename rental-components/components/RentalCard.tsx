@@ -141,9 +141,7 @@ export type RentalCardProps = {
 }
 
 export const RentalCard = ({
-  appName,
   cluster,
-  connection,
   wallet,
   tokenDatas,
   rentalCardConfig,

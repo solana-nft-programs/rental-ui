@@ -1,22 +1,12 @@
-import type { Wallet } from '@saberhq/solana-contrib'
-import type { Connection, Keypair } from '@solana/web3.js'
+import type { Keypair } from '@solana/web3.js'
 import type { TokenData } from 'api/api'
 import { Modal } from 'common/Modal'
-import { withSleep } from 'common/utils'
-import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import React, { useContext, useState } from 'react'
 
 import { RentalRateCard } from './components/RentalRateCard'
 
 interface RentalRateModal {
-  show: (
-    wallet: Wallet,
-    connection: Connection,
-    cluster: string,
-    tokenData: TokenData,
-    claim?: boolean,
-    otpKeypair?: Keypair
-  ) => void
+  show: (tokenData: TokenData, claim?: boolean, otpKeypair?: Keypair) => void
   showRentalRateModal: boolean
   tokenData: TokenData | undefined
 }
@@ -30,22 +20,15 @@ interface Props {
 export const RentalRateModalProvider: React.FC<Props> = ({
   children,
 }: Props) => {
-  const [wallet, setWallet] = useState<Wallet | null>(null)
-  const [connection, setConnection] = useState<Connection | null>(null)
-  const [cluster, setCluster] = useState<string | undefined>(undefined)
   const [showRentalRateModal, setShowRentalRateModal] = useState<boolean>(false)
   const [tokenData, setTokenData] = useState<TokenData | undefined>(undefined)
-  const [claim, setClaim] = useState(true)
   const [otpKeypair, setOtpKeypair] = useState<Keypair | undefined>(undefined)
-  const { config } = useProjectConfig()
+  const [claim, setClaim] = useState(true)
 
   return (
     <RentalRateModalContext.Provider
       value={{
-        show: (wallet, connection, cluster, tokenData, claim, otpKeypair) => {
-          setWallet(wallet)
-          setConnection(connection)
-          setCluster(cluster)
+        show: (tokenData, claim, otpKeypair) => {
           setTokenData(tokenData)
           setShowRentalRateModal(true)
           setClaim(claim ?? false)
@@ -59,22 +42,11 @@ export const RentalRateModalProvider: React.FC<Props> = ({
         isOpen={showRentalRateModal}
         onDismiss={() => setShowRentalRateModal(false)}
       >
-        {wallet && connection && (
-          <RentalRateCard
-            cluster={cluster}
-            wallet={wallet}
-            connection={connection}
-            tokenData={tokenData || {}}
-            config={config}
-            claim={claim}
-            otpKeypair={otpKeypair}
-            onComplete={() => {
-              withSleep(() => {
-                setShowRentalRateModal(false)
-              }, 1000)
-            }}
-          />
-        )}
+        <RentalRateCard
+          claim={claim}
+          tokenData={tokenData || {}}
+          otpKeypair={otpKeypair}
+        />
       </Modal>
       {children}
     </RentalRateModalContext.Provider>
