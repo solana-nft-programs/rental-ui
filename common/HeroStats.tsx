@@ -87,7 +87,7 @@ const calculateFloorPrice = (
   return Math.min(...rentalPrices)
 }
 
-export const HeroStats: React.FC = ({
+export const HeroStats: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   className,
 }: React.HTMLAttributes<HTMLDivElement>) => {
   const { config } = useProjectConfig()
@@ -96,8 +96,8 @@ export const HeroStats: React.FC = ({
   const tokenManagers = useFilteredTokenManagers()
   const tokenDatas = tokenManagers.data ?? []
   return (
-    <div className={`flex ${className}`}>
-      <div className="flex flex-col items-center justify-center px-16">
+    <div className={`flex flex-wrap ${className}`}>
+      <div className="flex flex-col items-center justify-center">
         <div className="text-lg text-medium-4">Floor price</div>
         {!tokenDatas || !paymentMints.data ? (
           <div className="h-5 w-10 animate-pulse rounded-md bg-border"></div>
@@ -118,8 +118,8 @@ export const HeroStats: React.FC = ({
           </div>
         )}
       </div>
-      <div className="my-auto h-10 w-[1px] bg-border"></div>
-      <div className="flex-col px-16">
+      <div className="mx-4 my-auto h-10 w-[1px] bg-border lg:mx-16"></div>
+      <div className="flex-col">
         <p className="text-lg text-medium-4">Listed</p>
         {!tokenDatas ? (
           <div className="h-5 w-10 animate-pulse rounded-md bg-border"></div>
@@ -134,8 +134,8 @@ export const HeroStats: React.FC = ({
         <>
           {projectStats.data?.totalRentalCount && (
             <>
-              <div className="my-auto h-10 w-[1px] bg-border"></div>
-              <div className="flex-col px-16">
+              <div className="mx-4 my-auto h-10 w-[1px] bg-border lg:mx-16"></div>
+              <div className="flex-col">
                 <p className="text-lg text-medium-4">Total rentals</p>
                 {!projectStats.data ? (
                   <div className="h-5 w-10 animate-pulse rounded-md bg-border"></div>
@@ -150,7 +150,7 @@ export const HeroStats: React.FC = ({
           {projectStats.data?.totalRentalDuration && (
             <>
               <div className="my-3 w-[1px]"></div>
-              <div className="flex-col px-16">
+              <div className="flex-col">
                 <p className="text-lg text-medium-4">
                   TOTAL DURATION (ALL-TIME)
                 </p>
@@ -163,7 +163,7 @@ export const HeroStats: React.FC = ({
           {projectStats.data?.totalRentalVolume && (
             <>
               <div className="my-3 w-[1px]"></div>
-              <div className="flex-col px-16">
+              <div className="flex-col">
                 <p className="text-lg text-medium-4">TOTAL VOLUME (ALL-TIME)</p>
                 <div className="text-center text-xl text-light-1">
                   {secondsToString(projectStats.data?.totalRentalVolume)} ◎
