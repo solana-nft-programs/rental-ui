@@ -233,6 +233,85 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     ],
     marketplaceRate: 'days',
   },
+  miniroyale: {
+    name: 'miniroyale',
+    displayName: 'Mini Royale',
+    type: 'Collection',
+    websiteUrl: 'https://miniroyale.io/',
+    hero: '/logos/miniroyale-hero.png',
+    description:
+      'MiniRoyale is a web browser game with battle royale game mode. The game comes with 3D graphics and unique style.',
+    logoImage: '/logos/miniroyale.png',
+    colors: {
+      main: '#192836',
+      secondary: '#FFB60C',
+    },
+    socialLinks: [
+      {
+        icon: 'discord',
+        link: 'https://discord.com/invite/miniroyale',
+      },
+      {
+        icon: 'web',
+        link: 'https://miniroyale.io/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/MiniNations',
+      },
+    ],
+    badges: [{ badgeType: 'trending' }],
+    filter: {
+      type: 'creators',
+      value: [
+        'CbPuZtVMAWwPySvsUAEbZhe8y9rkeAZ5qLhsGBVvtau9',
+        'EpgYkzyAXPDq11G5ngctWcjq7pKSfUtEnjVcYPs2jhGY',
+        'EoYTpE5HuTaXkN2AWDAgGA3JbhtPdeqnUiY9rdG7hMf',
+        '3TVyY5Tw9CuKj7EJwaawacDqBM5jnbeL1kRUvhDPvxH4',
+        'GgT69RnQwQhE8cmnTivRHSPfvXwd3HirdbnHQBaHgqwt',
+        '4hgG6XRBwGNsFpuCnBJMGi9iQteWmULM4nX6zSsgDKgz',
+      ],
+    },
+    rentalCard: {
+      paymentManager: 'mainnet-cardinal-mini-royale',
+      invalidators: ['rate'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['minutes', 'hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '3 weeks',
+          value: 7258000,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+    airdrops: [
+      {
+        name: 'Miniverse Hero #03016',
+        symbol: 'MINIROYALE',
+        uri: 'https://arweave.net/QfhzPB4a2txBl1Myumyq4431klq6HjDUwacPfS07W4Y',
+      },
+      {
+        name: 'Miniverse Weapon #184776',
+        symbol: 'MINIROYALE',
+        uri: 'https://arweave.net/amSCKytNSZy5cxuoJx-PSY0qMQK6ZAZzD4QnzyMzvBk',
+      },
+      {
+        name: 'Miniverse Hero #0720',
+        symbol: 'MINIROYALE',
+        uri: 'https://bafybeiat55vtqutsbtyz5u3ufjru7iiv6giete4bdu3mbgqhaxjvnelc7u.ipfs.nftstorage.link/89.json',
+      },
+      {
+        name: 'Miniverse Weapon #27339',
+        symbol: 'MINIROYALE',
+        uri: 'https://tokens.miniroyale.io/token-data?expires=4806495451&id=904c950a-309b-4fee-9bd4-504771ed2df9&token=BhknUWE6vXAElVhxWKE-YX6_4_acumpPP8q3ZQnsvR8',
+      },
+    ],
+  },
   portals: {
     name: 'portals',
     displayName: 'Portals',
@@ -619,85 +698,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         name: 'Thugbirdz',
         symbol: 'THUG',
         uri: 'https://arweave.net/l9VXqVWCsiKW-R8ShX8jknFPgBibrhQI1JRgUI9uvbw',
-      },
-    ],
-  },
-  miniroyale: {
-    name: 'miniroyale',
-    displayName: 'Mini Royale',
-    type: 'Collection',
-    websiteUrl: 'https://miniroyale.io/',
-    hero: '/logos/miniroyale-hero.png',
-    description:
-      'MiniRoyale is a web browser game with battle royale game mode. The game comes with 3D graphics and unique style.',
-    logoImage: '/logos/miniroyale.png',
-    colors: {
-      main: '#192836',
-      secondary: '#FFB60C',
-    },
-    socialLinks: [
-      {
-        icon: 'discord',
-        link: 'https://discord.com/invite/miniroyale',
-      },
-      {
-        icon: 'web',
-        link: 'https://miniroyale.io/',
-      },
-      {
-        icon: 'twitter',
-        link: 'https://twitter.com/MiniNations',
-      },
-    ],
-    badges: [{ badgeType: 'trending' }],
-    filter: {
-      type: 'creators',
-      value: [
-        'CbPuZtVMAWwPySvsUAEbZhe8y9rkeAZ5qLhsGBVvtau9',
-        'EpgYkzyAXPDq11G5ngctWcjq7pKSfUtEnjVcYPs2jhGY',
-        'EoYTpE5HuTaXkN2AWDAgGA3JbhtPdeqnUiY9rdG7hMf',
-        '3TVyY5Tw9CuKj7EJwaawacDqBM5jnbeL1kRUvhDPvxH4',
-        'GgT69RnQwQhE8cmnTivRHSPfvXwd3HirdbnHQBaHgqwt',
-        '4hgG6XRBwGNsFpuCnBJMGi9iQteWmULM4nX6zSsgDKgz',
-      ],
-    },
-    rentalCard: {
-      paymentManager: 'mainnet-cardinal-mini-royale',
-      invalidators: ['rate'],
-      invalidationOptions: {
-        visibilities: ['public', 'private'],
-        durationOptions: ['minutes', 'hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
-        paymentMints: ['So11111111111111111111111111111111111111112'],
-        showClaimRentalReceipt: false,
-        setClaimRentalReceipt: false,
-        maxDurationAllowed: {
-          displayText: '3 weeks',
-          value: 7258000,
-        },
-      },
-    },
-    marketplaceRate: 'days',
-    airdrops: [
-      {
-        name: 'Miniverse Hero #03016',
-        symbol: 'MINIROYALE',
-        uri: 'https://arweave.net/QfhzPB4a2txBl1Myumyq4431klq6HjDUwacPfS07W4Y',
-      },
-      {
-        name: 'Miniverse Weapon #184776',
-        symbol: 'MINIROYALE',
-        uri: 'https://arweave.net/amSCKytNSZy5cxuoJx-PSY0qMQK6ZAZzD4QnzyMzvBk',
-      },
-      {
-        name: 'Miniverse Hero #0720',
-        symbol: 'MINIROYALE',
-        uri: 'https://bafybeiat55vtqutsbtyz5u3ufjru7iiv6giete4bdu3mbgqhaxjvnelc7u.ipfs.nftstorage.link/89.json',
-      },
-      {
-        name: 'Miniverse Weapon #27339',
-        symbol: 'MINIROYALE',
-        uri: 'https://tokens.miniroyale.io/token-data?expires=4806495451&id=904c950a-309b-4fee-9bd4-504771ed2df9&token=BhknUWE6vXAElVhxWKE-YX6_4_acumpPP8q3ZQnsvR8',
       },
     ],
   },
