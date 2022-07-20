@@ -13,6 +13,7 @@ import { Tooltip } from './Tooltip'
 import { asWallet } from './Wallets'
 
 type Props = {
+  homeButton?: boolean
   tabs?: {
     disabled?: boolean
     name: string
@@ -22,7 +23,11 @@ type Props = {
   loading?: boolean
 }
 
-export const HeaderSlim: React.FC<Props> = ({ tabs, loading }: Props) => {
+export const HeaderSlim: React.FC<Props> = ({
+  tabs,
+  loading,
+  homeButton,
+}: Props) => {
   const router = useRouter()
   const { host } = router.query
   const wallet = useWallet()
@@ -44,11 +49,12 @@ export const HeaderSlim: React.FC<Props> = ({ tabs, loading }: Props) => {
             <img
               alt="Cardinal logo"
               className="inline-block h-6"
-              src="./cardinal-crosshair.svg"
+              src="/cardinal-crosshair.svg"
             />
             <span className="ml-2 text-2xl text-white">Cardinal</span>
           </div>
-          {config.name !== 'default' && !host?.includes(config.name) && (
+          {(homeButton ||
+            (config.name !== 'default' && !host?.includes(config.name))) && (
             <div
               className={`cursor-pointer text-center text-light-0 opacity-80 transition-opacity hover:opacity-100`}
               onClick={() => {

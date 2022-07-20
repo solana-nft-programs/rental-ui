@@ -114,7 +114,9 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
                 color: 'white',
               }}
               href={getLink(
-                `/claim/${tokenData.tokenManager?.pubkey.toBase58()}`
+                `/${
+                  config.name
+                }/claim/${tokenData.tokenManager?.pubkey.toBase58()}`
               )}
               target="_blank"
               rel="noreferrer"
