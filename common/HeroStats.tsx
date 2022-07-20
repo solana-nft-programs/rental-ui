@@ -109,7 +109,8 @@ export const HeroStats: React.FC<Props> = ({
             )}{' '}
             {tokenDatas.length > 0
               ? getSymbolFromTokenData(tokenDatas[0]!)
-              : '◎'}{' '}
+              : '◎'}
+            {' / '}
             {config.marketplaceRate
               ? config.marketplaceRate
                   .substring(0, config.marketplaceRate.length - 1)

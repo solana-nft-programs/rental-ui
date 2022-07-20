@@ -1,18 +1,10 @@
-import {
-  getNameEntryData,
-  tryGetProfile,
-} from '@cardinal/namespaces-components'
 import type { PublicKey } from '@solana/web3.js'
-import { Connection } from '@solana/web3.js'
 import type { TokenData } from 'api/api'
-import { tryPublicKey } from 'api/utils'
 import type { ProjectConfig } from 'config/config'
 import { projectConfigs } from 'config/config'
 import type { NextPageContext } from 'next'
 import type { ReactChild } from 'react'
 import React, { useContext, useState } from 'react'
-
-import { ENVIRONMENTS } from './EnvironmentProvider'
 
 export const getInitialProps = async ({
   ctx,
@@ -27,47 +19,52 @@ export const getInitialProps = async ({
       ?.split('.')[0]
       ?.replace('dev-', '')
 
-  const cluster = (ctx.query.cluster || ctx.req?.headers.host)?.includes('dev')
-    ? 'devnet'
-    : ctx.query.cluster || process.env.BASE_CLUSTER
-  const foundEnvironment =
-    ENVIRONMENTS.find((e) => e.label === cluster) || ENVIRONMENTS[0]!
-
-  const namespaceName = 'twitter'
-  let publicKey
-  let nameEntryData
-  if (project) {
-    const profile = await tryGetProfile(project)
-    try {
-      publicKey = tryPublicKey(project)
-      if (!publicKey) {
-        nameEntryData = await getNameEntryData(
-          foundEnvironment.secondary
-            ? new Connection(foundEnvironment.secondary)
-            : new Connection(foundEnvironment.primary, {
-                commitment: 'recent',
-              }),
-          namespaceName,
-          profile?.username || project
-        )
-        publicKey = tryPublicKey(project) || nameEntryData?.owner
-      }
-    } catch (e) {
-      console.log('Failed to get name entry: ', e)
-    }
-  }
-  const config = project
-    ? projectConfigs[project] || projectConfigs['default']!
-    : projectConfigs['default']!
-
   return {
-    config: publicKey
-      ? {
-          ...projectConfigs['vault']!,
-          issuer: { publicKeyString: publicKey.toString() },
-        }
-      : config,
+    config: project
+      ? projectConfigs[project] || projectConfigs['default']!
+      : projectConfigs['default']!,
   }
+
+  // const cluster = (ctx.query.cluster || ctx.req?.headers.host)?.includes('dev')
+  //   ? 'devnet'
+  //   : ctx.query.cluster || process.env.BASE_CLUSTER
+  // const foundEnvironment =
+  //   ENVIRONMENTS.find((e) => e.label === cluster) || ENVIRONMENTS[0]!
+  // const namespaceName = 'twitter'
+  // let publicKey
+  // let nameEntryData
+  // if (project) {
+  //   try {
+  //     publicKey = tryPublicKey(project)
+  //     if (!publicKey) {
+  //       const profile = await tryGetProfile(project)
+  //       nameEntryData = await getNameEntryData(
+  //         foundEnvironment.secondary
+  //           ? new Connection(foundEnvironment.secondary)
+  //           : new Connection(foundEnvironment.primary, {
+  //               commitment: 'recent',
+  //             }),
+  //         namespaceName,
+  //         profile?.username || project
+  //       )
+  //       publicKey = tryPublicKey(project) || nameEntryData?.owner
+  //     }
+  //   } catch (e) {
+  //     console.log('Failed to get name entry: ', e)
+  //   }
+  // }
+  // const config = project
+  //   ? projectConfigs[project] || projectConfigs['default']!
+  //   : projectConfigs['default']!
+
+  // return {
+  //   config: publicKey
+  //     ? {
+  //         ...projectConfigs['vault']!,
+  //         issuer: { publicKeyString: publicKey.toString() },
+  //       }
+  //     : config,
+  // }
 }
 
 export const filterTokens = (

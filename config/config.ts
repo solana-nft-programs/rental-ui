@@ -1,6 +1,6 @@
 import type { TokenData } from 'api/api'
 import type { AirdropMetadata } from 'common/Airdrop'
-import { IconKey } from 'common/Socials'
+import type { IconKey } from 'common/Socials'
 import type {
   DurationOption,
   RentalCardConfig,
@@ -94,7 +94,7 @@ export type ProjectConfig = {
 export const projectConfigs: { [key: string]: ProjectConfig } = {
   default: {
     name: 'default',
-    displayName: 'default',
+    displayName: 'Default',
     hidden: true,
     type: 'Collection',
     websiteUrl: 'https://cardinal.so',
