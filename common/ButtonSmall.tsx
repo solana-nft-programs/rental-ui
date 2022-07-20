@@ -13,6 +13,7 @@ export type ButtonSmallProps = {
 export type Props = {
   children: JSX.Element | string
   className?: string
+  loading?: boolean
   onClick?: () => void
 } & ButtonSmallProps
 
@@ -40,9 +41,10 @@ export const ButtonSmall: React.FC<Props> = ({
   children,
   onClick,
   className,
+  loading,
   ...buttonProps
 }: Props) => {
-  const [loading, setLoading] = useState(false)
+  const [loadingClick, setLoadingClick] = useState(false)
   const { config } = useProjectConfig()
   return (
     <StyledButtonSmall
@@ -54,14 +56,14 @@ export const ButtonSmall: React.FC<Props> = ({
       onClick={async () => {
         if (!onClick) return
         try {
-          setLoading(true)
+          setLoadingClick(true)
           await onClick()
         } finally {
-          setLoading(false)
+          setLoadingClick(false)
         }
       }}
     >
-      {loading ? <LoadingSpinner height="25px" /> : children}
+      {loadingClick || loading ? <LoadingSpinner height="25px" /> : children}
     </StyledButtonSmall>
   )
 }
