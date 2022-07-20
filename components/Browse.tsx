@@ -1,5 +1,4 @@
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
-import { css } from '@emotion/react'
 import { BN } from '@project-serum/anchor'
 import type * as splToken from '@solana/spl-token'
 import { useWallet } from '@solana/wallet-adapter-react'
@@ -13,7 +12,11 @@ import { HeaderSlim } from 'common/HeaderSlim'
 import { HeroLarge } from 'common/HeroLarge'
 import { Info } from 'common/Info'
 import { MultiSelector } from 'common/MultiSelector'
-import { getAllAttributes, NFT } from 'common/NFT'
+import { NFT } from 'common/NFT'
+import {
+  getAllAttributes,
+  getNFTAtrributeFilters,
+} from 'common/NFTAttributeFilters'
 import { NFTClaimButton } from 'common/NFTClaimButton'
 import { NFTHeader } from 'common/NFTHeader'
 import { NFTIssuerInfo } from 'common/NFTIssuerInfo'
@@ -455,54 +458,12 @@ export const Browse = () => {
                 </div>
               ) : undefined
             }
-            groups={Object.keys(sortedAttributes).map((traitType) => ({
-              label: traitType,
-              content: (
-                <div key={traitType} className="px-3 pb-3 text-sm">
-                  {sortedAttributes[traitType]!.map((value) => (
-                    <div
-                      key={`${traitType}-${value}`}
-                      className="flex items-center justify-between"
-                      onClick={() =>
-                        setSelectedFilters((filters) => ({
-                          ...filters,
-                          [traitType]: filters[traitType]?.includes(value)
-                            ? filters[traitType]?.filter((v) => v !== value) ??
-                              []
-                            : [...(filters[traitType] ?? []), value],
-                        }))
-                      }
-                    >
-                      <div
-                        className="flex cursor-pointer items-center gap-2 py-[2px] text-light-0 transition-colors hover:text-primary"
-                        css={css`
-                          &:hover {
-                            div {
-                              border-color: rgb(
-                                144 126 255 / var(--tw-border-opacity)
-                              );
-                            }
-                          }
-                        `}
-                      >
-                        <div
-                          className={`h-3 w-3 rounded-sm border-[.5px] border-light-1 transition-all`}
-                          css={css`
-                            background: ${selectedFilters[traitType]?.includes(
-                              value
-                            )
-                              ? config.colors.secondary
-                              : ''};
-                          `}
-                        />
-                        <div>{value}</div>
-                      </div>
-                      <div></div>
-                    </div>
-                  ))}
-                </div>
-              ),
-            }))}
+            groups={getNFTAtrributeFilters({
+              config,
+              sortedAttributes,
+              selectedFilters,
+              setSelectedFilters,
+            })}
           />
           <Selector<OrderCategories>
             className="mint-w-[190px]"
