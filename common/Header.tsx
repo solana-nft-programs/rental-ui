@@ -1,3 +1,4 @@
+import { contrastColorMode } from '@cardinal/common'
 import { ProfileSmall } from '@cardinal/namespaces-components'
 import styled from '@emotion/styled'
 import { useWallet } from '@solana/wallet-adapter-react'
@@ -13,7 +14,6 @@ import { useEffect, useState } from 'react'
 import { BiChevronDown } from 'react-icons/bi'
 import { IoChevronBack } from 'react-icons/io5'
 import { useMediaQuery } from 'react-responsive'
-import { getColorByBgColor } from 'rental-components/common/Button'
 
 import { AccountPopover } from './AccountPopover'
 import { Airdrop, AirdropSol } from './Airdrop'
@@ -224,8 +224,8 @@ export const Header = ({
                           : lighten(0.07, config.colors.main),
                       color:
                         tab === anchor
-                          ? getColorByBgColor(config.colors.secondary)
-                          : getColorByBgColor(config.colors.main),
+                          ? contrastColorMode(config.colors.secondary)[0]
+                          : contrastColorMode(config.colors.main)[0],
                     }}
                     onClick={() => {
                       if (disabled) return

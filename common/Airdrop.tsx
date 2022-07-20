@@ -19,8 +19,8 @@ import type { ProjectConfig } from 'config/config'
 import { useUserTokenData } from 'hooks/useUserTokenData'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
-import { ButtonSmall } from './ButtonSmall'
 
+import { ButtonSmall } from './ButtonSmall'
 import { executeTransaction } from './Transactions'
 
 export type AirdropMetadata = { name: string; symbol: string; uri: string }
@@ -167,12 +167,11 @@ export const AirdropSol = () => {
   return (
     <ButtonSmall
       bgColor={config.colors.secondary}
-      variant="primary"
       disabled={!wallet.connected}
-      handleClick={async () => {
-        if (!wallet.connected) return
+      onClick={async () => {
+        if (!wallet.publicKey) return
         try {
-          await connection.requestAirdrop(wallet.publicKey!, LAMPORTS_PER_SOL)
+          await connection.requestAirdrop(wallet.publicKey, LAMPORTS_PER_SOL)
           notify({ message: 'Airdropped 1 sol successfully' })
           await userTokenData.refetch()
         } catch (e) {

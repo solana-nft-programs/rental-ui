@@ -2,6 +2,7 @@ import {
   InvalidationType,
   TokenManagerState,
 } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
+import { css } from '@emotion/react'
 import Tooltip from '@mui/material/Tooltip'
 import { useWallet } from '@solana/wallet-adapter-react'
 import type { TokenData } from 'api/api'
@@ -16,7 +17,6 @@ import { BsArrowReturnLeft } from 'react-icons/bs'
 import { FaEllipsisH, FaLink } from 'react-icons/fa'
 import { FiExternalLink, FiSend } from 'react-icons/fi'
 import { IoAddSharp, IoClose, IoQrCodeOutline } from 'react-icons/io5'
-import { getColorByBgColor } from 'rental-components/common/Button'
 import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 import { useQRCode } from 'rental-components/QRCodeProvider'
 import { useRentalModal } from 'rental-components/RentalModalProvider'
@@ -58,10 +58,9 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
       content={
         <div
           className="flex flex-col rounded-md px-1 py-1"
-          style={{
-            background: lighten(0.07, config.colors.main),
-            color: getColorByBgColor(config.colors.main),
-          }}
+          css={css`
+            background: ${lighten(0.07, config.colors.main)};
+          `}
         >
           <PopoverItem>
             <a
@@ -226,13 +225,7 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
                   className="flex cursor-pointer items-center justify-between gap-2"
                   onClick={async (e) => {
                     e.stopPropagation()
-                    rentalRateModal.show(
-                      asWallet(wallet),
-                      connection,
-                      environment.label,
-                      tokenData,
-                      false
-                    )
+                    rentalRateModal.show({ tokenData, claim: false })
                   }}
                 >
                   <IoAddSharp />
