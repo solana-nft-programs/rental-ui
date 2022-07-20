@@ -47,7 +47,7 @@ export const Manage = () => {
           { name: 'Browse', anchor: 'browse' },
         ]}
       />
-      <HeroSmall tokens={tokenManagerByIssuer.data} />
+      <HeroSmall tokenDatas={tokenManagerByIssuer.data} />
       <div className="mx-auto mt-12 max-w-[1634px]">
         {!tokenManagerByIssuer.isFetched ? (
           <div className="flex flex-wrap justify-center gap-4 xl:justify-start">
