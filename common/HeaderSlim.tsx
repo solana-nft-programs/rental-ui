@@ -44,7 +44,7 @@ export const HeaderSlim: React.FC<Props> = ({
   return (
     <div className="w-full px-4 py-4">
       <div className="flex min-h-[72px] flex-wrap items-center justify-center gap-4 rounded-xl bg-white bg-opacity-5 py-4 px-8 lg:justify-between">
-        <div className="flex w-56 items-center gap-5">
+        <div className="flex items-center gap-5">
           <div className="flex items-center">
             <img
               alt="Cardinal logo"
@@ -65,7 +65,7 @@ export const HeaderSlim: React.FC<Props> = ({
             </div>
           )}
         </div>
-        <div className="relative">
+        <div className="relative lg:absolute lg:left-1/2 lg:-translate-x-1/2">
           {tabs && (
             <div className="mt-1 flex justify-center rounded-xl">
               {tabs.map(({ disabled, name, anchor, tooltip }) => (
@@ -104,7 +104,7 @@ export const HeaderSlim: React.FC<Props> = ({
             </div>
           )}
         </div>
-        <div className="flex w-56 justify-end">
+        <div className="flex justify-end">
           {wallet.connected && wallet.publicKey ? (
             <AccountConnect
               dark={true}
