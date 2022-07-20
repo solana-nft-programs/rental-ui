@@ -123,7 +123,7 @@ export const Collections = () => {
                         `}
                       >
                         <img
-                          className="max-h-full"
+                          className="max-h-full rounded-xl"
                           src={config.logoImage}
                           alt={config.name}
                         />

@@ -16,7 +16,7 @@ export const HeroLarge: React.FC<Props> = ({ tokenDatas }: Props) => {
   if (!config.hero) return <HeroSmall tokenDatas={tokenDatas} />
   return (
     <div className="mb-16 flex w-full flex-wrap items-stretch justify-center gap-12 py-8 px-4 lg:flex-nowrap lg:justify-between lg:gap-4 lg:px-20">
-      <div className="relative w-full flex-grow lg:w-1/2">
+      <div className="relative w-full flex-grow xl:w-1/2">
         <img
           className="w-full rounded-xl"
           src={config.hero}
