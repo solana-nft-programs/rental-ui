@@ -1,10 +1,10 @@
+import { contrastColorMode } from '@cardinal/common'
 import styled from '@emotion/styled'
 import { lighten } from 'polished'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import React from 'react'
 import toast, { resolveValue, ToastBar, Toaster } from 'react-hot-toast'
 import { VscClose } from 'react-icons/vsc'
-import { getColorByBgColor } from 'rental-components/common/Button'
 
 import type { Cluster } from './utils'
 
@@ -104,13 +104,13 @@ export function ToastContainer() {
               style={{
                 borderColor: config.colors.secondary,
                 backgroundColor: lighten(0.07, config.colors.main),
-                color: getColorByBgColor(config.colors.main),
+                color: contrastColorMode(config.colors.main)[0],
                 wordBreak: 'break-word',
               }}
             >
               {resolveValue(t.message, t)}
               <button
-                style={{ color: getColorByBgColor(config.colors.main) }}
+                style={{ color: contrastColorMode(config.colors.main)[0] }}
                 className={``}
                 onClick={() => toast.dismiss(t.id)}
               >
