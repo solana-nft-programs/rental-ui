@@ -8,7 +8,7 @@ import { withClaimToken } from '@cardinal/token-manager'
 import type { TokenManagerData } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { BN } from '@project-serum/anchor'
 import { useWallet } from '@solana/wallet-adapter-react'
-import type { Connection } from '@solana/web3.js'
+import type { Connection, Keypair } from '@solana/web3.js'
 import { PublicKey, Transaction } from '@solana/web3.js'
 import type { TokenData } from 'api/api'
 import { notify } from 'common/Notification'
@@ -22,6 +22,7 @@ import { useMutation } from 'react-query'
 
 export interface HandleClaimRentalParams {
   tokenData: TokenData
+  otpKeypair?: Keypair
 }
 
 export const allowedToRent = async (
@@ -90,7 +91,10 @@ export const useHandleClaimRental = () => {
     new PublicKey(WRAPPED_SOL_MINT)
   )
   return useMutation(
-    async ({ tokenData }: HandleClaimRentalParams): Promise<string> => {
+    async ({
+      tokenData,
+      otpKeypair,
+    }: HandleClaimRentalParams): Promise<string> => {
       if (!tokenData.tokenManager) throw new Error('No token manager data')
       if (!wallet.publicKey) throw new Error('Wallet not connected')
 
@@ -134,7 +138,10 @@ export const useHandleClaimRental = () => {
           ? secondaryConnection
           : connection,
         asWallet(wallet),
-        tokenData.tokenManager?.pubkey
+        tokenData.tokenManager?.pubkey,
+        {
+          otpKeypair,
+        }
       )
       return executeTransaction(connection, asWallet(wallet), transaction, {
         confirmOptions: {

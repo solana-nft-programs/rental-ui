@@ -24,6 +24,7 @@ export const COLORS = {
 export type Colors = {
   main: string
   secondary: string
+  accent?: string
 }
 
 export type TokenFilter = {
@@ -100,8 +101,8 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     websiteUrl: 'https://cardinal.so',
     logoImage: 'https://main.cardinal.so/assets/cardinal-titled.png',
     colors: {
-      main: 'rgb(26, 27, 32)',
-      secondary: 'rgb(29, 155, 240)',
+      main: '#0B0B0B',
+      secondary: '#7560FF',
     },
     rentalCard: {
       invalidators: ['duration', 'usages', 'expiration', 'manual', 'rate'],

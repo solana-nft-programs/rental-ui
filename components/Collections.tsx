@@ -27,7 +27,6 @@ export const Collections = () => {
       }
     },
     {} as { [type: string]: ProjectConfig[] }
-    
   )
 
   return (
@@ -71,7 +70,7 @@ export const Collections = () => {
                   stats.data[queryId('global', true)]?.aggregate.count ? (
                     stats.data[queryId('global', true)]!.aggregate.count
                   ) : (
-                    <div className="mt-[2px] h-5 w-12 animate-pulse rounded-md bg-border" />
+                    <div className="mt-[1px] h-5 w-12 animate-pulse rounded-md bg-border" />
                   )}
                 </div>
               </div>
@@ -83,7 +82,7 @@ export const Collections = () => {
                   stats.data[queryId('global', false)]?.aggregate.count ? (
                     stats.data[queryId('global', false)]!.aggregate.count
                   ) : (
-                    <div className="mt-[2px] h-5 w-12 animate-pulse rounded-md bg-border" />
+                    <div className="mt-[1px] h-5 w-12 animate-pulse rounded-md bg-border" />
                   )}
                 </div>
               </div>

@@ -106,12 +106,6 @@ function ClaimQRCode({
       ) : (
         <div className="relative flex flex-col items-center justify-center rounded-2xl">
           <div ref={ref} className="scale-[.7] md:scale-100" />
-          <div
-            className="cursor-pointer py-3 text-xs text-gray-500"
-            onClick={() => setShowQRCode && setShowQRCode(false)}
-          >
-            Hide QR Code
-          </div>
         </div>
       )}
     </>
