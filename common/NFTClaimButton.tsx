@@ -6,6 +6,7 @@ import {
   allowedToRent,
   useHandleClaimRental,
 } from 'handlers/useHandleClaimRental'
+import { useOtp } from 'hooks/useOtp'
 import { usePaymentMints } from 'hooks/usePaymentMints'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
@@ -14,7 +15,6 @@ import { useRentalRateModal } from 'rental-components/RentalRateModalProvider'
 import { ButtonSmall } from './ButtonSmall'
 import { notify } from './Notification'
 import { fmtMintAmount } from './units'
-import { asWallet } from './Wallets'
 
 interface NFTClaimButtonProps extends React.HTMLAttributes<HTMLDivElement> {
   tokenData: TokenData
@@ -29,10 +29,11 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
 }: NFTClaimButtonProps) => {
   const wallet = useWallet()
   const { config } = useProjectConfig()
-  const { connection, environment } = useEnvironmentCtx()
+  const { connection } = useEnvironmentCtx()
   const handleClaimRental = useHandleClaimRental()
   const paymentMintInfos = usePaymentMints()
   const rentalRateModal = useRentalRateModal()
+  const otpKeypair = useOtp()
 
   const handleClaim = async (tokenData: TokenData) => {
     if (
@@ -47,16 +48,10 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
       ))
     ) {
       if (tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber() === 0) {
-        rentalRateModal.show(
-          asWallet(wallet),
-          connection,
-          environment.label,
-          tokenData,
-          true
-        )
+        rentalRateModal.show({ tokenData, claim: true, otpKeypair })
       } else {
         try {
-          await handleClaimRental.mutateAsync({ tokenData })
+          await handleClaimRental.mutateAsync({ tokenData, otpKeypair })
         } catch (e: any) {
           console.log(e)
           notify({

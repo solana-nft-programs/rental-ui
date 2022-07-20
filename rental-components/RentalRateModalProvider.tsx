@@ -6,7 +6,11 @@ import React, { useContext, useState } from 'react'
 import { RentalRateCard } from './components/RentalRateCard'
 
 interface RentalRateModal {
-  show: (tokenData: TokenData, claim?: boolean, otpKeypair?: Keypair) => void
+  show: (config: {
+    tokenData: TokenData
+    claim?: boolean
+    otpKeypair?: Keypair
+  }) => void
   showRentalRateModal: boolean
   tokenData: TokenData | undefined
 }
@@ -28,7 +32,7 @@ export const RentalRateModalProvider: React.FC<Props> = ({
   return (
     <RentalRateModalContext.Provider
       value={{
-        show: (tokenData, claim, otpKeypair) => {
+        show: ({ tokenData, claim, otpKeypair }) => {
           setTokenData(tokenData)
           setShowRentalRateModal(true)
           setClaim(claim ?? false)
