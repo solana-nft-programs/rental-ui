@@ -40,7 +40,7 @@ export const Collections = () => {
         <div className="flex flex-wrap justify-between gap-10 px-16 py-28">
           <Glow angle={130} scale={1.5}>
             <div className="flex flex-col gap-2">
-              <div className="text-5xl text-light-0">Marketplace</div>
+              <div className="text-5xl text-light-0">Rental Marketplace</div>
               <div className="text-lg text-medium-3">
                 Let your NFTs generate revenue and RENT
                 <br /> NFTs temporarily!
