@@ -12,7 +12,7 @@ import { HeaderSlim } from 'common/HeaderSlim'
 import { HeroSmall } from 'common/HeroSmall'
 import { Info } from 'common/Info'
 import { MultiSelector } from 'common/MultiSelector'
-import { elligibleForRent, NFT, stateColor } from 'common/NFT'
+import { elligibleForRent, getAllAttributes, NFT, stateColor } from 'common/NFT'
 import { notify } from 'common/Notification'
 import { TabSelector } from 'common/TabSelector'
 import { asWallet } from 'common/Wallets'
@@ -24,7 +24,7 @@ import { filterTokens, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useState } from 'react'
 import { useRentalModal } from 'rental-components/RentalModalProvider'
 
-import { filterTokensByAttributes, getAllAttributes, PANE_TABS } from './Browse'
+import { filterTokensByAttributes, PANE_TABS } from './Browse'
 
 export const Wallet = () => {
   const { connection, secondaryConnection, environment } = useEnvironmentCtx()

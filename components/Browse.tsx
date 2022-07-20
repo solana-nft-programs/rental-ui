@@ -1,15 +1,13 @@
-import { withFindOrInitAssociatedTokenAccount } from '@cardinal/common'
-import { DisplayAddress, useAddressName } from '@cardinal/namespaces-components'
-import { invalidate, withClaimToken } from '@cardinal/token-manager'
+import { DisplayAddress } from '@cardinal/namespaces-components'
+import { invalidate } from '@cardinal/token-manager'
 import { shouldTimeInvalidate } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator/utils'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { css } from '@emotion/react'
 import { BN } from '@project-serum/anchor'
 import type * as splToken from '@solana/spl-token'
 import { useWallet } from '@solana/wallet-adapter-react'
-import { Connection, PublicKey, Transaction } from '@solana/web3.js'
+import { PublicKey } from '@solana/web3.js'
 import type { TokenData } from 'api/api'
-import { withWrapSol } from 'api/wrappedSol'
 import { GlyphActivity } from 'assets/GlyphActivity'
 import { GlyphBrowse } from 'assets/GlyphBrowse'
 import { ButtonSmall } from 'common/ButtonSmall'
@@ -19,7 +17,7 @@ import { HeaderSlim } from 'common/HeaderSlim'
 import { HeroSmall } from 'common/HeroSmall'
 import { Info } from 'common/Info'
 import { MultiSelector } from 'common/MultiSelector'
-import { NFT, stateColor } from 'common/NFT'
+import { getAllAttributes, NFT, stateColor } from 'common/NFT'
 import { notify } from 'common/Notification'
 import { Selector } from 'common/Selector'
 import { TabSelector } from 'common/TabSelector'
@@ -28,12 +26,12 @@ import { fmtMintAmount, getMintDecimalAmount } from 'common/units'
 import { getExpirationString, secondsToString } from 'common/utils'
 import { asWallet } from 'common/Wallets'
 import type { ProjectConfig, TokenSection } from 'config/config'
-import { useFilteredTokenManagers } from 'hooks/useFilteredTokenManagers'
 import {
-  PAYMENT_MINTS,
-  usePaymentMints,
-  WRAPPED_SOL_MINT,
-} from 'hooks/usePaymentMints'
+  allowedToRent,
+  useHandleClaimRental,
+} from 'handlers/useHandleClaimRental'
+import { useFilteredTokenManagers } from 'hooks/useFilteredTokenManagers'
+import { PAYMENT_MINTS, usePaymentMints } from 'hooks/usePaymentMints'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import {
   filterTokens,
@@ -84,32 +82,6 @@ export const PANE_TABS = [
     tooltip: 'Coming soon',
   },
 ]
-
-export const getAllAttributes = (tokens: TokenData[]) => {
-  const allAttributes: { [traitType: string]: Set<any> } = {}
-  tokens.forEach((tokenData) => {
-    if (
-      tokenData?.metadata?.data?.attributes &&
-      tokenData?.metadata?.data?.attributes.length > 0
-    ) {
-      tokenData?.metadata?.data?.attributes.forEach(
-        (attribute: { trait_type: string; value: string }) => {
-          if (attribute.trait_type in allAttributes) {
-            allAttributes[attribute.trait_type]!.add(attribute.value)
-          } else {
-            allAttributes[attribute.trait_type] = new Set([attribute.value])
-          }
-        }
-      )
-    }
-  })
-
-  const sortedAttributes: { [traitType: string]: string[] } = {}
-  Object.keys(allAttributes).forEach((traitType) => {
-    sortedAttributes[traitType] = Array.from(allAttributes[traitType] ?? [])
-  })
-  return sortedAttributes
-}
 
 export const getTokenMaxDuration = (tokenData: TokenData, UTCNow: number) => {
   if (tokenData.timeInvalidator?.parsed.maxExpiration) {
@@ -236,6 +208,64 @@ export function getTokenRentalRate(
   }
 }
 
+const getPriceFromTokenData = (
+  tokenData: TokenData,
+  paymentMintInfos: { [name: string]: splToken.MintInfo }
+): number => {
+  if (
+    tokenData.claimApprover?.parsed &&
+    tokenData.claimApprover?.parsed?.paymentMint.toString() &&
+    paymentMintInfos
+  ) {
+    const mintInfo =
+      paymentMintInfos[tokenData.claimApprover?.parsed?.paymentMint.toString()]
+    if (mintInfo) {
+      return getMintDecimalAmount(
+        mintInfo,
+        tokenData.claimApprover?.parsed?.paymentAmount
+      ).toNumber()
+    } else {
+      return 0
+    }
+  } else {
+    return 0
+  }
+}
+
+const getPriceOrRentalRate = (
+  config: ProjectConfig,
+  tokenData: TokenData,
+  paymentMintInfos?: { [name: string]: splToken.MintInfo }
+) => {
+  if (!paymentMintInfos) return 0
+
+  const rate = DURATION_DATA[config.marketplaceRate ?? 'days']
+  if (tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber() === 0) {
+    return getTokenRentalRate(config, paymentMintInfos, tokenData)?.rate ?? 0
+  } else {
+    const price = getPriceFromTokenData(tokenData, paymentMintInfos)
+    if (price === 0) return 0
+
+    let duration = 0
+    if (tokenData.timeInvalidator?.parsed.durationSeconds) {
+      duration = tokenData.timeInvalidator.parsed.durationSeconds.toNumber()
+    }
+    if (tokenData.timeInvalidator?.parsed.expiration) {
+      duration =
+        tokenData.timeInvalidator.parsed.expiration.toNumber() -
+        Date.now() / 1000
+    }
+    if (tokenData.timeInvalidator?.parsed.maxExpiration) {
+      duration = Math.min(
+        duration,
+        tokenData.timeInvalidator.parsed.maxExpiration.toNumber() -
+          Date.now() / 1000
+      )
+    }
+    return (price / duration) * rate
+  }
+}
+
 export const filterTokensByAttributes = (
   tokens: TokenData[],
   filters: { [filterName: string]: string[] }
@@ -286,17 +316,11 @@ export const Browse = () => {
   const { connection, secondaryConnection, environment } = useEnvironmentCtx()
   const wallet = useWallet()
   const { config } = useProjectConfig()
+  const handleClaimRental = useHandleClaimRental()
   const tokenManagers = useFilteredTokenManagers()
   const tokenManagersForConfig = tokenManagers.data || []
   const { UTCNow } = useUTCNow()
-  const twitterAddress = useAddressName(
-    connection,
-    wallet.publicKey ?? undefined
-  )
-
   const [pageNum, setPageNum] = useState<[number, number]>(DEFAULT_PAGE)
-  const [userPaymentTokenAccount, _setUserPaymentTokenAccount] =
-    useState<splToken.AccountInfo | null>(null)
   const paymentMintInfos = usePaymentMints()
   const [selectedOrderCategory, setSelectedOrderCategory] =
     useState<OrderCategories>(OrderCategories.RateLowToHigh)
@@ -304,67 +328,7 @@ export const Browse = () => {
     [filterName: string]: string[]
   }>({})
   const [selectedGroup, setSelectedGroup] = useState(0)
-  const [claimingRental, setClaimingRental] = useState<boolean>(false)
   const rentalRateModal = useRentalRateModal()
-  const globalRate = DURATION_DATA[config.marketplaceRate ?? 'days']
-
-  const getPriceFromTokenData = (tokenData: TokenData): number => {
-    if (
-      tokenData.claimApprover?.parsed &&
-      tokenData.claimApprover?.parsed?.paymentMint.toString() &&
-      paymentMintInfos.data
-    ) {
-      const mintInfo =
-        paymentMintInfos.data[
-          tokenData.claimApprover?.parsed?.paymentMint.toString()
-        ]
-      if (mintInfo) {
-        return getMintDecimalAmount(
-          mintInfo,
-          tokenData.claimApprover?.parsed?.paymentAmount
-        ).toNumber()
-      } else {
-        return 0
-      }
-    } else {
-      return 0
-    }
-  }
-
-  const getPriceOrRentalRate = (
-    tokenData: TokenData,
-    rate: number = globalRate
-  ) => {
-    let price = 0
-    if (
-      tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber() === 0 &&
-      paymentMintInfos.data
-    ) {
-      return (
-        getTokenRentalRate(config, paymentMintInfos.data, tokenData)?.rate ?? 0
-      )
-    } else {
-      price = getPriceFromTokenData(tokenData)
-      if (price === 0) return 0
-      let duration = 0
-      if (tokenData.timeInvalidator?.parsed.durationSeconds) {
-        duration = tokenData.timeInvalidator.parsed.durationSeconds.toNumber()
-      }
-      if (tokenData.timeInvalidator?.parsed.expiration) {
-        duration =
-          tokenData.timeInvalidator.parsed.expiration.toNumber() -
-          Date.now() / 1000
-      }
-      if (tokenData.timeInvalidator?.parsed.maxExpiration) {
-        duration = Math.min(
-          duration,
-          tokenData.timeInvalidator.parsed.maxExpiration.toNumber() -
-            Date.now() / 1000
-        )
-      }
-      return (price / duration) * rate
-    }
-  }
 
   const sortTokens = (tokens: TokenData[]): TokenData[] => {
     let sortedTokens
@@ -395,12 +359,18 @@ export const Browse = () => {
         break
       case OrderCategories.RateLowToHigh:
         sortedTokens = tokens.sort((a, b) => {
-          return getPriceOrRentalRate(a) - getPriceOrRentalRate(b)
+          return (
+            getPriceOrRentalRate(config, a, paymentMintInfos.data) -
+            getPriceOrRentalRate(config, b, paymentMintInfos.data)
+          )
         })
         break
       case OrderCategories.RateHighToLow:
         sortedTokens = tokens.sort((a, b) => {
-          return getPriceOrRentalRate(b) - getPriceOrRentalRate(a)
+          return (
+            getPriceOrRentalRate(config, b, paymentMintInfos.data) -
+            getPriceOrRentalRate(config, a, paymentMintInfos.data)
+          )
         })
         break
       case OrderCategories.DurationLowToHigh:
@@ -463,117 +433,17 @@ export const Browse = () => {
   }
 
   const handleClaim = async (tokenData: TokenData) => {
-    try {
-      setClaimingRental(true)
-      if (!tokenData.tokenManager) throw new Error('No token manager data')
-      if (!wallet.publicKey) throw new Error('Wallet not connected')
-      // wrap sol if there is payment required
-      const transaction = new Transaction()
-      const paymentMint =
-        tokenData?.claimApprover?.parsed.paymentMint ||
-        tokenData?.timeInvalidator?.parsed.extensionPaymentMint
-      if (
-        tokenData?.claimApprover?.parsed.paymentAmount &&
-        tokenData?.claimApprover?.parsed.paymentMint.toString() ===
-          WRAPPED_SOL_MINT.toString() &&
-        tokenData?.claimApprover?.parsed.paymentAmount.gt(new BN(0))
-      ) {
-        const amountToWrap = tokenData?.claimApprover?.parsed.paymentAmount.sub(
-          userPaymentTokenAccount?.amount || new BN(0)
-        )
-        if (amountToWrap.gt(new BN(0))) {
-          await withWrapSol(
-            transaction,
-            connection,
-            asWallet(wallet),
-            amountToWrap.toNumber()
-          )
-        }
-      }
-      if (paymentMint) {
-        await withFindOrInitAssociatedTokenAccount(
-          transaction,
-          connection,
-          paymentMint,
-          wallet.publicKey!,
-          wallet.publicKey!,
-          true
-        )
-      }
-      await withClaimToken(
-        transaction,
-        environment.secondary
-          ? new Connection(environment.secondary)
-          : connection,
-        asWallet(wallet),
-        tokenData.tokenManager?.pubkey
-      )
-      await executeTransaction(connection, asWallet(wallet), transaction, {
-        confirmOptions: {
-          commitment: 'confirmed',
-          maxRetries: 3,
-        },
-        signers: [],
-        notificationConfig: {},
-      })
-    } catch (e: any) {
-      notify({
-        message: 'Error claiming rental',
-        description: e.toString(),
-      })
-      console.log(e)
-    } finally {
-      setClaimingRental(false)
-      tokenManagers.refetch()
-    }
-  }
-
-  const handleBrowseClick = async (tokenData: TokenData) => {
-    if (config.allowOneByCreators && tokenManagers.data) {
-      for (const creator of config.allowOneByCreators) {
-        if (
-          tokenData.tokenManager?.parsed.issuer.toString() === creator.address
-        ) {
-          if (creator.preventMultipleClaims && claimingRental) {
-            notify({
-              message: 'Error renting this NFT',
-              description:
-                'This issuer has prevented simultaneous rentals, please wait until the current rental claim is approved',
-              type: 'error',
-            })
-            return
-          }
-          if (creator.enforceTwitter && !twitterAddress.displayName) {
-            notify({
-              message: 'Error renting this NFT',
-              description:
-                'You need to connect your twitter account to rent an NFT from this issuer. Click your profile on the top right corner to connect.',
-              type: 'error',
-            })
-            return
-          }
-          if (
-            tokenManagers.data.filter(
-              (tm) =>
-                tokenData.tokenManager?.parsed.issuer.toString() ===
-                  creator.address &&
-                tm.recipientTokenAccount?.owner.toString() ===
-                  wallet.publicKey?.toString() &&
-                tm.tokenManager?.parsed.issuer.toString() === creator.address
-            ).length > 0
-          ) {
-            notify({
-              message: 'Error renting this NFT',
-              description:
-                'The issuer of this NFT has limited only one NFT rental per user',
-              type: 'error',
-            })
-            return
-          }
-        }
-      }
-    }
-    if (wallet.publicKey) {
+    if (
+      wallet.publicKey &&
+      (await allowedToRent(
+        connection,
+        wallet.publicKey,
+        config,
+        tokenData,
+        false,
+        tokenManagers.data ?? []
+      ))
+    ) {
       if (tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber() === 0) {
         rentalRateModal.show(
           asWallet(wallet),
@@ -583,7 +453,17 @@ export const Browse = () => {
           true
         )
       } else {
-        await handleClaim(tokenData)
+        try {
+          await handleClaimRental.mutateAsync({ tokenData })
+        } catch (e: any) {
+          console.log(e)
+          notify({
+            message: 'Error claiming rental',
+            description: e.toString(),
+          })
+        } finally {
+          tokenManagers.refetch()
+        }
       }
     }
   }
@@ -818,7 +698,7 @@ export const Browse = () => {
                           <ButtonSmall
                             disabled={!wallet.publicKey}
                             className="my-auto inline-block max-w-[45%] flex-none text-xs"
-                            onClick={() => handleBrowseClick(tokenData)}
+                            onClick={() => handleClaim(tokenData)}
                           >
                             {tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber() ===
                               0 && paymentMintInfos.data ? (
