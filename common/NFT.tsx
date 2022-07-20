@@ -8,36 +8,6 @@ import { useUTCNow } from 'providers/UTCNowProvider'
 
 import { NFTContexualMenu } from './NFTContexualMenu'
 
-export const getAllAttributes = (
-  tokens: TokenData[]
-): {
-  [traitType: string]: string[]
-} => {
-  const allAttributes: { [traitType: string]: Set<any> } = {}
-  tokens.forEach((tokenData) => {
-    if (
-      tokenData?.metadata?.data?.attributes &&
-      tokenData?.metadata?.data?.attributes.length > 0
-    ) {
-      tokenData?.metadata?.data?.attributes.forEach(
-        (attribute: { trait_type: string; value: string }) => {
-          if (attribute.trait_type in allAttributes) {
-            allAttributes[attribute.trait_type]!.add(attribute.value)
-          } else {
-            allAttributes[attribute.trait_type] = new Set([attribute.value])
-          }
-        }
-      )
-    }
-  })
-
-  const sortedAttributes: { [traitType: string]: string[] } = {}
-  Object.keys(allAttributes).forEach((traitType) => {
-    sortedAttributes[traitType] = Array.from(allAttributes[traitType] ?? [])
-  })
-  return sortedAttributes
-}
-
 export const elligibleForRent = (
   config: ProjectConfig,
   tokenData: TokenData

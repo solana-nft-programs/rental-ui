@@ -101,12 +101,8 @@ export const NFTIssuerInfo: React.FC<NFTIssuerInfoProps> = ({
             `}
           >
             <div className="flex">
-              <span className="inline-block">Claimed by&nbsp;</span>
+              <div>Claimed by&nbsp;</div>
               <DisplayAddress
-                style={{
-                  color: '#52c41a !important',
-                  display: 'inline',
-                }}
                 connection={secondaryConnection}
                 address={tokenData.recipientTokenAccount?.owner}
                 height="18px"
@@ -115,12 +111,8 @@ export const NFTIssuerInfo: React.FC<NFTIssuerInfoProps> = ({
               />
             </div>
             <div className="flex">
-              <span className="inline-block">Issued by&nbsp;</span>
+              <div>Issued by&nbsp;</div>
               <DisplayAddress
-                style={{
-                  color: '#52c41a !important',
-                  display: 'inline',
-                }}
                 connection={secondaryConnection}
                 address={tokenData.tokenManager?.parsed.issuer}
                 height="18px"

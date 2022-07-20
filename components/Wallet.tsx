@@ -3,35 +3,35 @@ import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tok
 import { css } from '@emotion/react'
 import { useWallet } from '@solana/wallet-adapter-react'
 import type { TokenData } from 'api/api'
-import { GlyphClose } from 'assets/GlyphClose'
 import { Airdrop } from 'common/Airdrop'
-import { Button } from 'common/Button'
 import { Card } from 'common/Card'
 import { Glow } from 'common/Glow'
 import { HeaderSlim } from 'common/HeaderSlim'
 import { HeroSmall } from 'common/HeroSmall'
 import { Info } from 'common/Info'
 import { MultiSelector } from 'common/MultiSelector'
-import { elligibleForRent, getAllAttributes, NFT, stateColor } from 'common/NFT'
+import { elligibleForRent, NFT, stateColor } from 'common/NFT'
+import {
+  getAllAttributes,
+  getNFTAtrributeFilters,
+} from 'common/NFTAttributeFilters'
 import { notify } from 'common/Notification'
+import { SelecterDrawer } from 'common/SelectedDrawer'
 import { TabSelector } from 'common/TabSelector'
-import { asWallet } from 'common/Wallets'
 import type { TokenSection } from 'config/config'
 import type { UserTokenData } from 'hooks/useUserTokenData'
 import { useUserTokenData } from 'hooks/useUserTokenData'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { filterTokens, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useState } from 'react'
-import { useRentalModal } from 'rental-components/RentalModalProvider'
 
 import { filterTokensByAttributes, PANE_TABS } from './Browse'
 
 export const Wallet = () => {
-  const { connection, secondaryConnection, environment } = useEnvironmentCtx()
+  const { secondaryConnection, environment } = useEnvironmentCtx()
   const wallet = useWallet()
   const { config } = useProjectConfig()
   const userTokenDatas = useUserTokenData(config.filter)
-  const rentalModal = useRentalModal()
   const [selectedTokens, setSelectedTokens] = useState<TokenData[]>([])
   const [selectedGroup, setSelectedGroup] = useState(0)
   const [selectedFilters, setSelectedFilters] = useState<{
@@ -117,41 +117,10 @@ export const Wallet = () => {
 
   return (
     <>
-      <div
-        className={`fixed z-30 flex w-full items-center justify-between gap-4 bg-dark-6 px-4 py-8 transition-all lg:px-12 ${
-          selectedTokens.length > 0 ? 'bottom-0' : '-bottom-32'
-        }`}
-        css={css`
-          box-shadow: 0px 144px 100px 200px rgba(12, 12, 13, 1);
-        `}
-      >
-        <div className="text-lg">
-          You selected{' '}
-          {selectedTokens.length ? `(${selectedTokens.length})` : ''} items
-        </div>
-        <div className="flex items-center gap-2">
-          <Button
-            disabled={selectedTokens.length === 0}
-            variant="primary"
-            className="px-4 lg:px-8"
-            onClick={() =>
-              rentalModal.show(
-                asWallet(wallet),
-                connection,
-                environment.label,
-                selectedTokens,
-                config.rentalCard
-              )
-            }
-          >
-            Rent out
-          </Button>
-          <div className="mx-4 h-8 w-[2px] bg-border"></div>
-          <div className="cursor-pointer" onClick={() => setSelectedTokens([])}>
-            <GlyphClose />
-          </div>
-        </div>
-      </div>
+      <SelecterDrawer
+        selectedTokens={selectedTokens}
+        onClose={() => setSelectedTokens([])}
+      />
       <HeaderSlim
         loading={userTokenDatas.isFetched && userTokenDatas.isFetching}
         tabs={[
@@ -207,56 +176,12 @@ export const Wallet = () => {
                 </div>
               ) : undefined
             }
-            groups={Object.keys(sortedAttributes).map((traitType) => ({
-              label: traitType,
-              content: (
-                <div key={traitType} className="px-3 pb-3 text-xs">
-                  {sortedAttributes[traitType]!.map((value) => (
-                    <div
-                      key={`${traitType}-${value}`}
-                      className="flex items-center justify-between"
-                      onClick={() =>
-                        setSelectedFilters((filters) => ({
-                          ...filters,
-                          [traitType]: filters[traitType]?.includes(value)
-                            ? filters[traitType]?.filter((v) => v !== value) ??
-                              []
-                            : [...(filters[traitType] ?? []), value],
-                        }))
-                      }
-                    >
-                      <div
-                        className="flex cursor-pointer items-center gap-2 py-[2px] text-light-0 transition-colors hover:text-primary"
-                        css={css`
-                          &:hover {
-                            div {
-                              border-color: rgb(
-                                144 126 255 / var(--tw-border-opacity)
-                              );
-                            }
-                          }
-                        `}
-                      >
-                        <div
-                          className={`h-3 w-3 rounded-sm border-[.5px] border-light-1 transition-all`}
-                          css={css`
-                            background: ${selectedFilters[traitType]?.includes(
-                              value
-                            )
-                              ? config.colors.secondary
-                              : ''};
-                          `}
-                        >
-                          {}
-                        </div>
-                        <div>{value}</div>
-                      </div>
-                      <div></div>
-                    </div>
-                  ))}
-                </div>
-              ),
-            }))}
+            groups={getNFTAtrributeFilters({
+              config,
+              sortedAttributes,
+              selectedFilters,
+              setSelectedFilters,
+            })}
           />
         </div>
         <div className="flex">
@@ -310,12 +235,8 @@ export const Wallet = () => {
                         `}
                       >
                         <div className="flex">
-                          <span className="inline-block">Issued by&nbsp;</span>
+                          <div>Issued by&nbsp;</div>
                           <DisplayAddress
-                            style={{
-                              color: '#52c41a !important',
-                              display: 'inline',
-                            }}
                             connection={secondaryConnection}
                             address={tokenData.tokenManager?.parsed.issuer}
                             height="18px"
