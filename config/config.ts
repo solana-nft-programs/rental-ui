@@ -243,7 +243,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       'Homeowners Association (HOA) is an NFT project by Parcl, consisting of 7,777 unique combinations of iconic homes from four unique cities.',
     logoImage: '/logos/parcl.gif',
     colors: {
-      main: '#001242',
+      main: '#000D30',
       secondary: '#5529B7',
     },
     socialLinks: [
