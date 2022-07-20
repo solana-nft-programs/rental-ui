@@ -3,9 +3,9 @@ import type { TokenData } from 'api/api'
 import { darken } from 'polished'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 
-import { SOCIALS } from './Footer'
 import { HeroSmall } from './HeroSmall'
 import { HeroStats } from './HeroStats'
+import { SocialIcon } from './Socials'
 
 type Props = {
   tokenDatas?: TokenData[]
@@ -36,10 +36,10 @@ export const HeroLarge: React.FC<Props> = ({ tokenDatas }: Props) => {
           <div className="text-4xl text-light-0">{config.displayName}</div>
           <div className="text-lg text-medium-3">{config.description}</div>
           <div className="flex gap-4 text-light-0">
-            {Object.entries(SOCIALS).map(([id, { icon, link }]) => {
+            {config.socialLinks?.map(({ icon, link }, i) => {
               return (
                 <a
-                  key={id}
+                  key={i}
                   href={link}
                   target="_blank"
                   rel="noreferrer"
@@ -50,7 +50,7 @@ export const HeroLarge: React.FC<Props> = ({ tokenDatas }: Props) => {
                     }
                   `}
                 >
-                  {icon}
+                  <SocialIcon iconKey={icon} />
                 </a>
               )
             })}

@@ -1,5 +1,6 @@
 import type { TokenData } from 'api/api'
 import type { AirdropMetadata } from 'common/Airdrop'
+import { IconKey } from 'common/Socials'
 import type {
   DurationOption,
   RentalCardConfig,
@@ -65,6 +66,10 @@ export type ProjectConfig = {
   websiteUrl: string
   hero?: string
   description?: string
+  socialLinks?: {
+    icon: IconKey
+    link: string
+  }[]
   logoImage: string
   colors: Colors
   badges?: Badge[]
@@ -629,6 +634,20 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       main: '#192836',
       secondary: '#FFB60C',
     },
+    socialLinks: [
+      {
+        icon: 'discord',
+        link: 'https://discord.com/invite/miniroyale',
+      },
+      {
+        icon: 'web',
+        link: 'https://miniroyale.io/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/MiniNations',
+      },
+    ],
     badges: [{ badgeType: 'trending' }],
     filter: {
       type: 'creators',
