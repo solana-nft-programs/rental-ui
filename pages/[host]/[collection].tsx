@@ -1,6 +1,6 @@
+import { firstParam } from '@cardinal/common'
 import { Footer } from 'common/Footer'
 import { Browse } from 'components/Browse'
-import { Collections } from 'components/Collections'
 import { Manage } from 'components/Manage'
 import { Wallet } from 'components/Wallet'
 import Head from 'next/head'
@@ -19,13 +19,15 @@ export default function Home() {
   }, [router, tab])
 
   useEffect(() => {
-    if (
-      config.name !== 'default' &&
-      !router.query.host?.includes(config.name)
-    ) {
-      setProjectConfig('default')
+    const collection = firstParam(router.query.collection)
+    if (router.query.collection !== config.name && collection) {
+      setProjectConfig(collection)
     }
-  }, [router.query.host, config.name])
+  }, [router.query.collection])
+
+  if (router.query.collection !== config.name) {
+    return <></>
+  }
 
   return (
     <div
@@ -33,7 +35,7 @@ export default function Home() {
       style={{ backgroundColor: config.colors.main }}
     >
       <Head>
-        <title>Cardinal</title>
+        <title>Cardinal | {config.displayName}</title>
         <link rel="icon" href="/favicon.ico" />
 
         <link
@@ -55,28 +57,22 @@ export default function Home() {
           rel="stylesheet"
         />
       </Head>
-      {config.name !== 'default' || router.query.host?.includes(config.name) ? (
-        <>
-          <div style={{ minHeight: 'calc(100vh - 337px)' }}>
-            {(() => {
-              if (!tab) return <Browse />
-              else {
-                switch (tab) {
-                  case 'browse':
-                    return <Browse />
-                  case 'manage':
-                    return <Manage />
-                  default:
-                    return <Wallet />
-                }
-              }
-            })()}
-          </div>
-          <Footer bgColor={config.colors.main} />
-        </>
-      ) : (
-        <Collections />
-      )}
+      <div style={{ minHeight: 'calc(100vh - 337px)' }}>
+        {(() => {
+          if (!tab) return <Browse />
+          else {
+            switch (tab) {
+              case 'browse':
+                return <Browse />
+              case 'manage':
+                return <Manage />
+              default:
+                return <Wallet />
+            }
+          }
+        })()}
+      </div>
+      <Footer bgColor={config.colors.main} />
     </div>
   )
 }

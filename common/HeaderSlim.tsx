@@ -27,13 +27,13 @@ export const HeaderSlim: React.FC<Props> = ({ tabs, loading }: Props) => {
   const { host } = router.query
   const wallet = useWallet()
   const walletModal = useWalletModal()
-  const { config, setProjectConfig } = useProjectConfig()
+  const { config } = useProjectConfig()
   const { secondaryConnection, environment } = useEnvironmentCtx()
-  const [tab, setTab] = useState<string>('wallet')
+  const [tab, setTab] = useState<string>('browse')
 
   useEffect(() => {
     const anchor = router.asPath.split('#')[1]
-    if (anchor !== tab) setTab(anchor || 'wallet')
+    if (anchor !== tab) setTab(anchor || 'browse')
   }, [router.asPath, tab])
 
   return (
@@ -52,17 +52,7 @@ export const HeaderSlim: React.FC<Props> = ({ tabs, loading }: Props) => {
             <div
               className={`cursor-pointer text-center text-light-0 opacity-80 transition-opacity hover:opacity-100`}
               onClick={() => {
-                const { cluster } = router.query
-                if (false) {
-                  router.push(`/${location.search}#browse`)
-                } else {
-                  setProjectConfig('default')
-                  router.push(
-                    `${location.pathname}${
-                      cluster ? `?cluster=${cluster}` : ''
-                    }`
-                  )
-                }
+                router.push(`/${location.search}`)
               }}
             >
               Marketplace
@@ -108,8 +98,8 @@ export const HeaderSlim: React.FC<Props> = ({ tabs, loading }: Props) => {
             </div>
           )}
         </div>
-        {wallet.connected && wallet.publicKey ? (
-          <div className="flex w-56 justify-end">
+        <div className="flex w-56 justify-end">
+          {wallet.connected && wallet.publicKey ? (
             <AccountConnect
               dark={true}
               connection={secondaryConnection}
@@ -117,15 +107,15 @@ export const HeaderSlim: React.FC<Props> = ({ tabs, loading }: Props) => {
               handleDisconnect={() => wallet.disconnect()}
               wallet={asWallet(wallet)}
             />
-          </div>
-        ) : (
-          <ButtonSmall onClick={() => walletModal.setVisible(true)}>
-            <>
-              <GlyphWallet />
-              <>Connect wallet</>
-            </>
-          </ButtonSmall>
-        )}
+          ) : (
+            <ButtonSmall onClick={() => walletModal.setVisible(true)}>
+              <>
+                <GlyphWallet />
+                <>Connect wallet</>
+              </>
+            </ButtonSmall>
+          )}
+        </div>
       </div>
     </div>
   )

@@ -11,11 +11,11 @@ import { Stats } from 'common/Stats'
 import type { ProjectConfig } from 'config/config'
 import { projectConfigs } from 'config/config'
 import { queryId, useGlobalStats } from 'hooks/useGlobalStats'
+import { useRouter } from 'next/router'
 import { lighten, transparentize } from 'polished'
-import { useProjectConfig } from 'providers/ProjectConfigProvider'
 
 export const Collections = () => {
-  const { setProjectConfig } = useProjectConfig()
+  const router = useRouter()
   const stats = useGlobalStats()
 
   const categories = Object.entries(projectConfigs).reduce(
@@ -27,6 +27,7 @@ export const Collections = () => {
       }
     },
     {} as { [type: string]: ProjectConfig[] }
+    
   )
 
   return (
@@ -109,7 +110,9 @@ export const Collections = () => {
                       )};
                     }
                   `}
-                  onClick={() => setProjectConfig(config.name)}
+                  onClick={() =>
+                    router.push(`/${config.name}${location.search}`)
+                  }
                 >
                   <Card
                     badges={config.badges}
