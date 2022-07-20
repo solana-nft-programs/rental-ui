@@ -454,12 +454,28 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       },
     ],
   },
-  monke: {
-    name: 'monke',
-    displayName: 'Monke',
+  smb: {
+    name: 'smb',
+    displayName: 'Solana Monkey Business',
     type: 'Collection',
     websiteUrl: 'https://market.solanamonkey.business/',
     logoImage: '/logos/smb-large.png',
+    hero: '/logos/smb-hero.png',
+    description: '5000 inspired generative NFTs.',
+    socialLinks: [
+      {
+        icon: 'discord',
+        link: 'https://discord.com/invite/solanamonkeybusiness',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/SolanaMBS',
+      },
+      {
+        icon: 'web',
+        link: 'https://solanamonkey.business/',
+      },
+    ],
     colors: {
       main: '#202225',
       secondary: '#CCCDFF',
