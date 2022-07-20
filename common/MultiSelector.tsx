@@ -60,7 +60,7 @@ export const MultiSelector = <T,>({
       </div>
       {isOpen && (
         <div
-          className={`absolute max-h-[50vh] w-full overflow-scroll rounded-md text-xs  transition-all ${
+          className={`absolute max-h-[50vh] w-full overflow-scroll rounded-md transition-all ${
             isOpen ? 'h-auto opacity-100' : 'h-0 overflow-hidden opacity-0'
           }`}
           css={css`

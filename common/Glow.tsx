@@ -16,9 +16,8 @@ export const Glow = ({
   return (
     <div className={`relative h-fit w-fit overflow-visible ${className}`}>
       <div
-        className="absolute left-1/4 top-0 h-full w-1/2"
+        className="absolute left-1/4 top-0 h-full w-1/2 bg-glow"
         style={{
-          background: '#7560FF',
           opacity,
           filter: `blur(${blur}px)`,
           transform: `rotate(${angle}deg) scale(${scale})`,

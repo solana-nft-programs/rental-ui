@@ -6,6 +6,7 @@ import { useWallet } from '@solana/wallet-adapter-react'
 import type { TokenData } from 'api/api'
 import { GlyphActivity } from 'assets/GlyphActivity'
 import { GlyphBrowse } from 'assets/GlyphBrowse'
+import { GlyphLargeClose } from 'assets/GlyphLargeClose'
 import { Card } from 'common/Card'
 import { Glow } from 'common/Glow'
 import { HeaderSlim } from 'common/HeaderSlim'
@@ -359,6 +360,7 @@ export const Browse = () => {
           header: 'Claimed',
           icon: 'info',
           description: 'All currently claimed rentals are displayed below',
+          showEmpty: true,
           filter: {
             type: 'state',
             value: [TokenManagerState.Claimed.toString()],
@@ -456,7 +458,7 @@ export const Browse = () => {
             groups={Object.keys(sortedAttributes).map((traitType) => ({
               label: traitType,
               content: (
-                <div key={traitType} className="px-3 pb-3 text-xs">
+                <div key={traitType} className="px-3 pb-3 text-sm">
                   {sortedAttributes[traitType]!.map((value) => (
                     <div
                       key={`${traitType}-${value}`}
@@ -533,6 +535,8 @@ export const Browse = () => {
             <Card skeleton header={<></>} subHeader={<></>} />
             <Card skeleton header={<></>} subHeader={<></>} />
             <Card skeleton header={<></>} subHeader={<></>} />
+            <Card skeleton header={<></>} subHeader={<></>} />
+            <Card skeleton header={<></>} subHeader={<></>} />
           </div>
         ) : groupedTokens?.tokens && groupedTokens.tokens.length > 0 ? (
           <div className="flex flex-wrap justify-center gap-4 xl:justify-start">
@@ -577,7 +581,8 @@ export const Browse = () => {
           groupedTokens &&
           groupedTokens.showEmpty && (
             <div className="my-10 flex w-full flex-col items-center justify-center gap-1">
-              <div className="text-gray-500">
+              <GlyphLargeClose />
+              <div className="mt-4 text-medium-4">
                 No active rentals at this moment...
               </div>
             </div>

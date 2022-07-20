@@ -233,6 +233,57 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     ],
     marketplaceRate: 'days',
   },
+  parcl: {
+    name: 'parcl',
+    displayName: 'Homeowner Association (Parcl)',
+    type: 'Collection',
+    websiteUrl: 'https://www.hoa.house/',
+    hero: '/logos/parcl-hero.png',
+    description:
+      'Homeowners Association (HOA) is an NFT project by Parcl, consisting of 7,777 unique combinations of iconic homes from four unique cities.',
+    logoImage: '/logos/parcl.gif',
+    colors: {
+      main: '#001242',
+      secondary: '#5529B7',
+    },
+    socialLinks: [
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/parcl',
+      },
+      {
+        icon: 'web',
+        link: 'https://www.hoa.house/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/parcl',
+      },
+    ],
+    badges: [{ badgeType: 'recent' }],
+    filter: {
+      type: 'creators',
+      value: ['Cp3Fn6azbwtSG9LV1BWtQcAkQQiaQWDkc2LcqwaEuLuq'],
+    },
+    rentalCard: {
+      paymentManager: 'mainnet-cardinal-mini-royale',
+      invalidators: ['rate'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['minutes', 'hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '3 weeks',
+          value: 7258000,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+    airdrops: [],
+  },
   miniroyale: {
     name: 'miniroyale',
     displayName: 'Mini Royale',
