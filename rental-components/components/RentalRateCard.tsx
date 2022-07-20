@@ -1,12 +1,10 @@
 import { BN } from '@project-serum/anchor'
-import type { Wallet } from '@saberhq/solana-contrib'
-import type { Connection, Keypair } from '@solana/web3.js'
+import type { Keypair } from '@solana/web3.js'
 import type { TokenData } from 'api/api'
 import { Alert } from 'common/Alert'
 import { Button } from 'common/Button'
 import { DurationInput } from 'common/DurationInput'
 import { getQueryParam } from 'common/utils'
-import type { ProjectConfig } from 'config/config'
 import { useHandleRateRental } from 'handlers/useHandleRateRental'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useEffect, useState } from 'react'
@@ -18,25 +16,14 @@ import { PoweredByFooter } from 'rental-components/common/PoweredByFooter'
 
 export type RentalRateCardProps = {
   claim?: boolean
-  cluster?: string
-  connection: Connection
-  wallet: Wallet
   tokenData: TokenData
-  config?: ProjectConfig
-  appName?: string
-  appTwitter?: string
   otpKeypair?: Keypair
-  notify?: () => void
-  onComplete?: (asrg0: string) => void
 }
 
 export const RentalRateCard = ({
-  appName,
-  connection,
-  wallet,
   tokenData,
-  claim = true,
   otpKeypair,
+  claim = true,
 }: RentalRateCardProps) => {
   const [error, setError] = useState<string>()
   const [txid, setTxid] = useState<string>()

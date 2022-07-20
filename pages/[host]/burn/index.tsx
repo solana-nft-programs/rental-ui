@@ -4,6 +4,7 @@ import { useWallet } from '@solana/wallet-adapter-react'
 import { PublicKey, Transaction } from '@solana/web3.js'
 import type { TokenData } from 'api/api'
 import { Airdrop } from 'common/Airdrop'
+import { ButtonSmall } from 'common/ButtonSmall'
 import { Card } from 'common/Card'
 import { HeaderSlim } from 'common/HeaderSlim'
 import { NFT } from 'common/NFT'
@@ -12,7 +13,6 @@ import { executeTransaction } from 'common/Transactions'
 import { asWallet } from 'common/Wallets'
 import { useUserTokenData } from 'hooks/useUserTokenData'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
-import { AsyncButton } from 'rental-components/common/Button'
 
 function Burn() {
   const ctx = useEnvironmentCtx()
@@ -103,10 +103,9 @@ function Burn() {
                 key={tokenData?.tokenAccount?.pubkey.toBase58()}
                 tokenData={tokenData}
               ></NFT>
-              <AsyncButton
-                variant="primary"
+              <ButtonSmall
                 className="mx-auto mt-3"
-                handleClick={async () => {
+                onClick={async () => {
                   try {
                     await revokeRental(tokenData)
                   } catch (e) {
@@ -118,7 +117,7 @@ function Burn() {
                 }}
               >
                 Burn
-              </AsyncButton>
+              </ButtonSmall>
             </div>
           ))
         ) : (
