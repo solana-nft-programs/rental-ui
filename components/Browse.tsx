@@ -518,7 +518,7 @@ export const Browse = () => {
       <div className="mx-10 mt-4 flex items-end gap-[4px] text-light-0">
         <div>Results</div>
         <div className="relative top-[0.6px] text-medium-4">
-          {filteredAndSortedTokens.length}{' '}
+          {groupedTokens?.tokens?.length}{' '}
         </div>
       </div>
       <div className="mx-10 mt-4 flex flex-wrap justify-between gap-4">
