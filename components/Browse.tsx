@@ -420,9 +420,9 @@ export const Browse = () => {
       <HeroLarge
         tokenDatas={tokenManagers.data ? filteredAndSortedTokens : []}
       />
-      <div className="mx-10 mt-4 flex items-end gap-[4px] text-light-0">
-        <div>Results</div>
-        <div className="relative top-[0.6px] text-medium-4">
+      <div className="mx-10 mt-4 flex items-end gap-2">
+        <div className="text-xl text-light-0">Results</div>
+        <div className="relative -top-[0.6px] text-base text-medium-4">
           {groupedTokens?.tokens?.length}{' '}
         </div>
       </div>
