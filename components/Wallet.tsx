@@ -12,6 +12,7 @@ import { Info } from 'common/Info'
 import { MultiSelector } from 'common/MultiSelector'
 import { elligibleForRent, NFT, stateColor } from 'common/NFT'
 import {
+  filterTokensByAttributes,
   getAllAttributes,
   getNFTAtrributeFilters,
 } from 'common/NFTAttributeFilters'
@@ -25,7 +26,7 @@ import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { filterTokens, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useState } from 'react'
 
-import { filterTokensByAttributes, PANE_TABS } from './Browse'
+import { PANE_TABS } from './Browse'
 
 export const Wallet = () => {
   const { secondaryConnection, environment } = useEnvironmentCtx()

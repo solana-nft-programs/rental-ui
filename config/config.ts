@@ -32,7 +32,8 @@ export type TokenFilter = {
   value: string[]
 }
 
-export type TokenSection = {
+export interface TokenSection {
+  id: string
   header?: string
   description?: string
   icon?:

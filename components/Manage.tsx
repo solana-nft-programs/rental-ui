@@ -1,100 +1,159 @@
-import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
-import { css } from '@emotion/react'
-import { useWallet } from '@solana/wallet-adapter-react'
-import { Card } from 'common/Card'
+import type { PublicKey } from '@solana/web3.js'
+import type { TokenData } from 'api/api'
 import { HeaderSlim } from 'common/HeaderSlim'
 import { HeroSmall } from 'common/HeroSmall'
-import { NFT, stateColor } from 'common/NFT'
-import { NFTHeader } from 'common/NFTHeader'
-import { NFTIssuerInfo } from 'common/NFTIssuerInfo'
-import { NFTRevokeButton } from 'common/NFTRevokeButton'
+import { getAllAttributes } from 'common/NFTAttributeFilters'
+import { SelecterDrawer } from 'common/SelectedDrawer'
+import type { TokenFilter } from 'config/config'
 import { useManagedTokens } from 'hooks/useManagedTokens'
+import { useUserTokenData } from 'hooks/useUserTokenData'
+import { useWalletId } from 'hooks/useWalletId'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
+import { useState } from 'react'
+import { useQuery } from 'react-query'
+
+import { TokenQueryResults } from './TokenQueryResults'
+
+export type ManageTokenGroupId = 'all' | 'available' | 'rented' | 'rented-out'
+
+export type ManageTokenGroup = {
+  id: ManageTokenGroupId
+  header?: string
+  description?: string
+  icon?:
+    | 'time'
+    | 'featured'
+    | 'listed'
+    | 'rented'
+    | 'available'
+    | 'info'
+    | 'performance'
+  filter?: TokenFilter
+}
+
+export const tokenGroups = (walletId: PublicKey | null): ManageTokenGroup[] => [
+  {
+    id: 'all',
+    header: 'All',
+    description:
+      'View all tokens affiliated with your wallet on this marketplace',
+    icon: 'performance',
+    filter: {
+      type: 'claimer',
+      value: [walletId?.toString() || ''],
+    },
+  },
+  {
+    id: 'available',
+    header: 'Available',
+    description:
+      'View and select all tokens available for rent on this marketplace',
+    icon: 'available',
+    filter: {
+      type: 'owner',
+      value: [walletId?.toString() || ''],
+    },
+  },
+  {
+    id: 'rented',
+    header: 'Rented',
+    description:
+      'View all tokens you have currently rented on this marketplace',
+    icon: 'performance',
+    filter: {
+      type: 'claimer',
+      value: [walletId?.toString() || ''],
+    },
+  },
+  {
+    id: 'rented-out',
+    header: 'Rented out',
+    description:
+      'View all your currently rented out tokens on this marketplace',
+    icon: 'performance',
+    filter: {
+      type: 'issuer',
+      value: [walletId?.toString() || ''],
+    },
+  },
+]
+
+export const tokenDatasId = (tokenDatas: TokenData[] | undefined) =>
+  tokenDatas
+    ?.map((tokenData) => tokenData.metaplexData?.pubkey.toString())
+    .join(',')
 
 export const Manage = () => {
+  const walletId = useWalletId()
   const { config } = useProjectConfig()
-  const wallet = useWallet()
-  const tokenManagerByIssuer = useManagedTokens()
+  const userTokenDatas = useUserTokenData(config.filter)
+  const managedTokens = useManagedTokens()
+  const allManagedTokens = useQuery(
+    [
+      'useAllManagedTokens',
+      walletId?.toString(),
+      tokenDatasId(userTokenDatas.data),
+      tokenDatasId(managedTokens.data),
+    ],
+    () => {
+      return [...(userTokenDatas.data ?? []), ...(managedTokens.data ?? [])]
+    },
+    {
+      enabled: !!userTokenDatas.isFetched && !!managedTokens.isFetched,
+    }
+  )
+  const rentedTokens = useQuery(
+    [
+      'useRentedTokens',
+      walletId?.toString(),
+      tokenDatasId(userTokenDatas.data),
+    ],
+    () => {
+      return (userTokenDatas.data ?? []).filter(
+        (tokenData) =>
+          tokenData.tokenManager?.parsed.issuer.toString() ===
+          walletId?.toString()
+      )
+    },
+    {
+      enabled: !!userTokenDatas.data,
+    }
+  )
+
+  const [selectedTokens, setSelectedTokens] = useState<TokenData[]>([])
+  const [selectedGroup, setSelectedGroup] = useState<ManageTokenGroupId>('all')
+  const attributeFilterOptions = getAllAttributes(allManagedTokens.data ?? [])
   return (
     <>
+      <SelecterDrawer
+        selectedTokens={selectedTokens}
+        onClose={() => setSelectedTokens([])}
+      />
       <HeaderSlim
-        loading={
-          tokenManagerByIssuer.isFetched && tokenManagerByIssuer.isFetching
-        }
+        loading={userTokenDatas.isFetched && userTokenDatas.isFetching}
         tabs={[
-          {
-            name: 'Wallet',
-            anchor: wallet.publicKey?.toBase58() || 'wallet',
-            disabled: !wallet.connected,
-          },
+          { name: 'Browse', anchor: 'browse' },
           {
             name: 'Manage',
             anchor: 'manage',
-            disabled: !wallet.connected || config.disableListing,
+            disabled: !walletId || config.disableListing,
           },
-          { name: 'Browse', anchor: 'browse' },
         ]}
       />
-      <HeroSmall tokenDatas={tokenManagerByIssuer.data} />
-      <div className="mx-auto mt-12 max-w-[1634px]">
-        {!tokenManagerByIssuer.isFetched ? (
-          <div className="flex flex-wrap justify-center gap-4 xl:justify-start">
-            <Card skeleton header={<></>} subHeader={<></>} />
-            <Card skeleton header={<></>} subHeader={<></>} />
-            <Card skeleton header={<></>} subHeader={<></>} />
-            <Card skeleton header={<></>} subHeader={<></>} />
-            <Card skeleton header={<></>} subHeader={<></>} />
-            <Card skeleton header={<></>} subHeader={<></>} />
-            <Card skeleton header={<></>} subHeader={<></>} />
-            <Card skeleton header={<></>} subHeader={<></>} />
-          </div>
-        ) : tokenManagerByIssuer.data &&
-          tokenManagerByIssuer.data.length > 0 ? (
-          <div className="flex flex-wrap justify-center gap-4 xl:justify-start">
-            {tokenManagerByIssuer.data.map((tokenData) => (
-              <Card
-                key={tokenData.tokenManager?.pubkey.toString()}
-                hero={<NFT tokenData={tokenData} />}
-                header={<NFTHeader tokenData={tokenData} />}
-                content={
-                  {
-                    [TokenManagerState.Initialized]: <>Initiliazed</>,
-                    [TokenManagerState.Issued]: (
-                      <div className="flex w-full flex-row justify-between text-sm">
-                        <NFTIssuerInfo tokenData={tokenData} />
-                      </div>
-                    ),
-                    [TokenManagerState.Claimed]: (
-                      <div className="flex flex-row justify-between text-sm">
-                        <NFTIssuerInfo tokenData={tokenData} />
-                        <NFTRevokeButton
-                          tokenData={tokenData}
-                          callback={() => tokenManagerByIssuer.refetch()}
-                        />
-                      </div>
-                    ),
-                    [TokenManagerState.Invalidated]: (
-                      <div
-                        css={css`
-                          color: ${stateColor(TokenManagerState.Claimed, true)};
-                        `}
-                      >
-                        Invalidated
-                      </div>
-                    ),
-                  }[tokenData?.tokenManager?.parsed.state as TokenManagerState]
-                }
-              />
-            ))}
-          </div>
-        ) : (
-          <div className="white flex w-full flex-col items-center justify-center gap-1">
-            <div className="text-gray-500">
-              No outstanding {config.displayName} rentals found...
-            </div>
-          </div>
-        )}
-      </div>
+      <HeroSmall tokenDatas={[]} />
+      <TokenQueryResults
+        tokenGroup={tokenGroups(walletId).find((g) => g.id === selectedGroup)!}
+        setSelectedGroup={setSelectedGroup}
+        tokenQuery={
+          {
+            all: allManagedTokens,
+            available: userTokenDatas,
+            rented: rentedTokens,
+            'rented-out': managedTokens,
+          }[selectedGroup]
+        }
+        attributeFilterOptions={attributeFilterOptions}
+      />
     </>
   )
 }

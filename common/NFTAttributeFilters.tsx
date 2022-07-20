@@ -4,9 +4,7 @@ import type { ProjectConfig } from 'config/config'
 
 export const getAllAttributes = (
   tokens: TokenData[]
-): {
-  [traitType: string]: string[]
-} => {
+): NFTAtrributeFilterValues => {
   const allAttributes: { [traitType: string]: Set<any> } = {}
   tokens.forEach((tokenData) => {
     if (
@@ -30,6 +28,40 @@ export const getAllAttributes = (
     sortedAttributes[traitType] = Array.from(allAttributes[traitType] ?? [])
   })
   return sortedAttributes
+}
+
+export const filterTokensByAttributes = (
+  tokens: TokenData[],
+  filters: NFTAtrributeFilterValues
+): TokenData[] => {
+  if (
+    Object.keys(filters).length <= 0 ||
+    Object.values(filters).filter((v) => v.length > 0).length <= 0
+  ) {
+    return tokens
+  }
+  const attributeFilteredTokens: TokenData[] = []
+  tokens.forEach((token) => {
+    let addToken = false
+    Object.keys(filters).forEach((filterName) => {
+      if (filters[filterName]!.length > 0) {
+        filters[filterName]!.forEach((val) => {
+          if (
+            token.metadata?.data.attributes.filter(
+              (a: { trait_type: string; value: any }) =>
+                a.trait_type === filterName && a.value === val
+            ).length > 0
+          ) {
+            addToken = true
+          }
+        })
+      }
+    })
+    if (addToken) {
+      attributeFilteredTokens.push(token)
+    }
+  })
+  return attributeFilteredTokens
 }
 
 export type NFTAtrributeFilterValues = { [filterName: string]: string[] }
