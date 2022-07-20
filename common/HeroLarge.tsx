@@ -1,5 +1,4 @@
 import { css } from '@emotion/react'
-import type { TokenData } from 'api/api'
 import { darken } from 'polished'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 
@@ -7,13 +6,9 @@ import { HeroSmall } from './HeroSmall'
 import { HeroStats } from './HeroStats'
 import { SocialIcon } from './Socials'
 
-type Props = {
-  tokenDatas?: TokenData[]
-}
-
-export const HeroLarge: React.FC<Props> = ({ tokenDatas }: Props) => {
+export const HeroLarge: React.FC = () => {
   const { config } = useProjectConfig()
-  if (!config.hero) return <HeroSmall tokenDatas={tokenDatas} />
+  if (!config.hero) return <HeroSmall />
   return (
     <div className="mb-16 flex w-full flex-wrap items-stretch justify-center gap-12 py-8 px-4 lg:flex-nowrap lg:justify-between lg:gap-4 lg:px-20">
       <div className="relative w-full flex-grow xl:max-w-[40%]">
@@ -56,7 +51,7 @@ export const HeroLarge: React.FC<Props> = ({ tokenDatas }: Props) => {
             })}
           </div>
         </div>
-        <HeroStats tokenDatas={tokenDatas} />
+        <HeroStats />
       </div>
     </div>
   )

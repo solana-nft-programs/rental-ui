@@ -140,7 +140,7 @@ export const Manage = () => {
           },
         ]}
       />
-      <HeroSmall tokenDatas={[]} />
+      <HeroSmall />
       <TokenQueryResults
         tokenGroup={tokenGroups(walletId).find((g) => g.id === selectedGroup)!}
         setSelectedGroup={setSelectedGroup}

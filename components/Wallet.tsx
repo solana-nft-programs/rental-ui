@@ -138,7 +138,7 @@ export const Wallet = () => {
           { name: 'Browse', anchor: 'browse' },
         ]}
       />
-      <HeroSmall tokenDatas={[]} />
+      <HeroSmall />
       <div className="mx-10 mt-4 flex items-end gap-2">
         <div className="text-xl text-light-0">Results</div>
         <div className="relative -top-[0.6px] text-base text-medium-4">
