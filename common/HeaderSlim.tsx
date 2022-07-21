@@ -61,7 +61,7 @@ export const HeaderSlim: React.FC<Props> = ({
                 router.push(`/${location.search}`)
               }}
             >
-              Marketplace
+              Home
             </div>
           )}
         </div>

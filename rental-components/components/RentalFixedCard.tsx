@@ -1,9 +1,10 @@
-import { capitalizeFirstLetter, shortDateString } from '@cardinal/common'
+import { capitalizeFirstLetter } from '@cardinal/common'
 import type { Keypair } from '@solana/web3.js'
 import type { TokenData } from 'api/api'
 import { Alert } from 'common/Alert'
 import { Button } from 'common/Button'
 import { Pill } from 'common/Pill'
+import { RentalSummary } from 'common/RentalSummary'
 import { getQueryParam } from 'common/utils'
 import {
   getPriceFromTokenData,
@@ -19,17 +20,18 @@ import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useUTCNow } from 'providers/UTCNowProvider'
 import { useState } from 'react'
 import { useQueryClient } from 'react-query'
-import { SolanaLogo } from 'rental-components/common/icons'
 import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 import { PoweredByFooter } from 'rental-components/common/PoweredByFooter'
 
 export const secondsToStringForDisplay = (
   secondsAmount: number | undefined | null,
   config?: {
+    defaultString?: string
     delimiter?: string
     groupDelimiter?: string
     capitalizeSuffix?: boolean
     showTrailingZeros?: boolean
+    showLeadingZeros?: boolean
     fullSuffix?: boolean
     includes?: {
       suffix: string
@@ -39,8 +41,6 @@ export const secondsToStringForDisplay = (
     }[]
   }
 ) => {
-  if (!secondsAmount || secondsAmount <= 0) return '0'
-
   const ranges = config?.includes ?? [
     {
       suffix: 'd',
@@ -67,6 +67,26 @@ export const secondsToStringForDisplay = (
     },
   ]
 
+  const getSuffix = (suffix: string, fullSuffix: string, amount: number) => {
+    const preferredFullSuffix =
+      amount === 1 ? fullSuffix.slice(0, -1) : fullSuffix
+    const preferredSuffix = config?.fullSuffix ? preferredFullSuffix : suffix
+    return `${
+      config?.capitalizeSuffix
+        ? capitalizeFirstLetter(preferredSuffix)
+        : preferredSuffix
+    }`
+  }
+
+  if (!secondsAmount || secondsAmount <= 0) {
+    return (
+      config?.defaultString ??
+      (ranges[0]
+        ? `0 ${getSuffix(ranges[0].suffix, ranges[0]?.fullSuffix, 0)}`
+        : '0 days')
+    )
+  }
+
   const rangeAmount = (s: number, mod?: number) =>
     Math.floor(mod ? (secondsAmount / s) % mod : secondsAmount / s)
 
@@ -77,19 +97,19 @@ export const secondsToStringForDisplay = (
   const showRange = rangeAmounts.map(
     (rangeAmount, i) =>
       rangeAmount > 0 ||
-      config?.showTrailingZeros ||
-      rangeAmounts.slice(i).reduce((t, v) => t + v, 0) > 0
+      (config?.showTrailingZeros &&
+        rangeAmounts.slice(i).reduce((t, v) => t + v, 0) > 0) ||
+      (config?.showLeadingZeros &&
+        rangeAmounts.slice(0, i - 1).reduce((t, v) => t + v, 0) > 0)
   )
 
   return ranges.map(({ durationSeconds, fullSuffix, suffix, mod }, i) => {
     if (!showRange[i]) return ''
-    return `${rangeAmount(durationSeconds, mod)}${config?.delimiter ?? ''}${
-      config?.capitalizeSuffix
-        ? capitalizeFirstLetter(config?.fullSuffix ? fullSuffix : suffix)
-        : config?.fullSuffix
-        ? fullSuffix
-        : suffix
-    }${config?.groupDelimiter ?? ' '}`
+    return `${rangeAmount(durationSeconds, mod)}${
+      config?.delimiter ?? ''
+    }${getSuffix(suffix, fullSuffix, rangeAmount(durationSeconds, mod))}${
+      config?.groupDelimiter ?? ' '
+    }`
   })
 }
 
@@ -123,7 +143,7 @@ export const RentalFixedCard = ({
       <div
         className={`mb-4 flex w-full justify-center gap-4 overflow-x-auto pb-6`}
       >
-        <div className="relative w-1/2">
+        <div className="relative w-3/4 lg:w-1/2">
           {tokenData.metadata && tokenData.metadata.data && (
             <img
               className="rounded-lg"
@@ -150,7 +170,7 @@ export const RentalFixedCard = ({
         </div>
       )}
       <div className="flex flex-col gap-4">
-        <div className="flex justify-between gap-4 border-b-[1px] border-border pb-4">
+        <div className="flex justify-between gap-4">
           <div>
             <div className="mb-1 text-base text-light-0">Rental duration</div>
             <div className="text-base text-medium-3">
@@ -179,31 +199,7 @@ export const RentalFixedCard = ({
             </div>
           </div>
         </div>
-
-        <div className="flex justify-between gap-4">
-          <div className="flex gap-4">
-            <div>
-              <SolanaLogo width={24} height={24} className="mt-2" />
-            </div>
-            <div className="mb-2">
-              <div className="text-lg font-medium">
-                {getPriceFromTokenData(tokenData, paymentMints.data)}{' '}
-                {getSymbolFromTokenData(tokenData)} for{' '}
-                {secondsToStringForDisplay(durationSeconds?.toNumber() ?? 0, {
-                  fullSuffix: true,
-                  delimiter: ' ',
-                  showTrailingZeros: false,
-                })}
-              </div>
-              <div className="text-sm text-medium-3">
-                Expires on{' '}
-                {shortDateString(UTCNow + (durationSeconds?.toNumber() ?? 0))}
-              </div>
-            </div>
-          </div>
-          {/* <div className="text-base text-medium-3">($210.00)</div> */}
-        </div>
-
+        <RentalSummary tokenData={tokenData} />
         {txid && (
           <Alert variant="success">
             Congratulations! You have succesfully claimed your rental with

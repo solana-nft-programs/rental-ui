@@ -1,17 +1,20 @@
-import { BN } from '@project-serum/anchor'
+import { capitalizeFirstLetter } from '@cardinal/common'
 import type { Keypair } from '@solana/web3.js'
 import type { TokenData } from 'api/api'
 import { Alert } from 'common/Alert'
 import { Button } from 'common/Button'
 import { DurationInput } from 'common/DurationInput'
+import { Pill } from 'common/Pill'
+import { RentalSummary } from 'common/RentalSummary'
 import { getQueryParam } from 'common/utils'
+import { getPriceOrRentalRate, getSymbolFromTokenData } from 'components/Browse'
 import { useHandleRateRental } from 'handlers/useHandleRateRental'
+import { usePaymentMints } from 'hooks/usePaymentMints'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
-import { useEffect, useState } from 'react'
+import { useProjectConfig } from 'providers/ProjectConfigProvider'
+import { useState } from 'react'
 import { FiSend } from 'react-icons/fi'
-import { PAYMENT_MINTS } from 'rental-components/common/Constants'
 import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
-import { MintPriceSelector } from 'rental-components/common/MintPriceSelector'
 import { PoweredByFooter } from 'rental-components/common/PoweredByFooter'
 
 export type RentalRateCardProps = {
@@ -29,36 +32,17 @@ export const RentalRateCard = ({
   const [txid, setTxid] = useState<string>()
   const handleRateRental = useHandleRateRental()
   const { environment } = useEnvironmentCtx()
+  const { config } = useProjectConfig()
+  const paymentMints = usePaymentMints()
 
   const {
     extensionPaymentAmount,
     extensionPaymentMint,
     durationSeconds,
-    extensionDurationSeconds,
     maxExpiration,
   } = tokenData.timeInvalidator?.parsed || {}
 
-  const [paymentAmount, setPaymentAmount] = useState(new BN(0))
-  const [currentExtensionSeconds, setCurrentExtensionSeconds] = useState<
-    number | undefined | null
-  >(0)
-  // const userPaymentTokenAccount = useUserPaymentTokenAccount(
-  //   tokenData?.timeInvalidator?.parsed.extensionPaymentMint ?? undefined
-  // )
-
-  useEffect(() => {
-    currentExtensionSeconds !== null &&
-      currentExtensionSeconds !== undefined &&
-      setPaymentAmount(
-        (extensionPaymentAmount ?? new BN(0))
-          .mul(new BN(currentExtensionSeconds))
-          .div(extensionDurationSeconds ?? new BN(1))
-      )
-  }, [
-    extensionPaymentAmount?.toNumber(),
-    extensionDurationSeconds,
-    currentExtensionSeconds,
-  ])
+  const [currentExtensionSeconds, setCurrentExtensionSeconds] = useState(0)
 
   if (!extensionPaymentAmount || !extensionPaymentMint || !durationSeconds) {
     return <>Incorrect extension parameters</>
@@ -78,15 +62,19 @@ export const RentalRateCard = ({
 
   return (
     <div className="rounded-lg bg-dark-6 p-6">
-      <div className="text-center text-xl text-light-0">
+      <div className="text-center text-2xl text-light-0">
         Rent {tokenData.metadata?.data.name}
       </div>
+      <div className="mb-4 text-center text-lg text-medium-4">
+        {config.displayName}
+      </div>
       <div
-        className={`flex w-full justify-center gap-4 overflow-scroll overflow-x-auto py-4`}
+        className={`mb-4 flex w-full justify-center gap-4 overflow-x-auto pb-6`}
       >
-        <div className="w-1/2 flex-shrink-0 overflow-hidden rounded-lg bg-medium-4">
+        <div className="relative w-3/4 lg:w-1/2">
           {tokenData.metadata && tokenData.metadata.data && (
             <img
+              className="rounded-lg"
               src={
                 getQueryParam(tokenData.metadata?.data?.image, 'uri') ||
                 tokenData.metadata.data.image
@@ -94,11 +82,15 @@ export const RentalRateCard = ({
               alt={tokenData.metadata.data.name}
             />
           )}
+          <Pill className="absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-1/2 border-[1px] border-border text-primary">
+            Rate rental
+          </Pill>
         </div>
       </div>
       <p className="mb-2 flex flex-col gap-4 text-center text-[16px] text-gray-800">
         <span className="mb-2 text-[13px] text-gray-500">
-          <b>Max Rental Duration:&nbsp;</b>{' '}
+          This NFT can be rented for a specified duration<br></br>
+          <b>Max rental duration:&nbsp;</b>{' '}
           {maxExpiration
             ? `${new Date(maxExpiration?.toNumber() * 1000).toLocaleString(
                 'en-US',
@@ -112,12 +104,13 @@ export const RentalRateCard = ({
                 }
               )}
               `
-            : 'N/A'}
+            : 'N/A'}{' '}
+          (Local time)
         </span>
       </p>
 
       <div className="flex flex-col gap-4">
-        <div className="flex gap-4">
+        <div className="flex justify-between gap-4">
           <div>
             <div className="mb-1 text-base text-light-0">Rental duration</div>
             <DurationInput
@@ -126,33 +119,25 @@ export const RentalRateCard = ({
             />
           </div>
           <div>
-            <div className="mb-1 text-base text-light-0">Price</div>
-            <MintPriceSelector
-              price={paymentAmount}
-              defaultPrice={paymentAmount}
-              defaultMint={extensionPaymentMint?.toString()}
-              paymentMintData={PAYMENT_MINTS}
-              disabled={true}
-              mintDisabled={true}
-            />
+            <div className="mb-3 text-base text-light-0">Rental rate</div>
+            <div className="text-base text-medium-3">
+              {getPriceOrRentalRate(
+                config,
+                tokenData,
+                paymentMints.data
+              ).toFixed(4)}
+              {getSymbolFromTokenData(tokenData)} /{' '}
+              {capitalizeFirstLetter(config.marketplaceRate ?? 'days').slice(
+                0,
+                -1
+              )}
+            </div>
           </div>
         </div>
-        {/* <div className="mx-auto -mt-3 w-1/2">
-            <p className="ml-3 mt-2 text-[14px] text-gray-800">
-              <span className="font-bold">Duration of Rental: </span>
-              {`${secondsToString(currentExtensionSeconds)}
-              `}
-            </p>
-            <p className="ml-3 mt-2 text-[12px] text-gray-800">
-              <span className="font-bold ">Max Duration: </span>
-              {maxExpiration
-                ? `${new Date(maxExpiration?.toNumber() * 1000).toLocaleString(
-                    'en-US'
-                  )}
-              `
-                : 'N/A'}
-            </p>
-          </div> */}
+        <RentalSummary
+          tokenData={tokenData}
+          extensionSeconds={currentExtensionSeconds}
+        />
         {exceedMaxExpiration() && (
           <Alert variant="error">Extension amount exceeds max expiration</Alert>
         )}
@@ -180,10 +165,7 @@ export const RentalRateCard = ({
         <Button
           variant="primary"
           className="h-12"
-          disabled={
-            exceedMaxExpiration() ||
-            (paymentAmount.isZero() && extensionPaymentAmount.toNumber() !== 0)
-          }
+          disabled={exceedMaxExpiration()}
           onClick={() =>
             handleRateRental.mutate(
               {
