@@ -4,7 +4,7 @@ import type { IconKey } from 'common/Socials'
 import type {
   DurationOption,
   RentalCardConfig,
-} from 'rental-components/components/RentalCard'
+} from 'rental-components/components/RentalIssueCard'
 
 import type { UserTokenData } from '../hooks/useUserTokenData'
 

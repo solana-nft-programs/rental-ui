@@ -7,8 +7,8 @@ import { useOtp } from 'hooks/useOtp'
 import { usePaymentMints } from 'hooks/usePaymentMints'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
-import { useRentalFixedModal } from 'rental-components/components/RentalFixedCard'
-import { useRentalRateModal } from 'rental-components/RentalRateModalProvider'
+import { useRentalFixedCard } from 'rental-components/components/RentalFixedCard'
+import { useRentalRateCard } from 'rental-components/components/RentalRateCard'
 
 import { ButtonSmall } from './ButtonSmall'
 import { fmtMintAmount } from './units'
@@ -28,8 +28,8 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
   const { config } = useProjectConfig()
   const { connection } = useEnvironmentCtx()
   const paymentMintInfos = usePaymentMints()
-  const rentalRateModal = useRentalRateModal()
-  const rentalFixedModal = useRentalFixedModal()
+  const rentalRateCard = useRentalRateCard()
+  const rentalFixedCard = useRentalFixedCard()
   const otpKeypair = useOtp()
 
   const handleClaim = async (tokenData: TokenData) => {
@@ -45,9 +45,9 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
       ))
     ) {
       if (tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber() === 0) {
-        rentalRateModal.show({ tokenData, claim: true, otpKeypair })
+        rentalRateCard.showModal({ tokenData, claim: true, otpKeypair })
       } else {
-        rentalFixedModal.showRentalFixedModal({ tokenData, otpKeypair })
+        rentalFixedCard.showModal({ tokenData, otpKeypair })
       }
     }
   }

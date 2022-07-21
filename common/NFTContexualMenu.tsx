@@ -18,9 +18,9 @@ import { FaEllipsisH, FaLink } from 'react-icons/fa'
 import { FiExternalLink, FiSend } from 'react-icons/fi'
 import { IoAddSharp, IoClose, IoQrCodeOutline } from 'react-icons/io5'
 import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
+import { useRentalIssueCard } from 'rental-components/components/RentalIssueCard'
+import { useRentalRateCard } from 'rental-components/components/RentalRateCard'
 import { useQRCode } from 'rental-components/QRCodeProvider'
-import { useRentalModal } from 'rental-components/RentalModalProvider'
-import { useRentalRateModal } from 'rental-components/RentalRateModalProvider'
 
 import { elligibleForRent } from './NFT'
 import { notify } from './Notification'
@@ -32,8 +32,8 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
   const { config } = useProjectConfig()
   const wallet = useWallet()
   const qrCode = useQRCode()
-  const rentalRateModal = useRentalRateModal()
-  const rentalModal = useRentalModal()
+  const rentalRateCard = useRentalRateCard()
+  const rentalIssueCard = useRentalIssueCard()
   const handleReturnRental = useHandleReturnRental()
   const handleUnissueRental = useHandleUnissueRental()
 
@@ -135,13 +135,11 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
                 onClick={(e) => {
                   e.stopPropagation()
                   elligibleForRent(config, tokenData) &&
-                    rentalModal.show(
-                      asWallet(wallet),
-                      connection,
-                      environment.label,
-                      [tokenData],
-                      config.rentalCard
-                    )
+                    rentalIssueCard.showModal({
+                      cluster: environment.label,
+                      tokenDatas: [tokenData],
+                      rentalCardConfig: config.rentalCard,
+                    })
                 }}
               >
                 <FiSend />
@@ -225,7 +223,7 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
                   className="flex cursor-pointer items-center justify-between gap-2"
                   onClick={async (e) => {
                     e.stopPropagation()
-                    rentalRateModal.show({ tokenData, claim: false })
+                    rentalRateCard.showModal({ tokenData, claim: false })
                   }}
                 >
                   <IoAddSharp />

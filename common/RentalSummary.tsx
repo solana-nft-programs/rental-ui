@@ -1,4 +1,4 @@
-import { shortDateString } from '@cardinal/common'
+import { capitalizeFirstLetter, shortDateString } from '@cardinal/common'
 import { BN } from '@project-serum/anchor'
 import type * as splToken from '@solana/spl-token'
 import type { TokenData } from 'api/api'
@@ -9,7 +9,6 @@ import {
 import { usePaymentMints } from 'hooks/usePaymentMints'
 import { useUTCNow } from 'providers/UTCNowProvider'
 import { SolanaLogo } from 'rental-components/common/icons'
-import { secondsToStringForDisplay } from 'rental-components/components/RentalFixedCard'
 
 import { getMintDecimalAmount } from './units'
 
@@ -45,6 +44,96 @@ export const getExtensionPrice = (
         tokenData.timeInvalidator?.parsed.extensionDurationSeconds ?? new BN(1)
       )
   ).toNumber()
+}
+
+export const secondsToStringForDisplay = (
+  secondsAmount: number | undefined | null,
+  config?: {
+    defaultString?: string
+    delimiter?: string
+    groupDelimiter?: string
+    capitalizeSuffix?: boolean
+    showTrailingZeros?: boolean
+    showLeadingZeros?: boolean
+    fullSuffix?: boolean
+    includes?: {
+      suffix: string
+      fullSuffix: string
+      durationSeconds: number
+      mod: number
+    }[]
+  }
+) => {
+  const ranges = config?.includes ?? [
+    {
+      suffix: 'd',
+      fullSuffix: 'days',
+      durationSeconds: 60 * 60 * 24,
+    },
+    {
+      suffix: 'h',
+      fullSuffix: 'hours',
+      durationSeconds: 60 * 60,
+      mod: 24,
+    },
+    {
+      suffix: 'm',
+      fullSuffix: 'minutes',
+      durationSeconds: 60,
+      mod: 60,
+    },
+    {
+      suffix: 's',
+      fullSuffix: 'seconds',
+      durationSeconds: 1,
+      mod: 60,
+    },
+  ]
+
+  const getSuffix = (suffix: string, fullSuffix: string, amount: number) => {
+    const preferredFullSuffix =
+      amount === 1 ? fullSuffix.slice(0, -1) : fullSuffix
+    const preferredSuffix = config?.fullSuffix ? preferredFullSuffix : suffix
+    return `${
+      config?.capitalizeSuffix
+        ? capitalizeFirstLetter(preferredSuffix)
+        : preferredSuffix
+    }`
+  }
+
+  if (!secondsAmount || secondsAmount <= 0) {
+    return (
+      config?.defaultString ??
+      (ranges[0]
+        ? `0 ${getSuffix(ranges[0].suffix, ranges[0]?.fullSuffix, 0)}`
+        : '0 days')
+    )
+  }
+
+  const rangeAmount = (s: number, mod?: number) =>
+    Math.floor(mod ? (secondsAmount / s) % mod : secondsAmount / s)
+
+  const rangeAmounts = ranges.map(({ durationSeconds, mod }) =>
+    rangeAmount(durationSeconds, mod)
+  )
+
+  const showRange = rangeAmounts.map(
+    (rangeAmount, i) =>
+      rangeAmount > 0 ||
+      (config?.showTrailingZeros &&
+        rangeAmounts.slice(i).reduce((t, v) => t + v, 0) > 0) ||
+      (config?.showLeadingZeros &&
+        rangeAmounts.slice(0, i - 1).reduce((t, v) => t + v, 0) > 0)
+  )
+
+  return ranges.map(({ durationSeconds, fullSuffix, suffix, mod }, i) => {
+    if (!showRange[i]) return ''
+    return `${rangeAmount(durationSeconds, mod)}${
+      config?.delimiter ?? ''
+    }${getSuffix(suffix, fullSuffix, rangeAmount(durationSeconds, mod))}${
+      config?.groupDelimiter ?? ' '
+    }`
+  })
 }
 
 export const RentalSummary: React.FC<Props> = ({

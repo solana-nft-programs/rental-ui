@@ -12,8 +12,6 @@ import { claimLinks } from '@cardinal/token-manager'
 import { InvalidationType } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { css } from '@emotion/react'
 import * as anchor from '@project-serum/anchor'
-import type { Wallet } from '@saberhq/solana-contrib'
-import type { Connection } from '@solana/web3.js'
 import { DatePicker } from 'antd'
 import type { TokenData } from 'api/api'
 import { GlyphEdit } from 'assets/GlyphEdit'
@@ -28,8 +26,10 @@ import { Tooltip } from 'common/Tooltip'
 import { fmtMintAmount } from 'common/units'
 import { useHandleIssueRental } from 'handlers/useHandleIssueRental'
 import { usePaymentMints } from 'hooks/usePaymentMints'
+import { useWalletId } from 'hooks/useWalletId'
 import moment from 'moment'
 import { lighten } from 'polished'
+import { useModal } from 'providers/ModalProvider'
 import { getLink } from 'providers/ProjectConfigProvider'
 import { useEffect, useState } from 'react'
 import { FaLink } from 'react-icons/fa'
@@ -128,42 +128,35 @@ export type RentalCardConfig = {
   paymentManager?: string
 }
 
-export type RentalCardProps = {
-  dev?: boolean
+export type RentalIssueCardProps = {
   cluster?: string
-  connection: Connection
-  wallet: Wallet
   tokenDatas: TokenData[]
-  appName?: string
-  appTwitter?: string
   rentalCardConfig: RentalCardConfig
-  notify?: () => void
-  onComplete?: (asrg0: string) => void
 }
 
-export const RentalCard = ({
+export const RentalIssueCard = ({
   cluster,
-  wallet,
   tokenDatas,
   rentalCardConfig,
-}: RentalCardProps) => {
+}: RentalIssueCardProps) => {
   const [error, setError] = useState<string>()
   const [link, setLink] = useState<string | null>()
   const paymentMintInfos = usePaymentMints()
   const [totalTokens, setTotalTokens] = useState(tokenDatas.length)
   const handleIssueRental = useHandleIssueRental()
+  const walletId = useWalletId()
 
   // Pull overrides from config
   const visibilities =
     rentalCardConfig.invalidationOptions?.visibilities || VISIBILITY_OPTIONS
   const invalidationTypes =
     rentalCardConfig.invalidationOptions?.customInvalidationTypes &&
-    wallet.publicKey &&
-    wallet.publicKey.toString() in
+    walletId &&
+    walletId.toString() in
       rentalCardConfig.invalidationOptions.customInvalidationTypes
       ? INVALIDATION_TYPES.filter(({ label }) =>
           rentalCardConfig.invalidationOptions?.customInvalidationTypes?.[
-            wallet.publicKey.toString()
+            walletId.toString()
           ]?.includes(label)
         )
       : rentalCardConfig.invalidationOptions?.invalidationTypes
@@ -627,7 +620,7 @@ export const RentalCard = ({
                   <input
                     className="w-full rounded-xl border border-border bg-dark-4 py-2 px-3 text-light-0 placeholder-medium-3 transition-all focus:border-primary focus:outline-none"
                     value={customInvalidator}
-                    placeholder={shortPubKey(wallet.publicKey)}
+                    placeholder={shortPubKey(walletId)}
                     onChange={(e) => setCustomInvalidator(e.target.value)}
                   />
                   <Button
@@ -636,9 +629,7 @@ export const RentalCard = ({
                     css={css`
                       height: calc(100% - 2px);
                     `}
-                    onClick={() =>
-                      setCustomInvalidator(wallet.publicKey.toString())
-                    }
+                    onClick={() => setCustomInvalidator(walletId?.toString())}
                   >
                     Me
                   </Button>
@@ -1085,4 +1076,12 @@ export const RentalCard = ({
       </div>
     </div>
   )
+}
+
+export const useRentalIssueCard = () => {
+  const { showModal } = useModal()
+  return {
+    showModal: (props: RentalIssueCardProps) =>
+      showModal(<RentalIssueCard {...props} />),
+  }
 }

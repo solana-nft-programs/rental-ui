@@ -34,7 +34,7 @@ import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { filterTokens, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useUTCNow } from 'providers/UTCNowProvider'
 import { useEffect, useState } from 'react'
-import { DURATION_DATA } from 'rental-components/components/RentalCard'
+import { DURATION_DATA } from 'rental-components/components/RentalIssueCard'
 
 export const handleCopy = (shareUrl: string) => {
   navigator.clipboard.writeText(shareUrl)

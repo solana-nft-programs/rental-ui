@@ -96,7 +96,7 @@ export const HeroStats: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   const tokenManagers = useFilteredTokenManagers()
   const tokenDatas = tokenManagers.data ?? []
   return (
-    <div className={`flex flex-wrap ${className}`}>
+    <div className={`flex flex-wrap gap-y-5 ${className}`}>
       <div className="flex flex-col items-center justify-center">
         <div className="text-lg text-medium-4">Floor price</div>
         {!tokenDatas || !paymentMints.data ? (

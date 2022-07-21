@@ -63,7 +63,7 @@ export const Collections = () => {
               </div>
             </div>
             <div className="flex w-fit gap-3 rounded-xl border-[2px] border-border p-4">
-              <div className="flex gap-2">
+              <div className="flex items-center gap-2">
                 <div className="text-medium-3">Total rentals</div>
                 <div className="text-light-0">
                   {stats.data &&
@@ -75,7 +75,7 @@ export const Collections = () => {
                 </div>
               </div>
               <div className="w-[2px] bg-border"></div>
-              <div className="flex gap-2">
+              <div className="flex items-center gap-2">
                 <div className="text-medium-3">Listed rentals</div>
                 <div className="text-light-0">
                   {stats.data &&
