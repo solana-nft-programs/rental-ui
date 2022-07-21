@@ -11,6 +11,7 @@ import { ToastContainer } from 'common/Notification'
 import type { ProjectConfig } from 'config/config'
 import type { AppProps } from 'next/app'
 import { EnvironmentProvider } from 'providers/EnvironmentProvider'
+import { ModalProvider } from 'providers/ModalProvider'
 import {
   getInitialProps,
   ProjectConfigProvider,
@@ -47,17 +48,21 @@ const App = ({
           <ProjectConfigProvider defaultConfig={config}>
             <QueryClientProvider client={queryClient}>
               <QRCodeProvider>
-                <RentalModalProvider>
-                  <RentalRateModalProvider>
-                    <WalletModalProvider>
-                      <>
-                        <ToastContainer />
-                        <Component {...pageProps} />
-                        {DEBUG && <ReactQueryDevtools initialIsOpen={false} />}
-                      </>
-                    </WalletModalProvider>
-                  </RentalRateModalProvider>
-                </RentalModalProvider>
+                <ModalProvider>
+                  <RentalModalProvider>
+                    <RentalRateModalProvider>
+                      <WalletModalProvider>
+                        <>
+                          <ToastContainer />
+                          <Component {...pageProps} />
+                          {DEBUG && (
+                            <ReactQueryDevtools initialIsOpen={false} />
+                          )}
+                        </>
+                      </WalletModalProvider>
+                    </RentalRateModalProvider>
+                  </RentalModalProvider>
+                </ModalProvider>
               </QRCodeProvider>
             </QueryClientProvider>
           </ProjectConfigProvider>

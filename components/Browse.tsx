@@ -1,3 +1,4 @@
+import { secondsToString } from '@cardinal/common'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { BN } from '@project-serum/anchor'
 import type * as splToken from '@solana/spl-token'
@@ -26,7 +27,6 @@ import { notify } from 'common/Notification'
 import { Selector } from 'common/Selector'
 import { TabSelector } from 'common/TabSelector'
 import { fmtMintAmount, getMintDecimalAmount } from 'common/units'
-import { secondsToString } from 'common/utils'
 import type { ProjectConfig, TokenSection } from 'config/config'
 import { useFilteredTokenManagers } from 'hooks/useFilteredTokenManagers'
 import { PAYMENT_MINTS, usePaymentMints } from 'hooks/usePaymentMints'
@@ -153,7 +153,7 @@ export function getTokenRentalRate(
 
 export const getPriceFromTokenData = (
   tokenData: TokenData,
-  paymentMintInfos: { [name: string]: splToken.MintInfo }
+  paymentMintInfos?: { [name: string]: splToken.MintInfo }
 ): number => {
   if (
     tokenData.claimApprover?.parsed &&
@@ -175,7 +175,7 @@ export const getPriceFromTokenData = (
   }
 }
 
-const getPriceOrRentalRate = (
+export const getPriceOrRentalRate = (
   config: ProjectConfig,
   tokenData: TokenData,
   paymentMintInfos?: { [name: string]: splToken.MintInfo }
