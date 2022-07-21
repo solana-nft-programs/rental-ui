@@ -2,18 +2,15 @@ import { BN } from '@project-serum/anchor'
 import { useWallet } from '@solana/wallet-adapter-react'
 import type { TokenData } from 'api/api'
 import { getSymbolFromTokenData, getTokenRentalRate } from 'components/Browse'
-import {
-  allowedToRent,
-  useHandleClaimRental,
-} from 'handlers/useHandleClaimRental'
+import { allowedToRent } from 'handlers/useHandleClaimRental'
 import { useOtp } from 'hooks/useOtp'
 import { usePaymentMints } from 'hooks/usePaymentMints'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
+import { useRentalFixedModal } from 'rental-components/components/RentalFixedCard'
 import { useRentalRateModal } from 'rental-components/RentalRateModalProvider'
 
 import { ButtonSmall } from './ButtonSmall'
-import { notify } from './Notification'
 import { fmtMintAmount } from './units'
 
 interface NFTClaimButtonProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -30,9 +27,9 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
   const wallet = useWallet()
   const { config } = useProjectConfig()
   const { connection } = useEnvironmentCtx()
-  const handleClaimRental = useHandleClaimRental()
   const paymentMintInfos = usePaymentMints()
   const rentalRateModal = useRentalRateModal()
+  const rentalFixedModal = useRentalFixedModal()
   const otpKeypair = useOtp()
 
   const handleClaim = async (tokenData: TokenData) => {
@@ -50,17 +47,7 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
       if (tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber() === 0) {
         rentalRateModal.show({ tokenData, claim: true, otpKeypair })
       } else {
-        try {
-          await handleClaimRental.mutateAsync({ tokenData, otpKeypair })
-        } catch (e: any) {
-          console.log(e)
-          notify({
-            message: 'Error claiming rental',
-            description: e.toString(),
-          })
-        } finally {
-          callback && callback()
-        }
+        rentalFixedModal.showRentalFixedModal({ tokenData, otpKeypair })
       }
     }
   }

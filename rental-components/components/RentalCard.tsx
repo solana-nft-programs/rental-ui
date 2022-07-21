@@ -1,4 +1,13 @@
-import { secondstoDuration, tryPublicKey } from '@cardinal/common'
+import {
+  capitalizeFirstLetter,
+  getQueryParam,
+  longDateString,
+  pubKeyUrl,
+  secondstoDuration,
+  shortDateString,
+  shortPubKey,
+  tryPublicKey,
+} from '@cardinal/common'
 import { claimLinks } from '@cardinal/token-manager'
 import { InvalidationType } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { css } from '@emotion/react'
@@ -17,14 +26,6 @@ import { Switch } from 'common/Switch'
 import { Toggle } from 'common/Toggle'
 import { Tooltip } from 'common/Tooltip'
 import { fmtMintAmount } from 'common/units'
-import {
-  capitalizeFirstLetter,
-  getQueryParam,
-  longDateString,
-  pubKeyUrl,
-  shortDateString,
-  shortPubKey,
-} from 'common/utils'
 import { useHandleIssueRental } from 'handlers/useHandleIssueRental'
 import { usePaymentMints } from 'hooks/usePaymentMints'
 import moment from 'moment'

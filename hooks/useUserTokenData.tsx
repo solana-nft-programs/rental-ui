@@ -17,6 +17,8 @@ import { useQuery } from 'react-query'
 
 import { useWalletId } from './useWalletId'
 
+export const USE_USER_TOKEN_DATAS_KEY = 'useUserTokenData'
+
 export type UserTokenData = {
   tokenAccount?: {
     pubkey: PublicKey
@@ -38,7 +40,7 @@ export const useUserTokenData = (filter?: TokenFilter, cluster?: string) => {
   const { connection } = useEnvironmentCtx()
 
   return useQuery<UserTokenData[]>(
-    ['useUserTokenData', walletId, filter?.value],
+    [USE_USER_TOKEN_DATAS_KEY, walletId, filter?.value],
     async () => {
       if (!walletId) return []
 
