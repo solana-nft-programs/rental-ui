@@ -11,6 +11,7 @@ import { getPriceOrRentalRate, getSymbolFromTokenData } from 'components/Browse'
 import { useHandleRateRental } from 'handlers/useHandleRateRental'
 import { usePaymentMints } from 'hooks/usePaymentMints'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
+import { useModal } from 'providers/ModalProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useState } from 'react'
 import { FiSend } from 'react-icons/fi'
@@ -205,4 +206,12 @@ export const RentalRateCard = ({
       <PoweredByFooter />
     </div>
   )
+}
+
+export const useRentalRateCard = () => {
+  const { showModal } = useModal()
+  return {
+    showModal: (params: RentalRateCardProps) =>
+      showModal(<RentalRateCard {...params} />),
+  }
 }

@@ -4,7 +4,7 @@ import type { TokenData } from 'api/api'
 import { Alert } from 'common/Alert'
 import { Button } from 'common/Button'
 import { Pill } from 'common/Pill'
-import { RentalSummary } from 'common/RentalSummary'
+import { RentalSummary, secondsToStringForDisplay } from 'common/RentalSummary'
 import { getQueryParam } from 'common/utils'
 import {
   getPriceFromTokenData,
@@ -17,101 +17,10 @@ import { USE_USER_TOKEN_DATAS_KEY } from 'hooks/useUserTokenData'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useModal } from 'providers/ModalProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
-import { useUTCNow } from 'providers/UTCNowProvider'
 import { useState } from 'react'
 import { useQueryClient } from 'react-query'
 import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 import { PoweredByFooter } from 'rental-components/common/PoweredByFooter'
-
-export const secondsToStringForDisplay = (
-  secondsAmount: number | undefined | null,
-  config?: {
-    defaultString?: string
-    delimiter?: string
-    groupDelimiter?: string
-    capitalizeSuffix?: boolean
-    showTrailingZeros?: boolean
-    showLeadingZeros?: boolean
-    fullSuffix?: boolean
-    includes?: {
-      suffix: string
-      fullSuffix: string
-      durationSeconds: number
-      mod: number
-    }[]
-  }
-) => {
-  const ranges = config?.includes ?? [
-    {
-      suffix: 'd',
-      fullSuffix: 'days',
-      durationSeconds: 60 * 60 * 24,
-    },
-    {
-      suffix: 'h',
-      fullSuffix: 'hours',
-      durationSeconds: 60 * 60,
-      mod: 24,
-    },
-    {
-      suffix: 'm',
-      fullSuffix: 'minutes',
-      durationSeconds: 60,
-      mod: 60,
-    },
-    {
-      suffix: 's',
-      fullSuffix: 'seconds',
-      durationSeconds: 1,
-      mod: 60,
-    },
-  ]
-
-  const getSuffix = (suffix: string, fullSuffix: string, amount: number) => {
-    const preferredFullSuffix =
-      amount === 1 ? fullSuffix.slice(0, -1) : fullSuffix
-    const preferredSuffix = config?.fullSuffix ? preferredFullSuffix : suffix
-    return `${
-      config?.capitalizeSuffix
-        ? capitalizeFirstLetter(preferredSuffix)
-        : preferredSuffix
-    }`
-  }
-
-  if (!secondsAmount || secondsAmount <= 0) {
-    return (
-      config?.defaultString ??
-      (ranges[0]
-        ? `0 ${getSuffix(ranges[0].suffix, ranges[0]?.fullSuffix, 0)}`
-        : '0 days')
-    )
-  }
-
-  const rangeAmount = (s: number, mod?: number) =>
-    Math.floor(mod ? (secondsAmount / s) % mod : secondsAmount / s)
-
-  const rangeAmounts = ranges.map(({ durationSeconds, mod }) =>
-    rangeAmount(durationSeconds, mod)
-  )
-
-  const showRange = rangeAmounts.map(
-    (rangeAmount, i) =>
-      rangeAmount > 0 ||
-      (config?.showTrailingZeros &&
-        rangeAmounts.slice(i).reduce((t, v) => t + v, 0) > 0) ||
-      (config?.showLeadingZeros &&
-        rangeAmounts.slice(0, i - 1).reduce((t, v) => t + v, 0) > 0)
-  )
-
-  return ranges.map(({ durationSeconds, fullSuffix, suffix, mod }, i) => {
-    if (!showRange[i]) return ''
-    return `${rangeAmount(durationSeconds, mod)}${
-      config?.delimiter ?? ''
-    }${getSuffix(suffix, fullSuffix, rangeAmount(durationSeconds, mod))}${
-      config?.groupDelimiter ?? ' '
-    }`
-  })
-}
 
 export type RentalFixedCardParams = {
   tokenData: TokenData
@@ -129,7 +38,6 @@ export const RentalFixedCard = ({
   const paymentMints = usePaymentMints()
   const { environment } = useEnvironmentCtx()
   const { config } = useProjectConfig()
-  const { UTCNow } = useUTCNow()
   const { durationSeconds } = tokenData.timeInvalidator?.parsed || {}
 
   return (
@@ -261,10 +169,10 @@ export const RentalFixedCard = ({
   )
 }
 
-export const useRentalFixedModal = () => {
+export const useRentalFixedCard = () => {
   const { showModal } = useModal()
   return {
-    showRentalFixedModal: (params: RentalFixedCardParams) =>
+    showModal: (params: RentalFixedCardParams) =>
       showModal(<RentalFixedCard {...params} />),
   }
 }

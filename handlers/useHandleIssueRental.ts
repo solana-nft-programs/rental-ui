@@ -18,7 +18,7 @@ import { executeAllTransactions } from 'api/utils'
 import { asWallet } from 'common/Wallets'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useMutation } from 'react-query'
-import type { RentalCardConfig } from 'rental-components/components/RentalCard'
+import type { RentalCardConfig } from 'rental-components/components/RentalIssueCard'
 
 export interface HandleIssueRentalParams {
   tokenDatas: TokenData[]

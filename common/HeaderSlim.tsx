@@ -45,7 +45,12 @@ export const HeaderSlim: React.FC<Props> = ({
     <div className="w-full px-4 py-4">
       <div className="flex min-h-[72px] flex-wrap items-center justify-center gap-4 rounded-xl bg-white bg-opacity-5 py-4 px-8 lg:justify-between">
         <div className="flex items-center gap-5">
-          <div className="flex items-center">
+          <div
+            className="flex cursor-pointer items-center transition-opacity hover:opacity-60"
+            onClick={() => {
+              router.push(`/${location.search}`)
+            }}
+          >
             <img
               alt="Cardinal logo"
               className="inline-block h-6"
@@ -53,7 +58,7 @@ export const HeaderSlim: React.FC<Props> = ({
             />
             <span className="ml-2 text-2xl text-white">Cardinal</span>
           </div>
-          {(homeButton ||
+          {/* {(homeButton ||
             (config.name !== 'default' && !host?.includes(config.name))) && (
             <div
               className={`cursor-pointer text-center text-light-0 opacity-80 transition-opacity hover:opacity-100`}
@@ -63,7 +68,7 @@ export const HeaderSlim: React.FC<Props> = ({
             >
               Home
             </div>
-          )}
+          )} */}
         </div>
         <div className="relative lg:absolute lg:left-1/2 lg:-translate-x-1/2">
           {tabs && (

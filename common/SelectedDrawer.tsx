@@ -1,13 +1,11 @@
 import { css } from '@emotion/react'
-import { useWallet } from '@solana/wallet-adapter-react'
 import type { TokenData } from 'api/api'
 import { GlyphClose } from 'assets/GlyphClose'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
-import { useRentalModal } from 'rental-components/RentalModalProvider'
+import { useRentalIssueCard } from 'rental-components/components/RentalIssueCard'
 
 import { Button } from './Button'
-import { asWallet } from './Wallets'
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   selectedTokens: TokenData[]
@@ -19,9 +17,8 @@ export const SelecterDrawer: React.FC<Props> = ({
   onClose,
 }: Props) => {
   const { config } = useProjectConfig()
-  const wallet = useWallet()
-  const { connection, environment } = useEnvironmentCtx()
-  const rentalModal = useRentalModal()
+  const { environment } = useEnvironmentCtx()
+  const rentalIsseuCard = useRentalIssueCard()
   return (
     <div
       className={`fixed z-30 flex w-full items-center justify-between gap-4 bg-dark-6 px-4 py-8 transition-all lg:px-12 ${
@@ -41,13 +38,11 @@ export const SelecterDrawer: React.FC<Props> = ({
           variant="primary"
           className="px-4 lg:px-8"
           onClick={() =>
-            rentalModal.show(
-              asWallet(wallet),
-              connection,
-              environment.label,
-              selectedTokens,
-              config.rentalCard
-            )
+            rentalIsseuCard.showModal({
+              cluster: environment.label,
+              tokenDatas: selectedTokens,
+              rentalCardConfig: config.rentalCard,
+            })
           }
         >
           Rent out
