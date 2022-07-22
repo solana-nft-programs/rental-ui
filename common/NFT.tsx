@@ -37,29 +37,19 @@ export const getExpiration = (
   tokenData: TokenData,
   UTCNow: number
 ): string | undefined => {
-  const { timeInvalidator, tokenManager } = tokenData
-  if (tokenManager?.parsed.state !== TokenManagerState.Claimed) return
-  return timeInvalidator?.parsed.maxExpiration
-    ? getExpirationString(
-        timeInvalidator?.parsed.maxExpiration.toNumber(),
-        UTCNow,
-        { delimiter: ':', capitalizeSuffix: true, showZeros: true }
-      )
-    : timeInvalidator?.parsed.expiration
-    ? getExpirationString(
-        timeInvalidator?.parsed.expiration.toNumber(),
-        UTCNow,
-        { delimiter: ':', capitalizeSuffix: true, showZeros: true }
-      )
-    : (timeInvalidator?.parsed.durationSeconds &&
-        getExpirationString(
-          tokenManager?.parsed.stateChangedAt
-            .add(timeInvalidator?.parsed.durationSeconds)
-            .toNumber(),
-          UTCNow,
-          { delimiter: ':', capitalizeSuffix: true, showZeros: true }
-        )) ||
-      undefined
+  if (tokenData?.tokenManager?.parsed.state !== TokenManagerState.Claimed)
+    return
+  const { durationSeconds, expiration, maxExpiration } =
+    tokenData.timeInvalidator?.parsed || {}
+
+  return getExpirationString(
+    Math.min(
+      maxExpiration?.toNumber() ?? Infinity,
+      expiration?.toNumber() ?? UTCNow + (durationSeconds?.toNumber() ?? 0)
+    ),
+    UTCNow,
+    { delimiter: ':', capitalizeSuffix: true, showZeros: true }
+  )
 }
 
 interface NFTProps {

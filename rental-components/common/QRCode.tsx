@@ -7,7 +7,7 @@ import { getLink } from 'providers/ProjectConfigProvider'
 import { useCallback, useEffect, useState } from 'react'
 import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 
-const QRCode = ({
+export const QRCode = ({
   connection,
   wallet,
   tokenData,
@@ -105,5 +105,3 @@ export const QRCodeOuter = styled.div`
     bottom: -40px;
   }
 `
-
-export default QRCode
