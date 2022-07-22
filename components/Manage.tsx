@@ -102,6 +102,22 @@ export const Manage = () => {
       enabled: !!userTokenDatas.isFetched && !!managedTokens.isFetched,
     }
   )
+  const availableTokens = useQuery(
+    [
+      'availableTokens',
+      walletId?.toString(),
+      tokenDatasId(userTokenDatas.data),
+    ],
+    () => {
+      return (userTokenDatas.data ?? []).filter(
+        (tokenData) => !tokenData.tokenManager
+      )
+    },
+    {
+      enabled: !!userTokenDatas.data,
+    }
+  )
+
   const rentedTokens = useQuery(
     [
       'useRentedTokens',
@@ -109,11 +125,9 @@ export const Manage = () => {
       tokenDatasId(userTokenDatas.data),
     ],
     () => {
-      return (userTokenDatas.data ?? []).filter(
-        (tokenData) =>
-          tokenData.tokenManager?.parsed.issuer.toString() ===
-          walletId?.toString()
-      )
+      return (userTokenDatas.data ?? []).filter((tokenData) => {
+        return !!tokenData.tokenManager
+      })
     },
     {
       enabled: !!userTokenDatas.data,
@@ -147,7 +161,7 @@ export const Manage = () => {
         tokenQuery={
           {
             all: allManagedTokens,
-            available: userTokenDatas,
+            available: availableTokens,
             rented: rentedTokens,
             'rented-out': managedTokens,
           }[selectedGroup]
