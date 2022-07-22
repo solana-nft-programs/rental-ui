@@ -376,6 +376,23 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       main: '#000',
       secondary: '#80ddef',
     },
+    hero: '/logos/portals-hero.png',
+    description:
+      'The Metaverse on Solana. Explore downtown, invite friends, chat, build, show off your NFTs — right in the browser.',
+    socialLinks: [
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/9uMBaCPW3f',
+      },
+      {
+        icon: 'web',
+        link: 'https://theportal.to/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/_portals_',
+      },
+    ],
     // sections: [
     // {
     //   header: 'Featured',

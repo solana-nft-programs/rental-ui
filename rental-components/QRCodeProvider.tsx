@@ -4,7 +4,7 @@ import type { TokenData } from 'api/api'
 import { Modal } from 'common/Modal'
 import React, { useContext, useState } from 'react'
 
-import QRCode from './common/QRCode'
+import { QRCode } from './common/QRCode'
 
 export interface QRCode {
   show: (
