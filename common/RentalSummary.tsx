@@ -136,13 +136,34 @@ export const secondsToStringForDisplay = (
   })
 }
 
+export const rentalExpirationWithExtension = (
+  tokenData: TokenData,
+  extensionSeconds: number | undefined,
+  UTCNow: number
+) => {
+  const { durationSeconds, expiration, maxExpiration } =
+    tokenData.timeInvalidator?.parsed || {}
+  return shortDateString(
+    extensionSeconds
+      ? Math.max(
+          UTCNow + (durationSeconds?.toNumber() ?? 0),
+          expiration?.toNumber() ?? 0
+        ) + extensionSeconds
+      : Math.min(
+          maxExpiration?.toNumber() ?? Infinity,
+          expiration?.toNumber() ?? UTCNow + (durationSeconds?.toNumber() ?? 0)
+        )
+  )
+}
+
 export const RentalSummary: React.FC<Props> = ({
   tokenData,
   extensionSeconds,
 }: Props) => {
   const { UTCNow } = useUTCNow()
   const paymentMints = usePaymentMints()
-  const { durationSeconds } = tokenData.timeInvalidator?.parsed || {}
+  const { durationSeconds, expiration, maxExpiration } =
+    tokenData.timeInvalidator?.parsed || {}
   return (
     <div className="flex justify-between gap-4 border-t-[1px] border-border pt-4">
       <div className="flex gap-4">
@@ -171,8 +192,8 @@ export const RentalSummary: React.FC<Props> = ({
             )}
           </div>
           <div className="text-sm text-medium-3">
-            Expires on{' '}
-            {shortDateString(UTCNow + (durationSeconds?.toNumber() ?? 0))}
+            Expires at{' '}
+            {rentalExpirationWithExtension(tokenData, extensionSeconds, UTCNow)}
           </div>
         </div>
       </div>
