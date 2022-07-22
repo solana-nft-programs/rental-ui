@@ -22,6 +22,8 @@ import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useQuery } from 'react-query'
 
+export const USE_FILTERED_TOKEN_MANAGERS_KEY = 'useFilteredTokenManagers'
+
 export type FilteredTokenManagerData = {
   tokenAccount?: {
     pubkey: PublicKey
@@ -41,7 +43,7 @@ export const useFilteredTokenManagers = () => {
   const { config } = useProjectConfig()
   const { connection, environment } = useEnvironmentCtx()
   return useQuery<FilteredTokenManagerData[]>(
-    ['useFilteredTokenManagers', config.name],
+    [USE_FILTERED_TOKEN_MANAGERS_KEY, config.name],
     async () => {
       console.log('Fetching for config', config.name)
       if (

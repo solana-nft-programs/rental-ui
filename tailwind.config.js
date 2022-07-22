@@ -38,6 +38,7 @@ module.exports = {
         'dark-4': '#161616',
         'dark-5': '#0B0B0B',
         'dark-6': '#000000',
+        twitter: '#1DA1F2',
       },
     },
   },

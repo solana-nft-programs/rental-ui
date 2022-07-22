@@ -9,14 +9,18 @@ import { RentalSummary } from 'common/RentalSummary'
 import { getQueryParam } from 'common/utils'
 import { getPriceOrRentalRate, getSymbolFromTokenData } from 'components/Browse'
 import { useHandleRateRental } from 'handlers/useHandleRateRental'
+import { USE_FILTERED_TOKEN_MANAGERS_KEY } from 'hooks/useFilteredTokenManagers'
 import { usePaymentMints } from 'hooks/usePaymentMints'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useModal } from 'providers/ModalProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useState } from 'react'
 import { FiSend } from 'react-icons/fi'
+import { useQueryClient } from 'react-query'
 import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 import { PoweredByFooter } from 'rental-components/common/PoweredByFooter'
+
+import { RentalSuccessCard } from './RentalSuccessCard'
 
 export type RentalRateCardProps = {
   claim?: boolean
@@ -35,6 +39,7 @@ export const RentalRateCard = ({
   const { environment } = useEnvironmentCtx()
   const { config } = useProjectConfig()
   const paymentMints = usePaymentMints()
+  const queryClient = useQueryClient()
 
   const {
     extensionPaymentAmount,
@@ -61,6 +66,14 @@ export const RentalRateCard = ({
     )
   }
 
+  if (txid)
+    return (
+      <RentalSuccessCard
+        tokenData={tokenData}
+        extensionSeconds={currentExtensionSeconds}
+        txid={txid}
+      />
+    )
   return (
     <div className="rounded-lg bg-dark-6 p-6">
       <div className="text-center text-2xl text-light-0">
@@ -181,6 +194,7 @@ export const RentalRateCard = ({
               {
                 onSuccess: (txid) => {
                   setTxid(txid)
+                  queryClient.removeQueries(USE_FILTERED_TOKEN_MANAGERS_KEY)
                 },
                 onError: (e) => {
                   setTxid(undefined)

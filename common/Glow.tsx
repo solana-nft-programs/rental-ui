@@ -1,4 +1,5 @@
 export const Glow = ({
+  color = 'glow',
   angle = 35.64,
   blur = 50,
   scale = 1,
@@ -6,6 +7,7 @@ export const Glow = ({
   children,
   className,
 }: {
+  color?: string
   angle?: number
   blur?: number
   scale?: number
@@ -14,9 +16,9 @@ export const Glow = ({
   className?: string
 }) => {
   return (
-    <div className={`relative h-fit w-fit overflow-visible ${className}`}>
+    <div className={`relative h-fit w-fit overflow-visible`}>
       <div
-        className="absolute left-1/4 top-0 h-full w-1/2 bg-glow"
+        className={`absolute left-1/4 top-0 h-full w-1/2 rounded-full bg-${color} ${className}`}
         style={{
           opacity,
           filter: `blur(${blur}px)`,

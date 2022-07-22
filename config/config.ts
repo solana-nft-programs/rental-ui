@@ -68,6 +68,7 @@ export type ProjectConfig = {
   websiteUrl: string
   hero?: string
   description?: string
+  twitterHandle?: string
   socialLinks?: {
     icon: IconKey
     link: string
@@ -294,6 +295,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     description:
       'MiniRoyale is a web browser game with battle royale game mode. The game comes with 3D graphics and unique style.',
     logoImage: '/logos/miniroyale.png',
+    twitterHandle: '@MiniNations',
     colors: {
       main: '#192836',
       secondary: '#FFB60C',

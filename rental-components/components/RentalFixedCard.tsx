@@ -22,6 +22,8 @@ import { useQueryClient } from 'react-query'
 import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 import { PoweredByFooter } from 'rental-components/common/PoweredByFooter'
 
+import { RentalSuccessCard } from './RentalSuccessCard'
+
 export type RentalFixedCardParams = {
   tokenData: TokenData
   otpKeypair?: Keypair
@@ -40,6 +42,7 @@ export const RentalFixedCard = ({
   const { config } = useProjectConfig()
   const { durationSeconds } = tokenData.timeInvalidator?.parsed || {}
 
+  if (txid) return <RentalSuccessCard tokenData={tokenData} txid={txid} />
   return (
     <div className="rounded-lg bg-dark-6 p-8">
       <div className="text-center text-2xl text-light-0">

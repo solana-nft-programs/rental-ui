@@ -2,9 +2,15 @@ import type * as web3 from '@solana/web3.js'
 
 export type Cluster = web3.Cluster | 'mainnet' | 'localnet'
 
+export function transactionUrl(txid: string, cluster: string) {
+  return `https://explorer.solana.com/tx/${txid}${
+    cluster === 'devnet' ? '?cluster=devnet' : ''
+  }`
+}
+
 export function pubKeyUrl(
   pubkey: web3.PublicKey | null | undefined,
-  cluster: string
+  cluster: Cluster
 ) {
   if (!pubkey) return 'https://explorer.solana.com'
   return `https://explorer.solana.com/address/${pubkey.toString()}/metadata${
