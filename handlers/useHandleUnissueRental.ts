@@ -3,8 +3,9 @@ import { useWallet } from '@solana/wallet-adapter-react'
 import type { TokenData } from 'api/api'
 import { executeTransaction } from 'common/Transactions'
 import { asWallet } from 'common/Wallets'
+import { TOKEN_DATA_KEY } from 'hooks/useFilteredTokenManagers'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
-import { useMutation } from 'react-query'
+import { useMutation, useQueryClient } from 'react-query'
 
 export interface HandleIssueRentalParams {
   tokenData: TokenData
@@ -13,6 +14,7 @@ export interface HandleIssueRentalParams {
 export const useHandleUnissueRental = () => {
   const wallet = useWallet()
   const { connection } = useEnvironmentCtx()
+  const queryClient = useQueryClient()
   return useMutation(
     async ({ tokenData }: HandleIssueRentalParams): Promise<string> => {
       if (!tokenData.tokenManager) throw new Error('Invalid token manager')
@@ -27,9 +29,13 @@ export const useHandleUnissueRental = () => {
         ),
         {
           notificationConfig: {},
-          silent: true,
         }
       )
+    },
+    {
+      onSuccess: () => {
+        queryClient.removeQueries(TOKEN_DATA_KEY)
+      },
     }
   )
 }

@@ -15,9 +15,8 @@ import type { TokenFilter } from 'config/config'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useQuery } from 'react-query'
 
+import { TOKEN_DATA_KEY } from './useFilteredTokenManagers'
 import { useWalletId } from './useWalletId'
-
-export const USE_USER_TOKEN_DATAS_KEY = 'useUserTokenData'
 
 export type UserTokenData = {
   tokenAccount?: {
@@ -40,7 +39,7 @@ export const useUserTokenData = (filter?: TokenFilter, cluster?: string) => {
   const { connection } = useEnvironmentCtx()
 
   return useQuery<UserTokenData[]>(
-    [USE_USER_TOKEN_DATAS_KEY, walletId, filter?.value],
+    [TOKEN_DATA_KEY, 'useUserTokenData', walletId, filter?.value],
     async () => {
       if (!walletId) return []
 
@@ -243,7 +242,7 @@ export const useUserTokenData = (filter?: TokenFilter, cluster?: string) => {
     },
     {
       enabled: !!walletId,
-      refetchInterval: 10000,
+      refetchInterval: 12000,
     }
   )
 }

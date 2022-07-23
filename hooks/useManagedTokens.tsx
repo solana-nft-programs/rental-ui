@@ -20,6 +20,7 @@ import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useQuery } from 'react-query'
 
+import { TOKEN_DATA_KEY } from './useFilteredTokenManagers'
 import { useWalletId } from './useWalletId'
 
 const INDEX_ENABLED_MANAGE = true
@@ -44,7 +45,7 @@ export const useManagedTokens = () => {
   const { config } = useProjectConfig()
   const { connection, environment } = useEnvironmentCtx()
   return useQuery<ManagedTokenData[]>(
-    ['useManagedTokens', walletId?.toString()],
+    [TOKEN_DATA_KEY, 'useManagedTokens', walletId?.toString()],
     async () => {
       if (!walletId) return []
       if (environment.index && INDEX_ENABLED_MANAGE && !config.indexDisabled) {
@@ -85,7 +86,11 @@ export const useManagedTokens = () => {
                   findTimeInvalidatorAddress(tokenManagerId),
                   findUseInvalidatorAddress(tokenManagerId),
                 ])
-              return [timeInvalidatorId.toString(), useInvalidatorId.toString()]
+              return [
+                timeInvalidatorId.toString(),
+                useInvalidatorId.toString(),
+                walletId.toString(),
+              ]
             }
           )
         )
@@ -149,6 +154,6 @@ export const useManagedTokens = () => {
         return tokenDatas
       }
     },
-    { enabled: !!walletId }
+    { enabled: !!walletId, refetchInterval: 12000 }
   )
 }

@@ -16,8 +16,9 @@ import {
 import type { TokenData } from 'api/api'
 import { executeAllTransactions } from 'api/utils'
 import { asWallet } from 'common/Wallets'
+import { TOKEN_DATA_KEY } from 'hooks/useFilteredTokenManagers'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
-import { useMutation } from 'react-query'
+import { useMutation, useQueryClient } from 'react-query'
 import type { RentalCardConfig } from 'rental-components/components/RentalIssueCard'
 
 export interface HandleIssueRentalParams {
@@ -44,6 +45,7 @@ export interface HandleIssueRentalParams {
 export const useHandleIssueRental = () => {
   const wallet = useWallet()
   const { connection } = useEnvironmentCtx()
+  const queryClient = useQueryClient()
   return useMutation(
     async ({
       tokenDatas,
@@ -241,6 +243,11 @@ export const useHandleIssueRental = () => {
         },
       })
       return { tokenManagerIds, otpKeypairs, totalSuccessfulTransactions }
+    },
+    {
+      onSuccess: () => {
+        queryClient.removeQueries(TOKEN_DATA_KEY)
+      },
     }
   )
 }

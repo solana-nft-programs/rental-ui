@@ -10,6 +10,7 @@ export const Modal: React.FC<Props> = ({
   isOpen,
   children,
   onDismiss,
+  className,
   ...props
 }: Props) => {
   useEffect(() => {
@@ -38,7 +39,7 @@ export const Modal: React.FC<Props> = ({
         css={css`
           box-shadow: rgba(255, 255, 255, 0.15) 0px 0px 48px;
         `}
-        className={`my-[10vh] h-fit w-[560px] max-w-[98vw] rounded-xl transition-all `}
+        className={`${className} my-[10vh] h-fit w-[560px] max-w-[98vw] rounded-xl transition-all `}
       >
         {children}
       </div>
