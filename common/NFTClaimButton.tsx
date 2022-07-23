@@ -51,7 +51,7 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
     }
   }
 
-  if (isPrivateListing(tokenData)) return <></>
+  if (isPrivateListing(tokenData) && !otpKeypair) return <></>
   return (
     <ButtonSmall
       disabled={!wallet.publicKey}
@@ -66,23 +66,21 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
               ?.displayText
           }{' '}
         </>
+      ) : tokenData.claimApprover?.parsed?.paymentMint &&
+        paymentMintInfos.data &&
+        paymentMintInfos.data[
+          tokenData.claimApprover?.parsed?.paymentMint.toString()
+        ] ? (
+        `Claim ${parseFloat(
+          fmtMintAmount(
+            paymentMintInfos.data[
+              tokenData?.claimApprover?.parsed?.paymentMint.toString()
+            ],
+            tokenData.claimApprover?.parsed?.paymentAmount ?? new BN(0)
+          )
+        )}${getSymbolFromTokenData(tokenData)}`
       ) : (
-        <>
-          {tokenData.claimApprover?.parsed?.paymentMint &&
-          paymentMintInfos.data &&
-          paymentMintInfos.data[
-            tokenData.claimApprover?.parsed?.paymentMint.toString()
-          ]
-            ? `Claim ${parseFloat(
-                fmtMintAmount(
-                  paymentMintInfos.data[
-                    tokenData?.claimApprover?.parsed?.paymentMint.toString()
-                  ],
-                  tokenData.claimApprover?.parsed?.paymentAmount ?? new BN(0)
-                )
-              )}${getSymbolFromTokenData(tokenData)}`
-            : 'FREE'}
-        </>
+        'FREE'
       )}
     </ButtonSmall>
   )
