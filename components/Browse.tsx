@@ -485,7 +485,6 @@ export const Browse = () => {
                           <NFTClaimButton
                             tokenData={tokenData}
                             tokenDatas={tokenManagers.data}
-                            callback={() => tokenManagers.refetch()}
                           />
                         </div>
                       ),

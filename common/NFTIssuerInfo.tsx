@@ -10,12 +10,18 @@ import { useUTCNow } from 'providers/UTCNowProvider'
 
 import { stateColor } from './NFT'
 
+export const isPrivateListing = (tokenData: TokenData) =>
+  tokenData.tokenManager?.parsed.claimApprover && !tokenData.claimApprover
+
+export const isRateBasedListing = (tokenData: TokenData) =>
+  tokenData.timeInvalidator?.parsed.durationSeconds &&
+  tokenData.timeInvalidator?.parsed.durationSeconds.eq(new BN(0)) &&
+  tokenData.timeInvalidator?.parsed.extensionDurationSeconds
+
 export const getDurationText = (tokenData: TokenData, UTCNow: number) => {
   return tokenData.timeInvalidator?.parsed ? (
     <div className="float-left">
-      {tokenData.timeInvalidator?.parsed.durationSeconds &&
-      tokenData.timeInvalidator?.parsed.durationSeconds.eq(new BN(0)) &&
-      tokenData.timeInvalidator?.parsed.extensionDurationSeconds ? (
+      {isRateBasedListing(tokenData) ? (
         <p
           className={`float-left inline-block text-ellipsis whitespace-nowrap`}
         >
@@ -70,8 +76,7 @@ export const NFTIssuerInfo: React.FC<NFTIssuerInfoProps> = ({
   return (
     <div>
       {tokenData.tokenManager?.parsed.state === TokenManagerState.Issued ? (
-        tokenData.tokenManager?.parsed.claimApprover &&
-        !tokenData.claimApprover ? (
+        isPrivateListing(tokenData) ? (
           <div className="my-auto rounded-lg bg-gray-800 px-5 py-2 text-white">
             Private
           </div>

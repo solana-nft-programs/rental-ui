@@ -4,11 +4,11 @@ import {
 } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { css } from '@emotion/react'
 import Tooltip from '@mui/material/Tooltip'
-import { useWallet } from '@solana/wallet-adapter-react'
 import type { TokenData } from 'api/api'
 import { metadataUrl, pubKeyUrl } from 'common/utils'
 import { useHandleReturnRental } from 'handlers/useHandleReturnRental'
 import { useHandleUnissueRental } from 'handlers/useHandleUnissueRental'
+import { useWalletId } from 'hooks/useWalletId'
 import { lighten } from 'polished'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
@@ -20,18 +20,17 @@ import { IoAddSharp, IoClose, IoQrCodeOutline } from 'react-icons/io5'
 import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 import { useRentalIssueCard } from 'rental-components/components/RentalIssueCard'
 import { useRentalRateCard } from 'rental-components/components/RentalRateCard'
-import { useQRCode } from 'rental-components/QRCodeProvider'
+import { useScanCard } from 'rental-components/components/ScanCard'
 
 import { elligibleForRent } from './NFT'
 import { notify } from './Notification'
 import { Popover, PopoverItem } from './Popover'
-import { asWallet } from './Wallets'
 
 export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
-  const { connection, environment } = useEnvironmentCtx()
+  const { environment } = useEnvironmentCtx()
   const { config } = useProjectConfig()
-  const wallet = useWallet()
-  const qrCode = useQRCode()
+  const walletId = useWalletId()
+  const scanCard = useScanCard()
   const rentalRateCard = useRentalRateCard()
   const rentalIssueCard = useRentalIssueCard()
   const handleReturnRental = useHandleReturnRental()
@@ -104,26 +103,29 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
               </a>
             </PopoverItem>
           )}
-          <PopoverItem>
-            <a
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px',
-                color: 'white',
-              }}
-              href={getLink(
-                `/${
-                  config.name
-                }/claim/${tokenData.tokenManager?.pubkey.toBase58()}`
-              )}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <FaLink />
-              Claim Link
-            </a>
-          </PopoverItem>
+          {tokenManager &&
+            tokenManager.parsed.state === TokenManagerState.Issued && (
+              <PopoverItem>
+                <a
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    color: 'white',
+                  }}
+                  href={getLink(
+                    `/${
+                      config.name
+                    }/claim/${tokenData.tokenManager?.pubkey.toBase58()}`
+                  )}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <FaLink />
+                  Claim Link
+                </a>
+              </PopoverItem>
+            )}
           {!tokenManager && (
             <PopoverItem>
               <div
@@ -148,8 +150,7 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
             </PopoverItem>
           )}
           {tokenManager &&
-            tokenManager?.parsed.issuer.toString() ===
-              wallet.publicKey?.toString() &&
+            tokenManager?.parsed.issuer.toString() === walletId?.toString() &&
             tokenManager.parsed.state !== TokenManagerState.Claimed && (
               <PopoverItem>
                 <div
@@ -165,18 +166,17 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
               </PopoverItem>
             )}
           {tokenManager &&
-            tokenManager.parsed.state === TokenManagerState.Claimed && (
+            tokenManager.parsed.state === TokenManagerState.Claimed &&
+            tokenData.recipientTokenAccount?.owner.toString() ===
+              walletId?.toString() && (
               <PopoverItem>
                 <div
                   className="flex cursor-pointer items-center gap-2"
                   onClick={(e) => {
                     e.stopPropagation()
-                    qrCode.show(
-                      connection,
-                      asWallet(wallet),
+                    scanCard.showModal({
                       tokenData,
-                      environment.label
-                    )
+                    })
                   }}
                 >
                   <IoQrCodeOutline />
@@ -184,8 +184,7 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
                 </div>
               </PopoverItem>
             )}
-          {recipientTokenAccount?.owner.toString() ===
-            wallet.publicKey?.toString() &&
+          {recipientTokenAccount?.owner.toString() === walletId?.toString() &&
             tokenManager &&
             (tokenManager.parsed.invalidationType ===
               InvalidationType.Reissue ||
@@ -214,8 +213,7 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
                 </div>
               </PopoverItem>
             )}
-          {recipientTokenAccount?.owner.toString() ===
-            wallet.publicKey?.toString() &&
+          {recipientTokenAccount?.owner.toString() === walletId?.toString() &&
             timeInvalidator?.parsed?.extensionDurationSeconds &&
             tokenManager && (
               <PopoverItem>

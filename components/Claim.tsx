@@ -3,6 +3,7 @@ import { css } from '@emotion/react'
 import { tryPublicKey } from 'api/utils'
 import { ButtonSmall } from 'common/ButtonSmall'
 import { Card } from 'common/Card'
+import { FooterSlim } from 'common/FooterSlim'
 import { HeaderSlim } from 'common/HeaderSlim'
 import { NFT } from 'common/NFT'
 import { NFTClaimButton } from 'common/NFTClaimButton'
@@ -36,9 +37,9 @@ function Claim() {
   const tokenData = tokenQuery.data
 
   return (
-    <>
+    <div className="flex h-screen flex-col">
       <HeaderSlim homeButton />
-      <div className="mx-auto max-w-[500px] pt-[10vh]">
+      <div className="mx-auto max-w-[500px] flex-grow pt-[5vh] lg:pt-[12vh]">
         <div className="mb-6 text-center">
           <div className="mb-2 text-4xl">Claim Asset</div>
           <div className="text-xs font-extralight">
@@ -83,11 +84,7 @@ function Claim() {
               !isMobile &&
               tokenData.tokenManager?.parsed.state !==
                 TokenManagerState.Claimed ? (
-              <ClaimQRCode
-                tokenData={tokenData}
-                keypair={otpKeypair}
-                setShowQRCode={setShowQRCode}
-              />
+              <ClaimQRCode tokenData={tokenData} keypair={otpKeypair} />
             ) : tokenData ? (
               <Card
                 hero={<NFT tokenData={tokenData} />}
@@ -113,7 +110,6 @@ function Claim() {
                           <NFTClaimButton
                             tokenData={tokenData}
                             tokenDatas={[]}
-                            callback={() => tokenQuery.refetch()}
                           />
                         )}
                       </div>
@@ -160,8 +156,9 @@ function Claim() {
           </div>
         )}
       </div>
+      <FooterSlim />
       <StyledBackground colors={config.colors} />
-    </>
+    </div>
   )
 }
 

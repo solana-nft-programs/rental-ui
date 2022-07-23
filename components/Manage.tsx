@@ -96,7 +96,17 @@ export const Manage = () => {
       tokenDatasId(managedTokens.data),
     ],
     () => {
-      return [...(userTokenDatas.data ?? []), ...(managedTokens.data ?? [])]
+      return [
+        ...(userTokenDatas.data ?? []),
+        ...(managedTokens.data?.filter(
+          (tokenData) =>
+            !userTokenDatas.data
+              ?.map((userTokenData) =>
+                userTokenData.metaplexData?.pubkey.toString()
+              )
+              .includes(tokenData.metaplexData?.pubkey.toString())
+        ) ?? []),
+      ]
     },
     {
       enabled: !!userTokenDatas.isFetched && !!managedTokens.isFetched,

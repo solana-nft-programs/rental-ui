@@ -19,7 +19,6 @@ import {
 import { UTCNowProvider } from 'providers/UTCNowProvider'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
-import { QRCodeProvider } from 'rental-components/QRCodeProvider'
 
 require('@solana/wallet-adapter-react-ui/styles.css')
 
@@ -45,17 +44,15 @@ const App = ({
         <WalletIdentityProvider>
           <ProjectConfigProvider defaultConfig={config}>
             <QueryClientProvider client={queryClient}>
-              <QRCodeProvider>
-                <ModalProvider>
-                  <WalletModalProvider>
-                    <>
-                      <ToastContainer />
-                      <Component {...pageProps} />
-                      {DEBUG && <ReactQueryDevtools initialIsOpen={false} />}
-                    </>
-                  </WalletModalProvider>
-                </ModalProvider>
-              </QRCodeProvider>
+              <ModalProvider>
+                <WalletModalProvider>
+                  <>
+                    <ToastContainer />
+                    <Component {...pageProps} />
+                    {DEBUG && <ReactQueryDevtools initialIsOpen={false} />}
+                  </>
+                </WalletModalProvider>
+              </ModalProvider>
             </QueryClientProvider>
           </ProjectConfigProvider>
         </WalletIdentityProvider>
