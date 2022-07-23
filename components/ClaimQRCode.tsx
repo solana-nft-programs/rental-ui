@@ -9,18 +9,16 @@ import React, { useEffect, useMemo, useRef, useState } from 'react'
 function ClaimQRCode({
   tokenData,
   keypair,
-  setShowQRCode,
 }: {
   tokenData?: TokenData | null
   keypair?: Keypair
-  setShowQRCode?: (state: boolean) => void
 }) {
   const { config } = useProjectConfig()
   const [QRCode, setQRCode] = useState<QRCodeStyling>()
   const [showSuccess, setShowSuccess] = useState(false)
   const recentSignatures = useRecentSignatures(tokenData?.tokenManager?.pubkey)
 
-  const generateQrCode = async () => {
+  const generateQrCode = () => {
     console.log(
       'Generating QR code for request:/claim/ ',
       `solana:${encodeURIComponent(

@@ -11,18 +11,17 @@ import { useRentalFixedCard } from 'rental-components/components/RentalFixedCard
 import { useRentalRateCard } from 'rental-components/components/RentalRateCard'
 
 import { ButtonSmall } from './ButtonSmall'
+import { isPrivateListing, isRateBasedListing } from './NFTIssuerInfo'
 import { fmtMintAmount } from './units'
 
 interface NFTClaimButtonProps extends React.HTMLAttributes<HTMLDivElement> {
   tokenData: TokenData
   tokenDatas?: TokenData[]
-  callback?: () => void
 }
 
 export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
   tokenData,
   tokenDatas,
-  callback,
 }: NFTClaimButtonProps) => {
   const wallet = useWallet()
   const { config } = useProjectConfig()
@@ -44,7 +43,7 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
         tokenDatas ?? []
       ))
     ) {
-      if (tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber() === 0) {
+      if (isRateBasedListing(tokenData)) {
         rentalRateCard.showModal({ tokenData, claim: true, otpKeypair })
       } else {
         rentalFixedCard.showModal({ tokenData, otpKeypair })
@@ -52,6 +51,7 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
     }
   }
 
+  if (isPrivateListing(tokenData)) return <></>
   return (
     <ButtonSmall
       disabled={!wallet.publicKey}

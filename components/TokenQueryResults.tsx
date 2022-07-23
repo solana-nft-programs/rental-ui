@@ -134,7 +134,7 @@ export const TokenQueryResults: React.FC<Props> = ({
           <div className="flex flex-wrap justify-center gap-4 xl:justify-start">
             {filteredAndSortedTokens.map((tokenData) => (
               <Card
-                key={tokenData.tokenManager?.pubkey.toString()}
+                key={`${tokenData.tokenManager?.pubkey.toString()}-${tokenData.tokenAccount?.pubkey.toString()}`}
                 className={`cursor-pointer ${
                   isSelected(tokenData, selectedTokens)
                     ? 'border-[1px] border-secondary'

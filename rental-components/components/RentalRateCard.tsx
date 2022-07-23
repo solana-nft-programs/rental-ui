@@ -139,7 +139,7 @@ export const RentalRateCard = ({
                 config,
                 tokenData,
                 paymentMints.data
-              ).toFixed(4)}
+              ).toFixed(4)}{' '}
               {getSymbolFromTokenData(tokenData)} /{' '}
               {capitalizeFirstLetter(config.marketplaceRate ?? 'days').slice(
                 0,

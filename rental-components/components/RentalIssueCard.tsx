@@ -817,7 +817,7 @@ export const RentalIssueCard = ({
               </>
             )}
             {link ? (
-              <Alert variant="success">
+              <Alert variant="success" className="text-left">
                 {tokenDatas.length === 1 && totalListed === 1 ? (
                   <div>
                     Successfully listed: ({totalListed} / {tokenDatas.length})
@@ -1057,9 +1057,9 @@ export const RentalIssueCard = ({
               {link && link !== 'success' ? (
                 <div className="flex items-center justify-center gap-[5px] text-base">
                   <FaLink />
-                  {link.substring(0, 40)}
+                  {link.substring(0, link.length - 40)}
                   ...
-                  {link.substring(link.length - 10)}
+                  {link.substring(link.length - 6)}
                 </div>
               ) : (
                 <div className="flex items-center justify-center gap-[5px] text-base">

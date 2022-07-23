@@ -427,10 +427,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     rentalCard: {
       invalidators: ['rate', 'expiration', 'duration', 'manual'],
       invalidationOptions: {
-        freezeRentalRateDuration: {
-          value: '1',
-          durationOption: 'days',
-        },
         visibilities: ['public', 'private'],
         durationOptions: ['minutes', 'hours', 'days', 'weeks'],
         invalidationTypes: ['reissue', 'return'],
