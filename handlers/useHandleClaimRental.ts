@@ -15,10 +15,11 @@ import { notify } from 'common/Notification'
 import { executeTransaction } from 'common/Transactions'
 import { asWallet } from 'common/Wallets'
 import type { ProjectConfig } from 'config/config'
+import { TOKEN_DATA_KEY } from 'hooks/useFilteredTokenManagers'
 import { WRAPPED_SOL_MINT } from 'hooks/usePaymentMints'
 import { useUserPaymentTokenAccount } from 'hooks/useUserPaymentTokenAccount'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
-import { useMutation } from 'react-query'
+import { useMutation, useQueryClient } from 'react-query'
 
 export interface HandleClaimRentalParams {
   tokenData: TokenData
@@ -87,6 +88,7 @@ export const allowedToRent = async (
 export const useHandleClaimRental = () => {
   const wallet = useWallet()
   const { connection, secondaryConnection } = useEnvironmentCtx()
+  const queryClient = useQueryClient()
   const userWSolTokenAccount = useUserPaymentTokenAccount(
     new PublicKey(WRAPPED_SOL_MINT)
   )
@@ -151,6 +153,20 @@ export const useHandleClaimRental = () => {
         signers: [],
         notificationConfig: {},
       })
+    },
+    {
+      onSuccess: () => {
+        queryClient.removeQueries(TOKEN_DATA_KEY)
+      },
+      onError: async (e) => {
+        if (e instanceof Error) {
+          if (e.message.toString().includes('Invalid token manager state')) {
+            alert(e)
+            return 'Token manager has already been claimed'
+          }
+        }
+        return e
+      },
     }
   )
 }

@@ -1,6 +1,7 @@
 import { useTransaction } from '@cardinal/token-manager'
 import { useWallet } from '@solana/wallet-adapter-react'
 import type { TokenData } from 'api/api'
+import { Alert } from 'common/Alert'
 import { QRCode } from 'common/QRCode'
 import { asWallet } from 'common/Wallets'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
@@ -9,11 +10,11 @@ import { getLink } from 'providers/ProjectConfigProvider'
 import { useCallback, useEffect, useState } from 'react'
 import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 
-type ScanCardProps = { tokenData?: TokenData }
+interface Props extends React.HTMLAttributes<HTMLDivElement> {
+  tokenData?: TokenData
+}
 
-export const ScanCard: React.FC<ScanCardProps> = ({
-  tokenData,
-}: ScanCardProps) => {
+export const ScanCard: React.FC<Props> = ({ tokenData }: Props) => {
   const wallet = useWallet()
   const { connection } = useEnvironmentCtx()
   const [qrData, setQRData] = useState<string>()
@@ -44,8 +45,6 @@ export const ScanCard: React.FC<ScanCardProps> = ({
     }
   }, [])
 
-  console.log('-11', qrData)
-
   useEffect(() => {
     const interval = setInterval(
       (function getQRDataInterval() {
@@ -62,19 +61,23 @@ export const ScanCard: React.FC<ScanCardProps> = ({
   }
 
   return (
-    <div className="flex h-full min-h-[500px] w-full flex-col items-center justify-center gap-8 rounded-xl bg-dark-6">
+    <div className="flex h-full flex-col items-center justify-center gap-8 rounded-xl bg-dark-6">
       {error ? (
-        <div>{error}</div>
+        <Alert variant="error" className="m-10">
+          {error}
+        </Alert>
       ) : !qrData ? (
-        <LoadingSpinner />
+        <div className="p-10">
+          <LoadingSpinner />
+        </div>
       ) : (
-        <>
+        <div className="p-8">
           <QRCode data={qrData} />
-          <div className="text-medium-4">
+          <div className="pt-8 text-medium-4">
             This is a rotating QR code containing a temporarily valid signed
             transaction
           </div>
-        </>
+        </div>
       )}
     </div>
   )
@@ -83,6 +86,6 @@ export const ScanCard: React.FC<ScanCardProps> = ({
 export const useScanCard = () => {
   const { showModal } = useModal()
   return {
-    showModal: (params: ScanCardProps) => showModal(<ScanCard {...params} />),
+    showModal: (params: Props) => showModal(<ScanCard {...params} />),
   }
 }

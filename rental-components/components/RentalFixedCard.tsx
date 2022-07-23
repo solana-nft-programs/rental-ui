@@ -13,12 +13,10 @@ import {
 } from 'components/Browse'
 import { useHandleClaimRental } from 'handlers/useHandleClaimRental'
 import { usePaymentMints } from 'hooks/usePaymentMints'
-import { USE_USER_TOKEN_DATAS_KEY } from 'hooks/useUserTokenData'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useModal } from 'providers/ModalProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useState } from 'react'
-import { useQueryClient } from 'react-query'
 import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 import { PoweredByFooter } from 'rental-components/common/PoweredByFooter'
 
@@ -35,7 +33,6 @@ export const RentalFixedCard = ({
 }: RentalFixedCardParams) => {
   const [error, setError] = useState<string>()
   const [txid, setTxid] = useState<string>()
-  const queryClient = useQueryClient()
   const handleClaimRental = useHandleClaimRental()
   const paymentMints = usePaymentMints()
   const { environment } = useEnvironmentCtx()
@@ -144,8 +141,6 @@ export const RentalFixedCard = ({
               {
                 onSuccess: (txid) => {
                   setTxid(txid)
-                  queryClient.invalidateQueries(USE_USER_TOKEN_DATAS_KEY)
-                  queryClient.invalidateQueries(USE_USER_TOKEN_DATAS_KEY)
                 },
                 onError: (e) => {
                   setTxid(undefined)

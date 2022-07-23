@@ -16,9 +16,10 @@ import type { Keypair } from '@solana/web3.js'
 import { Connection, Transaction } from '@solana/web3.js'
 import { executeTransaction } from 'common/Transactions'
 import { asWallet } from 'common/Wallets'
+import { TOKEN_DATA_KEY } from 'hooks/useFilteredTokenManagers'
 import { WRAPPED_SOL_MINT } from 'hooks/usePaymentMints'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
-import { useMutation } from 'react-query'
+import { useMutation, useQueryClient } from 'react-query'
 
 export interface HandleRateRentalParams {
   tokenData: {
@@ -34,6 +35,7 @@ export interface HandleRateRentalParams {
 export const useHandleRateRental = () => {
   const wallet = useWallet()
   const { connection, environment } = useEnvironmentCtx()
+  const queryClient = useQueryClient()
   return useMutation(
     async ({
       claim,
@@ -141,6 +143,9 @@ export const useHandleRateRental = () => {
       onError: async (e) => {
         console.log('[error][useHandleRateRental]', e)
         return e
+      },
+      onSuccess: () => {
+        queryClient.removeQueries(TOKEN_DATA_KEY)
       },
     }
   )

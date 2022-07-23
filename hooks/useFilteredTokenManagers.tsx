@@ -22,7 +22,7 @@ import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useQuery } from 'react-query'
 
-export const USE_FILTERED_TOKEN_MANAGERS_KEY = 'useFilteredTokenManagers'
+export const TOKEN_DATA_KEY = 'tokenData'
 
 export type FilteredTokenManagerData = {
   tokenAccount?: {
@@ -43,7 +43,7 @@ export const useFilteredTokenManagers = () => {
   const { config } = useProjectConfig()
   const { connection, environment } = useEnvironmentCtx()
   return useQuery<FilteredTokenManagerData[]>(
-    [USE_FILTERED_TOKEN_MANAGERS_KEY, config.name],
+    [TOKEN_DATA_KEY, 'useFilteredTokenManagers', config.name],
     async () => {
       console.log('Fetching for config', config.name)
       if (
@@ -178,7 +178,7 @@ export const useFilteredTokenManagers = () => {
       }
     },
     {
-      // refetchInterval: 12000,
+      refetchInterval: 12000,
       enabled: !!config,
     }
   )
