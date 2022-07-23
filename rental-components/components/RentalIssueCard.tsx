@@ -1057,9 +1057,10 @@ export const RentalIssueCard = ({
               {link && link !== 'success' ? (
                 <div className="flex items-center justify-center gap-[5px] text-base">
                   <FaLink />
-                  {link.substring(0, link.length - 40)}
+                  Copy link
+                  {/* {link.substring(0, link.length - 40)}
                   ...
-                  {link.substring(link.length - 6)}
+                  {link.substring(link.length - 6)} */}
                 </div>
               ) : (
                 <div className="flex items-center justify-center gap-[5px] text-base">

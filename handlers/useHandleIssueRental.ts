@@ -4,7 +4,7 @@ import { issueToken } from '@cardinal/token-manager'
 import { findPaymentManagerAddress } from '@cardinal/token-manager/dist/cjs/programs/paymentManager/pda'
 import type { InvalidationType } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { TokenManagerKind } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
-import type { BN } from '@project-serum/anchor'
+import { BN } from '@project-serum/anchor'
 import { useWallet } from '@solana/wallet-adapter-react'
 import {
   Keypair,
@@ -128,7 +128,7 @@ export const useHandleIssueRental = () => {
         receiptMintKeypairs.push(receiptMintKeypair)
         const issueParams: IssueParameters = {
           claimPayment:
-            price && paymentMint
+            price && price.gt(new BN(0)) && paymentMint
               ? {
                   paymentAmount: price.toNumber(),
                   paymentMint: new PublicKey(paymentMint),

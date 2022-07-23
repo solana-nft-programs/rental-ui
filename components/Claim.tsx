@@ -128,7 +128,7 @@ function Claim() {
                 }
               />
             ) : (
-              <div className="flex flex-col">
+              <div className="flex flex-col p-20">
                 <FaQuestionCircle
                   style={{ fontSize: '170px', margin: '0px auto' }}
                 />
