@@ -63,7 +63,7 @@ export const RentalRateCard = ({
     )
   }
 
-  if (txid)
+  if (txid && claim)
     return (
       <RentalSuccessCard
         tokenData={tokenData}
