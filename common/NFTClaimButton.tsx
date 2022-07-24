@@ -37,11 +37,9 @@ export const priceAndSymbol = (
     | undefined
 ) => {
   if (!paymentMintInfos || !paymentMint) return 'Unknown mint'
-  return `${parseFloat(
-    fmtMintAmount(
-      paymentMintInfos[paymentMint.toString()],
-      paymentAmount ?? new BN(0)
-    )
+  return `${fmtMintAmount(
+    paymentMintInfos[paymentMint.toString()],
+    paymentAmount ?? new BN(0)
   )}${mintSymbol(paymentMint)}`
 }
 

@@ -62,6 +62,7 @@ export const RentalIssueExpiration = ({
   const [confirmRentalTerms, setConfirmRentalTerms] = useState(false)
   const [totalListed, setTotalListed] = useState(0)
 
+  console.log(paymentAmount.toString())
   return (
     <div className="flex flex-col gap-4">
       <RentalIssueAdvanced
