@@ -13,14 +13,13 @@ import type {
 } from 'rental-components/common/RentalIssueAdvanced'
 import { VISIBILITY_OPTIONS } from 'rental-components/common/RentalIssueAdvanced'
 import { RentalIssueDuration } from 'rental-components/common/RentalIssueDuration'
+import { RentalIssueExpiration } from 'rental-components/common/RentalIssueExpiration'
+import { RentalIssueManual } from 'rental-components/common/RentalIssueManual'
 import { RentalIssueRate } from 'rental-components/common/RentalIssueRate'
 
 export type InvalidatorOption =
-  | 'usages'
-  | 'expiration'
-  | 'duration'
-  | 'manual'
-  | 'rate'
+  // | 'usages'
+  'expiration' | 'duration' | 'manual' | 'rate'
 
 export type DurationOption =
   | 'minutes'
@@ -69,7 +68,7 @@ export const RentalIssueCard = ({
     InvalidatorOption[]
   >([])
   const [showAdvanced, setShowAdvanced] = useState(false)
-
+  const invalidatorOptions = rentalCardConfig.invalidators
   return (
     <div className="rounded-xl bg-dark-6 p-6">
       <div className="text-center text-xl text-light-0">
@@ -104,7 +103,7 @@ export const RentalIssueCard = ({
         ))}
       </div>
       <div>
-        {rentalCardConfig.invalidators.length > 1 && (
+        {invalidatorOptions.length > 1 && (
           <div className="flex items-center justify-between border-t-[2px] border-border py-4">
             <div
               className={`flex flex-col transition-opacity ${
@@ -116,7 +115,7 @@ export const RentalIssueCard = ({
             </div>
             <div className="flex flex-wrap gap-1">
               {selectedInvalidators.length === 0 ? (
-                rentalCardConfig.invalidators.map((invalidator) => (
+                invalidatorOptions.map((invalidator) => (
                   <div
                     key={invalidator}
                     className="cursor-pointer rounded-xl border-[2px] border-border bg-dark-4 px-3 py-2 text-base transition-colors"
@@ -189,9 +188,21 @@ export const RentalIssueCard = ({
                 showAdvanced={showAdvanced}
               />
             ),
-            expiration: <>Not yet supported</>,
+            expiration: (
+              <RentalIssueExpiration
+                tokenDatas={tokenDatas}
+                rentalCardConfig={rentalCardConfig}
+                showAdvanced={showAdvanced}
+              />
+            ),
             usages: <>Not yet supported</>,
-            manual: <>Not yet supported</>,
+            manual: (
+              <RentalIssueManual
+                tokenDatas={tokenDatas}
+                rentalCardConfig={rentalCardConfig}
+                showAdvanced={showAdvanced}
+              />
+            ),
           }[selectedInvalidators[0]!]}
         <PoweredByFooter />
       </div>

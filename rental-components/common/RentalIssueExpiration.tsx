@@ -1,10 +1,11 @@
-import { secondsToString, tryPublicKey } from '@cardinal/common'
+import { tryPublicKey } from '@cardinal/common'
 import { claimLinks } from '@cardinal/token-manager'
+import { css } from '@emotion/react'
 import { BN } from '@project-serum/anchor'
+import { DatePicker } from 'antd'
 import type { TokenData } from 'api/api'
 import { Alert } from 'common/Alert'
 import { Button } from 'common/Button'
-import { DurationInput } from 'common/DurationInput'
 import { priceAndSymbol } from 'common/NFTClaimButton'
 import { handleCopy } from 'components/Browse'
 import { useHandleIssueRental } from 'handlers/useHandleIssueRental'
@@ -23,17 +24,17 @@ import type { RentalIssueAdvancedValues } from './RentalIssueAdvanced'
 import { RentalIssueAdvanced } from './RentalIssueAdvanced'
 import { RentalIssueTerms } from './RentalIssueTerms'
 
-export type RentalIssueDurationParams = {
+export type RentalIssueExpirationParams = {
   tokenDatas: TokenData[]
   rentalCardConfig: RentalCardConfig
   showAdvanced: boolean
 }
 
-export const RentalIssueDuration = ({
+export const RentalIssueExpiration = ({
   tokenDatas,
   rentalCardConfig,
   showAdvanced,
-}: RentalIssueDurationParams) => {
+}: RentalIssueExpirationParams) => {
   const { environment } = useEnvironmentCtx()
   const [error, setError] = useState<string>()
   const [link, setLink] = useState<string | null>()
@@ -49,13 +50,19 @@ export const RentalIssueDuration = ({
   const [paymentMint, setPaymentMint] = useState<string>(
     paymentMintData[0]!.mint
   )
-  const [durationSeconds, setDurationSeconds] = useState<number>()
+  const [maxExpiration, setMaxExpiration] = useState<number | undefined>(
+    rentalCardConfig.invalidationOptions?.maxDurationAllowed?.value
+      ? Date.now() / 1000 +
+          rentalCardConfig.invalidationOptions?.maxDurationAllowed?.value
+      : undefined
+  )
 
   const [advancedValues, setAdvancedValues] =
     useState<RentalIssueAdvancedValues>()
   const [confirmRentalTerms, setConfirmRentalTerms] = useState(false)
   const [totalListed, setTotalListed] = useState(0)
 
+  console.log(paymentAmount.toString())
   return (
     <div className="flex flex-col gap-4">
       <RentalIssueAdvanced
@@ -79,24 +86,18 @@ export const RentalIssueDuration = ({
             }}
           />
         </div>
-        <div className="">
-          <div className="mb-1 text-base text-light-0">Duration</div>
-          <DurationInput
-            handleChange={(v) => setDurationSeconds(v)}
-            defaultAmount={
-              rentalCardConfig.invalidationOptions?.freezeRentalDuration?.value
-                ? parseInt(
-                    rentalCardConfig.invalidationOptions?.freezeRentalDuration
-                      ?.value
-                  )
-                : undefined
-            }
-            defaultOption={
-              rentalCardConfig.invalidationOptions?.freezeRentalDuration
-                ?.durationOption
-            }
-            disabled={
-              !!rentalCardConfig.invalidationOptions?.freezeRentalDuration
+        <div>
+          <div className="mb-1 text-base text-light-0">Expiration</div>
+          <DatePicker
+            className="rounded-xl bg-dark-4 py-2 px-3 text-base"
+            css={css`
+              input {
+                line-height: 1.5rem !important;
+              }
+            `}
+            showTime
+            onChange={(e) =>
+              setMaxExpiration(e ? e.valueOf() / 1000 : undefined)
             }
           />
         </div>
@@ -147,10 +148,10 @@ export const RentalIssueDuration = ({
             </div>
           </div>
           <div className="flex gap-3 border-t-[1px] border-border py-4 px-8 text-center text-sm text-medium-3">
-            {`This rental will be expire ${secondsToString(
-              durationSeconds,
-              false
-            )} after the offer is accepted.`}
+            {maxExpiration &&
+              `This rental will be expire at  ${new Date(
+                maxExpiration * 1000
+              ).toLocaleString('en-US')}.`}
           </div>
         </div>
       )}
@@ -168,7 +169,8 @@ export const RentalIssueDuration = ({
           !confirmRentalTerms ||
           (link === 'success' &&
             (totalListed === tokenDatas.length || tokenDatas.length === 0)) ||
-          !!error
+          !!error ||
+          !maxExpiration
         }
         loading={handleIssueRental.isLoading}
         onClick={async () => {
@@ -180,7 +182,8 @@ export const RentalIssueDuration = ({
                   rentalCardConfig,
                   paymentAmount,
                   paymentMint,
-                  durationSeconds,
+                  maxExpiration: maxExpiration,
+                  durationSeconds: undefined,
                   extensionPaymentMint: undefined,
                   extensionPaymentAmount: undefined,
                   extensionDurationSeconds: undefined,

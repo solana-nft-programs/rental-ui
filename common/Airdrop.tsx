@@ -141,7 +141,6 @@ export const Airdrop = () => {
 
   return (
     <ButtonSmall
-      bgColor={config.colors.secondary}
       disabled={!wallet.connected}
       onClick={async () => {
         if (!wallet.connected) return
@@ -166,7 +165,6 @@ export const AirdropSol = () => {
 
   return (
     <ButtonSmall
-      bgColor={config.colors.secondary}
       disabled={!wallet.connected}
       onClick={async () => {
         if (!wallet.publicKey) return

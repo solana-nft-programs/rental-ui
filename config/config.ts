@@ -107,7 +107,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       secondary: '#7560FF',
     },
     rentalCard: {
-      invalidators: ['duration', 'usages', 'expiration', 'manual', 'rate'],
+      invalidators: ['duration', 'expiration', 'manual', 'rate'],
       extensionOptions: { showDisablePartialExtension: true },
       invalidationOptions: {
         maxDurationAllowed: {
@@ -177,7 +177,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       secondary: 'rgb(29, 155, 240)',
     },
     rentalCard: {
-      invalidators: ['duration', 'usages', 'expiration', 'manual', 'rate'],
+      invalidators: ['duration', 'expiration', 'manual', 'rate'],
       extensionOptions: { showDisablePartialExtension: true },
       invalidationOptions: {
         maxDurationAllowed: {
