@@ -138,7 +138,6 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
                   e.stopPropagation()
                   elligibleForRent(config, tokenData) &&
                     rentalIssueCard.showModal({
-                      cluster: environment.label,
                       tokenDatas: [tokenData],
                       rentalCardConfig: config.rentalCard,
                     })

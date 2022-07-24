@@ -25,7 +25,7 @@ export interface HandleIssueRentalParams {
   tokenDatas: TokenData[]
   rentalCardConfig: RentalCardConfig
   //
-  price?: BN
+  paymentAmount?: BN
   paymentMint?: string
   durationSeconds?: number
   maxExpiration?: number
@@ -50,7 +50,7 @@ export const useHandleIssueRental = () => {
     async ({
       tokenDatas,
       rentalCardConfig,
-      price,
+      paymentAmount,
       paymentMint,
       durationSeconds,
       maxExpiration,
@@ -128,9 +128,9 @@ export const useHandleIssueRental = () => {
         receiptMintKeypairs.push(receiptMintKeypair)
         const issueParams: IssueParameters = {
           claimPayment:
-            price && price.gt(new BN(0)) && paymentMint
+            paymentAmount && paymentAmount.gt(new BN(0)) && paymentMint
               ? {
-                  paymentAmount: price.toNumber(),
+                  paymentAmount: paymentAmount.toNumber(),
                   paymentMint: new PublicKey(paymentMint),
                   paymentManager: rentalCardConfig.paymentManager
                     ? tryPublicKey(rentalCardConfig.paymentManager) ||

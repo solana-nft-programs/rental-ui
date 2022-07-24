@@ -166,7 +166,6 @@ export const RentalFixedCard = ({
     </div>
   )
 }
-
 export const useRentalFixedCard = () => {
   const { showModal } = useModal()
   return {

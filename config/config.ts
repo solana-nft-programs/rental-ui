@@ -974,6 +974,24 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       main: 'rgb(26, 27, 32)',
       secondary: '#a5b6f6',
     },
+    description:
+      'Udder Chaos is a project built on a sustainable business model. Operating a Solana Validator drives consistent income for the project on top of secondary sales, while also being supported by their RPC rentals and NFT rental treasury. They are also developing Alpha Audits, an NFT reviewing platform with a review-to-earn mechanism.',
+    hero: 'logos/udderchaos-hero.png',
+    socialLinks: [
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/UdderChaosSOL',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/udderchaos',
+      },
+      {
+        icon: 'web',
+
+        link: 'https://www.udderchaos.io/',
+      },
+    ],
     badges: [{ badgeType: 'recent' }],
     filter: {
       type: 'issuer',
