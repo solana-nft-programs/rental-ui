@@ -1,55 +1,40 @@
-import { secondsToString, tryPublicKey } from '@cardinal/common'
+import { pubKeyUrl, shortPubKey, tryPublicKey } from '@cardinal/common'
 import { claimLinks } from '@cardinal/token-manager'
-import { BN } from '@project-serum/anchor'
+import { css } from '@emotion/react'
 import type { TokenData } from 'api/api'
 import { Alert } from 'common/Alert'
 import { Button } from 'common/Button'
-import { DurationInput } from 'common/DurationInput'
-import { priceAndSymbol } from 'common/NFTClaimButton'
 import { handleCopy } from 'components/Browse'
 import { useHandleIssueRental } from 'handlers/useHandleIssueRental'
-import { usePaymentMints } from 'hooks/usePaymentMints'
+import { useWalletId } from 'hooks/useWalletId'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { getLink } from 'providers/ProjectConfigProvider'
 import { useState } from 'react'
 import { FaLink } from 'react-icons/fa'
 import { FiSend } from 'react-icons/fi'
-import { PAYMENT_MINTS } from 'rental-components/common/Constants'
-import { MintPriceSelector } from 'rental-components/common/MintPriceSelector'
 import type { RentalCardConfig } from 'rental-components/components/RentalIssueCard'
 
-import { SolanaLogo } from './icons'
 import type { RentalIssueAdvancedValues } from './RentalIssueAdvanced'
 import { RentalIssueAdvanced } from './RentalIssueAdvanced'
 import { RentalIssueTerms } from './RentalIssueTerms'
 
-export type RentalIssueDurationParams = {
+export type RentalIssueManualParams = {
   tokenDatas: TokenData[]
   rentalCardConfig: RentalCardConfig
   showAdvanced: boolean
 }
 
-export const RentalIssueDuration = ({
+export const RentalIssueManual = ({
   tokenDatas,
   rentalCardConfig,
   showAdvanced,
-}: RentalIssueDurationParams) => {
+}: RentalIssueManualParams) => {
   const { environment } = useEnvironmentCtx()
   const [error, setError] = useState<string>()
   const [link, setLink] = useState<string | null>()
   const handleIssueRental = useHandleIssueRental()
-
-  const paymentMints = usePaymentMints()
-  const paymentMintData = rentalCardConfig.invalidationOptions?.paymentMints
-    ? PAYMENT_MINTS.filter(({ mint }) =>
-        rentalCardConfig.invalidationOptions?.paymentMints?.includes(mint)
-      )
-    : PAYMENT_MINTS
-  const [paymentAmount, setPaymentAmount] = useState(new BN(0))
-  const [paymentMint, setPaymentMint] = useState<string>(
-    paymentMintData[0]!.mint
-  )
-  const [durationSeconds, setDurationSeconds] = useState<number>()
+  const [customInvalidator, setCustomInvalidator] = useState<string>()
+  const walletId = useWalletId()
 
   const [advancedValues, setAdvancedValues] =
     useState<RentalIssueAdvancedValues>()
@@ -65,40 +50,29 @@ export const RentalIssueDuration = ({
           setAdvancedValues(advancedValues)
         }}
       />
-      <div className="flex gap-4">
-        <div className="w-3/4">
-          <div className="mb-1 text-base text-light-0">Rental price</div>
-          <MintPriceSelector
-            defaultPrice={paymentAmount}
-            defaultMint={paymentMint}
-            mintDisabled={paymentMintData.length === 1}
-            paymentMintData={paymentMintData}
-            handleValue={(v) => {
-              setPaymentAmount(v.price.value)
-              setPaymentMint(v.mint.value)
-            }}
-          />
+      <div>
+        <div className="mb-1 text-base text-light-0">
+          Manual revocation pubkey
         </div>
-        <div className="">
-          <div className="mb-1 text-base text-light-0">Duration</div>
-          <DurationInput
-            handleChange={(v) => setDurationSeconds(v)}
-            defaultAmount={
-              rentalCardConfig.invalidationOptions?.freezeRentalDuration?.value
-                ? parseInt(
-                    rentalCardConfig.invalidationOptions?.freezeRentalDuration
-                      ?.value
-                  )
-                : undefined
-            }
-            defaultOption={
-              rentalCardConfig.invalidationOptions?.freezeRentalDuration
-                ?.durationOption
-            }
-            disabled={
-              !!rentalCardConfig.invalidationOptions?.freezeRentalDuration
-            }
+        <div className="relative flex">
+          <input
+            className="w-full rounded-xl border border-border bg-dark-4 py-2 px-3 text-light-0 placeholder-medium-3 transition-all focus:border-primary focus:outline-none"
+            value={customInvalidator}
+            placeholder={shortPubKey(walletId)}
+            onChange={(e) => setCustomInvalidator(e.target.value)}
           />
+          <Button
+            variant={'primary'}
+            className="absolute right-0 top-[1px] w-16 rounded-xl"
+            css={css`
+              height: calc(100% - 2px);
+            `}
+            onClick={() =>
+              setCustomInvalidator(walletId?.toString() ?? undefined)
+            }
+          >
+            Me
+          </Button>
         </div>
       </div>
       {link ? (
@@ -130,29 +104,30 @@ export const RentalIssueDuration = ({
           {error}
         </Alert>
       ) : (
-        <div className="rounded-xl bg-dark-4">
-          <div className="flex items-center p-4">
-            <div className="flex gap-4">
-              <div>
-                <SolanaLogo width={24} height={24} />
-              </div>
-              <div>
-                You set the price at{' '}
-                {priceAndSymbol(
-                  paymentAmount,
-                  tryPublicKey(paymentMint),
-                  paymentMints.data
-                )}
-              </div>
+        customInvalidator && (
+          <div className="rounded-xl bg-dark-4">
+            <div className="flex border-border py-4 px-8 text-center text-sm text-medium-3">
+              This rental will last{' '}
+              <>
+                until
+                {
+                  <a
+                    target="_blank"
+                    rel="noreferrer"
+                    className="mx-[3px]"
+                    href={pubKeyUrl(
+                      tryPublicKey(customInvalidator),
+                      environment.label
+                    )}
+                  >
+                    {shortPubKey(customInvalidator)}
+                  </a>
+                }
+                revokes it
+              </>
             </div>
           </div>
-          <div className="flex gap-3 border-t-[1px] border-border py-4 px-8 text-center text-sm text-medium-3">
-            {`This rental will be expire ${secondsToString(
-              durationSeconds,
-              false
-            )} after the offer is accepted.`}
-          </div>
-        </div>
+        )
       )}
       <RentalIssueTerms
         confirmed={confirmRentalTerms}
@@ -168,7 +143,8 @@ export const RentalIssueDuration = ({
           !confirmRentalTerms ||
           (link === 'success' &&
             (totalListed === tokenDatas.length || tokenDatas.length === 0)) ||
-          !!error
+          !!error ||
+          !customInvalidator
         }
         loading={handleIssueRental.isLoading}
         onClick={async () => {
@@ -178,16 +154,17 @@ export const RentalIssueDuration = ({
                 {
                   tokenDatas: tokenDatas,
                   rentalCardConfig,
-                  paymentAmount,
-                  paymentMint,
-                  durationSeconds,
+                  paymentAmount: undefined,
+                  paymentMint: undefined,
+                  maxExpiration: undefined,
+                  durationSeconds: undefined,
                   extensionPaymentMint: undefined,
                   extensionPaymentAmount: undefined,
                   extensionDurationSeconds: undefined,
                   totalUsages: undefined,
                   invalidationType: advancedValues?.invalidationType,
                   visibility: advancedValues?.visibility,
-                  customInvalidator: undefined,
+                  customInvalidator: customInvalidator,
                   disablePartialExtension: undefined,
                   claimRentalReceipt: undefined,
                 },

@@ -13,14 +13,13 @@ import type {
 } from 'rental-components/common/RentalIssueAdvanced'
 import { VISIBILITY_OPTIONS } from 'rental-components/common/RentalIssueAdvanced'
 import { RentalIssueDuration } from 'rental-components/common/RentalIssueDuration'
+import { RentalIssueExpiration } from 'rental-components/common/RentalIssueExpiration'
+import { RentalIssueManual } from 'rental-components/common/RentalIssueManual'
 import { RentalIssueRate } from 'rental-components/common/RentalIssueRate'
 
 export type InvalidatorOption =
-  | 'usages'
-  | 'expiration'
-  | 'duration'
-  | 'manual'
-  | 'rate'
+  // | 'usages'
+  'expiration' | 'duration' | 'manual' | 'rate'
 
 export type DurationOption =
   | 'minutes'
@@ -189,9 +188,21 @@ export const RentalIssueCard = ({
                 showAdvanced={showAdvanced}
               />
             ),
-            expiration: <>Not yet supported</>,
+            expiration: (
+              <RentalIssueExpiration
+                tokenDatas={tokenDatas}
+                rentalCardConfig={rentalCardConfig}
+                showAdvanced={showAdvanced}
+              />
+            ),
             usages: <>Not yet supported</>,
-            manual: <>Not yet supported</>,
+            manual: (
+              <RentalIssueManual
+                tokenDatas={tokenDatas}
+                rentalCardConfig={rentalCardConfig}
+                showAdvanced={showAdvanced}
+              />
+            ),
           }[selectedInvalidators[0]!]}
         <PoweredByFooter />
       </div>
