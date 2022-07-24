@@ -170,7 +170,7 @@ export const RentalIssueAdvanced = ({
           </div>
           <div>
             {visibility === 'private'
-              ? 'Your will receive a private one-time rental claim link to share.'
+              ? 'You will receive a private claim link.'
               : 'Your NFT listing will be available to everyone.'}
           </div>
         </div>
