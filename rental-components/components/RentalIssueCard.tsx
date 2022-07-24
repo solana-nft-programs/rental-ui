@@ -277,6 +277,8 @@ export const RentalIssueCard = ({
                 .value
             )
         )
+      } else {
+        setExtensionDurationSeconds(DURATION_DATA['days'])
       }
       setExtensionPaymentMint(defaultPaymentMint.mint)
       setExtensionPaymentAmount(undefined)
