@@ -73,7 +73,7 @@ export function NFT({ tokenData }: NFTProps) {
       <div
         className={`relative flex h-[280px] max-w-full items-center justify-center`}
       >
-        {getExpiration(tokenData, UTCNow) && (
+        {tokenData.timeInvalidator && getExpiration(tokenData, UTCNow) && (
           <div
             className={`absolute top-3 left-3 z-20 rounded-md bg-dark-5 px-2 py-1 text-sm text-light-0`}
           >

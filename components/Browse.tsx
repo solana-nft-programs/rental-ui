@@ -8,6 +8,7 @@ import { GlyphActivity } from 'assets/GlyphActivity'
 import { GlyphBrowse } from 'assets/GlyphBrowse'
 import { GlyphLargeClose } from 'assets/GlyphLargeClose'
 import { Card } from 'common/Card'
+import { DURATION_DATA } from 'common/DurationInput'
 import { Glow } from 'common/Glow'
 import { HeaderSlim } from 'common/HeaderSlim'
 import { HeroLarge } from 'common/HeroLarge'
@@ -19,7 +20,7 @@ import {
   getAllAttributes,
   getNFTAtrributeFilters,
 } from 'common/NFTAttributeFilters'
-import { NFTClaimButton } from 'common/NFTClaimButton'
+import { mintSymbol, NFTClaimButton } from 'common/NFTClaimButton'
 import { NFTHeader } from 'common/NFTHeader'
 import { NFTIssuerInfo } from 'common/NFTIssuerInfo'
 import { NFTRevokeButton } from 'common/NFTRevokeButton'
@@ -29,12 +30,11 @@ import { TabSelector } from 'common/TabSelector'
 import { fmtMintAmount, getMintDecimalAmount } from 'common/units'
 import type { ProjectConfig, TokenSection } from 'config/config'
 import { useFilteredTokenManagers } from 'hooks/useFilteredTokenManagers'
-import { PAYMENT_MINTS, usePaymentMints } from 'hooks/usePaymentMints'
+import { usePaymentMints } from 'hooks/usePaymentMints'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { filterTokens, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useUTCNow } from 'providers/UTCNowProvider'
 import { useEffect, useState } from 'react'
-import { DURATION_DATA } from 'rental-components/components/RentalIssueCard'
 
 export const handleCopy = (shareUrl: string) => {
   navigator.clipboard.writeText(shareUrl)
@@ -88,17 +88,10 @@ export const getTokenMaxDuration = (tokenData: TokenData, UTCNow: number) => {
 }
 
 export const getSymbolFromTokenData = (tokenData: TokenData) => {
-  const symbol = PAYMENT_MINTS.find(
-    (mint) =>
-      mint.mint ===
-      (tokenData.claimApprover?.parsed?.paymentMint.toString() ||
-        tokenData.timeInvalidator?.parsed.extensionPaymentMint?.toString())
-  )?.symbol
-  if (!symbol || symbol === 'SOL') {
-    return '◎'
-  } else {
-    return symbol
-  }
+  return mintSymbol(
+    tokenData.claimApprover?.parsed?.paymentMint ??
+      tokenData.timeInvalidator?.parsed.extensionPaymentMint
+  )
 }
 
 export function getTokenRentalRate(

@@ -162,8 +162,6 @@ export const RentalSummary: React.FC<Props> = ({
 }: Props) => {
   const { UTCNow } = useUTCNow()
   const paymentMints = usePaymentMints()
-  const { durationSeconds, expiration, maxExpiration } =
-    tokenData.timeInvalidator?.parsed || {}
   return (
     <div className="flex justify-between gap-4 border-t-[1px] border-border pt-4">
       <div className="flex gap-4">

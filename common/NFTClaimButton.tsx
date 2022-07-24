@@ -1,10 +1,12 @@
 import { BN } from '@project-serum/anchor'
+import type * as splToken from '@solana/spl-token'
 import { useWallet } from '@solana/wallet-adapter-react'
+import type { PublicKey } from '@solana/web3.js'
 import type { TokenData } from 'api/api'
 import { getSymbolFromTokenData, getTokenRentalRate } from 'components/Browse'
 import { allowedToRent } from 'handlers/useHandleClaimRental'
 import { useOtp } from 'hooks/useOtp'
-import { usePaymentMints } from 'hooks/usePaymentMints'
+import { PAYMENT_MINTS, usePaymentMints } from 'hooks/usePaymentMints'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useRentalFixedCard } from 'rental-components/components/RentalFixedCard'
@@ -13,6 +15,35 @@ import { useRentalRateCard } from 'rental-components/components/RentalRateCard'
 import { ButtonSmall } from './ButtonSmall'
 import { isPrivateListing, isRateBasedListing } from './NFTIssuerInfo'
 import { fmtMintAmount } from './units'
+
+export const mintSymbol = (paymentMint: PublicKey | null | undefined) => {
+  const symbol = PAYMENT_MINTS.find(
+    (mint) => mint.mint === paymentMint?.toString()
+  )?.symbol
+  if (!symbol || symbol === 'SOL') {
+    return '◎'
+  } else {
+    return symbol
+  }
+}
+
+export const priceAndSymbol = (
+  paymentAmount: BN,
+  paymentMint: PublicKey | null | undefined,
+  paymentMintInfos:
+    | {
+        [name: string]: splToken.MintInfo
+      }
+    | undefined
+) => {
+  if (!paymentMintInfos || !paymentMint) return 'Unknown mint'
+  return `${parseFloat(
+    fmtMintAmount(
+      paymentMintInfos[paymentMint.toString()],
+      paymentAmount ?? new BN(0)
+    )
+  )}${mintSymbol(paymentMint)}`
+}
 
 interface NFTClaimButtonProps extends React.HTMLAttributes<HTMLDivElement> {
   tokenData: TokenData

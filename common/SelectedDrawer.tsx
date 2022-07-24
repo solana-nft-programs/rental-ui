@@ -1,7 +1,6 @@
 import { css } from '@emotion/react'
 import type { TokenData } from 'api/api'
 import { GlyphClose } from 'assets/GlyphClose'
-import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useRentalIssueCard } from 'rental-components/components/RentalIssueCard'
 
@@ -17,7 +16,6 @@ export const SelecterDrawer: React.FC<Props> = ({
   onClose,
 }: Props) => {
   const { config } = useProjectConfig()
-  const { environment } = useEnvironmentCtx()
   const rentalIsseuCard = useRentalIssueCard()
   return (
     <div
@@ -39,7 +37,6 @@ export const SelecterDrawer: React.FC<Props> = ({
           className="px-4 lg:px-8"
           onClick={() =>
             rentalIsseuCard.showModal({
-              cluster: environment.label,
               tokenDatas: selectedTokens,
               rentalCardConfig: config.rentalCard,
             })
