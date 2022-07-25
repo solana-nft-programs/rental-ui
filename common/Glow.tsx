@@ -18,7 +18,9 @@ export const Glow = ({
   return (
     <div className={`relative h-fit w-fit overflow-visible`}>
       <div
-        className={`absolute left-1/4 top-0 h-full w-1/2 rounded-full bg-${color} ${className}`}
+        className={`absolute left-1/4 top-0 h-full w-1/2 rounded-full ${
+          color === 'accent' ? 'bg-accent' : 'bg-glow'
+        } ${className}`}
         style={{
           opacity,
           filter: `blur(${blur}px)`,
