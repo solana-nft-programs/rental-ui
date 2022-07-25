@@ -178,8 +178,7 @@ export const Collections = () => {
           How It Works
         </div> */}
         <div className="mx-auto my-24 h-[2px] w-[90%] rounded-lg bg-border"></div>
-        <div className="px-10 mb-10">
-
+        <div className="mb-10 px-10">
           <div className="mb-6 flex justify-center px-3 text-center text-4xl text-light-0">
             Renting a Token
           </div>
@@ -208,7 +207,7 @@ export const Collections = () => {
                 key={header}
                 className="min-h-80 flex flex-col items-center rounded-3xl bg-white bg-opacity-5 py-12 px-4 xl:px-24"
               >
-                <Glow blur={20} scale={3}>
+                <Glow blur={20} scale={3} color={'glow'}>
                   <div
                     className="flex h-16 w-16 items-center justify-center rounded-2xl p-3"
                     css={css`
@@ -258,7 +257,7 @@ export const Collections = () => {
                 key={header}
                 className="min-h-80 flex flex-col items-center rounded-3xl bg-white bg-opacity-5 py-12 px-4 xl:px-24"
               >
-                <Glow blur={20} scale={3}>
+                <Glow blur={20} scale={3} color={'accent'}>
                   <div
                     className="flex h-16 w-16 items-center justify-center rounded-2xl p-3"
                     css={css`
