@@ -1,5 +1,4 @@
 import { pubKeyUrl, shortPubKey, tryPublicKey } from '@cardinal/common'
-import { claimLinks } from '@cardinal/token-manager'
 import { css } from '@emotion/react'
 import type { TokenData } from 'api/api'
 import { Alert } from 'common/Alert'
@@ -8,11 +7,13 @@ import { handleCopy } from 'components/Browse'
 import { useHandleIssueRental } from 'handlers/useHandleIssueRental'
 import { useWalletId } from 'hooks/useWalletId'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
-import { getLink } from 'providers/ProjectConfigProvider'
 import { useState } from 'react'
 import { FaLink } from 'react-icons/fa'
 import { FiSend } from 'react-icons/fi'
-import type { RentalCardConfig } from 'rental-components/components/RentalIssueCard'
+import type {
+  RentalCardConfig,
+  TxResult,
+} from 'rental-components/components/RentalIssueCard'
 
 import type { RentalIssueAdvancedValues } from './RentalIssueAdvanced'
 import { RentalIssueAdvanced } from './RentalIssueAdvanced'
@@ -22,16 +23,18 @@ export type RentalIssueManualParams = {
   tokenDatas: TokenData[]
   rentalCardConfig: RentalCardConfig
   showAdvanced: boolean
+  setTxResults: (r: TxResult[]) => void
 }
 
 export const RentalIssueManual = ({
   tokenDatas,
   rentalCardConfig,
   showAdvanced,
+  setTxResults,
 }: RentalIssueManualParams) => {
   const { environment } = useEnvironmentCtx()
   const [error, setError] = useState<string>()
-  const [link, setLink] = useState<string | null>()
+  const [txData, setTxData] = useState<TxResult[]>()
   const handleIssueRental = useHandleIssueRental()
   const [customInvalidator, setCustomInvalidator] = useState<string>()
   const walletId = useWalletId()
@@ -39,7 +42,6 @@ export const RentalIssueManual = ({
   const [advancedValues, setAdvancedValues] =
     useState<RentalIssueAdvancedValues>()
   const [confirmRentalTerms, setConfirmRentalTerms] = useState(false)
-  const [totalListed, setTotalListed] = useState(0)
 
   return (
     <div className="flex flex-col gap-4">
@@ -75,17 +77,15 @@ export const RentalIssueManual = ({
           </Button>
         </div>
       </div>
-      {link ? (
+      {txData && txData.length === tokenDatas.length ? (
         <Alert variant="success" className="text-left">
-          {tokenDatas.length === 1 && totalListed === 1 ? (
+          {txData.length === 1 ? (
             <div>
-              Successfully listed: ({totalListed} / {tokenDatas.length})
+              Successfully listed {tokenDatas[0]?.metaplexData?.data.data.name}
               <br />
-              Link created {link.substring(0, 20)}
-              ...
               {advancedValues?.visibility === 'private' && (
                 <>
-                  {link.substring(link.length - 5)}
+                  {txData[0]?.claimLink.substring(0, 20)}
                   <div>
                     This link can only be used once and cannot be regenerated
                   </div>
@@ -95,7 +95,7 @@ export const RentalIssueManual = ({
           ) : (
             <div>
               {' '}
-              Successfully listed: ({totalListed} / {tokenDatas.length}){' '}
+              Successfully listed: ({txData.length} / {tokenDatas.length}){' '}
             </div>
           )}
         </Alert>
@@ -139,17 +139,11 @@ export const RentalIssueManual = ({
       <Button
         variant="primary"
         className="h-12"
-        disabled={
-          !confirmRentalTerms ||
-          (link === 'success' &&
-            (totalListed === tokenDatas.length || tokenDatas.length === 0)) ||
-          !!error ||
-          !customInvalidator
-        }
+        disabled={!confirmRentalTerms || !!error || !customInvalidator}
         loading={handleIssueRental.isLoading}
         onClick={async () => {
-          link
-            ? handleCopy(link)
+          txData
+            ? handleCopy(txData[0]?.claimLink ?? '')
             : handleIssueRental.mutate(
                 {
                   tokenDatas: tokenDatas,
@@ -169,23 +163,9 @@ export const RentalIssueManual = ({
                   claimRentalReceipt: undefined,
                 },
                 {
-                  onSuccess: ({
-                    otpKeypairs,
-                    tokenManagerIds,
-                    totalSuccessfulTransactions,
-                  }) => {
-                    setTotalListed(totalSuccessfulTransactions)
-                    if (tokenDatas.length === 1 && tokenManagerIds[0]) {
-                      const link = claimLinks.getLink(
-                        tokenManagerIds[0],
-                        otpKeypairs[0],
-                        environment.label,
-                        getLink('/claim', false)
-                      )
-                      setLink(link)
-                    } else {
-                      setLink('success')
-                    }
+                  onSuccess: (txData) => {
+                    setTxResults(txData)
+                    setTxData(txData)
                   },
                   onError: (e) => {
                     setError(`${e}`)
@@ -194,7 +174,7 @@ export const RentalIssueManual = ({
               )
         }}
       >
-        {link && link !== 'success' ? (
+        {txData?.length === 0 ? (
           <div className="flex items-center justify-center gap-[5px] text-base">
             <FaLink />
             Copy link

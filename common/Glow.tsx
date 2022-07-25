@@ -19,7 +19,11 @@ export const Glow = ({
     <div className={`relative h-fit w-fit overflow-visible`}>
       <div
         className={`absolute left-1/4 top-0 h-full w-1/2 rounded-full ${
-          color === 'accent' ? 'bg-accent' : 'bg-glow'
+          color === 'accent'
+            ? 'bg-accent'
+            : color === 'secondary'
+            ? 'bg-secondary'
+            : 'bg-glow'
         } ${className}`}
         style={{
           opacity,

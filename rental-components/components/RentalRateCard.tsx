@@ -76,7 +76,7 @@ export const RentalRateCard = ({
       <div className="text-center text-2xl text-light-0">
         Rent {tokenData.metadata?.data.name}
       </div>
-      <div className="mb-4 text-center text-lg text-medium-4">
+      <div className="mb-2 text-center text-lg text-medium-4">
         {config.displayName}
       </div>
       <div

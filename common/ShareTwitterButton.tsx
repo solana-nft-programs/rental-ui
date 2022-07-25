@@ -1,24 +1,64 @@
 import { css } from '@emotion/react'
 import type { TokenData } from 'api/api'
-import { useProjectConfig } from 'providers/ProjectConfigProvider'
+import type { ProjectConfig } from 'config/config'
 
 type Props = {
   children: string | JSX.Element
   className?: string
   disabled?: boolean
-  tokenData: TokenData
+  shareLink: string
+}
+
+export const shareTwitterClaimedLink = (
+  tokenData: TokenData,
+  config: ProjectConfig,
   issuerName?: string
+) => {
+  return [
+    `https://twitter.com/intent/tweet?text=`,
+    encodeURIComponent(
+      `I just rented ${
+        tokenData.metaplexData?.data.data.name
+          ? `${config.twitterHandle ? `${config.twitterHandle} ` : ''}${
+              tokenData.metaplexData?.data.data.name
+            }`
+          : `a ${config.twitterHandle ? `${config.twitterHandle} ` : ''}NFT`
+      }${
+        issuerName ? ` from ${issuerName}` : ''
+      } using @cardinal_labs rental UI! Check it out at https://rent.cardinal.so/claim/${tokenData.tokenManager?.pubkey.toString()}.`
+    ),
+  ].join('')
+}
+
+export const shareTwitterListedLink = (
+  tokenDatas: TokenData[],
+  config: ProjectConfig
+) => {
+  return [
+    `https://twitter.com/intent/tweet?text=`,
+    encodeURIComponent(
+      tokenDatas.length === 1
+        ? `I just listed ${
+            tokenDatas[0]!.metaplexData?.data.data.name
+              ? `${config.twitterHandle ? `${config.twitterHandle} ` : ''}${
+                  tokenDatas[0]!.metaplexData?.data.data.name
+                }`
+              : `a ${config.twitterHandle ? `${config.twitterHandle} ` : ''}NFT`
+          } for rent using @cardinal_labs rental UI! Check it out at https://rent.cardinal.so/claim/${tokenDatas[0]!.tokenManager?.pubkey.toString()}.`
+        : `I just listed ${tokenDatas.length} ${
+            config.twitterHandle ? `${config.twitterHandle} ` : ''
+          }NFTs! Check it out at https://rent.cardinal.so/${config.name}.`
+    ),
+  ].join('')
 }
 
 export const ShareTwitterButton: React.FC<Props> = ({
   children,
   className,
   disabled,
-  tokenData,
-  issuerName,
+  shareLink,
   ...rest
 }: Props) => {
-  const { config } = useProjectConfig()
   return (
     <a
       {...rest}
@@ -32,20 +72,7 @@ export const ShareTwitterButton: React.FC<Props> = ({
       `}
       target="_blank"
       rel="noreferrer"
-      href={[
-        `https://twitter.com/intent/tweet?text=`,
-        encodeURIComponent(
-          `I just rented ${
-            tokenData.metaplexData?.data.data.name
-              ? `${config.twitterHandle ?? ''} ${
-                  tokenData.metaplexData?.data.data.name
-                }`
-              : `a ${config.twitterHandle ?? ''} NFT`
-          }${
-            issuerName ? ` from ${issuerName}` : ''
-          }! Check it out at https://rent.cardinal.so/claim/${tokenData.tokenManager?.pubkey.toString()}`
-        ),
-      ].join('')}
+      href={shareLink}
     >
       <div className="flex items-center justify-center gap-1">
         {children && (

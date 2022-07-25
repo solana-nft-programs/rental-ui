@@ -4,11 +4,14 @@ import { GlyphCheck } from 'assets/GlyphCheck'
 import { Glow } from 'common/Glow'
 import { Pill } from 'common/Pill'
 import { rentalExpirationWithExtension } from 'common/RentalSummary'
-import { ShareTwitterButton } from 'common/ShareTwitterButton'
+import {
+  ShareTwitterButton,
+  shareTwitterClaimedLink,
+} from 'common/ShareTwitterButton'
 import { getQueryParam, transactionUrl } from 'common/utils'
 import { useWalletId } from 'hooks/useWalletId'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
-import { useModal } from 'providers/ModalProvider'
+import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useUTCNow } from 'providers/UTCNowProvider'
 import { FaTwitter } from 'react-icons/fa'
 import { PoweredByFooter } from 'rental-components/common/PoweredByFooter'
@@ -26,6 +29,7 @@ export const RentalSuccessCard = ({
 }: RentalSuccessCardProps) => {
   const { connection, environment } = useEnvironmentCtx()
   const walletId = useWalletId()
+  const { config } = useProjectConfig()
   const { durationSeconds } = tokenData.timeInvalidator?.parsed || {}
   const { UTCNow } = useUTCNow()
   const { displayName: issuerName, loadingName } = useAddressName(
@@ -50,7 +54,7 @@ export const RentalSuccessCard = ({
         </Glow>
       </div>
       <div className="text-center text-2xl text-light-0">Congratulations!</div>
-      <div className="mb-4 text-center text-lg text-medium-4">
+      <div className="mb-6 text-center text-lg text-medium-4">
         You&apos;ve rented {tokenData.metadata?.data.name}
       </div>
       <div
@@ -98,8 +102,7 @@ export const RentalSuccessCard = ({
       <div className="flex justify-center">
         <ShareTwitterButton
           className="px-8"
-          tokenData={tokenData}
-          issuerName={issuerName}
+          shareLink={shareTwitterClaimedLink(tokenData, config, issuerName)}
           disabled={loadingName}
         >
           <div
@@ -114,12 +117,4 @@ export const RentalSuccessCard = ({
       <PoweredByFooter />
     </div>
   )
-}
-
-export const useRentalSuccessCard = () => {
-  const { showModal } = useModal()
-  return {
-    showModal: (params: RentalSuccessCardProps) =>
-      showModal(<RentalSuccessCard {...params} />),
-  }
 }
