@@ -161,7 +161,7 @@ export const RentalIssueCard = ({
           </div>
           <div className="flex gap-1">
             {selectedInvalidators.length > 0 && visibilities.length > 1 && (
-              <Tooltip title="Set up your reccuring listing or listing visibility">
+              <Tooltip title="Set up your recurring listing or listing visibility">
                 <div
                   className="cursor-pointer text-base text-primary"
                   onClick={() => setShowAdvanced(!showAdvanced)}
