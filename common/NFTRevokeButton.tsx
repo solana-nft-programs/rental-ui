@@ -45,7 +45,7 @@ export const NFTRevokeButton: React.FC<NFTRevokeButtonProps> = ({
           disabled={!wallet.connected}
           onClick={async () => {
             tokenData?.tokenManager &&
-              executeTransaction(
+              (await executeTransaction(
                 connection,
                 asWallet(wallet),
                 await invalidate(
@@ -55,9 +55,8 @@ export const NFTRevokeButton: React.FC<NFTRevokeButtonProps> = ({
                 ),
                 {
                   callback,
-                  silent: true,
                 }
-              )
+              ))
           }}
         >
           Revoke
