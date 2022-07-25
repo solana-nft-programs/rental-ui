@@ -97,7 +97,6 @@ function Claim() {
                         <NFTIssuerInfo tokenData={tokenData} />
                         {qrcode && !isMobile ? (
                           <ButtonSmall
-                            bgColor={config.colors.secondary}
                             className="my-auto inline-block flex-none text-xs"
                             onClick={() => setShowQRCode(true)}
                           >
