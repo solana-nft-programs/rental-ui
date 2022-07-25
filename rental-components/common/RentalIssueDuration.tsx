@@ -1,5 +1,4 @@
 import { secondsToString, tryPublicKey } from '@cardinal/common'
-import { claimLinks } from '@cardinal/token-manager'
 import { BN } from '@project-serum/anchor'
 import type { TokenData } from 'api/api'
 import { Alert } from 'common/Alert'
@@ -9,14 +8,15 @@ import { priceAndSymbol } from 'common/NFTClaimButton'
 import { handleCopy } from 'components/Browse'
 import { useHandleIssueRental } from 'handlers/useHandleIssueRental'
 import { usePaymentMints } from 'hooks/usePaymentMints'
-import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
-import { getLink } from 'providers/ProjectConfigProvider'
 import { useState } from 'react'
 import { FaLink } from 'react-icons/fa'
 import { FiSend } from 'react-icons/fi'
 import { PAYMENT_MINTS } from 'rental-components/common/Constants'
 import { MintPriceSelector } from 'rental-components/common/MintPriceSelector'
-import type { RentalCardConfig } from 'rental-components/components/RentalIssueCard'
+import type {
+  RentalCardConfig,
+  TxResult,
+} from 'rental-components/components/RentalIssueCard'
 
 import { SolanaLogo } from './icons'
 import type { RentalIssueAdvancedValues } from './RentalIssueAdvanced'
@@ -27,16 +27,17 @@ export type RentalIssueDurationParams = {
   tokenDatas: TokenData[]
   rentalCardConfig: RentalCardConfig
   showAdvanced: boolean
+  setTxResults: (r: TxResult[]) => void
 }
 
 export const RentalIssueDuration = ({
   tokenDatas,
   rentalCardConfig,
   showAdvanced,
+  setTxResults,
 }: RentalIssueDurationParams) => {
-  const { environment } = useEnvironmentCtx()
   const [error, setError] = useState<string>()
-  const [link, setLink] = useState<string | null>()
+  const [txData, setTxData] = useState<TxResult[]>()
   const handleIssueRental = useHandleIssueRental()
 
   const paymentMints = usePaymentMints()
@@ -54,7 +55,6 @@ export const RentalIssueDuration = ({
   const [advancedValues, setAdvancedValues] =
     useState<RentalIssueAdvancedValues>()
   const [confirmRentalTerms, setConfirmRentalTerms] = useState(false)
-  const [totalListed, setTotalListed] = useState(0)
 
   return (
     <div className="flex flex-col gap-4">
@@ -101,17 +101,15 @@ export const RentalIssueDuration = ({
           />
         </div>
       </div>
-      {link ? (
+      {txData && txData.length === tokenDatas.length ? (
         <Alert variant="success" className="text-left">
-          {tokenDatas.length === 1 && totalListed === 1 ? (
+          {txData.length === 1 ? (
             <div>
-              Successfully listed: ({totalListed} / {tokenDatas.length})
+              Successfully listed {tokenDatas[0]?.metaplexData?.data.data.name}
               <br />
-              Link created {link.substring(0, 20)}
-              ...
               {advancedValues?.visibility === 'private' && (
                 <>
-                  {link.substring(link.length - 5)}
+                  {txData[0]?.claimLink.substring(0, 20)}
                   <div>
                     This link can only be used once and cannot be regenerated
                   </div>
@@ -121,7 +119,7 @@ export const RentalIssueDuration = ({
           ) : (
             <div>
               {' '}
-              Successfully listed: ({totalListed} / {tokenDatas.length}){' '}
+              Successfully listed: ({txData.length} / {tokenDatas.length}){' '}
             </div>
           )}
         </Alert>
@@ -164,16 +162,11 @@ export const RentalIssueDuration = ({
       <Button
         variant="primary"
         className="h-12"
-        disabled={
-          !confirmRentalTerms ||
-          (link === 'success' &&
-            (totalListed === tokenDatas.length || tokenDatas.length === 0)) ||
-          !!error
-        }
+        disabled={!confirmRentalTerms || !!error}
         loading={handleIssueRental.isLoading}
         onClick={async () => {
-          link
-            ? handleCopy(link)
+          txData
+            ? handleCopy(txData[0]?.claimLink ?? '')
             : handleIssueRental.mutate(
                 {
                   tokenDatas: tokenDatas,
@@ -192,23 +185,9 @@ export const RentalIssueDuration = ({
                   claimRentalReceipt: undefined,
                 },
                 {
-                  onSuccess: ({
-                    otpKeypairs,
-                    tokenManagerIds,
-                    totalSuccessfulTransactions,
-                  }) => {
-                    setTotalListed(totalSuccessfulTransactions)
-                    if (tokenDatas.length === 1 && tokenManagerIds[0]) {
-                      const link = claimLinks.getLink(
-                        tokenManagerIds[0],
-                        otpKeypairs[0],
-                        environment.label,
-                        getLink('/claim', false)
-                      )
-                      setLink(link)
-                    } else {
-                      setLink('success')
-                    }
+                  onSuccess: (txData) => {
+                    setTxResults(txData)
+                    setTxData(txData)
                   },
                   onError: (e) => {
                     setError(`${e}`)
@@ -217,7 +196,7 @@ export const RentalIssueDuration = ({
               )
         }}
       >
-        {link && link !== 'success' ? (
+        {txData?.length === 0 ? (
           <div className="flex items-center justify-center gap-[5px] text-base">
             <FaLink />
             Copy link

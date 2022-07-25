@@ -4,7 +4,7 @@ import { issueToken } from '@cardinal/token-manager'
 import { findPaymentManagerAddress } from '@cardinal/token-manager/dist/cjs/programs/paymentManager/pda'
 import type { InvalidationType } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { TokenManagerKind } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
-import { BN } from '@project-serum/anchor'
+import { BN, utils } from '@project-serum/anchor'
 import { useWallet } from '@solana/wallet-adapter-react'
 import {
   Keypair,
@@ -18,6 +18,7 @@ import { executeAllTransactions } from 'api/utils'
 import { asWallet } from 'common/Wallets'
 import { TOKEN_DATA_KEY } from 'hooks/useFilteredTokenManagers'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
+import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useMutation, useQueryClient } from 'react-query'
 import type { RentalCardConfig } from 'rental-components/components/RentalIssueCard'
 
@@ -44,6 +45,7 @@ export interface HandleIssueRentalParams {
 
 export const useHandleIssueRental = () => {
   const wallet = useWallet()
+  const { config } = useProjectConfig()
   const { connection } = useEnvironmentCtx()
   const queryClient = useQueryClient()
   return useMutation(
@@ -63,16 +65,23 @@ export const useHandleIssueRental = () => {
       customInvalidator,
       disablePartialExtension,
       claimRentalReceipt,
-    }: HandleIssueRentalParams): Promise<{
-      tokenManagerIds: PublicKey[]
-      otpKeypairs: (Keypair | undefined)[]
-      totalSuccessfulTransactions: number
-    }> => {
+    }: HandleIssueRentalParams): Promise<
+      {
+        tokenManagerId: PublicKey
+        otpKeypair: Keypair | undefined
+        tokenData: TokenData
+        claimLink: string
+        txid?: string
+      }[]
+    > => {
       if (!wallet.publicKey) {
         throw 'Wallet not connected'
       }
       if (maxExpiration && maxExpiration < Date.now() / 1000) {
         throw 'Rental expiration has already passed. Please select a value after the current date.'
+      }
+      if (visibility === 'private' && tokenDatas.length > 1) {
+        throw 'Private rentals can only be made one at a time.'
       }
 
       if (rentalCardConfig.invalidationOptions?.maxDurationAllowed) {
@@ -110,8 +119,7 @@ export const useHandleIssueRental = () => {
 
       const transactions: Transaction[] = []
       const receiptMintKeypairs: Keypair[] = []
-      const tokenManagerIds: PublicKey[] = []
-      const otpKeypairs: (Keypair | undefined)[] = []
+      const txData = []
       for (let i = 0; i < tokenDatas.length; i = i + 1) {
         const { tokenAccount, editionData } = tokenDatas[i]!
         if (!tokenAccount) {
@@ -211,8 +219,11 @@ export const useHandleIssueRental = () => {
           issueParams
         )
 
-        tokenManagerIds.push(tokenManagerId)
-        otpKeypairs.push(otpKeypair)
+        txData.push({
+          tokenManagerId,
+          tokenData: tokenDatas[i]!,
+          otpKeypair,
+        })
 
         const transaction = new Transaction()
         transaction.instructions = otpKeypair
@@ -228,21 +239,37 @@ export const useHandleIssueRental = () => {
         transactions.push(transaction)
       }
       let totalSuccessfulTransactions = 0
-      await executeAllTransactions(connection, asWallet(wallet), transactions, {
-        callback: async (successfulTxs: number) => {
-          totalSuccessfulTransactions = successfulTxs
-        },
-        signers: claimRentalReceipt ? [receiptMintKeypairs] : [],
-        confirmOptions: {
-          maxRetries: 3,
-        },
-        notificationConfig: {
-          successSummary: true,
-          message: 'Successfully rented out NFTs',
-          description: 'These NFTs are now available to rent in the browse tab',
-        },
-      })
-      return { tokenManagerIds, otpKeypairs, totalSuccessfulTransactions }
+      const txids = await executeAllTransactions(
+        connection,
+        asWallet(wallet),
+        transactions,
+        {
+          callback: async (successfulTxs: number) => {
+            totalSuccessfulTransactions = successfulTxs
+          },
+          signers: claimRentalReceipt ? [receiptMintKeypairs] : [],
+          confirmOptions: {
+            maxRetries: 3,
+          },
+          notificationConfig: {
+            successSummary: true,
+            message: 'Successfully rented out NFTs',
+            description:
+              'These NFTs are now available to rent in the browse tab',
+          },
+        }
+      )
+      return txData.map((txData, i) => ({
+        ...txData,
+        txid: txids[i] ?? undefined,
+        claimLink: getLink(
+          `/${config.name}/claim/${txData.tokenManagerId.toString()}${
+            txData.otpKeypair
+              ? `?otp=${utils.bytes.bs58.encode(txData.otpKeypair.secretKey)}`
+              : '?'
+          }`
+        ),
+      }))
     },
     {
       onSuccess: () => {

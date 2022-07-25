@@ -377,6 +377,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       secondary: '#80ddef',
     },
     hero: '/logos/portals-hero.png',
+    twitterHandle: '@_portals_',
     description:
       'The Metaverse on Solana. Explore downtown, invite friends, chat, build, show off your NFTs — right in the browser.',
     socialLinks: [

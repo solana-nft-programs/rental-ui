@@ -5,6 +5,7 @@ import { GlyphEdit } from 'assets/GlyphEdit'
 import { Tooltip } from 'common/Tooltip'
 import { lighten } from 'polished'
 import { useModal } from 'providers/ModalProvider'
+import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useState } from 'react'
 import { PoweredByFooter } from 'rental-components/common/PoweredByFooter'
 import type {
@@ -16,6 +17,14 @@ import { RentalIssueDuration } from 'rental-components/common/RentalIssueDuratio
 import { RentalIssueExpiration } from 'rental-components/common/RentalIssueExpiration'
 import { RentalIssueManual } from 'rental-components/common/RentalIssueManual'
 import { RentalIssueRate } from 'rental-components/common/RentalIssueRate'
+
+import { RentalIssueSuccessCard } from './RentalIssueSuccessCard'
+
+export type TxResult = {
+  tokenData: TokenData
+  txid?: string
+  claimLink: string
+}
 
 export type InvalidatorOption =
   // | 'usages'
@@ -67,17 +76,28 @@ export const RentalIssueCard = ({
   const [selectedInvalidators, setSelectedInvalidators] = useState<
     InvalidatorOption[]
   >([])
+  const { config } = useProjectConfig()
   const [showAdvanced, setShowAdvanced] = useState(false)
+  const [txResults, setTxResults] = useState<TxResult[]>()
   const invalidatorOptions = rentalCardConfig.invalidators
+
+  if (txResults) {
+    return (
+      <RentalIssueSuccessCard tokenDatas={tokenDatas} txResults={txResults} />
+    )
+  }
   return (
     <div className="rounded-xl bg-dark-6 p-6">
-      <div className="text-center text-xl text-light-0">
+      <div className="text-center text-2xl text-light-0">
         Rent out{' '}
         {tokenDatas.length > 1
           ? `(${tokenDatas.length})`
           : tokenDatas[0]
           ? tokenDatas[0].metadata?.data.name
           : ''}
+      </div>
+      <div className="mb-2 text-center text-lg text-medium-4">
+        {config.displayName}
       </div>
       <div
         className={
@@ -179,6 +199,7 @@ export const RentalIssueCard = ({
                 tokenDatas={tokenDatas}
                 rentalCardConfig={rentalCardConfig}
                 showAdvanced={showAdvanced}
+                setTxResults={setTxResults}
               />
             ),
             duration: (
@@ -186,6 +207,7 @@ export const RentalIssueCard = ({
                 tokenDatas={tokenDatas}
                 rentalCardConfig={rentalCardConfig}
                 showAdvanced={showAdvanced}
+                setTxResults={setTxResults}
               />
             ),
             expiration: (
@@ -193,6 +215,7 @@ export const RentalIssueCard = ({
                 tokenDatas={tokenDatas}
                 rentalCardConfig={rentalCardConfig}
                 showAdvanced={showAdvanced}
+                setTxResults={setTxResults}
               />
             ),
             usages: <>Not yet supported</>,
@@ -201,6 +224,7 @@ export const RentalIssueCard = ({
                 tokenDatas={tokenDatas}
                 rentalCardConfig={rentalCardConfig}
                 showAdvanced={showAdvanced}
+                setTxResults={setTxResults}
               />
             ),
           }[selectedInvalidators[0]!]}
