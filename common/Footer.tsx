@@ -16,12 +16,7 @@ export const Footer = ({
   accentColor?: string
 }) => {
   return (
-    <div
-      className="mt-10 px-10 pt-5 shadow-2xl md:px-32"
-      style={{
-        background: lighten(0.07, bgColor),
-      }}
-    >
+    <div className="mt-10 bg-white bg-opacity-5 px-10 pt-5 shadow-2xl md:px-32">
       <div className="flex w-full flex-wrap items-start justify-between gap-10 py-10">
         <div className="flex items-center">
           <img
@@ -53,10 +48,7 @@ export const Footer = ({
           </span>
         </div>
       </div>
-      <div
-        className="flex items-center justify-between border-t py-8 text-sm text-gray-400"
-        style={{ borderColor: lighten(0.2, bgColor) }}
-      >
+      <div className="flex items-center justify-between border-t border-border py-8 text-sm text-gray-400">
         <div className="flex items-center justify-center gap-2 text-gray-400">
           Powered by Cardinal
         </div>

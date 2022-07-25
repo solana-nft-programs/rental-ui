@@ -38,7 +38,7 @@ function Claim() {
 
   return (
     <div className="flex h-screen flex-col">
-      <HeaderSlim homeButton />
+      <HeaderSlim />
       <div className="mx-auto max-w-[500px] flex-grow pt-[5vh] lg:pt-[12vh]">
         <div className="mb-6 text-center">
           <div className="mb-2 text-4xl">Claim Asset</div>
