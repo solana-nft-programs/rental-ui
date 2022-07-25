@@ -15,7 +15,9 @@ export const Alert: React.FC<Props> = ({
   return {
     error: (
       <div
-        className={`${className} relative flex cursor-pointer items-center justify-center rounded-xl border-[1px] border-red-500 bg-red-500 bg-opacity-25 p-4 text-light-2`}
+        className={`${className} relative flex items-center justify-center rounded-xl border-[1px] border-red-500 bg-red-500 bg-opacity-25 p-4 text-light-2 ${
+          onClick && 'cursor-pointer'
+        }`}
         onClick={onClick}
       >
         <div className="pr-4" style={{ wordBreak: 'break-word' }}>
@@ -30,7 +32,9 @@ export const Alert: React.FC<Props> = ({
     ),
     success: (
       <div
-        className={`${className} relative flex cursor-pointer items-center justify-center rounded-xl border-[1px] border-secondary bg-secondary bg-opacity-25 p-4 text-light-2`}
+        className={`${className} relative flex items-center justify-center rounded-xl border-[1px] border-secondary bg-secondary bg-opacity-25 p-4 text-light-2 ${
+          onClick && 'cursor-pointer'
+        }`}
         onClick={onClick}
       >
         <div className="pr-4" style={{ wordBreak: 'break-word' }}>
