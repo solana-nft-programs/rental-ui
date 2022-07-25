@@ -1,4 +1,3 @@
-import { lighten } from 'polished'
 import { FaDiscord, FaGithub, FaMedium, FaTwitter } from 'react-icons/fa'
 
 export const SOCIALS = {
@@ -22,7 +21,7 @@ export const Footer = ({
           <img
             alt="Cardinal logo"
             className="inline-block h-[28px]"
-            src="./cardinal-crosshair.svg"
+            src="/cardinal-crosshair.svg"
           />
           <span className="ml-3 text-2xl font-semibold text-white">
             Cardinal
