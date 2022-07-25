@@ -54,7 +54,7 @@ export const RentalManualCard = ({
             />
           )}
           <Pill className="absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-1/2 border-[1px] border-border text-primary-2">
-            Manual duration
+            Manual revocation
           </Pill>
         </div>
       </div>

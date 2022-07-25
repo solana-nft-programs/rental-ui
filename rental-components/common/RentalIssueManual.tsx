@@ -58,7 +58,7 @@ export const RentalIssueManual = ({
           <input
             className="w-full rounded-xl border border-border bg-dark-4 py-2 px-3 text-light-0 placeholder-medium-3 transition-all focus:border-primary focus:outline-none"
             value={customInvalidator}
-            placeholder={shortPubKey(walletId)}
+            placeholder={'Enter a Solana address...'}
             onChange={(e) => setCustomInvalidator(e.target.value)}
           />
           <Button
