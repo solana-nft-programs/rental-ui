@@ -4,7 +4,6 @@ import { useWalletModal } from '@solana/wallet-adapter-react-ui'
 import { GlyphWallet } from 'assets/GlyphWallet'
 import { useRouter } from 'next/router'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
-import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useEffect, useState } from 'react'
 
 import { ButtonSmall } from './ButtonSmall'
@@ -13,7 +12,6 @@ import { Tooltip } from './Tooltip'
 import { asWallet } from './Wallets'
 
 type Props = {
-  homeButton?: boolean
   tabs?: {
     disabled?: boolean
     name: string
@@ -23,16 +21,10 @@ type Props = {
   loading?: boolean
 }
 
-export const HeaderSlim: React.FC<Props> = ({
-  tabs,
-  loading,
-  homeButton,
-}: Props) => {
+export const HeaderSlim: React.FC<Props> = ({ tabs, loading }: Props) => {
   const router = useRouter()
-  const { host } = router.query
   const wallet = useWallet()
   const walletModal = useWalletModal()
-  const { config } = useProjectConfig()
   const { secondaryConnection, environment } = useEnvironmentCtx()
   const [tab, setTab] = useState<string>('browse')
 
