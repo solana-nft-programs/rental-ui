@@ -1,6 +1,7 @@
 import { css } from '@emotion/react'
 import type { TokenData } from 'api/api'
 import type { ProjectConfig } from 'config/config'
+import type { TxResult } from 'rental-components/components/RentalIssueCard'
 
 type Props = {
   children: string | JSX.Element
@@ -31,23 +32,25 @@ export const shareTwitterClaimedLink = (
 }
 
 export const shareTwitterListedLink = (
-  tokenDatas: TokenData[],
+  txResults: TxResult[],
   config: ProjectConfig
 ) => {
   return [
     `https://twitter.com/intent/tweet?text=`,
     encodeURIComponent(
-      tokenDatas.length === 1
+      txResults.length === 1
         ? `I just listed ${
-            tokenDatas[0]!.metaplexData?.data.data.name
+            txResults[0]!.tokenData.metaplexData?.data.data.name
               ? `${config.twitterHandle ? `${config.twitterHandle} ` : ''}${
-                  tokenDatas[0]!.metaplexData?.data.data.name
+                  txResults[0]!.tokenData.metaplexData?.data.data.name
                 }`
               : `a ${config.twitterHandle ? `${config.twitterHandle} ` : ''}NFT`
-          } for rent using @cardinal_labs rental UI! Check it out at https://rent.cardinal.so/claim/${tokenDatas[0]!.tokenManager?.pubkey.toString()}.`
-        : `I just listed ${tokenDatas.length} ${
+          } for rent using @cardinal_labs rental UI! Check it out at https://rent-v2.cardinal.so/${
+            txResults[0]!.claimLink
+          }`
+        : `I just listed ${txResults.length} ${
             config.twitterHandle ? `${config.twitterHandle} ` : ''
-          }NFTs! Check it out at https://rent.cardinal.so/${config.name}.`
+          }NFTs! Check it out at https://rent-v2.cardinal.so/${config.name}.`
     ),
   ].join('')
 }
