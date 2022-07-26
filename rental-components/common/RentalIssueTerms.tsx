@@ -15,8 +15,8 @@ export const RentalIssueTerms: React.FC<RentalIssueTermsParams> = ({
         }`}
       />
       <div>
-        I have read, understood and agree to Risk Disclaimer, as well as I agree
-        to the rental terms displayed here.
+        I have thoroughly reviewed and understood the listing parameters
+        specified.
       </div>
     </div>
   )
