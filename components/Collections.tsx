@@ -93,7 +93,7 @@ export const Collections = () => {
           </div>
         </div>
       </div>
-      <div className="container mx-auto px-10 md:px-0">
+      <div className="mx-auto px-16">
         {Object.entries(categories).map(([type, configs], i) => (
           <div key={type}>
             {i > 0 && (
