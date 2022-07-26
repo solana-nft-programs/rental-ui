@@ -450,9 +450,9 @@ export const Browse = () => {
         </div>
       </div>
       <Info section={groupedFilteredAndSortedTokens[selectedGroup]} />
-      <div className="mx-auto mt-12 max-w-[1634px]">
+      <div className="mx-auto mt-12 px-10">
         {!tokenManagers.isFetched ? (
-          <div className="flex flex-wrap justify-center gap-4 xl:justify-start">
+          <div className="flex flex-wrap justify-center gap-4 2xl:grid 2xl:grid-cols-5">
             <Card skeleton header={<></>} subHeader={<></>} />
             <Card skeleton header={<></>} subHeader={<></>} />
             <Card skeleton header={<></>} subHeader={<></>} />
@@ -463,7 +463,7 @@ export const Browse = () => {
             <Card skeleton header={<></>} subHeader={<></>} />
           </div>
         ) : groupedTokens?.tokens && groupedTokens.tokens.length > 0 ? (
-          <div className="flex flex-wrap justify-center gap-4 xl:justify-start">
+          <div className="flex flex-wrap justify-center gap-4 2xl:grid 2xl:grid-cols-5">
             {groupedTokens?.tokens
               ?.slice(0, PAGE_SIZE * pageNum[0])
               .map((tokenData) => (

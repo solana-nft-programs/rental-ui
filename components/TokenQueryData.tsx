@@ -35,7 +35,7 @@ export const TokenQueryData: React.FC<Props> = ({
     attributeFilters
   )
   return (
-    <div className="mx-auto mt-12 max-w-[1634px]">
+    <div className="mx-auto mt-12 px-10">
       {!isFetched ? (
         <div className="flex flex-wrap justify-center gap-4 xl:justify-start">
           <Card skeleton header={<></>} subHeader={<></>} />
@@ -48,7 +48,7 @@ export const TokenQueryData: React.FC<Props> = ({
           <Card skeleton header={<></>} subHeader={<></>} />
         </div>
       ) : filteredAndSortedTokens && filteredAndSortedTokens.length > 0 ? (
-        <div className="flex flex-wrap justify-center gap-4 xl:justify-start">
+        <div className="flex flex-wrap justify-center gap-4 2xl:grid 2xl:grid-cols-5">
           {filteredAndSortedTokens.map((tokenData) => (
             <Card
               key={`${tokenData.tokenManager?.pubkey.toString()}-${tokenData.tokenAccount?.pubkey.toString()}`}
