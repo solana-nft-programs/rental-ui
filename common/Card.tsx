@@ -49,7 +49,7 @@ export const Card: React.FC<Props> = ({
       ))}
       <div className="aspect-square w-full overflow-hidden rounded-lg">
         {skeleton ? (
-          <div className="h-full w-[280px] animate-pulse bg-border"></div>
+          <div className="h-full w-full min-w-[320px] animate-pulse bg-border"></div>
         ) : (
           hero
         )}
@@ -57,7 +57,7 @@ export const Card: React.FC<Props> = ({
       {header && (
         <div className="text-lg text-white">
           {skeleton ? (
-            <div className="h-6 w-[65%] animate-pulse rounded-md bg-border"></div>
+            <div className="h-5 w-[65%] animate-pulse rounded-md bg-border"></div>
           ) : (
             header
           )}
@@ -75,7 +75,7 @@ export const Card: React.FC<Props> = ({
       {content && (
         <div>
           {skeleton ? (
-            <div className="h-8 w-full animate-pulse rounded-md bg-border"></div>
+            <div className="h-10 w-full animate-pulse rounded-md bg-border"></div>
           ) : (
             content
           )}

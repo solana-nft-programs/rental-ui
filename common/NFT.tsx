@@ -64,15 +64,13 @@ export function NFT({ tokenData }: NFTProps) {
   const { metadata } = tokenData
   return (
     <div
-      className="relative w-[280px] rounded-xl"
+      className="relative w-full max-w-[320px] rounded-xl"
       style={{
         background: lighten(0.02, config.colors.main),
       }}
     >
       <NFTContexualMenu tokenData={tokenData} />
-      <div
-        className={`relative flex h-[280px] max-w-full items-center justify-center`}
-      >
+      <div className={`relative flex w-full items-center justify-center`}>
         {tokenData.timeInvalidator && getExpiration(tokenData, UTCNow) && (
           <div
             className={`absolute top-3 left-3 z-20 rounded-md bg-dark-5 px-2 py-1 text-sm text-light-0`}

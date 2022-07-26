@@ -194,7 +194,7 @@ export const Wallet = () => {
       <Info section={groupedFilteredAndSortedTokens[selectedGroup]} />
       <div className="mx-auto mt-12 max-w-[1634px]">
         {!userTokenDatas.isFetched ? (
-          <div className="flex flex-wrap justify-center gap-4 xl:justify-start">
+          <div className="flex flex-wrap justify-center gap-4 2xl:grid 2xl:grid-cols-5">
             <Card skeleton header={<></>} subHeader={<></>} />
             <Card skeleton header={<></>} subHeader={<></>} />
             <Card skeleton header={<></>} subHeader={<></>} />
@@ -205,7 +205,7 @@ export const Wallet = () => {
             <Card skeleton header={<></>} subHeader={<></>} />
           </div>
         ) : groupedTokens?.tokens && groupedTokens.tokens.length > 0 ? (
-          <div className="flex flex-wrap justify-center gap-4 xl:justify-start">
+          <div className="flex flex-wrap justify-center gap-4 2xl:grid 2xl:grid-cols-5">
             {groupedTokens?.tokens?.map((tokenData) => (
               <Card
                 key={tokenData.tokenAccount?.pubkey.toString()}

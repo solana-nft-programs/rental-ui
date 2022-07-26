@@ -299,9 +299,9 @@ export const Dashboard = () => {
             </div>
           </div>
         ) : (
-          <div className="mx-auto mt-12 max-w-[1634px] px-12">
+          <div className="mx-auto mt-12 px-10">
             {!tokenQuery.isFetched ? (
-              <div className="flex flex-wrap justify-center gap-4 xl:justify-start">
+              <div className="flex flex-wrap justify-center gap-4 2xl:grid 2xl:grid-cols-5">
                 <Card skeleton header={<></>} subHeader={<></>} />
                 <Card skeleton header={<></>} subHeader={<></>} />
                 <Card skeleton header={<></>} subHeader={<></>} />
@@ -321,7 +321,7 @@ export const Dashboard = () => {
                       </div>
                       <div className="text-xl">{tokenDatas.length}</div>
                     </div>
-                    <div className="flex flex-wrap justify-center gap-4 xl:justify-start">
+                    <div className="flex flex-wrap justify-center gap-4 2xl:grid 2xl:grid-cols-5">
                       {tokenDatas.map((tokenData) => (
                         <Card
                           key={`${tokenData.tokenManager?.pubkey.toString()}-${tokenData.tokenAccount?.pubkey.toString()}`}
