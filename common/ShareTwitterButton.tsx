@@ -25,7 +25,7 @@ export const shareTwitterClaimedLink = (
           : `a ${config.twitterHandle ? `${config.twitterHandle} ` : ''}NFT`
       }${
         issuerName ? ` from ${issuerName}` : ''
-      } using @cardinal_labs rental UI! Check it out at https://rent.cardinal.so/claim/${tokenData.tokenManager?.pubkey.toString()}.`
+      } using @cardinal_labs rental UI! Check it out at https://rent-v2.cardinal.so/claim/${tokenData.tokenManager?.pubkey.toString()}.`
     ),
   ].join('')
 }
