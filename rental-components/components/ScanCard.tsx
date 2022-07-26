@@ -75,7 +75,7 @@ export const ScanCard: React.FC<Props> = ({ tokenData }: Props) => {
           <QRCode data={qrData} />
           <div className="pt-8 text-medium-4">
             This is a rotating QR code containing a temporarily valid signed
-            transaction
+            transaction. If it expires, it will ask to sign again.
           </div>
         </div>
       )}
