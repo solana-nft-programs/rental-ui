@@ -47,45 +47,67 @@ export const useFilteredTokenManagers = () => {
     async () => {
       console.log('Fetching for config', config.name)
       if (
-        environment.index &&
-        config.filter?.type === 'creators' &&
-        !config.indexDisabled
+        (environment.index && config.filter?.type === 'creators') ||
+        (config.filter?.type === 'issuer' && !config.indexDisabled)
       ) {
         /////
         const indexer = new ApolloClient({
           uri: environment.index,
           cache: new InMemoryCache({ resultCaching: false }),
         })
-        const tokenManagerResponse = await indexer.query({
-          query: gql`
-            query GetTokenManagers($creators: [String!]!) {
-              cardinal_token_managers(
-                where: {
-                  mint_address_nfts: {
-                    metadatas_metadata_creators: {
-                      _and: {
-                        creator_address: { _in: $creators }
-                        position: { _eq: 0 }
-                        _and: { verified: { _eq: true } }
+
+        const tokenManagerResponse =
+          config.filter.type === 'creators'
+            ? await indexer.query({
+                query: gql`
+                  query GetTokenManagers($creators: [String!]!) {
+                    cardinal_token_managers(
+                      where: {
+                        mint_address_nfts: {
+                          metadatas_metadata_creators: {
+                            _and: {
+                              creator_address: { _in: $creators }
+                              position: { _eq: 0 }
+                              _and: { verified: { _eq: true } }
+                            }
+                          }
+                        }
+                      }
+                    ) {
+                      address
+                      mint
+                      state
+                      state_changed_at
+                      invalidator_address {
+                        invalidator
                       }
                     }
                   }
-                }
-              ) {
-                address
-                mint
-                state
-                state_changed_at
-                invalidator_address {
-                  invalidator
-                }
-              }
-            }
-          `,
-          variables: {
-            creators: config.filter.value,
-          },
-        })
+                `,
+                variables: {
+                  creators: config.filter.value,
+                },
+              })
+            : await indexer.query({
+                query: gql`
+                  query GetTokenManagers($issuers: [String!]!) {
+                    cardinal_token_managers(
+                      where: { issuer: { _in: $issuers } }
+                    ) {
+                      address
+                      mint
+                      state
+                      state_changed_at
+                      invalidator_address {
+                        invalidator
+                      }
+                    }
+                  }
+                `,
+                variables: {
+                  issuers: config.filter.value,
+                },
+              })
 
         /////
         const knownInvalidators: string[][] = await Promise.all(
