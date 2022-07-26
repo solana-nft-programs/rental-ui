@@ -645,39 +645,38 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       },
     ],
   },
-  empiredao: {
-    name: 'empiredao',
-    displayName: 'Empire DAO',
-    type: 'Collection',
-    websiteUrl: 'https://empiredao.xyz/',
-    logoImage: '/logos/empiredao.png',
-    colors: {
-      main: '#202225',
-      secondary: '#CCCDFF',
-    },
-    indexDisabled: true,
-    filter: {
-      type: 'issuer',
-      value: ['edaoJQRZZ3hfNottaxe9z5o2owJDJgL1bUChiPk15KN'],
-    },
-    rentalCard: {
-      invalidators: ['expiration'],
-      invalidationOptions: {
-        visibilities: ['public'],
-        durationOptions: ['minutes', 'hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
-        paymentMints: ['So11111111111111111111111111111111111111112'],
-        showClaimRentalReceipt: false,
-        setClaimRentalReceipt: false,
-        maxDurationAllowed: {
-          displayText: '3 weeks',
-          value: 7258000,
-        },
-      },
-    },
-    marketplaceRate: 'days',
-    airdrops: [],
-  },
+  // empiredao: {
+  //   name: 'empiredao',
+  //   displayName: 'Empire DAO',
+  //   type: 'Collection',
+  //   websiteUrl: 'https://empiredao.xyz/',
+  //   logoImage: '/logos/empiredao.png',
+  //   colors: {
+  //     main: '#202225',
+  //     secondary: '#CCCDFF',
+  //   },
+  //   filter: {
+  //     type: 'issuer',
+  //     value: ['edaoJQRZZ3hfNottaxe9z5o2owJDJgL1bUChiPk15KN'],
+  //   },
+  //   rentalCard: {
+  //     invalidators: ['expiration'],
+  //     invalidationOptions: {
+  //       visibilities: ['public'],
+  //       durationOptions: ['minutes', 'hours', 'days', 'weeks'],
+  //       invalidationTypes: ['reissue'],
+  //       paymentMints: ['So11111111111111111111111111111111111111112'],
+  //       showClaimRentalReceipt: false,
+  //       setClaimRentalReceipt: false,
+  //       maxDurationAllowed: {
+  //         displayText: '3 weeks',
+  //         value: 7258000,
+  //       },
+  //     },
+  //   },
+  //   marketplaceRate: 'days',
+  //   airdrops: [],
+  // },
   default: {
     name: 'default',
     displayName: 'Unverified',

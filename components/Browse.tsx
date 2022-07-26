@@ -48,10 +48,8 @@ enum OrderCategories {
   RecentlyListed = 'Recently Listed',
   RateLowToHigh = 'Rate: Low to High',
   RateHighToLow = 'Rate: High to Low',
-  PriceLowToHigh = 'Price: Low to High',
-  PriceHighToLow = 'Price: High to Low',
-  DurationLowToHigh = 'Duration: Low to High',
-  DurationHighToLow = 'Duration: High to Low',
+  DurationLowToHigh = 'Max Duration: Low to High',
+  DurationHighToLow = 'Max Duration: High to Low',
 }
 
 export const PAGE_SIZE = 5
@@ -125,12 +123,12 @@ export function getTokenRentalRate(
 
   try {
     return {
-      rate: parseFloat(
-        fmtMintAmount(
-          paymentMintInfos[extensionPaymentMint.toString()],
-          new BN(marketplaceRate)
-        )
-      ),
+      rate: paymentMintInfos[extensionPaymentMint.toString()]
+        ? getMintDecimalAmount(
+            paymentMintInfos[extensionPaymentMint.toString()]!,
+            new BN(marketplaceRate)
+          ).toNumber()
+        : 0,
       displayText: `${fmtMintAmount(
         paymentMintInfos[extensionPaymentMint.toString()],
         new BN(marketplaceRate)
@@ -241,24 +239,14 @@ export const Browse = () => {
           )
         })
         break
-      case OrderCategories.PriceLowToHigh:
-        sortedTokens = tokens.sort((a, b) => {
-          return (
-            (a.claimApprover?.parsed.paymentAmount.toNumber() ?? 0) -
-            (b.claimApprover?.parsed.paymentAmount.toNumber() ?? 0)
-          )
-        })
-        break
-      case OrderCategories.PriceHighToLow:
-        sortedTokens = tokens.sort((a, b) => {
-          return (
-            (b.claimApprover?.parsed.paymentAmount.toNumber() ?? 0) -
-            (a.claimApprover?.parsed.paymentAmount.toNumber() ?? 0)
-          )
-        })
-        break
       case OrderCategories.RateLowToHigh:
         sortedTokens = tokens.sort((a, b) => {
+          console.log(
+            getPriceOrRentalRate(config, a, paymentMintInfos.data),
+            a,
+            a.timeInvalidator?.parsed.extensionPaymentAmount?.toString(),
+            getPriceOrRentalRate(config, b, paymentMintInfos.data)
+          )
           return (
             getPriceOrRentalRate(config, a, paymentMintInfos.data) -
             getPriceOrRentalRate(config, b, paymentMintInfos.data)
