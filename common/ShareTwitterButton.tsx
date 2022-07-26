@@ -45,7 +45,7 @@ export const shareTwitterListedLink = (
                   txResults[0]!.tokenData.metaplexData?.data.data.name
                 }`
               : `a ${config.twitterHandle ? `${config.twitterHandle} ` : ''}NFT`
-          } for rent using @cardinal_labs rental UI! Check it out at https://rent-v2.cardinal.so/${
+          } for rent using @cardinal_labs rental UI! Check it out at ${
             txResults[0]!.claimLink
           }`
         : `I just listed ${txResults.length} ${
