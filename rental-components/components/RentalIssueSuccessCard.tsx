@@ -91,7 +91,7 @@ export const RentalIssueSuccessCard = ({
       <div className="flex justify-center">
         <ShareTwitterButton
           className="px-8"
-          shareLink={shareTwitterListedLink(tokenDatas, config)}
+          shareLink={shareTwitterListedLink(txResults, config)}
         >
           <div
             style={{ gap: '5px' }}
