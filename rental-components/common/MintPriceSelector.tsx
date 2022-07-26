@@ -169,7 +169,7 @@ export const MintPriceSelector: React.FC<Props> = ({
               (paymentMintData[0] || PAYMENT_MINTS[0])!.symbol,
           }}
           onChange={(e) => {
-            setMintValue(e.value)
+            e?.value && setMintValue(e.value)
           }}
           options={(paymentMintData || PAYMENT_MINTS).map(
             ({ mint, symbol }) => ({ label: symbol, value: mint })

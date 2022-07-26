@@ -1,4 +1,3 @@
-import type { PublicKey } from '@solana/web3.js'
 import type { TokenData } from 'api/api'
 import type { ProjectConfig } from 'config/config'
 import { projectConfigs } from 'config/config'
@@ -24,57 +23,15 @@ export const getInitialProps = async ({
       ? projectConfigs[project] || projectConfigs['default']!
       : projectConfigs['default']!,
   }
-
-  // const cluster = (ctx.query.cluster || ctx.req?.headers.host)?.includes('dev')
-  //   ? 'devnet'
-  //   : ctx.query.cluster || process.env.BASE_CLUSTER
-  // const foundEnvironment =
-  //   ENVIRONMENTS.find((e) => e.label === cluster) || ENVIRONMENTS[0]!
-  // const namespaceName = 'twitter'
-  // let publicKey
-  // let nameEntryData
-  // if (project) {
-  //   try {
-  //     publicKey = tryPublicKey(project)
-  //     if (!publicKey) {
-  //       const profile = await tryGetProfile(project)
-  //       nameEntryData = await getNameEntryData(
-  //         foundEnvironment.secondary
-  //           ? new Connection(foundEnvironment.secondary)
-  //           : new Connection(foundEnvironment.primary, {
-  //               commitment: 'recent',
-  //             }),
-  //         namespaceName,
-  //         profile?.username || project
-  //       )
-  //       publicKey = tryPublicKey(project) || nameEntryData?.owner
-  //     }
-  //   } catch (e) {
-  //     console.log('Failed to get name entry: ', e)
-  //   }
-  // }
-  // const config = project
-  //   ? projectConfigs[project] || projectConfigs['default']!
-  //   : projectConfigs['default']!
-
-  // return {
-  //   config: publicKey
-  //     ? {
-  //         ...projectConfigs['vault']!,
-  //         issuer: { publicKeyString: publicKey.toString() },
-  //       }
-  //     : config,
-  // }
 }
 
 export const filterTokens = (
-  cluster: string,
   tokens: TokenData[],
   filter?: {
     type: 'creators' | 'symbol' | 'issuer' | 'state' | 'claimer' | 'owner'
     value: string[]
   },
-  issuer?: PublicKey | null
+  cluster?: string | undefined
 ): TokenData[] => {
   return tokens.filter((token) => {
     let filtered = false
@@ -84,7 +41,7 @@ export const filterTokens = (
         !token.metaplexData?.data?.data?.creators?.some(
           (creator) =>
             filter.value.includes(creator.address.toString()) &&
-            (cluster === 'devnet' || creator.verified)
+            ((cluster && cluster === 'devnet') || creator.verified)
         )
       ) {
         filtered = true
@@ -95,7 +52,7 @@ export const filterTokens = (
         filtered = true
       } else if (
         filter.type === 'issuer' &&
-        filter.value.includes(
+        !filter.value.includes(
           token.tokenManager?.parsed.issuer.toString() ?? ''
         )
       ) {
@@ -122,13 +79,10 @@ export const filterTokens = (
       ) {
         filtered = true
       }
-      if (issuer && !token.tokenManager?.parsed.issuer.equals(issuer)) {
-        filtered = true
-      }
     }
     return (
-      token?.metadata?.data &&
-      Object.keys(token.metadata.data).length > 0 &&
+      !!token?.metadata?.data &&
+      Object.keys(token.metadata.data).length > 1 &&
       !filtered
     )
   })

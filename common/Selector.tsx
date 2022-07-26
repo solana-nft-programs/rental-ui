@@ -1,6 +1,7 @@
 import { css } from '@emotion/react'
 import { ChevronDown } from 'assets/ChevronDown'
 import { ChevronRight } from 'assets/ChevronRight'
+import { GlyphSelectClear } from 'assets/GlyphSelectClear'
 import { lighten } from 'polished'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useEffect, useRef, useState } from 'react'
@@ -12,7 +13,8 @@ type Props<T> = {
   className?: string
   disabled?: boolean
   defaultOption?: Option<T>
-  onChange?: (arg: Option<T>) => void
+  isClearable?: boolean
+  onChange?: (arg?: Option<T>) => void
 }
 
 export const Selector = <T,>({
@@ -21,6 +23,7 @@ export const Selector = <T,>({
   disabled,
   className,
   onChange,
+  isClearable,
   options = [],
 }: Props<T>) => {
   const { config } = useProjectConfig()
@@ -41,7 +44,7 @@ export const Selector = <T,>({
   return (
     <div className="relative z-40 text-base" ref={ref}>
       <div
-        className={`flex justify-between gap-1 rounded-lg border-[1px] border-border px-3 py-2 transition-all ${
+        className={`flex justify-between gap-2 rounded-lg border-[1px] border-border px-3 py-2 transition-all ${
           disabled
             ? 'cursor-default opacity-50'
             : 'cursor-pointer hover:border-primary'
@@ -56,7 +59,22 @@ export const Selector = <T,>({
         ) : (
           <div className="text-medium-3">{placeholder}</div>
         )}
-        <ChevronDown />
+        <div className="flex items-center gap-1">
+          {isClearable && value ? (
+            <div
+              className={`opacity-80 hover:opacity-100`}
+              onClick={(e) => {
+                e.stopPropagation()
+                setValue(undefined)
+                onChange && onChange(undefined)
+              }}
+            >
+              <GlyphSelectClear />
+            </div>
+          ) : (
+            <ChevronDown />
+          )}
+        </div>
       </div>
       <div
         className={`absolute w-full rounded-md transition-all ${

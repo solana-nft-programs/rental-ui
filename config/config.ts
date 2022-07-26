@@ -95,75 +95,6 @@ export type ProjectConfig = {
 }
 
 export const projectConfigs: { [key: string]: ProjectConfig } = {
-  default: {
-    name: 'default',
-    displayName: 'All',
-    hidden: true,
-    type: 'Collection',
-    websiteUrl: 'https://cardinal.so',
-    logoImage: 'https://main.cardinal.so/assets/cardinal-titled.png',
-    colors: {
-      main: '#0B0B0B',
-      secondary: '#7560FF',
-    },
-    rentalCard: {
-      invalidators: ['duration', 'expiration', 'manual', 'rate'],
-      extensionOptions: { showDisablePartialExtension: true },
-      invalidationOptions: {
-        maxDurationAllowed: {
-          displayText: '12 weeks',
-          value: 7258000,
-        },
-      },
-    },
-    airdrops: [
-      {
-        name: 'Origin Jambo',
-        symbol: 'JAMB',
-        uri: 'https://arweave.net/XBoDa9TqiOZeXW_6bV8wvieD8fMQS6IHxKipwdvduCo',
-      },
-      {
-        name: 'Solana Monkey Business',
-        symbol: 'SMB',
-        uri: 'https://arweave.net/VjfB54_BbELJ5bc1kH-kddrXfq5noloSjkcvK2Odhh0',
-      },
-      {
-        name: 'Degen Ape',
-        symbol: 'DAPE',
-        uri: 'https://arweave.net/mWra8rTxavmbCnqxs6KoWwa0gC9uM8NMeOsyVhDy0-E',
-      },
-      {
-        name: 'Thugbirdz',
-        symbol: 'THUG',
-        uri: 'https://arweave.net/l9VXqVWCsiKW-R8ShX8jknFPgBibrhQI1JRgUI9uvbw',
-      },
-      {
-        name: 'Turtles',
-        symbol: 'TRTL',
-        uri: 'https://arweave.net/KKbhlHaPMOB9yMm9yG_i7PxzK0y24I5C7gNTaRDI9OE',
-      },
-      {
-        name: 'Almost Famous Pandas',
-        symbol: 'AFP',
-        uri: '8cs7hpBcuiRbzcdUY5BHpCFCgv1m8JhpZEVHUkYTmhnA',
-      },
-      {
-        name: 'Shi Guardians',
-        symbol: 'SHI',
-        uri: 'https://arweave.net/hSI4WIsX10yRWnzgXP8oqwSCaSgPfGU5nSN-Pxjslao',
-      },
-      {
-        name: 'Hacker House',
-        symbol: 'HH',
-        uri: 'https://arweave.net/DLDhnabWSXzAYktEhEKyukt3GIfagj2rPpWncw-KDQo',
-      },
-      {
-        name: '21 Club',
-        symbol: '21',
-        uri: 'https://bafkreicv3jj6oc53kid76mkk7hqsr6edrnhsydkw4do4vonq777sgfz3le.ipfs.dweb.link?ext=json',
-      },
-    ],
-  },
   parcl: {
     name: 'parcl',
     displayName: 'Homeowner Association (Parcl)',
@@ -751,79 +682,72 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     marketplaceRate: 'days',
     airdrops: [],
   },
-  degods: {
-    name: 'degods',
-    displayName: 'DeGods',
-    type: 'Collection',
-    websiteUrl: 'https://www.degods.com/',
-    logoImage: '/logos/degods.svg',
+  default: {
+    name: 'default',
+    displayName: 'Unverified',
     hidden: true,
+    type: 'Collection',
+    websiteUrl: 'https://cardinal.so',
+    logoImage: 'https://main.cardinal.so/assets/cardinal-titled.png',
     colors: {
-      main: '#0F0F0F',
-      secondary: '#6001FF',
-    },
-    filter: {
-      type: 'creators',
-      value: ['AxFuniPo7RaDgPH6Gizf4GZmLQFc4M5ipckeeZfkrPNn'],
+      main: '#0B0B0B',
+      secondary: '#7560FF',
     },
     rentalCard: {
-      invalidators: ['rate', 'duration'],
+      invalidators: ['duration', 'expiration', 'manual', 'rate'],
+      extensionOptions: { showDisablePartialExtension: true },
       invalidationOptions: {
-        freezeRentalRateDuration: {
-          value: '1',
-          durationOption: 'days',
-        },
-        durationOptions: ['hours', 'days', 'weeks', 'years'],
-        visibilities: ['public'],
-        invalidationTypes: ['reissue'],
-        paymentMints: ['So11111111111111111111111111111111111111112'],
-        setClaimRentalReceipt: true,
-        showClaimRentalReceipt: false,
         maxDurationAllowed: {
           displayText: '12 weeks',
           value: 7258000,
         },
       },
     },
-    marketplaceRate: 'days',
-  },
-  monkenftnyc: {
-    name: 'monkenftnyc',
-    displayName: 'Monke NFT NYC',
-    type: 'Collection',
-    websiteUrl: 'https://www.empiredao.xyz',
-    logoImage: '/logos/monkenftnyc.png',
-    hidden: true,
-    indexDisabled: true,
-    colors: {
-      main: '#202225',
-      secondary: '#CCCDFF',
-    },
-    filter: {
-      type: 'issuer',
-      value: ['mdaoH4C9SBQu2CQqudPbbct4uyo6PRrid1NNZsbSxef'],
-    },
-    rentalCard: {
-      invalidators: ['expiration'],
-      invalidationOptions: {
-        visibilities: ['public', 'private'],
-        durationOptions: ['minutes', 'hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue', 'release'],
-        paymentMints: ['So11111111111111111111111111111111111111112'],
-        showClaimRentalReceipt: false,
-        setClaimRentalReceipt: false,
-        maxDurationAllowed: {
-          displayText: '3 weeks',
-          value: 7258000,
-        },
-      },
-    },
-    marketplaceRate: 'days',
     airdrops: [
       {
-        name: 'MonkeDAO NFT NYC Ticket',
-        symbol: 'SMBNFT',
-        uri: '/metadata/monkenftnyc.json',
+        name: 'Origin Jambo',
+        symbol: 'JAMB',
+        uri: 'https://arweave.net/XBoDa9TqiOZeXW_6bV8wvieD8fMQS6IHxKipwdvduCo',
+      },
+      {
+        name: 'Solana Monkey Business',
+        symbol: 'SMB',
+        uri: 'https://arweave.net/VjfB54_BbELJ5bc1kH-kddrXfq5noloSjkcvK2Odhh0',
+      },
+      {
+        name: 'Degen Ape',
+        symbol: 'DAPE',
+        uri: 'https://arweave.net/mWra8rTxavmbCnqxs6KoWwa0gC9uM8NMeOsyVhDy0-E',
+      },
+      {
+        name: 'Thugbirdz',
+        symbol: 'THUG',
+        uri: 'https://arweave.net/l9VXqVWCsiKW-R8ShX8jknFPgBibrhQI1JRgUI9uvbw',
+      },
+      {
+        name: 'Turtles',
+        symbol: 'TRTL',
+        uri: 'https://arweave.net/KKbhlHaPMOB9yMm9yG_i7PxzK0y24I5C7gNTaRDI9OE',
+      },
+      {
+        name: 'Almost Famous Pandas',
+        symbol: 'AFP',
+        uri: '8cs7hpBcuiRbzcdUY5BHpCFCgv1m8JhpZEVHUkYTmhnA',
+      },
+      {
+        name: 'Shi Guardians',
+        symbol: 'SHI',
+        uri: 'https://arweave.net/hSI4WIsX10yRWnzgXP8oqwSCaSgPfGU5nSN-Pxjslao',
+      },
+      {
+        name: 'Hacker House',
+        symbol: 'HH',
+        uri: 'https://arweave.net/DLDhnabWSXzAYktEhEKyukt3GIfagj2rPpWncw-KDQo',
+      },
+      {
+        name: '21 Club',
+        symbol: '21',
+        uri: 'https://bafkreicv3jj6oc53kid76mkk7hqsr6edrnhsydkw4do4vonq777sgfz3le.ipfs.dweb.link?ext=json',
       },
     ],
   },

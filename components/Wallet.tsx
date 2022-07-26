@@ -72,7 +72,7 @@ export const Wallet = () => {
         let isPlaced = false
         return acc.map((section) => {
           const filteredToken = !isPlaced
-            ? filterTokens(environment.label, [tk], section.filter)
+            ? filterTokens([tk], section.filter, environment.label)
             : []
           if (filteredToken.length === 0 && !isPlaced) {
             isPlaced = true

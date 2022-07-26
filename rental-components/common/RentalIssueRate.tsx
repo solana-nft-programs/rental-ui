@@ -142,6 +142,7 @@ export const RentalIssueRate = ({
               <Selector<DurationOption>
                 className="w-max rounded-xl"
                 onChange={(e) =>
+                  e?.value &&
                   setExtensionDurationSeconds(DURATION_DATA[e.value])
                 }
                 defaultOption={{
