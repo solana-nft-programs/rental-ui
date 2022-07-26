@@ -13,7 +13,7 @@ export const HeroLarge: React.FC = () => {
     <div className="flex w-full flex-wrap items-stretch justify-center gap-16 py-8 px-6 lg:mb-8 lg:flex-nowrap lg:justify-between lg:gap-32 lg:px-20">
       <div className="relative w-full flex-grow">
         <img
-          className="w-full rounded-xl"
+          className="min-h-[200px] w-full rounded-xl"
           src={config.hero}
           alt={config.name}
         />
