@@ -94,7 +94,7 @@ export const HeroStats: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   const projectStats = useProjectStats()
   const paymentMints = usePaymentMints()
   const tokenManagers = useFilteredTokenManagers()
-  const tokenDatas = tokenManagers.data ?? []
+  const tokenDatas = tokenManagers.data
   return (
     <div className={`flex flex-wrap gap-y-5 ${className}`}>
       <div className="flex flex-col items-center justify-center">
