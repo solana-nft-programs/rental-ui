@@ -116,10 +116,7 @@ function Claim() {
                     [TokenManagerState.Claimed]: (
                       <div className="flex flex-row justify-between text-sm">
                         <NFTIssuerInfo tokenData={tokenData} />
-                        <NFTRevokeButton
-                          tokenData={tokenData}
-                          callback={() => tokenQuery.refetch()}
-                        />
+                        <NFTRevokeButton tokenData={tokenData} />
                       </div>
                     ),
                     [TokenManagerState.Invalidated]: <></>,

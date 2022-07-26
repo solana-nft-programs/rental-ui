@@ -19,9 +19,14 @@ type Props = {
     tooltip?: string
   }[]
   loading?: boolean
+  hideDashboard?: boolean
 }
 
-export const HeaderSlim: React.FC<Props> = ({ tabs, loading }: Props) => {
+export const HeaderSlim: React.FC<Props> = ({
+  tabs,
+  loading,
+  hideDashboard,
+}: Props) => {
   const router = useRouter()
   const wallet = useWallet()
   const walletModal = useWalletModal()
@@ -101,7 +106,17 @@ export const HeaderSlim: React.FC<Props> = ({ tabs, loading }: Props) => {
             </div>
           )}
         </div>
-        <div className="flex justify-end">
+        <div className="flex-5 flex items-center justify-end gap-6">
+          {!hideDashboard && (
+            <div
+              className={`cursor-pointer text-center text-light-0 opacity-80 transition-opacity hover:opacity-100`}
+              onClick={() => {
+                router.push(`/me${location.search}`)
+              }}
+            >
+              Dashboard
+            </div>
+          )}
           {wallet.connected && wallet.publicKey ? (
             <AccountConnect
               dark={true}

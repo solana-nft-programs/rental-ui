@@ -295,7 +295,7 @@ export const Browse = () => {
         let isPlaced = false
         return acc.map((section) => {
           const filteredToken = !isPlaced
-            ? filterTokens(environment.label, [tk], section.filter)
+            ? filterTokens([tk], section.filter, environment.label)
             : []
           if (filteredToken.length === 0 && !isPlaced) {
             isPlaced = true
@@ -434,7 +434,9 @@ export const Browse = () => {
             }}
             onChange={(e) => {
               setPageNum(DEFAULT_PAGE)
-              setSelectedOrderCategory(e.value)
+              setSelectedOrderCategory(
+                e?.value ?? OrderCategories.RateLowToHigh
+              )
             }}
             options={(
               Object.values(OrderCategories) as Array<OrderCategories>
@@ -484,10 +486,7 @@ export const Browse = () => {
                       [TokenManagerState.Claimed]: (
                         <div className="flex flex-row justify-between text-sm">
                           <NFTIssuerInfo tokenData={tokenData} />
-                          <NFTRevokeButton
-                            tokenData={tokenData}
-                            callback={() => tokenManagers.refetch()}
-                          />
+                          <NFTRevokeButton tokenData={tokenData} />
                         </div>
                       ),
                       [TokenManagerState.Invalidated]: <></>,

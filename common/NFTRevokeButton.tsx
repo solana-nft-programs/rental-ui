@@ -2,8 +2,10 @@ import { invalidate } from '@cardinal/token-manager'
 import { shouldTimeInvalidate } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator/utils'
 import { useWallet } from '@solana/wallet-adapter-react'
 import type { TokenData } from 'api/api'
+import { TOKEN_DATA_KEY } from 'hooks/useFilteredTokenManagers'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useUTCNow } from 'providers/UTCNowProvider'
+import { useQueryClient } from 'react-query'
 
 import { ButtonSmall } from './ButtonSmall'
 import { executeTransaction } from './Transactions'
@@ -11,16 +13,15 @@ import { asWallet } from './Wallets'
 
 interface NFTRevokeButtonProps extends React.HTMLAttributes<HTMLDivElement> {
   tokenData: TokenData
-  callback?: () => void
 }
 
 export const NFTRevokeButton: React.FC<NFTRevokeButtonProps> = ({
   tokenData,
-  callback,
 }: NFTRevokeButtonProps) => {
   const wallet = useWallet()
   const { connection } = useEnvironmentCtx()
   const { UTCNow } = useUTCNow()
+  const queryClient = useQueryClient()
 
   return (
     <>
@@ -54,7 +55,7 @@ export const NFTRevokeButton: React.FC<NFTRevokeButtonProps> = ({
                   tokenData?.tokenManager?.parsed.mint
                 ),
                 {
-                  callback,
+                  callback: () => queryClient.removeQueries(TOKEN_DATA_KEY),
                 }
               ))
           }}

@@ -154,6 +154,6 @@ export const useManagedTokens = () => {
         return tokenDatas
       }
     },
-    { enabled: !!walletId, refetchInterval: 12000 }
+    { enabled: !!walletId, refetchInterval: 16000 }
   )
 }

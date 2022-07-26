@@ -103,7 +103,7 @@ export const DurationInput: React.FC<Props> = ({
       <Selector<DurationOption>
         disabled={disabled}
         className="w-max rounded-xl"
-        onChange={(e) => setDurationOption(e.value)}
+        onChange={(e) => setDurationOption(e?.value ?? 'days')}
         defaultOption={{
           value: durationOption,
           label: capitalizeFirstLetter(durationOption).substring(

@@ -123,7 +123,7 @@ export const RentalIssueCard = ({
         ))}
       </div>
       <div>
-        {invalidatorOptions.length > 1 && (
+        {invalidatorOptions.length > 0 && (
           <div className="flex items-center justify-between border-t-[2px] border-border py-4">
             <div
               className={`flex flex-col transition-opacity ${

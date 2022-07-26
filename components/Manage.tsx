@@ -31,7 +31,9 @@ export type ManageTokenGroup = {
   filter?: TokenFilter
 }
 
-export const tokenGroups = (walletId: PublicKey | null): ManageTokenGroup[] => [
+export const manageTokenGroups = (
+  walletId: PublicKey | undefined
+): ManageTokenGroup[] => [
   {
     id: 'all',
     header: 'All',
@@ -166,7 +168,9 @@ export const Manage = () => {
       />
       <HeroSmall />
       <TokenQueryResults
-        tokenGroup={tokenGroups(walletId).find((g) => g.id === selectedGroup)!}
+        tokenGroup={
+          manageTokenGroups(walletId).find((g) => g.id === selectedGroup)!
+        }
         setSelectedGroup={setSelectedGroup}
         tokenQuery={
           {
