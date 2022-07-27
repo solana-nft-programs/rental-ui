@@ -106,7 +106,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     logoImage: '/logos/parcl.gif',
     colors: {
       main: '#000D30',
-      secondary: '#5529B7',
+      secondary: '#d7c9f2',
     },
     socialLinks: [
       {
@@ -492,8 +492,8 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     websiteUrl: 'https://metaopsgaming.com/',
     logoImage: '/logos/metaops.png',
     colors: {
-      main: '#544046',
-      secondary: '#e24040',
+      main: '#5b3a47',
+      secondary: '#c37f98',
     },
     filter: {
       type: 'creators',
@@ -555,7 +555,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     logoImage: '/logos/psyker.png',
     colors: {
       main: '#00101b',
-      secondary: '#ff0034',
+      secondary: '#a4051d',
     },
     filter: {
       type: 'creators',

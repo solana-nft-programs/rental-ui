@@ -1,6 +1,7 @@
 import { css } from '@emotion/react'
 import type { TokenData } from 'api/api'
 import type { ProjectConfig } from 'config/config'
+import { lighten } from 'polished'
 
 export const getAllAttributes = (
   tokens: TokenData[]
@@ -97,11 +98,12 @@ export const getNFTAtrributeFilters = ({
             }
           >
             <div
-              className="flex cursor-pointer items-center gap-2 py-[2px] text-light-0 transition-colors hover:text-primary"
+              className="flex cursor-pointer items-center gap-2 py-[2px] text-light-0 transition-colors"
               css={css`
                 &:hover {
+                  color: ${config.colors.secondary};
                   div {
-                    border-color: rgb(144 126 255 / var(--tw-border-opacity));
+                    border-color: ${lighten(0.2, config.colors.secondary)};
                   }
                 }
               `}

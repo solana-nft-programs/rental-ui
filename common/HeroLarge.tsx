@@ -18,7 +18,7 @@ export const HeroLarge: React.FC = () => {
           alt={config.name}
         />
         <div
-          className="absolute left-8 flex h-24 w-24 -translate-y-[65%] items-center justify-center overflow-hidden rounded-full border-4 border-border p-2 lg:h-32 lg:w-32"
+          className="absolute left-8 flex h-24 w-24 -translate-y-[65%] items-center justify-center overflow-hidden rounded-full border-4 border-border lg:h-32 lg:w-32"
           css={css`
             background: ${darken(0.05, config.colors.main)};
           `}

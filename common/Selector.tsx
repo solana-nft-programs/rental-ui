@@ -55,6 +55,9 @@ export const Selector = <T,>({
           colorized &&
           css`
             background: ${lighten(0.08, config.colors.main)} !important;
+            &:hover {
+              border-color: ${config.colors.secondary} !important;
+            }
           `
         }
         onClick={() => !disabled && setIsOpen((v) => !v)}
@@ -96,6 +99,14 @@ export const Selector = <T,>({
           <div
             key={o.label}
             className="flex cursor-pointer items-center justify-between p-3 text-light-0 transition-colors hover:text-primary"
+            css={
+              colorized &&
+              css`
+                &:hover {
+                  color: ${config.colors.secondary} !important;
+                }
+              `
+            }
             onClick={() => {
               setValue(o)
               setIsOpen((v) => !v)

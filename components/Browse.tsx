@@ -378,6 +378,7 @@ export const Browse = () => {
       <div className="mx-10 mt-4 flex flex-wrap justify-between gap-4">
         <div className="flex flex-wrap gap-4">
           <TabSelector
+            colorized
             defaultOption={{
               value: 0,
               label: groupedFilteredAndSortedTokens[0]?.header,
@@ -392,6 +393,7 @@ export const Browse = () => {
             }}
           />
           <MultiSelector<string>
+            colorized
             placeholder="Select filters"
             defaultValue={
               Object.values(selectedFilters).reduce(
@@ -433,7 +435,7 @@ export const Browse = () => {
           />
         </div>
         <div className="flex">
-          <Glow scale={1.5} opacity={1}>
+          <Glow scale={1.5} opacity={1} colorized>
             <TabSelector defaultOption={PANE_TABS[0]} options={PANE_TABS} />
           </Glow>
         </div>
