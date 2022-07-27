@@ -415,6 +415,7 @@ export const Browse = () => {
             })}
           />
           <Selector<OrderCategories>
+            colorized
             className="mint-w-[190px]"
             defaultOption={{
               label: OrderCategories.RateLowToHigh,
