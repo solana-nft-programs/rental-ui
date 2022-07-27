@@ -89,7 +89,9 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
     }
   }
 
-  if (isPrivateListing(tokenData) && !otpKeypair) return <></>
+  if (!paymentMintInfos.data || (isPrivateListing(tokenData) && !otpKeypair)) {
+    return <></>
+  }
   return (
     <ButtonSmall
       disabled={!wallet.publicKey}
