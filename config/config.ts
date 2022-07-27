@@ -128,8 +128,8 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     filter: {
       type: 'creators',
       value: [
-        '3v6SQ2s8w5TYYzXeS5QLn2AD3sfwQLsg9HM3W2t2QDqE', 
-        'FzeXx41UqWRqYxic3ftehHSTeq5bmaruYbsMrBn4b9qv'
+        '3v6SQ2s8w5TYYzXeS5QLn2AD3sfwQLsg9HM3W2t2QDqE',
+        'FzeXx41UqWRqYxic3ftehHSTeq5bmaruYbsMrBn4b9qv',
       ],
     },
     rentalCard: {
@@ -149,8 +149,8 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     },
     marketplaceRate: 'days',
   },
-  parcl: {
-    name: 'parcl',
+  hoa: {
+    name: 'hoa',
     displayName: 'Homeowner Association (Parcl)',
     type: 'Collection',
     websiteUrl: 'https://www.hoa.house/',
