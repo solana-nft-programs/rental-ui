@@ -127,7 +127,10 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     badges: [{ badgeType: 'recent' }],
     filter: {
       type: 'creators',
-      value: ['3v6SQ2s8w5TYYzXeS5QLn2AD3sfwQLsg9HM3W2t2QDqE'],
+      value: [
+        '3v6SQ2s8w5TYYzXeS5QLn2AD3sfwQLsg9HM3W2t2QDqE', 
+        'FzeXx41UqWRqYxic3ftehHSTeq5bmaruYbsMrBn4b9qv'
+      ],
     },
     rentalCard: {
       invalidators: ['rate', 'duration'],
