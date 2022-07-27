@@ -100,7 +100,7 @@ export const HeroStats: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
       <div className="flex flex-col items-center justify-center">
         <div className="text-lg text-medium-4">Floor price</div>
         {!tokenDatas || !paymentMints.data ? (
-          <div className="h-5 w-10 animate-pulse rounded-md bg-border"></div>
+          <div className="h-6 w-10 animate-pulse rounded-md bg-border"></div>
         ) : (
           <div className="text-center text-xl text-light-1">
             {calculateFloorPrice(tokenDatas, config, paymentMints.data).toFixed(
@@ -122,7 +122,7 @@ export const HeroStats: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
       <div className="flex-col">
         <p className="text-lg text-medium-4">Listed</p>
         {!tokenDatas ? (
-          <div className="h-5 w-10 animate-pulse rounded-md bg-border"></div>
+          <div className="h-6 w-10 animate-pulse rounded-md bg-border"></div>
         ) : (
           <div className="text-center text-xl text-light-1">
             {tokenDatas.length}
@@ -138,7 +138,7 @@ export const HeroStats: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
               <div className="flex-col">
                 <p className="text-lg text-medium-4">Total rentals</p>
                 {!projectStats.data ? (
-                  <div className="h-5 w-10 animate-pulse rounded-md bg-border"></div>
+                  <div className="h-6 w-10 animate-pulse rounded-md bg-border"></div>
                 ) : (
                   <div className="text-center text-xl text-light-1">
                     {projectStats.data?.totalRentalCount}
