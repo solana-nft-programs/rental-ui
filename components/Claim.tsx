@@ -1,6 +1,7 @@
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { css } from '@emotion/react'
 import { tryPublicKey } from 'api/utils'
+import { GlyphQuestion } from 'assets/GlyphQuestion'
 import { ButtonSmall } from 'common/ButtonSmall'
 import { Card } from 'common/Card'
 import { FooterSlim } from 'common/FooterSlim'
@@ -22,7 +23,6 @@ import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { BiQr } from 'react-icons/bi'
-import { FaQuestionCircle } from 'react-icons/fa'
 
 function Claim() {
   const { config } = useProjectConfig()
@@ -124,12 +124,17 @@ function Claim() {
                 }
               />
             ) : (
-              <div className="flex flex-col p-20">
-                <FaQuestionCircle
-                  style={{ fontSize: '170px', margin: '0px auto' }}
-                />
-                <div className="mt-5 text-center">Token not found</div>
-              </div>
+              <Card
+                hero={
+                  <div className="flex h-full w-[280px] flex-col items-center justify-center">
+                    <div className="scale-[1.5]">
+                      <GlyphQuestion />
+                    </div>
+                    <div className="mt-10">Token not found</div>
+                  </div>
+                }
+                header={<div className="m"></div>}
+              />
             )}
           </div>
         </div>

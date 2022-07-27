@@ -153,9 +153,9 @@ export const useHandleIssueRental = () => {
                 }
               : undefined,
           timeInvalidation:
-            maxExpiration || durationSeconds !== undefined
+            !!maxExpiration || !!durationSeconds
               ? {
-                  durationSeconds: durationSeconds ?? 0,
+                  durationSeconds,
                   maxExpiration,
                   extension:
                     extensionPaymentAmount !== undefined &&

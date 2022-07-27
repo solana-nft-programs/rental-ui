@@ -29,6 +29,7 @@ module.exports = {
         'primary-2': '#CE81F4',
         border: 'rgba(221, 218, 218, 0.2)',
         secondary: '#7EFFE8',
+        blue: '#49DEFF',
         accent: '#CE81F4',
         glow: '#7560FF',
         accent: '#FFA500',

@@ -10,6 +10,7 @@ import { PAYMENT_MINTS, usePaymentMints } from 'hooks/usePaymentMints'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useRentalFixedCard } from 'rental-components/components/RentalFixedCard'
+import { useRentalFixedExpirationCard } from 'rental-components/components/RentalFixedExpirationCard'
 import { useRentalManualCard } from 'rental-components/components/RentalManualCard'
 import { useRentalRateCard } from 'rental-components/components/RentalRateCard'
 
@@ -64,6 +65,7 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
   const paymentMintInfos = usePaymentMints()
   const rentalRateCard = useRentalRateCard()
   const rentalFixedCard = useRentalFixedCard()
+  const rentalFixedExpirationCard = useRentalFixedExpirationCard()
   const rentalManualCard = useRentalManualCard()
   const otpKeypair = useOtp()
 
@@ -79,12 +81,18 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
         tokenDatas ?? []
       ))
     ) {
+      console.log(
+        tokenData,
+        tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber()
+      )
       if (!tokenData.timeInvalidator && !tokenData.useInvalidator) {
         rentalManualCard.showModal({ tokenData, otpKeypair })
       } else if (isRateBasedListing(tokenData)) {
         rentalRateCard.showModal({ tokenData, claim: true, otpKeypair })
-      } else {
+      } else if (tokenData.timeInvalidator?.parsed?.durationSeconds) {
         rentalFixedCard.showModal({ tokenData, otpKeypair })
+      } else {
+        rentalFixedExpirationCard.showModal({ tokenData, otpKeypair })
       }
     }
   }
