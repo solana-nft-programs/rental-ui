@@ -15,6 +15,7 @@ type Props<T> = {
   defaultOption?: Option<T>
   isClearable?: boolean
   onChange?: (arg?: Option<T>) => void
+  colorized?: boolean
 }
 
 export const Selector = <T,>({
@@ -25,6 +26,7 @@ export const Selector = <T,>({
   onChange,
   isClearable,
   options = [],
+  colorized,
 }: Props<T>) => {
   const { config } = useProjectConfig()
   const [isOpen, setIsOpen] = useState(false)
@@ -44,14 +46,17 @@ export const Selector = <T,>({
   return (
     <div className="relative z-40 text-base" ref={ref}>
       <div
-        className={`flex justify-between gap-2 rounded-lg border-[1px] border-border px-3 py-2 transition-all ${
+        className={`flex justify-between gap-2 rounded-lg border-[1px] border-border bg-dark-4 px-3 py-2 transition-all ${
           disabled
             ? 'cursor-default opacity-50'
             : 'cursor-pointer hover:border-primary'
         } ${className}`}
-        css={css`
-          background: ${lighten(0.08, config.colors.main)};
-        `}
+        css={
+          colorized &&
+          css`
+            background: ${lighten(0.08, config.colors.main)} !important;
+          `
+        }
         onClick={() => !disabled && setIsOpen((v) => !v)}
       >
         {value ? (
@@ -77,12 +82,15 @@ export const Selector = <T,>({
         </div>
       </div>
       <div
-        className={`absolute w-full rounded-md transition-all ${
+        className={`absolute w-full rounded-md bg-dark-4 transition-all ${
           isOpen ? 'h-auto opacity-100' : 'h-0 overflow-hidden opacity-0'
         }`}
-        css={css`
-          background: ${lighten(0.08, config.colors.main)};
-        `}
+        css={
+          colorized &&
+          css`
+            background: ${lighten(0.08, config.colors.main)} !important;
+          `
+        }
       >
         {options.map((o) => (
           <div
