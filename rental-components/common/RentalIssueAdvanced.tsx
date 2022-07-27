@@ -23,10 +23,10 @@ export const INVALIDATION_TYPES: {
     type: InvalidationType.Return,
     label: 'return',
   },
-  {
-    type: InvalidationType.Invalidate,
-    label: 'invalidate',
-  },
+  // {
+  //   type: InvalidationType.Invalidate,
+  //   label: 'invalidate',
+  // },
   {
     type: InvalidationType.Release,
     label: 'release',

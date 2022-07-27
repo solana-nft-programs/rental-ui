@@ -242,7 +242,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidationOptions: {
         visibilities: ['public', 'private'],
         durationOptions: ['minutes', 'hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
+        invalidationTypes: ['reissue', 'return'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
@@ -739,7 +739,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       secondary: '#7560FF',
     },
     rentalCard: {
-      invalidators: ['duration', 'expiration', 'manual', 'rate'],
+      invalidators: ['rate', 'duration', 'expiration', 'manual'],
       extensionOptions: { showDisablePartialExtension: true },
       invalidationOptions: {
         maxDurationAllowed: {

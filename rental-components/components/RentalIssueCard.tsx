@@ -1,5 +1,6 @@
 import { capitalizeFirstLetter, getQueryParam } from '@cardinal/common'
 import { css } from '@emotion/react'
+import type { Keypair } from '@solana/web3.js'
 import type { TokenData } from 'api/api'
 import { GlyphEdit } from 'assets/GlyphEdit'
 import { Tooltip } from 'common/Tooltip'
@@ -23,6 +24,7 @@ import { RentalIssueSuccessCard } from './RentalIssueSuccessCard'
 export type TxResult = {
   tokenData: TokenData
   txid?: string
+  otpKeypair?: Keypair
   claimLink: string
 }
 

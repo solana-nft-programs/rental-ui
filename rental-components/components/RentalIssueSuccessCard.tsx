@@ -1,5 +1,6 @@
 import type { TokenData } from 'api/api'
 import { GlyphCheck } from 'assets/GlyphCheck'
+import { Alert } from 'common/Alert'
 import { Glow } from 'common/Glow'
 import { Pill } from 'common/Pill'
 import {
@@ -11,7 +12,7 @@ import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { FaTwitter } from 'react-icons/fa'
 import { PoweredByFooter } from 'rental-components/common/PoweredByFooter'
-
+import { handleCopy } from 'components/Browse'
 import type { TxResult } from './RentalIssueCard'
 
 export type RentalIssueSuccessCard = {
@@ -88,6 +89,28 @@ export const RentalIssueSuccessCard = ({
           </div>
         ))}
       </div>
+      {txResults.some((v) => v.otpKeypair) && (
+        <div className="mb-2 text-medium-3">
+          Private links generated below. These can only be used once and cannot
+          be regenerated.
+        </div>
+      )}
+      {txResults.map(
+        (txResult, i) =>
+          txResult.otpKeypair && (
+            <Alert
+              variant="success"
+              className="mb-4 cursor-pointer"
+              onClick={() => handleCopy(txResult.claimLink)}
+            >
+              <div className="">
+                ({i + 1}/{txResults.length}) Private link generated. Click
+                <div className="mx-1 inline-block text-blue-500">here</div>to
+                copy
+              </div>
+            </Alert>
+          )
+      )}
       <div className="flex justify-center">
         <ShareTwitterButton
           className="px-8"

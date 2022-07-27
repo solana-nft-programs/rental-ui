@@ -262,6 +262,7 @@ export const useHandleIssueRental = () => {
       return txData.map((txData, i) => ({
         ...txData,
         txid: txids[i] ?? undefined,
+        otpKeypair: txData.otpKeypair,
         claimLink: getLink(
           `/${config.name}/claim/${txData.tokenManagerId.toString()}${
             txData.otpKeypair

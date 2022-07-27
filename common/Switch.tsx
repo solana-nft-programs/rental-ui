@@ -23,7 +23,7 @@ export const Switch = <T,>({
 }: Props<T>) => {
   const [value, setValue] = useState<Option<T> | undefined>(defaultOption)
   return (
-    <div className="inline-flex flex-row-reverse rounded-xl bg-medium-4">
+    <div className="inline-flex justify-center rounded-xl bg-medium-4">
       {options.map((o, i) => (
         <Tooltip key={i} title={o.tooltip || ''}>
           <div
