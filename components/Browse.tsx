@@ -241,12 +241,6 @@ export const Browse = () => {
         break
       case OrderCategories.RateLowToHigh:
         sortedTokens = tokens.sort((a, b) => {
-          console.log(
-            getPriceOrRentalRate(config, a, paymentMintInfos.data),
-            a,
-            a.timeInvalidator?.parsed.extensionPaymentAmount?.toString(),
-            getPriceOrRentalRate(config, b, paymentMintInfos.data)
-          )
           return (
             getPriceOrRentalRate(config, a, paymentMintInfos.data) -
             getPriceOrRentalRate(config, b, paymentMintInfos.data)

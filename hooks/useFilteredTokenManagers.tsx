@@ -45,7 +45,6 @@ export const useFilteredTokenManagers = () => {
   return useQuery<FilteredTokenManagerData[]>(
     [TOKEN_DATA_KEY, 'useFilteredTokenManagers', config.name],
     async () => {
-      console.log('Fetching for config', config.name)
       if (
         (environment.index && config.filter?.type === 'creators') ||
         (config.filter?.type === 'issuer' && !config.indexDisabled)
