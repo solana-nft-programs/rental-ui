@@ -169,6 +169,7 @@ export const RentalIssueManual = ({
                   },
                   onError: (e) => {
                     setError(`${e}`)
+                    setConfirmRentalTerms(false)
                   },
                 }
               )

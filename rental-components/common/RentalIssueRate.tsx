@@ -270,6 +270,7 @@ export const RentalIssueRate = ({
                   },
                   onError: (e) => {
                     setError(`${e}`)
+                    setConfirmRentalTerms(false)
                   },
                 }
               )

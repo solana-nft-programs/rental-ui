@@ -191,6 +191,7 @@ export const RentalIssueExpiration = ({
                   },
                   onError: (e) => {
                     setError(`${e}`)
+                    setConfirmRentalTerms(false)
                   },
                 }
               )
