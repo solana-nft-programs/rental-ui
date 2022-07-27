@@ -150,7 +150,7 @@ export const useHandleClaimRental = () => {
           commitment: 'confirmed',
           maxRetries: 3,
         },
-        signers: [],
+        signers: otpKeypair ? [otpKeypair] : [],
         notificationConfig: {},
       })
     },
