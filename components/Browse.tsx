@@ -199,11 +199,10 @@ export const getPriceOrRentalRate = (
     const price = getPriceFromTokenData(tokenData, paymentMintInfos)
     if (price === 0) return 0
 
-    let duration = 0
+    let duration = Infinity
     if (tokenData.timeInvalidator?.parsed.durationSeconds) {
       duration = tokenData.timeInvalidator.parsed.durationSeconds.toNumber()
-    }
-    if (tokenData.timeInvalidator?.parsed.expiration) {
+    } else if (tokenData.timeInvalidator?.parsed.expiration) {
       duration =
         tokenData.timeInvalidator.parsed.expiration.toNumber() -
         Date.now() / 1000

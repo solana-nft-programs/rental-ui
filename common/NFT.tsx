@@ -55,7 +55,7 @@ export const getExpiration = (
       maxExpiration?.toNumber() ?? Infinity,
       expiration?.toNumber() ??
         tokenData.tokenManager.parsed.stateChangedAt.toNumber() +
-          (durationSeconds?.toNumber() ?? 0)
+          (durationSeconds?.toNumber() ?? Infinity)
     ),
     UTCNow,
     { delimiter: ':', capitalizeSuffix: true, showZeros: true }
