@@ -128,7 +128,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       value: ['Cp3Fn6azbwtSG9LV1BWtQcAkQQiaQWDkc2LcqwaEuLuq'],
     },
     rentalCard: {
-      paymentManager: 'mainnet-cardinal-mini-royale',
       invalidators: ['rate'],
       invalidationOptions: {
         visibilities: ['public', 'private'],
@@ -138,7 +137,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
         maxDurationAllowed: {
-          displayText: '3 weeks',
+          displayText: '12 weeks',
           value: 7258000,
         },
       },
@@ -197,7 +196,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
         maxDurationAllowed: {
-          displayText: '3 weeks',
+          displayText: '12 weeks',
           value: 7258000,
         },
       },
@@ -608,6 +607,57 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         uri: 'https://storage.googleapis.com/fractal-launchpad-public-assets/psyker-assets/jsons/1823.json',
       },
     ],
+    marketplaceRate: 'days',
+  },
+  rooniverse: {
+    name: 'rooniverse',
+    displayName: 'Rooniverse',
+    type: 'Collection',
+    websiteUrl: 'https://www.playrooniverse.com/',
+    logoImage: '/logos/rooniverse.png',
+    hero: '/logos/rooniverse-hero.png',
+    colors: {
+      main: '#2a2a2a',
+      secondary: '#b338ef',
+      accent: '#1abfdd',
+    },
+    description:
+      'Enter the world of savage, tribal Roos who fight to the death for sport and glory! Collect resources across lands, battle with friends, and build your own corner of Rooniverse! Adopt a Roo to access our Mini-Rooyale pre-alpha demo sessions!',
+    twitterHandle: '@playrooniverse',
+    socialLinks: [
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/rooniverse',
+      },
+      {
+        icon: 'web',
+        link: 'https://www.playrooniverse.com/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/playrooniverse',
+      },
+    ],
+    badges: [{ badgeType: 'recent' }],
+    filter: {
+      type: 'creators',
+      value: ['3v6SQ2s8w5TYYzXeS5QLn2AD3sfwQLsg9HM3W2t2QDqE'],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['minutes', 'hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
     marketplaceRate: 'days',
   },
   thugbirdz: {
