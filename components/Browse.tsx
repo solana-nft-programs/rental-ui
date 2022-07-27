@@ -20,7 +20,7 @@ import {
   getAllAttributes,
   getNFTAtrributeFilters,
 } from 'common/NFTAttributeFilters'
-import { mintSymbol, NFTClaimButton } from 'common/NFTClaimButton'
+import { mintImage, mintSymbol, NFTClaimButton } from 'common/NFTClaimButton'
 import { NFTHeader } from 'common/NFTHeader'
 import { NFTIssuerInfo } from 'common/NFTIssuerInfo'
 import { NFTRevokeButton } from 'common/NFTRevokeButton'
@@ -35,6 +35,7 @@ import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { filterTokens, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useUTCNow } from 'providers/UTCNowProvider'
 import { useEffect, useState } from 'react'
+import { SolanaLogo } from 'rental-components/common/icons'
 
 export const handleCopy = (shareUrl: string) => {
   navigator.clipboard.writeText(shareUrl)
@@ -89,6 +90,24 @@ export const getSymbolFromTokenData = (tokenData: TokenData) => {
   return mintSymbol(
     tokenData.claimApprover?.parsed?.paymentMint ??
       tokenData.timeInvalidator?.parsed.extensionPaymentMint
+  )
+}
+
+export const PaymentMintImage: React.FC<
+  {
+    width?: number
+    height?: number
+    tokenData: TokenData
+  } & React.HTMLAttributes<HTMLDivElement>
+> = ({ tokenData, ...props }: { tokenData: TokenData }) => {
+  const img = mintImage(
+    tokenData.claimApprover?.parsed?.paymentMint ??
+      tokenData.timeInvalidator?.parsed.extensionPaymentMint
+  )
+  return img ? (
+    <img {...props} src={img} alt={tokenData.metaplexData?.data.data.name} />
+  ) : (
+    <SolanaLogo {...props} />
   )
 }
 

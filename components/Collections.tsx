@@ -99,24 +99,22 @@ export const Collections = () => {
             {i > 0 && (
               <div className="mx-auto mt-10 mb-10 h-[2px] w-[90%] rounded-lg bg-border"></div>
             )}
-            <div className="grid grid-cols-1 flex-wrap gap-4 md:grid-cols-3 lg:grid-cols-4">
+            <div className="grid grid-cols-1 flex-wrap gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {configs.map((config) => (
-                <div
-                  key={config.name}
-                  className="bg-opacity-1 cursor-pointer transition-colors"
-                  css={css`
-                    &:hover {
-                      background: ${transparentize(
-                        0.7,
-                        lighten(0.07, config.colors.main)
-                      )};
-                    }
-                  `}
-                  onClick={() =>
-                    router.push(`/${config.name}${location.search}`)
-                  }
-                >
+                <div key={config.name}>
                   <Card
+                    className="bg-opacity-1 cursor-pointer transition-colors"
+                    css={css`
+                      &:hover {
+                        background: ${transparentize(
+                          0.7,
+                          lighten(0.15, config.colors.main)
+                        )};
+                      }
+                    `}
+                    onClick={() =>
+                      router.push(`/${config.name}${location.search}`)
+                    }
                     badges={config.badges}
                     hero={
                       <div

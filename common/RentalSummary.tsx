@@ -5,6 +5,7 @@ import type { TokenData } from 'api/api'
 import {
   getPriceFromTokenData,
   getSymbolFromTokenData,
+  PaymentMintImage,
 } from 'components/Browse'
 import { usePaymentMints } from 'hooks/usePaymentMints'
 import { useUTCNow } from 'providers/UTCNowProvider'
@@ -166,7 +167,13 @@ export const RentalSummary: React.FC<Props> = ({
     <div className="flex justify-between gap-4 border-t-[1px] border-border pt-4">
       <div className="flex gap-4">
         <div>
-          <SolanaLogo width={24} height={24} className="mt-2" />
+          <PaymentMintImage
+            width={24}
+            height={24}
+            className="mt-2"
+            tokenData={tokenData}
+          />
+          {/* <SolanaLogo width={24} height={24} className="mt-2" /> */}
         </div>
         <div className="mb-2">
           <div className="text-lg font-medium">

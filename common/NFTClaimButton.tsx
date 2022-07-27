@@ -28,6 +28,11 @@ export const mintSymbol = (paymentMint: PublicKey | null | undefined) => {
   }
 }
 
+export const mintImage = (paymentMint: PublicKey | null | undefined) => {
+  return PAYMENT_MINTS.find((mint) => mint.mint === paymentMint?.toString())
+    ?.image
+}
+
 export const priceAndSymbol = (
   paymentAmount: BN,
   paymentMint: PublicKey | null | undefined,
