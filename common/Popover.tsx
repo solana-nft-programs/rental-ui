@@ -106,11 +106,13 @@ export const Popover: React.FC<PopoverProps> = ({
 export const PopoverItem = ({
   className,
   children,
+  ...props
 }: {
   className?: string
   children: React.ReactNode
-}) => (
+} & React.HTMLAttributes<HTMLDivElement>) => (
   <div
+    {...props}
     className={`${className} rounded-md px-2 py-1 hover:bg-[rgba(255,255,255,0.1)]`}
   >
     {children}
