@@ -9,6 +9,7 @@ type Option<T> = { label: string; value: T }
 type Props<T> = {
   placeholder?: string
   defaultValue?: React.ReactNode
+  colorized?: boolean
   groups: {
     type?: 'radio'
     label: string
@@ -21,6 +22,7 @@ type Props<T> = {
 export const MultiSelector = <T,>({
   placeholder = 'Select',
   defaultValue,
+  colorized,
   onChange,
   groups = [],
 }: Props<T>) => {
@@ -43,10 +45,16 @@ export const MultiSelector = <T,>({
   return (
     <div className="relative z-40 text-base" ref={ref}>
       <div
-        className="flex min-w-[250px] cursor-pointer justify-between rounded-lg border-[1px] border-border px-3 py-2 transition-all hover:border-primary"
-        css={css`
-          background: ${lighten(0.08, config.colors.main)};
-        `}
+        className="flex min-w-[250px] cursor-pointer justify-between rounded-lg border-[1px] border-border bg-dark-4 px-3 py-2 transition-all hover:border-primary"
+        css={
+          colorized &&
+          css`
+            background: ${lighten(0.08, config.colors.main)} !important;
+            &:hover {
+              border-color: ${config.colors.secondary} !important;
+            }
+          `
+        }
         onClick={() => setIsOpen((v) => !v)}
       >
         {value ? (
@@ -63,18 +71,21 @@ export const MultiSelector = <T,>({
           className={`absolute max-h-[50vh] w-full overflow-scroll rounded-md transition-all ${
             isOpen ? 'h-auto opacity-100' : 'h-0 overflow-hidden opacity-0'
           }`}
-          css={css`
-            background: ${lighten(0.03, config.colors.main)};
-          `}
         >
           {groups.map(({ type, label, options, content }, i) =>
             !openSelectors.includes(label) ? (
               <div
                 key={i}
-                className="flex cursor-pointer items-center justify-between border-b-border p-3 text-light-0 transition-colors hover:text-primary"
+                className="flex cursor-pointer items-center justify-between border-b-border bg-dark-4 p-3 text-light-0 transition-colors hover:text-primary"
                 css={css`
-                  background: ${lighten(0.03, config.colors.main)};
                   border-bottom-width: ${i < groups?.length - 1 ? '1px' : ''};
+                  ${colorized &&
+                  css`
+                    background: ${lighten(0.03, config.colors.main)} !important;
+                    &:hover {
+                      color: ${config.colors.secondary} !important;
+                    }
+                  `}
                 `}
                 onClick={() => setOpenSelectors((v) => [...v, label])}
               >
@@ -83,10 +94,16 @@ export const MultiSelector = <T,>({
               </div>
             ) : (
               <div
-                className="border-b-border"
+                className="border-b-border bg-dark-5"
                 css={css`
-                  background: ${lighten(0.08, config.colors.main)};
                   border-bottom-width: ${i < groups?.length - 1 ? '1px' : ''};
+                  ${colorized &&
+                  css`
+                    background: ${lighten(0.03, config.colors.main)} !important;
+                    &:hover {
+                      color: ${config.colors.secondary} !important;
+                    }
+                  `}
                 `}
               >
                 <div
@@ -94,6 +111,14 @@ export const MultiSelector = <T,>({
                   className="flex cursor-pointer items-center justify-between p-3 text-light-0 transition-colors hover:text-primary"
                   onClick={() =>
                     setOpenSelectors((v) => v.filter((l) => l !== label))
+                  }
+                  css={
+                    colorized &&
+                    css`
+                      &:hover {
+                        color: ${config.colors.secondary} !important;
+                      }
+                    `
                   }
                 >
                   <div>{label}</div>
@@ -117,6 +142,11 @@ export const MultiSelector = <T,>({
                               className="flex cursor-pointer items-center gap-2 text-light-0 transition-colors hover:text-primary"
                               css={css`
                                 &:hover {
+                                  ${colorized &&
+                                  css`
+                                    color: ${config.colors
+                                      .secondary} !important;
+                                  `}
                                   div {
                                     border-color: rgb(
                                       144 126 255 / var(--tw-border-opacity)

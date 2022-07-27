@@ -69,7 +69,7 @@ export const RentalFixedCard = ({
       </div>
       {durationSeconds && (
         <div className="mb-8 px-8 text-center text-base text-medium-3">
-          This NFT can be rented for a specified duration of{' '}
+          This NFT can be rented for a fixed duration of{' '}
           {secondsToStringForDisplay(durationSeconds?.toNumber() ?? 0, {
             fullSuffix: true,
             delimiter: ' ',

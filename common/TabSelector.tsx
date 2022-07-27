@@ -13,6 +13,7 @@ type Option<T> = {
 }
 
 type Props<T> = {
+  colorized?: boolean
   placeholder?: string
   options: Option<T>[]
   defaultOption?: Option<T>
@@ -20,6 +21,7 @@ type Props<T> = {
 }
 
 export const TabSelector = <T,>({
+  colorized,
   defaultOption,
   onChange,
   options = [],
@@ -45,6 +47,14 @@ export const TabSelector = <T,>({
               background: ${value?.value === o.value
                 ? lighten(0.03, config.colors.main)
                 : ''};
+
+              ${!o.disabled &&
+              colorized &&
+              css`
+                &:hover {
+                  color: ${config.colors.secondary} !important;
+                }
+              `}
             `}
             onClick={() => {
               if (o.disabled) return

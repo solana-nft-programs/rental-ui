@@ -71,6 +71,7 @@ export const TokenQueryResults: React.FC<Props> = ({
       <div className="mx-10 mt-4 flex flex-wrap justify-between gap-4">
         <div className="flex flex-wrap gap-4">
           <TabSelector<ManageTokenGroupId>
+            colorized
             defaultOption={{
               value: 'all',
               label: tokenGroup?.header,
@@ -86,6 +87,7 @@ export const TokenQueryResults: React.FC<Props> = ({
           />
           {attributeFilterOptions && (
             <MultiSelector<string>
+              colorized
               placeholder="Select filters"
               defaultValue={
                 Object.values(selectedFilters).reduce(
@@ -111,7 +113,7 @@ export const TokenQueryResults: React.FC<Props> = ({
           )}
         </div>
         <div className="flex">
-          <Glow scale={1.5} opacity={1}>
+          <Glow scale={1.5} opacity={1} colorized>
             <TabSelector defaultOption={PANE_TABS[0]} options={PANE_TABS} />
           </Glow>
         </div>
