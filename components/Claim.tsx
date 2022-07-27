@@ -35,7 +35,7 @@ function Claim() {
   const tokenManagerId = tryPublicKey(tokenManagerString)
   const tokenQuery = useTokenData(tokenManagerId ?? undefined)
   const tokenData = tokenQuery.data
-
+  console.log(tokenData)
   return (
     <div className="flex h-screen flex-col">
       <HeaderSlim />

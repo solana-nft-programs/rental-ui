@@ -1,4 +1,5 @@
 import { secondsToString } from '@cardinal/common'
+import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import type * as splToken from '@solana/spl-token'
 import type { TokenData } from 'api/api'
 import {
@@ -12,6 +13,7 @@ import { useProjectStats } from 'hooks/useProjectStats'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 
 import { DURATION_DATA } from './DurationInput'
+import { isPrivateListing, isRateBasedListing } from './NFTIssuerInfo'
 import { getMintDecimalAmount } from './units'
 
 const calculateFloorPrice = (
@@ -32,16 +34,16 @@ const calculateFloorPrice = (
   const rentalPrices = tokenDatas
     .filter(
       (tokenData) =>
-        tokenData.timeInvalidator?.parsed && onlyRateTokens(tokenData)
+        tokenData.timeInvalidator?.parsed &&
+        tokenData.tokenManager?.parsed.state === TokenManagerState.Issued &&
+        onlyRateTokens(tokenData) &&
+        !isPrivateListing(tokenData)
     )
     .map((tokenData) => {
       let price = 0
       let duration = 0
-
       if (paymentMints && tokenData.timeInvalidator?.parsed) {
-        if (
-          tokenData.timeInvalidator.parsed.durationSeconds?.toNumber() === 0
-        ) {
+        if (isRateBasedListing(tokenData)) {
           if (
             tokenData.timeInvalidator.parsed.extensionPaymentAmount &&
             tokenData.timeInvalidator.parsed.extensionDurationSeconds &&
@@ -71,10 +73,9 @@ const calculateFloorPrice = (
           if (tokenData.timeInvalidator.parsed.durationSeconds) {
             duration =
               tokenData.timeInvalidator.parsed.durationSeconds.toNumber()
-          }
-          if (tokenData.timeInvalidator.parsed.expiration) {
+          } else if (tokenData.timeInvalidator.parsed.maxExpiration) {
             duration =
-              tokenData.timeInvalidator.parsed.expiration.toNumber() -
+              tokenData.timeInvalidator.parsed.maxExpiration.toNumber() -
               Date.now() / 1000
           }
         }

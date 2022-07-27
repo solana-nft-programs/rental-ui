@@ -14,9 +14,9 @@ export const isPrivateListing = (tokenData: TokenData) =>
   tokenData.tokenManager?.parsed.claimApprover && !tokenData.claimApprover
 
 export const isRateBasedListing = (tokenData: TokenData) =>
-  tokenData.timeInvalidator?.parsed.durationSeconds &&
+  !!tokenData.timeInvalidator?.parsed.durationSeconds &&
   tokenData.timeInvalidator?.parsed.durationSeconds.eq(new BN(0)) &&
-  tokenData.timeInvalidator?.parsed.extensionDurationSeconds
+  !!tokenData.timeInvalidator?.parsed.extensionDurationSeconds
 
 export const getDurationText = (tokenData: TokenData, UTCNow: number) => {
   return tokenData.timeInvalidator?.parsed ? (

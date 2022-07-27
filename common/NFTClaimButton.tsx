@@ -91,8 +91,7 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
       className="my-auto inline-block max-w-[45%] flex-none text-xs"
       onClick={async () => await handleClaim(tokenData)}
     >
-      {tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber() === 0 &&
-      paymentMintInfos.data ? (
+      {isRateBasedListing(tokenData) && paymentMintInfos.data ? (
         <>
           {
             getTokenRentalRate(config, paymentMintInfos.data, tokenData)
@@ -104,13 +103,11 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
         paymentMintInfos.data[
           tokenData.claimApprover?.parsed?.paymentMint.toString()
         ] ? (
-        `Claim ${parseFloat(
-          fmtMintAmount(
-            paymentMintInfos.data[
-              tokenData?.claimApprover?.parsed?.paymentMint.toString()
-            ],
-            tokenData.claimApprover?.parsed?.paymentAmount ?? new BN(0)
-          )
+        `Claim ${fmtMintAmount(
+          paymentMintInfos.data[
+            tokenData?.claimApprover?.parsed?.paymentMint.toString()
+          ],
+          tokenData.claimApprover?.parsed?.paymentAmount ?? new BN(0)
         )}${getSymbolFromTokenData(tokenData)}`
       ) : (
         'FREE'

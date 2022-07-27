@@ -18,6 +18,7 @@ import type { AccountInfo, ParsedAccountData, PublicKey } from '@solana/web3.js'
 import type { TokenData } from 'api/api'
 import { convertStringsToPubkeys, getTokenDatas } from 'api/api'
 import { tryPublicKey } from 'api/utils'
+import { elligibleForClaim } from 'common/NFT'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useQuery } from 'react-query'
@@ -161,7 +162,7 @@ export const useFilteredTokenManagers = () => {
           environment.label
         )
 
-        return tokenDatas
+        return tokenDatas.filter((tokenData) => elligibleForClaim(tokenData))
       } else if (environment.api) {
         const response = await fetch(
           `${environment.api}/tokenManagersByState?cluster=${environment.label}&collection=${config.name}`

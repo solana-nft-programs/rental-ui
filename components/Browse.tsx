@@ -14,7 +14,7 @@ import { HeaderSlim } from 'common/HeaderSlim'
 import { HeroLarge } from 'common/HeroLarge'
 import { Info } from 'common/Info'
 import { MultiSelector } from 'common/MultiSelector'
-import { elligibleForClaim, NFT } from 'common/NFT'
+import { NFT } from 'common/NFT'
 import {
   filterTokensByAttributes,
   getAllAttributes,
@@ -449,40 +449,38 @@ export const Browse = () => {
           </div>
         ) : groupedTokens?.tokens && groupedTokens.tokens.length > 0 ? (
           <div className="flex flex-wrap justify-center gap-4 2xl:grid 2xl:grid-cols-5">
-            {groupedTokens?.tokens?.slice(0, PAGE_SIZE * pageNum[0]).map(
-              (tokenData) =>
-                elligibleForClaim(tokenData) && (
-                  <Card
-                    key={tokenData.tokenManager?.pubkey.toString()}
-                    hero={<NFT tokenData={tokenData} />}
-                    header={<NFTHeader tokenData={tokenData} />}
-                    content={
-                      {
-                        [TokenManagerState.Initialized]: <></>,
-                        [TokenManagerState.Issued]: (
-                          <div className="flex w-full flex-row justify-between text-sm">
-                            <NFTIssuerInfo tokenData={tokenData} />
-                            <NFTClaimButton
-                              tokenData={tokenData}
-                              tokenDatas={tokenManagers.data}
-                            />
-                          </div>
-                        ),
-                        [TokenManagerState.Claimed]: (
-                          <div className="flex flex-row justify-between text-sm">
-                            <NFTIssuerInfo tokenData={tokenData} />
-                            <NFTRevokeButton tokenData={tokenData} />
-                          </div>
-                        ),
-                        [TokenManagerState.Invalidated]: <></>,
-                      }[
-                        tokenData?.tokenManager?.parsed
-                          .state as TokenManagerState
-                      ]
-                    }
-                  ></Card>
-                )
-            )}
+            {groupedTokens?.tokens
+              ?.slice(0, PAGE_SIZE * pageNum[0])
+              .map((tokenData) => (
+                <Card
+                  key={tokenData.tokenManager?.pubkey.toString()}
+                  hero={<NFT tokenData={tokenData} />}
+                  header={<NFTHeader tokenData={tokenData} />}
+                  content={
+                    {
+                      [TokenManagerState.Initialized]: <></>,
+                      [TokenManagerState.Issued]: (
+                        <div className="flex w-full flex-row justify-between text-sm">
+                          <NFTIssuerInfo tokenData={tokenData} />
+                          <NFTClaimButton
+                            tokenData={tokenData}
+                            tokenDatas={tokenManagers.data}
+                          />
+                        </div>
+                      ),
+                      [TokenManagerState.Claimed]: (
+                        <div className="flex flex-row justify-between text-sm">
+                          <NFTIssuerInfo tokenData={tokenData} />
+                          <NFTRevokeButton tokenData={tokenData} />
+                        </div>
+                      ),
+                      [TokenManagerState.Invalidated]: <></>,
+                    }[
+                      tokenData?.tokenManager?.parsed.state as TokenManagerState
+                    ]
+                  }
+                ></Card>
+              ))}
           </div>
         ) : (
           groupedTokens &&
