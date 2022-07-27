@@ -9,7 +9,7 @@ export const HeroSmall: React.FC = () => {
   const { config } = useProjectConfig()
   return (
     <div className="flex w-full flex-wrap items-center justify-center gap-16 py-8 px-4 lg:justify-between lg:px-28">
-      <Glow angle={160} colorized>
+      <Glow angle={160} colorized opacity={0.4}>
         <div className="flex items-center gap-4">
           <div
             className="flex h-32 w-32 items-center justify-center overflow-hidden rounded-full border-4 border-border"
