@@ -91,8 +91,8 @@ export const RentalIssueSuccessCard = ({
       </div>
       {txResults.some((v) => v.otpKeypair) && (
         <div className="mb-2 text-medium-3">
-          Private links generated below. These can only be used once and cannot
-          be regenerated.
+          Private links generated below include claim password in the link.
+          These can only be used once and cannot be regenerated.
         </div>
       )}
       {txResults.map(
