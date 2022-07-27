@@ -64,7 +64,7 @@ export function NFT({ tokenData }: NFTProps) {
   const { metadata } = tokenData
   return (
     <div
-      className="relative w-full min-w-[200px] max-w-[320px] rounded-xl"
+      className="relative min-w-[320px] max-w-[320px] rounded-xl 2xl:min-w-full"
       style={{
         background: lighten(0.02, config.colors.main),
       }}
@@ -83,7 +83,7 @@ export function NFT({ tokenData }: NFTProps) {
             loading="lazy"
             src={metadata.data.image}
             alt={metadata.data.name}
-            className={`h-full rounded-t-xl object-contain`}
+            className={`w-full rounded-t-xl object-contain`}
           />
         )}
       </div>
