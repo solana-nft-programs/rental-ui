@@ -25,6 +25,7 @@ import {
 import { findUseInvalidatorAddress } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator/pda'
 import * as metaplex from '@metaplex-foundation/mpl-token-metadata'
 import {
+  Edition,
   EditionData,
   MasterEditionV2Data,
   MetadataKey,
@@ -350,6 +351,14 @@ export async function getTokenDatas(
   }
   tokenManagerDatas = knownTokenManagers
 
+  const mintIds = tokenManagerDatas.map(
+    (tokenManager) => tokenManager.parsed.mint
+  )
+  const editionIds = await Promise.all(
+    tokenManagerDatas.map(async (tokenManager) =>
+      Edition.getPDA(tokenManager.parsed.mint)
+    )
+  )
   const idsToFetch = tokenManagerDatas.reduce(
     (acc, tm) => [
       ...acc,
@@ -357,7 +366,7 @@ export async function getTokenDatas(
       ...tm.parsed.invalidators,
       tm.parsed.recipientTokenAccount,
     ],
-    [] as (PublicKey | null)[]
+    [...editionIds, ...mintIds] as (PublicKey | null)[]
   )
   const accountsById = await accountDataById(connection, idsToFetch)
 
@@ -386,7 +395,7 @@ export async function getTokenDatas(
     }
   )
 
-  return tokenManagerDatas.map((tokenManagerData) => {
+  return tokenManagerDatas.map((tokenManagerData, i) => {
     const timeInvalidatorId = tokenManagerData.parsed.invalidators.filter(
       (invalidator) =>
         accountsById[invalidator.toString()]?.owner?.toString() ===
@@ -398,6 +407,15 @@ export async function getTokenDatas(
         USE_INVALIDATOR_ADDRESS.toString()
     )[0]
     return {
+      mint: accountsById[
+        tokenManagerData.parsed.mint.toString()
+      ] as spl.MintInfo,
+      editionData: accountsById[editionIds[i]!.toString()] as
+        | {
+            pubkey: PublicKey
+            parsed: metaplex.EditionData | metaplex.MasterEditionData
+          }
+        | undefined,
       recipientTokenAccount: tokenManagerData.parsed.recipientTokenAccount
         ? (accountsById[
             tokenManagerData.parsed.recipientTokenAccount?.toString()

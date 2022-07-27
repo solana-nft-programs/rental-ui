@@ -21,6 +21,14 @@ export const elligibleForRent = (
   )
 }
 
+export const elligibleForClaim = (tokenData: TokenData): boolean => {
+  return (
+    !!tokenData.tokenManager &&
+    !!tokenData.editionData &&
+    (!tokenData.mint || !!tokenData.mint.freezeAuthority)
+  )
+}
+
 export const stateColor = (state: TokenManagerState, light = false): string => {
   if (state === TokenManagerState.Invalidated) {
     return 'rgba(125, 0, 0, 1)'
