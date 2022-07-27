@@ -89,6 +89,7 @@ export const TokenQueryResults: React.FC<Props> = ({
             <MultiSelector<string>
               colorized
               placeholder="Select filters"
+              onChange={(v) => !v && setSelectedFilters({})}
               defaultValue={
                 Object.values(selectedFilters).reduce(
                   (acc, v) => acc + v.length,

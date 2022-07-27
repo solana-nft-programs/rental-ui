@@ -403,6 +403,7 @@ export const Browse = () => {
                 </div>
               ) : undefined
             }
+            onChange={(v) => !v && setSelectedFilters({})}
             groups={getNFTAtrributeFilters({
               tokenDatas: groupedTokens?.tokens,
               config,

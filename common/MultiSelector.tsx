@@ -1,6 +1,7 @@
 import { css } from '@emotion/react'
 import { ChevronDown } from 'assets/ChevronDown'
 import { ChevronRight } from 'assets/ChevronRight'
+import { GlyphSelectClear } from 'assets/GlyphSelectClear'
 import { lighten } from 'polished'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useEffect, useRef, useState } from 'react'
@@ -10,19 +11,22 @@ type Props<T> = {
   placeholder?: string
   defaultValue?: React.ReactNode
   colorized?: boolean
+  isClearable?: boolean
   groups: {
     type?: 'radio'
     label: string
+    count?: number
     content?: React.ReactNode
     options?: Option<T>[]
   }[]
-  onChange?: (arg: Option<T>) => void
+  onChange?: (arg?: Option<T>) => void
 }
 
 export const MultiSelector = <T,>({
   placeholder = 'Select',
   defaultValue,
   colorized,
+  isClearable,
   onChange,
   groups = [],
 }: Props<T>) => {
@@ -45,7 +49,7 @@ export const MultiSelector = <T,>({
   return (
     <div className="relative z-40 text-base" ref={ref}>
       <div
-        className="flex min-w-[250px] cursor-pointer justify-between rounded-lg border-[1px] border-border bg-dark-4 px-3 py-2 transition-all hover:border-primary"
+        className="flex min-w-[250px] cursor-pointer items-center justify-between rounded-lg border-[1px] border-border bg-dark-4 px-3 py-2 transition-all hover:border-primary"
         css={
           colorized &&
           css`
@@ -64,7 +68,19 @@ export const MultiSelector = <T,>({
         ) : (
           <div className="text-medium-3">{placeholder}</div>
         )}
-        <ChevronDown />
+        {(isClearable && value) ||
+        groups.reduce((acc, { count }) => acc + (count ?? 0), 0) ? (
+          <div
+            className={`opacity-80 hover:opacity-100`}
+            onClick={() => {
+              onChange && onChange(undefined)
+            }}
+          >
+            <GlyphSelectClear />
+          </div>
+        ) : (
+          <ChevronDown />
+        )}
       </div>
       {isOpen && (
         <div
@@ -72,7 +88,7 @@ export const MultiSelector = <T,>({
             isOpen ? 'h-auto opacity-100' : 'h-0 overflow-hidden opacity-0'
           }`}
         >
-          {groups.map(({ type, label, options, content }, i) =>
+          {groups.map(({ type, label, options, count, content }, i) =>
             !openSelectors.includes(label) ? (
               <div
                 key={i}
@@ -90,7 +106,11 @@ export const MultiSelector = <T,>({
                 onClick={() => setOpenSelectors((v) => [...v, label])}
               >
                 <div>{label}</div>
-                <ChevronRight />
+                {count ? (
+                  <div className="text-sm text-medium-4">{count}</div>
+                ) : (
+                  <ChevronRight />
+                )}
               </div>
             ) : (
               <div
@@ -99,7 +119,7 @@ export const MultiSelector = <T,>({
                   border-bottom-width: ${i < groups?.length - 1 ? '1px' : ''};
                   ${colorized &&
                   css`
-                    background: ${lighten(0.03, config.colors.main)} !important;
+                    background: ${lighten(0.06, config.colors.main)} !important;
                     &:hover {
                       color: ${config.colors.secondary} !important;
                     }
@@ -122,7 +142,11 @@ export const MultiSelector = <T,>({
                   }
                 >
                   <div>{label}</div>
-                  <ChevronDown size={14} />
+                  {count ? (
+                    <div className="text-sm text-medium-4">{count}</div>
+                  ) : (
+                    <ChevronDown size={14} />
+                  )}
                 </div>
                 {content ??
                   {

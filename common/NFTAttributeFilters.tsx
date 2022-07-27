@@ -84,6 +84,7 @@ export const getNFTAtrributeFilters = ({
     .sort()
     .map((traitType) => ({
       label: traitType,
+      count: selectedFilters[traitType]?.length,
       content: (
         <div key={traitType} className="px-3 pb-3 text-xs">
           {sortedAttributes[traitType]!.map((value) => (
