@@ -105,7 +105,7 @@ export const Dashboard = () => {
       ]
     },
     {
-      enabled: !!userTokenDatas.isFetched && !!managedTokens.isFetched,
+      enabled: userTokenDatas.isFetched && managedTokens.isFetched,
     }
   )
   const availableTokens = useQuery(
@@ -120,7 +120,7 @@ export const Dashboard = () => {
       )
     },
     {
-      enabled: !!userTokenDatas.data,
+      enabled: userTokenDatas.isFetched,
     }
   )
 
@@ -136,7 +136,7 @@ export const Dashboard = () => {
       })
     },
     {
-      enabled: !!userTokenDatas.data,
+      enabled: userTokenDatas.isFetched,
     }
   )
 
@@ -164,7 +164,6 @@ export const Dashboard = () => {
     setProjectConfig('default')
   }, [])
 
-  console.log(selectedConfig)
   return (
     <>
       <SelecterDrawer
@@ -173,7 +172,10 @@ export const Dashboard = () => {
       />
       <HeaderSlim
         hideDashboard
-        loading={userTokenDatas.isFetched && userTokenDatas.isFetching}
+        loading={
+          (userTokenDatas.isFetched && userTokenDatas.isFetching) ||
+          (managedTokens.isFetched && managedTokens.isFetching)
+        }
       />
       <div className="flex w-full flex-wrap items-center justify-center gap-16 py-8 px-4 lg:justify-between lg:px-28">
         <Glow angle={160}>
@@ -290,8 +292,7 @@ export const Dashboard = () => {
             </Glow>
           </div>
         </div>
-        {(tokenQuery.isFetched && groupedTokens.length === 0) ||
-        groupedTokens.flat().length === 0 ? (
+        {tokenQuery.isFetched && groupedTokens.length === 0 ? (
           <div className="my-10 flex w-full flex-col items-center justify-center gap-1">
             <GlyphLargeClose />
             <div className="mt-4 text-medium-4">
