@@ -141,7 +141,6 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
                   elligibleForRent(config, tokenData) &&
                     rentalIssueCard.showModal({
                       tokenDatas: [tokenData],
-                      rentalCardConfig: config.rentalCard,
                     })
                 }}
               >

@@ -66,19 +66,17 @@ export type RentalCardConfig = {
 
 export type RentalIssueCardProps = {
   tokenDatas: TokenData[]
-  rentalCardConfig: RentalCardConfig
 }
 
-export const RentalIssueCard = ({
-  tokenDatas,
-  rentalCardConfig,
-}: RentalIssueCardProps) => {
+export const RentalIssueCard = ({ tokenDatas }: RentalIssueCardProps) => {
+  const { configFromToken } = useProjectConfig()
+  const config = configFromToken(tokenDatas[0])
+  const rentalCardConfig = config.rentalCard
   const visibilities =
     rentalCardConfig.invalidationOptions?.visibilities || VISIBILITY_OPTIONS
   const [selectedInvalidators, setSelectedInvalidators] = useState<
     InvalidatorOption[]
   >([])
-  const { config } = useProjectConfig()
   const [showAdvanced, setShowAdvanced] = useState(false)
   const [txResults, setTxResults] = useState<TxResult[]>()
   const invalidatorOptions = rentalCardConfig.invalidators

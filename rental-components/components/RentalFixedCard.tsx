@@ -36,7 +36,8 @@ export const RentalFixedCard = ({
   const handleClaimRental = useHandleClaimRental()
   const paymentMints = usePaymentMints()
   const { environment } = useEnvironmentCtx()
-  const { config } = useProjectConfig()
+  const { configFromToken } = useProjectConfig()
+  const config = configFromToken(tokenData)
   const { durationSeconds } = tokenData.timeInvalidator?.parsed || {}
 
   if (txid) return <RentalSuccessCard tokenData={tokenData} txid={txid} />

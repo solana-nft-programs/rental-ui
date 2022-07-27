@@ -8,11 +8,12 @@ import {
   shareTwitterListedLink,
 } from 'common/ShareTwitterButton'
 import { getQueryParam, transactionUrl } from 'common/utils'
+import { handleCopy } from 'components/Browse'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { FaTwitter } from 'react-icons/fa'
 import { PoweredByFooter } from 'rental-components/common/PoweredByFooter'
-import { handleCopy } from 'components/Browse'
+
 import type { TxResult } from './RentalIssueCard'
 
 export type RentalIssueSuccessCard = {
@@ -25,7 +26,8 @@ export const RentalIssueSuccessCard = ({
   txResults,
 }: RentalIssueSuccessCard) => {
   const { environment } = useEnvironmentCtx()
-  const { config } = useProjectConfig()
+  const { configFromToken } = useProjectConfig()
+  const config = configFromToken(tokenDatas[0])
   return (
     <div className="relative rounded-lg bg-dark-6 p-8">
       <div className="absolute right-12 top-6 text-5xl">🎉</div>

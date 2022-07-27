@@ -28,8 +28,9 @@ export const RentalSuccessCard = ({
   txid,
 }: RentalSuccessCardProps) => {
   const { connection, environment } = useEnvironmentCtx()
+  const { configFromToken } = useProjectConfig()
+  const config = configFromToken(tokenData)
   const walletId = useWalletId()
-  const { config } = useProjectConfig()
   const { durationSeconds } = tokenData.timeInvalidator?.parsed || {}
   const { UTCNow } = useUTCNow()
   const { displayName: issuerName, loadingName } = useAddressName(

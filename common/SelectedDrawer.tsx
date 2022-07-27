@@ -1,7 +1,6 @@
 import { css } from '@emotion/react'
 import type { TokenData } from 'api/api'
 import { GlyphClose } from 'assets/GlyphClose'
-import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useRentalIssueCard } from 'rental-components/components/RentalIssueCard'
 
 import { Button } from './Button'
@@ -15,7 +14,6 @@ export const SelecterDrawer: React.FC<Props> = ({
   selectedTokens,
   onClose,
 }: Props) => {
-  const { config } = useProjectConfig()
   const rentalIsseuCard = useRentalIssueCard()
   return (
     <div
@@ -38,7 +36,6 @@ export const SelecterDrawer: React.FC<Props> = ({
           onClick={() =>
             rentalIsseuCard.showModal({
               tokenDatas: selectedTokens,
-              rentalCardConfig: config.rentalCard,
             })
           }
         >

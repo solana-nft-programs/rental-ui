@@ -28,7 +28,8 @@ export const RentalManualCard = ({
   const [txid, setTxid] = useState<string>()
   const handleClaimRental = useHandleClaimRental()
   const { connection } = useEnvironmentCtx()
-  const { config } = useProjectConfig()
+  const { configFromToken } = useProjectConfig()
+  const config = configFromToken(tokenData)
 
   if (txid) return <RentalSuccessCard tokenData={tokenData} txid={txid} />
   return (

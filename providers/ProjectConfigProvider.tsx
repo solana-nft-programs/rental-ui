@@ -101,12 +101,14 @@ export function getLink(path: string, withParams = true) {
 export interface ProjectConfigValues {
   config: ProjectConfig
   setProjectConfig: (s: string) => void
+  configFromToken: (tokenData?: TokenData) => ProjectConfig
 }
 
 const ProjectConfigValues: React.Context<ProjectConfigValues> =
   React.createContext<ProjectConfigValues>({
-    config: projectConfigs['portals']!,
+    config: projectConfigs['default']!,
     setProjectConfig: () => {},
+    configFromToken: () => projectConfigs['default']!,
   })
 
 export function ProjectConfigProvider({
@@ -126,6 +128,12 @@ export function ProjectConfigProvider({
             setConfig(projectConfigs[project]!)
           }
         },
+        configFromToken: (tokenData?: TokenData) =>
+          (tokenData &&
+            Object.values(projectConfigs).find(
+              (c) => filterTokens([tokenData], c.filter).length > 0
+            )) ??
+          config,
       }}
     >
       {children}

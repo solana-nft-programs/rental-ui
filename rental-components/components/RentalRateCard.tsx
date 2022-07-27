@@ -35,7 +35,8 @@ export const RentalRateCard = ({
   const [txid, setTxid] = useState<string>()
   const handleRateRental = useHandleRateRental()
   const { environment } = useEnvironmentCtx()
-  const { config } = useProjectConfig()
+  const { configFromToken } = useProjectConfig()
+  const config = configFromToken(tokenData)
   const paymentMints = usePaymentMints()
 
   const {
