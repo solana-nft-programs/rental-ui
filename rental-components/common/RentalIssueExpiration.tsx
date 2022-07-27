@@ -8,11 +8,10 @@ import { Button } from 'common/Button'
 import { priceAndSymbol } from 'common/NFTClaimButton'
 import { handleCopy } from 'components/Browse'
 import { useHandleIssueRental } from 'handlers/useHandleIssueRental'
-import { usePaymentMints } from 'hooks/usePaymentMints'
+import { PAYMENT_MINTS, usePaymentMints } from 'hooks/usePaymentMints'
 import { useState } from 'react'
 import { FaLink } from 'react-icons/fa'
 import { FiSend } from 'react-icons/fi'
-import { PAYMENT_MINTS } from 'rental-components/common/Constants'
 import { MintPriceSelector } from 'rental-components/common/MintPriceSelector'
 import type {
   RentalCardConfig,
