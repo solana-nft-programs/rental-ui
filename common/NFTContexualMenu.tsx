@@ -23,6 +23,7 @@ import { useRentalRateCard } from 'rental-components/components/RentalRateCard'
 import { useScanCard } from 'rental-components/components/ScanCard'
 
 import { elligibleForRent } from './NFT'
+import { isPrivateListing } from './NFTIssuerInfo'
 import { notify } from './Notification'
 import { Popover, PopoverItem } from './Popover'
 
@@ -104,7 +105,8 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
             </PopoverItem>
           )}
           {tokenManager &&
-            tokenManager.parsed.state === TokenManagerState.Issued && (
+            tokenManager.parsed.state === TokenManagerState.Issued &&
+            !isPrivateListing(tokenData) && (
               <PopoverItem>
                 <a
                   style={{
