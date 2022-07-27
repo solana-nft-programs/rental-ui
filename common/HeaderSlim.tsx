@@ -108,14 +108,16 @@ export const HeaderSlim: React.FC<Props> = ({
         </div>
         <div className="flex-5 flex items-center justify-end gap-6">
           {!hideDashboard && wallet.connected && (
-            <div
-              className={`cursor-pointer text-center text-light-0 opacity-80 transition-opacity hover:opacity-100`}
-              onClick={() => {
-                router.push(`/me${location.search}`)
-              }}
-            >
-              Dashboard
-            </div>
+            <Tooltip title="View and manage your rentals globally">
+              <div
+                className={`cursor-pointer text-center text-light-0 opacity-80 transition-opacity hover:opacity-100`}
+                onClick={() => {
+                  router.push(`/me${location.search}`)
+                }}
+              >
+                Dashboard
+              </div>
+            </Tooltip>
           )}
           {wallet.connected && wallet.publicKey ? (
             <AccountConnect
