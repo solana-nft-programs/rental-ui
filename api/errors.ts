@@ -28,6 +28,10 @@ type ErrorCode = {
 
 export const nativeErrors: ErrorCode[] = [
   {
+    code: 'WalletSignTransactionError',
+    message: 'User rejected the request.',
+  },
+  {
     code: 'Blockhash not found',
     message:
       'Blockhash not found. Transaction may or may not have gone through.',

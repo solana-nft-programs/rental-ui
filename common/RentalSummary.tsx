@@ -9,7 +9,6 @@ import {
 } from 'components/Browse'
 import { usePaymentMints } from 'hooks/usePaymentMints'
 import { useUTCNow } from 'providers/UTCNowProvider'
-import { SolanaLogo } from 'rental-components/common/icons'
 
 import { getMintDecimalAmount } from './units'
 
