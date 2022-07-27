@@ -33,7 +33,8 @@ export const getAllAttributes = (
 
 export const filterTokensByAttributes = (
   tokens: TokenData[],
-  filters: NFTAtrributeFilterValues
+  filters: NFTAtrributeFilterValues,
+  union = false
 ): TokenData[] => {
   if (
     Object.keys(filters).length <= 0 ||
@@ -41,33 +42,31 @@ export const filterTokensByAttributes = (
   ) {
     return tokens
   }
-  const attributeFilteredTokens: TokenData[] = []
-  tokens.forEach((token) => {
-    let addToken = false
+  return tokens.filter((tokenData) => {
+    let matchOne = false
+    let missOne = false
     Object.keys(filters).forEach((filterName) => {
-      if (filters[filterName]!.length > 0) {
-        filters[filterName]!.forEach((val) => {
-          if (
-            token.metadata?.data.attributes.filter(
-              (a: { trait_type: string; value: any }) =>
-                a.trait_type === filterName && a.value === val
-            ).length > 0
-          ) {
-            addToken = true
-          }
-        })
-      }
+      filters[filterName]?.forEach((val) => {
+        if (
+          tokenData.metadata?.data.attributes.filter(
+            (a: { trait_type: string; value: string }) =>
+              a.trait_type === filterName && a.value === val
+          ).length > 0
+        ) {
+          matchOne = true
+        } else {
+          missOne = true
+        }
+      })
     })
-    if (addToken) {
-      attributeFilteredTokens.push(token)
-    }
+    return union ? matchOne : !missOne
   })
-  return attributeFilteredTokens
 }
 
 export type NFTAtrributeFilterValues = { [filterName: string]: string[] }
 
 interface NFTAtrributeFiltersProps {
+  tokenDatas?: TokenData[]
   config: ProjectConfig
   sortedAttributes: NFTAtrributeFilterValues
   selectedFilters: NFTAtrributeFilterValues
@@ -75,55 +74,65 @@ interface NFTAtrributeFiltersProps {
 }
 
 export const getNFTAtrributeFilters = ({
+  tokenDatas,
   config,
   sortedAttributes,
   selectedFilters,
   setSelectedFilters,
 }: NFTAtrributeFiltersProps) => {
-  return Object.keys(sortedAttributes).map((traitType) => ({
-    label: traitType,
-    content: (
-      <div key={traitType} className="px-3 pb-3 text-xs">
-        {sortedAttributes[traitType]!.map((value) => (
-          <div
-            key={`${traitType}-${value}`}
-            className="flex items-center justify-between"
-            onClick={() =>
-              setSelectedFilters({
-                ...selectedFilters,
-                [traitType]: selectedFilters[traitType]?.includes(value)
-                  ? selectedFilters[traitType]?.filter((v) => v !== value) ?? []
-                  : [...(selectedFilters[traitType] ?? []), value],
-              })
-            }
-          >
+  return Object.keys(sortedAttributes)
+    .sort()
+    .map((traitType) => ({
+      label: traitType,
+      content: (
+        <div key={traitType} className="px-3 pb-3 text-xs">
+          {sortedAttributes[traitType]!.map((value) => (
             <div
-              className="flex cursor-pointer items-center gap-2 py-[2px] text-light-0 transition-colors"
-              css={css`
-                &:hover {
-                  color: ${config.colors.secondary};
-                  div {
-                    border-color: ${lighten(0.2, config.colors.secondary)};
-                  }
-                }
-              `}
+              key={`${traitType}-${value}`}
+              className="flex items-center justify-between"
+              onClick={() =>
+                setSelectedFilters({
+                  ...selectedFilters,
+                  [traitType]: selectedFilters[traitType]?.includes(value)
+                    ? selectedFilters[traitType]?.filter((v) => v !== value) ??
+                      []
+                    : [...(selectedFilters[traitType] ?? []), value],
+                })
+              }
             >
               <div
-                className={`h-3 w-3 rounded-sm border-[.5px] border-light-1 transition-all`}
+                className="flex cursor-pointer items-center gap-2 py-[2px] text-light-0 transition-colors"
                 css={css`
-                  background: ${selectedFilters[traitType]?.includes(value)
-                    ? config.colors.secondary
-                    : ''};
+                  &:hover {
+                    color: ${config.colors.secondary};
+                    div {
+                      border-color: ${lighten(0.2, config.colors.secondary)};
+                    }
+                  }
                 `}
               >
-                {}
+                <div
+                  className={`h-3 w-3 rounded-sm border-[.5px] border-light-1 transition-all`}
+                  css={css`
+                    background: ${selectedFilters[traitType]?.includes(value)
+                      ? config.colors.secondary
+                      : ''};
+                  `}
+                >
+                  {}
+                </div>
+                <div>{value}</div>
               </div>
-              <div>{value}</div>
+              <div className="text-medium-3">
+                {tokenDatas
+                  ? filterTokensByAttributes(tokenDatas, {
+                      [traitType]: [value],
+                    }).length
+                  : ''}
+              </div>
             </div>
-            <div></div>
-          </div>
-        ))}
-      </div>
-    ),
-  }))
+          ))}
+        </div>
+      ),
+    }))
 }

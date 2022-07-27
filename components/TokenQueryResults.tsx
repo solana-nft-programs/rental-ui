@@ -104,6 +104,7 @@ export const TokenQueryResults: React.FC<Props> = ({
                 ) : undefined
               }
               groups={getNFTAtrributeFilters({
+                tokenDatas: tokenQuery.data,
                 config,
                 sortedAttributes: attributeFilterOptions,
                 selectedFilters,

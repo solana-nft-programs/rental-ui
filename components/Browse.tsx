@@ -404,6 +404,7 @@ export const Browse = () => {
               ) : undefined
             }
             groups={getNFTAtrributeFilters({
+              tokenDatas: groupedTokens?.tokens,
               config,
               sortedAttributes,
               selectedFilters,
