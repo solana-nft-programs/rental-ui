@@ -105,7 +105,7 @@ export const HeroStats: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
         ) : (
           <div className="text-center text-xl text-light-1">
             {calculateFloorPrice(tokenDatas, config, paymentMints.data).toFixed(
-              2
+              4
             )}{' '}
             {tokenDatas.length > 0
               ? getSymbolFromTokenData(tokenDatas[0]!)

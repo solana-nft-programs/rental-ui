@@ -38,7 +38,7 @@ export const HeroLarge: React.FC = () => {
                   href={link}
                   target="_blank"
                   rel="noreferrer"
-                  className={`cursor-pointer text-xl text-light-0 transition-all`}
+                  className={`cursor-pointer text-xl text-light-0 transition-all duration-300`}
                   css={css`
                     &:hover {
                       color: ${config.colors.secondary};
