@@ -1,6 +1,7 @@
 import { firstParam } from '@cardinal/common'
 import { Footer } from 'common/Footer'
 import { Browse } from 'components/Browse'
+import Error from 'components/Error'
 import { Manage } from 'components/Manage'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
@@ -25,7 +26,7 @@ export default function Home() {
   }, [router.query.collection])
 
   if (router.query.collection !== config.name) {
-    return <></>
+    return <Error />
   }
 
   return (

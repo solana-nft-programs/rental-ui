@@ -64,7 +64,7 @@ export function NFT({ tokenData }: NFTProps) {
   const { metadata } = tokenData
   return (
     <div
-      className="relative w-full max-w-[320px] rounded-xl"
+      className="relative w-full min-w-[200px] max-w-[320px] rounded-xl"
       style={{
         background: lighten(0.02, config.colors.main),
       }}

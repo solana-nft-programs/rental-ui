@@ -1365,10 +1365,10 @@
     tiny-invariant "^1.2.0"
     tslib "^2.3.1"
 
-"@cardinal/common@^2.0.6":
-  version "2.0.6"
-  resolved "https://registry.yarnpkg.com/@cardinal/common/-/common-2.0.6.tgz#6ae8a2658139fe8657d74a3b785efc5e77c04ac0"
-  integrity sha512-7CZfDBMkgWUleYmOuyldHxOur+oPdXyT1egfft5N/jkERlqfqvE7VVUKA3vnWkCB657LhZIrzEneQHegOVgFFg==
+"@cardinal/common@^2.0.7":
+  version "2.0.7"
+  resolved "https://registry.yarnpkg.com/@cardinal/common/-/common-2.0.7.tgz#d772e11dbb8f65b74d7a692f333459096f65fba4"
+  integrity sha512-GvEe4p23fKalC+sV1uv2npvRViQDXmYjJg0J+tx8NX3ZyjrqwyFl44YVUEF9y5cYCKm+ZuEDbXtgfeVe/AaGXQ==
   dependencies:
     "@metaplex-foundation/mpl-token-metadata" "^1.2.5"
     "@project-serum/anchor" "^0.24.2"
