@@ -71,7 +71,9 @@ export const Collections = () => {
                 <div className="text-light-0">
                   {stats.data &&
                   stats.data[queryId('global', true)]?.aggregate.count ? (
-                    stats.data[queryId('global', true)]!.aggregate.count
+                    stats.data[
+                      queryId('global', true)
+                    ]!.aggregate.count.toLocaleString('en-US')
                   ) : (
                     <div className="mt-[1px] h-5 w-12 animate-pulse rounded-md bg-border" />
                   )}
@@ -83,7 +85,9 @@ export const Collections = () => {
                 <div className="text-light-0">
                   {stats.data &&
                   stats.data[queryId('global', false)]?.aggregate.count ? (
-                    stats.data[queryId('global', false)]!.aggregate.count
+                    stats.data[
+                      queryId('global', false)
+                    ]!.aggregate.count.toLocaleString('en-US')
                   ) : (
                     <div className="mt-[1px] h-5 w-12 animate-pulse rounded-md bg-border" />
                   )}
