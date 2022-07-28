@@ -1,5 +1,10 @@
 @import url('http://fonts.cdnfonts.com/css/euclid-circular-a');
 
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent; /* make scrollbar transparent */
+}
+
 body {
   margin: 0;
 }
