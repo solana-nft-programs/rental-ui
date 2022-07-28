@@ -1,5 +1,4 @@
 import type { TokenData } from 'api/api'
-import { Glow } from 'common/Glow'
 import { Info } from 'common/Info'
 import { MultiSelector } from 'common/MultiSelector'
 import { elligibleForRent } from 'common/NFT'

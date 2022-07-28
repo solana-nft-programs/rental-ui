@@ -32,24 +32,24 @@ export const Collections = () => {
   return (
     <div className="bg-dark-5">
       <div
+        className="relative z-0"
         css={css`
           background: linear-gradient(180deg, #140a51 0%, #0b0b0b 100%);
         `}
       >
+        <div className="blur-4xl absolute left-8 top-52 -z-10 h-[120px] w-[400px] -rotate-[60deg] bg-glow blur-[100px]" />
+        <div className="blur-4xl absolute -right-20 top-72 -z-10 h-[120px] w-[650px] -rotate-[60deg] bg-glow blur-[120px]" />
+
         <HeaderSlim />
         <div className="flex flex-wrap justify-between gap-10 px-16 py-28">
-          <Glow angle={130} scale={1.5}>
-            <div className="flex flex-col gap-2">
-              <div className="text-5xl text-light-0">
-                NFT Rental Marketplace
-              </div>
-              <div className="text-lg text-medium-3">
-                The first NFT Rental Marketplace on Solana. <br />
-                Hold the <b>actual NFT</b> and access its utility for the
-                duration rented.
-              </div>
+          <div className="flex flex-col gap-2">
+            <div className="text-5xl text-light-0">NFT Rental Marketplace</div>
+            <div className="text-lg text-medium-3">
+              The first NFT Rental Marketplace on Solana. <br />
+              Hold the <b>actual NFT</b> and access its utility for the duration
+              rented.
             </div>
-          </Glow>
+          </div>
           <div className="flex flex-col items-end justify-end gap-5 ">
             <div className="flex items-center gap-6">
               <div className="text-lg text-medium-3">
