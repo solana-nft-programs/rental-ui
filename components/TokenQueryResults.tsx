@@ -115,9 +115,7 @@ export const TokenQueryResults: React.FC<Props> = ({
           )}
         </div>
         <div className="flex">
-          <Glow scale={1.5} opacity={1} colorized>
-            <TabSelector defaultOption={PANE_TABS[0]} options={PANE_TABS} />
-          </Glow>
+          <TabSelector defaultOption={PANE_TABS[0]} options={PANE_TABS} />
         </div>
       </div>
       <Info colorized section={tokenGroup} />

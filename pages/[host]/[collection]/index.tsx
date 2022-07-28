@@ -1,10 +1,12 @@
 import { firstParam } from '@cardinal/common'
+import { css } from '@emotion/react'
 import { Footer } from 'common/Footer'
 import { Browse } from 'components/Browse'
 import Error from 'components/Error'
 import { Manage } from 'components/Manage'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
+import { lighten } from 'polished'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useEffect, useState } from 'react'
 
@@ -31,9 +33,21 @@ export default function Home() {
 
   return (
     <div
-      className="min-h-screen"
+      className="relative z-0 min-h-screen"
       style={{ backgroundColor: config.colors.main }}
     >
+      <div
+        className="blur-4xl absolute left-8 top-52 -z-10 h-[120px] w-[400px] -rotate-[60deg] blur-[100px]"
+        css={css`
+          background: ${lighten(0.2, config.colors.main)};
+        `}
+      />
+      <div
+        className="blur-4xl absolute -right-20 top-72 -z-10 h-[120px] w-[650px] -rotate-[60deg] blur-[120px]"
+        css={css`
+          background: ${lighten(0.2, config.colors.main)};
+        `}
+      />
       <Head>
         <title>Cardinal | {config.displayName}</title>
         <link rel="icon" href="/favicon.ico" />
