@@ -120,7 +120,7 @@ export const TokenQueryResults: React.FC<Props> = ({
           </Glow>
         </div>
       </div>
-      <Info section={tokenGroup} />
+      <Info colorized section={tokenGroup} />
       <TokenQueryData
         allTokens={tokenQuery.data}
         isFetched={tokenQuery.isFetched}

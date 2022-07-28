@@ -448,7 +448,7 @@ export const Browse = () => {
           </Glow>
         </div>
       </div>
-      <Info section={groupedFilteredAndSortedTokens[selectedGroup]} />
+      <Info colorized section={groupedFilteredAndSortedTokens[selectedGroup]} />
       <div className="mx-auto mt-12 px-10">
         {!tokenManagers.isFetched ? (
           <div className="flex flex-wrap justify-center gap-4 md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
