@@ -432,7 +432,7 @@ export const Browse = () => {
           />
           <Selector<OrderCategories>
             colorized
-            className="mint-w-[190px]"
+            className="min-w-[240px]"
             defaultOption={{
               label: OrderCategories.RateLowToHigh,
               value: OrderCategories.RateLowToHigh,
