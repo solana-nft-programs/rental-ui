@@ -47,6 +47,9 @@ export const usePaymentMints = () => {
         }
       }
       return paymentMintInfoMap
+    },
+    {
+      refetchOnMount: false,
     }
   )
 }

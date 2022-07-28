@@ -176,7 +176,7 @@ export const useProjectStats = () => {
       }
     },
     {
-      refetchInterval: 60000,
+      refetchOnMount: false,
     }
   )
 }
