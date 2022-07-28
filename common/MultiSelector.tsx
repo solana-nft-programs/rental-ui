@@ -97,7 +97,7 @@ export const MultiSelector = <T,>({
                   border-bottom-width: ${i < groups?.length - 1 ? '1px' : ''};
                   ${colorized &&
                   css`
-                    background: ${lighten(0.03, config.colors.main)} !important;
+                    background: ${lighten(0.08, config.colors.main)} !important;
                     &:hover {
                       color: ${config.colors.secondary} !important;
                     }
@@ -119,7 +119,7 @@ export const MultiSelector = <T,>({
                   border-bottom-width: ${i < groups?.length - 1 ? '1px' : ''};
                   ${colorized &&
                   css`
-                    background: ${lighten(0.06, config.colors.main)} !important;
+                    background: ${lighten(0.03, config.colors.main)} !important;
                     &:hover {
                       color: ${config.colors.secondary} !important;
                     }
