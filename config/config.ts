@@ -151,7 +151,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
   },
   hoa: {
     name: 'hoa',
-    displayName: 'Homeowner Association (Parcl)',
+    displayName: 'Homeowners Association (Parcl)',
     type: 'Collection',
     websiteUrl: 'https://www.hoa.house/',
     hero: '/logos/parcl-hero.png',
