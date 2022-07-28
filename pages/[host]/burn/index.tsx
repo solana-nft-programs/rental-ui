@@ -86,7 +86,7 @@ function Burn() {
       <HeaderSlim />
       <div className="mx-auto mt-12 max-w-[1634px]">
         {!userTokenData.isFetched ? (
-          <div className="flex flex-wrap justify-center gap-4 2xl:grid 2xl:grid-cols-5">
+          <div className="flex flex-wrap justify-center gap-4 md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
             <Card skeleton header={<></>} subHeader={<></>} />
             <Card skeleton header={<></>} subHeader={<></>} />
             <Card skeleton header={<></>} subHeader={<></>} />

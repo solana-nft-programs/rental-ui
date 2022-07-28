@@ -368,23 +368,25 @@ export async function getTokenDatas(
     ],
     [...editionIds, ...mintIds] as (PublicKey | null)[]
   )
-  const accountsById = await accountDataById(connection, idsToFetch)
+  const [accountsById, metadatas] = await Promise.all([
+    accountDataById(connection, idsToFetch),
+    Promise.all(
+      tokenManagerDatas.map(async (tm) => {
+        try {
+          const metaplexDataForTokenManager = metaplexData[tm.pubkey.toString()]
+          if (!metaplexDataForTokenManager?.data.data.uri) return null
+          const json = await fetch(
+            metaplexDataForTokenManager.data.data.uri
+          ).then((r) => r.json())
+          return {
+            pubkey: metaplexDataForTokenManager.pubkey,
+            data: json,
+          }
+        } catch (e) {}
+      })
+    ),
+  ])
 
-  const metadatas = await Promise.all(
-    tokenManagerDatas.map(async (tm) => {
-      try {
-        const metaplexDataForTokenManager = metaplexData[tm.pubkey.toString()]
-        if (!metaplexDataForTokenManager?.data.data.uri) return null
-        const json = await fetch(
-          metaplexDataForTokenManager.data.data.uri
-        ).then((r) => r.json())
-        return {
-          pubkey: metaplexDataForTokenManager.pubkey,
-          data: json,
-        }
-      } catch (e) {}
-    })
-  )
   const metadataById = metadatas.reduce(
     (acc, md, i) => ({ ...acc, [tokenManagerDatas[i]!.pubkey.toString()]: md }),
     {} as {

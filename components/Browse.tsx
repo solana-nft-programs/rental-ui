@@ -321,8 +321,8 @@ export const Browse = () => {
           showEmpty: true,
         },
         {
-          id: 'claimed',
-          header: 'Claimed',
+          id: 'rented',
+          header: 'Rented',
           icon: 'info',
           description: 'All currently claimed rentals are displayed below',
           showEmpty: true,
@@ -457,7 +457,7 @@ export const Browse = () => {
       <Info section={groupedFilteredAndSortedTokens[selectedGroup]} />
       <div className="mx-auto mt-12 px-10">
         {!tokenManagers.isFetched ? (
-          <div className="flex flex-wrap justify-center gap-4 2xl:grid 2xl:grid-cols-5">
+          <div className="flex flex-wrap justify-center gap-4 md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
             <Card skeleton header={<></>} subHeader={<></>} />
             <Card skeleton header={<></>} subHeader={<></>} />
             <Card skeleton header={<></>} subHeader={<></>} />
@@ -468,7 +468,7 @@ export const Browse = () => {
             <Card skeleton header={<></>} subHeader={<></>} />
           </div>
         ) : groupedTokens?.tokens && groupedTokens.tokens.length > 0 ? (
-          <div className="flex flex-wrap justify-center gap-4 2xl:grid 2xl:grid-cols-5">
+          <div className="flex flex-wrap justify-center gap-4 md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
             {groupedTokens?.tokens
               ?.slice(0, PAGE_SIZE * pageNum[0])
               .map((tokenData) => (
@@ -505,7 +505,7 @@ export const Browse = () => {
         ) : (
           groupedTokens &&
           groupedTokens.showEmpty && (
-            <div className="my-10 flex w-full flex-col items-center justify-center gap-1">
+            <div className="my-40 flex w-full flex-col items-center justify-center gap-1">
               <GlyphLargeClose />
               <div className="mt-4 text-medium-4">
                 No active rentals at this moment...
