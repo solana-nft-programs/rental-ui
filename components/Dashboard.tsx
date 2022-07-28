@@ -177,40 +177,39 @@ export const Dashboard = () => {
           (managedTokens.isFetched && managedTokens.isFetching)
         }
       />
-      <div className="flex w-full flex-wrap items-center justify-center gap-16 py-8 px-4 lg:justify-between lg:px-10">
-        <Glow angle={160}>
-          <div className="flex items-center gap-4">
-            <div
-              className={`flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border-4 border-border ${
-                loadingImage && 'animate-pulse bg-border'
-              }`}
-            >
-              {addressImage ? (
-                <img className="w-full" src={addressImage} alt={displayName} />
-              ) : (
-                !loadingImage && (
-                  <HiUserCircle className="relative h-full w-full scale-[1.25]" />
-                )
-              )}
-            </div>
-            {loadingName ? (
-              <div className="flex flex-col gap-2">
-                <div className="h-8 w-48 animate-pulse rounded-xl bg-border"></div>
-                <div className="h-6 w-32 animate-pulse rounded-xl bg-border"></div>
-              </div>
+      <div className="relative flex w-full flex-wrap items-center justify-center gap-16 py-8 px-4 lg:justify-between lg:px-10">
+        {/* <div className="blur-4xl absolute left-10 -bottom-20 h-[200px] w-[200px] -rotate-45 bg-glow"></div> */}
+        <div className="flex items-center gap-4">
+          <div
+            className={`flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border-4 border-border ${
+              loadingImage && 'animate-pulse bg-border'
+            }`}
+          >
+            {addressImage ? (
+              <img className="w-full" src={addressImage} alt={displayName} />
             ) : (
-              <div className="flex flex-col gap-2">
-                <div className="text-2xl text-light-0">
-                  {displayName ?? shortPubKey(walletId)}
-                </div>
-                <div className="flex items-center gap-2 text-lg text-medium-3">
-                  <SolanaLogo height={16} />
-                  <div>{shortPubKey(walletId)}</div>
-                </div>
-              </div>
+              !loadingImage && (
+                <HiUserCircle className="relative h-full w-full scale-[1.25]" />
+              )
             )}
           </div>
-        </Glow>
+          {loadingName ? (
+            <div className="flex flex-col gap-2">
+              <div className="h-8 w-48 animate-pulse rounded-xl bg-border"></div>
+              <div className="h-6 w-32 animate-pulse rounded-xl bg-border"></div>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-2">
+              <div className="text-2xl text-light-0">
+                {displayName ?? shortPubKey(walletId)}
+              </div>
+              <div className="flex items-center gap-2 text-lg text-medium-3">
+                <SolanaLogo height={16} />
+                <div>{shortPubKey(walletId)}</div>
+              </div>
+            </div>
+          )}
+        </div>
         <div className={`flex flex-wrap gap-y-5`}>
           <div className="flex items-center justify-center gap-4">
             <p className="text-lg text-medium-4">Owned</p>
@@ -287,9 +286,7 @@ export const Dashboard = () => {
             />
           </div>
           <div className="flex">
-            <Glow scale={1.5} opacity={1}>
-              <TabSelector defaultOption={PANE_TABS[0]} options={PANE_TABS} />
-            </Glow>
+            <TabSelector defaultOption={PANE_TABS[0]} options={PANE_TABS} />
           </div>
         </div>
         {tokenQuery.isFetched && groupedTokens.length === 0 ? (

@@ -364,12 +364,6 @@ export const Browse = () => {
       <HeaderSlim
         loading={tokenManagers.isFetched && tokenManagers.isRefetching}
         tabs={[
-          // {
-          //   name: 'Wallet',
-          //   anchor: wallet.publicKey?.toBase58() || 'wallet',
-          //   disabled: !wallet.connected,
-          //   tooltip: !wallet.connected ? 'Connect wallet' : undefined,
-          // },
           { name: 'Browse', anchor: 'browse' },
           {
             name: 'Manage',
