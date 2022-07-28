@@ -103,7 +103,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     logoImage: '/logos/rooniverse.png',
     hero: '/logos/rooniverse-hero.png',
     colors: {
-      main: '#2a2a2a',
+      main: '#0C0C0D',
       secondary: '#b338ef',
       accent: '#1abfdd',
     },
