@@ -3,6 +3,7 @@ import * as splToken from '@solana/spl-token'
 import type { Connection } from '@solana/web3.js'
 import * as web3 from '@solana/web3.js'
 import { notify } from 'common/Notification'
+
 import { handleError } from './errors'
 
 export async function getATokenAccountInfo(
