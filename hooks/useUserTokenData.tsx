@@ -242,7 +242,7 @@ export const useUserTokenData = (filter?: TokenFilter, cluster?: string) => {
     },
     {
       enabled: !!walletId,
-      refetchInterval: 16000,
+      refetchInterval: 20000,
     }
   )
 }
