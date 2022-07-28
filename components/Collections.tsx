@@ -224,7 +224,9 @@ export const Collections = () => {
                     {icon}
                   </div>
                 </Glow>
-                <div className="my-4 text-3xl text-light-0">{header}</div>
+                <div className="my-4 text-center text-3xl text-light-0">
+                  {header}
+                </div>
                 <div className="text-center text-medium-3">{description}</div>
               </div>
             ))}
@@ -274,7 +276,9 @@ export const Collections = () => {
                     {icon}
                   </div>
                 </Glow>
-                <div className="my-4 text-3xl text-light-0">{header}</div>
+                <div className="my-4 text-center text-3xl text-light-0">
+                  {header}
+                </div>
                 <div className="text-center text-medium-3">{description}</div>
               </div>
             ))}
