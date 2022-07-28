@@ -1,5 +1,6 @@
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { css } from '@emotion/react'
+import { convertStringsToPubkeys, TokenData } from 'api/api'
 import { tryPublicKey } from 'api/utils'
 import { GlyphQuestion } from 'assets/GlyphQuestion'
 import { ButtonSmall } from 'common/ButtonSmall'
@@ -24,7 +25,7 @@ import { useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { BiQr } from 'react-icons/bi'
 
-function Claim() {
+function Claim(props: any) {
   const { config } = useProjectConfig()
   const router = useRouter()
   const { environment } = useEnvironmentCtx()
@@ -34,8 +35,10 @@ function Claim() {
   const { tokenManagerString, qrcode } = router.query
   const tokenManagerId = tryPublicKey(tokenManagerString)
   const tokenQuery = useTokenData(tokenManagerId ?? undefined)
-  const tokenData = tokenQuery.data
-  console.log(tokenData)
+  const parsedTokenData = convertStringsToPubkeys(
+    JSON.parse(props.tokenData)
+  ) as TokenData
+  const tokenData = parsedTokenData
   return (
     <div className="flex h-screen flex-col">
       <HeaderSlim />
