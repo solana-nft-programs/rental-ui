@@ -6,10 +6,7 @@ import { useProjectConfig } from 'providers/ProjectConfigProvider'
 export default function Me() {
   const { config } = useProjectConfig()
   return (
-    <div
-      className="relative z-0 min-h-screen"
-      style={{ backgroundColor: config.colors.main }}
-    >
+    <div className="relative z-0 min-h-screen bg-dark-5">
       <div className="blur-4xl absolute left-10 top-52 -z-10 h-[120px] w-[300px] -rotate-[60deg] bg-glow blur-[100px]"></div>
       <div className="blur-4xl absolute right-12 top-52 -z-10 h-[120px] w-[350px] -rotate-[60deg] bg-glow blur-[120px]"></div>
       <Head>

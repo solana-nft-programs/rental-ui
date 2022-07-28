@@ -30,7 +30,7 @@ export const Collections = () => {
   )
 
   return (
-    <div className="bg-[#0B0B0B]">
+    <div className="bg-dark-5">
       <div
         css={css`
           background: linear-gradient(180deg, #140a51 0%, #0b0b0b 100%);
