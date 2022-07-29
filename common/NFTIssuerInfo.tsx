@@ -8,7 +8,7 @@ import { getTokenMaxDuration } from 'components/Browse'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useUTCNow } from 'providers/UTCNowProvider'
 
-import { stateColor } from './NFT'
+import { rentalType, rentalTypeColor, stateColor } from './NFT'
 
 export const isPrivateListing = (tokenData: TokenData) =>
   tokenData.tokenManager?.parsed.claimApprover && !tokenData.claimApprover
@@ -29,7 +29,7 @@ export const getDurationText = (tokenData: TokenData, UTCNow: number) => {
         </p>
       ) : tokenData.timeInvalidator?.parsed.durationSeconds ? (
         <p className="float-left inline-block text-ellipsis whitespace-nowrap">
-          Fixed Duration:{' '}
+          Fixed duration:{' '}
           <b>
             {tokenData.timeInvalidator?.parsed.durationSeconds.toNumber()
               ? secondsToString(
@@ -81,13 +81,10 @@ export const NFTIssuerInfo: React.FC<NFTIssuerInfoProps> = ({
             Private
           </div>
         ) : (
-          <div
-            className="flex flex-col"
-            css={css`
-              color: ${stateColor(TokenManagerState.Issued, true)};
-            `}
-          >
-            <div>{getDurationText(tokenData, UTCNow)}</div>
+          <div className="flex flex-col text-light-2">
+            <div className={`${rentalTypeColor(rentalType(tokenData))}`}>
+              {getDurationText(tokenData, UTCNow)}
+            </div>
             <DisplayAddress
               connection={secondaryConnection}
               address={tokenData.tokenManager?.parsed.issuer || undefined}

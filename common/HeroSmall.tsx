@@ -2,7 +2,6 @@ import { css } from '@emotion/react'
 import { darken } from 'polished'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 
-import { Glow } from './Glow'
 import { HeroStats } from './HeroStats'
 
 export const HeroSmall: React.FC = () => {

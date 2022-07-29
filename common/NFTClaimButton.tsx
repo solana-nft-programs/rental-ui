@@ -81,10 +81,6 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
         tokenDatas ?? []
       ))
     ) {
-      console.log(
-        tokenData,
-        tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber()
-      )
       if (!tokenData.timeInvalidator && !tokenData.useInvalidator) {
         rentalManualCard.showModal({ tokenData, otpKeypair })
       } else if (isRateBasedListing(tokenData)) {
