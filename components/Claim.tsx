@@ -39,7 +39,7 @@ function Claim() {
   return (
     <div className="flex h-screen flex-col">
       <HeaderSlim />
-      <div className="mx-auto max-w-[500px] flex-grow pt-[5vh] lg:pt-[12vh]">
+      <div className="mx-auto w-[500px] max-w-[86vw] flex-grow pt-[4vh] lg:pt-[10vh]">
         <div className="mb-6 text-center">
           <div className="mb-2 text-4xl">Claim Asset</div>
           <div className="text-xs font-extralight">
@@ -87,6 +87,7 @@ function Claim() {
               <ClaimQRCode tokenData={tokenData} keypair={otpKeypair} />
             ) : tokenData ? (
               <Card
+                className="max-w-[400px]"
                 hero={<NFT tokenData={tokenData} />}
                 header={<NFTHeader tokenData={tokenData} />}
                 content={
