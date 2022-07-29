@@ -13,8 +13,8 @@ function ClaimHome(props: any) {
 const generateImage = async (tokenData: TokenData) => {
   // setup
   // overlay text
-  const WIDTH = 1200
-  const HEIGHT = 675
+  const WIDTH = 1000
+  const HEIGHT = 562.5
   const imageCanvas = canvas.createCanvas(WIDTH, HEIGHT)
 
   // draw base image
@@ -42,16 +42,16 @@ const generateImage = async (tokenData: TokenData) => {
     console.log(0, 0, WIDTH, HEIGHT)
   }
 
-  const nftWidth = 290
-  const nftHeight = 290
+  const nftWidth = 242
+  const nftHeight = 242
 
   const nftImage = await canvas.loadImage(nftImageUri)
   const nftImageContext = imageCanvas.getContext('2d')
-  nftImageContext.fillRect(660, 214, nftWidth, nftHeight)
+  nftImageContext.fillRect(550, 178, nftWidth, nftHeight)
   if (nftImage.height > nftImage.width) {
-    nftImageContext.drawImage(nftImage, 660, 214, 290, 290)
+    nftImageContext.drawImage(nftImage, 550, 178, nftWidth, nftHeight)
   } else {
-    nftImageContext.drawImage(nftImage, 660, 214, 290, 290)
+    nftImageContext.drawImage(nftImage, 550, 178, nftWidth, nftHeight)
   }
 
   return imageCanvas.toBuffer('image/png')
