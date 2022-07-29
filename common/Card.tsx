@@ -73,7 +73,7 @@ export const Card: React.FC<Props> = ({
         </div>
       )}
       {content && (
-        <div>
+        <div className="grow">
           {skeleton ? (
             <div className="h-10 w-full animate-pulse rounded-md bg-border"></div>
           ) : (

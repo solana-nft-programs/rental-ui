@@ -1,16 +1,11 @@
-import { capitalizeFirstLetter } from '@cardinal/common'
 import type { Keypair } from '@solana/web3.js'
 import type { TokenData } from 'api/api'
 import { Alert } from 'common/Alert'
 import { Button } from 'common/Button'
+import { getRentalRateDisplayText } from 'common/NFTIssuerInfo'
 import { Pill } from 'common/Pill'
 import { RentalSummary, secondsToStringForDisplay } from 'common/RentalSummary'
 import { getQueryParam } from 'common/utils'
-import {
-  getPriceFromTokenData,
-  getPriceOrRentalRate,
-  getSymbolFromTokenData,
-} from 'components/Browse'
 import { useHandleClaimRental } from 'handlers/useHandleClaimRental'
 import { usePaymentMints } from 'hooks/usePaymentMints'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
@@ -93,17 +88,11 @@ export const RentalFixedCard = ({
           <div>
             <div className="mb-1 text-base text-light-0">Fixed price</div>
             <div className="text-base text-medium-3">
-              {getPriceFromTokenData(tokenData, paymentMints.data)}
-              {getSymbolFromTokenData(tokenData)} ={' '}
-              {getPriceOrRentalRate(
+              {getRentalRateDisplayText(
                 config,
                 tokenData,
-                paymentMints.data
-              ).toFixed(4)}
-              {getSymbolFromTokenData(tokenData)} /{' '}
-              {capitalizeFirstLetter(config.marketplaceRate ?? 'days').slice(
-                0,
-                -1
+                paymentMints.data,
+                'text-medium-3'
               )}
             </div>
           </div>

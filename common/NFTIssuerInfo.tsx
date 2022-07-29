@@ -1,14 +1,23 @@
 import { getExpirationString, secondsToString } from '@cardinal/common'
 import { DisplayAddress } from '@cardinal/namespaces-components'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
-import { css } from '@emotion/react'
 import { BN } from '@project-serum/anchor'
+import type * as splToken from '@solana/spl-token'
 import type { TokenData } from 'api/api'
-import { getTokenMaxDuration } from 'components/Browse'
+import {
+  getPriceFromTokenData,
+  getPriceOrRentalRate,
+  getSymbolFromTokenData,
+  getTokenMaxDuration,
+  getTokenRentalRate,
+} from 'components/Browse'
+import type { ProjectConfig } from 'config/config'
+import { usePaymentMints } from 'hooks/usePaymentMints'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
+import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useUTCNow } from 'providers/UTCNowProvider'
 
-import { rentalType, rentalTypeColor, stateColor } from './NFT'
+import { rentalType, rentalTypeColor } from './NFT'
 
 export const isPrivateListing = (tokenData: TokenData) =>
   tokenData.tokenManager?.parsed.claimApprover && !tokenData.claimApprover
@@ -64,6 +73,33 @@ export const getDurationText = (tokenData: TokenData, UTCNow: number) => {
   ) : null
 }
 
+export const getRentalRateDisplayText = (
+  config: ProjectConfig,
+  tokenData: TokenData,
+  paymentMints?: { [name: string]: splToken.MintInfo },
+  accentColor = 'text-light-2'
+) => {
+  return isRateBasedListing(tokenData) ? (
+    <>
+      {getTokenRentalRate(config, paymentMints ?? {}, tokenData)?.displayText}
+    </>
+  ) : (
+    <>
+      {getPriceFromTokenData(tokenData, paymentMints)}
+      {getSymbolFromTokenData(tokenData)}
+      <span className={accentColor}>
+        {' '}
+        ={' '}
+        {Number(
+          getPriceOrRentalRate(config, tokenData, paymentMints).toFixed(4)
+        )}
+        {getSymbolFromTokenData(tokenData)} /{' '}
+        {(config.marketplaceRate ?? 'days').slice(0, -1)}
+      </span>
+    </>
+  )
+}
+
 interface NFTIssuerInfoProps extends React.HTMLAttributes<HTMLDivElement> {
   tokenData: TokenData
 }
@@ -73,6 +109,8 @@ export const NFTIssuerInfo: React.FC<NFTIssuerInfoProps> = ({
 }: NFTIssuerInfoProps) => {
   const { UTCNow } = useUTCNow()
   const { secondaryConnection } = useEnvironmentCtx()
+  const { config } = useProjectConfig()
+  const paymentMints = usePaymentMints()
   return (
     <div>
       {tokenData.tokenManager?.parsed.state === TokenManagerState.Issued ? (
@@ -85,38 +123,19 @@ export const NFTIssuerInfo: React.FC<NFTIssuerInfoProps> = ({
             <div className={`${rentalTypeColor(rentalType(tokenData))}`}>
               {getDurationText(tokenData, UTCNow)}
             </div>
-            <DisplayAddress
-              connection={secondaryConnection}
-              address={tokenData.tokenManager?.parsed.issuer || undefined}
-              height="18px"
-              width="100px"
-              dark={true}
-            />
+            <div className="text-light-0">
+              {getRentalRateDisplayText(config, tokenData, paymentMints.data)}{' '}
+            </div>
           </div>
         )
       ) : (
         tokenData.recipientTokenAccount?.owner && (
-          <div
-            className="flex flex-col"
-            css={css`
-              color: ${stateColor(TokenManagerState.Claimed, true)};
-            `}
-          >
+          <div className="flex flex-col text-secondary">
             <div className="flex">
               <div>Claimed by&nbsp;</div>
               <DisplayAddress
                 connection={secondaryConnection}
                 address={tokenData.recipientTokenAccount?.owner}
-                height="18px"
-                width="100px"
-                dark={true}
-              />
-            </div>
-            <div className="flex">
-              <div>Issued by&nbsp;</div>
-              <DisplayAddress
-                connection={secondaryConnection}
-                address={tokenData.tokenManager?.parsed.issuer}
                 height="18px"
                 width="100px"
                 dark={true}

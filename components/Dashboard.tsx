@@ -357,12 +357,12 @@ export const Dashboard = () => {
                             {
                               [TokenManagerState.Initialized]: <></>,
                               [TokenManagerState.Issued]: (
-                                <div className="flex w-full flex-row justify-between text-sm">
+                                <div className="flex h-full w-full flex-row items-center justify-between text-sm">
                                   <NFTIssuerInfo tokenData={tokenData} />
                                 </div>
                               ),
                               [TokenManagerState.Claimed]: (
-                                <div className="flex flex-row justify-between text-sm">
+                                <div className="flex h-full flex-row justify-between text-sm">
                                   <NFTIssuerInfo tokenData={tokenData} />
                                   <NFTRevokeButton tokenData={tokenData} />
                                 </div>

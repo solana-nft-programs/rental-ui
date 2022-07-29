@@ -150,7 +150,7 @@ export function getTokenRentalRate(
       displayText: `${fmtMintAmount(
         paymentMintInfos[extensionPaymentMint.toString()],
         new BN(marketplaceRate)
-      )} ${getSymbolFromTokenData(tokenData)} / ${rateOption?.substring(
+      )}${getSymbolFromTokenData(tokenData)} / ${rateOption?.substring(
         0,
         rateOption.length - 1
       )}`,
@@ -470,7 +470,7 @@ export const Browse = () => {
                     {
                       [TokenManagerState.Initialized]: <></>,
                       [TokenManagerState.Issued]: (
-                        <div className="flex w-full flex-row justify-between text-sm">
+                        <div className="flex h-full w-full flex-row items-center justify-between text-sm">
                           <NFTIssuerInfo tokenData={tokenData} />
                           <NFTClaimButton
                             tokenData={tokenData}
@@ -479,7 +479,7 @@ export const Browse = () => {
                         </div>
                       ),
                       [TokenManagerState.Claimed]: (
-                        <div className="flex flex-row justify-between text-sm">
+                        <div className="flex h-full flex-row justify-between text-sm">
                           <NFTIssuerInfo tokenData={tokenData} />
                           <NFTRevokeButton tokenData={tokenData} />
                         </div>
