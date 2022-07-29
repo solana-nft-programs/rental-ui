@@ -1,5 +1,6 @@
 import { css } from '@emotion/react'
-import { Footer } from 'common/Footer'
+import { Banner } from 'common/Banner'
+import { FooterSlim } from 'common/FooterSlim'
 import { Browse } from 'components/Browse'
 import { Collections } from 'components/Collections'
 import { Manage } from 'components/Manage'
@@ -61,6 +62,7 @@ export default function Home() {
           rel="stylesheet"
         />
       </Head>
+      <Banner />
       {config.name !== 'default' || router.query.host?.includes(config.name) ? (
         <>
           <div style={{ minHeight: 'calc(100vh - 337px)' }}>
@@ -73,7 +75,7 @@ export default function Home() {
               }
             })()}
           </div>
-          <Footer />
+          <FooterSlim />
         </>
       ) : (
         <Collections />

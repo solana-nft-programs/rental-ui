@@ -1,7 +1,7 @@
 import { firstParam } from '@cardinal/common'
 import { css } from '@emotion/react'
 import { Banner } from 'common/Banner'
-import { Footer } from 'common/Footer'
+import { FooterSlim } from 'common/FooterSlim'
 import { Browse } from 'components/Browse'
 import Error from 'components/Error'
 import { Manage } from 'components/Manage'
@@ -82,7 +82,7 @@ export default function Home() {
           }
         })()}
       </div>
-      <Footer />
+      <FooterSlim />
     </div>
   )
 }
