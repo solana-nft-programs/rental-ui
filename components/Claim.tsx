@@ -79,16 +79,20 @@ function Claim() {
           <div className="">
             {!tokenQuery.isFetched ? (
               <Card skeleton header={<></>} subHeader={<></>} />
-            ) : tokenData &&
-              showQRCode &&
-              !isMobile &&
-              tokenData.tokenManager?.parsed.state !==
-                TokenManagerState.Claimed ? (
-              <ClaimQRCode tokenData={tokenData} keypair={otpKeypair} />
             ) : tokenData ? (
               <Card
                 className="max-w-[400px]"
-                hero={<NFT tokenData={tokenData} />}
+                hero={
+                  tokenData &&
+                  showQRCode &&
+                  !isMobile &&
+                  tokenData.tokenManager?.parsed.state !==
+                    TokenManagerState.Claimed ? (
+                    <ClaimQRCode tokenData={tokenData} keypair={otpKeypair} />
+                  ) : (
+                    <NFT tokenData={tokenData} />
+                  )
+                }
                 header={<NFTHeader tokenData={tokenData} />}
                 content={
                   {
@@ -99,10 +103,10 @@ function Claim() {
                         {qrcode && !isMobile ? (
                           <ButtonSmall
                             className="my-auto inline-block flex-none text-xs"
-                            onClick={() => setShowQRCode(true)}
+                            onClick={() => setShowQRCode((v) => !v)}
                           >
                             <div className="flex items-center gap-1">
-                              Scan
+                              {showQRCode ? 'Hide' : 'Scan'}
                               <BiQr />
                             </div>
                           </ButtonSmall>
@@ -139,14 +143,14 @@ function Claim() {
             )}
           </div>
         </div>
-        {showQRCode && (
+        {/* {showQRCode && (
           <div
             className="mx-auto cursor-pointer px-10 pt-3 text-center text-xs text-medium-3"
             onClick={() => setShowQRCode && setShowQRCode(false)}
           >
             Hide QR Code
           </div>
-        )}
+        )} */}
         {tokenQuery.error && (
           <div className="mt-8 text-center text-xs text-medium-3">{`
             ${tokenQuery.error}`}</div>
