@@ -1,60 +1,11 @@
 import { tryPublicKey } from '@cardinal/common'
 import { Connection } from '@solana/web3.js'
-import type { TokenData } from 'api/api'
 import { getTokenData } from 'api/api'
-import * as canvas from 'canvas'
 import Claim from 'components/Claim'
 import { ENVIRONMENTS } from 'providers/EnvironmentProvider'
 
 function ClaimHome(props: any) {
   return <Claim {...props} />
-}
-
-const generateImage = async (tokenData: TokenData) => {
-  // setup
-  // overlay text
-  const WIDTH = 1000
-  const HEIGHT = 562.5
-  const imageCanvas = canvas.createCanvas(WIDTH, HEIGHT)
-
-  // draw base image
-  const baseImgUri = '/assets/twitter-claim.png'
-  const nftImageUri = tokenData.metadata?.data?.image
-
-  const backgroundCtx = imageCanvas.getContext('2d')
-  backgroundCtx.fillStyle = 'rgba(26, 27, 32, 1)'
-  backgroundCtx.fillRect(0, 0, WIDTH, HEIGHT)
-
-  const img = await canvas.loadImage(baseImgUri)
-  const imgContext = imageCanvas.getContext('2d')
-  if (img.height > img.width) {
-    const imgHeightMultiplier = WIDTH / img.height
-    imgContext.drawImage(
-      img,
-      (WIDTH - img.width * imgHeightMultiplier) / 2,
-      0,
-      img.width * imgHeightMultiplier,
-      HEIGHT
-    )
-  } else {
-    const imgWidthMultiplier = HEIGHT / img.width
-    imgContext.drawImage(img, 0, 0, WIDTH, HEIGHT)
-    console.log(0, 0, WIDTH, HEIGHT)
-  }
-
-  const nftWidth = 242
-  const nftHeight = 242
-
-  const nftImage = await canvas.loadImage(nftImageUri)
-  const nftImageContext = imageCanvas.getContext('2d')
-  nftImageContext.fillRect(550, 178, nftWidth, nftHeight)
-  if (nftImage.height > nftImage.width) {
-    nftImageContext.drawImage(nftImage, 550, 178, nftWidth, nftHeight)
-  } else {
-    nftImageContext.drawImage(nftImage, 550, 178, nftWidth, nftHeight)
-  }
-
-  return imageCanvas.toBuffer('image/png')
 }
 
 export async function getServerSideProps(context: any) {
@@ -64,7 +15,8 @@ export async function getServerSideProps(context: any) {
     ? 'devnet'
     : query.host?.includes('test')
     ? 'testnet'
-    : query.cluster || process.env.BASE_CLUSTER
+    : query.cluster || process.env.BASE_CLUSTER || 'mainnet'
+  console.log(process.env.BASE_CLUSTER)
   const foundEnvironment = ENVIRONMENTS.find((e) => e.label === cluster)
   const environment = foundEnvironment ?? ENVIRONMENTS[0]!
   const connection = new Connection(environment.primary, {
@@ -77,12 +29,10 @@ export async function getServerSideProps(context: any) {
   }
 
   const tokenData = await getTokenData(connection, tokenManagerString)
-  const imageData = await generateImage(tokenData)
 
   return {
     props: {
       tokenData: JSON.stringify(tokenData),
-      imageData: imageData.toString('base64'),
     },
   }
 }

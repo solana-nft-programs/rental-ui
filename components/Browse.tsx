@@ -31,10 +31,12 @@ import { fmtMintAmount, getMintDecimalAmount } from 'common/units'
 import type { ProjectConfig, TokenSection } from 'config/config'
 import { useFilteredTokenManagers } from 'hooks/useFilteredTokenManagers'
 import { usePaymentMints } from 'hooks/usePaymentMints'
+import Head from 'next/head'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { filterTokens, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useUTCNow } from 'providers/UTCNowProvider'
 import { useEffect, useState } from 'react'
+import { Helmet } from 'react-helmet'
 import { SolanaLogo } from 'rental-components/common/icons'
 
 export const handleCopy = (shareUrl: string) => {
@@ -361,6 +363,22 @@ export const Browse = () => {
 
   return (
     <>
+      <Head>
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@cardinal_labs" />
+        <meta
+          name="twitter:title"
+          content={`Rent on Cardinal's NFT Rental Marketplace`}
+        />
+        <meta
+          name="twitter:description"
+          content="Rent your favorite NFTs on the Cardinal's NFT Rental Marketplace"
+        />
+        <meta
+          name="twitter:image"
+          content={`https://i.imgur.com/Kd1e27L.png`}
+        />
+      </Head>
       <HeaderSlim
         loading={tokenManagers.isFetched && tokenManagers.isRefetching}
         tabs={[
