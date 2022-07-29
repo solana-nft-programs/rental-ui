@@ -25,7 +25,7 @@ import { isPrivateListing } from './NFTIssuerInfo'
 import { notify } from './Notification'
 import { Popover } from './Popover'
 
-export const popoverItemClass = `px-2 py-1 rounded-md hover:bg-[rgba(255,255,255,0.1)]`
+export const popoverItemClass = `flex items-center text-light-0 px-2 py-1 rounded-md hover:bg-[rgba(255,255,255,0.1)] gap-2`
 
 export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
   const { environment } = useEnvironmentCtx()
@@ -59,12 +59,6 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
         <div className="flex flex-col rounded-md bg-dark-4 px-1 py-1">
           <a
             className={`${popoverItemClass}`}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '10px',
-              color: 'white',
-            }}
             href={pubKeyUrl(
               tokenManager?.parsed.mint ??
                 tokenAccount?.account.data.parsed.info.mint,
@@ -79,12 +73,6 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
           {environment.label !== 'devnet' && (
             <a
               className={`${popoverItemClass}`}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px',
-                color: 'white',
-              }}
               href={metadataUrl(
                 tokenManager?.parsed.mint ??
                   tokenAccount?.account.data.parsed.info.mint,
@@ -102,12 +90,6 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
             !isPrivateListing(tokenData) && (
               <a
                 className={`${popoverItemClass}`}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '10px',
-                  color: 'white',
-                }}
                 href={getLink(
                   `/${
                     config.name
@@ -126,7 +108,7 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
                 elligibleForRent(config, tokenData)
                   ? 'cursor-pointer'
                   : 'cursor-default opacity-20'
-              } flex items-center gap-2`}
+              } flex items-center`}
               onClick={(e) => {
                 e.stopPropagation()
                 elligibleForRent(config, tokenData) &&
@@ -143,7 +125,7 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
             tokenManager?.parsed.issuer.toString() === walletId?.toString() &&
             tokenManager.parsed.state !== TokenManagerState.Claimed && (
               <div
-                className={`${popoverItemClass} flex cursor-pointer items-center gap-2`}
+                className={`${popoverItemClass} flex cursor-pointer items-center`}
                 onClick={async (e) => {
                   e.stopPropagation()
                   handleUnissueRental.mutate({ tokenData })
@@ -158,7 +140,7 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
             tokenData.recipientTokenAccount?.owner.toString() ===
               walletId?.toString() && (
               <div
-                className={`${popoverItemClass} flex cursor-pointer items-center gap-2`}
+                className={`${popoverItemClass} flex cursor-pointer items-center`}
                 onClick={(e) => {
                   e.stopPropagation()
                   scanCard.showModal({
@@ -178,7 +160,7 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
                 InvalidationType.Return) &&
             confirmReturnConfig(tokenData) && (
               <div
-                className={`${popoverItemClass} flex cursor-pointer items-center gap-2`}
+                className={`${popoverItemClass} flex cursor-pointer items-center`}
                 onClick={async (e) => {
                   e.stopPropagation()
                   handleReturnRental.mutate(
@@ -201,7 +183,7 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
             timeInvalidator?.parsed?.extensionDurationSeconds &&
             tokenManager && (
               <div
-                className={`${popoverItemClass} flex cursor-pointer items-center gap-2`}
+                className={`${popoverItemClass} flex cursor-pointer items-center`}
                 onClick={async (e) => {
                   e.stopPropagation()
                   rentalRateCard.showModal({ tokenData, claim: false })
