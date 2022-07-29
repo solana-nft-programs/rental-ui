@@ -329,7 +329,7 @@ export const Dashboard = () => {
                           }`}
                           css={css`
                             box-shadow: ${isSelected(tokenData, selectedTokens)
-                              ? `0px 0px 30px ${config.colors.secondary}`
+                              ? `0px 0px 30px ${config.colors.accent}`
                               : ''};
                           `}
                           onClick={() => {

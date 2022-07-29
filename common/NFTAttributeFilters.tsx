@@ -1,7 +1,6 @@
 import { css } from '@emotion/react'
 import type { TokenData } from 'api/api'
 import type { ProjectConfig } from 'config/config'
-import { lighten } from 'polished'
 
 export const getAllAttributes = (
   tokens: TokenData[]
@@ -102,21 +101,25 @@ export const getNFTAtrributeFilters = ({
               }
             >
               <div
-                className="flex cursor-pointer items-center gap-2 py-[2px] text-light-0 transition-colors"
+                className="group flex cursor-pointer items-center gap-2 py-[2px] text-light-0 transition-colors hover:text-primary"
                 css={css`
                   &:hover {
-                    color: ${config.colors.secondary};
+                    color: ${config.colors.accent} !important;
                     div {
-                      border-color: ${lighten(0.2, config.colors.secondary)};
+                      border-color: ${config.colors.accent} !important;
                     }
                   }
                 `}
               >
                 <div
-                  className={`h-3 w-3 rounded-sm border-[.5px] border-light-1 transition-all`}
+                  className={`h-3 w-3 rounded-sm border-[.5px] border-light-1 transition-all group-hover:border-primary ${
+                    selectedFilters[traitType]?.includes(value)
+                      ? `bg-primary`
+                      : ''
+                  }`}
                   css={css`
                     background: ${selectedFilters[traitType]?.includes(value)
-                      ? config.colors.secondary
+                      ? `${config.colors.accent} !important`
                       : ''};
                   `}
                 >
@@ -129,7 +132,7 @@ export const getNFTAtrributeFilters = ({
                   ? filterTokensByAttributes(tokenDatas, {
                       [traitType]: [value],
                     }).length
-                  : ''}
+                  : 0}
               </div>
             </div>
           ))}

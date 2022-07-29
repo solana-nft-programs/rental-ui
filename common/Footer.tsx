@@ -8,10 +8,8 @@ export const SOCIALS = {
 }
 
 export const Footer = ({
-  bgColor = 'rgb(26, 27, 32)',
   accentColor = '#FFFFFF',
 }: {
-  bgColor?: string
   accentColor?: string
 }) => {
   return (

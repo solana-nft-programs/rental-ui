@@ -2,7 +2,6 @@ import { secondsToString } from '@cardinal/common'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { BN } from '@project-serum/anchor'
 import type * as splToken from '@solana/spl-token'
-import { useWallet } from '@solana/wallet-adapter-react'
 import type { TokenData } from 'api/api'
 import { GlyphActivity } from 'assets/GlyphActivity'
 import { GlyphBrowse } from 'assets/GlyphBrowse'
@@ -30,6 +29,7 @@ import { fmtMintAmount, getMintDecimalAmount } from 'common/units'
 import type { ProjectConfig, TokenSection } from 'config/config'
 import { useFilteredTokenManagers } from 'hooks/useFilteredTokenManagers'
 import { usePaymentMints } from 'hooks/usePaymentMints'
+import { useWalletId } from 'hooks/useWalletId'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { filterTokens, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useUTCNow } from 'providers/UTCNowProvider'
@@ -231,7 +231,7 @@ const getRentalDuration = (tokenData: TokenData, UTCNow: number) => {
 
 export const Browse = () => {
   const { environment } = useEnvironmentCtx()
-  const wallet = useWallet()
+  const walletId = useWalletId()
   const { config } = useProjectConfig()
   const tokenManagers = useFilteredTokenManagers()
   const tokenManagersForConfig = tokenManagers.data || []
@@ -367,12 +367,11 @@ export const Browse = () => {
           {
             name: 'Manage',
             anchor: 'manage',
-            disabled: !wallet.connected || config.disableListing,
-            tooltip: !wallet.connected ? 'Connect wallet' : undefined,
+            disabled: !walletId,
+            tooltip: !walletId ? 'Connect wallet' : undefined,
           },
         ]}
       />
-
       <HeroLarge />
       <div className="mx-10 mt-4 flex items-end gap-2">
         <div className="text-xl text-light-0">Results</div>

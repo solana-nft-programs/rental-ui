@@ -2,8 +2,6 @@ import { getExpirationString } from '@cardinal/common'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import type { TokenData } from 'api/api'
 import type { ProjectConfig } from 'config/config'
-import { lighten } from 'polished'
-import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useUTCNow } from 'providers/UTCNowProvider'
 import type { InvalidatorOption } from 'rental-components/components/RentalIssueCard'
 
@@ -110,16 +108,10 @@ interface NFTProps {
 }
 
 export function NFT({ tokenData }: NFTProps) {
-  const { config } = useProjectConfig()
   const { UTCNow } = useUTCNow()
   const { metadata } = tokenData
   return (
-    <div
-      className="relative min-w-full rounded-xl"
-      style={{
-        background: lighten(0.02, config.colors.main),
-      }}
-    >
+    <div className="relative min-w-full rounded-xl bg-dark-5">
       <NFTContexualMenu tokenData={tokenData} />
       <div className={`relative flex w-full items-center justify-center`}>
         {tokenData.timeInvalidator && getExpiration(tokenData, UTCNow) ? (
@@ -131,7 +123,7 @@ export function NFT({ tokenData }: NFTProps) {
         ) : (
           tokenData && (
             <div className={`absolute top-3 left-3 z-20`}>
-              {rentalTypePill(rentalType(tokenData))}
+              {/* {rentalTypePill(rentalType(tokenData))} */}
             </div>
           )
         )}

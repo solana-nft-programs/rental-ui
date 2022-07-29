@@ -55,17 +55,6 @@ export const HeaderSlim: React.FC<Props> = ({
             />
             <span className="ml-2 text-2xl text-white">Cardinal</span>
           </div>
-          {/* {(homeButton ||
-            (config.name !== 'default' && !host?.includes(config.name))) && (
-            <div
-              className={`cursor-pointer text-center text-light-0 opacity-80 transition-opacity hover:opacity-100`}
-              onClick={() => {
-                router.push(`/${location.search}`)
-              }}
-            >
-              Home
-            </div>
-          )} */}
         </div>
         <div className="relative lg:absolute lg:left-1/2 lg:-translate-x-1/2">
           {tabs && (

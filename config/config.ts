@@ -10,8 +10,8 @@ import type { UserTokenData } from '../hooks/useUserTokenData'
 
 export const COLORS = {
   primary: '#907EFF',
-  secondary: '#7EFFE8',
-  accent: '#CE81F4',
+  accent: '#7EFFE8',
+  glow: '#CE81F4',
   'light-0': '#FFFFFF',
   'light-1': '#F5E2FF',
   'light-2': '#B1AFBB',
@@ -22,9 +22,8 @@ export const COLORS = {
 }
 
 export type Colors = {
-  main: string
-  secondary: string
-  accent?: string
+  accent: string
+  glow: string
 }
 
 export type TokenFilter = {
@@ -57,9 +56,6 @@ export type Badge = {
 
 export type ProjectConfig = {
   type: 'Collection' | 'Guild'
-  issuer?: {
-    publicKeyString?: string
-  }
   hidden?: boolean
   indexDisabled?: boolean
   issuedOnly?: boolean
@@ -74,6 +70,7 @@ export type ProjectConfig = {
     link: string
   }[]
   logoImage: string
+  logoPadding?: boolean
   colors: Colors
   badges?: Badge[]
   disableListing?: boolean
@@ -81,9 +78,6 @@ export type ProjectConfig = {
   sections?: TokenSection[]
   rentalCard: RentalCardConfig
   airdrops?: AirdropMetadata[]
-  browse?: {
-    hideFilters?: boolean
-  }
   showUnknownInvalidators?: boolean
   marketplaceRate?: DurationOption
   allowOneByCreators?: {
@@ -103,9 +97,9 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     logoImage: '/logos/rooniverse.png',
     hero: '/logos/rooniverse-hero.png',
     colors: {
-      main: '#0C0C0D',
-      secondary: '#b338ef',
-      accent: '#1abfdd',
+      accent: '#b338ef',
+      // #1abfdd alternative
+      glow: '#b338ef',
     },
     description:
       'Enter the world of savage, tribal Roos who fight to the death for sport and glory! Collect resources across lands, battle with friends, and build your own corner of Rooniverse! Adopt a Roo to access our Mini-Rooyale pre-alpha demo sessions!',
@@ -159,8 +153,8 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       'Homeowners Association (HOA) is an NFT project by Parcl, consisting of 7,777 unique combinations of iconic homes from four unique cities.',
     logoImage: '/logos/parcl.gif',
     colors: {
-      main: '#000D30',
-      secondary: '#d7c9f2',
+      accent: '#10abf0',
+      glow: '#005eff',
     },
     socialLinks: [
       {
@@ -208,10 +202,11 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     description:
       'MiniRoyale is a web browser game with battle royale game mode. The game comes with 3D graphics and unique style.',
     logoImage: '/logos/miniroyale.png',
+    logoPadding: true,
     twitterHandle: '@MiniNations',
     colors: {
-      main: '#192836',
-      secondary: '#FFB60C',
+      accent: '#2584df',
+      glow: '#2584df',
     },
     socialLinks: [
       {
@@ -285,9 +280,10 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     type: 'Collection',
     websiteUrl: 'https://theportal.to/',
     logoImage: '/logos/portals.svg',
+    logoPadding: true,
     colors: {
-      main: '#000',
-      secondary: '#80ddef',
+      accent: '#80ddef',
+      glow: '#80ddef',
     },
     hero: '/logos/portals-hero.png',
     twitterHandle: '@_portals_',
@@ -407,8 +403,8 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       },
     ],
     colors: {
-      main: '#202225',
-      secondary: '#CCCDFF',
+      accent: '#cccdff',
+      glow: '#cccdff',
     },
     filter: {
       type: 'creators',
@@ -462,8 +458,8 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     logoImage:
       'https://static.wixstatic.com/media/a5e645_ede493815397419cad3c618bd7cb4aa4~mv2.png/v1/fill/w_888,h_390,al_c,usm_0.66_1.00_0.01,enc_auto/Artboard%202%20copy%204-1.png',
     colors: {
-      main: 'rgb(0,0,0)',
-      secondary: 'rgb(169,60,239)',
+      accent: 'rgb(169,60,239)',
+      glow: 'rgb(169,60,239)',
     },
     filter: {
       type: 'creators',
@@ -499,9 +495,10 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     type: 'Collection',
     websiteUrl: 'https://www.defiland.app/',
     logoImage: 'https://defiland.app/_nuxt/img/defiland.74b3850.svg',
+    logoPadding: true,
     colors: {
-      main: '#2d1923',
-      secondary: '#ad4933',
+      accent: '#ad4933',
+      glow: '#CD9373',
     },
     filter: {
       type: 'creators',
@@ -540,9 +537,10 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     type: 'Collection',
     websiteUrl: 'https://metaopsgaming.com/',
     logoImage: '/logos/metaops.png',
+    logoPadding: true,
     colors: {
-      main: '#3b262f',
-      secondary: '#c37f98',
+      accent: '#c37f98',
+      glow: '#b55b5e',
     },
     filter: {
       type: 'creators',
@@ -603,8 +601,8 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     websiteUrl: 'https://psyker.game/',
     logoImage: '/logos/psyker.png',
     colors: {
-      main: '#00101b',
-      secondary: '#a4051d',
+      accent: '#a4051d',
+      glow: '#a4051d',
     },
     filter: {
       type: 'creators',
@@ -659,45 +657,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     ],
     marketplaceRate: 'days',
   },
-  thugbirdz: {
-    name: 'thugbirdz',
-    displayName: 'Thugbirdz',
-    type: 'Collection',
-    websiteUrl: 'https://www.thugbirdz.com/#/',
-    logoImage: 'https://www.thugbirdz.com/icon.png',
-    hidden: true,
-    colors: {
-      main: 'rgb(26, 27, 32)',
-      secondary: '#9c74fc',
-    },
-    filter: {
-      type: 'creators',
-      value: ['CzrE3LhijwcmvsXZa8YavqgR9EzW3UGqoSWZKwGpZVqM'],
-    },
-    rentalCard: {
-      invalidators: ['rate'],
-      invalidationOptions: {
-        visibilities: ['public'],
-        durationOptions: ['minutes', 'hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
-        paymentMints: ['So11111111111111111111111111111111111111112'],
-        showClaimRentalReceipt: false,
-        setClaimRentalReceipt: false,
-        maxDurationAllowed: {
-          displayText: '12 weeks',
-          value: 7258000,
-        },
-      },
-    },
-    marketplaceRate: 'days',
-    airdrops: [
-      {
-        name: 'Thugbirdz',
-        symbol: 'THUG',
-        uri: 'https://arweave.net/l9VXqVWCsiKW-R8ShX8jknFPgBibrhQI1JRgUI9uvbw',
-      },
-    ],
-  },
   // empiredao: {
   //   name: 'empiredao',
   //   displayName: 'Empire DAO',
@@ -705,8 +664,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
   //   websiteUrl: 'https://empiredao.xyz/',
   //   logoImage: '/logos/empiredao.png',
   //   colors: {
-  //     main: '#202225',
-  //     secondary: '#CCCDFF',
+  //     accent: '#CCCDFF',
   //   },
   //   filter: {
   //     type: 'issuer',
@@ -738,8 +696,8 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     websiteUrl: 'https://cardinal.so',
     logoImage: 'https://main.cardinal.so/assets/cardinal-titled.png',
     colors: {
-      main: '#0B0B0B',
-      secondary: '#7560FF',
+      accent: '#7560FF',
+      glow: '#7560FF',
     },
     rentalCard: {
       invalidators: ['rate', 'duration', 'expiration', 'manual'],
@@ -806,8 +764,8 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     websiteUrl: 'https://all-starz.gitbook.io/all-starz/',
     logoImage: '/logos/all-starz.jpg',
     colors: {
-      main: '#000',
-      secondary: '#f71202',
+      accent: '#f71202',
+      glow: '#f71202',
     },
     filter: {
       type: 'issuer',
@@ -841,9 +799,10 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     websiteUrl: 'https://www.3dgamersguild.com/',
     logoImage:
       'https://images.squarespace-cdn.com/content/v1/618b2aec73c8ed19abf2fd2f/c4a759b4-91d5-462a-bd6d-ce3766ffda2f/3D+Gamers+Logo+with+white+letters+white+text.png?format=1500w',
+    logoPadding: true,
     colors: {
-      main: 'rgb(26, 27, 32)',
-      secondary: '#34659b',
+      accent: '#34659b',
+      glow: '#34659b',
     },
     filter: {
       type: 'issuer',
@@ -877,11 +836,11 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     websiteUrl: 'https://www.udderchaos.io/',
     logoImage: 'logos/udderchaos-logo.png',
     colors: {
-      main: 'rgb(26, 27, 32)',
-      secondary: '#a5b6f6',
+      accent: '#f9e7c9',
+      glow: '#f9e7c9',
     },
     description:
-      'Udder Chaos is a project built on a sustainable business model. Operating a Solana Validator drives consistent income for the project on top of secondary sales, while also being supported by their RPC rentals and NFT rental treasury. They are also developing Alpha Audits, an NFT reviewing platform with a review-to-earn mechanism.',
+      'Udder Chaos is a project built on a sustainable business model. Operating a Solana Validator drives consistent income for the project on top of accent sales, while also being supported by their RPC rentals and NFT rental treasury. They are also developing Alpha Audits, an NFT reviewing platform with a review-to-earn mechanism.',
     hero: 'logos/udderchaos-hero.png',
     socialLinks: [
       {

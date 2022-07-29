@@ -12,7 +12,7 @@ import type { ProjectConfig } from 'config/config'
 import { projectConfigs } from 'config/config'
 import { queryId, useGlobalStats } from 'hooks/useGlobalStats'
 import { useRouter } from 'next/router'
-import { lighten, transparentize } from 'polished'
+import { transparentize } from 'polished'
 
 export const Collections = () => {
   const router = useRouter()
@@ -38,8 +38,7 @@ export const Collections = () => {
         `}
       >
         <div className="blur-4xl absolute left-8 top-52 -z-10 h-[120px] w-[400px] -rotate-[60deg] bg-glow blur-[100px]" />
-        <div className="blur-4xl absolute -right-20 top-72 -z-10 h-[120px] w-[650px] -rotate-[60deg] bg-glow blur-[120px]" />
-
+        <div className="blur-4xl absolute -right-20 top-72 -z-10 h-[100px] w-[550px] -rotate-[60deg] bg-glow blur-[120px]" />
         <HeaderSlim />
         <div className="flex flex-wrap justify-between gap-10 px-16 py-28">
           <div className="flex flex-col gap-2">
@@ -110,10 +109,7 @@ export const Collections = () => {
                     className="bg-opacity-1 cursor-pointer transition-colors"
                     css={css`
                       &:hover {
-                        background: ${transparentize(
-                          0.7,
-                          lighten(0.15, config.colors.main)
-                        )};
+                        background: ${transparentize(0.8, config.colors.glow)};
                       }
                     `}
                     onClick={() =>
@@ -124,11 +120,16 @@ export const Collections = () => {
                       <div
                         className="flex h-full w-full items-center justify-center p-12"
                         css={css`
-                          background: ${lighten(0.07, config.colors.main)};
+                          background: ${transparentize(
+                            0.8,
+                            config.colors.glow
+                          )};
                         `}
                       >
                         <img
-                          className="max-h-full rounded-xl"
+                          className={`max-h-full rounded-xl ${
+                            config.logoPadding && 'p-3'
+                          }`}
                           src={config.logoImage}
                           alt={config.name}
                         />

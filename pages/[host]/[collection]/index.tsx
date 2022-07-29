@@ -1,12 +1,12 @@
 import { firstParam } from '@cardinal/common'
 import { css } from '@emotion/react'
+import { Banner } from 'common/Banner'
 import { Footer } from 'common/Footer'
 import { Browse } from 'components/Browse'
 import Error from 'components/Error'
 import { Manage } from 'components/Manage'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { lighten } from 'polished'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useEffect, useState } from 'react'
 
@@ -33,19 +33,19 @@ export default function Home() {
 
   return (
     <div
-      className="relative z-0 min-h-screen"
-      style={{ backgroundColor: config.colors.main }}
+      className="relative z-0 min-h-screen bg-dark-5"
+      // style={{ backgroundColor: config.colors.main }}
     >
       <div
-        className="blur-4xl absolute left-8 top-52 -z-10 h-[120px] w-[400px] -rotate-[60deg] blur-[100px]"
+        className="blur-4xl absolute left-8 top-52 -z-10 h-[120px] w-[400px] -rotate-[60deg] bg-glow blur-[100px]"
         css={css`
-          background: ${lighten(0.2, config.colors.main)};
+          background: ${config.colors.glow} !important;
         `}
       />
       <div
-        className="blur-4xl absolute -right-20 top-72 -z-10 h-[120px] w-[650px] -rotate-[60deg] blur-[120px]"
+        className="blur-4xl absolute -right-20 top-72 -z-10 h-[100px] w-[550px] -rotate-[60deg] bg-glow blur-[120px]"
         css={css`
-          background: ${lighten(0.2, config.colors.main)};
+          background: ${config.colors.glow} !important;
         `}
       />
       <Head>
@@ -71,6 +71,7 @@ export default function Home() {
           rel="stylesheet"
         />
       </Head>
+      <Banner />
       <div style={{ minHeight: 'calc(100vh - 337px)' }}>
         {(() => {
           switch (tab) {
@@ -81,7 +82,7 @@ export default function Home() {
           }
         })()}
       </div>
-      <Footer bgColor={config.colors.main} />
+      <Footer />
     </div>
   )
 }

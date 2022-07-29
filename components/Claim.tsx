@@ -62,8 +62,8 @@ function Claim() {
           className="relative mx-auto flex w-fit flex-col items-center rounded-xl text-white"
           css={css`
             box-shadow: 0 0 80px 50px ${
-              config.colors?.secondary
-                ? transparentize(0.8, config.colors.secondary)
+              config.colors.accent
+                ? transparentize(0.8, config.colors.accent)
                 : 'rgba(255, 255, 255, 0.3)'
             }};
           `}
@@ -72,7 +72,7 @@ function Claim() {
             <div
               className="absolute -right-5 -top-5 h-[10px] w-[10px] animate-ping rounded-full"
               css={css`
-                background: ${config.colors.secondary};
+                background: ${config.colors.accent};
               `}
             />
           )}
@@ -143,14 +143,6 @@ function Claim() {
             )}
           </div>
         </div>
-        {/* {showQRCode && (
-          <div
-            className="mx-auto cursor-pointer px-10 pt-3 text-center text-xs text-medium-3"
-            onClick={() => setShowQRCode && setShowQRCode(false)}
-          >
-            Hide QR Code
-          </div>
-        )} */}
         {tokenQuery.error && (
           <div className="mt-8 text-center text-xs text-medium-3">{`
             ${tokenQuery.error}`}</div>

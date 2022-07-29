@@ -2,14 +2,12 @@ import {
   InvalidationType,
   TokenManagerState,
 } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
-import { css } from '@emotion/react'
 import Tooltip from '@mui/material/Tooltip'
 import type { TokenData } from 'api/api'
 import { metadataUrl, pubKeyUrl } from 'common/utils'
 import { useHandleReturnRental } from 'handlers/useHandleReturnRental'
 import { useHandleUnissueRental } from 'handlers/useHandleUnissueRental'
 import { useWalletId } from 'hooks/useWalletId'
-import { lighten } from 'polished'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { AiOutlineDatabase } from 'react-icons/ai'
@@ -58,12 +56,7 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
   return (
     <Popover
       content={
-        <div
-          className="flex flex-col rounded-md px-1 py-1"
-          css={css`
-            background: ${lighten(0.07, config.colors.main)};
-          `}
-        >
+        <div className="flex flex-col rounded-md bg-dark-4 px-1 py-1">
           <a
             className={`${popoverItemClass}`}
             style={{
@@ -223,13 +216,9 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
     >
       <Tooltip placement="bottom-start" title="Quick Actions">
         <div
-          className={`absolute top-[8px] right-[8px] z-20 flex h-7 w-7 cursor-pointer items-center justify-center rounded-md text-white hover:bg-[${lighten(
-            0.3,
-            config.colors.main
-          )}]`}
+          className={`absolute top-[8px] right-[8px] z-20 flex h-7 w-7 cursor-pointer items-center justify-center rounded-md bg-dark-4 text-white hover:bg-opacity-60`}
           style={{
             transition: '0.2s all',
-            background: lighten(0.07, config.colors.main),
           }}
           key={tokenAccount?.pubkey.toString()}
         >

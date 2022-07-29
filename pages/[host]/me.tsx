@@ -34,7 +34,7 @@ export default function Me() {
       <div style={{ minHeight: 'calc(100vh - 337px)' }}>
         <Dashboard />
       </div>
-      <Footer bgColor={config.colors.main} />
+      <Footer />
     </div>
   )
 }

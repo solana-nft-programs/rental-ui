@@ -2,7 +2,6 @@ import { css } from '@emotion/react'
 import { ChevronDown } from 'assets/ChevronDown'
 import { ChevronRight } from 'assets/ChevronRight'
 import { GlyphSelectClear } from 'assets/GlyphSelectClear'
-import { lighten } from 'polished'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useEffect, useRef, useState } from 'react'
 
@@ -53,9 +52,8 @@ export const MultiSelector = <T,>({
         css={
           colorized &&
           css`
-            background: ${lighten(0.08, config.colors.main)} !important;
             &:hover {
-              border-color: ${config.colors.secondary} !important;
+              border-color: ${config.colors.accent} !important;
             }
           `
         }
@@ -97,9 +95,8 @@ export const MultiSelector = <T,>({
                   border-bottom-width: ${i < groups?.length - 1 ? '1px' : ''};
                   ${colorized &&
                   css`
-                    background: ${lighten(0.08, config.colors.main)} !important;
                     &:hover {
-                      color: ${config.colors.secondary} !important;
+                      color: ${config.colors.accent} !important;
                     }
                   `}
                 `}
@@ -119,9 +116,8 @@ export const MultiSelector = <T,>({
                   border-bottom-width: ${i < groups?.length - 1 ? '1px' : ''};
                   ${colorized &&
                   css`
-                    background: ${lighten(0.03, config.colors.main)} !important;
                     &:hover {
-                      color: ${config.colors.secondary} !important;
+                      color: ${config.colors.accent} !important;
                     }
                   `}
                 `}
@@ -136,7 +132,7 @@ export const MultiSelector = <T,>({
                     colorized &&
                     css`
                       &:hover {
-                        color: ${config.colors.secondary} !important;
+                        color: ${config.colors.accent} !important;
                       }
                     `
                   }
@@ -168,8 +164,7 @@ export const MultiSelector = <T,>({
                                 &:hover {
                                   ${colorized &&
                                   css`
-                                    color: ${config.colors
-                                      .secondary} !important;
+                                    color: ${config.colors.accent} !important;
                                   `}
                                   div {
                                     border-color: rgb(
