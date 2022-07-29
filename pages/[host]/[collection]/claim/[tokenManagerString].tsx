@@ -18,7 +18,7 @@ const generateImage = async (tokenData: TokenData) => {
   const imageCanvas = canvas.createCanvas(WIDTH, HEIGHT)
 
   // draw base image
-  const baseImgUri = 'http://localhost:3000/assets/twitter-claim.png'
+  const baseImgUri = '/assets/twitter-claim.png'
   const nftImageUri = tokenData.metadata?.data?.image
 
   const backgroundCtx = imageCanvas.getContext('2d')
