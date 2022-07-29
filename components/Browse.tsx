@@ -36,7 +36,6 @@ import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { filterTokens, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useUTCNow } from 'providers/UTCNowProvider'
 import { useEffect, useState } from 'react'
-import { Helmet } from 'react-helmet'
 import { SolanaLogo } from 'rental-components/common/icons'
 
 export const handleCopy = (shareUrl: string) => {
