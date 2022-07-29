@@ -497,7 +497,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     logoImage: 'https://defiland.app/_nuxt/img/defiland.74b3850.svg',
     logoPadding: true,
     colors: {
-      accent: '#ad4933',
+      accent: '#CD9373',
       glow: '#CD9373',
     },
     filter: {
