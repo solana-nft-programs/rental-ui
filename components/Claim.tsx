@@ -1,6 +1,7 @@
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { css } from '@emotion/react'
-import { convertStringsToPubkeys, TokenData } from 'api/api'
+import type { TokenData } from 'api/api'
+import { convertStringsToPubkeys } from 'api/api'
 import { tryPublicKey } from 'api/utils'
 import { GlyphQuestion } from 'assets/GlyphQuestion'
 import { ButtonSmall } from 'common/ButtonSmall'
@@ -24,6 +25,7 @@ import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { BiQr } from 'react-icons/bi'
+import MetaTags from 'react-meta-tags'
 
 function Claim(props: any) {
   const { config } = useProjectConfig()
@@ -39,12 +41,38 @@ function Claim(props: any) {
     JSON.parse(props.tokenData)
   ) as TokenData
   const tokenData = parsedTokenData
+  const imageData = props.imageData
   return (
     <div className="flex h-screen flex-col">
+      <MetaTags>
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@cardinal_labs" />
+        <meta
+          name="twitter:title"
+          content={`Rent ${tokenData.metadata?.data.name} on Cardinal's NFT Rental Marketplace`}
+        />
+        <meta
+          name="twitter:description"
+          content="Rent your favorite NFTs on the Cardinal's NFT Rental Marketplace"
+        />
+        <meta
+          name="twitter:image"
+          content={`data:image/png;base64,${imageData}
+          `}
+        />
+      </MetaTags>
       <HeaderSlim />
+      {/* <img
+        width="40%"
+        className="mx-auto"
+        alt="dynamic meta"
+        src={`data:image/png;base64,${imageData}
+            `}
+      /> */}
       <div className="mx-auto max-w-[500px] flex-grow pt-[5vh] lg:pt-[12vh]">
         <div className="mb-6 text-center">
           <div className="mb-2 text-4xl">Claim Asset</div>
+
           <div className="text-xs font-extralight">
             <a
               href={pubKeyUrl(
