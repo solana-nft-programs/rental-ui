@@ -539,7 +539,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     logoImage: '/logos/metaops.png',
     logoPadding: true,
     colors: {
-      accent: '#c37f98',
+      accent: '#b55b5e',
       glow: '#b55b5e',
     },
     filter: {
