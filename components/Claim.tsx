@@ -24,8 +24,8 @@ import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useState } from 'react'
 import { isMobile } from 'react-device-detect'
+import { Helmet } from 'react-helmet'
 import { BiQr } from 'react-icons/bi'
-import MetaTags from 'react-meta-tags'
 
 function Claim(props: any) {
   const { config } = useProjectConfig()
@@ -44,7 +44,7 @@ function Claim(props: any) {
   const imageData = props.imageData
   return (
     <div className="flex h-screen flex-col">
-      <MetaTags>
+      <Helmet>
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@cardinal_labs" />
         <meta
@@ -60,7 +60,7 @@ function Claim(props: any) {
           content={`data:image/png;base64,${imageData}
           `}
         />
-      </MetaTags>
+      </Helmet>
       <HeaderSlim />
       {/* <img
         width="40%"
