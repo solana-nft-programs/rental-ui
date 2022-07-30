@@ -4,7 +4,7 @@ import { getTokenData } from 'apis/api'
 import Claim from 'components/Claim'
 import { ENVIRONMENTS } from 'providers/EnvironmentProvider'
 
-function ClaimHome(props: any) {
+function ClaimHome(props: { tokenDataString: string }) {
   return <Claim {...props} />
 }
 
@@ -27,12 +27,11 @@ export async function getServerSideProps(context: any) {
   if (!tokenManagerId) {
     return {}
   }
-
   const tokenData = await getTokenData(connection, tokenManagerString)
 
   return {
     props: {
-      tokenData: JSON.stringify(tokenData),
+      tokenDataString: JSON.stringify(tokenData),
     },
   }
 }

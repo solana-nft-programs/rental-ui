@@ -17,7 +17,6 @@ import { StyledBackground } from 'common/StyledBackground'
 import { pubKeyUrl } from 'common/utils'
 import ClaimQRCode from 'components/ClaimQRCode'
 import { useOtp } from 'hooks/useOtp'
-import { useTokenData } from 'hooks/useTokenData'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { transparentize } from 'polished'
@@ -27,20 +26,17 @@ import { useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { BiQr } from 'react-icons/bi'
 
-function Claim(props: any) {
+function Claim(props: { tokenDataString: string }) {
   const { config } = useProjectConfig()
   const router = useRouter()
   const { environment } = useEnvironmentCtx()
   const [showQRCode, setShowQRCode] = useState(false)
   const otpKeypair = useOtp()
-
   const { tokenManagerString, qrcode } = router.query
   const tokenManagerId = tryPublicKey(tokenManagerString)
-  const tokenQuery = useTokenData(tokenManagerId ?? undefined)
-  const parsedTokenData = convertStringsToPubkeys(
-    JSON.parse(props.tokenData)
+  const tokenData = convertStringsToPubkeys(
+    JSON.parse(props.tokenDataString)
   ) as TokenData
-  const tokenData = parsedTokenData
   return (
     <div className="flex h-screen flex-col">
       <Head>
@@ -110,9 +106,7 @@ function Claim(props: any) {
             />
           )}
           <div className="">
-            {!tokenQuery.isFetched ? (
-              <Card skeleton header={<></>} subHeader={<></>} />
-            ) : tokenData ? (
+            {tokenData ? (
               <Card
                 className="max-w-[400px]"
                 hero={
@@ -176,10 +170,6 @@ function Claim(props: any) {
             )}
           </div>
         </div>
-        {tokenQuery.error && (
-          <div className="mt-8 text-center text-xs text-medium-3">{`
-            ${tokenQuery.error}`}</div>
-        )}
         {qrcode && (
           <div className="mx-auto mt-6 py-3 px-10 text-center text-xs text-medium-3">
             Click the scan button to claim this NFT with your mobile wallet and
