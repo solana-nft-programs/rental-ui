@@ -143,7 +143,8 @@ export function getTokenRentalRate(
   try {
     return {
       rate: paymentMintInfos[extensionPaymentMint.toString()]
-        ? getMintDecimalAmount(
+        ? tokenPrice +
+          getMintDecimalAmount(
             paymentMintInfos[extensionPaymentMint.toString()]!,
             new BN(marketplaceRate)
           ).toNumber()
