@@ -1,5 +1,5 @@
 import { DisplayAddress } from '@cardinal/namespaces-components'
-import type { TokenData } from 'api/api'
+import type { TokenData } from 'apis/api'
 import { handleCopy } from 'components/Browse'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'

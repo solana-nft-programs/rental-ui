@@ -1,5 +1,5 @@
 import type { PublicKey } from '@solana/web3.js'
-import type { TokenData } from 'api/api'
+import type { TokenData } from 'apis/api'
 import { HeaderSlim } from 'common/HeaderSlim'
 import { HeroSmall } from 'common/HeroSmall'
 import { getAllAttributes } from 'common/NFTAttributeFilters'

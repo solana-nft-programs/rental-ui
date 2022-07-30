@@ -1,7 +1,7 @@
 import { invalidate } from '@cardinal/token-manager'
 import { shouldTimeInvalidate } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator/utils'
 import { useWallet } from '@solana/wallet-adapter-react'
-import type { TokenData } from 'api/api'
+import type { TokenData } from 'apis/api'
 import { TOKEN_DATA_KEY } from 'hooks/useFilteredTokenManagers'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useUTCNow } from 'providers/UTCNowProvider'

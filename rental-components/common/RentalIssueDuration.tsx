@@ -1,6 +1,6 @@
 import { secondsToString, tryPublicKey } from '@cardinal/common'
 import { BN } from '@project-serum/anchor'
-import type { TokenData } from 'api/api'
+import type { TokenData } from 'apis/api'
 import { Alert } from 'common/Alert'
 import { Button } from 'common/Button'
 import { DurationInput } from 'common/DurationInput'

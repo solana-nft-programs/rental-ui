@@ -1,4 +1,4 @@
-import type { TokenData } from 'api/api'
+import type { TokenData } from 'apis/api'
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   tokenDatas: TokenData[]

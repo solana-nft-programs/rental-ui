@@ -1,7 +1,7 @@
 import type * as splToken from '@solana/spl-token'
 import type { PublicKey } from '@solana/web3.js'
 import { Connection } from '@solana/web3.js'
-import { getATokenAccountInfo } from 'api/utils'
+import { getATokenAccountInfo } from 'apis/utils'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useQuery } from 'react-query'
 

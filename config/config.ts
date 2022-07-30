@@ -1,4 +1,4 @@
-import type { TokenData } from 'api/api'
+import type { TokenData } from 'apis/api'
 import type { AirdropMetadata } from 'common/Airdrop'
 import type { IconKey } from 'common/Socials'
 import type {

@@ -1,6 +1,6 @@
 import { unissueToken } from '@cardinal/token-manager'
 import { useWallet } from '@solana/wallet-adapter-react'
-import type { TokenData } from 'api/api'
+import type { TokenData } from 'apis/api'
 import { executeTransaction } from 'common/Transactions'
 import { asWallet } from 'common/Wallets'
 import { TOKEN_DATA_KEY } from 'hooks/useFilteredTokenManagers'

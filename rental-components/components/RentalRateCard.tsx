@@ -1,5 +1,5 @@
 import type { Keypair } from '@solana/web3.js'
-import type { TokenData } from 'api/api'
+import type { TokenData } from 'apis/api'
 import { Alert } from 'common/Alert'
 import { Button } from 'common/Button'
 import { DurationInput } from 'common/DurationInput'

@@ -1,4 +1,4 @@
-import type { TokenData } from 'api/api'
+import type { TokenData } from 'apis/api'
 import { Info } from 'common/Info'
 import { MultiSelector } from 'common/MultiSelector'
 import { elligibleForRent } from 'common/NFT'

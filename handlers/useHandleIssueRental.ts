@@ -13,8 +13,8 @@ import {
   SystemProgram,
   Transaction,
 } from '@solana/web3.js'
-import type { TokenData } from 'api/api'
-import { executeAllTransactions } from 'api/utils'
+import type { TokenData } from 'apis/api'
+import { executeAllTransactions } from 'apis/utils'
 import { asWallet } from 'common/Wallets'
 import { TOKEN_DATA_KEY } from 'hooks/useFilteredTokenManagers'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'

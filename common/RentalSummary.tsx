@@ -1,7 +1,7 @@
 import { capitalizeFirstLetter, shortDateString } from '@cardinal/common'
 import { BN } from '@project-serum/anchor'
 import type * as splToken from '@solana/spl-token'
-import type { TokenData } from 'api/api'
+import type { TokenData } from 'apis/api'
 import {
   getPriceFromTokenData,
   getSymbolFromTokenData,

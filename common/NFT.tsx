@@ -1,6 +1,6 @@
 import { getExpirationString } from '@cardinal/common'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
-import type { TokenData } from 'api/api'
+import type { TokenData } from 'apis/api'
 import type { ProjectConfig } from 'config/config'
 import { useUTCNow } from 'providers/UTCNowProvider'
 import type { InvalidatorOption } from 'rental-components/components/RentalIssueCard'

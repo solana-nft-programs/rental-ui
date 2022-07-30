@@ -1,6 +1,6 @@
 import { useTransaction } from '@cardinal/token-manager'
 import { useWallet } from '@solana/wallet-adapter-react'
-import type { TokenData } from 'api/api'
+import type { TokenData } from 'apis/api'
 import { Alert } from 'common/Alert'
 import { QRCode } from 'common/QRCode'
 import { asWallet } from 'common/Wallets'

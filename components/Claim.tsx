@@ -1,6 +1,8 @@
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { css } from '@emotion/react'
-import { tryPublicKey } from 'api/utils'
+import type { TokenData } from 'apis/api'
+import { convertStringsToPubkeys } from 'apis/api'
+import { tryPublicKey } from 'apis/utils'
 import { GlyphQuestion } from 'assets/GlyphQuestion'
 import { ButtonSmall } from 'common/ButtonSmall'
 import { Card } from 'common/Card'
@@ -16,6 +18,7 @@ import { pubKeyUrl } from 'common/utils'
 import ClaimQRCode from 'components/ClaimQRCode'
 import { useOtp } from 'hooks/useOtp'
 import { useTokenData } from 'hooks/useTokenData'
+import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { transparentize } from 'polished'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
@@ -24,7 +27,7 @@ import { useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { BiQr } from 'react-icons/bi'
 
-function Claim() {
+function Claim(props: { tokenDataString: string }) {
   const { config } = useProjectConfig()
   const router = useRouter()
   const { environment } = useEnvironmentCtx()
@@ -34,10 +37,39 @@ function Claim() {
   const { tokenManagerString, qrcode } = router.query
   const tokenManagerId = tryPublicKey(tokenManagerString)
   const tokenQuery = useTokenData(tokenManagerId ?? undefined)
-  const tokenData = tokenQuery.data
-  console.log(tokenData)
+  const tokenData = convertStringsToPubkeys(
+    JSON.parse(props.tokenDataString)
+  ) as TokenData
   return (
     <div className="flex h-screen flex-col">
+      <Head>
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@cardinal_labs" />
+        <meta
+          name="twitter:title"
+          content={
+            tokenData.tokenManager?.parsed.state === TokenManagerState.Claimed
+              ? `Just claimed ${tokenData.metadata?.data.name} on Cardinal's NFT Rental Marketplace`
+              : `Rent ${tokenData.metadata?.data.name} on Cardinal's NFT Rental Marketplace`
+          }
+        />
+        <meta
+          name="twitter:description"
+          content="Rent and Claim your favorite NFTs on Cardinal's Rental Marketplace"
+        />
+        <meta
+          name="twitter:image"
+          content={`${
+            process.env.NEXT_PUBLIC_BASE_URL
+          }/api/generateTwitterImage?nftImageUri=${
+            tokenData.metadata?.data.image
+          }${
+            tokenData.tokenManager?.parsed.state === TokenManagerState.Claimed
+              ? '&claimed=true'
+              : ''
+          }`}
+        />
+      </Head>
       <HeaderSlim />
       <div className="mx-auto w-[500px] max-w-[86vw] flex-grow pt-[4vh] lg:pt-[10vh]">
         <div className="mb-6 text-center">

@@ -3,7 +3,7 @@ import { DisplayAddress } from '@cardinal/namespaces-components'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { BN } from '@project-serum/anchor'
 import type * as splToken from '@solana/spl-token'
-import type { TokenData } from 'api/api'
+import type { TokenData } from 'apis/api'
 import {
   getPriceFromTokenData,
   getPriceOrRentalRate,
