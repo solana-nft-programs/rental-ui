@@ -1,4 +1,4 @@
-import type { TokenData } from 'api/api'
+import type { TokenData } from 'apis/api'
 import type { ProjectConfig } from 'config/config'
 import { projectConfigs } from 'config/config'
 import type { NextPageContext } from 'next'

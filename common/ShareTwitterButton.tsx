@@ -1,5 +1,5 @@
 import { css } from '@emotion/react'
-import type { TokenData } from 'api/api'
+import type { TokenData } from 'apis/api'
 import type { ProjectConfig } from 'config/config'
 import type { TxResult } from 'rental-components/components/RentalIssueCard'
 

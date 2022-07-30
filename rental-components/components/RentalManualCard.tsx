@@ -1,6 +1,6 @@
 import { ProfileSmall } from '@cardinal/namespaces-components'
 import type { Keypair } from '@solana/web3.js'
-import type { TokenData } from 'api/api'
+import type { TokenData } from 'apis/api'
 import { Alert } from 'common/Alert'
 import { Button } from 'common/Button'
 import { Pill } from 'common/Pill'

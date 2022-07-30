@@ -1,4 +1,4 @@
-import type { TokenData } from 'api/api'
+import type { TokenData } from 'apis/api'
 import { handleCopy } from 'components/Browse'
 import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { FaLink } from 'react-icons/fa'

@@ -4,7 +4,7 @@ import {
 } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { css } from '@emotion/react'
 import Tooltip from '@mui/material/Tooltip'
-import type { TokenData } from 'api/api'
+import type { TokenData } from 'apis/api'
 import { metadataUrl, pubKeyUrl } from 'common/utils'
 import { useHandleReturnRental } from 'handlers/useHandleReturnRental'
 import { useHandleUnissueRental } from 'handlers/useHandleUnissueRental'

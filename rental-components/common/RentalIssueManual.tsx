@@ -1,6 +1,6 @@
 import { pubKeyUrl, shortPubKey, tryPublicKey } from '@cardinal/common'
 import { css } from '@emotion/react'
-import type { TokenData } from 'api/api'
+import type { TokenData } from 'apis/api'
 import { Alert } from 'common/Alert'
 import { Button } from 'common/Button'
 import { handleCopy } from 'components/Browse'

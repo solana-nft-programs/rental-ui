@@ -1,4 +1,4 @@
-import type { TokenData } from 'api/api'
+import type { TokenData } from 'apis/api'
 import { GlyphCheck } from 'assets/GlyphCheck'
 import { Alert } from 'common/Alert'
 import { Glow } from 'common/Glow'

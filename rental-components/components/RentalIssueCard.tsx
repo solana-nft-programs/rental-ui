@@ -1,7 +1,7 @@
 import { capitalizeFirstLetter, getQueryParam } from '@cardinal/common'
 import { css } from '@emotion/react'
 import type { Keypair } from '@solana/web3.js'
-import type { TokenData } from 'api/api'
+import type { TokenData } from 'apis/api'
 import { GlyphEdit } from 'assets/GlyphEdit'
 import { Tooltip } from 'common/Tooltip'
 import { lighten } from 'polished'

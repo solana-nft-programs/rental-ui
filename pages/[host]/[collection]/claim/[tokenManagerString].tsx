@@ -1,6 +1,6 @@
 import { tryPublicKey } from '@cardinal/common'
 import { Connection } from '@solana/web3.js'
-import { getTokenData } from 'api/api'
+import { getTokenData } from 'apis/api'
 import Claim from 'components/Claim'
 import { ENVIRONMENTS } from 'providers/EnvironmentProvider'
 
