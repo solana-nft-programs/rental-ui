@@ -139,6 +139,7 @@ export function getTokenRentalRate(
     (extensionPaymentAmount.toNumber() / extensionDurationSeconds.toNumber()) *
     rateSeconds.toNumber()
 
+  const tokenPrice = getPriceFromTokenData(tokenData, paymentMintInfos)
   try {
     return {
       rate: paymentMintInfos[extensionPaymentMint.toString()]
@@ -147,7 +148,7 @@ export function getTokenRentalRate(
             new BN(marketplaceRate)
           ).toNumber()
         : 0,
-      displayText: `${fmtMintAmount(
+      displayText: `${tokenPrice ? `${tokenPrice} + ` : ''}${fmtMintAmount(
         paymentMintInfos[extensionPaymentMint.toString()],
         new BN(marketplaceRate)
       )}${getSymbolFromTokenData(tokenData)} / ${rateOption?.substring(

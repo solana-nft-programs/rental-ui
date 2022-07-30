@@ -172,12 +172,12 @@ export const RentalSummary: React.FC<Props> = ({
             className="mt-2"
             tokenData={tokenData}
           />
-          {/* <SolanaLogo width={24} height={24} className="mt-2" /> */}
         </div>
         <div className="mb-2">
           <div className="text-lg font-medium">
             {extensionSeconds
-              ? getExtensionPrice(
+              ? getPriceFromTokenData(tokenData, paymentMints.data) +
+                getExtensionPrice(
                   tokenData,
                   extensionSeconds,
                   paymentMints.data

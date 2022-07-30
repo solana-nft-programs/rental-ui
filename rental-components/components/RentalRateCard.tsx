@@ -172,6 +172,7 @@ export const RentalRateCard = ({
             handleRateRental.mutate(
               {
                 tokenData: {
+                  claimApprover: tokenData.claimApprover,
                   tokenManager: tokenData.tokenManager,
                   timeInvalidator: tokenData.timeInvalidator,
                 },

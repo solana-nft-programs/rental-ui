@@ -8,6 +8,7 @@ import {
   withExtendExpiration,
   withResetExpiration,
 } from '@cardinal/token-manager'
+import type { PaidClaimApproverData } from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
 import type { TimeInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
 import type { TokenManagerData } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import type * as splToken from '@solana/spl-token'
@@ -23,6 +24,7 @@ import { useMutation, useQueryClient } from 'react-query'
 
 export interface HandleRateRentalParams {
   tokenData: {
+    claimApprover?: AccountData<PaidClaimApproverData> | null
     tokenManager?: AccountData<TokenManagerData> | null
     timeInvalidator?: AccountData<TimeInvalidatorData> | null
   }
@@ -57,9 +59,10 @@ export const useHandleRateRental = () => {
 
       // wrap sol if there is payment required
       const paymentAmount =
+        (tokenData?.claimApprover?.parsed.paymentAmount.toNumber() ?? 0) +
         ((extensionPaymentAmount?.toNumber() ?? 0) /
           (extensionDurationSeconds?.toNumber() ?? 0)) *
-        extensionSeconds
+          extensionSeconds
       if (
         extensionPaymentMint?.toString() === WRAPPED_SOL_MINT.toString() &&
         paymentAmount > 0
@@ -133,6 +136,7 @@ export const useHandleRateRental = () => {
           confirmOptions: {
             commitment: 'confirmed',
             maxRetries: 3,
+            skipPreflight: true,
           },
           signers: otpKeypair ? [otpKeypair] : [],
           notificationConfig: {},

@@ -45,7 +45,7 @@ export const getDurationText = (tokenData: TokenData, UTCNow: number) => {
                   tokenData.timeInvalidator?.parsed.durationSeconds.toNumber(),
                   false
                 )
-              : '∞'}
+              : '0'}
           </b>
         </p>
       ) : tokenData.timeInvalidator?.parsed.expiration ? (
