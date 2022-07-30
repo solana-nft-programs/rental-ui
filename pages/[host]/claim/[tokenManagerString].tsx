@@ -1,12 +1,39 @@
+import { tryPublicKey } from '@cardinal/common'
+import { Connection } from '@solana/web3.js'
+import { getTokenData } from 'api/api'
 import Claim from 'components/Claim'
+import { ENVIRONMENTS } from 'providers/EnvironmentProvider'
 
 function ClaimHome(props: any) {
   return <Claim {...props} />
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context: any) {
+  const query = context.query
+  const tokenManagerString = query.tokenManagerString
+  const cluster = (query.project || query.host)?.includes('dev')
+    ? 'devnet'
+    : query.host?.includes('test')
+    ? 'testnet'
+    : query.cluster || process.env.BASE_CLUSTER || 'mainnet'
+  console.log(process.env.BASE_CLUSTER)
+  const foundEnvironment = ENVIRONMENTS.find((e) => e.label === cluster)
+  const environment = foundEnvironment ?? ENVIRONMENTS[0]!
+  const connection = new Connection(environment.primary, {
+    commitment: 'recent',
+  })
+
+  const tokenManagerId = tryPublicKey(tokenManagerString)
+  if (!tokenManagerId) {
+    return {}
+  }
+
+  const tokenData = await getTokenData(connection, tokenManagerString)
+
   return {
-    props: { test: 'asd' },
+    props: {
+      tokenData: JSON.stringify(tokenData),
+    },
   }
 }
 

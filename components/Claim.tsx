@@ -48,11 +48,15 @@ function Claim(props: any) {
         <meta name="twitter:site" content="@cardinal_labs" />
         <meta
           name="twitter:title"
-          content={`Rent ${tokenData.metadata?.data.name} on Cardinal's NFT Rental Marketplace`}
+          content={
+            tokenData.tokenManager?.parsed.state === TokenManagerState.Claimed
+              ? `Just claimed ${tokenData.metadata?.data.name} on Cardinal's NFT Rental Marketplace`
+              : `Rent ${tokenData.metadata?.data.name} on Cardinal's NFT Rental Marketplace`
+          }
         />
         <meta
           name="twitter:description"
-          content="Rent your favorite NFTs on the Cardinal's NFT Rental Marketplace"
+          content="Rent and Claim your favorite NFTs on Cardinal's Rental Marketplace"
         />
         <meta
           name="twitter:image"
@@ -61,8 +65,7 @@ function Claim(props: any) {
           }/api/generateTwitterImage?nftImageUri=${
             tokenData.metadata?.data.image
           }${
-            parsedTokenData.tokenManager?.parsed.state ===
-            TokenManagerState.Claimed
+            tokenData.tokenManager?.parsed.state === TokenManagerState.Claimed
               ? '&claimed=true'
               : ''
           }`}
