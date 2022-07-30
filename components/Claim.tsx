@@ -75,7 +75,6 @@ function Claim(props: any) {
       <div className="mx-auto w-[500px] max-w-[86vw] flex-grow pt-[4vh] lg:pt-[10vh]">
         <div className="mb-6 text-center">
           <div className="mb-2 text-4xl">Claim Asset</div>
-
           <div className="text-xs font-extralight">
             <a
               href={pubKeyUrl(

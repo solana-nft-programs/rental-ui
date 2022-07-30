@@ -23,6 +23,27 @@ const generateTwitterImage = async (
   backgroundCtx.fillStyle = 'rgba(26, 27, 32, 1)'
   backgroundCtx.fillRect(0, 0, WIDTH, HEIGHT)
 
+  function drawRoundedImage(
+    ctx: canvas.CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    radius: number
+  ) {
+    ctx.beginPath()
+    ctx.moveTo(x + radius, y)
+    ctx.lineTo(x + width - radius, y)
+    ctx.quadraticCurveTo(x + width, y, x + width, y + radius)
+    ctx.lineTo(x + width, y + height - radius)
+    ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height)
+    ctx.lineTo(x + radius, y + height)
+    ctx.quadraticCurveTo(x, y + height, x, y + height - radius)
+    ctx.lineTo(x, y + radius)
+    ctx.quadraticCurveTo(x, y, x + radius, y)
+    ctx.closePath()
+  }
+
   const img = await canvas.loadImage(baseImgUri)
   const imgContext = imageCanvas.getContext('2d')
   if (img.height > img.width) {
@@ -37,13 +58,10 @@ const generateTwitterImage = async (
   const yDiff = claimed ? 177 : 112
 
   const nftImage = await canvas.loadImage(nftImageUri)
-  const nftImageContext = imageCanvas.getContext('2d')
-  nftImageContext.fillRect(xDiff, yDiff, nftWidth, nftHeight)
-  if (nftImage.height > nftImage.width) {
-    nftImageContext.drawImage(nftImage, xDiff, yDiff, nftWidth, nftHeight)
-  } else {
-    nftImageContext.drawImage(nftImage, xDiff, yDiff, nftWidth, nftHeight)
-  }
+  drawRoundedImage(backgroundCtx, xDiff, yDiff, nftWidth, nftHeight, 18)
+  backgroundCtx.clip()
+  backgroundCtx.drawImage(nftImage, xDiff, yDiff, nftWidth, nftHeight)
+  backgroundCtx.closePath()
 
   const buffer = imageCanvas.toBuffer('image/png')
   res.writeHead(200, {
