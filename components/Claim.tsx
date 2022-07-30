@@ -41,7 +41,6 @@ function Claim(props: any) {
     JSON.parse(props.tokenData)
   ) as TokenData
   const tokenData = parsedTokenData
-  const imageData = props.imageData
   return (
     <div className="flex h-screen flex-col">
       <Head>
@@ -57,15 +56,18 @@ function Claim(props: any) {
         />
         <meta
           name="twitter:image"
-          content={`${process.env.NEXT_PUBLIC_BASE_URL}/api/generateTwitterImage?nftImageUri=${tokenData.metadata?.data.image}`}
+          content={`${
+            process.env.NEXT_PUBLIC_BASE_URL
+          }/api/generateTwitterImage?nftImageUri=${
+            tokenData.metadata?.data.image
+          }${
+            parsedTokenData.tokenManager?.parsed.state ===
+            TokenManagerState.Claimed
+              ? '&claimed=true'
+              : ''
+          }`}
         />
       </Head>
-      <img
-        width="40%"
-        className="mx-auto"
-        alt="dynamic meta"
-        src={`${process.env.NEXT_PUBLIC_BASE_URL}/api/generateTwitterImage?nftImageUri=${tokenData.metadata?.data.image}`}
-      />
       <HeaderSlim />
       <div className="mx-auto max-w-[500px] flex-grow pt-[5vh] lg:pt-[12vh]">
         <div className="mb-6 text-center">
