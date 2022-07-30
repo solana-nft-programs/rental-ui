@@ -53,7 +53,7 @@ function ClaimQRCode({
       )}`,
       image: config.logoImage,
       dotsOptions: {
-        color: config.colors.secondary,
+        color: config.colors.accent,
         type: 'extra-rounded',
       },
       cornersSquareOptions: {

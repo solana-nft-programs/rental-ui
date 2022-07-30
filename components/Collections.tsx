@@ -12,7 +12,7 @@ import type { ProjectConfig } from 'config/config'
 import { projectConfigs } from 'config/config'
 import { queryId, useGlobalStats } from 'hooks/useGlobalStats'
 import { useRouter } from 'next/router'
-import { lighten, transparentize } from 'polished'
+import { transparentize } from 'polished'
 
 export const Collections = () => {
   const router = useRouter()
@@ -30,28 +30,27 @@ export const Collections = () => {
   )
 
   return (
-    <div className="bg-[#0B0B0B]">
+    <div className="bg-dark-5">
       <div
+        className="relative z-0"
         css={css`
           background: linear-gradient(180deg, #140a51 0%, #0b0b0b 100%);
         `}
       >
+        <div className="blur-4xl absolute left-8 top-52 -z-10 h-[120px] w-[400px] -rotate-[60deg] bg-glow blur-[100px]" />
+        <div className="blur-4xl absolute -right-20 top-72 -z-10 h-[100px] w-[550px] -rotate-[60deg] bg-glow blur-[120px]" />
         <HeaderSlim />
-        <div className="flex flex-wrap justify-between gap-10 px-16 py-28">
-          <Glow angle={130} scale={1.5}>
-            <div className="flex flex-col gap-2">
-              <div className="text-5xl text-light-0">
-                NFT Rental Marketplace
-              </div>
-              <div className="text-lg text-medium-3">
-                The first NFT Rental Marketplace on Solana. <br />
-                Hold the <b>actual NFT</b> and access its utility for the
-                duration rented.
-              </div>
+        <div className="flex flex-wrap justify-between gap-10 px-8 py-28 md:px-16">
+          <div className="flex flex-col gap-2">
+            <div className="text-5xl text-light-0">NFT Rental Marketplace</div>
+            <div className="text-lg text-medium-3">
+              The first NFT Rental Marketplace on Solana. <br />
+              Hold the <b>actual NFT</b> and access its utility for the duration
+              rented.
             </div>
-          </Glow>
+          </div>
           <div className="flex flex-col items-end justify-end gap-5 ">
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-2 lg:gap-6">
               <div className="text-lg text-medium-3">
                 Are you a collection owner?
               </div>
@@ -97,7 +96,7 @@ export const Collections = () => {
           </div>
         </div>
       </div>
-      <div className="mx-auto px-16">
+      <div className="mx-auto px-8 md:px-16">
         {Object.entries(categories).map(([type, configs], i) => (
           <div key={type}>
             {i > 0 && (
@@ -110,10 +109,7 @@ export const Collections = () => {
                     className="bg-opacity-1 cursor-pointer transition-colors"
                     css={css`
                       &:hover {
-                        background: ${transparentize(
-                          0.7,
-                          lighten(0.15, config.colors.main)
-                        )};
+                        background: ${transparentize(0.8, config.colors.glow)};
                       }
                     `}
                     onClick={() =>
@@ -124,11 +120,16 @@ export const Collections = () => {
                       <div
                         className="flex h-full w-full items-center justify-center p-12"
                         css={css`
-                          background: ${lighten(0.07, config.colors.main)};
+                          background: ${transparentize(
+                            0.8,
+                            config.colors.glow
+                          )};
                         `}
                       >
                         <img
-                          className="max-h-full rounded-xl"
+                          className={`max-h-full rounded-xl ${
+                            config.logoPadding && 'p-3'
+                          }`}
                           src={config.logoImage}
                           alt={config.name}
                         />
@@ -175,13 +176,13 @@ export const Collections = () => {
         ))}
       </div>
 
-      <div className="my-24 px-2 md:px-12">
+      <div className="my-24 px-8 md:px-16">
         {/* <div className="my-12 flex items-center justify-center text-4xl text-light-0">
           How It Works
         </div> */}
         <div className="mx-auto my-24 h-[2px] w-[90%] rounded-lg bg-border"></div>
-        <div className="mb-10 px-10">
-          <div className="mb-6 flex justify-center px-3 text-center text-4xl text-light-0">
+        <div className="mb-10">
+          <div className="mb-6 flex justify-center text-center text-4xl text-light-0">
             Renting a Token
           </div>
           <div className="grid w-full grid-cols-1 flex-wrap gap-4  md:grid-cols-3">
@@ -224,14 +225,16 @@ export const Collections = () => {
                     {icon}
                   </div>
                 </Glow>
-                <div className="my-4 text-3xl text-light-0">{header}</div>
+                <div className="my-4 text-center text-3xl text-light-0">
+                  {header}
+                </div>
                 <div className="text-center text-medium-3">{description}</div>
               </div>
             ))}
           </div>
         </div>
-        <div className="px-10">
-          <div className="mb-6 mt-20 flex justify-center px-3 text-center text-4xl text-light-0">
+        <div>
+          <div className="mb-6 mt-20 flex justify-center text-center text-4xl text-light-0">
             Listing a Token
           </div>
           <div className="grid w-full grid-cols-1 flex-wrap gap-4  md:grid-cols-3">
@@ -274,7 +277,9 @@ export const Collections = () => {
                     {icon}
                   </div>
                 </Glow>
-                <div className="my-4 text-3xl text-light-0">{header}</div>
+                <div className="my-4 text-center text-3xl text-light-0">
+                  {header}
+                </div>
                 <div className="text-center text-medium-3">{description}</div>
               </div>
             ))}

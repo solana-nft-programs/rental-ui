@@ -2,7 +2,6 @@ import { css } from '@emotion/react'
 import { ChevronDown } from 'assets/ChevronDown'
 import { ChevronRight } from 'assets/ChevronRight'
 import { GlyphSelectClear } from 'assets/GlyphSelectClear'
-import { lighten } from 'polished'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useEffect, useRef, useState } from 'react'
 
@@ -54,9 +53,8 @@ export const Selector = <T,>({
         css={
           colorized &&
           css`
-            background: ${lighten(0.08, config.colors.main)} !important;
             &:hover {
-              border-color: ${config.colors.secondary} !important;
+              border-color: ${config.colors.accent} !important;
             }
           `
         }
@@ -88,12 +86,6 @@ export const Selector = <T,>({
         className={`absolute w-full rounded-md bg-dark-4 transition-all ${
           isOpen ? 'h-auto opacity-100' : 'h-0 overflow-hidden opacity-0'
         }`}
-        css={
-          colorized &&
-          css`
-            background: ${lighten(0.08, config.colors.main)} !important;
-          `
-        }
       >
         {options.map((o) => (
           <div
@@ -103,7 +95,7 @@ export const Selector = <T,>({
               colorized &&
               css`
                 &:hover {
-                  color: ${config.colors.secondary} !important;
+                  color: ${config.colors.accent} !important;
                 }
               `
             }

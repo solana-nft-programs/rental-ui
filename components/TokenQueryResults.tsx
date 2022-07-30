@@ -1,5 +1,4 @@
 import type { TokenData } from 'apis/api'
-import { Glow } from 'common/Glow'
 import { Info } from 'common/Info'
 import { MultiSelector } from 'common/MultiSelector'
 import { elligibleForRent } from 'common/NFT'
@@ -115,12 +114,10 @@ export const TokenQueryResults: React.FC<Props> = ({
           )}
         </div>
         <div className="flex">
-          <Glow scale={1.5} opacity={1} colorized>
-            <TabSelector defaultOption={PANE_TABS[0]} options={PANE_TABS} />
-          </Glow>
+          <TabSelector defaultOption={PANE_TABS[0]} options={PANE_TABS} />
         </div>
       </div>
-      <Info section={tokenGroup} />
+      <Info colorized section={tokenGroup} />
       <TokenQueryData
         allTokens={tokenQuery.data}
         isFetched={tokenQuery.isFetched}

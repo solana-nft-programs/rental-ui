@@ -1,5 +1,4 @@
 import { css } from '@emotion/react'
-import { darken } from 'polished'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 
 import { HeroSmall } from './HeroSmall'
@@ -17,13 +16,12 @@ export const HeroLarge: React.FC = () => {
           src={config.hero}
           alt={config.name}
         />
-        <div
-          className="absolute left-8 flex h-24 w-24 -translate-y-[65%] items-center justify-center overflow-hidden rounded-full border-4 border-border lg:h-32 lg:w-32"
-          css={css`
-            background: ${darken(0.05, config.colors.main)};
-          `}
-        >
-          <img className="w-full" src={config.logoImage} alt={config.name} />
+        <div className="absolute left-8 flex h-24 w-24 -translate-y-[65%] items-center justify-center overflow-hidden rounded-full border-4 border-border bg-dark-5 lg:h-32 lg:w-32">
+          <img
+            className={`w-full ${config.logoPadding && 'p-3'}`}
+            src={config.logoImage}
+            alt={config.name}
+          />
         </div>
       </div>
       <div className="flex w-full flex-grow flex-col justify-between py-4">
@@ -38,10 +36,10 @@ export const HeroLarge: React.FC = () => {
                   href={link}
                   target="_blank"
                   rel="noreferrer"
-                  className={`cursor-pointer text-xl text-light-0 transition-all duration-300`}
+                  className={`cursor-pointer text-xl text-light-0 transition-all duration-300 hover:text-primary`}
                   css={css`
                     &:hover {
-                      color: ${config.colors.secondary};
+                      color: ${config.colors.accent} !important;
                     }
                   `}
                 >

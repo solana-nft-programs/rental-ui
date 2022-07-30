@@ -1,5 +1,7 @@
+import { DisplayAddress } from '@cardinal/namespaces-components'
 import type { TokenData } from 'apis/api'
 import { handleCopy } from 'components/Browse'
+import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { FaLink } from 'react-icons/fa'
 
@@ -11,9 +13,10 @@ export const NFTHeader: React.FC<NFTHeaderProps> = ({
   tokenData,
 }: NFTHeaderProps) => {
   const { config } = useProjectConfig()
+  const { secondaryConnection } = useEnvironmentCtx()
   return (
     <div
-      className="flex w-full cursor-pointer flex-row text-sm font-bold text-white"
+      className="flex w-full cursor-pointer flex-col justify-between"
       onClick={() =>
         handleCopy(
           getLink(
@@ -22,11 +25,22 @@ export const NFTHeader: React.FC<NFTHeaderProps> = ({
         )
       }
     >
-      <p className="flex w-fit overflow-hidden text-ellipsis whitespace-nowrap text-left">
-        {tokenData.metadata?.data?.name}
-      </p>
-      <div className="ml-[6px] mt-[2px] flex w-fit">
-        <FaLink />
+      <div className="flex items-center gap-2 font-bold">
+        <div className="w-fit overflow-hidden text-ellipsis whitespace-nowrap text-left text-lg">
+          {tokenData.metadata?.data?.name}
+        </div>
+        <div className="flex w-fit">
+          <FaLink />
+        </div>
+      </div>
+      <div className="text-sm text-light-2">
+        <DisplayAddress
+          connection={secondaryConnection}
+          address={tokenData.tokenManager?.parsed.issuer || undefined}
+          height="18px"
+          width="100px"
+          dark={true}
+        />
       </div>
     </div>
   )

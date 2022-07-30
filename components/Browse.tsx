@@ -2,14 +2,12 @@ import { secondsToString } from '@cardinal/common'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { BN } from '@project-serum/anchor'
 import type * as splToken from '@solana/spl-token'
-import { useWallet } from '@solana/wallet-adapter-react'
 import type { TokenData } from 'apis/api'
 import { GlyphActivity } from 'assets/GlyphActivity'
 import { GlyphBrowse } from 'assets/GlyphBrowse'
 import { GlyphLargeClose } from 'assets/GlyphLargeClose'
 import { Card } from 'common/Card'
 import { DURATION_DATA } from 'common/DurationInput'
-import { Glow } from 'common/Glow'
 import { HeaderSlim } from 'common/HeaderSlim'
 import { HeroLarge } from 'common/HeroLarge'
 import { Info } from 'common/Info'
@@ -31,6 +29,7 @@ import { fmtMintAmount, getMintDecimalAmount } from 'common/units'
 import type { ProjectConfig, TokenSection } from 'config/config'
 import { useFilteredTokenManagers } from 'hooks/useFilteredTokenManagers'
 import { usePaymentMints } from 'hooks/usePaymentMints'
+import { useWalletId } from 'hooks/useWalletId'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { filterTokens, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useUTCNow } from 'providers/UTCNowProvider'
@@ -151,7 +150,7 @@ export function getTokenRentalRate(
       displayText: `${fmtMintAmount(
         paymentMintInfos[extensionPaymentMint.toString()],
         new BN(marketplaceRate)
-      )} ${getSymbolFromTokenData(tokenData)} / ${rateOption?.substring(
+      )}${getSymbolFromTokenData(tokenData)} / ${rateOption?.substring(
         0,
         rateOption.length - 1
       )}`,
@@ -232,7 +231,7 @@ const getRentalDuration = (tokenData: TokenData, UTCNow: number) => {
 
 export const Browse = () => {
   const { environment } = useEnvironmentCtx()
-  const wallet = useWallet()
+  const walletId = useWalletId()
   const { config } = useProjectConfig()
   const tokenManagers = useFilteredTokenManagers()
   const tokenManagersForConfig = tokenManagers.data || []
@@ -364,22 +363,15 @@ export const Browse = () => {
       <HeaderSlim
         loading={tokenManagers.isFetched && tokenManagers.isRefetching}
         tabs={[
-          // {
-          //   name: 'Wallet',
-          //   anchor: wallet.publicKey?.toBase58() || 'wallet',
-          //   disabled: !wallet.connected,
-          //   tooltip: !wallet.connected ? 'Connect wallet' : undefined,
-          // },
           { name: 'Browse', anchor: 'browse' },
           {
             name: 'Manage',
             anchor: 'manage',
-            disabled: !wallet.connected || config.disableListing,
-            tooltip: !wallet.connected ? 'Connect wallet' : undefined,
+            disabled: !walletId,
+            tooltip: !walletId ? 'Connect wallet' : undefined,
           },
         ]}
       />
-
       <HeroLarge />
       <div className="mx-10 mt-4 flex items-end gap-2">
         <div className="text-xl text-light-0">Results</div>
@@ -432,7 +424,7 @@ export const Browse = () => {
           />
           <Selector<OrderCategories>
             colorized
-            className="mint-w-[190px]"
+            className="min-w-[240px]"
             defaultOption={{
               label: OrderCategories.RateLowToHigh,
               value: OrderCategories.RateLowToHigh,
@@ -449,12 +441,10 @@ export const Browse = () => {
           />
         </div>
         <div className="flex">
-          <Glow scale={1.5} opacity={1} colorized>
-            <TabSelector defaultOption={PANE_TABS[0]} options={PANE_TABS} />
-          </Glow>
+          <TabSelector defaultOption={PANE_TABS[0]} options={PANE_TABS} />
         </div>
       </div>
-      <Info section={groupedFilteredAndSortedTokens[selectedGroup]} />
+      <Info colorized section={groupedFilteredAndSortedTokens[selectedGroup]} />
       <div className="mx-auto mt-12 px-10">
         {!tokenManagers.isFetched ? (
           <div className="flex flex-wrap justify-center gap-4 md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
@@ -480,7 +470,7 @@ export const Browse = () => {
                     {
                       [TokenManagerState.Initialized]: <></>,
                       [TokenManagerState.Issued]: (
-                        <div className="flex w-full flex-row justify-between text-sm">
+                        <div className="flex h-full w-full flex-row items-center justify-between text-sm">
                           <NFTIssuerInfo tokenData={tokenData} />
                           <NFTClaimButton
                             tokenData={tokenData}
@@ -489,7 +479,7 @@ export const Browse = () => {
                         </div>
                       ),
                       [TokenManagerState.Claimed]: (
-                        <div className="flex flex-row justify-between text-sm">
+                        <div className="flex h-full flex-row justify-between text-sm">
                           <NFTIssuerInfo tokenData={tokenData} />
                           <NFTRevokeButton tokenData={tokenData} />
                         </div>

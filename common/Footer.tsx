@@ -1,4 +1,5 @@
 import { FaDiscord, FaGithub, FaMedium, FaTwitter } from 'react-icons/fa'
+import { LogoTitled } from 'rental-components/common/LogoTitled'
 
 export const SOCIALS = {
   discord: { icon: <FaDiscord />, link: 'https://discord.gg/byq6uNTugq' },
@@ -8,16 +9,16 @@ export const SOCIALS = {
 }
 
 export const Footer = ({
-  bgColor = 'rgb(26, 27, 32)',
   accentColor = '#FFFFFF',
 }: {
-  bgColor?: string
   accentColor?: string
 }) => {
   return (
     <div className="mt-10 bg-white bg-opacity-5 px-10 pt-5 shadow-2xl md:px-32">
       <div className="flex w-full flex-wrap items-start justify-between gap-10 py-10">
         <div className="flex items-center">
+          <LogoTitled className="inline-block h-6" />
+          {/* 
           <img
             alt="Cardinal logo"
             className="inline-block h-[28px]"
@@ -25,7 +26,7 @@ export const Footer = ({
           />
           <span className="ml-3 text-2xl font-semibold text-white">
             Cardinal
-          </span>
+          </span> */}
         </div>
         <div className="flex gap-10 self-end text-center md:gap-20">
           <span className="flex flex-col items-start gap-1">

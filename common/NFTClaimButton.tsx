@@ -3,7 +3,6 @@ import type * as splToken from '@solana/spl-token'
 import { useWallet } from '@solana/wallet-adapter-react'
 import type { PublicKey } from '@solana/web3.js'
 import type { TokenData } from 'apis/api'
-import { getSymbolFromTokenData, getTokenRentalRate } from 'components/Browse'
 import { allowedToRent } from 'handlers/useHandleClaimRental'
 import { useOtp } from 'hooks/useOtp'
 import { PAYMENT_MINTS, usePaymentMints } from 'hooks/usePaymentMints'
@@ -81,10 +80,6 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
         tokenDatas ?? []
       ))
     ) {
-      console.log(
-        tokenData,
-        tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber()
-      )
       if (!tokenData.timeInvalidator && !tokenData.useInvalidator) {
         rentalManualCard.showModal({ tokenData, otpKeypair })
       } else if (isRateBasedListing(tokenData)) {
@@ -103,28 +98,30 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
   return (
     <ButtonSmall
       disabled={!wallet.publicKey}
-      className="my-auto inline-block max-w-[45%] flex-none text-xs"
+      className="inline-block flex-none px-4 py-2 text-lg"
       onClick={async () => await handleClaim(tokenData)}
     >
       {isRateBasedListing(tokenData) && paymentMintInfos.data ? (
         <>
-          {
+          Rent
+          {/* {
             getTokenRentalRate(config, paymentMintInfos.data, tokenData)
               ?.displayText
-          }{' '}
+          }{' '} */}
         </>
       ) : tokenData.claimApprover?.parsed?.paymentMint &&
         paymentMintInfos.data &&
         paymentMintInfos.data[
           tokenData.claimApprover?.parsed?.paymentMint.toString()
         ] ? (
-        `Claim ${fmtMintAmount(
-          paymentMintInfos.data[
-            tokenData?.claimApprover?.parsed?.paymentMint.toString()
-          ],
-          tokenData.claimApprover?.parsed?.paymentAmount ?? new BN(0)
-        )}${getSymbolFromTokenData(tokenData)}`
+        'Rent'
       ) : (
+        // `Claim ${fmtMintAmount(
+        //   paymentMintInfos.data[
+        //     tokenData?.claimApprover?.parsed?.paymentMint.toString()
+        //   ],
+        //   tokenData.claimApprover?.parsed?.paymentAmount ?? new BN(0)
+        // )}${getSymbolFromTokenData(tokenData)}`
         'FREE'
       )}
     </ButtonSmall>

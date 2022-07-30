@@ -13,7 +13,7 @@ export const QRCode = ({ data }: { data: string }) => {
       data: data,
       image: config.logoImage,
       dotsOptions: {
-        color: config.colors.secondary,
+        color: config.colors.accent,
         type: 'extra-rounded',
       },
       cornersSquareOptions: {

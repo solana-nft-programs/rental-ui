@@ -1,5 +1,4 @@
 import { css } from '@emotion/react'
-import { lighten } from 'polished'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useState } from 'react'
 
@@ -29,12 +28,7 @@ export const TabSelector = <T,>({
   const { config } = useProjectConfig()
   const [value, setValue] = useState<Option<T> | undefined>(defaultOption)
   return (
-    <div
-      className="flex rounded-lg border-[1px] border-border"
-      css={css`
-        background: ${lighten(0.08, config.colors.main)};
-      `}
-    >
+    <div className="flex rounded-lg border-[1px] border-border bg-dark-4">
       {options.map((o, i) => (
         <Tooltip key={i} title={o.tooltip || ''}>
           <div
@@ -42,17 +36,13 @@ export const TabSelector = <T,>({
               o.disabled
                 ? 'cursor-default opacity-25'
                 : 'cursor-pointer hover:text-primary'
-            }`}
+            } ${value?.value === o.value ? 'bg-dark-6' : ''}`}
             css={css`
-              background: ${value?.value === o.value
-                ? lighten(0.03, config.colors.main)
-                : ''};
-
               ${!o.disabled &&
               colorized &&
               css`
                 &:hover {
-                  color: ${config.colors.secondary} !important;
+                  color: ${config.colors.accent} !important;
                 }
               `}
             `}

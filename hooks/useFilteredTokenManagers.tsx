@@ -140,7 +140,7 @@ export const useFilteredTokenManagers = () => {
           let filter = false
           data.invalidator_address.forEach(({ invalidator }) => {
             if (
-              !config.showUnknownInvalidate &&
+              !config.showUnknownInvalidators &&
               !knownInvalidators[i]?.includes(invalidator)
             ) {
               filter = true

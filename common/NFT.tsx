@@ -2,11 +2,52 @@ import { getExpirationString } from '@cardinal/common'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import type { TokenData } from 'apis/api'
 import type { ProjectConfig } from 'config/config'
-import { lighten } from 'polished'
-import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useUTCNow } from 'providers/UTCNowProvider'
+import type { InvalidatorOption } from 'rental-components/components/RentalIssueCard'
 
 import { NFTContexualMenu } from './NFTContexualMenu'
+import { isRateBasedListing } from './NFTIssuerInfo'
+import { Pill } from './Pill'
+
+export const rentalType = (tokenData: TokenData) => {
+  return !tokenData.timeInvalidator && !tokenData.useInvalidator
+    ? 'manual'
+    : isRateBasedListing(tokenData)
+    ? 'rate'
+    : tokenData.timeInvalidator?.parsed?.durationSeconds
+    ? 'duration'
+    : 'expiration'
+}
+
+export const rentalTypeColor = (type: InvalidatorOption) =>
+  ({
+    manual: 'text-primary-2',
+    rate: 'text-primary',
+    duration: 'text-secondary',
+    expiration: 'text-blue',
+  }[type])
+
+export const rentalTypePill = (type: InvalidatorOption) =>
+  ({
+    manual: (
+      <Pill className="border-[1px] border-border text-primary-2">Manual</Pill>
+    ),
+    rate: (
+      <Pill className="border-[1px] border-border text-primary">
+        Rate rental
+      </Pill>
+    ),
+    duration: (
+      <Pill className="border-[1px] border-border text-secondary">
+        Fixed duration
+      </Pill>
+    ),
+    expiration: (
+      <Pill className="border-[1px] border-border text-blue">
+        Fixed expiration
+      </Pill>
+    ),
+  }[type])
 
 export const elligibleForRent = (
   config: ProjectConfig,
@@ -67,24 +108,24 @@ interface NFTProps {
 }
 
 export function NFT({ tokenData }: NFTProps) {
-  const { config } = useProjectConfig()
   const { UTCNow } = useUTCNow()
   const { metadata } = tokenData
   return (
-    <div
-      className="relative min-w-full rounded-xl"
-      style={{
-        background: lighten(0.02, config.colors.main),
-      }}
-    >
+    <div className="relative min-w-full rounded-xl bg-dark-5">
       <NFTContexualMenu tokenData={tokenData} />
       <div className={`relative flex w-full items-center justify-center`}>
-        {tokenData.timeInvalidator && getExpiration(tokenData, UTCNow) && (
+        {tokenData.timeInvalidator && getExpiration(tokenData, UTCNow) ? (
           <div
             className={`absolute top-3 left-3 z-20 rounded-md bg-dark-5 px-2 py-1 text-sm text-light-0`}
           >
             ⏰ {getExpiration(tokenData, UTCNow)}
           </div>
+        ) : (
+          tokenData && (
+            <div className={`absolute top-3 left-3 z-20`}>
+              {/* {rentalTypePill(rentalType(tokenData))} */}
+            </div>
+          )
         )}
         {metadata && metadata.data && (
           <img

@@ -1,6 +1,5 @@
-import { contrastColorMode } from '@cardinal/common'
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import { lighten } from 'polished'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import React from 'react'
 import toast, { resolveValue, ToastBar, Toaster } from 'react-hot-toast'
@@ -98,22 +97,16 @@ export function ToastContainer() {
         >
           {() => (
             <div
-              className={`relative flex w-full max-w-sm gap-4 rounded border p-4 shadow ${
+              className={`relative flex w-full max-w-sm gap-4 rounded border border-border bg-dark-4 p-4 text-light-0 shadow ${
                 t.visible ? 'animate-enter' : 'animate-leave'
               }`}
-              style={{
-                borderColor: config.colors.secondary,
-                backgroundColor: lighten(0.07, config.colors.main),
-                color: contrastColorMode(config.colors.main)[0],
-                wordBreak: 'break-word',
-              }}
+              css={css`
+                border-color: ${config.colors.glow} !important;
+                word-break: break-word;
+              `}
             >
               {resolveValue(t.message, t)}
-              <button
-                style={{ color: contrastColorMode(config.colors.main)[0] }}
-                className={``}
-                onClick={() => toast.dismiss(t.id)}
-              >
+              <button className={``} onClick={() => toast.dismiss(t.id)}>
                 <VscClose />
               </button>
             </div>

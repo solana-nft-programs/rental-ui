@@ -5,6 +5,7 @@ import { GlyphWallet } from 'assets/GlyphWallet'
 import { useRouter } from 'next/router'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useEffect, useState } from 'react'
+import { LogoTitled } from 'rental-components/common/LogoTitled'
 
 import { ButtonSmall } from './ButtonSmall'
 import { LoadingPulse } from './LoadingPulse'
@@ -48,24 +49,8 @@ export const HeaderSlim: React.FC<Props> = ({
               router.push(`/${location.search}`)
             }}
           >
-            <img
-              alt="Cardinal logo"
-              className="inline-block h-6"
-              src="/cardinal-crosshair.svg"
-            />
-            <span className="ml-2 text-2xl text-white">Cardinal</span>
+            <LogoTitled className="inline-block h-6" />
           </div>
-          {/* {(homeButton ||
-            (config.name !== 'default' && !host?.includes(config.name))) && (
-            <div
-              className={`cursor-pointer text-center text-light-0 opacity-80 transition-opacity hover:opacity-100`}
-              onClick={() => {
-                router.push(`/${location.search}`)
-              }}
-            >
-              Home
-            </div>
-          )} */}
         </div>
         <div className="relative lg:absolute lg:left-1/2 lg:-translate-x-1/2">
           {tabs && (

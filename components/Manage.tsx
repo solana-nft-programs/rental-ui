@@ -162,7 +162,8 @@ export const Manage = () => {
           {
             name: 'Manage',
             anchor: 'manage',
-            disabled: !walletId || config.disableListing,
+            disabled: !walletId,
+            tooltip: !walletId ? 'Connect wallet' : undefined,
           },
         ]}
       />

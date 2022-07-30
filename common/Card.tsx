@@ -47,7 +47,7 @@ export const Card: React.FC<Props> = ({
           }
         </div>
       ))}
-      <div className="aspect-square w-full overflow-hidden rounded-lg">
+      <div className="aspect-square w-full overflow-hidden rounded-xl">
         {skeleton ? (
           <div className="h-full w-full min-w-[320px] animate-pulse bg-border"></div>
         ) : (
@@ -73,7 +73,7 @@ export const Card: React.FC<Props> = ({
         </div>
       )}
       {content && (
-        <div>
+        <div className="grow">
           {skeleton ? (
             <div className="h-10 w-full animate-pulse rounded-md bg-border"></div>
           ) : (
