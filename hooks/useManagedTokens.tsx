@@ -14,8 +14,7 @@ import { findUseInvalidatorAddress } from '@cardinal/token-manager/dist/cjs/prog
 import type * as metaplex from '@metaplex-foundation/mpl-token-metadata'
 import type * as spl from '@solana/spl-token'
 import type { AccountInfo, ParsedAccountData, PublicKey } from '@solana/web3.js'
-import type { TokenData } from 'apis/api'
-import { convertStringsToPubkeys, getTokenDatas } from 'apis/api'
+import { getTokenDatas } from 'apis/api'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useQuery } from 'react-query'
@@ -130,16 +129,6 @@ export const useManagedTokens = () => {
         )
 
         return tokenDatas
-      } else if (environment.api) {
-        const response = await fetch(
-          `${
-            environment.api
-          }/tokenManagersByIssuer?issuer=${walletId.toBase58()}&cluster=${
-            environment.label
-          }`
-        )
-        const json = (await response.json()) as { data: TokenData[] }
-        return json.data.map((tokenData) => convertStringsToPubkeys(tokenData))
       } else {
         const tokenManagerDatas = await getTokenManagersForIssuer(
           connection,

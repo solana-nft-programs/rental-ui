@@ -15,8 +15,7 @@ import { findUseInvalidatorAddress } from '@cardinal/token-manager/dist/cjs/prog
 import type * as metaplex from '@metaplex-foundation/mpl-token-metadata'
 import type * as spl from '@solana/spl-token'
 import type { AccountInfo, ParsedAccountData, PublicKey } from '@solana/web3.js'
-import type { TokenData } from 'apis/api'
-import { convertStringsToPubkeys, getTokenDatas } from 'apis/api'
+import { getTokenDatas } from 'apis/api'
 import { tryPublicKey } from 'apis/utils'
 import { elligibleForClaim } from 'common/NFT'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
@@ -163,12 +162,6 @@ export const useFilteredTokenManagers = () => {
         )
 
         return tokenDatas.filter((tokenData) => elligibleForClaim(tokenData))
-      } else if (environment.api) {
-        const response = await fetch(
-          `${environment.api}/tokenManagersByState?cluster=${environment.label}&collection=${config.name}`
-        )
-        const json = (await response.json()) as { data: TokenData[] }
-        return json.data.map((tokenData) => convertStringsToPubkeys(tokenData))
       } else {
         let tokenManagerDatas = []
         if (config.filter?.type === 'issuer') {
