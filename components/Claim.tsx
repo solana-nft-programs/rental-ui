@@ -17,6 +17,7 @@ import { StyledBackground } from 'common/StyledBackground'
 import { pubKeyUrl } from 'common/utils'
 import ClaimQRCode from 'components/ClaimQRCode'
 import { useOtp } from 'hooks/useOtp'
+import { useTokenData } from 'hooks/useTokenData'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { transparentize } from 'polished'
@@ -32,8 +33,10 @@ function Claim(props: { tokenDataString: string }) {
   const { environment } = useEnvironmentCtx()
   const [showQRCode, setShowQRCode] = useState(false)
   const otpKeypair = useOtp()
+
   const { tokenManagerString, qrcode } = router.query
   const tokenManagerId = tryPublicKey(tokenManagerString)
+  const tokenQuery = useTokenData(tokenManagerId ?? undefined)
   const tokenData = convertStringsToPubkeys(
     JSON.parse(props.tokenDataString)
   ) as TokenData
@@ -106,7 +109,9 @@ function Claim(props: { tokenDataString: string }) {
             />
           )}
           <div className="">
-            {tokenData ? (
+            {!tokenQuery.isFetched ? (
+              <Card skeleton header={<></>} subHeader={<></>} />
+            ) : tokenData ? (
               <Card
                 className="max-w-[400px]"
                 hero={
@@ -170,6 +175,10 @@ function Claim(props: { tokenDataString: string }) {
             )}
           </div>
         </div>
+        {tokenQuery.error && (
+          <div className="mt-8 text-center text-xs text-medium-3">{`
+            ${tokenQuery.error}`}</div>
+        )}
         {qrcode && (
           <div className="mx-auto mt-6 py-3 px-10 text-center text-xs text-medium-3">
             Click the scan button to claim this NFT with your mobile wallet and
