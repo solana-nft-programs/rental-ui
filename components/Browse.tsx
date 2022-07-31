@@ -5,23 +5,17 @@ import type * as splToken from '@solana/spl-token'
 import type { TokenData } from 'apis/api'
 import { GlyphActivity } from 'assets/GlyphActivity'
 import { GlyphBrowse } from 'assets/GlyphBrowse'
-import { GlyphLargeClose } from 'assets/GlyphLargeClose'
-import { Card } from 'common/Card'
 import { DURATION_DATA } from 'common/DurationInput'
 import { HeaderSlim } from 'common/HeaderSlim'
 import { HeroLarge } from 'common/HeroLarge'
 import { Info } from 'common/Info'
 import { MultiSelector } from 'common/MultiSelector'
-import { NFT } from 'common/NFT'
 import {
   filterTokensByAttributes,
   getAllAttributes,
   getNFTAtrributeFilters,
 } from 'common/NFTAttributeFilters'
-import { mintImage, mintSymbol, NFTClaimButton } from 'common/NFTClaimButton'
-import { NFTHeader } from 'common/NFTHeader'
-import { NFTIssuerInfo } from 'common/NFTIssuerInfo'
-import { NFTRevokeButton } from 'common/NFTRevokeButton'
+import { mintImage, mintSymbol } from 'common/NFTClaimButton'
 import { notify } from 'common/Notification'
 import { Selector } from 'common/Selector'
 import { TabSelector } from 'common/TabSelector'
@@ -34,8 +28,10 @@ import { useWalletId } from 'hooks/useWalletId'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { filterTokens, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useUTCNow } from 'providers/UTCNowProvider'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { SolanaLogo } from 'rental-components/common/icons'
+
+import { TokenQueryData } from './TokenQueryData'
 
 export const handleCopy = (shareUrl: string) => {
   navigator.clipboard.writeText(shareUrl)
@@ -256,7 +252,6 @@ export const Browse = () => {
   const tokenManagers = useFilteredTokenManagers()
   const tokenManagersForConfig = tokenManagers.data || []
   const { UTCNow } = useUTCNow()
-  const [pageNum, setPageNum] = useState<[number, number]>(DEFAULT_PAGE)
   const paymentMintInfos = usePaymentMints()
   const [selectedOrderCategory, setSelectedOrderCategory] =
     useState<OrderCategories>(OrderCategories.RateLowToHigh)
@@ -361,23 +356,6 @@ export const Browse = () => {
     )
   }
 
-  useEffect(() => {
-    const onScroll = (event: Event) => {
-      const { scrollHeight, scrollTop, clientHeight } =
-        // @ts-ignore
-        event.target?.scrollingElement
-      if (scrollHeight - scrollTop <= clientHeight * 1.5) {
-        setPageNum(([n, prevScrollHeight]) => {
-          return prevScrollHeight !== scrollHeight
-            ? [n + 1, scrollHeight]
-            : [n, prevScrollHeight]
-        })
-      }
-    }
-    document.addEventListener('scroll', onScroll)
-    return () => document.removeEventListener('scroll', onScroll)
-  }, [pageNum])
-
   const sortedAttributes = getAllAttributes(tokenManagersForConfig ?? [])
   const filteredAndSortedTokens: TokenData[] = sortTokens(
     filterTokensByAttributes(tokenManagersForConfig, selectedFilters)
@@ -419,7 +397,6 @@ export const Browse = () => {
               value: i,
             }))}
             onChange={(o) => {
-              setPageNum(DEFAULT_PAGE)
               setSelectedGroup(o.value)
             }}
           />
@@ -457,7 +434,6 @@ export const Browse = () => {
               value: OrderCategories.RateLowToHigh,
             }}
             onChange={(e) => {
-              setPageNum(DEFAULT_PAGE)
               setSelectedOrderCategory(
                 e?.value ?? OrderCategories.RateLowToHigh
               )
@@ -478,66 +454,18 @@ export const Browse = () => {
         </div>
       </div>
       <Info colorized section={groupedFilteredAndSortedTokens[selectedGroup]} />
-      <div className="mx-auto mt-12 px-10">
-        {{ activity: <Activity />, browse: <></> }[pane]}
-        {!tokenManagers.isFetched ? (
-          <div className="flex flex-wrap justify-center gap-4 md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-            <Card skeleton header={<></>} subHeader={<></>} />
-            <Card skeleton header={<></>} subHeader={<></>} />
-            <Card skeleton header={<></>} subHeader={<></>} />
-            <Card skeleton header={<></>} subHeader={<></>} />
-            <Card skeleton header={<></>} subHeader={<></>} />
-            <Card skeleton header={<></>} subHeader={<></>} />
-            <Card skeleton header={<></>} subHeader={<></>} />
-            <Card skeleton header={<></>} subHeader={<></>} />
-          </div>
-        ) : groupedTokens?.tokens && groupedTokens.tokens.length > 0 ? (
-          <div className="flex flex-wrap justify-center gap-4 md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-            {groupedTokens?.tokens
-              ?.slice(0, PAGE_SIZE * pageNum[0])
-              .map((tokenData) => (
-                <Card
-                  key={tokenData.tokenManager?.pubkey.toString()}
-                  hero={<NFT tokenData={tokenData} />}
-                  header={<NFTHeader tokenData={tokenData} />}
-                  content={
-                    {
-                      [TokenManagerState.Initialized]: <></>,
-                      [TokenManagerState.Issued]: (
-                        <div className="flex h-full w-full flex-row items-center justify-between text-sm">
-                          <NFTIssuerInfo tokenData={tokenData} />
-                          <NFTClaimButton
-                            tokenData={tokenData}
-                            tokenDatas={tokenManagers.data}
-                          />
-                        </div>
-                      ),
-                      [TokenManagerState.Claimed]: (
-                        <div className="flex h-full flex-row justify-between text-sm">
-                          <NFTIssuerInfo tokenData={tokenData} />
-                          <NFTRevokeButton tokenData={tokenData} />
-                        </div>
-                      ),
-                      [TokenManagerState.Invalidated]: <></>,
-                    }[
-                      tokenData?.tokenManager?.parsed.state as TokenManagerState
-                    ]
-                  }
-                ></Card>
-              ))}
-          </div>
-        ) : (
-          groupedTokens &&
-          groupedTokens.showEmpty && (
-            <div className="my-40 flex w-full flex-col items-center justify-center gap-1">
-              <GlyphLargeClose />
-              <div className="mt-4 text-medium-4">
-                No active rentals at this moment...
-              </div>
-            </div>
-          )
-        )}
-      </div>
+
+      {
+        {
+          activity: <Activity />,
+          browse: (
+            <TokenQueryData
+              isFetched={tokenManagers.isFetched}
+              tokenDatas={groupedTokens?.tokens}
+            />
+          ),
+        }[pane]
+      }
     </>
   )
 }

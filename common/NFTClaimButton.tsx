@@ -1,11 +1,11 @@
 import { BN } from '@project-serum/anchor'
 import type * as splToken from '@solana/spl-token'
-import { useWallet } from '@solana/wallet-adapter-react'
 import type { PublicKey } from '@solana/web3.js'
 import type { TokenData } from 'apis/api'
 import { allowedToRent } from 'handlers/useHandleClaimRental'
 import { useOtp } from 'hooks/useOtp'
 import { PAYMENT_MINTS, usePaymentMints } from 'hooks/usePaymentMints'
+import { useWalletId } from 'hooks/useWalletId'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useRentalFixedCard } from 'rental-components/components/RentalFixedCard'
@@ -58,7 +58,7 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
   tokenData,
   tokenDatas,
 }: NFTClaimButtonProps) => {
-  const wallet = useWallet()
+  const walletId = useWalletId()
   const { config } = useProjectConfig()
   const { connection } = useEnvironmentCtx()
   const paymentMintInfos = usePaymentMints()
@@ -70,10 +70,10 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
 
   const handleClaim = async (tokenData: TokenData) => {
     if (
-      wallet.publicKey &&
+      walletId &&
       (await allowedToRent(
         connection,
-        wallet.publicKey,
+        walletId,
         config,
         tokenData,
         false,
@@ -92,12 +92,16 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
     }
   }
 
-  if (!paymentMintInfos.data || (isPrivateListing(tokenData) && !otpKeypair)) {
+  if (
+    !paymentMintInfos.data ||
+    (isPrivateListing(tokenData) && !otpKeypair) ||
+    tokenData.tokenManager?.parsed.issuer.toString() === walletId?.toString()
+  ) {
     return <></>
   }
   return (
     <ButtonSmall
-      disabled={!wallet.publicKey}
+      disabled={!walletId}
       className="inline-block flex-none px-4 py-2 text-lg"
       onClick={async () => await handleClaim(tokenData)}
     >
