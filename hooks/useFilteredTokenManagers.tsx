@@ -1,3 +1,5 @@
+import '@sentry/tracing'
+
 import { ApolloClient, gql, InMemoryCache } from '@apollo/client'
 import type { AccountData } from '@cardinal/common'
 import type { PaidClaimApproverData } from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
@@ -13,6 +15,7 @@ import {
 import type { UseInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
 import { findUseInvalidatorAddress } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator/pda'
 import type * as metaplex from '@metaplex-foundation/mpl-token-metadata'
+import * as Sentry from '@sentry/browser'
 import type * as spl from '@solana/spl-token'
 import type { AccountInfo, ParsedAccountData, PublicKey } from '@solana/web3.js'
 import { getTokenDatas } from 'apis/api'
@@ -49,6 +52,9 @@ export const useFilteredTokenManagers = () => {
         (environment.index && config.filter?.type === 'creators') ||
         (config.filter?.type === 'issuer' && !config.indexDisabled)
       ) {
+        const transaction = Sentry.startTransaction({
+          name: `[useFilteredTokenManagers] ${config.name}`,
+        })
         /////
         const indexer = new ApolloClient({
           uri: environment.index,
@@ -161,6 +167,7 @@ export const useFilteredTokenManagers = () => {
           environment.label
         )
 
+        transaction.finish()
         return tokenDatas.filter((tokenData) => elligibleForClaim(tokenData))
       } else {
         let tokenManagerDatas = []
