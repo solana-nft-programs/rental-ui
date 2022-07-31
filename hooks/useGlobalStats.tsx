@@ -27,7 +27,7 @@ export const useGlobalStats = () => {
               ${queryId(
                 c.name,
                 true
-              )}: cardinal_claim_events_aggregate(where: {mint_address_nfts: {metadatas_attributes: {first_verified_creator: {_in: [${c.filter?.value
+              )}: cardinal_claim_events_aggregate(where: {time_invalidator_address: {_is_null: false}, mint_address_nfts: {metadatas_attributes: {first_verified_creator: {_in: [${c.filter?.value
                       .map((v) => `"${v}"`)
                       .join(',')}]}}}}) {
                 aggregate {
@@ -71,7 +71,10 @@ export const useGlobalStats = () => {
                   : ''
               )
               .join('')}
-            ${queryId('global', true)}: cardinal_claim_events_aggregate {
+            ${queryId(
+              'global',
+              true
+            )}: cardinal_claim_events_aggregate(where: {time_invalidator_address: {_is_null: false}}) {
               aggregate {
                 count
               }
