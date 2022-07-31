@@ -20,10 +20,10 @@ import type * as spl from '@solana/spl-token'
 import type { AccountInfo, ParsedAccountData, PublicKey } from '@solana/web3.js'
 import { getTokenDatas } from 'apis/api'
 import { tryPublicKey } from 'apis/utils'
-import { elligibleForClaim } from 'common/NFT'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useQuery } from 'react-query'
+import { elligibleForClaim } from 'common/tokenDataUtils'
 
 export const TOKEN_DATA_KEY = 'tokenData'
 

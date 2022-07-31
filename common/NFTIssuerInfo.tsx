@@ -10,14 +10,14 @@ import {
   getSymbolFromTokenData,
   getTokenMaxDuration,
   getTokenRentalRate,
+  rentalType,
+  rentalTypeColor,
 } from 'common/tokenDataUtils'
 import type { ProjectConfig } from 'config/config'
 import { usePaymentMints } from 'hooks/usePaymentMints'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useUTCNow } from 'providers/UTCNowProvider'
-
-import { rentalType, rentalTypeColor } from './NFT'
 
 export const isPrivateListing = (tokenData: TokenData) =>
   tokenData.tokenManager?.parsed.claimApprover && !tokenData.claimApprover

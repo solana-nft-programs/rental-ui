@@ -7,6 +7,10 @@ import { mintImage, mintSymbol } from 'common/NFTClaimButton'
 import { fmtMintAmount, getMintDecimalAmount } from 'common/units'
 import type { ProjectConfig } from 'config/config'
 import { SolanaLogo } from 'rental-components/common/icons'
+import type { InvalidatorOption } from 'rental-components/components/RentalIssueCard'
+
+import { isRateBasedListing } from './NFTIssuerInfo'
+import { Pill } from './Pill'
 
 export const getTokenMaxDuration = (tokenData: TokenData, UTCNow: number) => {
   if (tokenData.timeInvalidator?.parsed.maxExpiration) {
@@ -176,4 +180,65 @@ export const getRentalDuration = (
   } else {
     return 0
   }
+}
+
+export const rentalType = (tokenData: TokenData) => {
+  return !tokenData.timeInvalidator && !tokenData.useInvalidator
+    ? 'manual'
+    : isRateBasedListing(tokenData)
+    ? 'rate'
+    : tokenData.timeInvalidator?.parsed?.durationSeconds
+    ? 'duration'
+    : 'expiration'
+}
+
+export const rentalTypeColor = (type: InvalidatorOption) =>
+  ({
+    manual: 'text-primary-2',
+    rate: 'text-primary',
+    duration: 'text-secondary',
+    expiration: 'text-blue',
+  }[type])
+
+export const rentalTypePill = (type: InvalidatorOption) =>
+  ({
+    manual: (
+      <Pill className="border-[1px] border-border text-primary-2">Manual</Pill>
+    ),
+    rate: (
+      <Pill className="border-[1px] border-border text-primary">
+        Rate rental
+      </Pill>
+    ),
+    duration: (
+      <Pill className="border-[1px] border-border text-secondary">
+        Fixed duration
+      </Pill>
+    ),
+    expiration: (
+      <Pill className="border-[1px] border-border text-blue">
+        Fixed expiration
+      </Pill>
+    ),
+  }[type])
+
+export const elligibleForRent = (
+  config: ProjectConfig,
+  tokenData: TokenData
+): boolean => {
+  return (
+    !config.disableListing &&
+    !tokenData.tokenManager &&
+    tokenData.tokenAccount?.account.data.parsed.info.state !== 'frozen' &&
+    !!tokenData.editionData &&
+    (!tokenData.mint || !!tokenData.mint.freezeAuthority)
+  )
+}
+
+export const elligibleForClaim = (tokenData: TokenData): boolean => {
+  return (
+    !!tokenData.tokenManager &&
+    !!tokenData.editionData &&
+    (!tokenData.mint || !!tokenData.mint.freezeAuthority)
+  )
 }
