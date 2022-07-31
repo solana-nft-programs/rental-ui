@@ -1,20 +1,28 @@
+import { ApolloClient, gql, InMemoryCache } from '@apollo/client'
 import type { AccountData } from '@cardinal/common'
 import type { PaidClaimApproverData } from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
 import type { TimeInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
 import { TIME_INVALIDATOR_ADDRESS } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
+import { findTimeInvalidatorAddress } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator/pda'
 import type { TokenManagerData } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
+import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
+import {
+  getTokenManagers,
+  getTokenManagersByState,
+  getTokenManagersForIssuer,
+} from '@cardinal/token-manager/dist/cjs/programs/tokenManager/accounts'
 import type { UseInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
 import { USE_INVALIDATOR_ADDRESS } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
+import { findUseInvalidatorAddress } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator/pda'
 import * as metaplex from '@metaplex-foundation/mpl-token-metadata'
 import type * as spl from '@solana/spl-token'
 import type { AccountInfo, ParsedAccountData, PublicKey } from '@solana/web3.js'
 import { accountDataById, getTokenDatas } from 'apis/api'
+import { tryPublicKey } from 'apis/utils'
 import { elligibleForClaim } from 'common/NFT'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useQuery } from 'react-query'
-
-import { useBrowseTokenManagerData } from './useBrowseTokenManagerData'
 
 export const TOKEN_DATA_KEY = 'tokenData'
 
@@ -46,37 +54,136 @@ export type IndexedTokenData = {
 export const useBrowseTokenData = () => {
   const { config } = useProjectConfig()
   const { connection, environment } = useEnvironmentCtx()
-  const browseTokenManagerQuery = useBrowseTokenManagerData()
   return useQuery<FilteredTokenManagerData[]>(
-    [
-      TOKEN_DATA_KEY,
-      'useBrowseTokenData',
-      browseTokenManagerQuery.data?.map(
-        (tk) =>
-          `${tk.tokenManager?.pubkey.toString()}-${tk.tokenManager?.parsed.stateChangedAt.toString()}`
-      ),
-    ],
+    [TOKEN_DATA_KEY, 'useBrowseTokenData', config.name],
     async () => {
-      const browseTokenManagerData = browseTokenManagerQuery.data
-      if (!browseTokenManagerData) return []
-      const tokenManagerDatas = browseTokenManagerData.map(
-        ({ tokenManager }) => tokenManager
-      )
-
       if (
         (environment.index && config.filter?.type === 'creators') ||
         (config.filter?.type === 'issuer' && !config.indexDisabled)
       ) {
+        /////
+        const indexer = new ApolloClient({
+          uri: environment.index,
+          cache: new InMemoryCache({ resultCaching: false }),
+        })
+
+        const tokenManagerResponse =
+          config.filter.type === 'creators'
+            ? await indexer.query({
+                query: gql`
+                  query GetTokenManagers($creators: [String!]!) {
+                    cardinal_token_managers(
+                      where: {
+                        mint_address_nfts: {
+                          metadatas_metadata_creators: {
+                            _and: {
+                              creator_address: { _in: $creators }
+                              position: { _eq: 0 }
+                              _and: { verified: { _eq: true } }
+                            }
+                          }
+                        }
+                      }
+                    ) {
+                      address
+                      mint
+                      state
+                      state_changed_at
+                      invalidator_address {
+                        invalidator
+                      }
+                      mint_address_nfts {
+                        uri
+                        name
+                      }
+                    }
+                  }
+                `,
+                variables: {
+                  creators: config.filter.value,
+                },
+              })
+            : await indexer.query({
+                query: gql`
+                  query GetTokenManagers($issuers: [String!]!) {
+                    cardinal_token_managers(
+                      where: { issuer: { _in: $issuers } }
+                    ) {
+                      address
+                      mint
+                      state
+                      state_changed_at
+                      invalidator_address {
+                        invalidator
+                      }
+                      mint_address_nfts {
+                        uri
+                        name
+                      }
+                    }
+                  }
+                `,
+                variables: {
+                  issuers: config.filter.value,
+                },
+              })
+        /////
+        const indexedTokenManagers = tokenManagerResponse.data[
+          'cardinal_token_managers'
+        ] as IndexedTokenData[]
+
+        /////
+        const knownInvalidators: string[][] = await Promise.all(
+          indexedTokenManagers.map(async ({ address }): Promise<string[]> => {
+            const tokenManagerId = tryPublicKey(address)
+            if (!tokenManagerId) return []
+            const [[timeInvalidatorId], [useInvalidatorId]] = await Promise.all(
+              [
+                findTimeInvalidatorAddress(tokenManagerId),
+                findUseInvalidatorAddress(tokenManagerId),
+              ]
+            )
+            return [timeInvalidatorId.toString(), useInvalidatorId.toString()]
+          })
+        )
+        const [tokenManagerIds, indexedTokenManagerDatas] =
+          indexedTokenManagers.reduce(
+            (acc, data, i) => {
+              const tokenManagerId = tryPublicKey(data.address)
+              if (!tokenManagerId) return acc
+              let filter = false
+              data.invalidator_address?.forEach(({ invalidator }) => {
+                if (
+                  !config.showUnknownInvalidators &&
+                  !knownInvalidators[i]?.includes(invalidator)
+                ) {
+                  filter = true
+                }
+              })
+              return filter
+                ? acc
+                : [
+                    [...acc[0], tokenManagerId],
+                    { ...acc[1], [tokenManagerId.toString()]: data },
+                  ]
+            },
+            [[], {}] as [PublicKey[], { [a: string]: IndexedTokenData }]
+          )
+        /////
+        const tokenManagerDatas = (
+          await getTokenManagers(connection, tokenManagerIds)
+        ).filter((tm) => tm.parsed)
+
         ////
         const mintIds = tokenManagerDatas.map(
-          (tokenManager) => tokenManager?.parsed.mint
+          (tokenManager) => tokenManager.parsed.mint
         )
         const metaplexIds = await Promise.all(
           tokenManagerDatas.map(
-            async (tokenManager) =>
+            async (tm) =>
               (
                 await metaplex.MetadataProgram.findMetadataAccount(
-                  tokenManager.parsed.mint
+                  tm.parsed.mint
                 )
               )[0]
           )
@@ -98,21 +205,19 @@ export const useBrowseTokenData = () => {
         const [accountsById, metadatas] = await Promise.all([
           accountDataById(connection, idsToFetch),
           Promise.all(
-            browseTokenManagerData.map(
-              async ({ tokenManager, indexedTokenData }) => {
-                try {
-                  if (!indexedTokenData?.mint_address_nfts?.uri)
-                    return undefined
-                  const json = await fetch(
-                    indexedTokenData?.mint_address_nfts?.uri
-                  ).then((r) => r.json())
-                  return {
-                    pubkey: tokenManager.parsed.mint,
-                    data: json,
-                  }
-                } catch (e) {}
-              }
-            )
+            tokenManagerDatas.map(async ({ pubkey, parsed }) => {
+              try {
+                const indexedData = indexedTokenManagerDatas[pubkey.toString()]
+                if (!indexedData?.mint_address_nfts?.uri) return undefined
+                const json = await fetch(
+                  indexedData?.mint_address_nfts?.uri
+                ).then((r) => r.json())
+                return {
+                  pubkey: parsed.mint,
+                  data: json,
+                }
+              } catch (e) {}
+            })
           ),
         ])
 
@@ -182,6 +287,26 @@ export const useBrowseTokenData = () => {
         })
         return tokenDatas.filter((tokenData) => elligibleForClaim(tokenData))
       } else {
+        let tokenManagerDatas = []
+        if (config.filter?.type === 'issuer') {
+          // TODO unsafe loop of network calls
+          const tokenManagerDatasByIssuer = await Promise.all(
+            config.filter.value.map((issuerString) =>
+              tryPublicKey(issuerString)
+                ? getTokenManagersForIssuer(
+                    connection,
+                    tryPublicKey(issuerString)!
+                  )
+                : []
+            )
+          )
+          tokenManagerDatas = tokenManagerDatasByIssuer.flat()
+        } else {
+          tokenManagerDatas = await getTokenManagersByState(
+            connection,
+            config.issuedOnly ? TokenManagerState.Issued : null
+          )
+        }
         const tokenDatas = await getTokenDatas(
           connection,
           tokenManagerDatas,
@@ -192,6 +317,7 @@ export const useBrowseTokenData = () => {
       }
     },
     {
+      refetchInterval: 20000,
       refetchOnMount: false,
       enabled: !!config,
     }

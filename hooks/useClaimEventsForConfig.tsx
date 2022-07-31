@@ -1,25 +1,21 @@
 import '@sentry/tracing'
 
 import { ApolloClient, gql, InMemoryCache } from '@apollo/client'
-import { findTimeInvalidatorAddress } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator/pda'
-import { findUseInvalidatorAddress } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator/pda'
 import * as Sentry from '@sentry/browser'
-import { tryPublicKey } from 'apis/utils'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useQuery } from 'react-query'
 
 export const ACTIVITY_KEY = 'activity'
 
-export type ActivityResult = {
-  name?: string
-}
-
 export type IndexedClaimEvent = {
   mint?: string
   token_manager_address?: string
   state?: number
   state_changed_at?: number
+  issuer?: string
+  recipient_token_account?: string
+  paid_claim_approver_payment_amount?: number
   mint_address_nfts?: {
     name?: string
     uri?: string
@@ -29,7 +25,7 @@ export type IndexedClaimEvent = {
 export const useClaimEventsForConfig = () => {
   const { config } = useProjectConfig()
   const { environment } = useEnvironmentCtx()
-  return useQuery<ActivityResult[]>(
+  return useQuery<IndexedClaimEvent[]>(
     [ACTIVITY_KEY, 'useClaimEventsForConfig', config.name],
     async () => {
       const transaction = Sentry.startTransaction({
@@ -77,6 +73,9 @@ export const useClaimEventsForConfig = () => {
                     mint
                     state
                     state_changed_at
+                    issuer
+                    recipient_token_account
+                    paid_claim_approver_payment_amount
                     mint_address_nfts {
                       name
                       uri
@@ -106,6 +105,9 @@ export const useClaimEventsForConfig = () => {
                     mint
                     state
                     state_changed_at
+                    issuer
+                    recipient_token_account
+                    paid_claim_approver_payment_amount
                     mint_address_nfts {
                       name
                       uri
@@ -123,30 +125,8 @@ export const useClaimEventsForConfig = () => {
       const indexedClaimEvents = tokenManagerResponse.data[
         'cardinal_claim_events'
       ] as IndexedClaimEvent[]
-
-      console.log(indexedClaimEvents)
-      /////
-      const knownInvalidators: string[][] = await Promise.all(
-        tokenManagerResponse.data['cardinal_claim_events'].map(
-          async (data: {
-            mint: string
-            address: string
-          }): Promise<string[]> => {
-            const tokenManagerId = tryPublicKey(data.address)
-            if (!tokenManagerId) return []
-            const [[timeInvalidatorId], [useInvalidatorId]] = await Promise.all(
-              [
-                findTimeInvalidatorAddress(tokenManagerId),
-                findUseInvalidatorAddress(tokenManagerId),
-              ]
-            )
-            return [timeInvalidatorId.toString(), useInvalidatorId.toString()]
-          }
-        )
-      )
-
       transaction.finish()
-      return []
+      return indexedClaimEvents
     },
     {
       refetchOnMount: false,

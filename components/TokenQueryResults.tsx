@@ -119,9 +119,8 @@ export const TokenQueryResults: React.FC<Props> = ({
       </div>
       <Info colorized section={tokenGroup} />
       <TokenQueryData
-        allTokens={tokenQuery.data}
+        tokenDatas={filteredAndSortedTokens}
         isFetched={tokenQuery.isFetched}
-        attributeFilters={selectedFilters}
         selectedTokens={selectedTokens}
         handleClick={(tokenData) => {
           if (isSelected(tokenData, selectedTokens)) {

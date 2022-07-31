@@ -4,8 +4,6 @@ import type { TokenData } from 'apis/api'
 import { GlyphLargeClose } from 'assets/GlyphLargeClose'
 import { Card } from 'common/Card'
 import { NFT } from 'common/NFT'
-import type { NFTAtrributeFilterValues } from 'common/NFTAttributeFilters'
-import { filterTokensByAttributes } from 'common/NFTAttributeFilters'
 import { NFTHeader } from 'common/NFTHeader'
 import { NFTIssuerInfo } from 'common/NFTIssuerInfo'
 import { NFTRevokeButton } from 'common/NFTRevokeButton'
@@ -14,26 +12,20 @@ import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { isSelected } from './TokenQueryResults'
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
-  allTokens?: TokenData[]
+  tokenDatas?: TokenData[]
   isFetched?: boolean
-  attributeFilters: NFTAtrributeFilterValues
   selectedTokens: TokenData[]
   handleClick?: (tokenData: TokenData) => void
 }
 
 export const TokenQueryData: React.FC<Props> = ({
-  allTokens,
+  tokenDatas,
   isFetched,
-  attributeFilters,
   selectedTokens,
   handleClick,
 }: Props) => {
   const { config } = useProjectConfig()
 
-  const filteredAndSortedTokens = filterTokensByAttributes(
-    allTokens ?? [],
-    attributeFilters
-  )
   return (
     <div className="mx-auto mt-12 px-10">
       {!isFetched ? (
@@ -47,9 +39,9 @@ export const TokenQueryData: React.FC<Props> = ({
           <Card skeleton header={<></>} subHeader={<></>} />
           <Card skeleton header={<></>} subHeader={<></>} />
         </div>
-      ) : filteredAndSortedTokens && filteredAndSortedTokens.length > 0 ? (
+      ) : tokenDatas && tokenDatas.length > 0 ? (
         <div className="flex flex-wrap justify-center gap-4 md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-          {filteredAndSortedTokens.map((tokenData) => (
+          {tokenDatas.map((tokenData) => (
             <Card
               key={`${tokenData.tokenManager?.pubkey.toString()}-${tokenData.tokenAccount?.pubkey.toString()}`}
               className={`cursor-pointer ${

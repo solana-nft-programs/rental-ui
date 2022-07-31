@@ -26,6 +26,7 @@ import { notify } from 'common/Notification'
 import { Selector } from 'common/Selector'
 import { TabSelector } from 'common/TabSelector'
 import { fmtMintAmount, getMintDecimalAmount } from 'common/units'
+import { Activity } from 'components/Activity'
 import type { ProjectConfig, TokenSection } from 'config/config'
 import { useFilteredTokenManagers } from 'hooks/useFilteredTokenManagers'
 import { usePaymentMints } from 'hooks/usePaymentMints'
@@ -54,7 +55,13 @@ enum OrderCategories {
 
 export const PAGE_SIZE = 5
 export const DEFAULT_PAGE: [number, number] = [2, 0]
-export const PANE_TABS = [
+export type PANE_OPTIONS = 'browse' | 'activity'
+export const PANE_TABS: {
+  label: JSX.Element
+  value: PANE_OPTIONS
+  disabled?: boolean
+  tooltip?: string
+}[] = [
   {
     label: <GlyphBrowse />,
     value: 'browse',
@@ -257,6 +264,7 @@ export const Browse = () => {
     [filterName: string]: string[]
   }>({})
   const [selectedGroup, setSelectedGroup] = useState(0)
+  const [pane, setPane] = useState<PANE_OPTIONS>('browse')
 
   const sortTokens = (tokens: TokenData[]): TokenData[] => {
     let sortedTokens
@@ -460,11 +468,18 @@ export const Browse = () => {
           />
         </div>
         <div className="flex">
-          <TabSelector defaultOption={PANE_TABS[0]} options={PANE_TABS} />
+          <TabSelector<PANE_OPTIONS>
+            defaultOption={PANE_TABS[0]}
+            options={PANE_TABS}
+            onChange={(o) => {
+              setPane(o.value)
+            }}
+          />
         </div>
       </div>
       <Info colorized section={groupedFilteredAndSortedTokens[selectedGroup]} />
       <div className="mx-auto mt-12 px-10">
+        {{ activity: <Activity />, browse: <></> }[pane]}
         {!tokenManagers.isFetched ? (
           <div className="flex flex-wrap justify-center gap-4 md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
             <Card skeleton header={<></>} subHeader={<></>} />
