@@ -28,7 +28,7 @@ import { isMobile } from 'react-device-detect'
 import { BiQr } from 'react-icons/bi'
 
 function Claim(props: { tokenDataString: string }) {
-  const { config } = useProjectConfig()
+  const { configFromToken } = useProjectConfig()
   const router = useRouter()
   const { environment } = useEnvironmentCtx()
   const [showQRCode, setShowQRCode] = useState(false)
@@ -40,6 +40,8 @@ function Claim(props: { tokenDataString: string }) {
   const tokenData = convertStringsToPubkeys(
     JSON.parse(props.tokenDataString)
   ) as TokenData
+  const config = configFromToken(tokenData)
+
   return (
     <div className="flex h-screen flex-col">
       <Head>
@@ -71,24 +73,12 @@ function Claim(props: { tokenDataString: string }) {
         />
       </Head>
       <HeaderSlim />
-      <div className="mx-auto w-[500px] max-w-[86vw] flex-grow pt-[4vh] lg:pt-[10vh]">
+      <div className="mx-auto w-[500px] max-w-[86vw] flex-grow pt-[4vh] lg:pt-[5vh]">
         <div className="mb-6 text-center">
           <div className="mb-2 text-4xl">Claim Asset</div>
-          <div className="text-xs font-extralight">
-            <a
-              href={pubKeyUrl(
-                tokenData?.tokenManager?.parsed.mint,
-                environment.label
-              )}
-              target="_blank"
-              rel="noreferrer"
-            >
-              {(tokenManagerId &&
-                tokenData?.tokenManager?.parsed.mint &&
-                tokenData?.tokenManager?.parsed.mint.toString()) ||
-                ''}
-            </a>
-          </div>
+          <span className="mt-1 inline-block rounded-md bg-gray-800 py-2 px-4 text-lg">
+            {config.displayName}
+          </span>
         </div>
         <div
           className="relative mx-auto flex w-fit flex-col items-center rounded-xl text-white"
