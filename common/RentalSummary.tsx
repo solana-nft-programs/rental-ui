@@ -6,7 +6,7 @@ import {
   getPriceFromTokenData,
   getSymbolFromTokenData,
   PaymentMintImage,
-} from 'components/Browse'
+} from 'common/tokenDataUtils'
 import { usePaymentMints } from 'hooks/usePaymentMints'
 import { useUTCNow } from 'providers/UTCNowProvider'
 

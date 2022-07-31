@@ -10,7 +10,7 @@ import {
   getSymbolFromTokenData,
   getTokenMaxDuration,
   getTokenRentalRate,
-} from 'components/Browse'
+} from 'common/tokenDataUtils'
 import type { ProjectConfig } from 'config/config'
 import { usePaymentMints } from 'hooks/usePaymentMints'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'

@@ -2,10 +2,6 @@ import { secondsToString } from '@cardinal/common'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import type * as splToken from '@solana/spl-token'
 import type { TokenData } from 'apis/api'
-import {
-  getPriceFromTokenData,
-  getSymbolFromTokenData,
-} from 'components/Browse'
 import type { ProjectConfig } from 'config/config'
 import { useFilteredTokenManagers } from 'hooks/useFilteredTokenManagers'
 import { usePaymentMints } from 'hooks/usePaymentMints'
@@ -14,6 +10,7 @@ import { useProjectConfig } from 'providers/ProjectConfigProvider'
 
 import { DURATION_DATA } from './DurationInput'
 import { isPrivateListing, isRateBasedListing } from './NFTIssuerInfo'
+import { getPriceFromTokenData, getSymbolFromTokenData } from './tokenDataUtils'
 import { getMintDecimalAmount } from './units'
 
 const calculateFloorPrice = (

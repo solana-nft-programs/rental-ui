@@ -5,12 +5,12 @@ import { Alert } from 'common/Alert'
 import { Button } from 'common/Button'
 import { Pill } from 'common/Pill'
 import { RentalSummary } from 'common/RentalSummary'
-import { getQueryParam } from 'common/utils'
 import {
   getPriceFromTokenData,
   getPriceOrRentalRate,
   getSymbolFromTokenData,
-} from 'components/Browse'
+} from 'common/tokenDataUtils'
+import { getQueryParam } from 'common/utils'
 import { useHandleClaimRental } from 'handlers/useHandleClaimRental'
 import { usePaymentMints } from 'hooks/usePaymentMints'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
