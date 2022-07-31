@@ -108,12 +108,8 @@ export const HeroStats: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
           <div className="h-6 w-10 animate-pulse rounded-md bg-border"></div>
         ) : (
           <div className="text-center text-xl text-light-1">
-            {calculateFloorPrice(tokenDatas, config, paymentMints.data).toFixed(
-              4
-            )}{' '}
-            {tokenDatas.length > 0
-              ? getSymbolFromTokenData(tokenDatas[0]!)
-              : '◎'}
+            {calculateFloorPrice(tokenDatas, config, paymentMints.data)}{' '}
+            {getSymbolFromTokenData(tokenDatas[0] ?? {})}
             {' / '}
             {config.marketplaceRate
               ? config.marketplaceRate
