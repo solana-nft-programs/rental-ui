@@ -1,11 +1,13 @@
-import { withFindOrInitAssociatedTokenAccount } from '@cardinal/common'
+import {
+  withFindOrInitAssociatedTokenAccount,
+  withWrapSol,
+} from '@cardinal/common'
 import { withClaimToken } from '@cardinal/token-manager'
 import { BN, utils } from '@project-serum/anchor'
 import type { PublicKey } from '@solana/web3.js'
 import { Connection, Keypair, Transaction } from '@solana/web3.js'
 import { getTokenData } from 'apis/api'
 import { getATokenAccountInfo, tryPublicKey } from 'apis/utils'
-import { withWrapSol } from 'apis/wrappedSol'
 import { firstParam } from 'common/utils'
 import { projectConfigs } from 'config/config'
 import { WRAPPED_SOL_MINT } from 'hooks/usePaymentMints'
