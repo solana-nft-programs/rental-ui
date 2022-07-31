@@ -219,7 +219,18 @@ export const getPriceOrRentalRate = (
   }
 }
 
-const getRentalDuration = (tokenData: TokenData, UTCNow: number) => {
+const getRentalDuration = (
+  tokenData: TokenData,
+  UTCNow: number,
+  claimed?: boolean
+) => {
+  if (
+    claimed &&
+    tokenData.timeInvalidator?.parsed.expiration?.toNumber() &&
+    tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber() === 0
+  ) {
+    return tokenData.timeInvalidator?.parsed.expiration?.toNumber() - UTCNow
+  }
   if (tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber() === 0) {
     return getTokenMaxDuration(tokenData, UTCNow).value
   } else if (tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber()) {
@@ -276,12 +287,18 @@ export const Browse = () => {
         break
       case OrderCategories.DurationLowToHigh:
         sortedTokens = tokens.sort((a, b) => {
-          return getRentalDuration(a, UTCNow) - getRentalDuration(b, UTCNow)
+          return (
+            getRentalDuration(a, UTCNow, selectedGroup === 1) -
+            getRentalDuration(b, UTCNow, selectedGroup === 1)
+          )
         })
         break
       case OrderCategories.DurationHighToLow:
         sortedTokens = tokens.sort((a, b) => {
-          return getRentalDuration(b, UTCNow) - getRentalDuration(a, UTCNow)
+          return (
+            getRentalDuration(b, UTCNow, selectedGroup === 1) -
+            getRentalDuration(a, UTCNow, selectedGroup === 1)
+          )
         })
         break
       default:
