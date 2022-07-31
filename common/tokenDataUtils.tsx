@@ -1,4 +1,5 @@
 import { secondsToString } from '@cardinal/common'
+import { shouldTimeInvalidate } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator/utils'
 import { BN } from '@project-serum/anchor'
 import type * as splToken from '@solana/spl-token'
 import type { TokenData } from 'apis/api'
@@ -240,5 +241,25 @@ export const elligibleForClaim = (tokenData: TokenData): boolean => {
     !!tokenData.tokenManager &&
     !!tokenData.editionData &&
     (!tokenData.mint || !!tokenData.mint.freezeAuthority)
+  )
+}
+
+export const shouldBeInvalidated = (
+  tokenData: TokenData,
+  UTCNow: number
+): boolean => {
+  return (
+    (!!tokenData.timeInvalidator &&
+      !!tokenData.tokenManager &&
+      shouldTimeInvalidate(
+        tokenData.tokenManager,
+        tokenData.timeInvalidator,
+        UTCNow
+      )) ||
+    (!!tokenData.useInvalidator &&
+      !!tokenData.useInvalidator.parsed.maxUsages &&
+      tokenData.useInvalidator.parsed.usages.gte(
+        tokenData.useInvalidator.parsed.maxUsages
+      ))
   )
 }

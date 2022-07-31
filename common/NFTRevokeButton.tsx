@@ -1,5 +1,4 @@
 import { invalidate } from '@cardinal/token-manager'
-import { shouldTimeInvalidate } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator/utils'
 import { useWallet } from '@solana/wallet-adapter-react'
 import type { TokenData } from 'apis/api'
 import { TOKEN_DATA_KEY } from 'hooks/useFilteredTokenManagers'
@@ -8,6 +7,7 @@ import { useUTCNow } from 'providers/UTCNowProvider'
 import { useQueryClient } from 'react-query'
 
 import { ButtonSmall } from './ButtonSmall'
+import { shouldBeInvalidated } from './tokenDataUtils'
 import { executeTransaction } from './Transactions'
 import { asWallet } from './Wallets'
 
@@ -26,22 +26,10 @@ export const NFTRevokeButton: React.FC<NFTRevokeButtonProps> = ({
   return (
     <>
       {((wallet.publicKey &&
-        tokenData?.tokenManager?.parsed.invalidators &&
         tokenData?.tokenManager?.parsed.invalidators
           .map((i) => i.toString())
           .includes(wallet.publicKey?.toString())) ||
-        (tokenData.timeInvalidator &&
-          tokenData.tokenManager &&
-          shouldTimeInvalidate(
-            tokenData.tokenManager,
-            tokenData.timeInvalidator,
-            UTCNow
-          )) ||
-        (tokenData.useInvalidator &&
-          tokenData.useInvalidator.parsed.maxUsages &&
-          tokenData.useInvalidator.parsed.usages.gte(
-            tokenData.useInvalidator.parsed.maxUsages
-          ))) && (
+        shouldBeInvalidated(tokenData, UTCNow)) && (
         <ButtonSmall
           disabled={!wallet.connected}
           onClick={async () => {
