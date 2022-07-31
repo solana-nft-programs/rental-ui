@@ -1,7 +1,6 @@
 import { getExpirationString, secondsToString } from '@cardinal/common'
 import { DisplayAddress } from '@cardinal/namespaces-components'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
-import { BN } from '@project-serum/anchor'
 import type * as splToken from '@solana/spl-token'
 import type { TokenData } from 'apis/api'
 import {
@@ -10,6 +9,8 @@ import {
   getSymbolFromTokenData,
   getTokenMaxDuration,
   getTokenRentalRate,
+  isPrivateListing,
+  isRateBasedListing,
   rentalType,
   rentalTypeColor,
 } from 'common/tokenDataUtils'
@@ -18,14 +19,6 @@ import { usePaymentMints } from 'hooks/usePaymentMints'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useUTCNow } from 'providers/UTCNowProvider'
-
-export const isPrivateListing = (tokenData: TokenData) =>
-  tokenData.tokenManager?.parsed.claimApprover && !tokenData.claimApprover
-
-export const isRateBasedListing = (tokenData: TokenData) =>
-  !!tokenData.timeInvalidator?.parsed.durationSeconds &&
-  tokenData.timeInvalidator?.parsed.durationSeconds.eq(new BN(0)) &&
-  !!tokenData.timeInvalidator?.parsed.extensionDurationSeconds
 
 export const getDurationText = (tokenData: TokenData, UTCNow: number) => {
   return tokenData.timeInvalidator?.parsed ? (

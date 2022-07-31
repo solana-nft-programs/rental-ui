@@ -10,7 +10,6 @@ import type { ProjectConfig } from 'config/config'
 import { SolanaLogo } from 'rental-components/common/icons'
 import type { InvalidatorOption } from 'rental-components/components/RentalIssueCard'
 
-import { isRateBasedListing } from './NFTIssuerInfo'
 import { Pill } from './Pill'
 
 export const getTokenMaxDuration = (tokenData: TokenData, UTCNow: number) => {
@@ -182,6 +181,14 @@ export const getRentalDuration = (
     return 0
   }
 }
+
+export const isPrivateListing = (tokenData: TokenData) =>
+  tokenData.tokenManager?.parsed.claimApprover && !tokenData.claimApprover
+
+export const isRateBasedListing = (tokenData: TokenData) =>
+  !!tokenData.timeInvalidator?.parsed.durationSeconds &&
+  tokenData.timeInvalidator?.parsed.durationSeconds.eq(new BN(0)) &&
+  !!tokenData.timeInvalidator?.parsed.extensionDurationSeconds
 
 export const rentalType = (tokenData: TokenData) => {
   return !tokenData.timeInvalidator && !tokenData.useInvalidator

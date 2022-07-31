@@ -20,10 +20,9 @@ import { useRentalIssueCard } from 'rental-components/components/RentalIssueCard
 import { useRentalRateCard } from 'rental-components/components/RentalRateCard'
 import { useScanCard } from 'rental-components/components/ScanCard'
 
-import { elligibleForRent } from './NFT'
-import { isPrivateListing } from './NFTIssuerInfo'
 import { notify } from './Notification'
 import { Popover } from './Popover'
+import { elligibleForRent, isPrivateListing } from './tokenDataUtils'
 
 export const popoverItemClass = `flex items-center text-light-0 px-2 py-1 rounded-md hover:bg-[rgba(255,255,255,0.1)] gap-2`
 

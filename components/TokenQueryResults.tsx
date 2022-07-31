@@ -1,7 +1,6 @@
 import type { TokenData } from 'apis/api'
 import { Info } from 'common/Info'
 import { MultiSelector } from 'common/MultiSelector'
-import { elligibleForRent } from 'common/NFT'
 import type { NFTAtrributeFilterValues } from 'common/NFTAttributeFilters'
 import {
   filterTokensByAttributes,
@@ -10,6 +9,7 @@ import {
 import { notify } from 'common/Notification'
 import { SelecterDrawer } from 'common/SelectedDrawer'
 import { TabSelector } from 'common/TabSelector'
+import { elligibleForRent } from 'common/tokenDataUtils'
 import { useWalletId } from 'hooks/useWalletId'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useState } from 'react'

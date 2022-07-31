@@ -14,7 +14,7 @@ import { useRentalManualCard } from 'rental-components/components/RentalManualCa
 import { useRentalRateCard } from 'rental-components/components/RentalRateCard'
 
 import { ButtonSmall } from './ButtonSmall'
-import { isPrivateListing, isRateBasedListing } from './NFTIssuerInfo'
+import { isPrivateListing, isRateBasedListing } from './tokenDataUtils'
 import { fmtMintAmount } from './units'
 
 export const mintSymbol = (paymentMint: PublicKey | null | undefined) => {

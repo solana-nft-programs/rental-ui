@@ -9,8 +9,7 @@ import { useProjectStats } from 'hooks/useProjectStats'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 
 import { DURATION_DATA } from './DurationInput'
-import { isPrivateListing, isRateBasedListing } from './NFTIssuerInfo'
-import { getPriceFromTokenData, getSymbolFromTokenData } from './tokenDataUtils'
+import { getPriceFromTokenData, getSymbolFromTokenData, isPrivateListing, isRateBasedListing } from './tokenDataUtils'
 import { getMintDecimalAmount } from './units'
 
 const calculateFloorPrice = (
