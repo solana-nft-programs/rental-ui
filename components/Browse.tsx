@@ -11,7 +11,6 @@ import {
   getAllAttributes,
   getNFTAtrributeFilters,
 } from 'common/NFTAttributeFilters'
-import { notify } from 'common/Notification'
 import { Selector } from 'common/Selector'
 import { TabSelector } from 'common/TabSelector'
 import { getPriceOrRentalRate, getRentalDuration } from 'common/tokenDataUtils'
@@ -26,14 +25,6 @@ import { useUTCNow } from 'providers/UTCNowProvider'
 import { useState } from 'react'
 
 import { TokenQueryData } from './TokenQueryData'
-
-export const handleCopy = (shareUrl: string) => {
-  navigator.clipboard.writeText(shareUrl)
-  notify({
-    message: 'Share link copied',
-    description: 'Paste this link from your clipboard',
-  })
-}
 
 enum OrderCategories {
   RecentlyListed = 'Recently Listed',

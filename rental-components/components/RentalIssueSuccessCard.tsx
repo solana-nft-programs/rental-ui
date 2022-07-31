@@ -2,13 +2,13 @@ import type { TokenData } from 'apis/api'
 import { GlyphCheck } from 'assets/GlyphCheck'
 import { Alert } from 'common/Alert'
 import { Glow } from 'common/Glow'
+import { handleCopy } from 'common/NFTHeader'
 import { Pill } from 'common/Pill'
 import {
   ShareTwitterButton,
   shareTwitterListedLink,
 } from 'common/ShareTwitterButton'
 import { getQueryParam, transactionUrl } from 'common/utils'
-import { handleCopy } from 'components/Browse'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { FaTwitter } from 'react-icons/fa'
@@ -107,7 +107,7 @@ export const RentalIssueSuccessCard = ({
             >
               <div className="">
                 ({i + 1}/{txResults.length}) Private link generated. Click
-                <div className="mx-1 inline-block text-blue-500">here</div>to
+                <div className="text-blue-500 mx-1 inline-block">here</div>to
                 copy
               </div>
             </Alert>

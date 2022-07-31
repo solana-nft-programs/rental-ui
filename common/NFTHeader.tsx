@@ -1,9 +1,18 @@
 import { DisplayAddress } from '@cardinal/namespaces-components'
 import type { TokenData } from 'apis/api'
-import { handleCopy } from 'components/Browse'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { FaLink } from 'react-icons/fa'
+
+import { notify } from './Notification'
+
+export const handleCopy = (shareUrl: string) => {
+  navigator.clipboard.writeText(shareUrl)
+  notify({
+    message: 'Share link copied',
+    description: 'Paste this link from your clipboard',
+  })
+}
 
 interface NFTHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
   tokenData: TokenData
