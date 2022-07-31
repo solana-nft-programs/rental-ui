@@ -5,6 +5,10 @@ import { useQuery } from 'react-query'
 
 export const PAYMENT_MINTS = [
   {
+    mint: 'So11111111111111111111111111111111111111112',
+    symbol: 'SOL',
+  },
+  {
     mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
     symbol: 'USDC',
     image:
@@ -15,10 +19,6 @@ export const PAYMENT_MINTS = [
     symbol: 'MILK',
     image:
       'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/MLKmUCaj1dpBY881aFsrBwR9RUMoKic8SWT3u1q5Nkj/logo.png',
-  },
-  {
-    mint: 'So11111111111111111111111111111111111111112',
-    symbol: 'SOL',
   },
 ]
 
