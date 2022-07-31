@@ -1,3 +1,4 @@
+import type { AccountData } from '@cardinal/common'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { css } from '@emotion/react'
 import type { TokenData } from 'apis/api'
@@ -36,7 +37,7 @@ function Claim(props: { tokenDataString: string }) {
   const tokenQuery = useTokenData(tokenManagerId ?? undefined)
   const tokenData = convertStringsToPubkeys(
     JSON.parse(props.tokenDataString)
-  ) as TokenData
+  ) as TokenData & { metadata: AccountData<any> }
   const config = configFromToken(tokenData)
 
   return (
@@ -48,8 +49,8 @@ function Claim(props: { tokenDataString: string }) {
           name="twitter:title"
           content={
             tokenData.tokenManager?.parsed.state === TokenManagerState.Claimed
-              ? `Just claimed ${tokenData.metadata?.parsed.name} on Cardinal's NFT Rental Marketplace`
-              : `Rent ${tokenData.metadata?.parsed.name} on Cardinal's NFT Rental Marketplace`
+              ? `Just claimed ${tokenData.metaplexData?.parsed.data.name} on Cardinal's NFT Rental Marketplace`
+              : `Rent ${tokenData.metaplexData?.parsed.data.name} on Cardinal's NFT Rental Marketplace`
           }
         />
         <meta

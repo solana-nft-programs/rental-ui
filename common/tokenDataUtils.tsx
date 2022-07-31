@@ -10,8 +10,6 @@ import type { ProjectConfig } from 'config/config'
 import { SolanaLogo } from 'rental-components/common/icons'
 import type { InvalidatorOption } from 'rental-components/components/RentalIssueCard'
 
-import { Pill } from './Pill'
-
 export const getTokenMaxDuration = (tokenData: TokenData, UTCNow: number) => {
   if (tokenData.timeInvalidator?.parsed.maxExpiration) {
     const maxDuration =
@@ -208,26 +206,12 @@ export const rentalTypeColor = (type: InvalidatorOption) =>
     expiration: 'text-blue',
   }[type])
 
-export const rentalTypePill = (type: InvalidatorOption) =>
+export const rentalTypeName = (type: InvalidatorOption) =>
   ({
-    manual: (
-      <Pill className="border-[1px] border-border text-primary-2">Manual</Pill>
-    ),
-    rate: (
-      <Pill className="border-[1px] border-border text-primary">
-        Rate rental
-      </Pill>
-    ),
-    duration: (
-      <Pill className="border-[1px] border-border text-secondary">
-        Fixed duration
-      </Pill>
-    ),
-    expiration: (
-      <Pill className="border-[1px] border-border text-blue">
-        Fixed expiration
-      </Pill>
-    ),
+    manual: 'Manual',
+    rate: 'Rate rental',
+    duration: 'Fixed duration',
+    expiration: 'Fixed expiration',
   }[type])
 
 export const elligibleForRent = (

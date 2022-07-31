@@ -8,7 +8,8 @@ import {
   ShareTwitterButton,
   shareTwitterListedLink,
 } from 'common/ShareTwitterButton'
-import { getQueryParam, transactionUrl } from 'common/utils'
+import { transactionUrl } from 'common/utils'
+import { useMintMetadatas } from 'hooks/useMintMetadata'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { FaTwitter } from 'react-icons/fa'
@@ -28,6 +29,10 @@ export const RentalIssueSuccessCard = ({
   const { environment } = useEnvironmentCtx()
   const { configFromToken } = useProjectConfig()
   const config = configFromToken(tokenDatas[0])
+  const mintMetadatas = useMintMetadatas(
+    txResults.map(({ tokenData }) => tokenData)
+  )
+
   return (
     <div className="relative rounded-lg bg-dark-6 p-8">
       <div className="absolute right-12 top-6 text-5xl">🎉</div>
@@ -50,7 +55,7 @@ export const RentalIssueSuccessCard = ({
         {tokenDatas.length > 1
           ? `(${tokenDatas.length})`
           : tokenDatas[0]
-          ? tokenDatas[0].metadata?.parsed.name
+          ? tokenDatas[0].metaplexData?.parsed.data.name
           : ''}
       </div>
       <div
@@ -59,19 +64,16 @@ export const RentalIssueSuccessCard = ({
           (tokenDatas.length <= 2 ? 'justify-center' : '')
         }
       >
-        {txResults.map(({ tokenData, txid }, i) => (
+        {txResults.map(({ txid }, i) => (
           <div
             key={i}
             className="relative w-1/2 flex-shrink-0 rounded-lg bg-medium-4"
           >
-            {tokenData.metadata && tokenData.metadata.parsed && (
+            {mintMetadatas[i]?.data && (
               <img
                 className="rounded-lg"
-                src={
-                  getQueryParam(tokenData.metadata?.parsed?.image, 'uri') ||
-                  tokenData.metadata.parsed.image
-                }
-                alt={tokenData.metadata.parsed.name}
+                src={mintMetadatas[i]?.data!.parsed?.image}
+                alt={mintMetadatas[i]?.data!.parsed?.name}
               />
             )}
             {txid && (

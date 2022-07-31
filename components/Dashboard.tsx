@@ -177,8 +177,7 @@ export const Dashboard = () => {
           (managedTokens.isFetched && managedTokens.isFetching)
         }
       />
-      <div className="relative flex w-full flex-wrap items-center justify-center gap-16 py-8 px-4 lg:justify-between lg:px-10">
-        {/* <div className="blur-4xl absolute left-10 -bottom-20 h-[200px] w-[200px] -rotate-45 bg-glow"></div> */}
+      <div className="relative flex w-full flex-wrap items-center justify-center gap-16 py-8 px-4 md:justify-between md:px-10">
         <div className="flex items-center gap-4">
           <div
             className={`flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border-4 border-border ${
@@ -313,7 +312,7 @@ export const Dashboard = () => {
               <div className="flex flex-col gap-12">
                 {groupedTokens.map(({ config, tokenDatas }) => (
                   <div key={config.name} className="flex flex-col gap-6">
-                    <div className="flex items-center gap-3 px-24 xl:px-0">
+                    <div className="flex items-center gap-3">
                       <div className="text-2xl text-light-0">
                         {config.displayName}
                       </div>

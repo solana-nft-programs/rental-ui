@@ -16,7 +16,7 @@ import { TabSelector } from 'common/TabSelector'
 import { getPriceOrRentalRate, getRentalDuration } from 'common/tokenDataUtils'
 import { Activity } from 'components/Activity'
 import type { TokenSection } from 'config/config'
-import { useFilteredTokenManagers } from 'hooks/useFilteredTokenManagers'
+import { useBrowseTokenDataWithIndex } from 'hooks/useBrowseTokenDataWithIndex'
 import { usePaymentMints } from 'hooks/usePaymentMints'
 import { useWalletId } from 'hooks/useWalletId'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
@@ -64,7 +64,7 @@ export const Browse = () => {
   const { environment } = useEnvironmentCtx()
   const walletId = useWalletId()
   const { config } = useProjectConfig()
-  const tokenManagers = useFilteredTokenManagers()
+  const tokenManagers = useBrowseTokenDataWithIndex()
   const tokenManagersForConfig = tokenManagers.data || []
   const { UTCNow } = useUTCNow()
   const paymentMintInfos = usePaymentMints()
@@ -133,7 +133,7 @@ export const Browse = () => {
           const filteredToken = !isPlaced
             ? filterTokens([tk], section.filter, environment.label)
             : []
-          if (filteredToken.length === 0 && !isPlaced) {
+          if (filteredToken.length > 0 && !isPlaced) {
             isPlaced = true
             return {
               ...section,

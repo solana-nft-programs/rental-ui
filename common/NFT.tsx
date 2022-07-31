@@ -1,6 +1,7 @@
 import { getExpirationString } from '@cardinal/common'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import type { TokenData } from 'apis/api'
+import { useMintMetadata } from 'hooks/useMintMetadata'
 import { useUTCNow } from 'providers/UTCNowProvider'
 
 import { NFTContexualMenu } from './NFTContexualMenu'
@@ -32,7 +33,7 @@ interface NFTProps {
 
 export function NFT({ tokenData }: NFTProps) {
   const { UTCNow } = useUTCNow()
-  const { metadata } = tokenData
+  const metadata = useMintMetadata(tokenData).data
   return (
     <div className="relative min-w-full rounded-xl bg-dark-5">
       <NFTContexualMenu tokenData={tokenData} />
@@ -50,12 +51,16 @@ export function NFT({ tokenData }: NFTProps) {
             </div>
           )
         )}
-        {metadata && metadata.parsed && (
+        {metadata && metadata.parsed.image ? (
           <img
             loading="lazy"
             src={metadata.parsed.image}
             alt={metadata.parsed.name}
-            className={`w-full rounded-t-xl object-contain`}
+            className={`w-full rounded-xl object-contain`}
+          />
+        ) : (
+          <div
+            className={`h-[320px] w-full grow animate-pulse rounded-xl bg-border`}
           />
         )}
       </div>

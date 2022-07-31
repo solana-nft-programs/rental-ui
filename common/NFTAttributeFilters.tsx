@@ -1,25 +1,33 @@
+import type { AccountData } from '@cardinal/common'
 import { css } from '@emotion/react'
 import type { TokenData } from 'apis/api'
 import type { ProjectConfig } from 'config/config'
+import type { IndexedData } from 'hooks/useBrowseTokenDataWithIndex'
+
+export const attributesForTokenData = (tokenData: {
+  metadata?: AccountData<any> | null
+  indexedData?: IndexedData
+}): { trait_type: string; value: string }[] => {
+  return (
+    tokenData.metadata?.parsed?.attributes ??
+    tokenData.indexedData?.mint_address_nfts?.metadatas_attributes
+  )
+}
 
 export const getAllAttributes = (
-  tokens: TokenData[]
+  tokens: { metadata?: AccountData<any> | null; indexedData?: IndexedData }[]
 ): NFTAtrributeFilterValues => {
   const allAttributes: { [traitType: string]: Set<any> } = {}
   tokens.forEach((tokenData) => {
-    if (
-      tokenData?.metadata?.parsed?.attributes &&
-      tokenData?.metadata?.parsed?.attributes.length > 0
-    ) {
-      tokenData?.metadata?.parsed?.attributes.forEach(
-        (attribute: { trait_type: string; value: string }) => {
-          if (attribute.trait_type in allAttributes) {
-            allAttributes[attribute.trait_type]!.add(attribute.value)
-          } else {
-            allAttributes[attribute.trait_type] = new Set([attribute.value])
-          }
+    const attributes = attributesForTokenData(tokenData)
+    if (attributes && attributes.length > 0) {
+      attributes.forEach((attribute: { trait_type: string; value: string }) => {
+        if (attribute.trait_type in allAttributes) {
+          allAttributes[attribute.trait_type]!.add(attribute.value)
+        } else {
+          allAttributes[attribute.trait_type] = new Set([attribute.value])
         }
-      )
+      })
     }
   })
 
@@ -31,7 +39,7 @@ export const getAllAttributes = (
 }
 
 export const filterTokensByAttributes = (
-  tokens: TokenData[],
+  tokens: { metadata?: AccountData<any> | null; indexedData?: IndexedData }[],
   filters: NFTAtrributeFilterValues,
   union = false
 ): TokenData[] => {
@@ -47,7 +55,7 @@ export const filterTokensByAttributes = (
     Object.keys(filters).forEach((filterName) => {
       filters[filterName]?.forEach((val) => {
         if (
-          tokenData.metadata?.parsed.attributes.filter(
+          attributesForTokenData(tokenData).filter(
             (a: { trait_type: string; value: string }) =>
               a.trait_type === filterName && a.value === val
           ).length > 0

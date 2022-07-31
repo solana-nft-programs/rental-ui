@@ -1,4 +1,4 @@
-import { capitalizeFirstLetter, getQueryParam } from '@cardinal/common'
+import { capitalizeFirstLetter } from '@cardinal/common'
 import { css } from '@emotion/react'
 import type { Keypair } from '@solana/web3.js'
 import type { TokenData } from 'apis/api'
@@ -9,6 +9,7 @@ import { useModal } from 'providers/ModalProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useState } from 'react'
 import { PoweredByFooter } from 'rental-components/common/PoweredByFooter'
+import { RentalCardTokenHeader } from 'rental-components/common/RentalCardTokenHeader'
 import type {
   InvalidationTypeOption,
   VisibilityOption,
@@ -88,40 +89,7 @@ export const RentalIssueCard = ({ tokenDatas }: RentalIssueCardProps) => {
   }
   return (
     <div className="rounded-xl bg-dark-6 p-6">
-      <div className="text-center text-2xl text-light-0">
-        Rent out{' '}
-        {tokenDatas.length > 1
-          ? `(${tokenDatas.length})`
-          : tokenDatas[0]
-          ? tokenDatas[0].metadata?.parsed.name
-          : ''}
-      </div>
-      <div className="mb-2 text-center text-lg text-medium-4">
-        {config.displayName}
-      </div>
-      <div
-        className={
-          `flex w-full gap-4 overflow-scroll overflow-x-auto py-4 ` +
-          (tokenDatas.length <= 2 ? 'justify-center' : '')
-        }
-      >
-        {tokenDatas.map((tokenData, i) => (
-          <div
-            key={i}
-            className="w-1/2 flex-shrink-0 overflow-hidden rounded-lg bg-medium-4"
-          >
-            {tokenData.metadata && tokenData.metadata.parsed && (
-              <img
-                src={
-                  getQueryParam(tokenData.metadata?.parsed?.image, 'uri') ||
-                  tokenData.metadata.parsed.image
-                }
-                alt={tokenData.metadata.parsed.name}
-              />
-            )}
-          </div>
-        ))}
-      </div>
+      <RentalCardTokenHeader tokenDatas={tokenDatas} config={config} />
       <div>
         {invalidatorOptions.length > 0 && (
           <div className="flex items-center justify-between border-t-[2px] border-border py-4">

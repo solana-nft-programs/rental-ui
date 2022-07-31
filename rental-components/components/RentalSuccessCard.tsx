@@ -8,7 +8,8 @@ import {
   ShareTwitterButton,
   shareTwitterClaimedLink,
 } from 'common/ShareTwitterButton'
-import { getQueryParam, transactionUrl } from 'common/utils'
+import { transactionUrl } from 'common/utils'
+import { useMintMetadata } from 'hooks/useMintMetadata'
 import { useWalletId } from 'hooks/useWalletId'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
@@ -37,6 +38,7 @@ export const RentalSuccessCard = ({
     connection,
     tokenData.tokenManager?.parsed.issuer
   )
+  const metadata = useMintMetadata(tokenData).data
 
   return (
     <div className="relative rounded-lg bg-dark-6 p-8">
@@ -56,20 +58,17 @@ export const RentalSuccessCard = ({
       </div>
       <div className="text-center text-2xl text-light-0">Congratulations!</div>
       <div className="mb-6 text-center text-lg text-medium-4">
-        You&apos;ve rented {tokenData.metadata?.parsed.name}
+        You&apos;ve rented {tokenData.metaplexData?.parsed.data.name}
       </div>
       <div
         className={`mb-4 flex w-full justify-center gap-4 overflow-x-auto pb-6`}
       >
         <div className="relative w-3/4 lg:w-1/2">
-          {tokenData.metadata && tokenData.metadata.parsed && (
+          {metadata && metadata.parsed && (
             <img
               className="rounded-lg"
-              src={
-                getQueryParam(tokenData.metadata?.parsed?.image, 'uri') ||
-                tokenData.metadata.parsed.image
-              }
-              alt={tokenData.metadata.parsed.name}
+              src={metadata.parsed.image}
+              alt={metadata.parsed.name}
             />
           )}
           <a

@@ -3,13 +3,18 @@ import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tok
 import type * as splToken from '@solana/spl-token'
 import type { TokenData } from 'apis/api'
 import type { ProjectConfig } from 'config/config'
-import { useFilteredTokenManagers } from 'hooks/useFilteredTokenManagers'
+import { useBrowseTokenDataWithIndex } from 'hooks/useBrowseTokenDataWithIndex'
 import { usePaymentMints } from 'hooks/usePaymentMints'
 import { useProjectStats } from 'hooks/useProjectStats'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 
 import { DURATION_DATA } from './DurationInput'
-import { getPriceFromTokenData, getSymbolFromTokenData, isPrivateListing, isRateBasedListing } from './tokenDataUtils'
+import {
+  getPriceFromTokenData,
+  getSymbolFromTokenData,
+  isPrivateListing,
+  isRateBasedListing,
+} from './tokenDataUtils'
 import { getMintDecimalAmount } from './units'
 
 const calculateFloorPrice = (
@@ -90,8 +95,8 @@ export const HeroStats: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   const { config } = useProjectConfig()
   const projectStats = useProjectStats()
   const paymentMints = usePaymentMints()
-  const filteredTokenManagers = useFilteredTokenManagers()
-  const tokenDatas = filteredTokenManagers.data?.filter(
+  const browseTokenDatas = useBrowseTokenDataWithIndex()
+  const tokenDatas = browseTokenDatas.data?.filter(
     (tokenData) =>
       tokenData.tokenManager?.parsed.state === TokenManagerState.Issued
   )

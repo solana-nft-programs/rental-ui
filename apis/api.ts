@@ -41,6 +41,7 @@ import type {
 } from '@solana/web3.js'
 import { Keypair, PublicKey } from '@solana/web3.js'
 import type { TokenFilter } from 'config/config'
+import type { IndexedData } from 'hooks/useBrowseTokenDataWithIndex'
 
 import { tryPublicKey } from './utils'
 
@@ -66,10 +67,10 @@ export type TokenData = {
     account: AccountInfo<ParsedAccountData>
   }
   mint?: spl.MintInfo
+  indexedData?: IndexedData
   tokenManager?: AccountData<TokenManagerData>
   metaplexData?: AccountData<metaplex.MetadataData>
   editionData?: AccountData<metaplex.EditionData | metaplex.MasterEditionData>
-  metadata?: AccountData<any> | null
   claimApprover?: AccountData<PaidClaimApproverData> | null
   useInvalidator?: AccountData<UseInvalidatorData> | null
   timeInvalidator?: AccountData<TimeInvalidatorData> | null
@@ -445,7 +446,11 @@ export async function getTokenDatas(
 export async function getTokenData(
   connection: Connection,
   tokenManagerId: PublicKey
-): Promise<TokenData> {
+): Promise<
+  {
+    metadata?: AccountData<any> | null
+  } & TokenData
+> {
   const tokenManagerData = await tokenManager.accounts.getTokenManager(
     connection,
     tokenManagerId

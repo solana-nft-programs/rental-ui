@@ -1,3 +1,5 @@
+import '@sentry/tracing'
+
 import { ApolloClient, gql, InMemoryCache } from '@apollo/client'
 import type { AccountData } from '@cardinal/common'
 import type { PaidClaimApproverData } from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
@@ -15,6 +17,7 @@ import type { UseInvalidatorData } from '@cardinal/token-manager/dist/cjs/progra
 import { USE_INVALIDATOR_ADDRESS } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
 import { findUseInvalidatorAddress } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator/pda'
 import * as metaplex from '@metaplex-foundation/mpl-token-metadata'
+import * as Sentry from '@sentry/browser'
 import type * as spl from '@solana/spl-token'
 import type { AccountInfo, ParsedAccountData, PublicKey } from '@solana/web3.js'
 import { accountDataById, getTokenDatas } from 'apis/api'
@@ -26,13 +29,14 @@ import { useQuery } from 'react-query'
 
 export const TOKEN_DATA_KEY = 'tokenData'
 
-export type FilteredTokenManagerData = {
+export type BrowseTokenData = {
   tokenAccount?: {
     pubkey: PublicKey
     account: AccountInfo<ParsedAccountData>
   }
+  indexedData?: IndexedData
   tokenManager?: AccountData<TokenManagerData>
-  metaplexData?: AccountData<metaplex.MetadataData> | null
+  metaplexData?: AccountData<metaplex.MetadataData>
   editionData?: AccountData<metaplex.EditionData | metaplex.MasterEditionData>
   metadata?: AccountData<any> | null
   claimApprover?: AccountData<PaidClaimApproverData> | null
@@ -41,26 +45,34 @@ export type FilteredTokenManagerData = {
   recipientTokenAccount?: spl.AccountInfo | null
 }
 
-export type IndexedTokenData = {
+export type IndexedData = {
   mint?: string
   address?: string
   invalidator_address?: { invalidator: string }[]
   mint_address_nfts?: {
     name?: string
     uri?: string
+    metadatas_attributes?: {
+      trait_type: string
+      value: string
+    }[]
   }
 }
 
-export const useBrowseTokenData = () => {
+export const useBrowseTokenDataWithIndex = () => {
   const { config } = useProjectConfig()
   const { connection, environment } = useEnvironmentCtx()
-  return useQuery<FilteredTokenManagerData[]>(
-    [TOKEN_DATA_KEY, 'useBrowseTokenData', config.name],
+  return useQuery<BrowseTokenData[]>(
+    [TOKEN_DATA_KEY, 'useBrowseTokenDataWithIndex', config.name],
     async () => {
       if (
         (environment.index && config.filter?.type === 'creators') ||
         (config.filter?.type === 'issuer' && !config.indexDisabled)
       ) {
+        const transaction = Sentry.startTransaction({
+          name: `[useBrowseTokenDataWithIndex] ${config.name}`,
+        })
+
         /////
         const indexer = new ApolloClient({
           uri: environment.index,
@@ -95,6 +107,10 @@ export const useBrowseTokenData = () => {
                       mint_address_nfts {
                         uri
                         name
+                        metadatas_attributes {
+                          trait_type
+                          value
+                        }
                       }
                     }
                   }
@@ -119,6 +135,10 @@ export const useBrowseTokenData = () => {
                       mint_address_nfts {
                         uri
                         name
+                        metadatas_attributes {
+                          trait_type
+                          value
+                        }
                       }
                     }
                   }
@@ -130,7 +150,7 @@ export const useBrowseTokenData = () => {
         /////
         const indexedTokenManagers = tokenManagerResponse.data[
           'cardinal_token_managers'
-        ] as IndexedTokenData[]
+        ] as IndexedData[]
 
         /////
         const knownInvalidators: string[][] = await Promise.all(
@@ -167,7 +187,7 @@ export const useBrowseTokenData = () => {
                     { ...acc[1], [tokenManagerId.toString()]: data },
                   ]
             },
-            [[], {}] as [PublicKey[], { [a: string]: IndexedTokenData }]
+            [[], {}] as [PublicKey[], { [a: string]: IndexedData }]
           )
         /////
         const tokenManagerDatas = (
@@ -202,37 +222,37 @@ export const useBrowseTokenData = () => {
           ],
           [...editionIds, ...mintIds, ...metaplexIds] as (PublicKey | null)[]
         )
-        const [accountsById, metadatas] = await Promise.all([
-          accountDataById(connection, idsToFetch),
-          Promise.all(
-            tokenManagerDatas.map(async ({ pubkey, parsed }) => {
-              try {
-                const indexedData = indexedTokenManagerDatas[pubkey.toString()]
-                if (!indexedData?.mint_address_nfts?.uri) return undefined
-                const json = await fetch(
-                  indexedData?.mint_address_nfts?.uri
-                ).then((r) => r.json())
-                return {
-                  pubkey: parsed.mint,
-                  parsed: json,
-                }
-              } catch (e) {}
-            })
-          ),
-        ])
-
-        const metadataById = metadatas.reduce(
-          (acc, md, i) => ({
-            ...acc,
-            [tokenManagerDatas[i]!.pubkey.toString()]: md,
-          }),
-          {} as {
-            [tokenManagerId: string]:
-              | { pubkey: PublicKey; parsed: any }
-              | undefined
-              | null
-          }
-        )
+        const accountsById = await accountDataById(connection, idsToFetch)
+        // const [accountsById, metadatas] = await Promise.all([
+        //   accountDataById(connection, idsToFetch),
+        //   Promise.all(
+        //     tokenManagerDatas.map(async ({ pubkey, parsed }) => {
+        //       try {
+        //         const indexedData = indexedTokenManagerDatas[pubkey.toString()]
+        //         if (!indexedData?.mint_address_nfts?.uri) return undefined
+        //         const json = await fetch(
+        //           indexedData?.mint_address_nfts?.uri
+        //         ).then((r) => r.json())
+        //         return {
+        //           pubkey: parsed.mint,
+        //           parsed: json,
+        //         }
+        //       } catch (e) {}
+        //     })
+        //   ),
+        // ])
+        // const metadataById = metadatas.reduce(
+        //   (acc, md, i) => ({
+        //     ...acc,
+        //     [tokenManagerDatas[i]!.pubkey.toString()]: md,
+        //   }),
+        //   {} as {
+        //     [tokenManagerId: string]:
+        //       | { pubkey: PublicKey; parsed: any }
+        //       | undefined
+        //       | null
+        //   }
+        // )
 
         const tokenDatas = tokenManagerDatas.map((tokenManagerData, i) => {
           const timeInvalidatorId = tokenManagerData.parsed.invalidators.filter(
@@ -249,6 +269,8 @@ export const useBrowseTokenData = () => {
             mint: accountsById[
               tokenManagerData.parsed.mint.toString()
             ] as spl.MintInfo,
+            indexedData:
+              indexedTokenManagerDatas[tokenManagerData.pubkey.toString()],
             editionData: accountsById[editionIds[i]!.toString()] as
               | {
                   pubkey: PublicKey
@@ -264,7 +286,7 @@ export const useBrowseTokenData = () => {
               | AccountData<metaplex.MetadataData>
               | undefined,
             tokenManager: tokenManagerData,
-            metadata: metadataById[tokenManagerData.pubkey.toString()],
+            // metadata: metadataById[tokenManagerData.pubkey.toString()],
             claimApprover: tokenManagerData.parsed.claimApprover?.toString()
               ? (accountsById[
                   tokenManagerData.parsed.claimApprover?.toString()
@@ -282,6 +304,7 @@ export const useBrowseTokenData = () => {
               : undefined,
           }
         })
+        transaction.finish()
         return tokenDatas.filter((tokenData) => elligibleForClaim(tokenData))
       } else {
         let tokenManagerDatas = []

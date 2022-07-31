@@ -95,6 +95,9 @@ export const MultiSelector = <T,>({
                   border-bottom-width: ${i < groups?.length - 1 ? '1px' : ''};
                   ${colorized &&
                   css`
+                  color: ${
+                    count && count > 0 && `${config.colors.accent} !important;`
+                  }
                     &:hover {
                       color: ${config.colors.accent} !important;
                     }
@@ -104,7 +107,14 @@ export const MultiSelector = <T,>({
               >
                 <div>{label}</div>
                 {count ? (
-                  <div className="text-sm text-medium-4">{count}</div>
+                  <div
+                    className="text-sm"
+                    css={css`
+                      color: ${config.colors.accent};
+                    `}
+                  >
+                    {count}
+                  </div>
                 ) : (
                   <ChevronRight />
                 )}
@@ -131,6 +141,11 @@ export const MultiSelector = <T,>({
                   css={
                     colorized &&
                     css`
+                    color: ${
+                      count &&
+                      count > 0 &&
+                      `${config.colors.accent} !important;`
+                    }
                       &:hover {
                         color: ${config.colors.accent} !important;
                       }
@@ -139,7 +154,14 @@ export const MultiSelector = <T,>({
                 >
                   <div>{label}</div>
                   {count ? (
-                    <div className="text-sm text-medium-4">{count}</div>
+                    <div
+                      className="text-sm"
+                      css={css`
+                        color: ${config.colors.accent};
+                      `}
+                    >
+                      {count}
+                    </div>
                   ) : (
                     <ChevronDown size={14} />
                   )}

@@ -34,57 +34,54 @@ export const filterTokens = (
   cluster?: string | undefined
 ): TokenData[] => {
   return tokens.filter((token) => {
-    let filtered = false
-    if (filter) {
-      if (
-        filter.type === 'creators' &&
-        !token.metaplexData?.parsed?.data?.creators?.some(
+    if (
+      !token.metaplexData?.parsed.data.uri ||
+      token.metaplexData?.parsed.data.uri.length <= 0
+    ) {
+      return false
+    }
+    if (
+      token.indexedData?.mint_address_nfts &&
+      (token.indexedData.mint_address_nfts.metadatas_attributes?.length ?? 0) <=
+        0
+    ) {
+      return false
+    }
+    if (!filter) return true
+    switch (filter.type) {
+      case 'creators':
+        return token.metaplexData?.parsed?.data?.creators?.some(
           (creator) =>
             filter.value.includes(creator.address.toString()) &&
             ((cluster && cluster === 'devnet') || creator.verified)
         )
-      ) {
-        filtered = true
-      } else if (
-        filter.type === 'symbol' &&
-        token.metadata?.parsed?.symbol !== filter.value
-      ) {
-        filtered = true
-      } else if (
-        filter.type === 'issuer' &&
-        !filter.value.includes(
+      case 'symbol':
+        return filter.value.includes(token.metaplexData?.parsed.data.symbol)
+      case 'issuer':
+        return filter.value.includes(
           token.tokenManager?.parsed.issuer.toString() ?? ''
         )
-      ) {
-        filtered = true
-      } else if (
-        filter.type === 'state' &&
-        token.tokenManager?.parsed &&
-        filter.value.includes(token.tokenManager?.parsed.state.toString())
-      ) {
-        filtered = true
-      } else if (
-        filter.type === 'claimer' &&
-        token.recipientTokenAccount &&
-        filter.value.includes(token.recipientTokenAccount.owner.toString())
-      ) {
-        filtered = true
-      } else if (
-        filter.type === 'owner' &&
-        token.tokenAccount &&
-        filter.value.includes(
-          token.tokenAccount?.account.data.parsed.info.owner.toString()
-        ) &&
-        !token.tokenManager
-      ) {
-        filtered = true
-      }
+      case 'state':
+        return (
+          token.tokenManager?.parsed &&
+          filter.value.includes(token.tokenManager?.parsed.state.toString())
+        )
+      case 'claimer':
+        return (
+          token.recipientTokenAccount &&
+          filter.value.includes(token.recipientTokenAccount.owner.toString())
+        )
+      case 'owner':
+        return (
+          token.tokenAccount &&
+          !token.tokenManager &&
+          filter.value.includes(
+            token.tokenAccount?.account.data.parsed.info.owner.toString()
+          )
+        )
+      default:
+        return false
     }
-    return (
-      !!token?.metadata?.parsed &&
-      Object.keys(token.metadata.parsed).length > 1 &&
-      !filtered
-    )
   })
 }
 
