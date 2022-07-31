@@ -14,14 +14,12 @@ import { NFTHeader } from 'common/NFTHeader'
 import { NFTIssuerInfo } from 'common/NFTIssuerInfo'
 import { NFTRevokeButton } from 'common/NFTRevokeButton'
 import { StyledBackground } from 'common/StyledBackground'
-import { pubKeyUrl } from 'common/utils'
 import ClaimQRCode from 'components/ClaimQRCode'
 import { useOtp } from 'hooks/useOtp'
 import { useTokenData } from 'hooks/useTokenData'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { transparentize } from 'polished'
-import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useState } from 'react'
 import { isMobile } from 'react-device-detect'
@@ -30,7 +28,6 @@ import { BiQr } from 'react-icons/bi'
 function Claim(props: { tokenDataString: string }) {
   const { configFromToken } = useProjectConfig()
   const router = useRouter()
-  const { environment } = useEnvironmentCtx()
   const [showQRCode, setShowQRCode] = useState(false)
   const otpKeypair = useOtp()
 
