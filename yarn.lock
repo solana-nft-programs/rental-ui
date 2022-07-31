@@ -1456,6 +1456,20 @@
     ts-mocha "^8.0.0"
     typescript "^4.5.5"
 
+"@cardinal/token-manager@^1.4.10":
+  version "1.4.10"
+  resolved "https://registry.yarnpkg.com/@cardinal/token-manager/-/token-manager-1.4.10.tgz#3818b7199dd7a5873fe5a98f1b67c2acabd25646"
+  integrity sha512-eRbCg2acTRlYUjTyxGRoatC+jUFFSYXAA/yasRfEEEL8sPpq2mQ29u04D7AnphEupbtZ9p4ysm+MHCKjmC05tQ==
+  dependencies:
+    "@metaplex-foundation/mpl-token-metadata" "^1.2.3"
+    "@solana/buffer-layout" "^4.0.0"
+    "@solana/spl-token" "^0.1.8"
+    borsh "^0.7.0"
+    bs58 "^4.0.1"
+    superstruct "^0.15.4"
+    tiny-invariant "^1.2.0"
+    tslib "^2.3.1"
+
 "@cardinal/token-manager@^1.4.7":
   version "1.4.7"
   resolved "https://registry.yarnpkg.com/@cardinal/token-manager/-/token-manager-1.4.7.tgz#1f7ef6ae9ec61faa78801a0294424d6ea8336d54"
