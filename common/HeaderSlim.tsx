@@ -113,7 +113,10 @@ export const HeaderSlim: React.FC<Props> = ({
               wallet={asWallet(wallet)}
             />
           ) : (
-            <ButtonSmall onClick={() => walletModal.setVisible(true)}>
+            <ButtonSmall
+              className="text-xs"
+              onClick={() => walletModal.setVisible(true)}
+            >
               <>
                 <GlyphWallet />
                 <>Connect wallet</>

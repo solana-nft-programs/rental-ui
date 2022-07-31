@@ -50,11 +50,11 @@ export function NFT({ tokenData }: NFTProps) {
             </div>
           )
         )}
-        {metadata && metadata.data && (
+        {metadata && metadata.parsed && (
           <img
             loading="lazy"
-            src={metadata.data.image}
-            alt={metadata.data.name}
+            src={metadata.parsed.image}
+            alt={metadata.parsed.name}
             className={`w-full rounded-t-xl object-contain`}
           />
         )}

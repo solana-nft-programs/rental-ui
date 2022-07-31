@@ -35,7 +35,9 @@ export const TokenQueryData: React.FC<Props> = ({
   useEffect(() => {
     setPageNum(DEFAULT_PAGE)
   }, [
-    tokenDatas?.map((tokenData) => tokenData.metaplexData?.data.mint).join(','),
+    tokenDatas
+      ?.map((tokenData) => tokenData.metaplexData?.parsed.mint)
+      .join(','),
   ])
 
   useEffect(() => {

@@ -32,9 +32,9 @@ export type FilteredTokenManagerData = {
     account: AccountInfo<ParsedAccountData>
   }
   tokenManager?: AccountData<TokenManagerData>
-  metaplexData?: { pubkey: PublicKey; data: metaplex.MetadataData } | null
+  metaplexData?: AccountData<metaplex.MetadataData> | null
   editionData?: AccountData<metaplex.EditionData | metaplex.MasterEditionData>
-  metadata?: { pubkey: PublicKey; data: any } | null
+  metadata?: AccountData<any> | null
   claimApprover?: AccountData<PaidClaimApproverData> | null
   useInvalidator?: AccountData<UseInvalidatorData> | null
   timeInvalidator?: AccountData<TimeInvalidatorData> | null
@@ -214,7 +214,7 @@ export const useBrowseTokenData = () => {
                 ).then((r) => r.json())
                 return {
                   pubkey: parsed.mint,
-                  data: json,
+                  parsed: json,
                 }
               } catch (e) {}
             })
@@ -228,7 +228,7 @@ export const useBrowseTokenData = () => {
           }),
           {} as {
             [tokenManagerId: string]:
-              | { pubkey: PublicKey; data: any }
+              | { pubkey: PublicKey; parsed: any }
               | undefined
               | null
           }
@@ -261,10 +261,7 @@ export const useBrowseTokenData = () => {
                 ] as spl.AccountInfo)
               : undefined,
             metaplexData: accountsById[metaplexIds[i]!.toString()] as
-              | {
-                  pubkey: PublicKey
-                  data: metaplex.MetadataData
-                }
+              | AccountData<metaplex.MetadataData>
               | undefined,
             tokenManager: tokenManagerData,
             metadata: metadataById[tokenManagerData.pubkey.toString()],

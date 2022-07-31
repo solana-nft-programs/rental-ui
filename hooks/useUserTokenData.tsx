@@ -25,9 +25,9 @@ export type UserTokenData = {
   }
   mint?: spl.MintInfo
   tokenManager?: AccountData<TokenManagerData>
-  metaplexData?: { pubkey: PublicKey; data: metaplex.MetadataData } | null
+  metaplexData?: AccountData<metaplex.MetadataData>
   editionData?: AccountData<metaplex.EditionData | metaplex.MasterEditionData>
-  metadata?: any
+  metadata?: AccountData<any> | null
   claimApprover?: AccountData<PaidClaimApproverData> | null
   useInvalidator?: AccountData<UseInvalidatorData> | null
   timeInvalidator?: AccountData<TimeInvalidatorData> | null
@@ -77,7 +77,7 @@ export const useUserTokenData = (filter?: TokenFilter, cluster?: string) => {
             acc[tokenAccounts[i]!.pubkey.toString()] = {
               pubkey: metaplexIds[i]!,
               ...accountInfo,
-              data: metaplex.MetadataData.deserialize(
+              parsed: metaplex.MetadataData.deserialize(
                 accountInfo?.data as Buffer
               ) as metaplex.MetadataData,
             }
@@ -85,10 +85,7 @@ export const useUserTokenData = (filter?: TokenFilter, cluster?: string) => {
           return acc
         },
         {} as {
-          [tokenAccountId: string]: {
-            pubkey: PublicKey
-            data: metaplex.MetadataData
-          }
+          [tokenAccountId: string]: AccountData<metaplex.MetadataData>
         }
       )
 
@@ -97,7 +94,7 @@ export const useUserTokenData = (filter?: TokenFilter, cluster?: string) => {
         tokenAccounts = tokenAccounts.filter((tokenAccount) =>
           metaplexData[
             tokenAccount.pubkey.toString()
-          ]?.data?.data?.creators?.some(
+          ]?.parsed?.data?.creators?.some(
             (creator) =>
               filter.value.includes(creator.address.toString()) &&
               (cluster === 'devnet' || creator.verified)
@@ -165,14 +162,14 @@ export const useUserTokenData = (filter?: TokenFilter, cluster?: string) => {
         tokenAccounts.map(async (tokenAccount) => {
           try {
             const md = metaplexData[tokenAccount.pubkey.toString()]
-            const uri = md?.data.data.uri
+            const uri = md?.parsed.data.uri
             if (!md || !uri) {
               return null
             }
             const json = await fetch(uri).then((r) => r.json())
             return {
               pubkey: md.pubkey,
-              data: json,
+              parsed: json,
             }
           } catch (e) {}
         })

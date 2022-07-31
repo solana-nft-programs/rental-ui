@@ -36,7 +36,7 @@ export const NFTHeader: React.FC<NFTHeaderProps> = ({
     >
       <div className="flex items-center gap-2 font-bold">
         <div className="w-fit overflow-hidden text-ellipsis whitespace-nowrap text-left text-lg">
-          {tokenData.metadata?.data?.name}
+          {tokenData.metadata?.parsed?.name}
         </div>
         <div className="flex w-fit">
           <FaLink />

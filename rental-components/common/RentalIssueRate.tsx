@@ -188,7 +188,8 @@ export const RentalIssueRate = ({
         <Alert variant="success" className="text-left">
           {txData.length === 1 ? (
             <div>
-              Successfully listed {tokenDatas[0]?.metaplexData?.data.data.name}
+              Successfully listed{' '}
+              {tokenDatas[0]?.metaplexData?.parsed.data.name}
               <br />
               {advancedValues?.visibility === 'private' && (
                 <>

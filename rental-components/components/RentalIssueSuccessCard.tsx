@@ -50,7 +50,7 @@ export const RentalIssueSuccessCard = ({
         {tokenDatas.length > 1
           ? `(${tokenDatas.length})`
           : tokenDatas[0]
-          ? tokenDatas[0].metadata?.data.name
+          ? tokenDatas[0].metadata?.parsed.name
           : ''}
       </div>
       <div
@@ -64,14 +64,14 @@ export const RentalIssueSuccessCard = ({
             key={i}
             className="relative w-1/2 flex-shrink-0 rounded-lg bg-medium-4"
           >
-            {tokenData.metadata && tokenData.metadata.data && (
+            {tokenData.metadata && tokenData.metadata.parsed && (
               <img
                 className="rounded-lg"
                 src={
-                  getQueryParam(tokenData.metadata?.data?.image, 'uri') ||
-                  tokenData.metadata.data.image
+                  getQueryParam(tokenData.metadata?.parsed?.image, 'uri') ||
+                  tokenData.metadata.parsed.image
                 }
-                alt={tokenData.metadata.data.name}
+                alt={tokenData.metadata.parsed.name}
               />
             )}
             {txid && (

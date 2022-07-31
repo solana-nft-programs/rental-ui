@@ -21,7 +21,7 @@ function Burn() {
 
   const revokeRental = async (tokenData: TokenData) => {
     const transaction = new Transaction()
-    const mintId = tokenData.metaplexData?.data.mint
+    const mintId = tokenData.metaplexData?.parsed.mint
     if (!mintId || !wallet.publicKey) return
     const walletAta = await withFindOrInitAssociatedTokenAccount(
       transaction,
@@ -69,10 +69,10 @@ function Burn() {
   const getExpiredTokens = (tokenData: TokenData[]) => {
     const datas = tokenData.filter(
       (token) =>
-        token?.metaplexData?.data?.data?.uri.includes('api.cardinal.so') &&
+        token?.metaplexData?.parsed?.data?.uri.includes('api.cardinal.so') &&
         !token.tokenManager &&
         token.tokenAccount?.account.data.parsed.info.state !== 'frozen' &&
-        token?.metadata?.data?.name === 'EXPIRED'
+        token?.metadata?.parsed?.name === 'EXPIRED'
     )
     // console.log(datas[0])
     // console.log(datas[1])

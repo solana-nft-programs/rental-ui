@@ -20,10 +20,10 @@ import type * as spl from '@solana/spl-token'
 import type { AccountInfo, ParsedAccountData, PublicKey } from '@solana/web3.js'
 import { getTokenDatas } from 'apis/api'
 import { tryPublicKey } from 'apis/utils'
+import { elligibleForClaim } from 'common/tokenDataUtils'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useQuery } from 'react-query'
-import { elligibleForClaim } from 'common/tokenDataUtils'
 
 export const TOKEN_DATA_KEY = 'tokenData'
 
@@ -33,9 +33,9 @@ export type FilteredTokenManagerData = {
     account: AccountInfo<ParsedAccountData>
   }
   tokenManager?: AccountData<TokenManagerData>
-  metaplexData?: { pubkey: PublicKey; data: metaplex.MetadataData } | null
+  metaplexData?: AccountData<metaplex.MetadataData>
   editionData?: AccountData<metaplex.EditionData | metaplex.MasterEditionData>
-  metadata?: any
+  metadata?: AccountData<any> | null
   claimApprover?: AccountData<PaidClaimApproverData> | null
   useInvalidator?: AccountData<UseInvalidatorData> | null
   timeInvalidator?: AccountData<TimeInvalidatorData> | null

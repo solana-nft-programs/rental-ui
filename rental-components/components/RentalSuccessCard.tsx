@@ -56,20 +56,20 @@ export const RentalSuccessCard = ({
       </div>
       <div className="text-center text-2xl text-light-0">Congratulations!</div>
       <div className="mb-6 text-center text-lg text-medium-4">
-        You&apos;ve rented {tokenData.metadata?.data.name}
+        You&apos;ve rented {tokenData.metadata?.parsed.name}
       </div>
       <div
         className={`mb-4 flex w-full justify-center gap-4 overflow-x-auto pb-6`}
       >
         <div className="relative w-3/4 lg:w-1/2">
-          {tokenData.metadata && tokenData.metadata.data && (
+          {tokenData.metadata && tokenData.metadata.parsed && (
             <img
               className="rounded-lg"
               src={
-                getQueryParam(tokenData.metadata?.data?.image, 'uri') ||
-                tokenData.metadata.data.image
+                getQueryParam(tokenData.metadata?.parsed?.image, 'uri') ||
+                tokenData.metadata.parsed.image
               }
-              alt={tokenData.metadata.data.name}
+              alt={tokenData.metadata.parsed.name}
             />
           )}
           <a

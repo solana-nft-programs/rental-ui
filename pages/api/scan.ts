@@ -28,7 +28,7 @@ export type ScanTokenData = {
     account: AccountInfo<ParsedAccountData>
   }
   tokenManager?: AccountData<TokenManagerData>
-  metaplexData?: { pubkey: PublicKey; data: metaplex.MetadataData } | null
+  metaplexData?: AccountData<metaplex.MetadataData>
   claimApprover?: AccountData<PaidClaimApproverData> | null
   useInvalidator?: AccountData<UseInvalidatorData> | null
   timeInvalidator?: AccountData<TimeInvalidatorData> | null
@@ -73,18 +73,20 @@ export async function getScanTokenAccounts(
       acc[tokenAccounts[i]!.pubkey.toString()] = {
         pubkey: metaplexIds[i]!,
         ...accountInfo,
-        data: metaplex.MetadataData.deserialize(
+        parsed: metaplex.MetadataData.deserialize(
           accountInfo?.data as Buffer
         ) as metaplex.MetadataData,
       }
     } catch (e) {}
     return acc
-  }, {} as { [tokenAccountId: string]: { pubkey: PublicKey; data: metaplex.MetadataData } })
+  }, {} as { [tokenAccountId: string]: { pubkey: PublicKey; parsed: metaplex.MetadataData } })
 
   // filter by creators
   if (filter?.type === 'creators') {
     tokenAccounts = tokenAccounts.filter((tokenAccount) =>
-      metaplexData[tokenAccount.pubkey.toString()]?.data?.data?.creators?.some(
+      metaplexData[
+        tokenAccount.pubkey.toString()
+      ]?.parsed?.data?.creators?.some(
         (creator) =>
           filter.value.includes(creator.address.toString()) &&
           (cluster === 'devnet' || creator.verified)

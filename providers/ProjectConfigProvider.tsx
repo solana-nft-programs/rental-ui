@@ -38,7 +38,7 @@ export const filterTokens = (
     if (filter) {
       if (
         filter.type === 'creators' &&
-        !token.metaplexData?.data?.data?.creators?.some(
+        !token.metaplexData?.parsed?.data?.creators?.some(
           (creator) =>
             filter.value.includes(creator.address.toString()) &&
             ((cluster && cluster === 'devnet') || creator.verified)
@@ -47,7 +47,7 @@ export const filterTokens = (
         filtered = true
       } else if (
         filter.type === 'symbol' &&
-        token.metadata?.data?.symbol !== filter.value
+        token.metadata?.parsed?.symbol !== filter.value
       ) {
         filtered = true
       } else if (
@@ -81,8 +81,8 @@ export const filterTokens = (
       }
     }
     return (
-      !!token?.metadata?.data &&
-      Object.keys(token.metadata.data).length > 1 &&
+      !!token?.metadata?.parsed &&
+      Object.keys(token.metadata.parsed).length > 1 &&
       !filtered
     )
   })

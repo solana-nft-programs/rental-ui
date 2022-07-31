@@ -67,9 +67,9 @@ export type TokenData = {
   }
   mint?: spl.MintInfo
   tokenManager?: AccountData<TokenManagerData>
-  metaplexData?: { pubkey: PublicKey; data: metaplex.MetadataData } | null
+  metaplexData?: AccountData<metaplex.MetadataData>
   editionData?: AccountData<metaplex.EditionData | metaplex.MasterEditionData>
-  metadata?: { pubkey: PublicKey; data: any } | null
+  metadata?: AccountData<any> | null
   claimApprover?: AccountData<PaidClaimApproverData> | null
   useInvalidator?: AccountData<UseInvalidatorData> | null
   timeInvalidator?: AccountData<TimeInvalidatorData> | null
@@ -309,17 +309,17 @@ export async function getTokenDatas(
       acc[tokenManagerDatas[i]!.pubkey.toString()] = {
         pubkey: metaplexIds[i]!,
         ...accountInfo,
-        data: metaplex.MetadataData.deserialize(
+        parsed: metaplex.MetadataData.deserialize(
           accountInfo?.data as Buffer
         ) as metaplex.MetadataData,
       }
     } catch (e) {}
     return acc
-  }, {} as { [tokenManagerId: string]: { pubkey: PublicKey; data: metaplex.MetadataData } })
+  }, {} as { [tokenManagerId: string]: { pubkey: PublicKey; parsed: metaplex.MetadataData } })
 
   if (filter?.type === 'creators') {
     tokenManagerDatas = tokenManagerDatas.filter((tm) =>
-      metaplexData[tm.pubkey.toString()]?.data?.data?.creators?.some(
+      metaplexData[tm.pubkey.toString()]?.parsed?.data?.creators?.some(
         (creator) =>
           filter.value.includes(creator.address.toString()) &&
           (cluster === 'devnet' || creator.verified)
@@ -374,13 +374,13 @@ export async function getTokenDatas(
       tokenManagerDatas.map(async (tm) => {
         try {
           const metaplexDataForTokenManager = metaplexData[tm.pubkey.toString()]
-          if (!metaplexDataForTokenManager?.data.data.uri) return null
+          if (!metaplexDataForTokenManager?.parsed.data.uri) return null
           const json = await fetch(
-            metaplexDataForTokenManager.data.data.uri
+            metaplexDataForTokenManager.parsed.data.uri
           ).then((r) => r.json())
           return {
             pubkey: metaplexDataForTokenManager.pubkey,
-            data: json,
+            parsed: json,
           }
         } catch (e) {}
       })
@@ -391,7 +391,7 @@ export async function getTokenDatas(
     (acc, md, i) => ({ ...acc, [tokenManagerDatas[i]!.pubkey.toString()]: md }),
     {} as {
       [tokenManagerId: string]:
-        | { pubkey: PublicKey; data: any }
+        | { pubkey: PublicKey; parsed: any }
         | undefined
         | null
     }
@@ -413,10 +413,7 @@ export async function getTokenDatas(
         tokenManagerData.parsed.mint.toString()
       ] as spl.MintInfo,
       editionData: accountsById[editionIds[i]!.toString()] as
-        | {
-            pubkey: PublicKey
-            parsed: metaplex.EditionData | metaplex.MasterEditionData
-          }
+        | AccountData<metaplex.EditionData | metaplex.MasterEditionData>
         | undefined,
       recipientTokenAccount: tokenManagerData.parsed.recipientTokenAccount
         ? (accountsById[
@@ -457,13 +454,19 @@ export async function getTokenData(
   const [metaplexId] = await metaplex.MetadataProgram.findMetadataAccount(
     tokenManagerData.parsed.mint
   )
-  const metaplexData = await metaplex.Metadata.load(
+  const metaplexDataRaw = await metaplex.Metadata.load(
     connection,
     metaplexId
   ).catch((e) => {
     console.log('Failed to get metaplex data', e)
     return null
   })
+  const metaplexData = metaplexDataRaw
+    ? {
+        pubkey: metaplexDataRaw?.pubkey,
+        parsed: metaplexDataRaw?.data,
+      }
+    : undefined
 
   // TODO lookup metaplex in parallel
   const idsToFetch = [
@@ -481,8 +484,10 @@ export async function getTokenData(
   let metadata: any | null = null
   if (metaplexData) {
     try {
-      const json = await fetch(metaplexData.data.data.uri).then((r) => r.json())
-      metadata = { pubkey: metaplexData.pubkey, data: json }
+      const json = await fetch(metaplexData.parsed.data.uri).then((r) =>
+        r.json()
+      )
+      metadata = { pubkey: metaplexData.pubkey, parsed: json }
     } catch (e) {
       console.log('Failed to get metadata data', e)
     }

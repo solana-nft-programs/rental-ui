@@ -44,7 +44,7 @@ export const PaymentMintImage: React.FC<
       tokenData.timeInvalidator?.parsed.extensionPaymentMint
   )
   return img ? (
-    <img {...props} src={img} alt={tokenData.metaplexData?.data.data.name} />
+    <img {...props} src={img} alt={tokenData.metaplexData?.parsed.data.name} />
   ) : (
     <SolanaLogo {...props} />
   )

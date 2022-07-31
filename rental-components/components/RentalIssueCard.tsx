@@ -93,7 +93,7 @@ export const RentalIssueCard = ({ tokenDatas }: RentalIssueCardProps) => {
         {tokenDatas.length > 1
           ? `(${tokenDatas.length})`
           : tokenDatas[0]
-          ? tokenDatas[0].metadata?.data.name
+          ? tokenDatas[0].metadata?.parsed.name
           : ''}
       </div>
       <div className="mb-2 text-center text-lg text-medium-4">
@@ -110,13 +110,13 @@ export const RentalIssueCard = ({ tokenDatas }: RentalIssueCardProps) => {
             key={i}
             className="w-1/2 flex-shrink-0 overflow-hidden rounded-lg bg-medium-4"
           >
-            {tokenData.metadata && tokenData.metadata.data && (
+            {tokenData.metadata && tokenData.metadata.parsed && (
               <img
                 src={
-                  getQueryParam(tokenData.metadata?.data?.image, 'uri') ||
-                  tokenData.metadata.data.image
+                  getQueryParam(tokenData.metadata?.parsed?.image, 'uri') ||
+                  tokenData.metadata.parsed.image
                 }
-                alt={tokenData.metadata.data.name}
+                alt={tokenData.metadata.parsed.name}
               />
             )}
           </div>

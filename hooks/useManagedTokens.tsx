@@ -29,10 +29,11 @@ export type ManagedTokenData = {
     pubkey: PublicKey
     account: AccountInfo<ParsedAccountData>
   }
+  mint?: spl.MintInfo
   tokenManager?: AccountData<TokenManagerData>
-  metaplexData?: { pubkey: PublicKey; data: metaplex.MetadataData } | null
+  metaplexData?: AccountData<metaplex.MetadataData>
   editionData?: AccountData<metaplex.EditionData | metaplex.MasterEditionData>
-  metadata?: any
+  metadata?: AccountData<any> | null
   claimApprover?: AccountData<PaidClaimApproverData> | null
   useInvalidator?: AccountData<UseInvalidatorData> | null
   timeInvalidator?: AccountData<TimeInvalidatorData> | null

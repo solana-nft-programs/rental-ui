@@ -19,10 +19,10 @@ export const RentalCardTokenHeader: React.FC<Props> = ({
           key={i}
           className="w-1/2 flex-shrink-0 overflow-hidden rounded-lg bg-medium-4"
         >
-          {tokenData.metadata && tokenData.metadata.data && (
+          {tokenData.metadata && tokenData.metadata.parsed && (
             <img
-              src={tokenData.metadata.data.image}
-              alt={tokenData.metadata.data.name}
+              src={tokenData.metadata.parsed.image}
+              alt={tokenData.metadata.parsed.name}
             />
           )}
         </div>

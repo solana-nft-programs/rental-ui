@@ -74,7 +74,7 @@ export const RentalRateCard = ({
   return (
     <div className="rounded-lg bg-dark-6 p-6">
       <div className="text-center text-2xl text-light-0">
-        Rent {tokenData.metadata?.data.name}
+        Rent {tokenData.metadata?.parsed.name}
       </div>
       <div className="mb-2 text-center text-lg text-medium-4">
         {config.displayName}
@@ -83,14 +83,14 @@ export const RentalRateCard = ({
         className={`mb-4 flex w-full justify-center gap-4 overflow-x-auto pb-6`}
       >
         <div className="relative w-3/4 lg:w-1/2">
-          {tokenData.metadata && tokenData.metadata.data && (
+          {tokenData.metadata && tokenData.metadata.parsed && (
             <img
               className="rounded-lg"
               src={
-                getQueryParam(tokenData.metadata?.data?.image, 'uri') ||
-                tokenData.metadata.data.image
+                getQueryParam(tokenData.metadata?.parsed?.image, 'uri') ||
+                tokenData.metadata.parsed.image
               }
-              alt={tokenData.metadata.data.name}
+              alt={tokenData.metadata.parsed.name}
             />
           )}
           <Pill className="absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-1/2 border-[1px] border-border text-primary">

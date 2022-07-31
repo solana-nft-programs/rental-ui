@@ -48,8 +48,8 @@ function Claim(props: { tokenDataString: string }) {
           name="twitter:title"
           content={
             tokenData.tokenManager?.parsed.state === TokenManagerState.Claimed
-              ? `Just claimed ${tokenData.metadata?.data.name} on Cardinal's NFT Rental Marketplace`
-              : `Rent ${tokenData.metadata?.data.name} on Cardinal's NFT Rental Marketplace`
+              ? `Just claimed ${tokenData.metadata?.parsed.name} on Cardinal's NFT Rental Marketplace`
+              : `Rent ${tokenData.metadata?.parsed.name} on Cardinal's NFT Rental Marketplace`
           }
         />
         <meta
@@ -61,7 +61,7 @@ function Claim(props: { tokenDataString: string }) {
           content={`${
             process.env.NEXT_PUBLIC_BASE_URL
           }/api/generateTwitterImage?nftImageUri=${
-            tokenData.metadata?.data.image
+            tokenData.metadata?.parsed.image
           }${
             tokenData.tokenManager?.parsed.state === TokenManagerState.Claimed
               ? '&claimed=true'

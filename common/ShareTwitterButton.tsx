@@ -19,9 +19,9 @@ export const shareTwitterClaimedLink = (
     `https://twitter.com/intent/tweet?text=`,
     encodeURIComponent(
       `I just rented ${
-        tokenData.metaplexData?.data.data.name
+        tokenData.metaplexData?.parsed.data.name
           ? `${config.twitterHandle ? `${config.twitterHandle} ` : ''}${
-              tokenData.metaplexData?.data.data.name
+              tokenData.metaplexData?.parsed.data.name
             }`
           : `a ${config.twitterHandle ? `${config.twitterHandle} ` : ''}NFT`
       }${
@@ -40,9 +40,9 @@ export const shareTwitterListedLink = (
     encodeURIComponent(
       txResults.length === 1
         ? `I just listed ${
-            txResults[0]!.tokenData.metaplexData?.data.data.name
+            txResults[0]!.tokenData.metaplexData?.parsed.data.name
               ? `${config.twitterHandle ? `${config.twitterHandle} ` : ''}${
-                  txResults[0]!.tokenData.metaplexData?.data.data.name
+                  txResults[0]!.tokenData.metaplexData?.parsed.data.name
                 }`
               : `a ${config.twitterHandle ? `${config.twitterHandle} ` : ''}NFT`
           } for rent using @cardinal_labs rental UI! Check it out at ${

@@ -8,10 +8,10 @@ export const getAllAttributes = (
   const allAttributes: { [traitType: string]: Set<any> } = {}
   tokens.forEach((tokenData) => {
     if (
-      tokenData?.metadata?.data?.attributes &&
-      tokenData?.metadata?.data?.attributes.length > 0
+      tokenData?.metadata?.parsed?.attributes &&
+      tokenData?.metadata?.parsed?.attributes.length > 0
     ) {
-      tokenData?.metadata?.data?.attributes.forEach(
+      tokenData?.metadata?.parsed?.attributes.forEach(
         (attribute: { trait_type: string; value: string }) => {
           if (attribute.trait_type in allAttributes) {
             allAttributes[attribute.trait_type]!.add(attribute.value)
@@ -47,7 +47,7 @@ export const filterTokensByAttributes = (
     Object.keys(filters).forEach((filterName) => {
       filters[filterName]?.forEach((val) => {
         if (
-          tokenData.metadata?.data.attributes.filter(
+          tokenData.metadata?.parsed.attributes.filter(
             (a: { trait_type: string; value: string }) =>
               a.trait_type === filterName && a.value === val
           ).length > 0
