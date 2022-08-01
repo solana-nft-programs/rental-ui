@@ -7,37 +7,37 @@ import { Alert } from 'common/Alert'
 import { Button } from 'common/Button'
 import { priceAndSymbol } from 'common/NFTClaimButton'
 import { handleCopy } from 'common/NFTHeader'
+import type { IssueTxResult } from 'handlers/useHandleIssueRental'
 import { useHandleIssueRental } from 'handlers/useHandleIssueRental'
 import { PAYMENT_MINTS, usePaymentMints } from 'hooks/usePaymentMints'
 import { useState } from 'react'
 import { FaLink } from 'react-icons/fa'
 import { FiSend } from 'react-icons/fi'
 import { MintPriceSelector } from 'rental-components/common/MintPriceSelector'
-import type {
-  RentalCardConfig,
-  TxResult,
-} from 'rental-components/components/RentalIssueCard'
+import type { RentalCardConfig } from 'rental-components/components/RentalIssueCard'
 
 import { SolanaLogo } from './icons'
 import type { RentalIssueAdvancedValues } from './RentalIssueAdvanced'
 import { RentalIssueAdvanced } from './RentalIssueAdvanced'
+import { RentalIssueResults } from './RentalIssueResults'
 import { RentalIssueTerms } from './RentalIssueTerms'
 
 export type RentalIssueExpirationParams = {
   tokenDatas: TokenData[]
   rentalCardConfig: RentalCardConfig
   showAdvanced: boolean
-  setTxResults: (r: TxResult[]) => void
+  txResults?: IssueTxResult[]
+  setTxResults: (r: IssueTxResult[]) => void
 }
 
 export const RentalIssueExpiration = ({
   tokenDatas,
   rentalCardConfig,
   showAdvanced,
+  txResults,
   setTxResults,
 }: RentalIssueExpirationParams) => {
   const [error, setError] = useState<string>()
-  const [txData, setTxData] = useState<TxResult[]>()
   const handleIssueRental = useHandleIssueRental()
 
   const paymentMints = usePaymentMints()
@@ -100,29 +100,8 @@ export const RentalIssueExpiration = ({
           />
         </div>
       </div>
-      {txData && txData.length === tokenDatas.length ? (
-        <Alert variant="success" className="text-left">
-          {txData.length === 1 ? (
-            <div>
-              Successfully listed{' '}
-              {tokenDatas[0]?.metaplexData?.parsed.data.name}
-              <br />
-              {advancedValues?.visibility === 'private' && (
-                <>
-                  {txData[0]?.claimLink.substring(0, 20)}
-                  <div>
-                    This link can only be used once and cannot be regenerated
-                  </div>
-                </>
-              )}
-            </div>
-          ) : (
-            <div>
-              {' '}
-              Successfully listed: ({txData.length} / {tokenDatas.length}){' '}
-            </div>
-          )}
-        </Alert>
+      {txResults ? (
+        <RentalIssueResults txResults={txResults} tokenDatas={tokenDatas} />
       ) : error ? (
         <Alert variant="error" showClose onClick={() => setError(undefined)}>
           {error}
@@ -146,7 +125,7 @@ export const RentalIssueExpiration = ({
           </div>
           <div className="flex gap-3 border-t-[1px] border-border py-4 px-8 text-center text-sm text-medium-3">
             {maxExpiration &&
-              `This rental will be expire at  ${new Date(
+              `This rental will be expire at ${new Date(
                 maxExpiration * 1000
               ).toLocaleString('en-US')}.`}
           </div>
@@ -165,8 +144,8 @@ export const RentalIssueExpiration = ({
         disabled={!confirmRentalTerms || !!error || !!error || !maxExpiration}
         loading={handleIssueRental.isLoading}
         onClick={async () => {
-          txData
-            ? handleCopy(txData[0]?.claimLink ?? '')
+          txResults
+            ? handleCopy(txResults[0]?.claimLink ?? '')
             : handleIssueRental.mutate(
                 {
                   tokenDatas: tokenDatas,
@@ -188,7 +167,6 @@ export const RentalIssueExpiration = ({
                 {
                   onSuccess: (txData) => {
                     setTxResults(txData)
-                    setTxData(txData)
                   },
                   onError: (e) => {
                     setError(`${e}`)
@@ -198,7 +176,7 @@ export const RentalIssueExpiration = ({
               )
         }}
       >
-        {txData?.length === 0 ? (
+        {txResults?.length === 0 ? (
           <div className="flex items-center justify-center gap-[5px] text-base">
             <FaLink />
             Copy link

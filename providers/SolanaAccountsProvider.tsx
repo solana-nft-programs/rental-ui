@@ -352,7 +352,7 @@ export function SolanaAccountsProvider({
     const matchedData = Object.fromEntries(
       keys
         .map((k) => cacheKey(k ?? ''))
-        .filter((key) => key in accountDataById) // line can be removed to make it inclusive
+        .filter((key) => key in accountDataById)
         .map((key) => [key, accountDataById[key]!])
     )
     return { ...fetchedData, ...matchedData }

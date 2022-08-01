@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
 import type { TokenData } from 'apis/api'
 import type { ProjectConfig } from 'config/config'
-import type { TxResult } from 'rental-components/components/RentalIssueCard'
+import type { IssueTxResult } from 'handlers/useHandleIssueRental'
 
 type Props = {
   children: string | JSX.Element
@@ -32,7 +32,7 @@ export const shareTwitterClaimedLink = (
 }
 
 export const shareTwitterListedLink = (
-  txResults: TxResult[],
+  txResults: IssueTxResult[],
   config: ProjectConfig
 ) => {
   return [

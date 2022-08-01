@@ -757,41 +757,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       },
     ],
   },
-  ['all-starz']: {
-    name: 'all-starz',
-    displayName: 'All Starz',
-    type: 'Guild',
-    websiteUrl: 'https://all-starz.gitbook.io/all-starz/',
-    logoImage: '/logos/all-starz.jpg',
-    colors: {
-      accent: '#f71202',
-      glow: '#f71202',
-    },
-    filter: {
-      type: 'issuer',
-      value: ['Cx2FDbdfqezYiN8teLFdFAzdv9mwG48uYbe218Az4EMP'],
-    },
-    rentalCard: {
-      invalidators: ['rate', 'duration'],
-      invalidationOptions: {
-        freezeRentalRateDuration: {
-          value: '1',
-          durationOption: 'days',
-        },
-        visibilities: ['public'],
-        durationOptions: ['minutes', 'hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
-        paymentMints: ['So11111111111111111111111111111111111111112'],
-        showClaimRentalReceipt: false,
-        setClaimRentalReceipt: false,
-        maxDurationAllowed: {
-          displayText: '12 weeks',
-          value: 7258000,
-        },
-      },
-    },
-    marketplaceRate: 'days',
-  },
   ['3dgamersguild']: {
     name: '3dgamersguild',
     displayName: '3D Gamers Guild',
@@ -872,6 +837,153 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
           'MLKmUCaj1dpBY881aFsrBwR9RUMoKic8SWT3u1q5Nkj',
           'So11111111111111111111111111111111111111112',
         ],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
+  ['fatcats']: {
+    name: 'fatcats',
+    displayName: 'Fatcats',
+    type: 'Guild',
+    websiteUrl: 'https://fatcatscapital.com/',
+    logoImage: 'logos/fatcats.png',
+    colors: {
+      accent: '#397fd6',
+      glow: '#397fd6',
+    },
+    description:
+      'The FatCats Capital Club (FCC) is a community focused on the development of projects looking to advance the Solana ecosystem as a whole. Through the FatCats Accelerator program, both holders and project creators can benefit from services the FCC provides.',
+    hero: 'logos/fatcats-hero.png',
+    socialLinks: [
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/fatcatscapital',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.com/invite/9FnX58FWVB',
+      },
+      {
+        icon: 'web',
+        link: 'https://fatcatscapital.com/',
+      },
+    ],
+    badges: [{ badgeType: 'recent' }],
+    filter: {
+      type: 'issuer',
+      value: ['Dx2svFqyhm1eFQTvKrETehLmrNHpNXhioqSHpXGzp5Xe'],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration'],
+      invalidationOptions: {
+        visibilities: ['public'],
+        durationOptions: ['minutes', 'hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: ['FdviznPoMEakdJ37fikNxhoscyruUHSHNkKyvntSqbuo'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
+  ['thedegenerates']: {
+    name: 'thedegenerates',
+    displayName: 'The Degenerates',
+    type: 'Guild',
+    websiteUrl: 'https://thedegen.app/',
+    logoImage: 'logos/thedegenerates.png',
+    colors: {
+      accent: '#ff7921',
+      glow: '#ff7921',
+    },
+    description:
+      'For degenerates by degenerates and home for all degenerates. Slowly taking over the Solana blockchain and beyond with tool help and info such as Mint Bot and sniper features, RPC locations, Degen Alerts, Wallet Manager, RPC Tester and Listing manager. Tool reviews and ratings by your fellow degenerates. Come get your degen on!',
+    hero: 'logos/thedegenerates-hero.png',
+    socialLinks: [
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/_DegeneratesNFT',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/thedegenerates',
+      },
+      {
+        icon: 'web',
+        link: 'https://thedegen.app/',
+      },
+    ],
+    badges: [{ badgeType: 'recent' }],
+    filter: {
+      type: 'issuer',
+      value: ['E6m3sYbjbzCVqtMpDuWjMBnJneJu5a4VnTorz8hpCDB5'],
+    },
+    rentalCard: {
+      invalidators: ['rate'],
+      invalidationOptions: {
+        visibilities: ['public'],
+        durationOptions: ['minutes', 'hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '1 week',
+          value: 604800,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
+  ['syndicate-initiative']: {
+    name: 'syndicate-initiative',
+    displayName: 'SyNdicate Initiative',
+    type: 'Guild',
+    websiteUrl: 'https://www.twitch.tv/syndicateinitiative',
+    logoImage: 'logos/syndicate-initiative.png',
+    colors: {
+      accent: '#A45EE5',
+      glow: '#A45EE5',
+    },
+    description:
+      'A community of gamers focusing on good vibes and competitive gaming in the developing Web 3 space.',
+    hero: 'logos/syndicate-initiative-hero.png',
+    socialLinks: [
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/ItzSyNi',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/gz34uBgQMN',
+      },
+      {
+        icon: 'web',
+        link: 'https://www.twitch.tv/syndicateinitiative',
+      },
+    ],
+    badges: [{ badgeType: 'recent' }],
+    filter: {
+      type: 'issuer',
+      value: ['7Rinf5mQGHccRnxE6J2p2xNFjpNCh4sgVdpsiyQ9NRHc'],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration'],
+      invalidationOptions: {
+        visibilities: ['public'],
+        durationOptions: ['minutes', 'hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
         maxDurationAllowed: {

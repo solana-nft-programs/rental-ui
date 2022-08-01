@@ -136,7 +136,6 @@ export const useHandleRateRental = () => {
           confirmOptions: {
             commitment: 'confirmed',
             maxRetries: 3,
-            skipPreflight: true,
           },
           signers: otpKeypair ? [otpKeypair] : [],
           notificationConfig: {},

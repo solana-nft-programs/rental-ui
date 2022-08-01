@@ -1,5 +1,6 @@
 import * as amplitude from '@amplitude/analytics-browser'
 import { AccountConnect } from '@cardinal/namespaces-components'
+import * as Sentry from '@sentry/browser'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useWalletModal } from '@solana/wallet-adapter-react-ui'
 import { GlyphWallet } from 'assets/GlyphWallet'
@@ -47,6 +48,16 @@ export const HeaderSlim: React.FC<Props> = ({
     }
   }, [wallet.connected, wallet.publicKey?.toString()])
 
+  useEffect(() => {
+    Sentry.configureScope((scope) => {
+      scope.setUser({
+        username: wallet.publicKey?.toString(),
+        wallet: wallet.publicKey?.toString(),
+      })
+      scope.setTag('wallet', wallet.publicKey?.toString())
+    })
+  }, [wallet.publicKey?.toString()])
+
   return (
     <div className="w-full px-4 py-4">
       <div className="flex min-h-[72px] flex-wrap items-center justify-center gap-4 rounded-xl bg-white bg-opacity-5 py-4 px-8 lg:justify-between">
@@ -59,6 +70,9 @@ export const HeaderSlim: React.FC<Props> = ({
           >
             <LogoTitled className="inline-block h-6" />
           </div>
+          {environment.label !== 'mainnet-beta' && (
+            <div className="text-primary">{environment.label}</div>
+          )}
         </div>
         <div className="relative lg:absolute lg:left-1/2 lg:-translate-x-1/2">
           {tabs && (

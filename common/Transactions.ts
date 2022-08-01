@@ -1,7 +1,9 @@
 import type { Wallet } from '@saberhq/solana-contrib'
+import * as Sentry from '@sentry/browser'
 import type {
   ConfirmOptions,
   Connection,
+  SendTransactionError,
   Signer,
   Transaction,
 } from '@solana/web3.js'
@@ -48,8 +50,13 @@ export const executeTransaction = async (
         txid,
       })
   } catch (e) {
-    console.log('Failed transaction: ', e)
+    console.log('Failed transaction: ', e, (e as SendTransactionError).logs)
     const errorMessage = handleError(e, `${e}`)
+    console.log(errorMessage)
+    Sentry.captureException(e, {
+      tags: { type: 'transaction' },
+      extra: { errorMessage },
+    })
     config.notificationConfig &&
       notify({
         message: 'Failed transaction',
