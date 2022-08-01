@@ -226,8 +226,7 @@ export const RentalIssueRate = ({
             than or equal to the max rental duration.{' '}
             {maxExpiration &&
               `It will be automatically returned to your wallet at
-                  ${new Date(maxExpiration * 1000).toLocaleString('en-US')}`}
-            .
+                  ${new Date(maxExpiration * 1000).toLocaleString('en-US')}.`}
           </div>
         </div>
       )}

@@ -117,6 +117,14 @@ export const useHandleIssueRental = () => {
         }
       }
 
+      if (
+        !customInvalidator &&
+        (!durationSeconds || durationSeconds === 0) &&
+        (!maxExpiration || maxExpiration === 0)
+      ) {
+        throw 'Max expiration required'
+      }
+
       const transactions: Transaction[] = []
       const receiptMintKeypairs: Keypair[] = []
       const txData = []
