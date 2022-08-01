@@ -181,7 +181,8 @@ export const getRentalDuration = (
 }
 
 export const isPrivateListing = (tokenData: TokenData) =>
-  tokenData.tokenManager?.parsed.claimApprover && !tokenData.claimApprover
+  tokenData.tokenManager?.parsed.claimApprover &&
+  !tokenData.claimApprover?.parsed
 
 export const isRateBasedListing = (tokenData: TokenData) =>
   !!tokenData.timeInvalidator?.parsed.durationSeconds &&
@@ -221,9 +222,9 @@ export const elligibleForRent = (
   return (
     !config.disableListing &&
     !tokenData.tokenManager &&
-    tokenData.tokenAccount?.account.data.parsed.info.state !== 'frozen' &&
+    tokenData.tokenAccount?.parsed.state !== 'frozen' &&
     !!tokenData.editionData &&
-    (!tokenData.mint || !!tokenData.mint.freezeAuthority)
+    (!tokenData.mint || !!tokenData.mint.parsed.freezeAuthority)
   )
 }
 
@@ -231,7 +232,7 @@ export const elligibleForClaim = (tokenData: TokenData): boolean => {
   return (
     !!tokenData.tokenManager &&
     !!tokenData.editionData &&
-    (!tokenData.mint || !!tokenData.mint.freezeAuthority)
+    (!tokenData.mint || !!tokenData.mint.parsed.freezeAuthority)
   )
 }
 

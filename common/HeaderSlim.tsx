@@ -45,7 +45,7 @@ export const HeaderSlim: React.FC<Props> = ({
       const userId = wallet.publicKey.toString()
       amplitude.setUserId(userId)
     }
-  }, [wallet.connected, wallet.publicKey])
+  }, [wallet.connected, wallet.publicKey?.toString()])
 
   return (
     <div className="w-full px-4 py-4">
