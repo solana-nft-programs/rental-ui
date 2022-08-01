@@ -889,11 +889,11 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     websiteUrl: 'https://fatcatscapital.com/',
     logoImage: 'logos/fatcats.png',
     colors: {
-      accent: '#ec2593',
+      accent: '#397fd6',
       glow: '#397fd6',
     },
     description:
-      'The FatCats Capital Club (FCC) is focused on community growth, development and innovation. 80% of all mint revenue will be used to grow the FatCats Treasury, invest in member run projects through the FatCats Accelerator program while developing exclusive utilities for the Capital Club.',
+      'The FatCats Capital Club (FCC) is a community focused on the development of projects looking to advance the Solana ecosystem as a whole. Through the FatCats Accelerator program, both holders and project creators can benefit from services the FCC provides.',
     hero: 'logos/fatcats-hero.png',
     socialLinks: [
       {
