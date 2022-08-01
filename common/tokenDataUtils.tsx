@@ -53,7 +53,7 @@ export function getTokenRentalRate(
   paymentMints: { [name: string]: splToken.MintInfo },
   tokenData: TokenData
 ) {
-  const rateOption = config.marketplaceRate ?? 'weeks'
+  const rateOption = config.marketplaceRate ?? 'days'
   const rateSeconds = new BN(DURATION_DATA[rateOption])
   const {
     extensionPaymentAmount,
