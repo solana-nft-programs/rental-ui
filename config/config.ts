@@ -964,7 +964,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       value: ['E6m3sYbjbzCVqtMpDuWjMBnJneJu5a4VnTorz8hpCDB5'],
     },
     rentalCard: {
-      invalidators: ['rate', 'duration'],
+      invalidators: ['rate'],
       invalidationOptions: {
         visibilities: ['public'],
         durationOptions: ['minutes', 'hours', 'days', 'weeks'],
@@ -973,8 +973,8 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
         maxDurationAllowed: {
-          displayText: '12 weeks',
-          value: 7258000,
+          displayText: '1 week',
+          value: 604800,
         },
       },
     },
