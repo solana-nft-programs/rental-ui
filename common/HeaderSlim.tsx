@@ -1,5 +1,5 @@
 import * as amplitude from '@amplitude/analytics-browser'
-import { AccountConnect } from '@cardinal/namespaces-components'
+import { AccountConnect, useAddressName } from '@cardinal/namespaces-components'
 import * as Sentry from '@sentry/browser'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useWalletModal } from '@solana/wallet-adapter-react-ui'
@@ -34,6 +34,10 @@ export const HeaderSlim: React.FC<Props> = ({
   const wallet = useWallet()
   const walletModal = useWalletModal()
   const { secondaryConnection, environment } = useEnvironmentCtx()
+  const { displayName } = useAddressName(
+    secondaryConnection,
+    wallet.publicKey ?? undefined
+  )
   const [tab, setTab] = useState<string>('browse')
 
   useEffect(() => {
@@ -46,7 +50,14 @@ export const HeaderSlim: React.FC<Props> = ({
       const userId = wallet.publicKey.toString()
       amplitude.setUserId(userId)
     }
-  }, [wallet.connected, wallet.publicKey?.toString()])
+    if (displayName) {
+      const identify = new amplitude.Identify().setOnce(
+        'twitter_handle',
+        displayName
+      )
+      amplitude.identify(identify)
+    }
+  }, [wallet.connected, wallet.publicKey?.toString(), displayName])
 
   useEffect(() => {
     Sentry.configureScope((scope) => {
