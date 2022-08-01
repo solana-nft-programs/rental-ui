@@ -10,6 +10,7 @@ import { DURATION_DATA, SECONDS_TO_DURATION } from 'common/DurationInput'
 import { handleCopy } from 'common/NFTHeader'
 import { Selector } from 'common/Selector'
 import { fmtMintAmount } from 'common/units'
+import type { IssueTxResult } from 'handlers/useHandleIssueRental'
 import { useHandleIssueRental } from 'handlers/useHandleIssueRental'
 import { PAYMENT_MINTS, usePaymentMints } from 'hooks/usePaymentMints'
 import moment from 'moment'
@@ -17,31 +18,30 @@ import { useState } from 'react'
 import { FaLink } from 'react-icons/fa'
 import { FiSend } from 'react-icons/fi'
 import { MintPriceSelector } from 'rental-components/common/MintPriceSelector'
-import type {
-  RentalCardConfig,
-  TxResult,
-} from 'rental-components/components/RentalIssueCard'
+import type { RentalCardConfig } from 'rental-components/components/RentalIssueCard'
 
 import { SolanaLogo } from './icons'
 import type { RentalIssueAdvancedValues } from './RentalIssueAdvanced'
 import { RentalIssueAdvanced } from './RentalIssueAdvanced'
+import { RentalIssueResults } from './RentalIssueResults'
 import { RentalIssueTerms } from './RentalIssueTerms'
 
 export type RentalIssueRateProps = {
   tokenDatas: TokenData[]
   rentalCardConfig: RentalCardConfig
   showAdvanced: boolean
-  setTxResults: (r: TxResult[]) => void
+  txResults?: IssueTxResult[]
+  setTxResults: (r: IssueTxResult[]) => void
 }
 
 export const RentalIssueRate = ({
   tokenDatas,
   rentalCardConfig,
   showAdvanced,
+  txResults,
   setTxResults,
 }: RentalIssueRateProps) => {
   const [error, setError] = useState<string>()
-  const [txData, setTxData] = useState<TxResult[]>()
   const paymentMintInfos = usePaymentMints()
   const handleIssueRental = useHandleIssueRental()
 
@@ -184,29 +184,8 @@ export const RentalIssueRate = ({
           />
         </div>
       </div>
-      {txData && txData.length === tokenDatas.length ? (
-        <Alert variant="success" className="text-left">
-          {txData.length === 1 ? (
-            <div>
-              Successfully listed{' '}
-              {tokenDatas[0]?.metaplexData?.parsed.data.name}
-              <br />
-              {advancedValues?.visibility === 'private' && (
-                <>
-                  {txData[0]?.claimLink.substring(0, 20)}
-                  <div>
-                    This link can only be used once and cannot be regenerated
-                  </div>
-                </>
-              )}
-            </div>
-          ) : (
-            <div>
-              {' '}
-              Successfully listed: ({txData.length} / {tokenDatas.length}){' '}
-            </div>
-          )}
-        </Alert>
+      {txResults ? (
+        <RentalIssueResults txResults={txResults} tokenDatas={tokenDatas} />
       ) : error ? (
         <Alert variant="error" showClose onClick={() => setError(undefined)}>
           {error}
@@ -243,8 +222,8 @@ export const RentalIssueRate = ({
         disabled={!confirmRentalTerms || !!error}
         loading={handleIssueRental.isLoading}
         onClick={async () => {
-          txData
-            ? handleCopy(txData[0]?.claimLink ?? '')
+          txResults
+            ? handleCopy(txResults[0]?.claimLink ?? '')
             : handleIssueRental.mutate(
                 {
                   tokenDatas: tokenDatas,
@@ -266,7 +245,6 @@ export const RentalIssueRate = ({
                 {
                   onSuccess: (txData) => {
                     setTxResults(txData)
-                    setTxData(txData)
                   },
                   onError: (e) => {
                     setError(`${e}`)
@@ -276,7 +254,7 @@ export const RentalIssueRate = ({
               )
         }}
       >
-        {txData?.length === 0 ? (
+        {txResults?.length === 0 ? (
           <div className="flex items-center justify-center gap-[5px] text-base">
             <FaLink />
             Copy link

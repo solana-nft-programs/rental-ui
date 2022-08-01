@@ -1,9 +1,9 @@
 import { capitalizeFirstLetter } from '@cardinal/common'
 import { css } from '@emotion/react'
-import type { Keypair } from '@solana/web3.js'
 import type { TokenData } from 'apis/api'
 import { GlyphEdit } from 'assets/GlyphEdit'
 import { Tooltip } from 'common/Tooltip'
+import type { IssueTxResult } from 'handlers/useHandleIssueRental'
 import { lighten } from 'polished'
 import { useModal } from 'providers/ModalProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
@@ -21,13 +21,6 @@ import { RentalIssueManual } from 'rental-components/common/RentalIssueManual'
 import { RentalIssueRate } from 'rental-components/common/RentalIssueRate'
 
 import { RentalIssueSuccessCard } from './RentalIssueSuccessCard'
-
-export type TxResult = {
-  tokenData: TokenData
-  txid?: string
-  otpKeypair?: Keypair
-  claimLink: string
-}
 
 export type InvalidatorOption =
   // | 'usages'
@@ -79,10 +72,11 @@ export const RentalIssueCard = ({ tokenDatas }: RentalIssueCardProps) => {
     InvalidatorOption[]
   >([])
   const [showAdvanced, setShowAdvanced] = useState(false)
-  const [txResults, setTxResults] = useState<TxResult[]>()
+  const [txResults, setTxResults] = useState<IssueTxResult[]>()
   const invalidatorOptions = rentalCardConfig.invalidators
 
-  if (txResults) {
+  console.log(txResults)
+  if (txResults && !txResults.some(({ txid }) => !txid)) {
     return (
       <RentalIssueSuccessCard tokenDatas={tokenDatas} txResults={txResults} />
     )
@@ -167,6 +161,7 @@ export const RentalIssueCard = ({ tokenDatas }: RentalIssueCardProps) => {
                 tokenDatas={tokenDatas}
                 rentalCardConfig={rentalCardConfig}
                 showAdvanced={showAdvanced}
+                txResults={txResults}
                 setTxResults={setTxResults}
               />
             ),
@@ -175,6 +170,7 @@ export const RentalIssueCard = ({ tokenDatas }: RentalIssueCardProps) => {
                 tokenDatas={tokenDatas}
                 rentalCardConfig={rentalCardConfig}
                 showAdvanced={showAdvanced}
+                txResults={txResults}
                 setTxResults={setTxResults}
               />
             ),
@@ -183,6 +179,7 @@ export const RentalIssueCard = ({ tokenDatas }: RentalIssueCardProps) => {
                 tokenDatas={tokenDatas}
                 rentalCardConfig={rentalCardConfig}
                 showAdvanced={showAdvanced}
+                txResults={txResults}
                 setTxResults={setTxResults}
               />
             ),
@@ -192,6 +189,7 @@ export const RentalIssueCard = ({ tokenDatas }: RentalIssueCardProps) => {
                 tokenDatas={tokenDatas}
                 rentalCardConfig={rentalCardConfig}
                 showAdvanced={showAdvanced}
+                txResults={txResults}
                 setTxResults={setTxResults}
               />
             ),

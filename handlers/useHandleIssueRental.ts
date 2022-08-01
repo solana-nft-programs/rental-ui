@@ -22,6 +22,15 @@ import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useMutation, useQueryClient } from 'react-query'
 import type { RentalCardConfig } from 'rental-components/components/RentalIssueCard'
 
+export type IssueTxResult = {
+  tokenManagerId: PublicKey
+  otpKeypair: Keypair | undefined
+  tokenData: TokenData
+  claimLink: string
+  error?: string
+  txid?: string
+}
+
 export interface HandleIssueRentalParams {
   tokenDatas: TokenData[]
   rentalCardConfig: RentalCardConfig
@@ -65,15 +74,7 @@ export const useHandleIssueRental = () => {
       customInvalidator,
       disablePartialExtension,
       claimRentalReceipt,
-    }: HandleIssueRentalParams): Promise<
-      {
-        tokenManagerId: PublicKey
-        otpKeypair: Keypair | undefined
-        tokenData: TokenData
-        claimLink: string
-        txid?: string
-      }[]
-    > => {
+    }: HandleIssueRentalParams): Promise<IssueTxResult[]> => {
       if (!wallet.publicKey) {
         throw 'Wallet not connected'
       }
@@ -244,15 +245,11 @@ export const useHandleIssueRental = () => {
           : issueTransaction.instructions
         transactions.push(transaction)
       }
-      let totalSuccessfulTransactions = 0
-      const txids = await executeAllTransactions(
+      const txResults = await executeAllTransactions(
         connection,
         asWallet(wallet),
         transactions,
         {
-          callback: async (successfulTxs: number) => {
-            totalSuccessfulTransactions = successfulTxs
-          },
           signers: claimRentalReceipt ? [receiptMintKeypairs] : [],
           confirmOptions: {
             maxRetries: 3,
@@ -267,7 +264,8 @@ export const useHandleIssueRental = () => {
       )
       return txData.map((txData, i) => ({
         ...txData,
-        txid: txids[i] ?? undefined,
+        error: txResults[i]?.error ?? undefined,
+        txid: txResults[i]?.txid ?? undefined,
         otpKeypair: txData.otpKeypair,
         claimLink: getLink(
           `/${config.name}/claim/${txData.tokenManagerId.toString()}${

@@ -9,17 +9,16 @@ import {
   shareTwitterListedLink,
 } from 'common/ShareTwitterButton'
 import { transactionUrl } from 'common/utils'
+import type { IssueTxResult } from 'handlers/useHandleIssueRental'
 import { useMintMetadatas } from 'hooks/useMintMetadata'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { FaTwitter } from 'react-icons/fa'
 import { PoweredByFooter } from 'rental-components/common/PoweredByFooter'
 
-import type { TxResult } from './RentalIssueCard'
-
 export type RentalIssueSuccessCard = {
   tokenDatas: TokenData[]
-  txResults: TxResult[]
+  txResults: IssueTxResult[]
 }
 
 export const RentalIssueSuccessCard = ({

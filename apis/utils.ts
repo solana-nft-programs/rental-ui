@@ -53,9 +53,8 @@ export const executeAllTransactions = async (
       errorMessage?: string
       description?: string
     }
-    callback?: (successfulTxs: number) => void
   }
-): Promise<(string | null)[]> => {
+): Promise<{ txid?: string | null; error?: string | null }[]> => {
   if (transactions.length === 0) return []
 
   const recentBlockhash = (await connection.getRecentBlockhash('max')).blockhash
@@ -65,7 +64,7 @@ export const executeAllTransactions = async (
   }
   await wallet.signAllTransactions(transactions)
 
-  const txIds = await Promise.all(
+  const txResults = await Promise.all(
     transactions.map(async (tx, index) => {
       try {
         if (
@@ -89,7 +88,7 @@ export const executeAllTransactions = async (
             description: config.notificationConfig.message,
             txid,
           })
-        return txid
+        return { txid }
       } catch (e) {
         console.log(
           'Failed transaction: ',
@@ -107,12 +106,15 @@ export const executeAllTransactions = async (
             type: 'error',
           })
         if (config.throwIndividualError) throw new Error(`${e}`)
-        return null
+        return {
+          txid: null,
+          error: config.notificationConfig?.errorMessage ?? errorMessage,
+        }
       }
     })
   )
-  console.log('Successful txs', txIds)
-  const successfulTxids = txIds.filter((txid) => txid)
+  console.log('txResults', txResults)
+  const successfulTxids = txResults.filter(({ txid }) => txid)
   config.notificationConfig &&
     successfulTxids.length > 0 &&
     notify({
@@ -121,8 +123,5 @@ export const executeAllTransactions = async (
       // Consider linking all transactions
       txid: '',
     })
-  if (config.callback) {
-    await config.callback(successfulTxids.length)
-  }
-  return txIds
+  return txResults
 }
