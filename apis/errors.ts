@@ -43,7 +43,7 @@ export const nativeErrors: ErrorCode[] = [
   },
   {
     code: 'Attempt to debit an account but found no record of a prior credit',
-    message: 'Wallet has never had any sol before try funding first.',
+    message: 'Wallet has never had any sol before. Try adding sol first.',
   },
   // token program errors
   {
