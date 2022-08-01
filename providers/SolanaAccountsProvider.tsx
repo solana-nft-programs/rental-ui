@@ -271,7 +271,7 @@ export function SolanaAccountsProvider({
   children: ReactChild
   maxCacheSize?: number
 }) {
-  const { secondaryConnection, environment } = useEnvironmentCtx()
+  const { connection, environment } = useEnvironmentCtx()
   const [accountDataById, setAccountDataById] = useState<AccountDataById>({})
 
   /**
@@ -307,10 +307,7 @@ export function SolanaAccountsProvider({
     const keysToFetch = keys.filter(
       (key) => key && !(cacheKey(key) in accountDataById)
     )
-    const fetchedData = await fetchAccountDataById(
-      secondaryConnection,
-      keysToFetch
-    )
+    const fetchedData = await fetchAccountDataById(connection, keysToFetch)
     console.log(
       `[cacheMiss] (${keysToFetch.length}/${keys.length}) cacheSize: ${
         Object.keys(accountDataById).length
@@ -332,7 +329,7 @@ export function SolanaAccountsProvider({
       return accountDataById[cacheKey(key)]
     }
     console.log(`[cacheMissSingle] ${key.toString()}`)
-    const fetchedData = await fetchAccountDataById(secondaryConnection, [key])
+    const fetchedData = await fetchAccountDataById(connection, [key])
     const results = accountDataById[cacheKey(key)] ?? fetchedData[cacheKey(key)]
     setAccountDataById((v) => ({ ...v, ...fetchedData }))
     return results
@@ -345,10 +342,7 @@ export function SolanaAccountsProvider({
     const keysToFetch = keys.filter(
       (key) => key && !(cacheKey(key) in accountDataById)
     )
-    const fetchedData = await fetchAccountDataById(
-      secondaryConnection,
-      keysToFetch
-    )
+    const fetchedData = await fetchAccountDataById(connection, keysToFetch)
     console.log(
       `[cacheMiss] (${keysToFetch.length}/${keys.length}) cacheSize: ${
         Object.keys(accountDataById).length
