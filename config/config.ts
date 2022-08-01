@@ -757,41 +757,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       },
     ],
   },
-  ['all-starz']: {
-    name: 'all-starz',
-    displayName: 'All Starz',
-    type: 'Guild',
-    websiteUrl: 'https://all-starz.gitbook.io/all-starz/',
-    logoImage: '/logos/all-starz.jpg',
-    colors: {
-      accent: '#f71202',
-      glow: '#f71202',
-    },
-    filter: {
-      type: 'issuer',
-      value: ['Cx2FDbdfqezYiN8teLFdFAzdv9mwG48uYbe218Az4EMP'],
-    },
-    rentalCard: {
-      invalidators: ['rate', 'duration'],
-      invalidationOptions: {
-        freezeRentalRateDuration: {
-          value: '1',
-          durationOption: 'days',
-        },
-        visibilities: ['public'],
-        durationOptions: ['minutes', 'hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
-        paymentMints: ['So11111111111111111111111111111111111111112'],
-        showClaimRentalReceipt: false,
-        setClaimRentalReceipt: false,
-        maxDurationAllowed: {
-          displayText: '12 weeks',
-          value: 7258000,
-        },
-      },
-    },
-    marketplaceRate: 'days',
-  },
   ['3dgamersguild']: {
     name: '3dgamersguild',
     displayName: '3D Gamers Guild',
@@ -975,6 +940,55 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         maxDurationAllowed: {
           displayText: '1 week',
           value: 604800,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
+  ['syndicate-initiative']: {
+    name: 'syndicate-initiative',
+    displayName: 'SyNdicate Initiative',
+    type: 'Guild',
+    websiteUrl: 'https://www.twitch.tv/syndicateinitiative',
+    logoImage: 'logos/syndicate-initiative.png',
+    colors: {
+      accent: '#A45EE5',
+      glow: '#A45EE5',
+    },
+    description:
+      'A community of gamers focusing on good vibes and competitive gaming in the developing Web 3 space.',
+    hero: 'logos/syndicate-initiative-hero.png',
+    socialLinks: [
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/ItzSyNi',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/gz34uBgQMN',
+      },
+      {
+        icon: 'web',
+        link: 'https://www.twitch.tv/syndicateinitiative',
+      },
+    ],
+    badges: [{ badgeType: 'recent' }],
+    filter: {
+      type: 'issuer',
+      value: ['7Rinf5mQGHccRnxE6J2p2xNFjpNCh4sgVdpsiyQ9NRHc'],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration'],
+      invalidationOptions: {
+        visibilities: ['public'],
+        durationOptions: ['minutes', 'hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
         },
       },
     },
