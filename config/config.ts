@@ -931,4 +931,53 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     },
     marketplaceRate: 'days',
   },
+  ['thedegenerates']: {
+    name: 'thedegenerates',
+    displayName: 'The Degenerates',
+    type: 'Guild',
+    websiteUrl: 'https://thedegen.app/',
+    logoImage: 'logos/thedegenerates.png',
+    colors: {
+      accent: '#ff7921',
+      glow: '#ff7921',
+    },
+    description:
+      'For degenerates by degenerates and home for all degenerates. Slowly taking over the Solana blockchain and beyond with tool help and info such as Mint Bot and sniper features, RPC locations, Degen Alerts, Wallet Manager, RPC Tester and Listing manager. Tool reviews and ratings by your fellow degenerates. Come get your degen on!',
+    hero: 'logos/thedegenerates-hero.png',
+    socialLinks: [
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/_DegeneratesNFT',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/thedegenerates',
+      },
+      {
+        icon: 'web',
+        link: 'https://thedegen.app/',
+      },
+    ],
+    badges: [{ badgeType: 'recent' }],
+    filter: {
+      type: 'issuer',
+      value: ['E6m3sYbjbzCVqtMpDuWjMBnJneJu5a4VnTorz8hpCDB5'],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration'],
+      invalidationOptions: {
+        visibilities: ['public'],
+        durationOptions: ['minutes', 'hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
 }
