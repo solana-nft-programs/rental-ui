@@ -17,6 +17,7 @@ import type { Connection } from '@solana/web3.js'
 import { Keypair, PublicKey } from '@solana/web3.js'
 import type { TokenFilter } from 'config/config'
 import type { IndexedData } from 'hooks/useBrowseTokenDataWithIndex'
+import type { SingleTokenData } from 'hooks/useTokenData'
 import type { ParsedTokenAccountData } from 'providers/SolanaAccountsProvider'
 import { fetchAccountDataById } from 'providers/SolanaAccountsProvider'
 
@@ -240,12 +241,7 @@ export async function getTokenDatas(
 export async function getTokenData(
   connection: Connection,
   tokenManagerId: PublicKey
-): Promise<
-  Omit<TokenData, 'recipientTokenAccount'> & {
-    metadata?: AccountData<any> | null
-    recipientTokenAccount?: AccountData<spl.AccountInfo>
-  }
-> {
+): Promise<SingleTokenData> {
   const tokenManagerData = await tokenManager.accounts.getTokenManager(
     connection,
     tokenManagerId
@@ -281,7 +277,7 @@ export async function getTokenData(
   ]
   const accountsById = await fetchAccountDataById(connection, idsToFetch)
 
-  let metadata: any | null = null
+  let metadata: AccountData<any> | null = null
   if (metaplexData) {
     try {
       const json = await fetch(metaplexData.parsed.data.uri).then((r) =>
@@ -344,7 +340,7 @@ export async function getTokenData(
           timeInvalidatorId.toString()
         ] as AccountData<TimeInvalidatorData>)
       : undefined,
-    metadata,
+    metadata: metadata ?? undefined,
     recipientTokenAccount: recipientTokenAccount ?? undefined,
   }
 }
