@@ -53,7 +53,7 @@ export const executeTransaction = async (
     const errorMessage = handleError(e, `${e}`)
     Sentry.captureException(
       { e, errorMessage },
-      { tags: { type: 'transaction' } }
+      { tags: { type: 'transaction', wallet: wallet.publicKey.toString() } }
     )
     config.notificationConfig &&
       notify({
