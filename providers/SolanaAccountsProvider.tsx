@@ -42,6 +42,7 @@ import { useEnvironmentCtx } from './EnvironmentProvider'
 
 export type ParsedTokenAccountData = {
   isNative: boolean
+  delegate: string
   mint: string
   owner: string
   state: 'initialized' | 'frozen'

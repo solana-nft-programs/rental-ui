@@ -126,8 +126,6 @@ export const useManagedTokens = () => {
           config.filter,
           environment.label
         )
-
-        console.log(tokenDatas)
         return tokenDatas
       } else {
         const tokenManagerDatas = await getTokenManagersForIssuer(

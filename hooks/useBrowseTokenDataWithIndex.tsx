@@ -321,7 +321,6 @@ export const useBrowseTokenDataWithIndex = () => {
           }
         })
         transaction.finish()
-        console.log(tokenDatas)
         return tokenDatas.filter((tokenData) => elligibleForClaim(tokenData))
       } else {
         let tokenManagerDatas = []
