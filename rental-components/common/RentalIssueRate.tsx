@@ -222,8 +222,8 @@ export const RentalIssueRate = ({
             </div>
           </div>
           <div className="flex gap-3 border-t-[1px] border-border py-4 px-8 text-center text-sm text-medium-3">
-            This token can be rented out from you for any duration at the above
-            rate.{' '}
+            This token can be rented at the specified rate for any duration less
+            than or equal to the max rental duration.{' '}
             {maxExpiration &&
               `It will be automatically returned to your wallet at
                   ${new Date(maxExpiration * 1000).toLocaleString('en-US')}`}
