@@ -62,6 +62,9 @@ export const HeaderSlim: React.FC<Props> = ({
           >
             <LogoTitled className="inline-block h-6" />
           </div>
+          {environment.label !== 'mainnet-beta' && (
+            <div className="text-primary">{environment.label}</div>
+          )}
         </div>
         <div className="relative lg:absolute lg:left-1/2 lg:-translate-x-1/2">
           {tabs && (
