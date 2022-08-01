@@ -337,8 +337,8 @@ export const Dashboard = () => {
                               setSelectedTokens(
                                 selectedTokens.filter(
                                   (t) =>
-                                    t.tokenAccount?.account.data.parsed.info.mint.toString() !==
-                                    tokenData.tokenAccount?.account.data.parsed.info.mint.toString()
+                                    t.tokenAccount?.parsed.mint.toString() !==
+                                    tokenData.tokenAccount?.parsed.mint.toString()
                                 )
                               )
                             } else if (elligibleForRent(config, tokenData)) {

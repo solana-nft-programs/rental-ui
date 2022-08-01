@@ -69,15 +69,15 @@ export const filterTokens = (
       case 'claimer':
         return (
           token.recipientTokenAccount &&
-          filter.value.includes(token.recipientTokenAccount.owner.toString())
+          filter.value.includes(
+            token.recipientTokenAccount.parsed.owner.toString()
+          )
         )
       case 'owner':
         return (
           token.tokenAccount &&
           !token.tokenManager &&
-          filter.value.includes(
-            token.tokenAccount?.account.data.parsed.info.owner.toString()
-          )
+          filter.value.includes(token.tokenAccount?.parsed.owner.toString())
         )
       default:
         return false

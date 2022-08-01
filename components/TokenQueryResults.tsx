@@ -33,8 +33,8 @@ export const isSelected = (
 ) => {
   return selectedTokens.some(
     (t) =>
-      t.tokenAccount?.account.data.parsed.info.mint.toString() ===
-      tokenData.tokenAccount?.account.data.parsed.info.mint.toString()
+      t.tokenAccount?.parsed.mint.toString() ===
+      tokenData.tokenAccount?.parsed.mint.toString()
   )
 }
 
@@ -127,8 +127,8 @@ export const TokenQueryResults: React.FC<Props> = ({
             setSelectedTokens(
               selectedTokens.filter(
                 (t) =>
-                  t.tokenAccount?.account.data.parsed.info.mint.toString() !==
-                  tokenData.tokenAccount?.account.data.parsed.info.mint.toString()
+                  t.tokenAccount?.parsed.mint.toString() !==
+                  tokenData.tokenAccount?.parsed.mint.toString()
               )
             )
           } else if (elligibleForRent(config, tokenData)) {

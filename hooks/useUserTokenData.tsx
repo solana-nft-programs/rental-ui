@@ -8,22 +8,19 @@ import type { UseInvalidatorData } from '@cardinal/token-manager/dist/cjs/progra
 import * as metaplex from '@metaplex-foundation/mpl-token-metadata'
 import { Edition } from '@metaplex-foundation/mpl-token-metadata'
 import * as spl from '@solana/spl-token'
-import type { AccountInfo, ParsedAccountData } from '@solana/web3.js'
 import { PublicKey } from '@solana/web3.js'
-import { accountDataById } from 'apis/api'
 import type { TokenFilter } from 'config/config'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
+import type { ParsedTokenAccountData } from 'providers/SolanaAccountsProvider'
+import { fetchAccountDataById } from 'providers/SolanaAccountsProvider'
 import { useQuery } from 'react-query'
 
 import { TOKEN_DATA_KEY } from './useFilteredTokenManagers'
 import { useWalletId } from './useWalletId'
 
 export type UserTokenData = {
-  tokenAccount?: {
-    pubkey: PublicKey
-    account: AccountInfo<ParsedAccountData>
-  }
-  mint?: spl.MintInfo
+  tokenAccount?: AccountData<ParsedTokenAccountData>
+  mint?: AccountData<spl.MintInfo>
   tokenManager?: AccountData<TokenManagerData>
   metaplexData?: AccountData<metaplex.MetadataData>
   editionData?: AccountData<metaplex.EditionData | metaplex.MasterEditionData>
@@ -31,7 +28,7 @@ export type UserTokenData = {
   claimApprover?: AccountData<PaidClaimApproverData> | null
   useInvalidator?: AccountData<UseInvalidatorData> | null
   timeInvalidator?: AccountData<TimeInvalidatorData> | null
-  recipientTokenAccount?: spl.AccountInfo | null
+  recipientTokenAccount?: AccountData<ParsedTokenAccountData>
 }
 
 export const useUserTokenData = (filter?: TokenFilter, cluster?: string) => {
@@ -53,6 +50,11 @@ export const useUserTokenData = (filter?: TokenFilter, cluster?: string) => {
             tokenAccount.account.data.parsed.info.tokenAmount.uiAmount > 0
         )
         .sort((a, b) => a.pubkey.toBase58().localeCompare(b.pubkey.toBase58()))
+        .map((tokenAccount) => ({
+          pubkey: tokenAccount.pubkey,
+          parsed: tokenAccount.account.data.parsed
+            .info as ParsedTokenAccountData,
+        }))
 
       // lookup metaplex data
       const metaplexIds = await Promise.all(
@@ -60,7 +62,7 @@ export const useUserTokenData = (filter?: TokenFilter, cluster?: string) => {
           async (tokenAccount) =>
             (
               await metaplex.MetadataProgram.findMetadataAccount(
-                new PublicKey(tokenAccount.account.data.parsed.info.mint)
+                new PublicKey(tokenAccount.parsed.mint)
               )
             )[0]
         )
@@ -104,9 +106,9 @@ export const useUserTokenData = (filter?: TokenFilter, cluster?: string) => {
 
       // lookup delegates and
       const delegateIds = tokenAccounts.map((tokenAccount) =>
-        tryPublicKey(tokenAccount.account.data.parsed.info.delegate)
+        tryPublicKey(tokenAccount.parsed.delegate)
       )
-      const tokenAccountDelegateData = await accountDataById(
+      const tokenAccountDelegateData = await fetchAccountDataById(
         connection,
         delegateIds
       )
@@ -115,13 +117,12 @@ export const useUserTokenData = (filter?: TokenFilter, cluster?: string) => {
       if (filter?.type === 'issuer') {
         tokenAccounts = tokenAccounts.filter(
           (tokenAccount) =>
-            tokenAccountDelegateData[
-              tokenAccount.account.data.parsed.info.delegate
-            ]?.type === 'tokenManager' &&
+            tokenAccountDelegateData[tokenAccount.parsed.delegate]?.type ===
+              'tokenManager' &&
             filter.value.includes(
               (
                 tokenAccountDelegateData[
-                  tokenAccount.account.data.parsed.info.delegate
+                  tokenAccount.parsed.delegate
                 ] as AccountData<TokenManagerData>
               ).parsed.issuer.toString()
             )
@@ -129,11 +130,11 @@ export const useUserTokenData = (filter?: TokenFilter, cluster?: string) => {
       }
 
       const mintIds = tokenAccounts.map((tokenAccount) =>
-        tryPublicKey(tokenAccount.account.data.parsed.info.mint)
+        tryPublicKey(tokenAccount.parsed.mint)
       )
       const editionIds = await Promise.all(
         tokenAccounts.map(async (tokenAccount) =>
-          Edition.getPDA(tokenAccount.account.data.parsed.info.mint)
+          Edition.getPDA(tokenAccount.parsed.mint)
         )
       )
       const idsToFetch = Object.values(tokenAccountDelegateData).reduce(
@@ -155,7 +156,7 @@ export const useUserTokenData = (filter?: TokenFilter, cluster?: string) => {
 
       const accountsById = {
         ...tokenAccountDelegateData,
-        ...(await accountDataById(connection, idsToFetch)),
+        ...(await fetchAccountDataById(connection, idsToFetch)),
       }
 
       // const metadata = await Promise.all(
@@ -176,8 +177,7 @@ export const useUserTokenData = (filter?: TokenFilter, cluster?: string) => {
       // )
 
       return tokenAccounts.map((tokenAccount, i) => {
-        const delegateData =
-          accountsById[tokenAccount.account.data.parsed.info.delegate]
+        const delegateData = accountsById[tokenAccount.parsed.delegate]
 
         let tokenManagerData: AccountData<TokenManagerData> | undefined
         let claimApproverId: PublicKey | undefined
@@ -198,12 +198,12 @@ export const useUserTokenData = (filter?: TokenFilter, cluster?: string) => {
         return {
           tokenAccount,
           mint: accountsById[
-            tokenAccount.account.data.parsed.info.mint
-          ] as spl.MintInfo,
+            tokenAccount.parsed.mint
+          ] as AccountData<spl.MintInfo>,
           recipientTokenAccount: tokenManagerData?.parsed.recipientTokenAccount
             ? (accountsById[
                 tokenManagerData.parsed.recipientTokenAccount?.toString()
-              ] as spl.AccountInfo)
+              ] as AccountData<ParsedTokenAccountData>)
             : undefined,
           metaplexData: metaplexData[tokenAccount.pubkey.toString()],
           editionData: accountsById[editionIds[i]!.toString()] as
