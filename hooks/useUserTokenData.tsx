@@ -11,6 +11,7 @@ import * as spl from '@solana/spl-token'
 import { PublicKey } from '@solana/web3.js'
 import type { TokenFilter } from 'config/config'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
+import type { ParsedTokenAccountData } from 'providers/SolanaAccountsProvider'
 import { fetchAccountDataById } from 'providers/SolanaAccountsProvider'
 import { useQuery } from 'react-query'
 
@@ -18,7 +19,7 @@ import { TOKEN_DATA_KEY } from './useFilteredTokenManagers'
 import { useWalletId } from './useWalletId'
 
 export type UserTokenData = {
-  tokenAccount?: AccountData<spl.AccountInfo>
+  tokenAccount?: AccountData<ParsedTokenAccountData>
   mint?: AccountData<spl.MintInfo>
   tokenManager?: AccountData<TokenManagerData>
   metaplexData?: AccountData<metaplex.MetadataData>
@@ -27,7 +28,7 @@ export type UserTokenData = {
   claimApprover?: AccountData<PaidClaimApproverData> | null
   useInvalidator?: AccountData<UseInvalidatorData> | null
   timeInvalidator?: AccountData<TimeInvalidatorData> | null
-  recipientTokenAccount?: AccountData<spl.AccountInfo>
+  recipientTokenAccount?: AccountData<ParsedTokenAccountData>
 }
 
 export const useUserTokenData = (filter?: TokenFilter, cluster?: string) => {
@@ -191,6 +192,7 @@ export const useUserTokenData = (filter?: TokenFilter, cluster?: string) => {
               accountsById[invalidator.toString()]?.type === 'useInvalidator'
           )[0]
         }
+        console.log(tokenAccount.account.data.parsed)
         return {
           tokenAccount: {
             pubkey: tokenAccount.pubkey,
@@ -202,7 +204,7 @@ export const useUserTokenData = (filter?: TokenFilter, cluster?: string) => {
           recipientTokenAccount: tokenManagerData?.parsed.recipientTokenAccount
             ? (accountsById[
                 tokenManagerData.parsed.recipientTokenAccount?.toString()
-              ] as AccountData<spl.AccountInfo>)
+              ] as AccountData<ParsedTokenAccountData>)
             : undefined,
           metaplexData: metaplexData[tokenAccount.pubkey.toString()],
           editionData: accountsById[editionIds[i]!.toString()] as

@@ -40,6 +40,19 @@ import React, { useContext, useEffect, useMemo, useState } from 'react'
 
 import { useEnvironmentCtx } from './EnvironmentProvider'
 
+export type ParsedTokenAccountData = {
+  isNative: boolean
+  mint: string
+  owner: string
+  state: 'initialized' | 'frozen'
+  tokenAmount: {
+    amount: string
+    decimals: number
+    uiAmount: number
+    uiAmountString: string
+  }
+}
+
 export type AccountTypeData = {
   type: AccountType
   timestamp: number
@@ -67,7 +80,7 @@ export type AccountCacheData = AccountInfo<Buffer> &
     | metaplex.MetadataData
     | metaplex.EditionData
     | metaplex.MasterEditionData
-    | spl.AccountInfo
+    | ParsedTokenAccountData
     | spl.MintInfo
     | null
   >
@@ -165,7 +178,7 @@ export const deserializeAccountInfos = (
                 ...baseData,
                 type: 'tokenAccount',
                 ...(accountInfo as AccountInfo<Buffer>),
-                parsed: accountData.parsed?.info as spl.AccountInfo,
+                parsed: accountData.parsed?.info as ParsedTokenAccountData,
               }
         return acc
       case metaplex.MetadataProgram.PUBKEY.toString():
@@ -338,8 +351,7 @@ export function SolanaAccountsProvider({
     console.log(
       `[cacheMiss] (${keysToFetch.length}/${keys.length}) cacheSize: ${
         Object.keys(accountDataById).length
-      }, keys:`,
-      keysToFetch.map((k) => cacheKey(k ?? ''))
+      }`
     )
     setAccountDataById((v) => ({ ...v, ...fetchedData }))
     const matchedData = Object.fromEntries(

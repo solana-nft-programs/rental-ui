@@ -17,6 +17,7 @@ import type { Connection } from '@solana/web3.js'
 import { Keypair, PublicKey } from '@solana/web3.js'
 import type { TokenFilter } from 'config/config'
 import type { IndexedData } from 'hooks/useBrowseTokenDataWithIndex'
+import type { ParsedTokenAccountData } from 'providers/SolanaAccountsProvider'
 import { fetchAccountDataById } from 'providers/SolanaAccountsProvider'
 
 import { tryPublicKey } from './utils'
@@ -38,7 +39,7 @@ export async function findAssociatedTokenAddress(
 }
 
 export type TokenData = {
-  tokenAccount?: AccountData<spl.AccountInfo>
+  tokenAccount?: AccountData<ParsedTokenAccountData>
   mint?: AccountData<spl.MintInfo>
   indexedData?: IndexedData
   tokenManager?: AccountData<TokenManagerData>
@@ -47,7 +48,7 @@ export type TokenData = {
   claimApprover?: AccountData<PaidClaimApproverData> | null
   useInvalidator?: AccountData<UseInvalidatorData> | null
   timeInvalidator?: AccountData<TimeInvalidatorData> | null
-  recipientTokenAccount?: AccountData<spl.AccountInfo>
+  recipientTokenAccount?: AccountData<ParsedTokenAccountData>
 }
 
 /** Converts serialized tokenData or similar to TokenData */
@@ -212,7 +213,7 @@ export async function getTokenDatas(
       recipientTokenAccount: tokenManagerData.parsed.recipientTokenAccount
         ? (accountsById[
             tokenManagerData.parsed.recipientTokenAccount?.toString()
-          ] as AccountData<spl.AccountInfo>)
+          ] as AccountData<ParsedTokenAccountData>)
         : undefined,
       metaplexData: metaplexData[tokenManagerData.pubkey.toString()],
       tokenManager: tokenManagerData,
@@ -240,9 +241,10 @@ export async function getTokenData(
   connection: Connection,
   tokenManagerId: PublicKey
 ): Promise<
-  {
+  Omit<TokenData, 'recipientTokenAccount'> & {
     metadata?: AccountData<any> | null
-  } & TokenData
+    recipientTokenAccount?: AccountData<spl.AccountInfo>
+  }
 > {
   const tokenManagerData = await tokenManager.accounts.getTokenManager(
     connection,

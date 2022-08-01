@@ -16,19 +16,19 @@ import type { UseInvalidatorData } from '@cardinal/token-manager/dist/cjs/progra
 import { findUseInvalidatorAddress } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator/pda'
 import type * as metaplex from '@metaplex-foundation/mpl-token-metadata'
 import * as Sentry from '@sentry/browser'
-import type * as spl from '@solana/spl-token'
 import type { PublicKey } from '@solana/web3.js'
 import { getTokenDatas } from 'apis/api'
 import { tryPublicKey } from 'apis/utils'
 import { elligibleForClaim } from 'common/tokenDataUtils'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
+import type { ParsedTokenAccountData } from 'providers/SolanaAccountsProvider'
 import { useQuery } from 'react-query'
 
 export const TOKEN_DATA_KEY = 'tokenData'
 
 export type FilteredTokenManagerData = {
-  tokenAccount?: AccountData<spl.AccountInfo>
+  tokenAccount?: AccountData<ParsedTokenAccountData>
   tokenManager?: AccountData<TokenManagerData>
   metaplexData?: AccountData<metaplex.MetadataData>
   editionData?: AccountData<metaplex.EditionData | metaplex.MasterEditionData>
@@ -36,7 +36,7 @@ export type FilteredTokenManagerData = {
   claimApprover?: AccountData<PaidClaimApproverData> | null
   useInvalidator?: AccountData<UseInvalidatorData> | null
   timeInvalidator?: AccountData<TimeInvalidatorData> | null
-  recipientTokenAccount?: AccountData<spl.AccountInfo>
+  recipientTokenAccount?: AccountData<ParsedTokenAccountData>
 }
 
 export const useFilteredTokenManagers = () => {

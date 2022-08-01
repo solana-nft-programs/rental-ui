@@ -12,7 +12,6 @@ import { Edition } from '@metaplex-foundation/mpl-token-metadata'
 import { utils } from '@project-serum/anchor'
 import * as spl from '@solana/spl-token'
 import { Connection, Keypair, PublicKey, Transaction } from '@solana/web3.js'
-import type { TokenData } from 'apis/api'
 import { tryPublicKey } from 'apis/utils'
 import { firstParam } from 'common/utils'
 import type { TokenFilter } from 'config/config'
@@ -226,7 +225,7 @@ const post: NextApiHandler<PostResponse> = async (req, res) => {
   const config =
     projectConfigs[firstParam(collectionParam)] || projectConfigs['default']!
 
-  let tokenDatas: TokenData[] = []
+  let tokenDatas: ScanTokenData[] = []
   try {
     tokenDatas = await getScanTokenAccounts(
       connection,

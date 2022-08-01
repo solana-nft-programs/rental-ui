@@ -1,3 +1,4 @@
+import { tryPublicKey } from '@cardinal/common'
 import {
   InvalidationType,
   TokenManagerState,
@@ -59,7 +60,8 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
           <a
             className={`${popoverItemClass}`}
             href={pubKeyUrl(
-              tokenManager?.parsed.mint ?? tokenAccount?.parsed.mint,
+              tokenManager?.parsed.mint ??
+                tryPublicKey(tokenAccount?.parsed.mint),
               environment.label
             )}
             target="_blank"
@@ -72,7 +74,8 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
             <a
               className={`${popoverItemClass}`}
               href={metadataUrl(
-                tokenManager?.parsed.mint ?? tokenAccount?.parsed.mint,
+                tokenManager?.parsed.mint ??
+                  tryPublicKey(tokenAccount?.parsed.mint),
                 environment.label
               )}
               target="_blank"

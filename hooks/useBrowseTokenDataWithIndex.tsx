@@ -25,13 +25,13 @@ import { tryPublicKey } from 'apis/utils'
 import { elligibleForClaim } from 'common/tokenDataUtils'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
+import type { ParsedTokenAccountData } from 'providers/SolanaAccountsProvider'
 import { useAccounts } from 'providers/SolanaAccountsProvider'
 import { useQuery } from 'react-query'
 
 export const TOKEN_DATA_KEY = 'tokenData'
 
 export type BrowseTokenData = {
-  tokenAccount?: AccountData<spl.AccountInfo>
   indexedData?: IndexedData
   tokenManager?: AccountData<TokenManagerData>
   metaplexData?: AccountData<metaplex.MetadataData>
@@ -39,7 +39,7 @@ export type BrowseTokenData = {
   claimApprover?: AccountData<PaidClaimApproverData> | null
   useInvalidator?: AccountData<UseInvalidatorData> | null
   timeInvalidator?: AccountData<TimeInvalidatorData> | null
-  recipientTokenAccount?: AccountData<spl.AccountInfo>
+  recipientTokenAccount?: AccountData<ParsedTokenAccountData>
 }
 
 export type IndexedData = {
@@ -296,7 +296,7 @@ export const useBrowseTokenDataWithIndex = () => {
             recipientTokenAccount: tokenManagerData.parsed.recipientTokenAccount
               ? (accountsById[
                   tokenManagerData.parsed.recipientTokenAccount?.toString()
-                ] as AccountData<spl.AccountInfo>)
+                ] as AccountData<ParsedTokenAccountData>)
               : undefined,
             metaplexData: accountsById[metaplexIds[i]!.toString()] as
               | AccountData<metaplex.MetadataData>
@@ -321,6 +321,7 @@ export const useBrowseTokenDataWithIndex = () => {
           }
         })
         transaction.finish()
+        console.log(tokenDatas)
         return tokenDatas.filter((tokenData) => elligibleForClaim(tokenData))
       } else {
         let tokenManagerDatas = []

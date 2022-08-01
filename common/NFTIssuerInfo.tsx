@@ -1,4 +1,8 @@
-import { getExpirationString, secondsToString } from '@cardinal/common'
+import {
+  getExpirationString,
+  secondsToString,
+  tryPublicKey,
+} from '@cardinal/common'
 import { DisplayAddress } from '@cardinal/namespaces-components'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import type * as splToken from '@solana/spl-token'
@@ -128,7 +132,10 @@ export const NFTIssuerInfo: React.FC<NFTIssuerInfoProps> = ({
               <div>Claimed by&nbsp;</div>
               <DisplayAddress
                 connection={secondaryConnection}
-                address={tokenData.recipientTokenAccount?.parsed.owner}
+                address={
+                  tryPublicKey(tokenData.recipientTokenAccount?.parsed.owner) ??
+                  undefined
+                }
                 height="18px"
                 width="100px"
                 dark={true}

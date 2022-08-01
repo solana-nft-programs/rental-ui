@@ -17,6 +17,7 @@ import type { PublicKey } from '@solana/web3.js'
 import { getTokenDatas } from 'apis/api'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
+import type { ParsedTokenAccountData } from 'providers/SolanaAccountsProvider'
 import { useQuery } from 'react-query'
 
 import { TOKEN_DATA_KEY } from './useFilteredTokenManagers'
@@ -25,7 +26,7 @@ import { useWalletId } from './useWalletId'
 const INDEX_ENABLED_MANAGE = true
 
 export type ManagedTokenData = {
-  tokenAccount?: AccountData<spl.AccountInfo>
+  tokenAccount?: AccountData<ParsedTokenAccountData>
   mint?: AccountData<spl.MintInfo>
   tokenManager?: AccountData<TokenManagerData>
   metaplexData?: AccountData<metaplex.MetadataData>
@@ -34,7 +35,7 @@ export type ManagedTokenData = {
   claimApprover?: AccountData<PaidClaimApproverData> | null
   useInvalidator?: AccountData<UseInvalidatorData> | null
   timeInvalidator?: AccountData<TimeInvalidatorData> | null
-  recipientTokenAccount?: AccountData<spl.AccountInfo>
+  recipientTokenAccount?: AccountData<ParsedTokenAccountData>
 }
 
 export const useManagedTokens = () => {
@@ -126,6 +127,7 @@ export const useManagedTokens = () => {
           environment.label
         )
 
+        console.log(tokenDatas)
         return tokenDatas
       } else {
         const tokenManagerDatas = await getTokenManagersForIssuer(
