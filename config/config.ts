@@ -956,7 +956,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       glow: '#A45EE5',
     },
     description:
-      'A community of gamers focusing on good vibes and competitive gaming in the developing Web 3 space.',
+      'Syndicate Initiative is a community of gamers focused on good vibes and competitive gaming in the developing web3 space. We coach eSports players and stream content on Twitch. Let\’s build SyNi together and make a name in the web3 gaming space! #SyNi',
     hero: 'logos/syndicate-initiative-hero.png',
     socialLinks: [
       {

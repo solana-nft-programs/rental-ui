@@ -200,12 +200,15 @@ export const RentalIssueRate = ({
               <div>You set the rate at {extensionRate()}</div>
             </div>
           </div>
-          <div className="flex gap-3 border-t-[1px] border-border py-4 px-8 text-center text-sm text-medium-3">
+          <div className="flex gap-3 border-t-[1px] border-border py-4 px-8 text-sm text-medium-3">
             This token can be rented at the specified rate for any duration less
             than or equal to the max rental duration.{' '}
             {maxExpiration &&
-              `It will be automatically returned to your wallet at
-                  ${new Date(maxExpiration * 1000).toLocaleString('en-US')}.`}
+              `It will be automatically returned to your wallet at ${new Date(maxExpiration * 1000)
+                .toLocaleString('en-US')
+                .substring(11, undefined)} on ${new Date(maxExpiration * 1000)
+                .toLocaleString('en-US')
+                .substring(0, 10)}.`}
           </div>
         </div>
       )}
