@@ -178,33 +178,27 @@ export const useBrowseTokenDataWithIndex = () => {
         collectSpan.finish()
 
         const filterSpan = transaction.startChild({
-          op: 'filter-known-invalidators',
+          op: 'filter-known-invalidators-v2',
         })
-        const [tokenManagerIds, indexedTokenManagerDatas] =
-          indexedTokenManagers.reduce(
-            (acc, data, i) => {
-              const tokenManagerId = tryPublicKey(data.address)
-              if (!tokenManagerId) return acc
-              let filter = false
-              data.invalidator_address?.forEach(({ invalidator }) => {
-                if (
-                  !config.showUnknownInvalidators &&
-                  !knownInvalidators[i]?.includes(invalidator)
-                ) {
-                  filter = true
-                }
-              })
-
-              // const acc = await memo
-              return filter
-                ? acc
-                : [
-                    [...acc[0], tokenManagerId],
-                    { ...acc[1], [tokenManagerId.toString()]: data },
-                  ]
-            },
-            [[], {}] as [PublicKey[], { [a: string]: IndexedData }]
-          )
+        const indexedTokenManagerDatas = Object.fromEntries(
+          indexedTokenManagers
+            .filter(
+              (data, i) =>
+                !data.invalidator_address?.some(
+                  ({ invalidator }) =>
+                    !config.showUnknownInvalidators &&
+                    !knownInvalidators[i]?.includes(invalidator)
+                )
+            )
+            .map((data) => [data.address ?? '', data])
+        )
+        const tokenManagerIds = Object.keys(indexedTokenManagerDatas).reduce(
+          (acc, id) => {
+            const pubkey = tryPublicKey(id)
+            return pubkey ? [...acc, pubkey] : acc
+          },
+          [] as PublicKey[]
+        )
         filterSpan.finish()
 
         ////
