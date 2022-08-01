@@ -125,7 +125,7 @@ export const RentalIssueExpiration = ({
           </div>
           <div className="flex gap-3 border-t-[1px] border-border py-4 px-8 text-center text-sm text-medium-3">
             {maxExpiration &&
-              `This rental will be expire at  ${new Date(
+              `This rental will be expire at ${new Date(
                 maxExpiration * 1000
               ).toLocaleString('en-US')}.`}
           </div>

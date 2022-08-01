@@ -93,14 +93,15 @@ export const executeAllTransactions = async (
       } catch (e) {
         console.log(
           'Failed transaction: ',
-          (e as web3.SendTransactionError).logs,
-          e
+          e,
+          (e as web3.SendTransactionError).logs
         )
         const errorMessage = handleError(e, `${e}`)
-        Sentry.captureException(
-          { e, errorMessage },
-          { tags: { type: 'transaction', wallet: wallet.publicKey.toString() } }
-        )
+        console.log(errorMessage)
+        Sentry.captureException(e, {
+          tags: { type: 'transaction', wallet: wallet.publicKey.toString() },
+          extra: { errorMessage },
+        })
         config.notificationConfig &&
           notify({
             message: `${

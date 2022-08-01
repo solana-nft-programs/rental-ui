@@ -1,4 +1,5 @@
 import { AccountConnect } from '@cardinal/namespaces-components'
+import * as Sentry from '@sentry/browser'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useWalletModal } from '@solana/wallet-adapter-react-ui'
 import { GlyphWallet } from 'assets/GlyphWallet'
@@ -38,6 +39,16 @@ export const HeaderSlim: React.FC<Props> = ({
     const anchor = router.asPath.split('#')[1]
     if (anchor !== tab) setTab(anchor || 'browse')
   }, [router.asPath, tab])
+
+  useEffect(() => {
+    Sentry.configureScope((scope) => {
+      scope.setUser({
+        username: wallet.publicKey?.toString(),
+        wallet: wallet.publicKey?.toString(),
+      })
+      scope.setTag('wallet', wallet.publicKey?.toString())
+    })
+  }, [wallet.publicKey?.toString()])
 
   return (
     <div className="w-full px-4 py-4">
