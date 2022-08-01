@@ -181,7 +181,8 @@ export const getRentalDuration = (
 }
 
 export const isPrivateListing = (tokenData: TokenData) =>
-  tokenData.tokenManager?.parsed.claimApprover && !tokenData.claimApprover
+  tokenData.tokenManager?.parsed.claimApprover &&
+  !tokenData.claimApprover?.parsed
 
 export const isRateBasedListing = (tokenData: TokenData) =>
   !!tokenData.timeInvalidator?.parsed.durationSeconds &&
