@@ -1,4 +1,5 @@
 import type { Wallet } from '@saberhq/solana-contrib'
+import * as Sentry from '@sentry/browser'
 import * as splToken from '@solana/spl-token'
 import type { Connection } from '@solana/web3.js'
 import * as web3 from '@solana/web3.js'
@@ -96,6 +97,10 @@ export const executeAllTransactions = async (
           e
         )
         const errorMessage = handleError(e, `${e}`)
+        Sentry.captureException(
+          { e, errorMessage },
+          { tags: { type: 'transaction' } }
+        )
         config.notificationConfig &&
           notify({
             message: `${
