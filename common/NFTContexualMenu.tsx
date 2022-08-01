@@ -59,8 +59,7 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
           <a
             className={`${popoverItemClass}`}
             href={pubKeyUrl(
-              tokenManager?.parsed.mint ??
-                tokenAccount?.account.data.parsed.info.mint,
+              tokenManager?.parsed.mint ?? tokenAccount?.parsed.mint,
               environment.label
             )}
             target="_blank"
@@ -73,8 +72,7 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
             <a
               className={`${popoverItemClass}`}
               href={metadataUrl(
-                tokenManager?.parsed.mint ??
-                  tokenAccount?.account.data.parsed.info.mint,
+                tokenManager?.parsed.mint ?? tokenAccount?.parsed.mint,
                 environment.label
               )}
               target="_blank"
@@ -136,7 +134,7 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
             )}
           {tokenManager &&
             tokenManager.parsed.state === TokenManagerState.Claimed &&
-            tokenData.recipientTokenAccount?.owner.toString() ===
+            tokenData.recipientTokenAccount?.parsed.owner.toString() ===
               walletId?.toString() && (
               <div
                 className={`${popoverItemClass} flex cursor-pointer items-center`}
@@ -151,7 +149,8 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
                 Scan
               </div>
             )}
-          {recipientTokenAccount?.owner.toString() === walletId?.toString() &&
+          {recipientTokenAccount?.parsed.owner.toString() ===
+            walletId?.toString() &&
             tokenManager &&
             (tokenManager.parsed.invalidationType ===
               InvalidationType.Reissue ||
@@ -178,7 +177,8 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
                 Return
               </div>
             )}
-          {recipientTokenAccount?.owner.toString() === walletId?.toString() &&
+          {recipientTokenAccount?.parsed.owner.toString() ===
+            walletId?.toString() &&
             timeInvalidator?.parsed?.extensionDurationSeconds &&
             tokenManager && (
               <div

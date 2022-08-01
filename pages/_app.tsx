@@ -16,6 +16,7 @@ import {
   getInitialProps,
   ProjectConfigProvider,
 } from 'providers/ProjectConfigProvider'
+import { SolanaAccountsProvider } from 'providers/SolanaAccountsProvider'
 import { UTCNowProvider } from 'providers/UTCNowProvider'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
@@ -40,23 +41,25 @@ const App = ({
 }: AppProps & { config: ProjectConfig; cluster: string }) => (
   <EnvironmentProvider defaultCluster={cluster}>
     <UTCNowProvider>
-      <WalletProvider wallets={getWalletAdapters()} autoConnect>
-        <WalletIdentityProvider>
-          <ProjectConfigProvider defaultConfig={config}>
-            <QueryClientProvider client={queryClient}>
-              <ModalProvider>
-                <WalletModalProvider>
-                  <>
-                    <ToastContainer />
-                    <Component {...pageProps} />
-                    {DEBUG && <ReactQueryDevtools initialIsOpen={false} />}
-                  </>
-                </WalletModalProvider>
-              </ModalProvider>
-            </QueryClientProvider>
-          </ProjectConfigProvider>
-        </WalletIdentityProvider>
-      </WalletProvider>
+      <SolanaAccountsProvider>
+        <WalletProvider wallets={getWalletAdapters()} autoConnect>
+          <WalletIdentityProvider>
+            <ProjectConfigProvider defaultConfig={config}>
+              <QueryClientProvider client={queryClient}>
+                <ModalProvider>
+                  <WalletModalProvider>
+                    <>
+                      <ToastContainer />
+                      <Component {...pageProps} />
+                      {DEBUG && <ReactQueryDevtools initialIsOpen={false} />}
+                    </>
+                  </WalletModalProvider>
+                </ModalProvider>
+              </QueryClientProvider>
+            </ProjectConfigProvider>
+          </WalletIdentityProvider>
+        </WalletProvider>
+      </SolanaAccountsProvider>
     </UTCNowProvider>
   </EnvironmentProvider>
 )

@@ -129,9 +129,7 @@ export const useHandleIssueRental = () => {
           throw 'Edition info not found'
         }
 
-        const rentalMint = new PublicKey(
-          tokenAccount?.account.data.parsed.info.mint
-        )
+        const rentalMint = new PublicKey(tokenAccount?.parsed.mint)
         const receiptMintKeypair = Keypair.generate()
         receiptMintKeypairs.push(receiptMintKeypair)
         const issueParams: IssueParameters = {

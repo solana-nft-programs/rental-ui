@@ -63,12 +63,12 @@ export const allowedToRent = async (
         }
         if (
           tokenDatasByIssuer.some(
-            (tm) =>
+            (tk) =>
               tokenData.tokenManager?.parsed.issuer.toString() ===
                 creator.address &&
-              tm.recipientTokenAccount?.owner.toString() ===
+              tk.recipientTokenAccount?.parsed.owner.toString() ===
                 walletId?.toString() &&
-              tm.tokenManager?.parsed.issuer.toString() === creator.address
+              tk.tokenManager?.parsed.issuer.toString() === creator.address
           )
         ) {
           notify({

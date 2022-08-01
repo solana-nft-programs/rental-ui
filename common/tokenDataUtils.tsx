@@ -221,9 +221,9 @@ export const elligibleForRent = (
   return (
     !config.disableListing &&
     !tokenData.tokenManager &&
-    tokenData.tokenAccount?.account.data.parsed.info.state !== 'frozen' &&
+    !tokenData.tokenAccount?.parsed.isFrozen &&
     !!tokenData.editionData &&
-    (!tokenData.mint || !!tokenData.mint.freezeAuthority)
+    (!tokenData.mint || !!tokenData.mint.parsed.freezeAuthority)
   )
 }
 
@@ -231,7 +231,7 @@ export const elligibleForClaim = (tokenData: TokenData): boolean => {
   return (
     !!tokenData.tokenManager &&
     !!tokenData.editionData &&
-    (!tokenData.mint || !!tokenData.mint.freezeAuthority)
+    (!tokenData.mint || !!tokenData.mint.parsed.freezeAuthority)
   )
 }
 

@@ -13,7 +13,7 @@ import type { UseInvalidatorData } from '@cardinal/token-manager/dist/cjs/progra
 import { findUseInvalidatorAddress } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator/pda'
 import type * as metaplex from '@metaplex-foundation/mpl-token-metadata'
 import type * as spl from '@solana/spl-token'
-import type { AccountInfo, ParsedAccountData, PublicKey } from '@solana/web3.js'
+import type { PublicKey } from '@solana/web3.js'
 import { getTokenDatas } from 'apis/api'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
@@ -25,11 +25,8 @@ import { useWalletId } from './useWalletId'
 const INDEX_ENABLED_MANAGE = true
 
 export type ManagedTokenData = {
-  tokenAccount?: {
-    pubkey: PublicKey
-    account: AccountInfo<ParsedAccountData>
-  }
-  mint?: spl.MintInfo
+  tokenAccount?: AccountData<spl.AccountInfo>
+  mint?: AccountData<spl.MintInfo>
   tokenManager?: AccountData<TokenManagerData>
   metaplexData?: AccountData<metaplex.MetadataData>
   editionData?: AccountData<metaplex.EditionData | metaplex.MasterEditionData>
@@ -37,7 +34,7 @@ export type ManagedTokenData = {
   claimApprover?: AccountData<PaidClaimApproverData> | null
   useInvalidator?: AccountData<UseInvalidatorData> | null
   timeInvalidator?: AccountData<TimeInvalidatorData> | null
-  recipientTokenAccount?: spl.AccountInfo | null
+  recipientTokenAccount?: AccountData<spl.AccountInfo>
 }
 
 export const useManagedTokens = () => {

@@ -11,22 +11,18 @@ import * as metaplex from '@metaplex-foundation/mpl-token-metadata'
 import { Edition } from '@metaplex-foundation/mpl-token-metadata'
 import { utils } from '@project-serum/anchor'
 import * as spl from '@solana/spl-token'
-import type { AccountInfo, ParsedAccountData } from '@solana/web3.js'
 import { Connection, Keypair, PublicKey, Transaction } from '@solana/web3.js'
 import type { TokenData } from 'apis/api'
-import { accountDataById } from 'apis/api'
 import { tryPublicKey } from 'apis/utils'
 import { firstParam } from 'common/utils'
 import type { TokenFilter } from 'config/config'
 import { projectConfigs } from 'config/config'
 import type { NextApiHandler } from 'next'
 import { ENVIRONMENTS } from 'providers/EnvironmentProvider'
+import { fetchAccountDataById } from 'providers/SolanaAccountsProvider'
 
 export type ScanTokenData = {
-  tokenAccount?: {
-    pubkey: PublicKey
-    account: AccountInfo<ParsedAccountData>
-  }
+  tokenAccount?: AccountData<spl.AccountInfo>
   tokenManager?: AccountData<TokenManagerData>
   metaplexData?: AccountData<metaplex.MetadataData>
   claimApprover?: AccountData<PaidClaimApproverData> | null
@@ -98,7 +94,7 @@ export async function getScanTokenAccounts(
   const delegateIds = tokenAccounts.map((tokenAccount) =>
     tryPublicKey(tokenAccount.account.data.parsed.info.delegate)
   )
-  const tokenAccountDelegateData = await accountDataById(
+  const tokenAccountDelegateData = await fetchAccountDataById(
     connection,
     delegateIds
   )
@@ -125,7 +121,7 @@ export async function getScanTokenAccounts(
 
   const accountsById = {
     ...tokenAccountDelegateData,
-    ...(await accountDataById(connection, idsToFetch)),
+    ...(await fetchAccountDataById(connection, idsToFetch)),
   }
 
   return tokenAccounts.reduce((acc, tokenAccount, i) => {
@@ -157,7 +153,10 @@ export async function getScanTokenAccounts(
     return [
       ...acc,
       {
-        tokenAccount,
+        tokenAccount: {
+          pubkey: tokenAccount.pubkey,
+          parsed: tokenAccount.account.data.parsed,
+        },
         metaplexData: metaplexData[tokenAccount.pubkey.toString()],
         tokenManager: tokenManagerData,
         claimApprover: claimApproverId

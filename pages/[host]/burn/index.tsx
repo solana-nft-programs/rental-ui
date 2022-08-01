@@ -71,7 +71,7 @@ function Burn() {
       (token) =>
         token?.metaplexData?.parsed?.data?.uri.includes('api.cardinal.so') &&
         !token.tokenManager &&
-        token.tokenAccount?.account.data.parsed.info.state !== 'frozen' &&
+        !token.tokenAccount?.parsed.isFrozen &&
         token?.metaplexData?.parsed?.data.name === 'EXPIRED'
     )
     // console.log(datas[0])

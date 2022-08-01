@@ -122,13 +122,13 @@ export const NFTIssuerInfo: React.FC<NFTIssuerInfoProps> = ({
           </div>
         )
       ) : (
-        tokenData.recipientTokenAccount?.owner && (
+        tokenData.recipientTokenAccount?.parsed.owner && (
           <div className="flex flex-col text-secondary">
             <div className="flex">
               <div>Claimed by&nbsp;</div>
               <DisplayAddress
                 connection={secondaryConnection}
-                address={tokenData.recipientTokenAccount?.owner}
+                address={tokenData.recipientTokenAccount?.parsed.owner}
                 height="18px"
                 width="100px"
                 dark={true}

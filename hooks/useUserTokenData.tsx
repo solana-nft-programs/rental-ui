@@ -8,22 +8,18 @@ import type { UseInvalidatorData } from '@cardinal/token-manager/dist/cjs/progra
 import * as metaplex from '@metaplex-foundation/mpl-token-metadata'
 import { Edition } from '@metaplex-foundation/mpl-token-metadata'
 import * as spl from '@solana/spl-token'
-import type { AccountInfo, ParsedAccountData } from '@solana/web3.js'
 import { PublicKey } from '@solana/web3.js'
-import { accountDataById } from 'apis/api'
 import type { TokenFilter } from 'config/config'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
+import { fetchAccountDataById } from 'providers/SolanaAccountsProvider'
 import { useQuery } from 'react-query'
 
 import { TOKEN_DATA_KEY } from './useFilteredTokenManagers'
 import { useWalletId } from './useWalletId'
 
 export type UserTokenData = {
-  tokenAccount?: {
-    pubkey: PublicKey
-    account: AccountInfo<ParsedAccountData>
-  }
-  mint?: spl.MintInfo
+  tokenAccount?: AccountData<spl.AccountInfo>
+  mint?: AccountData<spl.MintInfo>
   tokenManager?: AccountData<TokenManagerData>
   metaplexData?: AccountData<metaplex.MetadataData>
   editionData?: AccountData<metaplex.EditionData | metaplex.MasterEditionData>
@@ -31,7 +27,7 @@ export type UserTokenData = {
   claimApprover?: AccountData<PaidClaimApproverData> | null
   useInvalidator?: AccountData<UseInvalidatorData> | null
   timeInvalidator?: AccountData<TimeInvalidatorData> | null
-  recipientTokenAccount?: spl.AccountInfo | null
+  recipientTokenAccount?: AccountData<spl.AccountInfo>
 }
 
 export const useUserTokenData = (filter?: TokenFilter, cluster?: string) => {
@@ -106,7 +102,7 @@ export const useUserTokenData = (filter?: TokenFilter, cluster?: string) => {
       const delegateIds = tokenAccounts.map((tokenAccount) =>
         tryPublicKey(tokenAccount.account.data.parsed.info.delegate)
       )
-      const tokenAccountDelegateData = await accountDataById(
+      const tokenAccountDelegateData = await fetchAccountDataById(
         connection,
         delegateIds
       )
@@ -155,7 +151,7 @@ export const useUserTokenData = (filter?: TokenFilter, cluster?: string) => {
 
       const accountsById = {
         ...tokenAccountDelegateData,
-        ...(await accountDataById(connection, idsToFetch)),
+        ...(await fetchAccountDataById(connection, idsToFetch)),
       }
 
       // const metadata = await Promise.all(
@@ -196,14 +192,17 @@ export const useUserTokenData = (filter?: TokenFilter, cluster?: string) => {
           )[0]
         }
         return {
-          tokenAccount,
+          tokenAccount: {
+            pubkey: tokenAccount.pubkey,
+            parsed: tokenAccount.account.data.parsed,
+          },
           mint: accountsById[
             tokenAccount.account.data.parsed.info.mint
-          ] as spl.MintInfo,
+          ] as AccountData<spl.MintInfo>,
           recipientTokenAccount: tokenManagerData?.parsed.recipientTokenAccount
             ? (accountsById[
                 tokenManagerData.parsed.recipientTokenAccount?.toString()
-              ] as spl.AccountInfo)
+              ] as AccountData<spl.AccountInfo>)
             : undefined,
           metaplexData: metaplexData[tokenAccount.pubkey.toString()],
           editionData: accountsById[editionIds[i]!.toString()] as
