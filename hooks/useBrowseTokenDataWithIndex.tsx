@@ -180,50 +180,31 @@ export const useBrowseTokenDataWithIndex = () => {
         const filterSpan = transaction.startChild({
           op: 'filter-known-invalidators',
         })
-        const [
-          tokenManagerIds,
-          editionIds,
-          metaplexIds,
-          indexedTokenManagerDatas,
-        ] = indexedTokenManagers.reduce(
-          (acc, data, i) => {
-            const tokenManagerId = tryPublicKey(data.address)
-            if (!tokenManagerId) return acc
-            const editionId = tryPublicKey(data.mint_address_nfts?.edition_pda)
-            const metaplexId = tryPublicKey(
-              data.mint_address_nfts?.metadatas_attributes
-                ? data.mint_address_nfts?.metadatas_attributes[0]
-                    ?.metadata_address
-                : ''
-            )
+        const [tokenManagerIds, indexedTokenManagerDatas] =
+          indexedTokenManagers.reduce(
+            (acc, data, i) => {
+              const tokenManagerId = tryPublicKey(data.address)
+              if (!tokenManagerId) return acc
+              let filter = false
+              data.invalidator_address?.forEach(({ invalidator }) => {
+                if (
+                  !config.showUnknownInvalidators &&
+                  !knownInvalidators[i]?.includes(invalidator)
+                ) {
+                  filter = true
+                }
+              })
 
-            let filter = false
-            data.invalidator_address?.forEach(({ invalidator }) => {
-              if (
-                !config.showUnknownInvalidators &&
-                !knownInvalidators[i]?.includes(invalidator)
-              ) {
-                filter = true
-              }
-            })
-
-            // const acc = await memo
-            return filter
-              ? acc
-              : [
-                  [...acc[0], tokenManagerId],
-                  [...acc[1], editionId],
-                  [...acc[2], metaplexId],
-                  { ...acc[3], [tokenManagerId.toString()]: data },
-                ]
-          },
-          [[], [], [], {}] as [
-            PublicKey[],
-            (PublicKey | null)[],
-            (PublicKey | null)[],
-            { [a: string]: IndexedData }
-          ]
-        )
+              // const acc = await memo
+              return filter
+                ? acc
+                : [
+                    [...acc[0], tokenManagerId],
+                    { ...acc[1], [tokenManagerId.toString()]: data },
+                  ]
+            },
+            [[], {}] as [PublicKey[], { [a: string]: IndexedData }]
+          )
         filterSpan.finish()
 
         ////
@@ -239,6 +220,7 @@ export const useBrowseTokenDataWithIndex = () => {
         const mintIds = tokenManagerDatas.map(
           (tokenManager) => tokenManager.parsed.mint
         )
+
         // const metaplexIds = await Promise.all(
         //   tokenManagerDatas.map(
         //     async (tm) =>
@@ -249,6 +231,22 @@ export const useBrowseTokenDataWithIndex = () => {
         //       )[0]
         //   )
         // )
+        const metaplexIds = tokenManagerDatas.map((tm) => {
+          const indexData = indexedTokenManagerDatas[tm.pubkey.toString()]
+          return indexData?.mint_address_nfts?.metadatas_attributes
+            ? tryPublicKey(
+                indexData.mint_address_nfts.metadatas_attributes[0]
+                  ?.metadata_address
+              )
+            : null
+        })
+        const editionIds = tokenManagerDatas.map(
+          (tm) =>
+            tryPublicKey(
+              indexedTokenManagerDatas[tm.pubkey.toString()]?.mint_address_nfts
+                ?.edition_pda
+            ) ?? null
+        )
         // const editionIds = await Promise.all(
         //   tokenManagerDatas.map(async (tokenManager) =>
         //     metaplex.Edition.getPDA(tokenManager.parsed.mint)
