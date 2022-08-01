@@ -1,3 +1,4 @@
+import * as amplitude from '@amplitude/analytics-browser'
 import { AccountConnect } from '@cardinal/namespaces-components'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useWalletModal } from '@solana/wallet-adapter-react-ui'
@@ -38,6 +39,13 @@ export const HeaderSlim: React.FC<Props> = ({
     const anchor = router.asPath.split('#')[1]
     if (anchor !== tab) setTab(anchor || 'browse')
   }, [router.asPath, tab])
+
+  useEffect(() => {
+    if (wallet.connected && wallet.publicKey) {
+      const userId = wallet.publicKey.toString()
+      amplitude.setUserId(userId)
+    }
+  }, [wallet.connected, wallet.publicKey])
 
   return (
     <div className="w-full px-4 py-4">

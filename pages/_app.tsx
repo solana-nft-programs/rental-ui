@@ -3,6 +3,7 @@ import './styles.css'
 import '@cardinal/namespaces-components/dist/esm/styles.css'
 import 'tailwindcss/tailwind.css'
 
+import * as amplitude from '@amplitude/analytics-browser'
 import { WalletIdentityProvider } from '@cardinal/namespaces-components'
 import { WalletProvider } from '@solana/wallet-adapter-react'
 import { WalletModalProvider } from '@solana/wallet-adapter-react-ui'
@@ -37,29 +38,32 @@ const App = ({
   pageProps,
   config,
   cluster,
-}: AppProps & { config: ProjectConfig; cluster: string }) => (
-  <EnvironmentProvider defaultCluster={cluster}>
-    <UTCNowProvider>
-      <WalletProvider wallets={getWalletAdapters()} autoConnect>
-        <WalletIdentityProvider>
-          <ProjectConfigProvider defaultConfig={config}>
-            <QueryClientProvider client={queryClient}>
-              <ModalProvider>
-                <WalletModalProvider>
-                  <>
-                    <ToastContainer />
-                    <Component {...pageProps} />
-                    {DEBUG && <ReactQueryDevtools initialIsOpen={false} />}
-                  </>
-                </WalletModalProvider>
-              </ModalProvider>
-            </QueryClientProvider>
-          </ProjectConfigProvider>
-        </WalletIdentityProvider>
-      </WalletProvider>
-    </UTCNowProvider>
-  </EnvironmentProvider>
-)
+}: AppProps & { config: ProjectConfig; cluster: string }) => {
+  amplitude.init('0ca91ed9b3a6cb48f89aa0fcebb2cdaf')
+  return (
+    <EnvironmentProvider defaultCluster={cluster}>
+      <UTCNowProvider>
+        <WalletProvider wallets={getWalletAdapters()} autoConnect>
+          <WalletIdentityProvider>
+            <ProjectConfigProvider defaultConfig={config}>
+              <QueryClientProvider client={queryClient}>
+                <ModalProvider>
+                  <WalletModalProvider>
+                    <>
+                      <ToastContainer />
+                      <Component {...pageProps} />
+                      {DEBUG && <ReactQueryDevtools initialIsOpen={false} />}
+                    </>
+                  </WalletModalProvider>
+                </ModalProvider>
+              </QueryClientProvider>
+            </ProjectConfigProvider>
+          </WalletIdentityProvider>
+        </WalletProvider>
+      </UTCNowProvider>
+    </EnvironmentProvider>
+  )
+}
 
 App.getInitialProps = getInitialProps
 
