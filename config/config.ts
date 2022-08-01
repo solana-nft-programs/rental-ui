@@ -882,4 +882,53 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     },
     marketplaceRate: 'days',
   },
+  ['fatcats']: {
+    name: 'fatcats',
+    displayName: 'Fatcats',
+    type: 'Guild',
+    websiteUrl: 'https://fatcatscapital.com/',
+    logoImage: 'logos/fatcats.png',
+    colors: {
+      accent: '#ec2593',
+      glow: '#397fd6',
+    },
+    description:
+      'The FatCats Capital Club (FCC) is focused on community growth, development and innovation. 80% of all mint revenue will be used to grow the FatCats Treasury, invest in member run projects through the FatCats Accelerator program while developing exclusive utilities for the Capital Club.',
+    hero: 'logos/fatcats-hero.png',
+    socialLinks: [
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/fatcatscapital',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.com/invite/9FnX58FWVB',
+      },
+      {
+        icon: 'web',
+        link: 'https://fatcatscapital.com/',
+      },
+    ],
+    badges: [{ badgeType: 'recent' }],
+    filter: {
+      type: 'issuer',
+      value: ['Dx2svFqyhm1eFQTvKrETehLmrNHpNXhioqSHpXGzp5Xe'],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration'],
+      invalidationOptions: {
+        visibilities: ['public'],
+        durationOptions: ['minutes', 'hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: ['FdviznPoMEakdJ37fikNxhoscyruUHSHNkKyvntSqbuo'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
 }
