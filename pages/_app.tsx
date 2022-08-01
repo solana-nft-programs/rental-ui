@@ -39,7 +39,9 @@ const App = ({
   config,
   cluster,
 }: AppProps & { config: ProjectConfig; cluster: string }) => {
-  amplitude.init('0ca91ed9b3a6cb48f89aa0fcebb2cdaf')
+  if (process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY) {
+    amplitude.init(process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY)
+  }
   return (
     <EnvironmentProvider defaultCluster={cluster}>
       <UTCNowProvider>
