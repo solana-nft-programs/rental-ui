@@ -60,12 +60,7 @@ export default function Home() {
         <link
           href="https://fonts.googleapis.com/css2?family=Karla:wght@600&display=swap"
           rel="stylesheet"
-        />
-        <script
-          defer
-          data-domain="rent-v2.cardinal.so"
-          src="https://plausible.io/js/plausible.js"
-        ></script>
+        />       
       </Head>
       <Banner />
       {config.name !== 'default' || router.query.host?.includes(config.name) ? (
