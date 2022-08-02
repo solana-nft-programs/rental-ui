@@ -56,6 +56,7 @@ export const executeTransaction = async (
     Sentry.captureException(e, {
       tags: { type: 'transaction' },
       extra: { errorMessage },
+      fingerprint: [errorMessage],
     })
     config.notificationConfig &&
       notify({

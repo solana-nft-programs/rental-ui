@@ -101,6 +101,7 @@ export const executeAllTransactions = async (
         Sentry.captureException(e, {
           tags: { type: 'transaction', wallet: wallet.publicKey.toString() },
           extra: { errorMessage },
+          fingerprint: [errorMessage],
         })
         config.notificationConfig &&
           notify({
