@@ -102,6 +102,9 @@ export const HeaderSlim: React.FC<Props> = ({
                       }`}
                       onClick={() => {
                         if (disabled) return
+                        amplitude.logEvent('header: click tab', {
+                          name: anchor,
+                        })
                         setTab(anchor)
                         router.push(
                           `${location.pathname}${location.search}#${anchor}`
@@ -130,6 +133,9 @@ export const HeaderSlim: React.FC<Props> = ({
               <div
                 className={`cursor-pointer text-center text-light-0 opacity-80 transition-opacity hover:opacity-100`}
                 onClick={() => {
+                  amplitude.logEvent('header: click tab', {
+                    name: 'dashboard',
+                  })
                   router.push(`/me${location.search}`)
                 }}
               >

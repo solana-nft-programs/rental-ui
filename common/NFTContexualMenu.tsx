@@ -4,6 +4,7 @@ import {
   TokenManagerState,
 } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import Tooltip from '@mui/material/Tooltip'
+import { logConfigTokenDataEvent } from 'apis/amplitude'
 import type { TokenData } from 'apis/api'
 import { metadataUrl, pubKeyUrl } from 'common/utils'
 import { useHandleReturnRental } from 'handlers/useHandleReturnRental'
@@ -64,6 +65,13 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
                 tryPublicKey(tokenAccount?.parsed.mint),
               environment.label
             )}
+            onClick={() => {
+              logConfigTokenDataEvent(
+                'nft menu: click explorer view',
+                config,
+                tokenData
+              )
+            }}
             target="_blank"
             rel="noreferrer"
           >

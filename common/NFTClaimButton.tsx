@@ -1,6 +1,7 @@
 import { BN } from '@project-serum/anchor'
 import type * as splToken from '@solana/spl-token'
 import type { PublicKey } from '@solana/web3.js'
+import { logConfigTokenDataEvent } from 'apis/amplitude'
 import type { TokenData } from 'apis/api'
 import { allowedToRent } from 'handlers/useHandleClaimRental'
 import { useOtp } from 'hooks/useOtp'
@@ -80,15 +81,23 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
         tokenDatas ?? []
       ))
     ) {
+      let rentalType
       if (!tokenData.timeInvalidator && !tokenData.useInvalidator) {
         rentalManualCard.showModal({ tokenData, otpKeypair })
+        rentalType = 'manual'
       } else if (isRateBasedListing(tokenData)) {
         rentalRateCard.showModal({ tokenData, claim: true, otpKeypair })
+        rentalType = 'rate'
       } else if (tokenData.timeInvalidator?.parsed?.durationSeconds) {
         rentalFixedCard.showModal({ tokenData, otpKeypair })
+        rentalType = 'fixed duration'
       } else {
+        rentalType = 'expiration'
         rentalFixedExpirationCard.showModal({ tokenData, otpKeypair })
       }
+      logConfigTokenDataEvent('nft: click rent', config, tokenData, {
+        rental_type: rentalType,
+      })
     }
   }
 
