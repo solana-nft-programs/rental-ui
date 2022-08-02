@@ -7,16 +7,17 @@ export const mintMetadataQueryKey = (tokenData: TokenData) => {
 }
 
 export const mintMetadataQuery = async (
-  tokenData: TokenData & { metadata?: AccountData<any> }
+  tokenData: Pick<TokenData, 'metadata'> | Pick<TokenData, 'metaplexData'>
 ) => {
-  if (tokenData?.metadata) return tokenData.metadata
-  if (!tokenData?.metaplexData?.parsed.data.uri) return
-  const json = await fetch(tokenData?.metaplexData?.parsed.data.uri).then((r) =>
-    r.json()
-  )
-  return {
-    pubkey: tokenData.metaplexData.pubkey,
-    parsed: json,
+  if ('metadata' in tokenData && tokenData.metadata) return tokenData.metadata
+  if ('metaplexData' in tokenData && tokenData?.metaplexData) {
+    const json = await fetch(tokenData?.metaplexData?.parsed.data.uri).then(
+      (r) => r.json()
+    )
+    return {
+      pubkey: tokenData.metaplexData.pubkey,
+      parsed: json,
+    }
   }
 }
 

@@ -292,9 +292,8 @@ export const useBrowseAvailableTokenDatas = (
             indexedData:
               indexedTokenManagerDatas[tokenManagerData.pubkey.toString()],
             tokenManager: tokenManagerData,
-            mint: accountsById[tokenManagerData.parsed.mint.toString()] as
-              | AccountData<spl.MintInfo>
-              | undefined,
+            mint: (accountsById[tokenManagerData.parsed.mint.toString()] ??
+              null) as AccountData<spl.MintInfo> | null,
             metaplexData: accountsById[metaplexIds[i]!.toString()] as
               | AccountData<metaplex.MetadataData>
               | undefined,

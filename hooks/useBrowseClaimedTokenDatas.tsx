@@ -2,7 +2,6 @@ import type { AccountData } from '@cardinal/common'
 import type { PaidClaimApproverData } from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
 import type { TimeInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
 import { TIME_INVALIDATOR_ADDRESS } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
-import type { TokenManagerData } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { getTokenManagers } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/accounts'
 import type { UseInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
@@ -11,6 +10,7 @@ import type * as metaplex from '@metaplex-foundation/mpl-token-metadata'
 import * as Sentry from '@sentry/browser'
 import type * as spl from '@solana/spl-token'
 import type { PublicKey } from '@solana/web3.js'
+import type { TokenData } from 'apis/api'
 import { getTokenDatas } from 'apis/api'
 import { tryPublicKey } from 'apis/utils'
 import { withTrace } from 'common/trace'
@@ -20,7 +20,6 @@ import type { ParsedTokenAccountData } from 'providers/SolanaAccountsProvider'
 import { useAccounts } from 'providers/SolanaAccountsProvider'
 import { useQuery } from 'react-query'
 
-import type { IndexedData } from './useBrowseAvailableTokenDatas'
 import {
   filterKnownInvalidators,
   getTokenIndexData,
@@ -28,15 +27,16 @@ import {
   TOKEN_DATA_KEY,
 } from './useBrowseAvailableTokenDatas'
 
-export type BrowseClaimedTokenData = {
-  indexedData?: IndexedData
-  tokenManager?: AccountData<TokenManagerData>
-  metaplexData?: AccountData<metaplex.MetadataData>
-  claimApprover?: AccountData<PaidClaimApproverData> | null
-  useInvalidator?: AccountData<UseInvalidatorData> | null
-  timeInvalidator?: AccountData<TimeInvalidatorData> | null
-  recipientTokenAccount?: AccountData<ParsedTokenAccountData>
-}
+export type BrowseClaimedTokenData = Pick<
+  TokenData,
+  | 'indexedData'
+  | 'tokenManager'
+  | 'metaplexData'
+  | 'claimApprover'
+  | 'useInvalidator'
+  | 'timeInvalidator'
+  | 'recipientTokenAccount'
+>
 
 export const useBrowseClaimedTokenDatas = (disabled: boolean) => {
   const state = TokenManagerState.Claimed

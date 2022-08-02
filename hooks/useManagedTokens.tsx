@@ -1,23 +1,16 @@
 import { ApolloClient, gql, InMemoryCache } from '@apollo/client'
-import type { AccountData } from '@cardinal/common'
 import { tryPublicKey } from '@cardinal/common'
-import type { PaidClaimApproverData } from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
-import type { TimeInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
 import { findTimeInvalidatorAddress } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator/pda'
-import type { TokenManagerData } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import {
   getTokenManagers,
   getTokenManagersForIssuer,
 } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/accounts'
-import type { UseInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
 import { findUseInvalidatorAddress } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator/pda'
-import type * as metaplex from '@metaplex-foundation/mpl-token-metadata'
-import type * as spl from '@solana/spl-token'
 import type { PublicKey } from '@solana/web3.js'
+import type { TokenData } from 'apis/api'
 import { getTokenDatas } from 'apis/api'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
-import type { ParsedTokenAccountData } from 'providers/SolanaAccountsProvider'
 import { useQuery } from 'react-query'
 
 import { TOKEN_DATA_KEY } from './useBrowseAvailableTokenDatas'
@@ -25,18 +18,19 @@ import { useWalletId } from './useWalletId'
 
 const INDEX_ENABLED_MANAGE = true
 
-export type ManagedTokenData = {
-  tokenAccount?: AccountData<ParsedTokenAccountData>
-  mint?: AccountData<spl.MintInfo>
-  tokenManager?: AccountData<TokenManagerData>
-  metaplexData?: AccountData<metaplex.MetadataData>
-  editionData?: AccountData<metaplex.EditionData | metaplex.MasterEditionData>
-  metadata?: AccountData<any> | null
-  claimApprover?: AccountData<PaidClaimApproverData> | null
-  useInvalidator?: AccountData<UseInvalidatorData> | null
-  timeInvalidator?: AccountData<TimeInvalidatorData> | null
-  recipientTokenAccount?: AccountData<ParsedTokenAccountData>
-}
+export type ManagedTokenData = Pick<
+  TokenData,
+  | 'tokenAccount'
+  | 'mint'
+  | 'tokenManager'
+  | 'metaplexData'
+  | 'metadata'
+  | 'editionData'
+  | 'claimApprover'
+  | 'useInvalidator'
+  | 'timeInvalidator'
+  | 'recipientTokenAccount'
+>
 
 export const useManagedTokens = () => {
   const walletId = useWalletId()

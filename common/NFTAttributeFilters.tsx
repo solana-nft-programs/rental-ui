@@ -1,24 +1,21 @@
-import type { AccountData } from '@cardinal/common'
 import { css } from '@emotion/react'
 import type { TokenData } from 'apis/api'
 import type { ProjectConfig } from 'config/config'
-import type { IndexedData } from 'hooks/useBrowseTokenDataWithIndex'
 
-export const attributesForTokenData = (tokenData: {
-  metadata?: AccountData<any> | null
-  indexedData?: IndexedData
-}): { trait_type: string; value: string }[] => {
-  return (
-    tokenData.metadata?.parsed?.attributes ??
-    tokenData.indexedData?.mint_address_nfts?.metadatas_attributes ??
-    []
-  )
+export const attributesForTokenData = (
+  tokenData: Pick<TokenData, 'indexedData'> | Pick<TokenData, 'metadata'>
+): { trait_type: string; value: string }[] => {
+  return 'metadata' in tokenData
+    ? tokenData.metadata?.parsed?.attributes
+    : 'indexedData' in tokenData
+    ? tokenData.indexedData?.mint_address_nfts?.metadatas_attributes
+    : []
 }
 
 export const getAllAttributes = (
-  tokens: { metadata?: AccountData<any> | null; indexedData?: IndexedData }[]
+  tokens: (Pick<TokenData, 'indexedData'> | Pick<TokenData, 'metadata'>)[]
 ): NFTAtrributeFilterValues => {
-  const allAttributes: { [traitType: string]: Set<any> } = {}
+  const allAttributes: { [traitType: string]: Set<string> } = {}
   tokens.forEach((tokenData) => {
     const attributes = attributesForTokenData(tokenData)
     if (attributes && attributes.length > 0) {
@@ -39,11 +36,9 @@ export const getAllAttributes = (
   return sortedAttributes
 }
 
-export const filterTokensByAttributes = (
-  tokens: { metadata?: AccountData<any> | null; indexedData?: IndexedData }[],
-  filters: NFTAtrributeFilterValues,
-  union = false
-): TokenData[] => {
+export function filterTokensByAttributes<
+  T extends Pick<TokenData, 'indexedData'> | Pick<TokenData, 'metadata'>
+>(tokens: T[], filters: NFTAtrributeFilterValues, union = false): T[] {
   if (
     Object.keys(filters).length <= 0 ||
     Object.values(filters).filter((v) => v.length > 0).length <= 0
@@ -74,7 +69,7 @@ export const filterTokensByAttributes = (
 export type NFTAtrributeFilterValues = { [filterName: string]: string[] }
 
 interface NFTAtrributeFiltersProps {
-  tokenDatas?: TokenData[]
+  tokenDatas?: (Pick<TokenData, 'indexedData'> | Pick<TokenData, 'metadata'>)[]
   config: ProjectConfig
   sortedAttributes: NFTAtrributeFilterValues
   selectedFilters: NFTAtrributeFilterValues

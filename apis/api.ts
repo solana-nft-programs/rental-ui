@@ -39,12 +39,13 @@ export async function findAssociatedTokenAddress(
   )[0]
 }
 
-export type TokenData = {
+export interface TokenData {
   tokenAccount?: AccountData<ParsedTokenAccountData>
-  mint?: AccountData<spl.MintInfo>
+  mint?: AccountData<spl.MintInfo> | null
   indexedData?: IndexedData
   tokenManager?: AccountData<TokenManagerData>
   metaplexData?: AccountData<metaplex.MetadataData>
+  metadata?: AccountData<any> | null
   editionData?: AccountData<metaplex.EditionData | metaplex.MasterEditionData>
   claimApprover?: AccountData<PaidClaimApproverData> | null
   useInvalidator?: AccountData<UseInvalidatorData> | null
@@ -205,9 +206,8 @@ export async function getTokenDatas(
         USE_INVALIDATOR_ADDRESS.toString()
     )[0]
     return {
-      mint: accountsById[
-        tokenManagerData.parsed.mint.toString()
-      ] as AccountData<spl.MintInfo>,
+      mint: (accountsById[tokenManagerData.parsed.mint.toString()] ??
+        null) as AccountData<spl.MintInfo> | null,
       editionData: accountsById[editionIds[i]!.toString()] as
         | AccountData<metaplex.EditionData | metaplex.MasterEditionData>
         | undefined,

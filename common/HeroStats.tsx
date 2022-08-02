@@ -18,11 +18,14 @@ import {
 import { getMintDecimalAmount } from './units'
 
 const calculateFloorPrice = (
-  tokenDatas: TokenData[],
+  tokenDatas: Pick<
+    TokenData,
+    'tokenManager' | 'claimApprover' | 'timeInvalidator'
+  >[],
   config: ProjectConfig,
   paymentMints: { [name: string]: splToken.MintInfo } | undefined
 ): number => {
-  const onlyRateTokens = (tokenData: TokenData) => {
+  const onlyRateTokens = (tokenData: Pick<TokenData, 'timeInvalidator'>) => {
     if (config.marketplaceRate) {
       return (
         tokenData.timeInvalidator?.parsed?.durationSeconds?.toNumber() === 0

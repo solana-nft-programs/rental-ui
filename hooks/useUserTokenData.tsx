@@ -9,6 +9,7 @@ import * as metaplex from '@metaplex-foundation/mpl-token-metadata'
 import { Edition } from '@metaplex-foundation/mpl-token-metadata'
 import * as spl from '@solana/spl-token'
 import { PublicKey } from '@solana/web3.js'
+import type { TokenData } from 'apis/api'
 import type { TokenFilter } from 'config/config'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import type { ParsedTokenAccountData } from 'providers/SolanaAccountsProvider'
@@ -18,18 +19,19 @@ import { useQuery } from 'react-query'
 import { TOKEN_DATA_KEY } from './useBrowseAvailableTokenDatas'
 import { useWalletId } from './useWalletId'
 
-export type UserTokenData = {
-  tokenAccount?: AccountData<ParsedTokenAccountData>
-  mint?: AccountData<spl.MintInfo>
-  tokenManager?: AccountData<TokenManagerData>
-  metaplexData?: AccountData<metaplex.MetadataData>
-  editionData?: AccountData<metaplex.EditionData | metaplex.MasterEditionData>
-  metadata?: AccountData<any> | null
-  claimApprover?: AccountData<PaidClaimApproverData> | null
-  useInvalidator?: AccountData<UseInvalidatorData> | null
-  timeInvalidator?: AccountData<TimeInvalidatorData> | null
-  recipientTokenAccount?: AccountData<ParsedTokenAccountData>
-}
+export type UserTokenData = Pick<
+  TokenData,
+  | 'mint'
+  | 'tokenAccount'
+  | 'tokenManager'
+  | 'metadata'
+  | 'metaplexData'
+  | 'editionData'
+  | 'claimApprover'
+  | 'useInvalidator'
+  | 'timeInvalidator'
+  | 'recipientTokenAccount'
+>
 
 export const useUserTokenData = (filter?: TokenFilter) => {
   const walletId = useWalletId()
@@ -158,22 +160,22 @@ export const useUserTokenData = (filter?: TokenFilter) => {
         ...(await fetchAccountDataById(connection, idsToFetch)),
       }
 
-      // const metadata = await Promise.all(
-      //   tokenAccounts.map(async (tokenAccount) => {
-      //     try {
-      //       const md = metaplexData[tokenAccount.pubkey.toString()]
-      //       const uri = md?.parsed.data.uri
-      //       if (!md || !uri) {
-      //         return null
-      //       }
-      //       const json = await fetch(uri).then((r) => r.json())
-      //       return {
-      //         pubkey: md.pubkey,
-      //         parsed: json,
-      //       }
-      //     } catch (e) {}
-      //   })
-      // )
+      const metadata = await Promise.all(
+        tokenAccounts.map(async (tokenAccount) => {
+          try {
+            const md = metaplexData[tokenAccount.pubkey.toString()]
+            const uri = md?.parsed.data.uri
+            if (!md || !uri) {
+              return null
+            }
+            const json = await fetch(uri).then((r) => r.json())
+            return {
+              pubkey: md.pubkey,
+              parsed: json,
+            }
+          } catch (e) {}
+        })
+      )
 
       return tokenAccounts.map((tokenAccount, i) => {
         const delegateData = accountsById[tokenAccount.parsed.delegate]
@@ -211,12 +213,12 @@ export const useUserTokenData = (filter?: TokenFilter) => {
                 parsed: metaplex.EditionData | metaplex.MasterEditionData
               }
             | undefined,
-          // metadata: metadata.find((data) =>
-          //   data
-          //     ? data.pubkey.toBase58() ===
-          //       metaplexData[tokenAccount.pubkey.toString()]?.pubkey.toBase58()
-          //     : undefined
-          // ),
+          metadata: metadata.find((data) =>
+            data
+              ? data.pubkey.toBase58() ===
+                metaplexData[tokenAccount.pubkey.toString()]?.pubkey.toBase58()
+              : undefined
+          ),
           tokenManager: tokenManagerData,
           claimApprover: claimApproverId
             ? (accountsById[

@@ -72,7 +72,9 @@ export const groupByConfig = (
   )
 }
 
-export const tokenDatasId = (tokenDatas: TokenData[] | undefined) =>
+export const tokenDatasId = (
+  tokenDatas: Pick<TokenData, 'metaplexData'>[] | undefined
+) =>
   tokenDatas
     ?.map((tokenData) => tokenData.metaplexData?.pubkey.toString())
     .join(',')
