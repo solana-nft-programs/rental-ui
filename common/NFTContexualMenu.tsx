@@ -136,7 +136,7 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
 
                 if (elligibleForRent(config, tokenData)) {
                   logConfigTokenDataEvent(
-                    'nft menu: click rent',
+                    'nft menu: click issue',
                     config,
                     tokenData
                   )

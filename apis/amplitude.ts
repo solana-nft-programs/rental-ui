@@ -12,6 +12,7 @@ export const logConfigEvent = (
     collection_id: config.name,
     collection_name: config.displayName,
     collection_type: config.type,
+    collection_rate: config.marketplaceRate,
     ...eventProperties,
   })
 }
@@ -27,5 +28,7 @@ export const logConfigTokenDataEvent = (
     nft_name: tokenData.metaplexData?.parsed.data.name,
     nft_mint_id: tokenData.metaplexData?.parsed.mint,
     token_manager_id: tokenData.tokenManager?.pubkey.toString(),
+    token_manager_state_changed_at:
+      tokenData.tokenManager?.parsed.stateChangedAt.toNumber(),
   })
 }

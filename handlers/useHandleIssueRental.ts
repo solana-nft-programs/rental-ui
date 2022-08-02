@@ -16,9 +16,15 @@ import {
 import { logConfigTokenDataEvent } from 'apis/amplitude'
 import type { TokenData } from 'apis/api'
 import { executeAllTransactions } from 'apis/utils'
+import { DURATION_DATA } from 'common/DurationInput'
+import {
+  getPriceFromTokenData,
+  getTokenRentalRate,
+} from 'common/tokenDataUtils'
+import { fmtMintAmount } from 'common/units'
 import { asWallet } from 'common/Wallets'
 import { TOKEN_DATA_KEY } from 'hooks/useBrowseAvailableTokenDatas'
-import { PAYMENT_MINTS } from 'hooks/usePaymentMints'
+import { PAYMENT_MINTS, usePaymentMints } from 'hooks/usePaymentMints'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useMutation, useQueryClient } from 'react-query'
@@ -32,6 +38,8 @@ export type IssueTxResult = {
   error?: string
   txid?: string
 }
+
+export type RentalType = 'rate' | 'fixed duration' | 'expiration' | 'manual'
 
 export interface HandleIssueRentalParams {
   tokenDatas: TokenData[]
@@ -53,7 +61,7 @@ export interface HandleIssueRentalParams {
   disablePartialExtension?: boolean
   claimRentalReceipt?: boolean
   //
-  rentalType: 'rate' | 'fixed duration' | 'expiration' | 'manual'
+  rentalType: RentalType
 }
 
 export const useHandleIssueRental = () => {
@@ -61,6 +69,8 @@ export const useHandleIssueRental = () => {
   const { config } = useProjectConfig()
   const { connection } = useEnvironmentCtx()
   const queryClient = useQueryClient()
+  const paymentMints = usePaymentMints()
+
   return useMutation(
     async ({
       tokenDatas,
@@ -271,9 +281,16 @@ export const useHandleIssueRental = () => {
         const txResult = txResults[i]
         const tokenData = txData[i]?.tokenData
         if (!txResult?.error && tokenData) {
-          logConfigTokenDataEvent('issue rental: list nft', config, tokenData, {
+          logConfigTokenDataEvent('nft rental: issue', config, tokenData, {
             rental_type: rentalType,
-            payment_amount: paymentAmount?.toString(),
+            rental_price: getPriceFromTokenData(tokenData),
+            rental_rate: getTokenRentalRate(
+              config,
+              paymentMints.data ?? {},
+              tokenData
+            )?.displayText,
+            rental_rate_duration:
+              DURATION_DATA[config.marketplaceRate ?? 'days'],
             payment_mint: PAYMENT_MINTS.filter(
               (mint) => mint.mint === paymentMint
             )[0]?.symbol,
@@ -282,7 +299,10 @@ export const useHandleIssueRental = () => {
             extension_payment_mint: PAYMENT_MINTS.filter(
               (mint) => mint.mint === extensionPaymentMint
             )[0]?.symbol,
-            extension_payment_amount: extensionPaymentAmount?.toNumber(),
+            extension_payment_amount: fmtMintAmount(
+              paymentMints.data?.[extensionPaymentMint ?? ''],
+              extensionPaymentAmount ?? new BN(0)
+            ),
             extension_duration_seconds: extensionDurationSeconds,
             total_usages: totalUsages,
             invalidation_type: invalidationType,
@@ -290,6 +310,7 @@ export const useHandleIssueRental = () => {
             custom_invalidator: customInvalidator,
             disable_partial_extension: disablePartialExtension,
             claim_rental_receipt: claimRentalReceipt,
+            issuer_id: wallet.publicKey?.toString(),
           })
         }
       }

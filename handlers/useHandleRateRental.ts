@@ -11,22 +11,37 @@ import {
 import type { PaidClaimApproverData } from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
 import type { TimeInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
 import type { TokenManagerData } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
+import type * as metaplex from '@metaplex-foundation/mpl-token-metadata'
 import type * as splToken from '@solana/spl-token'
 import { useWallet } from '@solana/wallet-adapter-react'
 import type { Keypair } from '@solana/web3.js'
 import { Connection, Transaction } from '@solana/web3.js'
+import { logConfigTokenDataEvent } from 'apis/amplitude'
+import { getExtensionPrice } from 'common/RentalSummary'
+import {
+  getPriceFromTokenData,
+  getTokenRentalRate,
+} from 'common/tokenDataUtils'
 import { executeTransaction } from 'common/Transactions'
 import { asWallet } from 'common/Wallets'
 import { TOKEN_DATA_KEY } from 'hooks/useBrowseAvailableTokenDatas'
-import { WRAPPED_SOL_MINT } from 'hooks/usePaymentMints'
+import {
+  PAYMENT_MINTS,
+  usePaymentMints,
+  WRAPPED_SOL_MINT,
+} from 'hooks/usePaymentMints'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
+import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useMutation, useQueryClient } from 'react-query'
+
+import type { TokenData } from './../apis/api'
 
 export interface HandleRateRentalParams {
   tokenData: {
     claimApprover?: AccountData<PaidClaimApproverData> | null
     tokenManager?: AccountData<TokenManagerData> | null
     timeInvalidator?: AccountData<TimeInvalidatorData> | null
+    metaplexData?: AccountData<metaplex.MetadataData>
   }
   extensionSeconds: number | undefined | null
   userPaymentTokenAccount?: splToken.AccountInfo
@@ -38,6 +53,8 @@ export const useHandleRateRental = () => {
   const wallet = useWallet()
   const { connection, environment } = useEnvironmentCtx()
   const queryClient = useQueryClient()
+  const { config } = useProjectConfig()
+  const paymentMints = usePaymentMints()
   return useMutation(
     async ({
       claim,
@@ -128,7 +145,7 @@ export const useHandleRateRental = () => {
         extensionSeconds
       )
 
-      return await executeTransaction(
+      const tx = await executeTransaction(
         connection,
         asWallet(wallet),
         transaction,
@@ -141,6 +158,61 @@ export const useHandleRateRental = () => {
           notificationConfig: {},
         }
       )
+      logConfigTokenDataEvent(
+        `nft rental: ${claim ? 'claim' : 'extend duration'}`,
+        config,
+        tokenData as TokenData,
+        {
+          rental_type: 'rate',
+          rental_rate: getTokenRentalRate(
+            config,
+            paymentMints.data ?? {},
+            tokenData as TokenData
+          )?.rate,
+          rental_rate_text: getTokenRentalRate(
+            config,
+            paymentMints.data ?? {},
+            tokenData as TokenData
+          )?.displayText,
+          is_claim: claim,
+          issuer_id: tokenData.tokenManager?.parsed.issuer.toString(),
+          recipient_id: wallet.publicKey?.toString(),
+          duration_seconds:
+            tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber(),
+          expiration_timestamp:
+            tokenData.timeInvalidator?.parsed.expiration?.toNumber(),
+          max_expiration:
+            tokenData.timeInvalidator?.parsed.maxExpiration?.toNumber(),
+          extension_seconds: extensionSeconds,
+          rental_price: getPriceFromTokenData(
+            tokenData as TokenData,
+            paymentMints.data
+          ),
+          rental_extension_price: getExtensionPrice(
+            tokenData as TokenData,
+            extensionSeconds,
+            paymentMints.data
+          ),
+          rental_total_price:
+            getPriceFromTokenData(tokenData as TokenData, paymentMints.data) +
+            getExtensionPrice(
+              tokenData as TokenData,
+              extensionSeconds,
+              paymentMints.data
+            ),
+          payment_mint: PAYMENT_MINTS.filter(
+            (mint) =>
+              mint.mint ===
+              tokenData.claimApprover?.parsed.paymentMint.toString()
+          )[0]?.symbol,
+          extension_payment_mint: PAYMENT_MINTS.filter(
+            (mint) =>
+              mint.mint ===
+              tokenData.timeInvalidator?.parsed.extensionPaymentMint?.toString()
+          )[0]?.symbol,
+        }
+      )
+      return tx
     },
     {
       onError: async (e) => {

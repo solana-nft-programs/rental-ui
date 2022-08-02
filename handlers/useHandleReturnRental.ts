@@ -1,11 +1,13 @@
 import { withResetExpiration, withReturn } from '@cardinal/token-manager'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { Transaction } from '@solana/web3.js'
+import { logConfigTokenDataEvent } from 'apis/amplitude'
 import type { TokenData } from 'apis/api'
 import { executeTransaction } from 'common/Transactions'
 import { asWallet } from 'common/Wallets'
 import { TOKEN_DATA_KEY } from 'hooks/useBrowseAvailableTokenDatas'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
+import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useMutation, useQueryClient } from 'react-query'
 
 export interface HandleIssueRentalParams {
@@ -16,6 +18,7 @@ export const useHandleReturnRental = () => {
   const wallet = useWallet()
   const { connection } = useEnvironmentCtx()
   const queryClient = useQueryClient()
+  const { configFromToken } = useProjectConfig()
   return useMutation(
     async ({ tokenData }: HandleIssueRentalParams): Promise<string> => {
       if (!tokenData.tokenManager) throw new Error('Invalid token manager')
@@ -39,7 +42,7 @@ export const useHandleReturnRental = () => {
         )
       }
 
-      return executeTransaction(connection, asWallet(wallet), transaction, {
+      const tx = executeTransaction(connection, asWallet(wallet), transaction, {
         silent: false,
         confirmOptions: {
           commitment: 'confirmed',
@@ -47,6 +50,19 @@ export const useHandleReturnRental = () => {
         },
         notificationConfig: {},
       })
+      logConfigTokenDataEvent(
+        'nft rental: return',
+        configFromToken(tokenData),
+        tokenData,
+        {
+          duration_seconds:
+            tokenData.timeInvalidator?.parsed?.durationSeconds?.toNumber(),
+          expiration: tokenData.timeInvalidator?.parsed?.expiration?.toNumber(),
+          max_expiration:
+            tokenData.timeInvalidator?.parsed?.maxExpiration?.toNumber(),
+        }
+      )
+      return tx
     },
     {
       onSuccess: () => {

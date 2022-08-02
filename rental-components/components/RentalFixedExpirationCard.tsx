@@ -108,6 +108,7 @@ export const RentalFixedExpirationCard = ({
               {
                 tokenData,
                 otpKeypair,
+                rentalType: 'expiration',
               },
               {
                 onSuccess: (txid) => {
