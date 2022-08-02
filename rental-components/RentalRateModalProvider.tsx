@@ -1,6 +1,6 @@
 import type { Wallet } from '@saberhq/solana-contrib'
 import type { Connection, Keypair } from '@solana/web3.js'
-import type { TokenData } from 'api/api'
+import type { TokenData } from 'apis/api'
 import { withSleep } from 'common/utils'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import React, { useContext, useState } from 'react'

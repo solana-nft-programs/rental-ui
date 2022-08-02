@@ -4,7 +4,7 @@ import {
 } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import styled from '@emotion/styled'
 import * as anchor from '@project-serum/anchor'
-import type { TokenData } from 'api/api'
+import type { TokenData } from 'apis/api'
 import { Extendable, Returnable, Revocable } from 'common/icons'
 import { fmtMintAmount } from 'common/units'
 import * as utils from 'common/utils'

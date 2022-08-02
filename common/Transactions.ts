@@ -6,7 +6,7 @@ import type {
   Transaction,
 } from '@solana/web3.js'
 import { sendAndConfirmRawTransaction } from '@solana/web3.js'
-import { handleError } from 'api/errors'
+import { handleError } from 'apis/errors'
 import { notify } from 'common/Notification'
 
 export const executeTransaction = async (
