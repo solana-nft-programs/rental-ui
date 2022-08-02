@@ -110,22 +110,7 @@ export const NFTIssuerInfo: React.FC<NFTIssuerInfoProps> = ({
   const paymentMints = usePaymentMints()
   return (
     <div>
-      {tokenData.tokenManager?.parsed.state === TokenManagerState.Issued ? (
-        isPrivateListing(tokenData) ? (
-          <div className="my-auto rounded-lg bg-gray-800 px-5 py-2 text-white">
-            Private
-          </div>
-        ) : (
-          <div className="flex flex-col text-light-2">
-            <div className={`${rentalTypeColor(rentalType(tokenData))}`}>
-              {getDurationText(tokenData, UTCNow)}
-            </div>
-            <div className="text-light-0">
-              {getRentalRateDisplayText(config, tokenData, paymentMints.data)}{' '}
-            </div>
-          </div>
-        )
-      ) : (
+      {tokenData.tokenManager?.parsed.state === TokenManagerState.Claimed &&
         tokenData.recipientTokenAccount?.parsed.owner && (
           <div className="flex flex-col text-secondary">
             <div className="flex">
@@ -142,7 +127,24 @@ export const NFTIssuerInfo: React.FC<NFTIssuerInfoProps> = ({
               />
             </div>
           </div>
-        )
+        )}
+      {isPrivateListing(tokenData) &&
+      tokenData.tokenManager?.parsed.state === TokenManagerState.Issued ? (
+        <div className="my-auto rounded-lg bg-gray-800 px-5 py-2 text-white">
+          Private
+        </div>
+      ) : (
+        <div className="flex flex-col text-light-2">
+          {tokenData.tokenManager?.parsed.state !==
+            TokenManagerState.Claimed && (
+            <div className={`${rentalTypeColor(rentalType(tokenData))}`}>
+              {getDurationText(tokenData, UTCNow)}
+            </div>
+          )}
+          <div className="text-light-0">
+            {getRentalRateDisplayText(config, tokenData, paymentMints.data)}{' '}
+          </div>
+        </div>
       )}
     </div>
   )
