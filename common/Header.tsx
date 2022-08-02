@@ -113,7 +113,11 @@ export const Header = ({
           }}
         >
           <div className="text-xs font-semibold text-yellow-500">
-            👀 UI redesign coming soon...
+            👀 UI{' '}
+            <a className="text-blue-500" href="https://rent-v2.cardinal.so">
+              redesign
+            </a>{' '}
+            coming soon...
           </div>
         </div>
         {clockDrift && (
