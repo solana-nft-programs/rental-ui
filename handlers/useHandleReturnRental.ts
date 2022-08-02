@@ -4,7 +4,7 @@ import { Transaction } from '@solana/web3.js'
 import type { TokenData } from 'apis/api'
 import { executeTransaction } from 'common/Transactions'
 import { asWallet } from 'common/Wallets'
-import { TOKEN_DATA_KEY } from 'hooks/useFilteredTokenManagers'
+import { TOKEN_DATA_KEY } from 'hooks/useBrowseAvailableTokenDatas'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useMutation, useQueryClient } from 'react-query'
 

@@ -1,3 +1,4 @@
+import { logConfigEvent } from 'apis/amplitude'
 import type { TokenData } from 'apis/api'
 import { Info } from 'common/Info'
 import { MultiSelector } from 'common/MultiSelector'
@@ -7,6 +8,7 @@ import {
   getNFTAtrributeFilters,
 } from 'common/NFTAttributeFilters'
 import { notify } from 'common/Notification'
+import { RefreshButton } from 'common/RefreshButton'
 import { SelecterDrawer } from 'common/SelectedDrawer'
 import { TabSelector } from 'common/TabSelector'
 import { elligibleForRent } from 'common/tokenDataUtils'
@@ -22,7 +24,10 @@ import { TokenQueryData } from './TokenQueryData'
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   setSelectedGroup: (id: ManageTokenGroupId) => void
-  tokenQuery: UseQueryResult<TokenData[], unknown>
+  tokenQuery: Pick<
+    UseQueryResult<TokenData[], unknown>,
+    'data' | 'isFetched' | 'isFetching' | 'dataUpdatedAt' | 'refetch'
+  >
   tokenGroup: ManageTokenGroup
   attributeFilterOptions?: NFTAtrributeFilterValues
 }
@@ -80,6 +85,9 @@ export const TokenQueryResults: React.FC<Props> = ({
               value: g.id,
             }))}
             onChange={(o) => {
+              logConfigEvent('manage: click tab', config, {
+                name: o.value,
+              })
               setSelectedTokens([])
               setSelectedGroup(o.value)
             }}
@@ -113,11 +121,17 @@ export const TokenQueryResults: React.FC<Props> = ({
             />
           )}
         </div>
-        <div className="flex">
+        <div className="flex gap-4">
+          <RefreshButton
+            colorized
+            isFetching={tokenQuery.isFetching}
+            dataUpdatdAtMs={tokenQuery.dataUpdatedAt}
+            handleClick={() => tokenQuery.refetch()}
+          />
           <TabSelector defaultOption={PANE_TABS[0]} options={PANE_TABS} />
         </div>
       </div>
-      <Info colorized section={tokenGroup} />
+      <Info colorized {...tokenGroup} />
       <TokenQueryData
         tokenDatas={filteredAndSortedTokens}
         isFetched={tokenQuery.isFetched}

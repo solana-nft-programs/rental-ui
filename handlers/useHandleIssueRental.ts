@@ -13,10 +13,12 @@ import {
   SystemProgram,
   Transaction,
 } from '@solana/web3.js'
+import { logConfigTokenDataEvent } from 'apis/amplitude'
 import type { TokenData } from 'apis/api'
 import { executeAllTransactions } from 'apis/utils'
 import { asWallet } from 'common/Wallets'
-import { TOKEN_DATA_KEY } from 'hooks/useFilteredTokenManagers'
+import { TOKEN_DATA_KEY } from 'hooks/useBrowseAvailableTokenDatas'
+import { PAYMENT_MINTS } from 'hooks/usePaymentMints'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useMutation, useQueryClient } from 'react-query'
@@ -50,6 +52,8 @@ export interface HandleIssueRentalParams {
   customInvalidator?: string
   disablePartialExtension?: boolean
   claimRentalReceipt?: boolean
+  //
+  rentalType: 'rate' | 'fixed duration' | 'expiration' | 'manual'
 }
 
 export const useHandleIssueRental = () => {
@@ -74,6 +78,7 @@ export const useHandleIssueRental = () => {
       customInvalidator,
       disablePartialExtension,
       claimRentalReceipt,
+      rentalType,
     }: HandleIssueRentalParams): Promise<IssueTxResult[]> => {
       if (!wallet.publicKey) {
         throw 'Wallet not connected'
@@ -262,6 +267,33 @@ export const useHandleIssueRental = () => {
           },
         }
       )
+      for (let i = 0; i < txData.length; i++) {
+        const txResult = txResults[i]
+        const tokenData = txData[i]?.tokenData
+        if (!txResult?.error && tokenData) {
+          logConfigTokenDataEvent('issue rental: list nft', config, tokenData, {
+            rental_type: rentalType,
+            payment_amount: paymentAmount?.toString(),
+            payment_mint: PAYMENT_MINTS.filter(
+              (mint) => mint.mint === paymentMint
+            )[0]?.symbol,
+            duration_seconds: durationSeconds,
+            max_expiration: maxExpiration,
+            extension_payment_mint: PAYMENT_MINTS.filter(
+              (mint) => mint.mint === extensionPaymentMint
+            )[0]?.symbol,
+            extension_payment_amount: extensionPaymentAmount?.toNumber(),
+            extension_duration_seconds: extensionDurationSeconds,
+            total_usages: totalUsages,
+            invalidation_type: invalidationType,
+            visibility: visibility,
+            custom_invalidator: customInvalidator,
+            disable_partial_extension: disablePartialExtension,
+            claim_rental_receipt: claimRentalReceipt,
+          })
+        }
+      }
+
       return txData.map((txData, i) => ({
         ...txData,
         error: txResults[i]?.error ?? undefined,

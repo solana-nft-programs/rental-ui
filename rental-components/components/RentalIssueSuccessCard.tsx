@@ -118,6 +118,8 @@ export const RentalIssueSuccessCard = ({
         <ShareTwitterButton
           className="px-8"
           shareLink={shareTwitterListedLink(txResults, config)}
+          shareType="issue"
+          tokenDatas={txResults.map((txResult) => txResult.tokenData)}
         >
           <div
             style={{ gap: '5px' }}

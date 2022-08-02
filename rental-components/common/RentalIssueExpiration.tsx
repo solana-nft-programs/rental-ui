@@ -165,6 +165,7 @@ export const RentalIssueExpiration = ({
                   customInvalidator: undefined,
                   disablePartialExtension: undefined,
                   claimRentalReceipt: undefined,
+                  rentalType: 'expiration'
                 },
                 {
                   onSuccess: (txData) => {

@@ -141,6 +141,7 @@ export const RentalIssueManual = ({
                   customInvalidator: customInvalidator,
                   disablePartialExtension: undefined,
                   claimRentalReceipt: undefined,
+                  rentalType: 'manual',
                 },
                 {
                   onSuccess: (txData) => {
