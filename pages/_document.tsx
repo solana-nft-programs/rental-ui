@@ -25,6 +25,11 @@ class AppDocument extends Document {
             href="https://fonts.googleapis.com/css2?family=Karla:wght@600&display=swap"
             rel="stylesheet"
           />
+          <script
+            defer
+            data-domain="rent-v2.cardinal.so"
+            src="https://plausible.io/js/plausible.js"
+          ></script>
         </Head>
         <body className="bg-dark-5">
           <Main />
