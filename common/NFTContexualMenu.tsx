@@ -67,7 +67,7 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
             )}
             onClick={() => {
               logConfigTokenDataEvent(
-                'nft menu: click explorer view',
+                'nft menu: click view explorer',
                 config,
                 tokenData
               )
@@ -86,6 +86,13 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
                   tryPublicKey(tokenAccount?.parsed.mint),
                 environment.label
               )}
+              onClick={() => {
+                logConfigTokenDataEvent(
+                  'nft menu: click view metadata',
+                  config,
+                  tokenData
+                )
+              }}
               target="_blank"
               rel="noreferrer"
             >
@@ -103,6 +110,13 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
                     config.name
                   }/claim/${tokenData.tokenManager?.pubkey.toBase58()}`
                 )}
+                onClick={() => {
+                  logConfigTokenDataEvent(
+                    'nft menu: click claim link',
+                    config,
+                    tokenData
+                  )
+                }}
                 target="_blank"
                 rel="noreferrer"
               >
@@ -119,10 +133,17 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
               } flex items-center`}
               onClick={(e) => {
                 e.stopPropagation()
-                elligibleForRent(config, tokenData) &&
+
+                if (elligibleForRent(config, tokenData)) {
+                  logConfigTokenDataEvent(
+                    'nft menu: click rent',
+                    config,
+                    tokenData
+                  )
                   rentalIssueCard.showModal({
                     tokenDatas: [tokenData],
                   })
+                }
               }}
             >
               <FiSend />
@@ -136,6 +157,11 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
                 className={`${popoverItemClass} flex cursor-pointer items-center`}
                 onClick={async (e) => {
                   e.stopPropagation()
+                  logConfigTokenDataEvent(
+                    'nft menu: click delist',
+                    config,
+                    tokenData
+                  )
                   handleUnissueRental.mutate({ tokenData })
                 }}
               >
@@ -151,6 +177,11 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
                 className={`${popoverItemClass} flex cursor-pointer items-center`}
                 onClick={(e) => {
                   e.stopPropagation()
+                  logConfigTokenDataEvent(
+                    'nft menu: click scan',
+                    config,
+                    tokenData
+                  )
                   scanCard.showModal({
                     tokenData,
                   })
@@ -172,6 +203,11 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
                 className={`${popoverItemClass} flex cursor-pointer items-center`}
                 onClick={async (e) => {
                   e.stopPropagation()
+                  logConfigTokenDataEvent(
+                    'nft menu: click return',
+                    config,
+                    tokenData
+                  )
                   handleReturnRental.mutate(
                     { tokenData },
                     {
@@ -196,6 +232,11 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
                 className={`${popoverItemClass} flex cursor-pointer items-center`}
                 onClick={async (e) => {
                   e.stopPropagation()
+                  logConfigTokenDataEvent(
+                    'nft menu: click add duration',
+                    config,
+                    tokenData
+                  )
                   rentalRateCard.showModal({ tokenData, claim: false })
                 }}
               >
