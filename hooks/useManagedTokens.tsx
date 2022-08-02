@@ -20,7 +20,7 @@ import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import type { ParsedTokenAccountData } from 'providers/SolanaAccountsProvider'
 import { useQuery } from 'react-query'
 
-import { TOKEN_DATA_KEY } from './useFilteredTokenManagers'
+import { TOKEN_DATA_KEY } from './useBrowseAvailableTokenDatas'
 import { useWalletId } from './useWalletId'
 
 const INDEX_ENABLED_MANAGE = true
@@ -141,6 +141,6 @@ export const useManagedTokens = () => {
         return tokenDatas
       }
     },
-    { enabled: !!walletId, refetchInterval: 16000 }
+    { enabled: !!walletId, refetchInterval: 40000 }
   )
 }

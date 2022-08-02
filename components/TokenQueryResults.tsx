@@ -7,6 +7,7 @@ import {
   getNFTAtrributeFilters,
 } from 'common/NFTAttributeFilters'
 import { notify } from 'common/Notification'
+import { RefreshButton } from 'common/RefreshButton'
 import { SelecterDrawer } from 'common/SelectedDrawer'
 import { TabSelector } from 'common/TabSelector'
 import { elligibleForRent } from 'common/tokenDataUtils'
@@ -113,11 +114,17 @@ export const TokenQueryResults: React.FC<Props> = ({
             />
           )}
         </div>
-        <div className="flex">
+        <div className="flex gap-4">
+          <RefreshButton
+            colorized
+            isFetching={tokenQuery.isFetching}
+            dataUpdatdAtMs={tokenQuery.dataUpdatedAt}
+            handleClick={() => tokenQuery.refetch()}
+          />
           <TabSelector defaultOption={PANE_TABS[0]} options={PANE_TABS} />
         </div>
       </div>
-      <Info colorized section={tokenGroup} />
+      <Info colorized {...tokenGroup} />
       <TokenQueryData
         tokenDatas={filteredAndSortedTokens}
         isFetched={tokenQuery.isFetched}

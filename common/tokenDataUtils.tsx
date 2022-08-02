@@ -180,11 +180,15 @@ export const getRentalDuration = (
   }
 }
 
-export const isPrivateListing = (tokenData: TokenData) =>
+export const isPrivateListing = (
+  tokenData: Pick<TokenData, 'claimApprover' | 'tokenManager'>
+) =>
   tokenData.tokenManager?.parsed.claimApprover &&
   !tokenData.claimApprover?.parsed
 
-export const isRateBasedListing = (tokenData: TokenData) =>
+export const isRateBasedListing = (
+  tokenData: Pick<TokenData, 'timeInvalidator'>
+) =>
   !!tokenData.timeInvalidator?.parsed.durationSeconds &&
   tokenData.timeInvalidator?.parsed.durationSeconds.eq(new BN(0)) &&
   !!tokenData.timeInvalidator?.parsed.extensionDurationSeconds
@@ -217,7 +221,10 @@ export const rentalTypeName = (type: InvalidatorOption) =>
 
 export const elligibleForRent = (
   config: ProjectConfig,
-  tokenData: TokenData
+  tokenData: Pick<
+    TokenData,
+    'tokenAccount' | 'tokenManager' | 'editionData' | 'mint'
+  >
 ): boolean => {
   return (
     !config.disableListing &&
@@ -228,11 +235,15 @@ export const elligibleForRent = (
   )
 }
 
-export const elligibleForClaim = (tokenData: TokenData): boolean => {
+export const elligibleForClaim = (
+  tokenData: Pick<TokenData, 'tokenManager' | 'mint'>,
+  editionId?: string
+): boolean => {
   return (
     !!tokenData.tokenManager &&
-    !!tokenData.editionData &&
-    (!tokenData.mint || !!tokenData.mint.parsed.freezeAuthority)
+    (!tokenData.mint || !!tokenData.mint.parsed.freezeAuthority) &&
+    (!editionId ||
+      editionId === tokenData.mint?.parsed.freezeAuthority?.toString())
   )
 }
 

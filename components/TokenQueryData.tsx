@@ -16,6 +16,8 @@ import { isSelected } from './TokenQueryResults'
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   tokenDatas?: TokenData[]
   isFetched?: boolean
+  isFetching?: boolean
+  refetch?: () => void
   selectedTokens?: TokenData[]
   handleClick?: (tokenData: TokenData) => void
 }

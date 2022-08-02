@@ -15,7 +15,7 @@ import type { ParsedTokenAccountData } from 'providers/SolanaAccountsProvider'
 import { fetchAccountDataById } from 'providers/SolanaAccountsProvider'
 import { useQuery } from 'react-query'
 
-import { TOKEN_DATA_KEY } from './useFilteredTokenManagers'
+import { TOKEN_DATA_KEY } from './useBrowseAvailableTokenDatas'
 import { useWalletId } from './useWalletId'
 
 export type UserTokenData = {
@@ -239,7 +239,7 @@ export const useUserTokenData = (filter?: TokenFilter, cluster?: string) => {
     },
     {
       enabled: !!walletId,
-      refetchInterval: 20000,
+      refetchInterval: 40000,
     }
   )
 }

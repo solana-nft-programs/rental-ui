@@ -1,4 +1,5 @@
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
+import type * as splToken from '@solana/spl-token'
 import type { TokenData } from 'apis/api'
 import { GlyphActivity } from 'assets/GlyphActivity'
 import { GlyphBrowse } from 'assets/GlyphBrowse'
@@ -11,15 +12,17 @@ import {
   getAllAttributes,
   getNFTAtrributeFilters,
 } from 'common/NFTAttributeFilters'
+import { RefreshButton } from 'common/RefreshButton'
 import { Selector } from 'common/Selector'
 import { TabSelector } from 'common/TabSelector'
 import { getPriceOrRentalRate, getRentalDuration } from 'common/tokenDataUtils'
 import { Activity } from 'components/Activity'
-import type { TokenSection } from 'config/config'
-import { useBrowseTokenDataWithIndex } from 'hooks/useBrowseTokenDataWithIndex'
+import type { ProjectConfig, TokenSection } from 'config/config'
+import { useBrowseAvailableTokenDatas } from 'hooks/useBrowseAvailableTokenDatas'
+import { useBrowseClaimedTokenDatas } from 'hooks/useBrowseClaimedTokenDatas'
 import { usePaymentMints } from 'hooks/usePaymentMints'
 import { useWalletId } from 'hooks/useWalletId'
-import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
+import type { Environment } from 'providers/EnvironmentProvider'
 import { filterTokens, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useUTCNow } from 'providers/UTCNowProvider'
 import { useState } from 'react'
@@ -34,8 +37,6 @@ enum OrderCategories {
   DurationHighToLow = 'Max Duration: High to Low',
 }
 
-export const PAGE_SIZE = 5
-export const DEFAULT_PAGE: [number, number] = [2, 0]
 export type PANE_OPTIONS = 'browse' | 'activity'
 export const PANE_TABS: {
   label: JSX.Element
@@ -60,12 +61,118 @@ export const PANE_TABS: {
   },
 ]
 
+export const tokenSectionsForConfig = (config: ProjectConfig) => {
+  return (
+    config.sections ?? [
+      {
+        id: 'available',
+        header: 'Available',
+        icon: 'info',
+        description:
+          'All listed tokens currently available to rent are displayed below',
+        filter: {
+          type: 'state',
+          value: [TokenManagerState.Issued.toString()],
+        },
+        showEmpty: true,
+      },
+      {
+        id: 'rented',
+        header: 'Rented',
+        icon: 'info',
+        description: 'All currently claimed rentals are displayed below',
+        showEmpty: true,
+        filter: {
+          type: 'state',
+          value: [TokenManagerState.Claimed.toString()],
+        },
+      },
+    ]
+  )
+}
+
+export const sortTokens = (
+  tokens: TokenData[],
+  selectedOrderCategory: OrderCategories,
+  config: ProjectConfig,
+  UTCNow: number,
+  claimed: boolean,
+  paymentMints: { [name: string]: splToken.MintInfo }
+): TokenData[] => {
+  let sortedTokens
+  switch (selectedOrderCategory) {
+    case OrderCategories.RecentlyListed:
+      sortedTokens = tokens.sort((a, b) => {
+        return (
+          (a.tokenManager?.parsed.stateChangedAt.toNumber() ?? 0) -
+          (b.tokenManager?.parsed.stateChangedAt.toNumber() ?? 0)
+        )
+      })
+      break
+    case OrderCategories.RateLowToHigh:
+      sortedTokens = tokens.sort((a, b) => {
+        return (
+          getPriceOrRentalRate(config, a, paymentMints) -
+          getPriceOrRentalRate(config, b, paymentMints)
+        )
+      })
+      break
+    case OrderCategories.RateHighToLow:
+      sortedTokens = tokens.sort((a, b) => {
+        return (
+          getPriceOrRentalRate(config, b, paymentMints) -
+          getPriceOrRentalRate(config, a, paymentMints)
+        )
+      })
+      break
+    case OrderCategories.DurationLowToHigh:
+      sortedTokens = tokens.sort((a, b) => {
+        return (
+          getRentalDuration(a, UTCNow, claimed) -
+          getRentalDuration(b, UTCNow, claimed)
+        )
+      })
+      break
+    case OrderCategories.DurationHighToLow:
+      sortedTokens = tokens.sort((a, b) => {
+        return (
+          getRentalDuration(b, UTCNow, claimed) -
+          getRentalDuration(a, UTCNow, claimed)
+        )
+      })
+      break
+    default:
+      return []
+  }
+  return sortedTokens
+}
+
+export const groupTokens = (
+  tokens: TokenData[],
+  sections: TokenSection[],
+  environment: Environment
+): TokenSection[] => {
+  return tokens.reduce((acc, tk) => {
+    let isPlaced = false
+    return acc.map((section) => {
+      const filteredToken = !isPlaced
+        ? filterTokens([tk], section.filter, environment.label)
+        : []
+      if (filteredToken.length > 0 && !isPlaced) {
+        isPlaced = true
+        return {
+          ...section,
+          tokens: [...(section.tokens ?? []), tk],
+        }
+      }
+      return section
+    })
+  }, sections)
+}
+
 export const Browse = () => {
-  const { environment } = useEnvironmentCtx()
   const walletId = useWalletId()
   const { config } = useProjectConfig()
-  const tokenManagers = useBrowseTokenDataWithIndex()
-  const tokenManagersForConfig = tokenManagers.data || []
   const { UTCNow } = useUTCNow()
   const paymentMintInfos = usePaymentMints()
   const [selectedOrderCategory, setSelectedOrderCategory] =
@@ -73,115 +180,29 @@ export const Browse = () => {
   const [selectedFilters, setSelectedFilters] = useState<{
     [filterName: string]: string[]
   }>({})
+  const tokenSections = tokenSectionsForConfig(config)
   const [selectedGroup, setSelectedGroup] = useState(0)
   const [pane, setPane] = useState<PANE_OPTIONS>('browse')
-
-  const sortTokens = (tokens: TokenData[]): TokenData[] => {
-    let sortedTokens
-    switch (selectedOrderCategory) {
-      case OrderCategories.RecentlyListed:
-        sortedTokens = tokens.sort((a, b) => {
-          return (
-            (a.tokenManager?.parsed.stateChangedAt.toNumber() ?? 0) -
-            (b.tokenManager?.parsed.stateChangedAt.toNumber() ?? 0)
-          )
-        })
-        break
-      case OrderCategories.RateLowToHigh:
-        sortedTokens = tokens.sort((a, b) => {
-          return (
-            getPriceOrRentalRate(config, a, paymentMintInfos.data) -
-            getPriceOrRentalRate(config, b, paymentMintInfos.data)
-          )
-        })
-        break
-      case OrderCategories.RateHighToLow:
-        sortedTokens = tokens.sort((a, b) => {
-          return (
-            getPriceOrRentalRate(config, b, paymentMintInfos.data) -
-            getPriceOrRentalRate(config, a, paymentMintInfos.data)
-          )
-        })
-        break
-      case OrderCategories.DurationLowToHigh:
-        sortedTokens = tokens.sort((a, b) => {
-          return (
-            getRentalDuration(a, UTCNow, selectedGroup === 1) -
-            getRentalDuration(b, UTCNow, selectedGroup === 1)
-          )
-        })
-        break
-      case OrderCategories.DurationHighToLow:
-        sortedTokens = tokens.sort((a, b) => {
-          return (
-            getRentalDuration(b, UTCNow, selectedGroup === 1) -
-            getRentalDuration(a, UTCNow, selectedGroup === 1)
-          )
-        })
-        break
-      default:
-        return []
-    }
-    return sortedTokens
-  }
-
-  const groupTokens = (tokens: TokenData[]): TokenSection[] => {
-    return tokens.reduce(
-      (acc, tk) => {
-        let isPlaced = false
-        return acc.map((section) => {
-          const filteredToken = !isPlaced
-            ? filterTokens([tk], section.filter, environment.label)
-            : []
-          if (filteredToken.length > 0 && !isPlaced) {
-            isPlaced = true
-            return {
-              ...section,
-              tokens: [...(section.tokens ?? []), tk],
-            }
-          }
-          return section
-        })
-      },
-      config.sections ?? [
-        {
-          id: 'available',
-          header: 'Available',
-          icon: 'info',
-          description:
-            'All listed tokens currently available to rent are displayed below',
-          filter: {
-            type: 'state',
-            value: [TokenManagerState.Issued.toString()],
-          },
-          showEmpty: true,
-        },
-        {
-          id: 'rented',
-          header: 'Rented',
-          icon: 'info',
-          description: 'All currently claimed rentals are displayed below',
-          showEmpty: true,
-          filter: {
-            type: 'state',
-            value: [TokenManagerState.Claimed.toString()],
-          },
-        },
-      ]
-    )
-  }
-
-  const sortedAttributes = getAllAttributes(tokenManagersForConfig ?? [])
-  const filteredAndSortedTokens: TokenData[] = sortTokens(
-    filterTokensByAttributes(tokenManagersForConfig, selectedFilters)
+  const availableTokenDatas = useBrowseAvailableTokenDatas(
+    false,
+    selectedGroup !== 0
   )
-  const groupedFilteredAndSortedTokens = groupTokens(filteredAndSortedTokens)
-  const groupedTokens = groupedFilteredAndSortedTokens[selectedGroup]
+  const claimedTokenDatas = useBrowseClaimedTokenDatas(selectedGroup !== 1)
 
+  const tokenQuery =
+    selectedGroup === 0 ? availableTokenDatas : claimedTokenDatas
+  const sortedAttributes = getAllAttributes(tokenQuery.data ?? [])
+  const filteredAndSortedTokens = sortTokens(
+    filterTokensByAttributes(tokenQuery.data ?? [], selectedFilters),
+    selectedOrderCategory,
+    config,
+    UTCNow,
+    selectedGroup === 1,
+    paymentMintInfos.data ?? {}
+  )
   return (
     <>
       <HeaderSlim
-        loading={tokenManagers.isFetched && tokenManagers.isRefetching}
         tabs={[
           { name: 'Browse', anchor: 'browse' },
           {
@@ -196,7 +217,7 @@ export const Browse = () => {
       <div className="mx-10 mt-4 flex items-end gap-2">
         <div className="text-xl text-light-0">Results</div>
         <div className="relative -top-[0.6px] text-base text-medium-4">
-          {groupedTokens?.tokens?.length ?? 0}{' '}
+          {filteredAndSortedTokens?.length ?? 0}{' '}
         </div>
       </div>
       <div className="mx-10 mt-4 flex flex-wrap justify-between gap-4">
@@ -205,9 +226,9 @@ export const Browse = () => {
             colorized
             defaultOption={{
               value: 0,
-              label: groupedFilteredAndSortedTokens[0]?.header,
+              label: tokenSections[0]?.header,
             }}
-            options={groupedFilteredAndSortedTokens.map((g, i) => ({
+            options={tokenSections.map((g, i) => ({
               label: g.header,
               value: i,
             }))}
@@ -234,7 +255,7 @@ export const Browse = () => {
             }
             onChange={(v) => !v && setSelectedFilters({})}
             groups={getNFTAtrributeFilters({
-              tokenDatas: groupedTokens?.tokens,
+              tokenDatas: tokenQuery.data,
               config,
               sortedAttributes,
               selectedFilters,
@@ -258,7 +279,13 @@ export const Browse = () => {
             ).map((v) => ({ label: v, value: v }))}
           />
         </div>
-        <div className="flex">
+        <div className="flex gap-4">
+          <RefreshButton
+            colorized
+            isFetching={tokenQuery.isFetching}
+            dataUpdatdAtMs={tokenQuery.dataUpdatedAt}
+            handleClick={() => tokenQuery.refetch()}
+          />
           <TabSelector<PANE_OPTIONS>
             defaultOption={PANE_TABS[0]}
             options={PANE_TABS}
@@ -268,15 +295,15 @@ export const Browse = () => {
           />
         </div>
       </div>
-      <Info colorized section={groupedFilteredAndSortedTokens[selectedGroup]} />
-
+      <Info colorized {...tokenSections[selectedGroup]} />
       {
         {
           activity: <Activity />,
           browse: (
             <TokenQueryData
-              isFetched={tokenManagers.isFetched}
-              tokenDatas={groupedTokens?.tokens}
+              isFetched={tokenQuery.isFetched}
+              isFetching={tokenQuery.isFetching}
+              tokenDatas={filteredAndSortedTokens}
             />
           ),
         }[pane]

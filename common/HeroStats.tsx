@@ -3,7 +3,7 @@ import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tok
 import type * as splToken from '@solana/spl-token'
 import type { TokenData } from 'apis/api'
 import type { ProjectConfig } from 'config/config'
-import { useBrowseTokenDataWithIndex } from 'hooks/useBrowseTokenDataWithIndex'
+import { useBrowseAvailableTokenDatas } from 'hooks/useBrowseAvailableTokenDatas'
 import { usePaymentMints } from 'hooks/usePaymentMints'
 import { useProjectStats } from 'hooks/useProjectStats'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
@@ -95,27 +95,23 @@ export const HeroStats: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   const { config } = useProjectConfig()
   const projectStats = useProjectStats()
   const paymentMints = usePaymentMints()
-  const browseTokenDatas = useBrowseTokenDataWithIndex()
-  const tokenDatas = browseTokenDatas.data?.filter(
-    (tokenData) =>
-      tokenData.tokenManager?.parsed.state === TokenManagerState.Issued
-  )
+  const availableTokens = useBrowseAvailableTokenDatas(false, true)
   return (
     <div className={`flex flex-wrap gap-y-5 ${className}`}>
       <div className="flex flex-col items-center justify-center">
         <div className="text-lg text-medium-4">Floor price</div>
-        {!tokenDatas || !paymentMints.data ? (
+        {!availableTokens.data || !paymentMints.data ? (
           <div className="h-6 w-10 animate-pulse rounded-md bg-border"></div>
         ) : (
           <div className="text-center text-xl text-light-1">
             {Number(
               calculateFloorPrice(
-                tokenDatas,
+                availableTokens.data,
                 config,
                 paymentMints.data
               ).toFixed(6)
             )}{' '}
-            {getSymbolFromTokenData(tokenDatas[0] ?? {})}
+            {getSymbolFromTokenData(availableTokens.data[0] ?? {})}
             {' / '}
             {config.marketplaceRate
               ? config.marketplaceRate
@@ -128,11 +124,11 @@ export const HeroStats: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
       <div className="mx-4 my-auto h-10 w-[1px] bg-border lg:mx-16"></div>
       <div className="flex-col">
         <p className="text-lg text-medium-4">Listed</p>
-        {!tokenDatas ? (
+        {!availableTokens.data ? (
           <div className="h-6 w-10 animate-pulse rounded-md bg-border"></div>
         ) : (
           <div className="text-center text-xl text-light-1">
-            {tokenDatas.length}
+            {availableTokens.data.length}
           </div>
         )}
       </div>

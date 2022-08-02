@@ -156,7 +156,6 @@ export const Manage = () => {
         onClose={() => setSelectedTokens([])}
       />
       <HeaderSlim
-        loading={userTokenDatas.isFetched && userTokenDatas.isFetching}
         tabs={[
           { name: 'Browse', anchor: 'browse' },
           {

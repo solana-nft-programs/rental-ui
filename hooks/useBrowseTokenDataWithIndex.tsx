@@ -29,7 +29,7 @@ import type { ParsedTokenAccountData } from 'providers/SolanaAccountsProvider'
 import { useAccounts } from 'providers/SolanaAccountsProvider'
 import { useQuery } from 'react-query'
 
-export const TOKEN_DATA_KEY = 'tokenData'
+import { TOKEN_DATA_KEY } from './useBrowseAvailableTokenDatas'
 
 export type BrowseTokenData = {
   indexedData?: IndexedData
