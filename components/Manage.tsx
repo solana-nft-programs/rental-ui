@@ -4,6 +4,7 @@ import { HeaderSlim } from 'common/HeaderSlim'
 import { HeroSmall } from 'common/HeroSmall'
 import { getAllAttributes } from 'common/NFTAttributeFilters'
 import { SelecterDrawer } from 'common/SelectedDrawer'
+import { elligibleForRent } from 'common/tokenDataUtils'
 import type { TokenFilter } from 'config/config'
 import { useManagedTokens } from 'hooks/useManagedTokens'
 import { useUserTokenData } from 'hooks/useUserTokenData'
@@ -88,6 +89,7 @@ export const tokenDatasId = (tokenDatas: TokenData[] | undefined) =>
 export const Manage = () => {
   const walletId = useWalletId()
   const { config } = useProjectConfig()
+
   const userTokenDatas = useUserTokenData(config.filter)
   const managedTokens = useManagedTokens()
   const allManagedTokens = useQuery(
@@ -121,8 +123,8 @@ export const Manage = () => {
       tokenDatasId(userTokenDatas.data),
     ],
     () => {
-      return (userTokenDatas.data ?? []).filter(
-        (tokenData) => !tokenData.tokenManager
+      return (userTokenDatas.data ?? []).filter((tokenData) =>
+        elligibleForRent(config, tokenData)
       )
     },
     {
@@ -146,8 +148,8 @@ export const Manage = () => {
     }
   )
 
-  const [selectedTokens, setSelectedTokens] = useState<TokenData[]>([])
   const [selectedGroup, setSelectedGroup] = useState<ManageTokenGroupId>('all')
+  const [selectedTokens, setSelectedTokens] = useState<TokenData[]>([])
   const attributeFilterOptions = getAllAttributes(allManagedTokens.data ?? [])
   return (
     <>
@@ -156,7 +158,6 @@ export const Manage = () => {
         onClose={() => setSelectedTokens([])}
       />
       <HeaderSlim
-        loading={userTokenDatas.isFetched && userTokenDatas.isFetching}
         tabs={[
           { name: 'Browse', anchor: 'browse' },
           {
@@ -175,9 +176,30 @@ export const Manage = () => {
         setSelectedGroup={setSelectedGroup}
         tokenQuery={
           {
-            all: allManagedTokens,
-            available: availableTokens,
-            rented: rentedTokens,
+            all: {
+              ...allManagedTokens,
+              isFetching: userTokenDatas.isFetching || managedTokens.isFetching,
+              dataUpdatedAt: Math.min(
+                userTokenDatas.dataUpdatedAt,
+                managedTokens.dataUpdatedAt
+              ),
+              refetch: () => {
+                userTokenDatas.refetch()
+                return managedTokens.refetch()
+              },
+            },
+            available: {
+              ...availableTokens,
+              isFetching: userTokenDatas.isFetching,
+              dataUpdatedAt: userTokenDatas.dataUpdatedAt,
+              refetch: userTokenDatas.refetch,
+            },
+            rented: {
+              ...rentedTokens,
+              isFetching: userTokenDatas.isFetching,
+              dataUpdatedAt: userTokenDatas.dataUpdatedAt,
+              refetch: userTokenDatas.refetch,
+            },
             'rented-out': managedTokens,
           }[selectedGroup]
         }

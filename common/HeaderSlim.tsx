@@ -9,7 +9,6 @@ import { useEffect, useState } from 'react'
 import { LogoTitled } from 'rental-components/common/LogoTitled'
 
 import { ButtonSmall } from './ButtonSmall'
-import { LoadingPulse } from './LoadingPulse'
 import { Tooltip } from './Tooltip'
 import { asWallet } from './Wallets'
 
@@ -20,15 +19,10 @@ type Props = {
     anchor: string
     tooltip?: string
   }[]
-  loading?: boolean
   hideDashboard?: boolean
 }
 
-export const HeaderSlim: React.FC<Props> = ({
-  tabs,
-  loading,
-  hideDashboard,
-}: Props) => {
+export const HeaderSlim: React.FC<Props> = ({ tabs, hideDashboard }: Props) => {
   const router = useRouter()
   const wallet = useWallet()
   const walletModal = useWalletModal()
@@ -99,9 +93,6 @@ export const HeaderSlim: React.FC<Props> = ({
                   </div>
                 </Tooltip>
               ))}
-              <div className="absolute -right-10 top-1 h-5 w-5">
-                <LoadingPulse loading={loading ?? false} />
-              </div>
             </div>
           )}
         </div>

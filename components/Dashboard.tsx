@@ -14,6 +14,7 @@ import { NFTHeader } from 'common/NFTHeader'
 import { NFTIssuerInfo } from 'common/NFTIssuerInfo'
 import { NFTRevokeButton } from 'common/NFTRevokeButton'
 import { notify } from 'common/Notification'
+import { RefreshButton } from 'common/RefreshButton'
 import { SelecterDrawer } from 'common/SelectedDrawer'
 import { Selector } from 'common/Selector'
 import { TabSelector } from 'common/TabSelector'
@@ -115,8 +116,8 @@ export const Dashboard = () => {
       tokenDatasId(userTokenDatas.data),
     ],
     () => {
-      return (userTokenDatas.data ?? []).filter(
-        (tokenData) => !tokenData.tokenManager
+      return (userTokenDatas.data ?? []).filter((tokenData) =>
+        elligibleForRent(config, tokenData)
       )
     },
     {
@@ -170,13 +171,7 @@ export const Dashboard = () => {
         selectedTokens={selectedTokens}
         onClose={() => setSelectedTokens([])}
       />
-      <HeaderSlim
-        hideDashboard
-        loading={
-          (userTokenDatas.isFetched && userTokenDatas.isFetching) ||
-          (managedTokens.isFetched && managedTokens.isFetching)
-        }
-      />
+      <HeaderSlim hideDashboard />
       <div className="relative flex w-full flex-wrap items-center justify-center gap-16 py-8 px-4 md:justify-between md:px-10">
         <div className="flex items-center gap-4">
           <div
@@ -284,7 +279,19 @@ export const Dashboard = () => {
                 }))}
             />
           </div>
-          <div className="flex">
+          <div className="flex gap-4">
+            <RefreshButton
+              colorized
+              isFetching={userTokenDatas.isFetching || managedTokens.isFetching}
+              dataUpdatdAtMs={Math.min(
+                tokenQuery.dataUpdatedAt,
+                managedTokens.dataUpdatedAt
+              )}
+              handleClick={() => {
+                userTokenDatas.refetch()
+                managedTokens.refetch()
+              }}
+            />
             <TabSelector defaultOption={PANE_TABS[0]} options={PANE_TABS} />
           </div>
         </div>

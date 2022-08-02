@@ -16,7 +16,7 @@ import {
 import type { TokenData } from 'apis/api'
 import { executeAllTransactions } from 'apis/utils'
 import { asWallet } from 'common/Wallets'
-import { TOKEN_DATA_KEY } from 'hooks/useFilteredTokenManagers'
+import { TOKEN_DATA_KEY } from 'hooks/useBrowseAvailableTokenDatas'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useMutation, useQueryClient } from 'react-query'

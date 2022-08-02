@@ -1,7 +1,7 @@
 import { invalidate } from '@cardinal/token-manager'
 import { useWallet } from '@solana/wallet-adapter-react'
 import type { TokenData } from 'apis/api'
-import { TOKEN_DATA_KEY } from 'hooks/useFilteredTokenManagers'
+import { TOKEN_DATA_KEY } from 'hooks/useBrowseAvailableTokenDatas'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useUTCNow } from 'providers/UTCNowProvider'
 import { useQueryClient } from 'react-query'

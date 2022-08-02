@@ -1,16 +1,31 @@
 import { css } from '@emotion/react'
 import { GlyphPerformance } from 'assets/GlyphPerformance'
 import { GlyphQuestion } from 'assets/GlyphQuestion'
-import type { TokenSection } from 'config/config'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { AiFillStar, AiOutlineShoppingCart } from 'react-icons/ai'
 import { MdAccessTimeFilled, MdSell } from 'react-icons/md'
 
+export type InfoIcon =
+  | 'time'
+  | 'featured'
+  | 'listed'
+  | 'rented'
+  | 'available'
+  | 'info'
+  | 'performance'
+
 type Props = {
   colorized?: boolean
-  section?: TokenSection
+  header?: string
+  description?: string
+  icon?: InfoIcon
 }
-export const Info: React.FC<Props> = ({ section, colorized }: Props) => {
+export const Info: React.FC<Props> = ({
+  header,
+  description,
+  icon,
+  colorized,
+}: Props) => {
   const { config } = useProjectConfig()
   return (
     <div className="relative z-0 mx-10 mt-10 flex items-center gap-4 overflow-hidden rounded-xl px-8 py-4 text-xl">
@@ -33,7 +48,7 @@ export const Info: React.FC<Props> = ({ section, colorized }: Props) => {
         }
       />
       <div className="text-white">
-        {section?.icon &&
+        {icon &&
           {
             time: <MdAccessTimeFilled />,
             featured: <AiFillStar />,
@@ -44,11 +59,11 @@ export const Info: React.FC<Props> = ({ section, colorized }: Props) => {
             ),
             info: <GlyphQuestion />,
             performance: <GlyphPerformance />,
-          }[section!.icon!]}
+          }[icon]}
       </div>
       <div className="flex flex-col">
-        <div className="text-medium-3">{section?.header}</div>
-        <div className="text-light-0">{section?.description}</div>
+        <div className="text-medium-3">{header}</div>
+        <div className="text-light-0">{description}</div>
       </div>
     </div>
   )

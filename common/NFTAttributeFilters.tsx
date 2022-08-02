@@ -10,7 +10,8 @@ export const attributesForTokenData = (tokenData: {
 }): { trait_type: string; value: string }[] => {
   return (
     tokenData.metadata?.parsed?.attributes ??
-    tokenData.indexedData?.mint_address_nfts?.metadatas_attributes
+    tokenData.indexedData?.mint_address_nfts?.metadatas_attributes ??
+    []
   )
 }
 
