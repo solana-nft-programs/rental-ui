@@ -689,6 +689,10 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
           displayText: '3 weeks',
           value: 7258000,
         },
+        freezeRentalRateDuration: {
+          value: '1',
+          durationOption: 'days',
+        },
       },
     },
     marketplaceRate: 'days',
