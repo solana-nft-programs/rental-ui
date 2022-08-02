@@ -116,8 +116,8 @@ export const Dashboard = () => {
       tokenDatasId(userTokenDatas.data),
     ],
     () => {
-      return (userTokenDatas.data ?? []).filter(
-        (tokenData) => !tokenData.tokenManager
+      return (userTokenDatas.data ?? []).filter((tokenData) =>
+        elligibleForRent(config, tokenData)
       )
     },
     {

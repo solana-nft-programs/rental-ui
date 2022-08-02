@@ -4,6 +4,7 @@ import { HeaderSlim } from 'common/HeaderSlim'
 import { HeroSmall } from 'common/HeroSmall'
 import { getAllAttributes } from 'common/NFTAttributeFilters'
 import { SelecterDrawer } from 'common/SelectedDrawer'
+import { elligibleForRent } from 'common/tokenDataUtils'
 import type { TokenFilter } from 'config/config'
 import { useManagedTokens } from 'hooks/useManagedTokens'
 import { useUserTokenData } from 'hooks/useUserTokenData'
@@ -122,8 +123,8 @@ export const Manage = () => {
       tokenDatasId(userTokenDatas.data),
     ],
     () => {
-      return (userTokenDatas.data ?? []).filter(
-        (tokenData) => !tokenData.tokenManager
+      return (userTokenDatas.data ?? []).filter((tokenData) =>
+        elligibleForRent(config, tokenData)
       )
     },
     {

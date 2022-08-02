@@ -31,9 +31,9 @@ export type UserTokenData = {
   recipientTokenAccount?: AccountData<ParsedTokenAccountData>
 }
 
-export const useUserTokenData = (filter?: TokenFilter, cluster?: string) => {
+export const useUserTokenData = (filter?: TokenFilter) => {
   const walletId = useWalletId()
-  const { connection } = useEnvironmentCtx()
+  const { connection, environment } = useEnvironmentCtx()
 
   return useQuery<UserTokenData[]>(
     [TOKEN_DATA_KEY, 'useUserTokenData', walletId, filter?.value],
@@ -67,7 +67,6 @@ export const useUserTokenData = (filter?: TokenFilter, cluster?: string) => {
             )[0]
         )
       )
-      // const metaplexMetadatas = await accountDataById(connection, metaplexIds)
       // TODO use accountDataById?
       const metaplexAccountInfos = await getBatchedMultipleAccounts(
         connection,
@@ -99,7 +98,7 @@ export const useUserTokenData = (filter?: TokenFilter, cluster?: string) => {
           ]?.parsed?.data?.creators?.some(
             (creator) =>
               filter.value.includes(creator.address.toString()) &&
-              (cluster === 'devnet' || creator.verified)
+              (environment.label === 'devnet' || creator.verified)
           )
         )
       }
