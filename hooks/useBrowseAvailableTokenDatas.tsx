@@ -12,7 +12,6 @@ import {
 } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/accounts'
 import type { UseInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
 import { USE_INVALIDATOR_ADDRESS } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
-import { findUseInvalidatorAddress } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator/pda'
 import type * as metaplex from '@metaplex-foundation/mpl-token-metadata'
 import * as Sentry from '@sentry/browser'
 import type * as spl from '@solana/spl-token'
@@ -72,11 +71,14 @@ export const filterKnownInvalidators = async (
     indexedTokenManagers.map(async ({ address }): Promise<string[]> => {
       const tokenManagerId = tryPublicKey(address)
       if (!tokenManagerId) return []
-      const [[timeInvalidatorId], [useInvalidatorId]] = await Promise.all([
-        findTimeInvalidatorAddress(tokenManagerId),
-        findUseInvalidatorAddress(tokenManagerId),
-      ])
-      return [timeInvalidatorId.toString(), useInvalidatorId.toString()]
+      const [timeInvalidatorId] = await findTimeInvalidatorAddress(
+        tokenManagerId
+      )
+      // const [[timeInvalidatorId], [useInvalidatorId]] = await Promise.all([
+      //   findTimeInvalidatorAddress(tokenManagerId),
+      //   findUseInvalidatorAddress(tokenManagerId),
+      // ])
+      return [timeInvalidatorId.toString()]
     })
   )
   collectSpan?.finish()
