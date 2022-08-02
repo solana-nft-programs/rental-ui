@@ -1,12 +1,17 @@
 import { secondsToString } from '@cardinal/common'
 import { css } from '@emotion/react'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
+import { useUTCNow } from 'providers/UTCNowProvider'
 import { BiRefresh } from 'react-icons/bi'
 
 import { Tooltip } from './Tooltip'
 
 export const refreshSecondsString = (refreshedSeconds: number) => {
-  return refreshedSeconds < 3 ? 'just now' : secondsToString(refreshedSeconds)
+  return refreshedSeconds < 3
+    ? 'just now'
+    : refreshedSeconds > 180
+    ? 'awhile ago'
+    : secondsToString(refreshedSeconds)
 }
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
@@ -23,6 +28,7 @@ export const RefreshButton: React.FC<Props> = ({
   handleClick,
 }: Props) => {
   const { config } = useProjectConfig()
+  const { UTCNow } = useUTCNow()
   if (!dataUpdatdAtMs) return <></>
   return (
     <Tooltip title="Click to refresh latest data">

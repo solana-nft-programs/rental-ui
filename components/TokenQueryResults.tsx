@@ -23,7 +23,10 @@ import { TokenQueryData } from './TokenQueryData'
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   setSelectedGroup: (id: ManageTokenGroupId) => void
-  tokenQuery: UseQueryResult<TokenData[], unknown>
+  tokenQuery: Pick<
+    UseQueryResult<TokenData[], unknown>,
+    'data' | 'isFetched' | 'isFetching' | 'dataUpdatedAt' | 'refetch'
+  >
   tokenGroup: ManageTokenGroup
   attributeFilterOptions?: NFTAtrributeFilterValues
 }

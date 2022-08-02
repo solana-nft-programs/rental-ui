@@ -26,7 +26,6 @@ import { useUserTokenData } from 'hooks/useUserTokenData'
 import { useWalletId } from 'hooks/useWalletId'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { filterTokens, useProjectConfig } from 'providers/ProjectConfigProvider'
-import { useUTCNow } from 'providers/UTCNowProvider'
 import { useEffect, useState } from 'react'
 import { HiUserCircle } from 'react-icons/hi'
 import { useQuery } from 'react-query'
@@ -85,7 +84,6 @@ export const Dashboard = () => {
   const userTokenDatas = useUserTokenData(config.filter)
   const { addressImage, loadingImage } = useAddressImage(connection, walletId)
   const { displayName, loadingName } = useAddressName(connection, walletId)
-  const { UTCNow } = useUTCNow()
   const managedTokens = useManagedTokens()
   const allManagedTokens = useQuery(
     [
@@ -285,7 +283,7 @@ export const Dashboard = () => {
             <RefreshButton
               colorized
               isFetching={userTokenDatas.isFetching || managedTokens.isFetching}
-              dataUpdatdAtMs={Math.max(
+              dataUpdatdAtMs={Math.min(
                 tokenQuery.dataUpdatedAt,
                 managedTokens.dataUpdatedAt
               )}
