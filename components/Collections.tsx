@@ -100,7 +100,16 @@ export const Collections = () => {
         {Object.entries(categories).map(([type, configs], i) => (
           <div key={type}>
             {i > 0 && (
-              <div className="mx-auto mt-10 mb-10 h-[2px] w-[90%] rounded-lg bg-border"></div>
+              <>
+                <div className="mx-auto mt-10 mb-10 h-[2px] w-full rounded-lg bg-border"></div>
+                <div className="flex flex-col gap-2">
+                  <div className="text-5xl text-light-0">Featured Profiles</div>
+                  <div className="mb-10 text-lg text-medium-3">
+                    Treasuries or guilds listing assets across multiple
+                    collections.
+                  </div>
+                </div>
+              </>
             )}
             <div className="grid grid-cols-1 flex-wrap gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {configs.map((config) => (
