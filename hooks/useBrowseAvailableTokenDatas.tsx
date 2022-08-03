@@ -56,11 +56,12 @@ export type IndexedData = {
   }
 }
 
-export const filterKnownInvalidators = async (
-  config: ProjectConfig,
-  indexedTokenManagers: IndexedData[],
-  trace?: Trace
-) => {
+export async function filterKnownInvalidators<
+  T extends {
+    address?: string
+    invalidator_address?: { invalidator: string }[]
+  }
+>(config: ProjectConfig, indexedTokenManagers: T[], trace?: Trace) {
   /////
   const collectSpan = trace?.startChild({
     op: 'collect-known-invalidators',

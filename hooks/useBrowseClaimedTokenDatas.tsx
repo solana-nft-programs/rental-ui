@@ -6,13 +6,10 @@ import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tok
 import { getTokenManagers } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/accounts'
 import type { UseInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
 import { USE_INVALIDATOR_ADDRESS } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
-import type * as metaplex from '@metaplex-foundation/mpl-token-metadata'
 import * as Sentry from '@sentry/browser'
-import type * as spl from '@solana/spl-token'
 import type { PublicKey } from '@solana/web3.js'
 import type { TokenData } from 'apis/api'
 import { getTokenDatas } from 'apis/api'
-import { tryPublicKey } from 'apis/utils'
 import { withTrace } from 'common/trace'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
@@ -31,7 +28,6 @@ export type BrowseClaimedTokenData = Pick<
   TokenData,
   | 'indexedData'
   | 'tokenManager'
-  | 'metaplexData'
   | 'claimApprover'
   | 'useInvalidator'
   | 'timeInvalidator'
@@ -79,15 +75,6 @@ export const useBrowseClaimedTokenDatas = (disabled: boolean) => {
         )
 
         ////
-        const metaplexIds = tokenManagerDatas.map((tm) => {
-          const indexData = indexedTokenManagerDatas[tm.pubkey.toString()]
-          return indexData?.mint_address_nfts?.metadatas_attributes
-            ? tryPublicKey(
-                indexData.mint_address_nfts.metadatas_attributes[0]
-                  ?.metadata_address
-              )
-            : null
-        })
         const idsToFetch = tokenManagerDatas.reduce(
           (acc, tm) => [
             ...acc,
@@ -95,7 +82,7 @@ export const useBrowseClaimedTokenDatas = (disabled: boolean) => {
             ...tm.parsed.invalidators,
             tm.parsed.recipientTokenAccount,
           ],
-          [...metaplexIds] as (PublicKey | null)[]
+          [] as (PublicKey | null)[]
         )
 
         const accountsById = await withTrace(
@@ -119,12 +106,6 @@ export const useBrowseClaimedTokenDatas = (disabled: boolean) => {
             indexedData:
               indexedTokenManagerDatas[tokenManagerData.pubkey.toString()],
             tokenManager: tokenManagerData,
-            mint: accountsById[tokenManagerData.parsed.mint.toString()] as
-              | AccountData<spl.MintInfo>
-              | undefined,
-            metaplexData: accountsById[metaplexIds[i]!.toString()] as
-              | AccountData<metaplex.MetadataData>
-              | undefined,
             claimApprover: tokenManagerData.parsed.claimApprover?.toString()
               ? (accountsById[
                   tokenManagerData.parsed.claimApprover?.toString()

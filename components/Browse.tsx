@@ -195,7 +195,6 @@ export const Browse = () => {
     selectedGroup !== 0
   )
   const claimedTokenDatas = useBrowseClaimedTokenDatas(selectedGroup !== 1)
-
   const tokenQuery =
     selectedGroup === 0 ? availableTokenDatas : claimedTokenDatas
 
