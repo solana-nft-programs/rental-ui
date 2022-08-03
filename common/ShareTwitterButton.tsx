@@ -3,6 +3,8 @@ import type { TokenData } from 'apis/api'
 import type { ProjectConfig } from 'config/config'
 import type { IssueTxResult } from 'handlers/useHandleIssueRental'
 
+import { getNameFromTokenData } from './tokenDataUtils'
+
 type Props = {
   children: string | JSX.Element
   className?: string
@@ -10,19 +12,22 @@ type Props = {
   shareLink: string
 }
 
+const BASE_URL = `https://twitter.com/intent/tweet?text=`
+
 export const shareTwitterClaimedLink = (
   tokenData: TokenData,
   config: ProjectConfig,
   issuerName?: string
 ) => {
+  const tokenName = getNameFromTokenData(tokenData)
   return [
-    `https://twitter.com/intent/tweet?text=`,
+    BASE_URL,
     encodeURIComponent(
       `I just rented ${
-        tokenData.metaplexData?.parsed.data.name
-          ? `${config.twitterHandle ? `${config.twitterHandle} ` : ''}${
-              tokenData.metaplexData?.parsed.data.name
-            }`
+        tokenName
+          ? `${
+              config.twitterHandle ? `${config.twitterHandle} ` : ''
+            }${tokenName}`
           : `a ${config.twitterHandle ? `${config.twitterHandle} ` : ''}NFT`
       }${
         issuerName ? ` from ${issuerName}` : ''
@@ -35,22 +40,28 @@ export const shareTwitterListedLink = (
   txResults: IssueTxResult[],
   config: ProjectConfig
 ) => {
+  if (txResults.length === 1) {
+    const { tokenData, claimLink } = txResults[0]!
+    const tokenName = getNameFromTokenData(tokenData)
+    return [
+      BASE_URL,
+      encodeURIComponent(
+        `I just listed ${
+          tokenName
+            ? `${
+                config.twitterHandle ? `${config.twitterHandle} ` : ''
+              }${tokenName}`
+            : `a ${config.twitterHandle ? `${config.twitterHandle} ` : ''}NFT`
+        } for rent using @cardinal_labs rental UI! Check it out at ${claimLink}`
+      ),
+    ].join('')
+  }
   return [
-    `https://twitter.com/intent/tweet?text=`,
+    BASE_URL,
     encodeURIComponent(
-      txResults.length === 1
-        ? `I just listed ${
-            txResults[0]!.tokenData.metaplexData?.parsed.data.name
-              ? `${config.twitterHandle ? `${config.twitterHandle} ` : ''}${
-                  txResults[0]!.tokenData.metaplexData?.parsed.data.name
-                }`
-              : `a ${config.twitterHandle ? `${config.twitterHandle} ` : ''}NFT`
-          } for rent using @cardinal_labs rental UI! Check it out at ${
-            txResults[0]!.claimLink
-          }`
-        : `I just listed ${txResults.length} ${
-            config.twitterHandle ? `${config.twitterHandle} ` : ''
-          }NFTs! Check it out at https://rent-v2.cardinal.so/${config.name}`
+      `I just listed ${txResults.length} ${
+        config.twitterHandle ? `${config.twitterHandle} ` : ''
+      }NFTs! Check it out at https://rent-v2.cardinal.so/${config.name}`
     ),
   ].join('')
 }

@@ -27,7 +27,7 @@ export type Colors = {
 }
 
 export type TokenFilter = {
-  type: 'creators' | 'symbol' | 'issuer' | 'state' | 'claimer' | 'owner'
+  type: 'creators' | 'issuer' | 'state' | 'claimer' | 'owner'
   value: string[]
 }
 

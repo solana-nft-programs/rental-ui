@@ -26,6 +26,44 @@ export const getTokenMaxDuration = (
   }
 }
 
+export const getNameFromTokenData = (
+  tokenData: Pick<TokenData, 'indexedData'> | Pick<TokenData, 'metaplexData'>,
+  defaultName?: string
+) => {
+  return (
+    ('indexedData' in tokenData &&
+      tokenData.indexedData?.mint_address_nfts?.name) ||
+    ('metaplexData' in tokenData && tokenData.metaplexData?.parsed.data.name) ||
+    defaultName
+  )
+}
+
+export const getUrifromTokenData = (
+  tokenData: Pick<TokenData, 'indexedData'> | Pick<TokenData, 'metaplexData'>
+) => {
+  return (
+    ('indexedData' in tokenData &&
+      tokenData.indexedData?.mint_address_nfts?.uri) ||
+    ('metaplexData' in tokenData && tokenData.metaplexData?.parsed.data.uri) ||
+    null
+  )
+}
+
+export const getMintfromTokenData = (
+  tokenData:
+    | Pick<TokenData, 'tokenManager'>
+    | Pick<TokenData, 'metaplexData'>
+    | Pick<TokenData, 'indexedData'>
+) => {
+  return (
+    ('tokenManager' in tokenData &&
+      tokenData.tokenManager?.parsed?.mint.toString()) ||
+    ('indexedData' in tokenData && tokenData.indexedData?.mint) ||
+    ('metaplexData' in tokenData && tokenData.metaplexData?.parsed.mint) ||
+    null
+  )
+}
+
 export const getSymbolFromTokenData = (
   tokenData: Pick<TokenData, 'claimApprover' | 'timeInvalidator'>
 ) => {
@@ -47,7 +85,7 @@ export const PaymentMintImage: React.FC<
       tokenData.timeInvalidator?.parsed.extensionPaymentMint
   )
   return img ? (
-    <img {...props} src={img} alt={tokenData.metaplexData?.parsed.data.name} />
+    <img {...props} src={img} alt={getNameFromTokenData(tokenData)} />
   ) : (
     <SolanaLogo {...props} />
   )

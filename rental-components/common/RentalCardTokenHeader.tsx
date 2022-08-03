@@ -1,6 +1,7 @@
 import type { TokenData } from 'apis/api'
 import { Pill } from 'common/Pill'
 import {
+  getNameFromTokenData,
   rentalType,
   rentalTypeColor,
   rentalTypeName,
@@ -26,7 +27,7 @@ export const RentalCardTokenHeader: React.FC<Props> = ({
         {tokenDatas.length > 1
           ? `(${tokenDatas.length})`
           : tokenDatas[0]
-          ? tokenDatas[0].metaplexData?.parsed.data.name
+          ? getNameFromTokenData(tokenDatas[0], `(1)`)
           : ''}
       </div>
       <div className="mb-2 text-center text-lg text-medium-4">
