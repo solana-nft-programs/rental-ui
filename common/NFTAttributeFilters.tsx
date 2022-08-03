@@ -6,9 +6,9 @@ export const attributesForTokenData = (
   tokenData: Pick<TokenData, 'indexedData'> | Pick<TokenData, 'metadata'>
 ): { trait_type: string; value: string }[] => {
   return (
-    ('metadata' in tokenData && tokenData.metadata?.parsed?.attributes) ??
+    ('metadata' in tokenData && tokenData.metadata?.parsed?.attributes) ||
     ('indexedData' in tokenData &&
-      tokenData.indexedData?.mint_address_nfts?.metadatas_attributes) ??
+      tokenData.indexedData?.mint_address_nfts?.metadatas_attributes) ||
     []
   )
 }
