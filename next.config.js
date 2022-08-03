@@ -32,6 +32,14 @@ module.exports = withSentryConfig(
           ],
           destination: '/:hostName/:path*',
         },
+        {
+          source: '/:hostName/:collection/claim/:tokenManagerString*',
+          destination: '/:hostName/:collection/:tokenManagerString*',
+        },
+        {
+          source: '/:hostName/claim/:tokenManagerString*',
+          destination: '/:hostName/default/:tokenManagerString*',
+        },
       ]
     },
     webpack: (config, { isServer, webpack }) => {
