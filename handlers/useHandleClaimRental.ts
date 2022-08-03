@@ -167,7 +167,11 @@ export const useHandleClaimRental = () => {
             commitment: 'confirmed',
             maxRetries: 3,
           },
-          signers: otpKeypair ? [otpKeypair] : [],
+          signers:
+            otpKeypair &&
+            tokenData?.claimApprover?.pubkey.equals(otpKeypair.publicKey)
+              ? [otpKeypair]
+              : [],
           notificationConfig: {},
         }
       )
