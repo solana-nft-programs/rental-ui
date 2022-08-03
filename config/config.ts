@@ -27,7 +27,7 @@ export type Colors = {
 }
 
 export type TokenFilter = {
-  type: 'creators' | 'symbol' | 'issuer' | 'state' | 'claimer' | 'owner'
+  type: 'creators' | 'issuer' | 'state' | 'claimer' | 'owner'
   value: string[]
 }
 
@@ -351,7 +351,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
           value: 7258000,
         },
       },
-      paymentManager: 'cprtEVpR3uPs38USVq1MYrPMW7exZTnq2kRNSuvjvYM',
     },
     airdrops: [
       {
@@ -956,7 +955,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       glow: '#A45EE5',
     },
     description:
-      'Syndicate Initiative is a community of gamers focused on good vibes and competitive gaming in the developing web3 space. We coach eSports players and stream content on Twitch. Let\’s build SyNi together and make a name in the web3 gaming space! #SyNi',
+      'Syndicate Initiative is a community of gamers focused on good vibes and competitive gaming in the developing web3 space. We coach eSports players and stream content on Twitch. Let’s build SyNi together and make a name in the web3 gaming space! #SyNi',
     hero: 'logos/syndicate-initiative-hero.png',
     socialLinks: [
       {

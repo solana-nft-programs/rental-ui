@@ -1,131 +1,229 @@
 import { ApolloClient, gql, InMemoryCache } from '@apollo/client'
 import type { AccountData } from '@cardinal/common'
-import { tryPublicKey } from '@cardinal/common'
 import type { PaidClaimApproverData } from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
 import type { TimeInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
-import { findTimeInvalidatorAddress } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator/pda'
-import type { TokenManagerData } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
+import { TIME_INVALIDATOR_ADDRESS } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
 import {
   getTokenManagers,
   getTokenManagersForIssuer,
 } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/accounts'
 import type { UseInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
-import { findUseInvalidatorAddress } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator/pda'
-import type * as metaplex from '@metaplex-foundation/mpl-token-metadata'
-import type * as spl from '@solana/spl-token'
+import { USE_INVALIDATOR_ADDRESS } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
+import * as Sentry from '@sentry/browser'
 import type { PublicKey } from '@solana/web3.js'
+import type { TokenData } from 'apis/api'
 import { getTokenDatas } from 'apis/api'
+import { withTrace } from 'common/trace'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
-import type { ParsedTokenAccountData } from 'providers/SolanaAccountsProvider'
+import { useAccounts } from 'providers/SolanaAccountsProvider'
 import { useQuery } from 'react-query'
 
-import { TOKEN_DATA_KEY } from './useBrowseAvailableTokenDatas'
+import type { IndexedData } from './useBrowseAvailableTokenDatas'
+import {
+  filterKnownInvalidators,
+  TOKEN_DATA_KEY,
+} from './useBrowseAvailableTokenDatas'
 import { useWalletId } from './useWalletId'
 
 const INDEX_ENABLED_MANAGE = true
 
-export type ManagedTokenData = {
-  tokenAccount?: AccountData<ParsedTokenAccountData>
-  mint?: AccountData<spl.MintInfo>
-  tokenManager?: AccountData<TokenManagerData>
-  metaplexData?: AccountData<metaplex.MetadataData>
-  editionData?: AccountData<metaplex.EditionData | metaplex.MasterEditionData>
-  metadata?: AccountData<any> | null
-  claimApprover?: AccountData<PaidClaimApproverData> | null
-  useInvalidator?: AccountData<UseInvalidatorData> | null
-  timeInvalidator?: AccountData<TimeInvalidatorData> | null
-  recipientTokenAccount?: AccountData<ParsedTokenAccountData>
-}
+export type ManagedTokenData = Pick<
+  TokenData,
+  | 'tokenManager'
+  | 'indexedData'
+  | 'claimApprover'
+  | 'useInvalidator'
+  | 'timeInvalidator'
+  | 'recipientTokenAccount'
+>
 
 export const useManagedTokens = () => {
   const walletId = useWalletId()
   const { config } = useProjectConfig()
   const { connection, environment } = useEnvironmentCtx()
+  const { getAccountDataById } = useAccounts()
   return useQuery<ManagedTokenData[]>(
     [TOKEN_DATA_KEY, 'useManagedTokens', walletId?.toString()],
     async () => {
       if (!walletId) return []
       if (environment.index && INDEX_ENABLED_MANAGE && !config.indexDisabled) {
+        const trace = Sentry.startTransaction({
+          name: `[useBrowseAvailableTokenDatas] ${config.name}`,
+        })
         const indexer = new ApolloClient({
           uri: environment.index,
           cache: new InMemoryCache({ resultCaching: false }),
         })
-        const tokenManagerResponse = await indexer.query({
-          query: gql`
-            query GetTokenManagersForIssuer($issuer: String!) {
-              cardinal_token_managers(where: { issuer: { _eq: $issuer } }) {
-                address
-                mint
-                state
-                state_changed_at
-                invalidator_address {
-                  invalidator
-                }
-              }
-            }
-          `,
-          variables: {
-            issuer: walletId.toBase58(),
-          },
-        })
-
-        /////
-        const knownInvalidators: string[][] = await Promise.all(
-          tokenManagerResponse.data['cardinal_token_managers'].map(
-            async (data: {
-              mint: string
-              address: string
-            }): Promise<string[]> => {
-              const tokenManagerId = tryPublicKey(data.address)
-              if (!tokenManagerId) return []
-              const [[timeInvalidatorId], [useInvalidatorId]] =
-                await Promise.all([
-                  findTimeInvalidatorAddress(tokenManagerId),
-                  findUseInvalidatorAddress(tokenManagerId),
-                ])
-              return [
-                timeInvalidatorId.toString(),
-                useInvalidatorId.toString(),
-                walletId.toString(),
-              ]
-            }
-          )
-        )
-
-        const tokenManagerIds: PublicKey[] = (
-          tokenManagerResponse.data['cardinal_token_managers'] as {
-            mint: string
-            address: string
-            invalidator_address: { invalidator: string }[]
-          }[]
-        ).reduce((acc, data, i) => {
-          const tokenManagerId = tryPublicKey(data.address)
-          if (!tokenManagerId) return acc
-          let filter = false
-          data.invalidator_address.forEach(({ invalidator }) => {
+        const indexedTokenManagers = await withTrace(
+          async () => {
+            const filter = config.filter
             if (
-              !config.showUnknownInvalidators &&
-              !knownInvalidators[i]?.includes(invalidator)
+              filter?.type === 'issuer' &&
+              !config.filter?.value.includes(walletId.toString())
             ) {
-              filter = true
+              return []
             }
-          })
-          return filter ? acc : [...acc, tokenManagerId]
-        }, [] as PublicKey[])
-
-        const tokenManagerDatas = await getTokenManagers(
-          connection,
-          tokenManagerIds
+            const tokenManagerResponse = await (filter?.type === 'creators'
+              ? indexer.query({
+                  query: gql`
+                    query GetTokenManagersForIssuer(
+                      $issuer: String!
+                      $creators: [String!]!
+                    ) {
+                      cardinal_token_managers(
+                        where: {
+                          issuer: { _eq: $issuer }
+                          mint_address_nfts: {
+                            metadatas_metadata_creators: {
+                              _and: {
+                                creator_address: { _in: $creators }
+                                position: { _eq: 0 }
+                                _and: { verified: { _eq: true } }
+                              }
+                            }
+                          }
+                        }
+                      ) {
+                        address
+                        mint
+                        state
+                        state_changed_at
+                        invalidator_address {
+                          invalidator
+                        }
+                        mint_address_nfts {
+                          uri
+                          name
+                          edition_pda
+                          metadatas_attributes {
+                            metadata_address
+                            trait_type
+                            value
+                          }
+                          metadatas_metadata_creators {
+                            creator_address
+                            verified
+                          }
+                        }
+                      }
+                    }
+                  `,
+                  variables: {
+                    issuer: walletId.toBase58(),
+                    creators: filter.value,
+                  },
+                })
+              : indexer.query({
+                  query: gql`
+                    query GetTokenManagersForIssuer($issuer: String!) {
+                      cardinal_token_managers(
+                        where: { issuer: { _eq: $issuer } }
+                      ) {
+                        address
+                        mint
+                        state
+                        state_changed_at
+                        invalidator_address {
+                          invalidator
+                        }
+                        mint_address_nfts {
+                          uri
+                          name
+                          edition_pda
+                          metadatas_attributes {
+                            metadata_address
+                            trait_type
+                            value
+                          }
+                          metadatas_metadata_creators {
+                            creator_address
+                            verified
+                          }
+                        }
+                      }
+                    }
+                  `,
+                  variables: {
+                    issuer: walletId.toBase58(),
+                  },
+                }))
+            return tokenManagerResponse.data[
+              'cardinal_token_managers'
+            ] as IndexedData[]
+          },
+          trace,
+          { op: 'index-lookup' }
         )
 
         ////
-        const tokenDatas = await getTokenDatas(
-          connection,
-          tokenManagerDatas,
-          config.filter,
-          environment.label
+        const { tokenManagerIds, indexedTokenManagerDatas } =
+          await filterKnownInvalidators(config, indexedTokenManagers, trace)
+
+        ////
+        const tokenManagerDatas = await withTrace(
+          async () =>
+            (
+              await getTokenManagers(connection, tokenManagerIds)
+            ).filter((tm) => tm.parsed),
+          trace,
+          {
+            op: 'fetch-recent-token-managers',
+          }
         )
+
+        ////
+        const mintIds = tokenManagerDatas.map((tm) => tm.parsed.mint)
+        const idsToFetch = tokenManagerDatas.reduce(
+          (acc, tm) => [
+            ...acc,
+            tm.parsed.claimApprover,
+            ...tm.parsed.invalidators,
+          ],
+          [...mintIds] as (PublicKey | null)[]
+        )
+
+        const accountsById = await withTrace(
+          () => getAccountDataById(idsToFetch),
+          trace,
+          { op: 'fetch-accounts' }
+        )
+
+        ////
+        const tokenDatas = tokenManagerDatas.map((tokenManagerData, i) => {
+          const timeInvalidatorId = tokenManagerData.parsed.invalidators.filter(
+            (invalidator) =>
+              accountsById[invalidator.toString()]?.owner?.toString() ===
+              TIME_INVALIDATOR_ADDRESS.toString()
+          )[0]
+          const useInvalidatorId = tokenManagerData.parsed.invalidators.filter(
+            (invalidator) =>
+              accountsById[invalidator.toString()]?.owner?.toString() ===
+              USE_INVALIDATOR_ADDRESS.toString()
+          )[0]
+          return {
+            indexedData:
+              indexedTokenManagerDatas[tokenManagerData.pubkey.toString()],
+            tokenManager: tokenManagerData,
+            claimApprover: tokenManagerData.parsed.claimApprover?.toString()
+              ? (accountsById[
+                  tokenManagerData.parsed.claimApprover?.toString()
+                ] as AccountData<PaidClaimApproverData>)
+              : undefined,
+            useInvalidator: useInvalidatorId
+              ? (accountsById[
+                  useInvalidatorId.toString()
+                ] as AccountData<UseInvalidatorData>)
+              : undefined,
+            timeInvalidator: timeInvalidatorId
+              ? (accountsById[
+                  timeInvalidatorId.toString()
+                ] as AccountData<TimeInvalidatorData>)
+              : undefined,
+          }
+        })
+
+        trace.finish()
         return tokenDatas
       } else {
         const tokenManagerDatas = await getTokenManagersForIssuer(

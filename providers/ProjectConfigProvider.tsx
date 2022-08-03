@@ -28,15 +28,17 @@ export const getInitialProps = async ({
 export const filterTokens = (
   tokens: TokenData[],
   filter?: {
-    type: 'creators' | 'symbol' | 'issuer' | 'state' | 'claimer' | 'owner'
+    type: 'creators' | 'issuer' | 'state' | 'claimer' | 'owner'
     value: string[]
   },
   cluster?: string | undefined
 ): TokenData[] => {
   return tokens.filter((token) => {
     if (
-      !token.metaplexData?.parsed.data.uri ||
-      token.metaplexData?.parsed.data.uri.length <= 0
+      (!token.metaplexData?.parsed.data.uri ||
+        token.metaplexData?.parsed.data.uri.length <= 0) &&
+      (!token.indexedData?.mint_address_nfts?.uri ||
+        token.indexedData?.mint_address_nfts?.uri?.length <= 0)
     ) {
       return false
     }
@@ -50,13 +52,18 @@ export const filterTokens = (
     if (!filter) return true
     switch (filter.type) {
       case 'creators':
-        return token.metaplexData?.parsed?.data?.creators?.some(
-          (creator) =>
-            filter.value.includes(creator.address.toString()) &&
-            ((cluster && cluster === 'devnet') || creator.verified)
+        return (
+          token.metaplexData?.parsed?.data?.creators?.some(
+            (creator) =>
+              filter.value.includes(creator.address.toString()) &&
+              ((cluster && cluster === 'devnet') || creator.verified)
+          ) ||
+          token.indexedData?.mint_address_nfts?.metadatas_metadata_creators?.some(
+            (creator) =>
+              filter.value.includes(creator.creator_address) &&
+              ((cluster && cluster === 'devnet') || creator.verified)
+          )
         )
-      case 'symbol':
-        return filter.value.includes(token.metaplexData?.parsed.data.symbol)
       case 'issuer':
         return filter.value.includes(
           token.tokenManager?.parsed.issuer.toString() ?? ''

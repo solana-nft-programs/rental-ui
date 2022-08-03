@@ -136,9 +136,12 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
 
                 if (elligibleForRent(config, tokenData)) {
                   logConfigTokenDataEvent(
-                    'nft menu: click issue',
+                    'nft: click issue',
                     config,
-                    tokenData
+                    tokenData,
+                    {
+                      batch_uploaded: false
+                    }
                   )
                   rentalIssueCard.showModal({
                     tokenDatas: [tokenData],

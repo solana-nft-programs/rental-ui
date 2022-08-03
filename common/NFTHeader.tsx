@@ -6,6 +6,7 @@ import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { FaLink } from 'react-icons/fa'
 
 import { notify } from './Notification'
+import { getNameFromTokenData } from './tokenDataUtils'
 
 export const handleCopy = (shareUrl: string) => {
   navigator.clipboard.writeText(shareUrl)
@@ -27,7 +28,8 @@ export const NFTHeader: React.FC<NFTHeaderProps> = ({
   return (
     <div
       className="flex w-full cursor-pointer flex-col justify-between"
-      onClick={() => {
+      onClick={(e) => {
+        e.stopPropagation()
         logConfigTokenDataEvent('nft: click claim link', config, tokenData)
         handleCopy(
           getLink(
@@ -38,7 +40,7 @@ export const NFTHeader: React.FC<NFTHeaderProps> = ({
     >
       <div className="flex items-center gap-2 font-bold">
         <div className="w-fit overflow-hidden text-ellipsis whitespace-nowrap text-left text-lg">
-          {tokenData.metaplexData?.parsed?.data.name}
+          {getNameFromTokenData(tokenData, 'Unknown')}
         </div>
         <div className="flex w-fit">
           <FaLink />

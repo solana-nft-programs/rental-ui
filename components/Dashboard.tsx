@@ -19,7 +19,7 @@ import { RefreshButton } from 'common/RefreshButton'
 import { SelecterDrawer } from 'common/SelectedDrawer'
 import { Selector } from 'common/Selector'
 import { TabSelector } from 'common/TabSelector'
-import { elligibleForRent } from 'common/tokenDataUtils'
+import { elligibleForRent, getMintfromTokenData } from 'common/tokenDataUtils'
 import type { ProjectConfig } from 'config/config'
 import { projectConfigs } from 'config/config'
 import { useManagedTokens } from 'hooks/useManagedTokens'
@@ -73,10 +73,15 @@ export const groupByConfig = (
   )
 }
 
-export const tokenDatasId = (tokenDatas: TokenData[] | undefined) =>
-  tokenDatas
-    ?.map((tokenData) => tokenData.metaplexData?.pubkey.toString())
-    .join(',')
+export const tokenDatasId = (
+  tokenDatas:
+    | (
+        | Pick<TokenData, 'tokenManager'>
+        | Pick<TokenData, 'metaplexData'>
+        | Pick<TokenData, 'indexedData'>
+      )[]
+    | undefined
+) => tokenDatas?.map((tokenData) => getMintfromTokenData(tokenData)).join(',')
 
 export const Dashboard = () => {
   const walletId = useWalletId()
@@ -99,10 +104,10 @@ export const Dashboard = () => {
         ...(managedTokens.data?.filter(
           (tokenData) =>
             !userTokenDatas.data
-              ?.map((userTokenData) =>
-                userTokenData.metaplexData?.pubkey.toString()
+              ?.map(
+                (userTokenData) => getMintfromTokenData(userTokenData) ?? ''
               )
-              .includes(tokenData.metaplexData?.pubkey.toString())
+              .includes(getMintfromTokenData(tokenData) ?? '')
         ) ?? []),
       ]
     },

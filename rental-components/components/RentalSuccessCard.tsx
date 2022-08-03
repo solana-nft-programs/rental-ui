@@ -8,6 +8,7 @@ import {
   ShareTwitterButton,
   shareTwitterClaimedLink,
 } from 'common/ShareTwitterButton'
+import { getNameFromTokenData } from 'common/tokenDataUtils'
 import { transactionUrl } from 'common/utils'
 import { useMintMetadata } from 'hooks/useMintMetadata'
 import { useWalletId } from 'hooks/useWalletId'
@@ -58,7 +59,7 @@ export const RentalSuccessCard = ({
       </div>
       <div className="text-center text-2xl text-light-0">Congratulations!</div>
       <div className="mb-6 text-center text-lg text-medium-4">
-        You&apos;ve rented {tokenData.metaplexData?.parsed.data.name}
+        You&apos;ve rented {getNameFromTokenData(tokenData, 'unknown')}
       </div>
       <div
         className={`mb-4 flex w-full justify-center gap-4 overflow-x-auto pb-6`}

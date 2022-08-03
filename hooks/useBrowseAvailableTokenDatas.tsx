@@ -12,8 +12,6 @@ import {
 } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/accounts'
 import type { UseInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
 import { USE_INVALIDATOR_ADDRESS } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
-import { findUseInvalidatorAddress } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator/pda'
-import type * as metaplex from '@metaplex-foundation/mpl-token-metadata'
 import * as Sentry from '@sentry/browser'
 import type * as spl from '@solana/spl-token'
 import type { Connection, PublicKey } from '@solana/web3.js'
@@ -34,10 +32,9 @@ export const TOKEN_DATA_KEY = 'tokenData'
 
 export type BrowseAvailableTokenData = Pick<
   TokenData,
+  | 'mint'
   | 'indexedData'
   | 'tokenManager'
-  | 'mint'
-  | 'metaplexData'
   | 'claimApprover'
   | 'useInvalidator'
   | 'timeInvalidator'
@@ -56,14 +53,19 @@ export type IndexedData = {
       trait_type: string
       value: string
     }[]
+    metadatas_metadata_creators: {
+      creator_address: string
+      verified: boolean
+    }[]
   }
 }
 
-export const filterKnownInvalidators = async (
-  config: ProjectConfig,
-  indexedTokenManagers: IndexedData[],
-  trace?: Trace
-) => {
+export async function filterKnownInvalidators<
+  T extends {
+    address?: string
+    invalidator_address?: { invalidator: string }[]
+  }
+>(config: ProjectConfig, indexedTokenManagers: T[], trace?: Trace) {
   /////
   const collectSpan = trace?.startChild({
     op: 'collect-known-invalidators',
@@ -72,11 +74,14 @@ export const filterKnownInvalidators = async (
     indexedTokenManagers.map(async ({ address }): Promise<string[]> => {
       const tokenManagerId = tryPublicKey(address)
       if (!tokenManagerId) return []
-      const [[timeInvalidatorId], [useInvalidatorId]] = await Promise.all([
-        findTimeInvalidatorAddress(tokenManagerId),
-        findUseInvalidatorAddress(tokenManagerId),
-      ])
-      return [timeInvalidatorId.toString(), useInvalidatorId.toString()]
+      const [timeInvalidatorId] = await findTimeInvalidatorAddress(
+        tokenManagerId
+      )
+      // const [[timeInvalidatorId], [useInvalidatorId]] = await Promise.all([
+      //   findTimeInvalidatorAddress(tokenManagerId),
+      //   findUseInvalidatorAddress(tokenManagerId),
+      // ])
+      return [timeInvalidatorId.toString()]
     })
   )
   collectSpan?.finish()
@@ -253,22 +258,13 @@ export const useBrowseAvailableTokenDatas = (
 
         ////
         const mintIds = tokenManagerDatas.map((tm) => tm.parsed.mint)
-        const metaplexIds = tokenManagerDatas.map((tm) => {
-          const indexData = indexedTokenManagerDatas[tm.pubkey.toString()]
-          return indexData?.mint_address_nfts?.metadatas_attributes
-            ? tryPublicKey(
-                indexData.mint_address_nfts.metadatas_attributes[0]
-                  ?.metadata_address
-              )
-            : null
-        })
         const idsToFetch = tokenManagerDatas.reduce(
           (acc, tm) => [
             ...acc,
             tm.parsed.claimApprover,
             ...tm.parsed.invalidators,
           ],
-          [...mintIds, ...metaplexIds] as (PublicKey | null)[]
+          [...mintIds] as (PublicKey | null)[]
         )
 
         const accountsById = await withTrace(
@@ -292,12 +288,8 @@ export const useBrowseAvailableTokenDatas = (
             indexedData:
               indexedTokenManagerDatas[tokenManagerData.pubkey.toString()],
             tokenManager: tokenManagerData,
-            mint: accountsById[tokenManagerData.parsed.mint.toString()] as
-              | AccountData<spl.MintInfo>
-              | undefined,
-            metaplexData: accountsById[metaplexIds[i]!.toString()] as
-              | AccountData<metaplex.MetadataData>
-              | undefined,
+            mint: (accountsById[tokenManagerData.parsed.mint.toString()] ??
+              null) as AccountData<spl.MintInfo> | null,
             claimApprover: tokenManagerData.parsed.claimApprover?.toString()
               ? (accountsById[
                   tokenManagerData.parsed.claimApprover?.toString()

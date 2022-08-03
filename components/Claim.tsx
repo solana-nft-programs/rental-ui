@@ -15,6 +15,7 @@ import { NFTHeader } from 'common/NFTHeader'
 import { NFTIssuerInfo } from 'common/NFTIssuerInfo'
 import { NFTRevokeButton } from 'common/NFTRevokeButton'
 import { StyledBackground } from 'common/StyledBackground'
+import { getNameFromTokenData } from 'common/tokenDataUtils'
 import ClaimQRCode from 'components/ClaimQRCode'
 import { useOtp } from 'hooks/useOtp'
 import { useTokenData } from 'hooks/useTokenData'
@@ -49,8 +50,14 @@ function Claim(props: { tokenDataString: string }) {
           name="twitter:title"
           content={
             tokenData.tokenManager?.parsed.state === TokenManagerState.Claimed
-              ? `Just claimed ${tokenData.metaplexData?.parsed.data.name} on Cardinal's NFT Rental Marketplace`
-              : `Rent ${tokenData.metaplexData?.parsed.data.name} on Cardinal's NFT Rental Marketplace`
+              ? `Just claimed ${getNameFromTokenData(
+                  tokenData,
+                  'unknown'
+                )} on Cardinal's NFT Rental Marketplace`
+              : `Rent ${getNameFromTokenData(
+                  tokenData,
+                  'unknown'
+                )} on Cardinal's NFT Rental Marketplace`
           }
         />
         <meta

@@ -10,7 +10,10 @@ import type { ProjectConfig } from 'config/config'
 import { SolanaLogo } from 'rental-components/common/icons'
 import type { InvalidatorOption } from 'rental-components/components/RentalIssueCard'
 
-export const getTokenMaxDuration = (tokenData: TokenData, UTCNow: number) => {
+export const getTokenMaxDuration = (
+  tokenData: Pick<TokenData, 'timeInvalidator'>,
+  UTCNow: number
+) => {
   if (tokenData.timeInvalidator?.parsed.maxExpiration) {
     const maxDuration =
       tokenData.timeInvalidator?.parsed.maxExpiration?.toNumber() - UTCNow
@@ -23,7 +26,47 @@ export const getTokenMaxDuration = (tokenData: TokenData, UTCNow: number) => {
   }
 }
 
-export const getSymbolFromTokenData = (tokenData: TokenData) => {
+export const getNameFromTokenData = (
+  tokenData: Pick<TokenData, 'indexedData'> | Pick<TokenData, 'metaplexData'>,
+  defaultName?: string
+) => {
+  return (
+    ('indexedData' in tokenData &&
+      tokenData.indexedData?.mint_address_nfts?.name) ||
+    ('metaplexData' in tokenData && tokenData.metaplexData?.parsed.data.name) ||
+    defaultName
+  )
+}
+
+export const getUrifromTokenData = (
+  tokenData: Pick<TokenData, 'indexedData'> | Pick<TokenData, 'metaplexData'>
+) => {
+  return (
+    ('indexedData' in tokenData &&
+      tokenData.indexedData?.mint_address_nfts?.uri) ||
+    ('metaplexData' in tokenData && tokenData.metaplexData?.parsed.data.uri) ||
+    null
+  )
+}
+
+export const getMintfromTokenData = (
+  tokenData:
+    | Pick<TokenData, 'tokenManager'>
+    | Pick<TokenData, 'metaplexData'>
+    | Pick<TokenData, 'indexedData'>
+) => {
+  return (
+    ('tokenManager' in tokenData &&
+      tokenData.tokenManager?.parsed?.mint.toString()) ||
+    ('indexedData' in tokenData && tokenData.indexedData?.mint) ||
+    ('metaplexData' in tokenData && tokenData.metaplexData?.parsed.mint) ||
+    null
+  )
+}
+
+export const getSymbolFromTokenData = (
+  tokenData: Pick<TokenData, 'claimApprover' | 'timeInvalidator'>
+) => {
   return mintSymbol(
     tokenData.claimApprover?.parsed?.paymentMint ??
       tokenData.timeInvalidator?.parsed.extensionPaymentMint
@@ -42,7 +85,7 @@ export const PaymentMintImage: React.FC<
       tokenData.timeInvalidator?.parsed.extensionPaymentMint
   )
   return img ? (
-    <img {...props} src={img} alt={tokenData.metaplexData?.parsed.data.name} />
+    <img {...props} src={img} alt={getNameFromTokenData(tokenData)} />
   ) : (
     <SolanaLogo {...props} />
   )
@@ -51,7 +94,7 @@ export const PaymentMintImage: React.FC<
 export function getTokenRentalRate(
   config: ProjectConfig,
   paymentMints: { [name: string]: splToken.MintInfo },
-  tokenData: TokenData
+  tokenData: Pick<TokenData, 'timeInvalidator' | 'claimApprover'>
 ) {
   const rateOption = config.marketplaceRate ?? 'days'
   const rateSeconds = new BN(DURATION_DATA[rateOption])
@@ -101,7 +144,7 @@ export function getTokenRentalRate(
 }
 
 export const getPriceFromTokenData = (
-  tokenData: TokenData,
+  tokenData: Pick<TokenData, 'claimApprover'>,
   paymentMints?: { [name: string]: splToken.MintInfo }
 ): number => {
   if (
@@ -126,7 +169,7 @@ export const getPriceFromTokenData = (
 
 export const getPriceOrRentalRate = (
   config: ProjectConfig,
-  tokenData: TokenData,
+  tokenData: Pick<TokenData, 'timeInvalidator' | 'claimApprover'>,
   paymentMints?: { [name: string]: splToken.MintInfo }
 ) => {
   if (!paymentMints) return 0
@@ -158,7 +201,7 @@ export const getPriceOrRentalRate = (
 }
 
 export const getRentalDuration = (
-  tokenData: TokenData,
+  tokenData: Pick<TokenData, 'timeInvalidator'>,
   UTCNow: number,
   claimed?: boolean
 ) => {

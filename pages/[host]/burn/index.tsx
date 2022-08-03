@@ -9,6 +9,10 @@ import { Card } from 'common/Card'
 import { HeaderSlim } from 'common/HeaderSlim'
 import { NFT } from 'common/NFT'
 import { notify } from 'common/Notification'
+import {
+  getMintfromTokenData,
+  getNameFromTokenData,
+} from 'common/tokenDataUtils'
 import { executeTransaction } from 'common/Transactions'
 import { asWallet } from 'common/Wallets'
 import { useUserTokenData } from 'hooks/useUserTokenData'
@@ -21,7 +25,7 @@ function Burn() {
 
   const revokeRental = async (tokenData: TokenData) => {
     const transaction = new Transaction()
-    const mintId = tokenData.metaplexData?.parsed.mint
+    const mintId = getMintfromTokenData(tokenData)
     if (!mintId || !wallet.publicKey) return
     const walletAta = await withFindOrInitAssociatedTokenAccount(
       transaction,
@@ -72,7 +76,7 @@ function Burn() {
         token?.metaplexData?.parsed?.data?.uri.includes('api.cardinal.so') &&
         !token.tokenManager &&
         token.tokenAccount?.parsed.state !== 'frozen' &&
-        token?.metaplexData?.parsed?.data.name === 'EXPIRED'
+        getNameFromTokenData(token) === 'EXPIRED'
     )
     // console.log(datas[0])
     // console.log(datas[1])

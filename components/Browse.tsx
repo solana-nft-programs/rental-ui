@@ -19,7 +19,9 @@ import { TabSelector } from 'common/TabSelector'
 import { getPriceOrRentalRate, getRentalDuration } from 'common/tokenDataUtils'
 import { Activity } from 'components/Activity'
 import type { ProjectConfig, TokenSection } from 'config/config'
+import type { BrowseAvailableTokenData } from 'hooks/useBrowseAvailableTokenDatas'
 import { useBrowseAvailableTokenDatas } from 'hooks/useBrowseAvailableTokenDatas'
+import type { BrowseClaimedTokenData } from 'hooks/useBrowseClaimedTokenDatas'
 import { useBrowseClaimedTokenDatas } from 'hooks/useBrowseClaimedTokenDatas'
 import { usePaymentMints } from 'hooks/usePaymentMints'
 import { useWalletId } from 'hooks/useWalletId'
@@ -92,14 +94,19 @@ export const tokenSectionsForConfig = (config: ProjectConfig) => {
   )
 }
 
-export const sortTokens = (
-  tokens: TokenData[],
+export function sortTokens<
+  T extends Pick<
+    TokenData,
+    'tokenManager' | 'claimApprover' | 'timeInvalidator'
+  >
+>(
+  tokens: T[],
   selectedOrderCategory: OrderCategories,
   config: ProjectConfig,
   UTCNow: number,
   claimed: boolean,
   paymentMints: { [name: string]: splToken.MintInfo }
-): TokenData[] => {
+): T[] {
   let sortedTokens
   switch (selectedOrderCategory) {
     case OrderCategories.RecentlyListed:
@@ -189,12 +196,15 @@ export const Browse = () => {
     selectedGroup !== 0
   )
   const claimedTokenDatas = useBrowseClaimedTokenDatas(selectedGroup !== 1)
-
   const tokenQuery =
     selectedGroup === 0 ? availableTokenDatas : claimedTokenDatas
+
   const sortedAttributes = getAllAttributes(tokenQuery.data ?? [])
   const filteredAndSortedTokens = sortTokens(
-    filterTokensByAttributes(tokenQuery.data ?? [], selectedFilters),
+    filterTokensByAttributes<BrowseAvailableTokenData | BrowseClaimedTokenData>(
+      tokenQuery.data ?? [],
+      selectedFilters
+    ),
     selectedOrderCategory,
     config,
     UTCNow,

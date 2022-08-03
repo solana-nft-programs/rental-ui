@@ -95,7 +95,7 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
         rentalType = 'expiration'
         rentalFixedExpirationCard.showModal({ tokenData, otpKeypair })
       }
-      logConfigTokenDataEvent('nft: click rent', config, tokenData, {
+      logConfigTokenDataEvent('nft: click claim', config, tokenData, {
         rental_type: rentalType,
       })
     }
