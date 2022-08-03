@@ -27,13 +27,14 @@ export const NFTHeader: React.FC<NFTHeaderProps> = ({
   return (
     <div
       className="flex w-full cursor-pointer flex-col justify-between"
-      onClick={() =>
+      onClick={(e) => {
+        e.stopPropagation()
         handleCopy(
           getLink(
             `/${config.name}/claim/${tokenData.tokenManager?.pubkey.toBase58()}`
           )
         )
-      }
+      }}
     >
       <div className="flex items-center gap-2 font-bold">
         <div className="w-fit overflow-hidden text-ellipsis whitespace-nowrap text-left text-lg">
