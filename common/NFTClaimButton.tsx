@@ -90,7 +90,7 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
         rentalType = 'rate'
       } else if (tokenData.timeInvalidator?.parsed?.durationSeconds) {
         rentalFixedCard.showModal({ tokenData, otpKeypair })
-        rentalType = 'fixed duration'
+        rentalType = 'duration'
       } else {
         rentalType = 'expiration'
         rentalFixedExpirationCard.showModal({ tokenData, otpKeypair })

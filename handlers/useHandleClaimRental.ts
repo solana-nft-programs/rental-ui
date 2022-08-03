@@ -27,13 +27,12 @@ import { useUserPaymentTokenAccount } from 'hooks/useUserPaymentTokenAccount'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useMutation, useQueryClient } from 'react-query'
-
-import type { RentalType } from './useHandleIssueRental'
+import type { InvalidatorOption } from 'rental-components/components/RentalIssueCard'
 
 export interface HandleClaimRentalParams {
   tokenData: TokenData
   otpKeypair?: Keypair
-  rentalType: RentalType
+  rentalType: InvalidatorOption
 }
 
 export const allowedToRent = async (

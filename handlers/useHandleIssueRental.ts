@@ -28,7 +28,10 @@ import { PAYMENT_MINTS, usePaymentMints } from 'hooks/usePaymentMints'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useMutation, useQueryClient } from 'react-query'
-import type { RentalCardConfig } from 'rental-components/components/RentalIssueCard'
+import type {
+  InvalidatorOption,
+  RentalCardConfig,
+} from 'rental-components/components/RentalIssueCard'
 
 export type IssueTxResult = {
   tokenManagerId: PublicKey
@@ -38,8 +41,6 @@ export type IssueTxResult = {
   error?: string
   txid?: string
 }
-
-export type RentalType = 'rate' | 'fixed duration' | 'expiration' | 'manual'
 
 export interface HandleIssueRentalParams {
   tokenDatas: TokenData[]
@@ -61,7 +62,7 @@ export interface HandleIssueRentalParams {
   disablePartialExtension?: boolean
   claimRentalReceipt?: boolean
   //
-  rentalType: RentalType
+  rentalType: InvalidatorOption
 }
 
 export const useHandleIssueRental = () => {

@@ -70,16 +70,6 @@ export const ShareTwitterButton: React.FC<Props> = ({
 }: Props) => {
   const { config } = useProjectConfig()
 
-  function sendLogEvents() {
-    for (const tokenData of tokenDatas) {
-      logConfigTokenDataEvent(
-        `${shareType} rental: click share`,
-        config,
-        tokenData
-      )
-    }
-  }
-
   return (
     <a
       {...rest}
@@ -95,7 +85,13 @@ export const ShareTwitterButton: React.FC<Props> = ({
       rel="noreferrer"
       href={shareLink}
       onClick={() => {
-        sendLogEvents()
+        for (const tokenData of tokenDatas) {
+          logConfigTokenDataEvent(
+            `${shareType} rental: click share`,
+            config,
+            tokenData
+          )
+        }
       }}
     >
       <div className="flex items-center justify-center gap-1">

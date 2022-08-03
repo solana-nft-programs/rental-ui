@@ -43,25 +43,24 @@ export const HeaderSlim: React.FC<Props> = ({ tabs, hideDashboard }: Props) => {
     if (wallet.connected && wallet.publicKey) {
       const userId = wallet.publicKey.toString()
       amplitude.setUserId(userId)
-    }
-    if (displayName) {
-      const identify = new amplitude.Identify().setOnce(
-        'twitter_handle',
-        displayName
-      )
-      amplitude.identify(identify)
+
+      Sentry.configureScope((scope) => {
+        scope.setUser({
+          username: displayName ?? wallet.publicKey?.toString(),
+          wallet: wallet.publicKey?.toString(),
+        })
+        scope.setTag('wallet', wallet.publicKey?.toString())
+      })
+
+      if (displayName) {
+        const identify = new amplitude.Identify().setOnce(
+          'twitter_handle',
+          displayName
+        )
+        amplitude.identify(identify)
+      }
     }
   }, [wallet.connected, wallet.publicKey?.toString(), displayName])
-
-  useEffect(() => {
-    Sentry.configureScope((scope) => {
-      scope.setUser({
-        username: wallet.publicKey?.toString(),
-        wallet: wallet.publicKey?.toString(),
-      })
-      scope.setTag('wallet', wallet.publicKey?.toString())
-    })
-  }, [wallet.publicKey?.toString()])
 
   return (
     <div className="w-full px-4 py-4">
