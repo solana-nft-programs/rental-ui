@@ -53,6 +53,10 @@ export type IndexedData = {
       trait_type: string
       value: string
     }[]
+    metadatas_metadata_creators: {
+      creator_address: string
+      verified: boolean
+    }[]
   }
 }
 

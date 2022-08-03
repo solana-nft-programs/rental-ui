@@ -73,7 +73,13 @@ export const groupByConfig = (
 }
 
 export const tokenDatasId = (
-  tokenDatas: Pick<TokenData, 'metaplexData'>[] | undefined
+  tokenDatas:
+    | (
+        | Pick<TokenData, 'tokenManager'>
+        | Pick<TokenData, 'metaplexData'>
+        | Pick<TokenData, 'indexedData'>
+      )[]
+    | undefined
 ) => tokenDatas?.map((tokenData) => getMintfromTokenData(tokenData)).join(',')
 
 export const Dashboard = () => {
@@ -97,10 +103,10 @@ export const Dashboard = () => {
         ...(managedTokens.data?.filter(
           (tokenData) =>
             !userTokenDatas.data
-              ?.map((userTokenData) =>
-                userTokenData.metaplexData?.pubkey.toString()
+              ?.map(
+                (userTokenData) => getMintfromTokenData(userTokenData) ?? ''
               )
-              .includes(tokenData.metaplexData?.pubkey.toString())
+              .includes(getMintfromTokenData(tokenData) ?? '')
         ) ?? []),
       ]
     },

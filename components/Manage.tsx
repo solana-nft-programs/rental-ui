@@ -4,7 +4,7 @@ import { HeaderSlim } from 'common/HeaderSlim'
 import { HeroSmall } from 'common/HeroSmall'
 import { getAllAttributes } from 'common/NFTAttributeFilters'
 import { SelecterDrawer } from 'common/SelectedDrawer'
-import { elligibleForRent } from 'common/tokenDataUtils'
+import { elligibleForRent, getMintfromTokenData } from 'common/tokenDataUtils'
 import type { TokenFilter } from 'config/config'
 import { useManagedTokens } from 'hooks/useManagedTokens'
 import { useUserTokenData } from 'hooks/useUserTokenData'
@@ -12,6 +12,7 @@ import { useWalletId } from 'hooks/useWalletId'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useState } from 'react'
 import { useQuery } from 'react-query'
+import { tokenDatasId } from './Dashboard'
 
 import { TokenQueryResults } from './TokenQueryResults'
 
@@ -81,11 +82,6 @@ export const manageTokenGroups = (
   },
 ]
 
-export const tokenDatasId = (tokenDatas: TokenData[] | undefined) =>
-  tokenDatas
-    ?.map((tokenData) => tokenData.metaplexData?.pubkey.toString())
-    .join(',')
-
 export const Manage = () => {
   const walletId = useWalletId()
   const { config } = useProjectConfig()
@@ -105,10 +101,10 @@ export const Manage = () => {
         ...(managedTokens.data?.filter(
           (tokenData) =>
             !userTokenDatas.data
-              ?.map((userTokenData) =>
-                userTokenData.metaplexData?.pubkey.toString()
+              ?.map(
+                (userTokenData) => getMintfromTokenData(userTokenData) ?? ''
               )
-              .includes(tokenData.metaplexData?.pubkey.toString())
+              .includes(getMintfromTokenData(tokenData) ?? '')
         ) ?? []),
       ]
     },

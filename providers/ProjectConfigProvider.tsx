@@ -52,10 +52,17 @@ export const filterTokens = (
     if (!filter) return true
     switch (filter.type) {
       case 'creators':
-        return token.metaplexData?.parsed?.data?.creators?.some(
-          (creator) =>
-            filter.value.includes(creator.address.toString()) &&
-            ((cluster && cluster === 'devnet') || creator.verified)
+        return (
+          token.metaplexData?.parsed?.data?.creators?.some(
+            (creator) =>
+              filter.value.includes(creator.address.toString()) &&
+              ((cluster && cluster === 'devnet') || creator.verified)
+          ) ||
+          token.indexedData?.mint_address_nfts?.metadatas_metadata_creators?.some(
+            (creator) =>
+              filter.value.includes(creator.creator_address) &&
+              ((cluster && cluster === 'devnet') || creator.verified)
+          )
         )
       case 'issuer':
         return filter.value.includes(
