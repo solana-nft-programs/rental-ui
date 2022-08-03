@@ -1,4 +1,5 @@
 import {
+  tryPublicKey,
   withFindOrInitAssociatedTokenAccount,
   withWrapSol,
 } from '@cardinal/common'
@@ -7,7 +8,7 @@ import { BN, utils } from '@project-serum/anchor'
 import type { PublicKey } from '@solana/web3.js'
 import { Connection, Keypair, Transaction } from '@solana/web3.js'
 import { getTokenData } from 'apis/api'
-import { getATokenAccountInfo, tryPublicKey } from 'apis/utils'
+import { getATokenAccountInfo } from 'apis/utils'
 import { firstParam } from 'common/utils'
 import { projectConfigs } from 'config/config'
 import { WRAPPED_SOL_MINT } from 'hooks/usePaymentMints'

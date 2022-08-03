@@ -1,4 +1,4 @@
-import { getBatchedMultipleAccounts } from '@cardinal/common'
+import { getBatchedMultipleAccounts, tryPublicKey } from '@cardinal/common'
 import type { AccountData } from '@cardinal/token-manager'
 import { tokenManager } from '@cardinal/token-manager/dist/cjs/programs'
 import type { PaidClaimApproverData } from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
@@ -13,31 +13,13 @@ import * as metaplex from '@metaplex-foundation/mpl-token-metadata'
 import { Edition } from '@metaplex-foundation/mpl-token-metadata'
 import * as anchor from '@project-serum/anchor'
 import * as spl from '@solana/spl-token'
-import type { Connection } from '@solana/web3.js'
-import { Keypair, PublicKey } from '@solana/web3.js'
+import type { Connection, PublicKey } from '@solana/web3.js'
+import { Keypair } from '@solana/web3.js'
 import type { TokenFilter } from 'config/config'
 import type { IndexedData } from 'hooks/useBrowseAvailableTokenDatas'
 import type { SingleTokenData } from 'hooks/useTokenData'
 import type { ParsedTokenAccountData } from 'providers/SolanaAccountsProvider'
 import { fetchAccountDataById } from 'providers/SolanaAccountsProvider'
-
-import { tryPublicKey } from './utils'
-
-export async function findAssociatedTokenAddress(
-  walletAddress: PublicKey,
-  mintAddress: PublicKey
-): Promise<PublicKey> {
-  return (
-    await PublicKey.findProgramAddress(
-      [
-        walletAddress.toBuffer(),
-        spl.TOKEN_PROGRAM_ID.toBuffer(),
-        mintAddress.toBuffer(),
-      ],
-      spl.ASSOCIATED_TOKEN_PROGRAM_ID
-    )
-  )[0]
-}
 
 export interface TokenData {
   tokenAccount?: AccountData<ParsedTokenAccountData>

@@ -28,17 +28,6 @@ export async function getATokenAccountInfo(
   return token.getAccountInfo(aTokenAccount)
 }
 
-export const tryPublicKey = (
-  publicKeyString: string | string[] | undefined | null
-): web3.PublicKey | null => {
-  if (!publicKeyString) return null
-  try {
-    return new web3.PublicKey(publicKeyString)
-  } catch (e) {
-    return null
-  }
-}
-
 export const executeAllTransactions = async (
   connection: Connection,
   wallet: Wallet,
