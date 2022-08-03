@@ -8,6 +8,7 @@ import { NFTClaimButton } from 'common/NFTClaimButton'
 import { NFTHeader } from 'common/NFTHeader'
 import { NFTIssuerInfo } from 'common/NFTIssuerInfo'
 import { NFTRevokeButton } from 'common/NFTRevokeButton'
+import { getMintfromTokenData } from 'common/tokenDataUtils'
 import type { BrowseAvailableTokenData } from 'hooks/useBrowseAvailableTokenDatas'
 import type { BrowseClaimedTokenData } from 'hooks/useBrowseClaimedTokenDatas'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
@@ -39,9 +40,7 @@ export const TokenQueryData: React.FC<Props> = ({
   useEffect(() => {
     setPageNum(DEFAULT_PAGE)
   }, [
-    tokenDatas
-      ?.map((tokenData) => tokenData.tokenManager?.parsed.mint)
-      .join(','),
+    tokenDatas?.map((tokenData) => getMintfromTokenData(tokenData)).join(','),
   ])
 
   useEffect(() => {
@@ -78,7 +77,7 @@ export const TokenQueryData: React.FC<Props> = ({
         <div className="flex flex-wrap justify-center gap-4 md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
           {tokenDatas?.slice(0, PAGE_SIZE * pageNum[0]).map((tokenData, i) => (
             <Card
-              key={`${tokenData.tokenManager?.pubkey.toString()}-${i}`}
+              key={`${getMintfromTokenData(tokenData)}-${i}`}
               className={`${handleClick && 'cursor-pointer'} ${
                 isSelected(tokenData, selectedTokens ?? [])
                   ? 'border-[1px] border-secondary'

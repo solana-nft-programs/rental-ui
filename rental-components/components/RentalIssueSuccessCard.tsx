@@ -55,7 +55,7 @@ export const RentalIssueSuccessCard = ({
         {tokenDatas.length > 1
           ? `(${tokenDatas.length})`
           : tokenDatas[0]
-          ? getNameFromTokenData(tokenDatas[0], '1')
+          ? getNameFromTokenData(tokenDatas[0], '(1)')
           : ''}
       </div>
       <div

@@ -38,6 +38,28 @@ export const getNameFromTokenData = (
   )
 }
 
+export const getUrifromTokenData = (
+  tokenData: Pick<TokenData, 'indexedData'> | Pick<TokenData, 'metaplexData'>
+) => {
+  return (
+    ('indexedData' in tokenData &&
+      tokenData.indexedData?.mint_address_nfts?.uri) ||
+    ('metaplexData' in tokenData && tokenData.metaplexData?.parsed.data.uri) ||
+    null
+  )
+}
+
+export const getMintfromTokenData = (
+  tokenData: Pick<TokenData, 'tokenManager'> | Pick<TokenData, 'metaplexData'>
+) => {
+  return (
+    ('tokenManager' in tokenData &&
+      tokenData.tokenManager?.parsed?.mint.toString()) ||
+    ('metaplexData' in tokenData && tokenData.metaplexData?.parsed.mint) ||
+    null
+  )
+}
+
 export const getSymbolFromTokenData = (
   tokenData: Pick<TokenData, 'claimApprover' | 'timeInvalidator'>
 ) => {
