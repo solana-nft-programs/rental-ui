@@ -253,22 +253,13 @@ export const useBrowseAvailableTokenDatas = (
 
         ////
         const mintIds = tokenManagerDatas.map((tm) => tm.parsed.mint)
-        const metaplexIds = tokenManagerDatas.map((tm) => {
-          const indexData = indexedTokenManagerDatas[tm.pubkey.toString()]
-          return indexData?.mint_address_nfts?.metadatas_attributes
-            ? tryPublicKey(
-                indexData.mint_address_nfts.metadatas_attributes[0]
-                  ?.metadata_address
-              )
-            : null
-        })
         const idsToFetch = tokenManagerDatas.reduce(
           (acc, tm) => [
             ...acc,
             tm.parsed.claimApprover,
             ...tm.parsed.invalidators,
           ],
-          [...mintIds, ...metaplexIds] as (PublicKey | null)[]
+          [...mintIds] as (PublicKey | null)[]
         )
 
         const accountsById = await withTrace(
