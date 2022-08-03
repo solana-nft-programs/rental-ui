@@ -1,7 +1,9 @@
 import { css } from '@emotion/react'
+import { logConfigTokenDataEvent } from 'apis/amplitude'
 import type { TokenData } from 'apis/api'
 import type { ProjectConfig } from 'config/config'
 import type { IssueTxResult } from 'handlers/useHandleIssueRental'
+import { useProjectConfig } from 'providers/ProjectConfigProvider'
 
 import { getNameFromTokenData } from './tokenDataUtils'
 
@@ -10,6 +12,8 @@ type Props = {
   className?: string
   disabled?: boolean
   shareLink: string
+  shareType: 'issue' | 'claim'
+  tokenDatas: TokenData[]
 }
 
 const BASE_URL = `https://twitter.com/intent/tweet?text=`
@@ -71,8 +75,12 @@ export const ShareTwitterButton: React.FC<Props> = ({
   className,
   disabled,
   shareLink,
+  shareType,
+  tokenDatas,
   ...rest
 }: Props) => {
+  const { config } = useProjectConfig()
+
   return (
     <a
       {...rest}
@@ -87,6 +95,15 @@ export const ShareTwitterButton: React.FC<Props> = ({
       target="_blank"
       rel="noreferrer"
       href={shareLink}
+      onClick={() => {
+        for (const tokenData of tokenDatas) {
+          logConfigTokenDataEvent(
+            `${shareType} rental: click share`,
+            config,
+            tokenData
+          )
+        }
+      }}
     >
       <div className="flex items-center justify-center gap-1">
         {children && (

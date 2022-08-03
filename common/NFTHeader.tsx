@@ -1,4 +1,5 @@
 import { DisplayAddress } from '@cardinal/namespaces-components'
+import { logConfigTokenDataEvent } from 'apis/amplitude'
 import type { TokenData } from 'apis/api'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
@@ -29,6 +30,7 @@ export const NFTHeader: React.FC<NFTHeaderProps> = ({
       className="flex w-full cursor-pointer flex-col justify-between"
       onClick={(e) => {
         e.stopPropagation()
+        logConfigTokenDataEvent('nft: click claim link', config, tokenData)
         handleCopy(
           getLink(
             `/${config.name}/claim/${tokenData.tokenManager?.pubkey.toBase58()}`

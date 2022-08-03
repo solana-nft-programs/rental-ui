@@ -204,7 +204,9 @@ export const RentalIssueRate = ({
             This token can be rented at the specified rate for any duration less
             than or equal to the max rental duration.{' '}
             {maxExpiration &&
-              `It will be automatically returned to your wallet at ${new Date(maxExpiration * 1000)
+              `It will be automatically returned to your wallet at ${new Date(
+                maxExpiration * 1000
+              )
                 .toLocaleString('en-US')
                 .substring(11, undefined)} on ${new Date(maxExpiration * 1000)
                 .toLocaleString('en-US')
@@ -244,6 +246,7 @@ export const RentalIssueRate = ({
                   customInvalidator: undefined,
                   disablePartialExtension: undefined,
                   claimRentalReceipt: undefined,
+                  rentalType: 'rate',
                 },
                 {
                   onSuccess: (txData) => {

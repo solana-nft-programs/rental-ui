@@ -54,6 +54,7 @@ export const RentalManualCard = ({
               {
                 tokenData,
                 otpKeypair,
+                rentalType: 'manual',
               },
               {
                 onSuccess: (txid) => {

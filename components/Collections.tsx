@@ -1,3 +1,4 @@
+import * as amplitude from '@amplitude/analytics-browser'
 import { css } from '@emotion/react'
 import { GlyphPlus } from 'assets/GlyphPlus'
 import { MoneyGlow, MoneyGlowSecondary } from 'assets/MoneyGlow'
@@ -121,9 +122,14 @@ export const Collections = () => {
                         background: ${transparentize(0.8, config.colors.glow)};
                       }
                     `}
-                    onClick={() =>
+                    onClick={() => {
+                      amplitude.logEvent('marketplace: click collection', {
+                        id: config.name,
+                        name: config.displayName,
+                        type: config.type,
+                      })
                       router.push(`/${config.name}${location.search}`)
-                    }
+                    }}
                     badges={config.badges}
                     hero={
                       <div

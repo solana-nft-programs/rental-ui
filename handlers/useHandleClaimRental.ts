@@ -10,20 +10,29 @@ import { BN } from '@project-serum/anchor'
 import { useWallet } from '@solana/wallet-adapter-react'
 import type { Connection, Keypair } from '@solana/web3.js'
 import { PublicKey, Transaction } from '@solana/web3.js'
+import { logConfigTokenDataEvent } from 'apis/amplitude'
 import type { TokenData } from 'apis/api'
 import { notify } from 'common/Notification'
+import { getPriceFromTokenData } from 'common/tokenDataUtils'
 import { executeTransaction } from 'common/Transactions'
 import { asWallet } from 'common/Wallets'
 import type { ProjectConfig } from 'config/config'
 import { TOKEN_DATA_KEY } from 'hooks/useBrowseAvailableTokenDatas'
-import { WRAPPED_SOL_MINT } from 'hooks/usePaymentMints'
+import {
+  PAYMENT_MINTS,
+  usePaymentMints,
+  WRAPPED_SOL_MINT,
+} from 'hooks/usePaymentMints'
 import { useUserPaymentTokenAccount } from 'hooks/useUserPaymentTokenAccount'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
+import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useMutation, useQueryClient } from 'react-query'
+import type { InvalidatorOption } from 'rental-components/components/RentalIssueCard'
 
 export interface HandleClaimRentalParams {
   tokenData: TokenData
   otpKeypair?: Keypair
+  rentalType: InvalidatorOption
 }
 
 export const allowedToRent = async (
@@ -92,10 +101,14 @@ export const useHandleClaimRental = () => {
   const userWSolTokenAccount = useUserPaymentTokenAccount(
     new PublicKey(WRAPPED_SOL_MINT)
   )
+  const { config } = useProjectConfig()
+  const paymentMints = usePaymentMints()
+
   return useMutation(
     async ({
       tokenData,
       otpKeypair,
+      rentalType,
     }: HandleClaimRentalParams): Promise<string> => {
       if (!tokenData.tokenManager) throw new Error('No token manager data')
       if (!wallet.publicKey) throw new Error('Wallet not connected')
@@ -145,14 +158,42 @@ export const useHandleClaimRental = () => {
           otpKeypair,
         }
       )
-      return executeTransaction(connection, asWallet(wallet), transaction, {
-        confirmOptions: {
-          commitment: 'confirmed',
-          maxRetries: 3,
-        },
-        signers: otpKeypair ? [otpKeypair] : [],
-        notificationConfig: {},
+      const tx = await executeTransaction(
+        connection,
+        asWallet(wallet),
+        transaction,
+        {
+          confirmOptions: {
+            commitment: 'confirmed',
+            maxRetries: 3,
+          },
+          signers: otpKeypair ? [otpKeypair] : [],
+          notificationConfig: {},
+        }
+      )
+      logConfigTokenDataEvent('nft rental: claim', config, tokenData, {
+        rental_type: rentalType,
+        rental_price: getPriceFromTokenData(tokenData, paymentMints.data),
+        rental_total_price: getPriceFromTokenData(tokenData, paymentMints.data),
+        issuer_id: tokenData.tokenManager?.parsed.issuer.toString(),
+        recipient_id: wallet.publicKey?.toString(),
+        duration_seconds:
+          tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber(),
+        expiration_timestamp:
+          tokenData.timeInvalidator?.parsed.expiration?.toNumber(),
+        max_expiration:
+          tokenData.timeInvalidator?.parsed.maxExpiration?.toNumber(),
+        payment_mint: PAYMENT_MINTS.filter(
+          (mint) =>
+            mint.mint === tokenData.claimApprover?.parsed.paymentMint.toString()
+        )[0]?.symbol,
+        extension_payment_mint: PAYMENT_MINTS.filter(
+          (mint) =>
+            mint.mint ===
+            tokenData.timeInvalidator?.parsed.extensionPaymentMint?.toString()
+        )[0]?.symbol,
       })
+      return tx
     },
     {
       onSuccess: () => {

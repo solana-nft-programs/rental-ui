@@ -13,14 +13,25 @@ import {
   SystemProgram,
   Transaction,
 } from '@solana/web3.js'
+import { logConfigTokenDataEvent } from 'apis/amplitude'
 import type { TokenData } from 'apis/api'
 import { executeAllTransactions } from 'apis/utils'
+import { DURATION_DATA } from 'common/DurationInput'
+import {
+  getPriceFromTokenData,
+  getTokenRentalRate,
+} from 'common/tokenDataUtils'
+import { fmtMintAmount } from 'common/units'
 import { asWallet } from 'common/Wallets'
 import { TOKEN_DATA_KEY } from 'hooks/useBrowseAvailableTokenDatas'
+import { PAYMENT_MINTS, usePaymentMints } from 'hooks/usePaymentMints'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useMutation, useQueryClient } from 'react-query'
-import type { RentalCardConfig } from 'rental-components/components/RentalIssueCard'
+import type {
+  InvalidatorOption,
+  RentalCardConfig,
+} from 'rental-components/components/RentalIssueCard'
 
 export type IssueTxResult = {
   tokenManagerId: PublicKey
@@ -50,6 +61,8 @@ export interface HandleIssueRentalParams {
   customInvalidator?: string
   disablePartialExtension?: boolean
   claimRentalReceipt?: boolean
+  //
+  rentalType: InvalidatorOption
 }
 
 export const useHandleIssueRental = () => {
@@ -57,6 +70,8 @@ export const useHandleIssueRental = () => {
   const { config } = useProjectConfig()
   const { connection } = useEnvironmentCtx()
   const queryClient = useQueryClient()
+  const paymentMints = usePaymentMints()
+
   return useMutation(
     async ({
       tokenDatas,
@@ -74,6 +89,7 @@ export const useHandleIssueRental = () => {
       customInvalidator,
       disablePartialExtension,
       claimRentalReceipt,
+      rentalType,
     }: HandleIssueRentalParams): Promise<IssueTxResult[]> => {
       if (!wallet.publicKey) {
         throw 'Wallet not connected'
@@ -262,6 +278,44 @@ export const useHandleIssueRental = () => {
           },
         }
       )
+      for (let i = 0; i < txData.length; i++) {
+        const txResult = txResults[i]
+        const tokenData = txData[i]?.tokenData
+        if (!txResult?.error && tokenData) {
+          logConfigTokenDataEvent('nft rental: issue', config, tokenData, {
+            rental_type: rentalType,
+            rental_price: getPriceFromTokenData(tokenData),
+            rental_rate: getTokenRentalRate(
+              config,
+              paymentMints.data ?? {},
+              tokenData
+            )?.displayText,
+            rental_rate_duration:
+              DURATION_DATA[config.marketplaceRate ?? 'days'],
+            payment_mint: PAYMENT_MINTS.filter(
+              (mint) => mint.mint === paymentMint
+            )[0]?.symbol,
+            duration_seconds: durationSeconds,
+            max_expiration: maxExpiration,
+            extension_payment_mint: PAYMENT_MINTS.filter(
+              (mint) => mint.mint === extensionPaymentMint
+            )[0]?.symbol,
+            extension_payment_amount: fmtMintAmount(
+              paymentMints.data?.[extensionPaymentMint ?? ''],
+              extensionPaymentAmount ?? new BN(0)
+            ),
+            extension_duration_seconds: extensionDurationSeconds,
+            total_usages: totalUsages,
+            invalidation_type: invalidationType,
+            visibility: visibility,
+            custom_invalidator: customInvalidator,
+            disable_partial_extension: disablePartialExtension,
+            claim_rental_receipt: claimRentalReceipt,
+            issuer_id: wallet.publicKey?.toString(),
+          })
+        }
+      }
+
       return txData.map((txData, i) => ({
         ...txData,
         error: txResults[i]?.error ?? undefined,

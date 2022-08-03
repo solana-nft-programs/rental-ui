@@ -1,8 +1,10 @@
 import { invalidate } from '@cardinal/token-manager'
 import { useWallet } from '@solana/wallet-adapter-react'
+import { logConfigTokenDataEvent } from 'apis/amplitude'
 import type { TokenData } from 'apis/api'
 import { TOKEN_DATA_KEY } from 'hooks/useBrowseAvailableTokenDatas'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
+import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useUTCNow } from 'providers/UTCNowProvider'
 import { useQueryClient } from 'react-query'
 
@@ -22,6 +24,7 @@ export const NFTRevokeButton: React.FC<NFTRevokeButtonProps> = ({
   const { connection } = useEnvironmentCtx()
   const { UTCNow } = useUTCNow()
   const queryClient = useQueryClient()
+  const { configFromToken } = useProjectConfig()
 
   return (
     <>
@@ -43,7 +46,14 @@ export const NFTRevokeButton: React.FC<NFTRevokeButtonProps> = ({
                   tokenData?.tokenManager?.parsed.mint
                 ),
                 {
-                  callback: () => queryClient.removeQueries(TOKEN_DATA_KEY),
+                  callback: () => {
+                    logConfigTokenDataEvent(
+                      'nft: click revoke',
+                      configFromToken(tokenData),
+                      tokenData
+                    )
+                    queryClient.removeQueries(TOKEN_DATA_KEY)
+                  },
                 }
               ))
           }}

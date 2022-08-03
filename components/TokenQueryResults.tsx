@@ -1,3 +1,4 @@
+import { logConfigEvent } from 'apis/amplitude'
 import type { TokenData } from 'apis/api'
 import { Info } from 'common/Info'
 import { MultiSelector } from 'common/MultiSelector'
@@ -84,6 +85,9 @@ export const TokenQueryResults: React.FC<Props> = ({
               value: g.id,
             }))}
             onChange={(o) => {
+              logConfigEvent('manage: click tab', config, {
+                name: o.value,
+              })
               setSelectedTokens([])
               setSelectedGroup(o.value)
             }}

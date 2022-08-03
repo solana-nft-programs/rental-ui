@@ -1,6 +1,8 @@
 import { css } from '@emotion/react'
+import { logConfigEvent, logConfigTokenDataEvent } from 'apis/amplitude'
 import type { TokenData } from 'apis/api'
 import { GlyphClose } from 'assets/GlyphClose'
+import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useRentalIssueCard } from 'rental-components/components/RentalIssueCard'
 
 import { Button } from './Button'
@@ -15,6 +17,7 @@ export const SelecterDrawer: React.FC<Props> = ({
   onClose,
 }: Props) => {
   const rentalIsseuCard = useRentalIssueCard()
+  const { config } = useProjectConfig()
   return (
     <div
       className={`fixed z-30 flex w-full items-center justify-between gap-4 bg-dark-6 px-4 py-8 transition-all lg:px-12 ${
@@ -33,11 +36,24 @@ export const SelecterDrawer: React.FC<Props> = ({
           disabled={selectedTokens.length === 0}
           variant="primary"
           className="px-4 lg:px-8"
-          onClick={() =>
+          onClick={() => {
+            logConfigEvent('dashboard: click batch issue', config, {
+              selected_tokens_count: selectedTokens.length,
+            })
+            for (const tokenData of selectedTokens) {
+              logConfigTokenDataEvent(
+                'nft rental: batch issue',
+                config,
+                tokenData,
+                {
+                  batch_uploaded: true,
+                }
+              )
+            }
             rentalIsseuCard.showModal({
               tokenDatas: selectedTokens,
             })
-          }
+          }}
         >
           Rent out
         </Button>

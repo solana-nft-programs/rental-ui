@@ -104,6 +104,8 @@ export const RentalSuccessCard = ({
         <ShareTwitterButton
           className="px-8"
           shareLink={shareTwitterClaimedLink(tokenData, config, issuerName)}
+          shareType="claim"
+          tokenDatas={[tokenData]}
           disabled={loadingName}
         >
           <div

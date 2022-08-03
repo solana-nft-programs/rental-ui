@@ -1,5 +1,6 @@
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import type * as splToken from '@solana/spl-token'
+import { logConfigEvent } from 'apis/amplitude'
 import type { TokenData } from 'apis/api'
 import { GlyphActivity } from 'assets/GlyphActivity'
 import { GlyphBrowse } from 'assets/GlyphBrowse'
@@ -280,6 +281,9 @@ export const Browse = () => {
               value: OrderCategories.RateLowToHigh,
             }}
             onChange={(e) => {
+              logConfigEvent('collection: sort tokens', config, {
+                sort_type: e?.value ?? OrderCategories.RateLowToHigh,
+              })
               setSelectedOrderCategory(
                 e?.value ?? OrderCategories.RateLowToHigh
               )

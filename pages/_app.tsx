@@ -3,6 +3,7 @@ import './styles.css'
 import '@cardinal/namespaces-components/dist/esm/styles.css'
 import 'tailwindcss/tailwind.css'
 
+import * as amplitude from '@amplitude/analytics-browser'
 import { WalletIdentityProvider } from '@cardinal/namespaces-components'
 import { WalletProvider } from '@solana/wallet-adapter-react'
 import { WalletModalProvider } from '@solana/wallet-adapter-react-ui'
@@ -38,31 +39,36 @@ const App = ({
   pageProps,
   config,
   cluster,
-}: AppProps & { config: ProjectConfig; cluster: string }) => (
-  <EnvironmentProvider defaultCluster={cluster}>
-    <UTCNowProvider>
-      <SolanaAccountsProvider>
-        <WalletProvider wallets={getWalletAdapters()} autoConnect>
-          <WalletIdentityProvider>
-            <ProjectConfigProvider defaultConfig={config}>
-              <QueryClientProvider client={queryClient}>
-                <ModalProvider>
-                  <WalletModalProvider>
-                    <>
-                      <ToastContainer />
-                      <Component {...pageProps} />
-                      {DEBUG && <ReactQueryDevtools initialIsOpen={false} />}
-                    </>
-                  </WalletModalProvider>
-                </ModalProvider>
-              </QueryClientProvider>
-            </ProjectConfigProvider>
-          </WalletIdentityProvider>
-        </WalletProvider>
-      </SolanaAccountsProvider>
-    </UTCNowProvider>
-  </EnvironmentProvider>
-)
+}: AppProps & { config: ProjectConfig; cluster: string }) => {
+  if (process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY) {
+    amplitude.init(process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY)
+  }
+  return (
+    <EnvironmentProvider defaultCluster={cluster}>
+      <UTCNowProvider>
+        <SolanaAccountsProvider>
+          <WalletProvider wallets={getWalletAdapters()} autoConnect>
+            <WalletIdentityProvider>
+              <ProjectConfigProvider defaultConfig={config}>
+                <QueryClientProvider client={queryClient}>
+                  <ModalProvider>
+                    <WalletModalProvider>
+                      <>
+                        <ToastContainer />
+                        <Component {...pageProps} />
+                        {DEBUG && <ReactQueryDevtools initialIsOpen={false} />}
+                      </>
+                    </WalletModalProvider>
+                  </ModalProvider>
+                </QueryClientProvider>
+              </ProjectConfigProvider>
+            </WalletIdentityProvider>
+          </WalletProvider>
+        </SolanaAccountsProvider>
+      </UTCNowProvider>
+    </EnvironmentProvider>
+  )
+}
 
 App.getInitialProps = getInitialProps
 

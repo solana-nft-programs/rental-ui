@@ -2,6 +2,34 @@
 # yarn lockfile v1
 
 
+"@amplitude/analytics-browser@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@amplitude/analytics-browser/-/analytics-browser-1.1.1.tgz#edf864a407e63b035125ce191f5fa1b5fbeb375e"
+  integrity sha512-J6ftCTThmtKZ4OG6sqFu6eFIJHCP/s/GK+FMZ2mUSEwWxAUWQYWE8LLPnKo/BIDQXCT0q++sMc4+OMr8w7azPw==
+  dependencies:
+    "@amplitude/analytics-core" "^0.6.4"
+    "@amplitude/analytics-types" "^0.6.1"
+    "@amplitude/ua-parser-js" "^0.7.31"
+    tslib "^2.3.1"
+
+"@amplitude/analytics-core@^0.6.4":
+  version "0.6.4"
+  resolved "https://registry.yarnpkg.com/@amplitude/analytics-core/-/analytics-core-0.6.4.tgz#510c31de9ee06a1178ec3898435f8d026af49f30"
+  integrity sha512-RuWkLGO89O/8x88J7OPMIB1sSZ+toAJQeEI+KFkZGU1uQ0znhF1nLe64UUi39mP7qLMFYtQfXVD8IfNLIJt7IQ==
+  dependencies:
+    "@amplitude/analytics-types" "^0.6.1"
+    tslib "^2.3.1"
+
+"@amplitude/analytics-types@^0.6.1":
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/@amplitude/analytics-types/-/analytics-types-0.6.1.tgz#bd12255f33f7a396b61924d11e6d0e7fe8152ba2"
+  integrity sha512-6XWxxt0LYMkOLZHnAzLoDRwhMcOeNviXEdba6tVVjYOM9zW6ZOCLZWO3N+/s+UF6tYOvDZyLH6a1PqAlNUvHqQ==
+
+"@amplitude/ua-parser-js@^0.7.31":
+  version "0.7.31"
+  resolved "https://registry.yarnpkg.com/@amplitude/ua-parser-js/-/ua-parser-js-0.7.31.tgz#749bf7cb633cfcc7ff3c10805bad7c5f6fbdbc61"
+  integrity sha512-+z8UGRaj13Pt5NDzOnkTBy49HE2CX64jeL0ArB86HAtilpnfkPB7oqkigN7Lf2LxscMg4QhFD7mmCfedh3rqTg==
+
 "@ampproject/remapping@^2.0.0":
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/@ampproject/remapping/-/remapping-2.0.2.tgz#f3d9760bf30588c51408dbe7c05ff2bb13069307"

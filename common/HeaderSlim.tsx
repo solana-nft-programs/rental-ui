@@ -1,4 +1,5 @@
-import { AccountConnect } from '@cardinal/namespaces-components'
+import * as amplitude from '@amplitude/analytics-browser'
+import { AccountConnect, useAddressName } from '@cardinal/namespaces-components'
 import * as Sentry from '@sentry/browser'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useWalletModal } from '@solana/wallet-adapter-react-ui'
@@ -27,6 +28,10 @@ export const HeaderSlim: React.FC<Props> = ({ tabs, hideDashboard }: Props) => {
   const wallet = useWallet()
   const walletModal = useWalletModal()
   const { secondaryConnection, environment } = useEnvironmentCtx()
+  const { displayName } = useAddressName(
+    secondaryConnection,
+    wallet.publicKey ?? undefined
+  )
   const [tab, setTab] = useState<string>('browse')
 
   useEffect(() => {
@@ -35,14 +40,27 @@ export const HeaderSlim: React.FC<Props> = ({ tabs, hideDashboard }: Props) => {
   }, [router.asPath, tab])
 
   useEffect(() => {
-    Sentry.configureScope((scope) => {
-      scope.setUser({
-        username: wallet.publicKey?.toString(),
-        wallet: wallet.publicKey?.toString(),
+    if (wallet.connected && wallet.publicKey) {
+      const userId = wallet.publicKey.toString()
+      amplitude.setUserId(userId)
+
+      Sentry.configureScope((scope) => {
+        scope.setUser({
+          username: displayName ?? wallet.publicKey?.toString(),
+          wallet: wallet.publicKey?.toString(),
+        })
+        scope.setTag('wallet', wallet.publicKey?.toString())
       })
-      scope.setTag('wallet', wallet.publicKey?.toString())
-    })
-  }, [wallet.publicKey?.toString()])
+
+      if (displayName) {
+        const identify = new amplitude.Identify().setOnce(
+          'twitter_handle',
+          displayName
+        )
+        amplitude.identify(identify)
+      }
+    }
+  }, [wallet.connected, wallet.publicKey?.toString(), displayName])
 
   return (
     <div className="w-full px-4 py-4">
@@ -51,6 +69,9 @@ export const HeaderSlim: React.FC<Props> = ({ tabs, hideDashboard }: Props) => {
           <div
             className="flex cursor-pointer items-center transition-opacity hover:opacity-60"
             onClick={() => {
+              amplitude.logEvent('header: click tab', {
+                name: 'home',
+              })
               router.push(`/${location.search}`)
             }}
           >
@@ -77,6 +98,9 @@ export const HeaderSlim: React.FC<Props> = ({ tabs, hideDashboard }: Props) => {
                       }`}
                       onClick={() => {
                         if (disabled) return
+                        amplitude.logEvent('header: click tab', {
+                          name: anchor,
+                        })
                         setTab(anchor)
                         router.push(
                           `${location.pathname}${location.search}#${anchor}`
@@ -102,6 +126,9 @@ export const HeaderSlim: React.FC<Props> = ({ tabs, hideDashboard }: Props) => {
               <div
                 className={`cursor-pointer text-center text-light-0 opacity-80 transition-opacity hover:opacity-100`}
                 onClick={() => {
+                  amplitude.logEvent('header: click tab', {
+                    name: 'dashboard',
+                  })
                   router.push(`/me${location.search}`)
                 }}
               >

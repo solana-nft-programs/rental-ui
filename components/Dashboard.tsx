@@ -5,6 +5,7 @@ import {
 } from '@cardinal/namespaces-components'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { css } from '@emotion/react'
+import { logConfigEvent } from 'apis/amplitude'
 import type { TokenData } from 'apis/api'
 import { GlyphLargeClose } from 'assets/GlyphLargeClose'
 import { Card } from 'common/Card'
@@ -252,6 +253,9 @@ export const Dashboard = () => {
                 value: g.id,
               }))}
               onChange={(o) => {
+                logConfigEvent('dashboard: click tab', config, {
+                  name: o.value,
+                })
                 setSelectedTokens([])
                 setSelectedGroup(o.value)
               }}

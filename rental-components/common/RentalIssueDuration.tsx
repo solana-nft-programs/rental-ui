@@ -162,6 +162,7 @@ export const RentalIssueDuration = ({
                   customInvalidator: undefined,
                   disablePartialExtension: undefined,
                   claimRentalReceipt: undefined,
+                  rentalType: 'duration',
                 },
                 {
                   onSuccess: (txData) => {
