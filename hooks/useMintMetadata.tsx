@@ -1,10 +1,13 @@
 import type { AccountData } from '@cardinal/common'
 import { tryPublicKey } from '@cardinal/common'
 import type { TokenData } from 'apis/api'
+import { getMintfromTokenData } from 'common/tokenDataUtils'
 import { useQueries, useQuery } from 'react-query'
 
-export const mintMetadataQueryKey = (tokenData: TokenData) => {
-  return ['useMintMetadata', tokenData.metaplexData?.parsed.mint?.toString()]
+export const mintMetadataQueryKey = (
+  tokenData: Pick<TokenData, 'metaplexData'> | Pick<TokenData, 'indexedData'>
+) => {
+  return ['useMintMetadata', getMintfromTokenData(tokenData)]
 }
 
 export const mintMetadataQuery = async (
@@ -37,10 +40,7 @@ export const mintMetadataQuery = async (
 }
 
 export const useMintMetadata = (
-  tokenData:
-    | Pick<TokenData, 'metadata'>
-    | Pick<TokenData, 'metaplexData'>
-    | Pick<TokenData, 'indexedData'>
+  tokenData: Pick<TokenData, 'metaplexData'> | Pick<TokenData, 'indexedData'>
 ) => {
   return useQuery<AccountData<any> | undefined>(
     [mintMetadataQueryKey(tokenData)],

@@ -50,11 +50,15 @@ export const getUrifromTokenData = (
 }
 
 export const getMintfromTokenData = (
-  tokenData: Pick<TokenData, 'tokenManager'> | Pick<TokenData, 'metaplexData'>
+  tokenData:
+    | Pick<TokenData, 'tokenManager'>
+    | Pick<TokenData, 'metaplexData'>
+    | Pick<TokenData, 'indexedData'>
 ) => {
   return (
     ('tokenManager' in tokenData &&
       tokenData.tokenManager?.parsed?.mint.toString()) ||
+    ('indexedData' in tokenData && tokenData.indexedData?.mint) ||
     ('metaplexData' in tokenData && tokenData.metaplexData?.parsed.mint) ||
     null
   )
