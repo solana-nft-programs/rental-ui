@@ -18,7 +18,7 @@ import { useAccounts } from 'providers/SolanaAccountsProvider'
 import { useQuery } from 'react-query'
 
 import {
-  filterKnownInvalidators,
+  collectIndexedData,
   getTokenIndexData,
   getTokenManagersWithoutIndex,
   TOKEN_DATA_KEY,
@@ -54,13 +54,14 @@ export const useBrowseClaimedTokenDatas = (disabled: boolean) => {
         const indexedTokenManagers = await getTokenIndexData(
           environment,
           config.filter,
+          config.showUnknownInvalidators ?? false,
           state,
           trace
         )
 
         /////
         const { tokenManagerIds, indexedTokenManagerDatas } =
-          await filterKnownInvalidators(config, indexedTokenManagers, trace)
+          await collectIndexedData(indexedTokenManagers, trace)
 
         ////
         const tokenManagerDatas = await withTrace(

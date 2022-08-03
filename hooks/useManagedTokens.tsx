@@ -21,7 +21,7 @@ import { useQuery } from 'react-query'
 
 import type { IndexedData } from './useBrowseAvailableTokenDatas'
 import {
-  filterKnownInvalidators,
+  collectIndexedData,
   TOKEN_DATA_KEY,
 } from './useBrowseAvailableTokenDatas'
 import { useWalletId } from './useWalletId'
@@ -92,6 +92,9 @@ export const useManagedTokens = () => {
                         invalidator_address {
                           invalidator
                         }
+                        time_invalidator_address {
+                          time_invalidator_address
+                        }
                         mint_address_nfts {
                           uri
                           name
@@ -127,6 +130,9 @@ export const useManagedTokens = () => {
                         invalidator_address {
                           invalidator
                         }
+                        time_invalidator_address {
+                          time_invalidator_address
+                        }
                         mint_address_nfts {
                           uri
                           name
@@ -158,7 +164,7 @@ export const useManagedTokens = () => {
 
         ////
         const { tokenManagerIds, indexedTokenManagerDatas } =
-          await filterKnownInvalidators(config, indexedTokenManagers, trace)
+          await collectIndexedData(indexedTokenManagers, trace)
 
         ////
         const tokenManagerDatas = await withTrace(

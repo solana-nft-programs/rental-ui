@@ -7,7 +7,7 @@ import { useUTCNow } from 'providers/UTCNowProvider'
 import { NFTContexualMenu } from './NFTContexualMenu'
 
 export const getExpiration = (
-  tokenData: TokenData,
+  tokenData: Pick<TokenData, 'timeInvalidator' | 'tokenManager'>,
   UTCNow: number
 ): string | undefined => {
   if (tokenData?.tokenManager?.parsed.state !== TokenManagerState.Claimed)
@@ -28,7 +28,10 @@ export const getExpiration = (
 }
 
 interface NFTProps {
-  tokenData: TokenData
+  tokenData: Pick<
+    TokenData,
+    'timeInvalidator' | 'tokenManager' | 'metaplexData' | 'indexedData'
+  >
 }
 
 export function NFT({ tokenData }: NFTProps) {

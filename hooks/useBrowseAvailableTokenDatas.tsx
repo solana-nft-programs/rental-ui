@@ -44,6 +44,9 @@ export type IndexedData = {
   mint?: string
   address?: string
   invalidator_address?: { invalidator: string }[]
+  time_invalidator_address?: {
+    time_invalidator_address: string
+  }
   mint_address_nfts?: {
     name?: string
     uri?: string
@@ -77,10 +80,6 @@ export async function filterKnownInvalidators<
       const [timeInvalidatorId] = await findTimeInvalidatorAddress(
         tokenManagerId
       )
-      // const [[timeInvalidatorId], [useInvalidatorId]] = await Promise.all([
-      //   findTimeInvalidatorAddress(tokenManagerId),
-      //   findUseInvalidatorAddress(tokenManagerId),
-      // ])
       return [timeInvalidatorId.toString()]
     })
   )
@@ -113,9 +112,32 @@ export async function filterKnownInvalidators<
   return { tokenManagerIds, indexedTokenManagerDatas }
 }
 
+export async function collectIndexedData<
+  T extends {
+    address?: string
+  }
+>(indexedTokenManagers: T[], trace?: Trace) {
+  const collectSpan = trace?.startChild({
+    op: 'collect-indexed-data',
+  })
+  const indexedTokenManagerDatas = Object.fromEntries(
+    indexedTokenManagers.map((data) => [data.address ?? '', data])
+  )
+  const tokenManagerIds = Object.keys(indexedTokenManagerDatas).reduce(
+    (acc, id) => {
+      const pubkey = tryPublicKey(id)
+      return pubkey ? [...acc, pubkey] : acc
+    },
+    [] as PublicKey[]
+  )
+  collectSpan?.finish()
+  return { tokenManagerIds, indexedTokenManagerDatas }
+}
+
 export const getTokenIndexData = async (
   environment: Environment,
   filter: TokenFilter,
+  showUnknownInvalidators: boolean,
   state: TokenManagerState,
   trace: Trace
 ) => {
@@ -144,6 +166,11 @@ export const getTokenIndexData = async (
                       }
                     }
                   }
+                  ${
+                    showUnknownInvalidators
+                      ? ''
+                      : `time_invalidator_address: {}`
+                  }
                 }
               ) {
                 address
@@ -152,6 +179,9 @@ export const getTokenIndexData = async (
                 state_changed_at
                 invalidator_address {
                   invalidator
+                }
+                time_invalidator_address {
+                  time_invalidator_address
                 }
                 mint_address_nfts {
                   uri
@@ -181,6 +211,11 @@ export const getTokenIndexData = async (
                 where: {
                   state: { _eq: $tokenManagerState }
                   issuer: { _in: $issuers }
+                  ${
+                    showUnknownInvalidators
+                      ? ''
+                      : `time_invalidator_address: {}`
+                  }
                 }
               ) {
                 address
@@ -189,6 +224,9 @@ export const getTokenIndexData = async (
                 state_changed_at
                 invalidator_address {
                   invalidator
+                }
+                time_invalidator_address {
+                  time_invalidator_address
                 }
                 mint_address_nfts {
                   uri
@@ -236,13 +274,14 @@ export const useBrowseAvailableTokenDatas = (
         const indexedTokenManagers = await getTokenIndexData(
           environment,
           config.filter,
+          config.showUnknownInvalidators ?? false,
           state,
           trace
         )
 
         /////
         const { tokenManagerIds, indexedTokenManagerDatas } =
-          await filterKnownInvalidators(config, indexedTokenManagers, trace)
+          await collectIndexedData(indexedTokenManagers, trace)
 
         ////
         const tokenManagerDatas = await withTrace(
