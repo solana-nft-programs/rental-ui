@@ -8,6 +8,7 @@ import {
   ShareTwitterButton,
   shareTwitterListedLink,
 } from 'common/ShareTwitterButton'
+import { getNameFromTokenData } from 'common/tokenDataUtils'
 import { transactionUrl } from 'common/utils'
 import type { IssueTxResult } from 'handlers/useHandleIssueRental'
 import { useMintMetadatas } from 'hooks/useMintMetadata'
@@ -54,7 +55,7 @@ export const RentalIssueSuccessCard = ({
         {tokenDatas.length > 1
           ? `(${tokenDatas.length})`
           : tokenDatas[0]
-          ? tokenDatas[0].metaplexData?.parsed.data.name
+          ? getNameFromTokenData(tokenDatas[0], '1')
           : ''}
       </div>
       <div

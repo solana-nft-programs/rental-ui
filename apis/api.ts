@@ -101,22 +101,30 @@ export async function getTokenDatas(
     connection,
     metaplexIds
   )
-  const metaplexData = metaplexAccountInfos.reduce((acc, accountInfo, i) => {
-    try {
-      acc[tokenManagerDatas[i]!.pubkey.toString()] = {
-        pubkey: metaplexIds[i]!,
-        ...accountInfo,
-        parsed: metaplex.MetadataData.deserialize(
-          accountInfo?.data as Buffer
-        ) as metaplex.MetadataData,
+  const metaplexDataById = metaplexAccountInfos.reduce(
+    (acc, accountInfo, i) => {
+      try {
+        acc[tokenManagerDatas[i]!.pubkey.toString()] = {
+          pubkey: metaplexIds[i]!,
+          ...accountInfo,
+          parsed: metaplex.MetadataData.deserialize(
+            accountInfo?.data as Buffer
+          ) as metaplex.MetadataData,
+        }
+      } catch (e) {}
+      return acc
+    },
+    {} as {
+      [tokenManagerId: string]: {
+        pubkey: PublicKey
+        parsed: metaplex.MetadataData
       }
-    } catch (e) {}
-    return acc
-  }, {} as { [tokenManagerId: string]: { pubkey: PublicKey; parsed: metaplex.MetadataData } })
+    }
+  )
 
   if (filter?.type === 'creators') {
     tokenManagerDatas = tokenManagerDatas.filter((tm) =>
-      metaplexData[tm.pubkey.toString()]?.parsed?.data?.creators?.some(
+      metaplexDataById[tm.pubkey.toString()]?.parsed?.data?.creators?.some(
         (creator) =>
           filter.value.includes(creator.address.toString()) &&
           (cluster === 'devnet' || creator.verified)
@@ -170,7 +178,8 @@ export async function getTokenDatas(
     Promise.all(
       tokenManagerDatas.map(async (tm) => {
         try {
-          const metaplexDataForTokenManager = metaplexData[tm.pubkey.toString()]
+          const metaplexDataForTokenManager =
+            metaplexDataById[tm.pubkey.toString()]
           if (!metaplexDataForTokenManager?.parsed.data.uri) return null
           const json = await fetch(
             metaplexDataForTokenManager.parsed.data.uri
@@ -216,7 +225,7 @@ export async function getTokenDatas(
             tokenManagerData.parsed.recipientTokenAccount?.toString()
           ] as AccountData<ParsedTokenAccountData>)
         : undefined,
-      metaplexData: metaplexData[tokenManagerData.pubkey.toString()],
+      metaplexData: metaplexDataById[tokenManagerData.pubkey.toString()],
       tokenManager: tokenManagerData,
       metadata: metadataById[tokenManagerData.pubkey.toString()],
       claimApprover: tokenManagerData.parsed.claimApprover?.toString()

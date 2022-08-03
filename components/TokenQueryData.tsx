@@ -8,13 +8,15 @@ import { NFTClaimButton } from 'common/NFTClaimButton'
 import { NFTHeader } from 'common/NFTHeader'
 import { NFTIssuerInfo } from 'common/NFTIssuerInfo'
 import { NFTRevokeButton } from 'common/NFTRevokeButton'
+import type { BrowseAvailableTokenData } from 'hooks/useBrowseAvailableTokenDatas'
+import type { BrowseClaimedTokenData } from 'hooks/useBrowseClaimedTokenDatas'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useEffect, useState } from 'react'
 
 import { isSelected } from './TokenQueryResults'
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
-  tokenDatas?: TokenData[]
+  tokenDatas?: (BrowseAvailableTokenData | BrowseClaimedTokenData | TokenData)[]
   isFetched?: boolean
   isFetching?: boolean
   refetch?: () => void
@@ -38,7 +40,7 @@ export const TokenQueryData: React.FC<Props> = ({
     setPageNum(DEFAULT_PAGE)
   }, [
     tokenDatas
-      ?.map((tokenData) => tokenData.metaplexData?.parsed.mint)
+      ?.map((tokenData) => tokenData.tokenManager?.parsed.mint)
       .join(','),
   ])
 
@@ -74,9 +76,9 @@ export const TokenQueryData: React.FC<Props> = ({
         </div>
       ) : tokenDatas && tokenDatas.length > 0 ? (
         <div className="flex flex-wrap justify-center gap-4 md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-          {tokenDatas?.slice(0, PAGE_SIZE * pageNum[0]).map((tokenData) => (
+          {tokenDatas?.slice(0, PAGE_SIZE * pageNum[0]).map((tokenData, i) => (
             <Card
-              key={`${tokenData.tokenManager?.pubkey.toString()}-${tokenData.tokenAccount?.pubkey.toString()}`}
+              key={`${tokenData.tokenManager?.pubkey.toString()}-${i}`}
               className={`${handleClick && 'cursor-pointer'} ${
                 isSelected(tokenData, selectedTokens ?? [])
                   ? 'border-[1px] border-secondary'

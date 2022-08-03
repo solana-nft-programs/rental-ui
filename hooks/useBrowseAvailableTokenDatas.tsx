@@ -12,7 +12,6 @@ import {
 } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/accounts'
 import type { UseInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
 import { USE_INVALIDATOR_ADDRESS } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
-import type * as metaplex from '@metaplex-foundation/mpl-token-metadata'
 import * as Sentry from '@sentry/browser'
 import type * as spl from '@solana/spl-token'
 import type { Connection, PublicKey } from '@solana/web3.js'
@@ -33,10 +32,9 @@ export const TOKEN_DATA_KEY = 'tokenData'
 
 export type BrowseAvailableTokenData = Pick<
   TokenData,
+  | 'mint'
   | 'indexedData'
   | 'tokenManager'
-  | 'mint'
-  | 'metaplexData'
   | 'claimApprover'
   | 'useInvalidator'
   | 'timeInvalidator'
@@ -296,9 +294,6 @@ export const useBrowseAvailableTokenDatas = (
             tokenManager: tokenManagerData,
             mint: (accountsById[tokenManagerData.parsed.mint.toString()] ??
               null) as AccountData<spl.MintInfo> | null,
-            metaplexData: accountsById[metaplexIds[i]!.toString()] as
-              | AccountData<metaplex.MetadataData>
-              | undefined,
             claimApprover: tokenManagerData.parsed.claimApprover?.toString()
               ? (accountsById[
                   tokenManagerData.parsed.claimApprover?.toString()

@@ -98,7 +98,7 @@ export const getRentalRateDisplayText = (
 }
 
 interface NFTIssuerInfoProps extends React.HTMLAttributes<HTMLDivElement> {
-  tokenData: TokenData
+  tokenData: Pick<TokenData, 'tokenManager' | 'recipientTokenAccount'>
 }
 
 export const NFTIssuerInfo: React.FC<NFTIssuerInfoProps> = ({
