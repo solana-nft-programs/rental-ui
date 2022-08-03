@@ -29,6 +29,7 @@ export const NFTHeader: React.FC<NFTHeaderProps> = ({
     <div
       className="flex w-full cursor-pointer flex-col justify-between"
       onClick={(e) => {
+        if (!tokenData.tokenManager) return
         e.stopPropagation()
         logConfigTokenDataEvent('nft: click claim link', config, tokenData)
         handleCopy(
@@ -42,9 +43,11 @@ export const NFTHeader: React.FC<NFTHeaderProps> = ({
         <div className="w-fit overflow-hidden text-ellipsis whitespace-nowrap text-left text-lg">
           {getNameFromTokenData(tokenData, 'Unknown')}
         </div>
-        <div className="flex w-fit">
-          <FaLink />
-        </div>
+        {tokenData.tokenManager && (
+          <div className="flex w-fit">
+            <FaLink />
+          </div>
+        )}
       </div>
       <div className="text-sm text-light-2">
         <DisplayAddress
