@@ -43,7 +43,7 @@ export const useMintMetadata = (
   tokenData: Pick<TokenData, 'metaplexData'> | Pick<TokenData, 'indexedData'>
 ) => {
   return useQuery<AccountData<any> | undefined>(
-    [mintMetadataQueryKey(tokenData)],
+    mintMetadataQueryKey(tokenData),
     async () => {
       return mintMetadataQuery(tokenData)
     },
