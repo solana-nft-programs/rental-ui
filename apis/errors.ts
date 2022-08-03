@@ -32,9 +32,14 @@ export const nativeErrors: ErrorCode[] = [
     message: 'User rejected the request.',
   },
   {
+    code: 'failed to get recent blockhash',
+    message:
+      'Solana is experiencing degrading performance. You transaction failed to execute.',
+  },
+  {
     code: 'Blockhash not found',
     message:
-      'Blockhash not found. Transaction may or may not have gone through.',
+      'Solana is experiencing degrading performance. Transaction may or may not have gone through.',
   },
   {
     code: 'Transaction was not confirmed in',
