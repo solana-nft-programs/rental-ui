@@ -19,10 +19,14 @@ import {
   rentalTypeColor,
 } from 'common/tokenDataUtils'
 import type { ProjectConfig } from 'config/config'
+import { useOtp } from 'hooks/useOtp'
 import { usePaymentMints } from 'hooks/usePaymentMints'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useUTCNow } from 'providers/UTCNowProvider'
+import { FiCheck } from 'react-icons/fi'
+
+import { Tooltip } from './Tooltip'
 
 export const getDurationText = (tokenData: TokenData, UTCNow: number) => {
   return tokenData.timeInvalidator?.parsed ? (
@@ -107,7 +111,12 @@ export const NFTIssuerInfo: React.FC<NFTIssuerInfoProps> = ({
   const { UTCNow } = useUTCNow()
   const { secondaryConnection } = useEnvironmentCtx()
   const { config } = useProjectConfig()
+  const otpKeypair = useOtp()
   const paymentMints = usePaymentMints()
+  const isPriveApproved =
+    isPrivateListing(tokenData) &&
+    otpKeypair?.publicKey.toString() ===
+      tokenData.tokenManager?.parsed.claimApprover?.toString()
   return (
     <div>
       {tokenData.tokenManager?.parsed.state === TokenManagerState.Claimed &&
@@ -130,9 +139,28 @@ export const NFTIssuerInfo: React.FC<NFTIssuerInfoProps> = ({
         )}
       {isPrivateListing(tokenData) &&
       tokenData.tokenManager?.parsed.state === TokenManagerState.Issued ? (
-        <div className="my-auto rounded-lg bg-gray-800 px-5 py-2 text-white">
-          Private
-        </div>
+        <Tooltip
+          title={
+            isPriveApproved
+              ? 'You are approved to claim this private rental'
+              : 'This rental is private and only specific recipients can claim.'
+          }
+        >
+          {isPrivateListing(tokenData) && isPriveApproved ? (
+            <div className="my-auto flex cursor-default items-center gap-1 rounded-lg bg-gray-800 px-3 py-2 text-secondary">
+              {isPriveApproved && (
+                <div className="text-base text-secondary">
+                  <FiCheck />
+                </div>
+              )}
+              Approved
+            </div>
+          ) : (
+            <div className="my-auto flex cursor-default items-center gap-1 rounded-lg bg-gray-800 px-5 py-2 text-white">
+              Private
+            </div>
+          )}
+        </Tooltip>
       ) : (
         <div className="flex flex-col text-light-2">
           {tokenData.tokenManager?.parsed.state !==

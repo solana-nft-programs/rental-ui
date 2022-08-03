@@ -103,40 +103,31 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
 
   if (
     !paymentMintInfos.data ||
-    (isPrivateListing(tokenData) && !otpKeypair) ||
-    tokenData.tokenManager?.parsed.issuer.toString() === walletId?.toString()
+    (isPrivateListing(tokenData) &&
+      otpKeypair?.publicKey.toString() !==
+        tokenData.tokenManager?.parsed.claimApprover?.toString())
   ) {
     return <></>
   }
   return (
-    <ButtonSmall
-      disabled={!walletId}
-      className="inline-block flex-none px-4 py-2 text-lg"
-      onClick={async () => await handleClaim(tokenData)}
-    >
-      {isRateBasedListing(tokenData) && paymentMintInfos.data ? (
-        <>
-          Rent
-          {/* {
-            getTokenRentalRate(config, paymentMintInfos.data, tokenData)
-              ?.displayText
-          }{' '} */}
-        </>
-      ) : tokenData.claimApprover?.parsed?.paymentMint &&
-        paymentMintInfos.data &&
-        paymentMintInfos.data[
-          tokenData.claimApprover?.parsed?.paymentMint.toString()
-        ] ? (
-        'Rent'
-      ) : (
-        // `Claim ${fmtMintAmount(
-        //   paymentMintInfos.data[
-        //     tokenData?.claimApprover?.parsed?.paymentMint.toString()
-        //   ],
-        //   tokenData.claimApprover?.parsed?.paymentAmount ?? new BN(0)
-        // )}${getSymbolFromTokenData(tokenData)}`
-        'FREE'
-      )}
-    </ButtonSmall>
+    <div className="flex flex-col">
+      <ButtonSmall
+        disabled={!walletId}
+        className="inline-block flex-none px-4 py-2 text-lg"
+        onClick={async () => await handleClaim(tokenData)}
+      >
+        {isRateBasedListing(tokenData) && paymentMintInfos.data ? (
+          <>Rent</>
+        ) : tokenData.claimApprover?.parsed?.paymentMint &&
+          paymentMintInfos.data &&
+          paymentMintInfos.data[
+            tokenData.claimApprover?.parsed?.paymentMint.toString()
+          ] ? (
+          'Rent'
+        ) : (
+          'FREE'
+        )}
+      </ButtonSmall>
+    </div>
   )
 }

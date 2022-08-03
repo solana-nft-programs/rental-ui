@@ -38,7 +38,7 @@ export const RentalManualCard = ({
         <div className="text-base">Manual revocation can be triggered by</div>
         {tokenData.tokenManager?.parsed.invalidators.map((i) => (
           <div key={i.toString()} className="rounded-xl bg-dark-4 px-4 py-2">
-            <ProfileSmall connection={connection} address={i} />
+            <ProfileSmall dark connection={connection} address={i} />
           </div>
         ))}
         {error && (
