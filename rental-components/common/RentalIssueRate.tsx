@@ -227,7 +227,7 @@ export const RentalIssueRate = ({
         disabled={!confirmRentalTerms || !!error}
         loading={handleIssueRental.isLoading}
         onClick={async () => {
-          txResults
+          txResults?.length === 0 && !txResults[0]?.error
             ? handleCopy(txResults[0]?.claimLink ?? '')
             : handleIssueRental.mutate(
                 {
@@ -260,7 +260,7 @@ export const RentalIssueRate = ({
               )
         }}
       >
-        {txResults?.length === 0 ? (
+        {txResults?.length === 0 && !txResults[0]?.error ? (
           <div className="flex items-center justify-center gap-[5px] text-base">
             <FaLink />
             Copy link

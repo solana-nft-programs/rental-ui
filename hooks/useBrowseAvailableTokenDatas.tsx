@@ -235,14 +235,15 @@ export const getTokenIndexData = async (
 
 export const useBrowseAvailableTokenDatas = (
   disabled: boolean,
-  disableRefetch: boolean
+  disableRefetch: boolean,
+  subFilter?: TokenFilter
 ) => {
   const state = TokenManagerState.Issued
   const { config } = useProjectConfig()
   const { connection, environment } = useEnvironmentCtx()
   const { getAccountDataById } = useAccounts()
   return useQuery<BrowseAvailableTokenData[]>(
-    [TOKEN_DATA_KEY, 'useBrowseAvailableTokenDatas', config.name],
+    [TOKEN_DATA_KEY, 'useBrowseAvailableTokenDatas', config.name, subFilter],
     async () => {
       if (
         (environment.index && config.filter?.type === 'creators') ||
@@ -255,7 +256,7 @@ export const useBrowseAvailableTokenDatas = (
         ////
         const indexedTokenManagers = await getTokenIndexData(
           environment,
-          config.filter,
+          subFilter ?? config.filter,
           config.showUnknownInvalidators ?? false,
           state,
           config.disallowedMints ?? [],
@@ -356,7 +357,7 @@ export const useBrowseAvailableTokenDatas = (
       }
     },
     {
-      refetchInterval: !disableRefetch ? 30000 : undefined,
+      refetchInterval: !disableRefetch ? 60000 : undefined,
       refetchOnMount: false,
       enabled: !!config && !disabled,
     }

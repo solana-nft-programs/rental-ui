@@ -11,6 +11,7 @@ import type { PublicKey } from '@solana/web3.js'
 import type { TokenData } from 'apis/api'
 import { getTokenDatas } from 'apis/api'
 import { withTrace } from 'common/trace'
+import { TokenFilter } from 'config/config'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import type { ParsedTokenAccountData } from 'providers/SolanaAccountsProvider'
@@ -34,13 +35,16 @@ export type BrowseClaimedTokenData = Pick<
   | 'recipientTokenAccount'
 >
 
-export const useBrowseClaimedTokenDatas = (disabled: boolean) => {
+export const useBrowseClaimedTokenDatas = (
+  disabled: boolean,
+  subFilter?: TokenFilter
+) => {
   const state = TokenManagerState.Claimed
   const { config } = useProjectConfig()
   const { connection, environment } = useEnvironmentCtx()
   const { getAccountDataById } = useAccounts()
   return useQuery<BrowseClaimedTokenData[]>(
-    [TOKEN_DATA_KEY, 'useBrowseClaimedTokenDatas', config.name],
+    [TOKEN_DATA_KEY, 'useBrowseClaimedTokenDatas', config.name, subFilter],
     async () => {
       if (
         (environment.index && config.filter?.type === 'creators') ||
@@ -53,7 +57,7 @@ export const useBrowseClaimedTokenDatas = (disabled: boolean) => {
         ////
         const indexedTokenManagers = await getTokenIndexData(
           environment,
-          config.filter,
+          subFilter ?? config.filter,
           config.showUnknownInvalidators ?? false,
           state,
           config.disallowedMints ?? [],

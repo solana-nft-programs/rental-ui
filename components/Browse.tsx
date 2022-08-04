@@ -18,7 +18,7 @@ import { Selector } from 'common/Selector'
 import { TabSelector } from 'common/TabSelector'
 import { getPriceOrRentalRate, getRentalDuration } from 'common/tokenDataUtils'
 import { Activity } from 'components/Activity'
-import type { ProjectConfig, TokenSection } from 'config/config'
+import type { ProjectConfig, TokenFilter, TokenSection } from 'config/config'
 import type { BrowseAvailableTokenData } from 'hooks/useBrowseAvailableTokenDatas'
 import { useBrowseAvailableTokenDatas } from 'hooks/useBrowseAvailableTokenDatas'
 import type { BrowseClaimedTokenData } from 'hooks/useBrowseClaimedTokenDatas'
@@ -180,11 +180,12 @@ export const groupTokens = (
 
 export const Browse = () => {
   const walletId = useWalletId()
-  const { config } = useProjectConfig()
+  const { config, setSubFilter, subFilter } = useProjectConfig()
   const { UTCNow } = useUTCNow()
   const paymentMintInfos = usePaymentMints()
   const [selectedOrderCategory, setSelectedOrderCategory] =
     useState<OrderCategories>(OrderCategories.RateLowToHigh)
+
   const [selectedFilters, setSelectedFilters] = useState<{
     [filterName: string]: string[]
   }>({})
@@ -193,9 +194,10 @@ export const Browse = () => {
   const [pane, setPane] = useState<PANE_OPTIONS>('browse')
   const availableTokenDatas = useBrowseAvailableTokenDatas(
     false,
-    selectedGroup !== 0
+    selectedGroup !== 0,
+    subFilter
   )
-  const claimedTokenDatas = useBrowseClaimedTokenDatas(selectedGroup !== 1)
+  const claimedTokenDatas = useBrowseClaimedTokenDatas(selectedGroup !== 1, subFilter)
   const tokenQuery =
     selectedGroup === 0 ? availableTokenDatas : claimedTokenDatas
 
@@ -233,6 +235,27 @@ export const Browse = () => {
       </div>
       <div className="mx-10 mt-4 flex flex-wrap justify-between gap-4">
         <div className="flex flex-wrap gap-4">
+          {config.subFilters && config.subFilters[0]?.filter && (
+            <Selector<TokenFilter>
+              colorized
+              highlight
+              className="min-w-[140px]"
+              defaultOption={{
+                label: config.subFilters[0]?.label ?? 'Unknwnown',
+                value: config.subFilters[0]?.filter,
+              }}
+              onChange={(e) => {
+                logConfigEvent('collection: select sub filter', config, {
+                  sort_type: e?.value ?? 'Unknown',
+                })
+                e?.value && setSubFilter(e.value)
+              }}
+              options={config.subFilters.map(({ label, filter }) => ({
+                label,
+                value: filter,
+              }))}
+            />
+          )}
           <TabSelector
             colorized
             defaultOption={{
@@ -247,6 +270,7 @@ export const Browse = () => {
               setSelectedGroup(o.value)
             }}
           />
+
           <MultiSelector<string>
             colorized
             placeholder="Select filters"

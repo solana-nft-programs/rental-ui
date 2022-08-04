@@ -146,7 +146,7 @@ export const RentalIssueExpiration = ({
         disabled={!confirmRentalTerms || !!error || !!error || !maxExpiration}
         loading={handleIssueRental.isLoading}
         onClick={async () => {
-          txResults
+          txResults?.length === 0 && !txResults[0]?.error
             ? handleCopy(txResults[0]?.claimLink ?? '')
             : handleIssueRental.mutate(
                 {
@@ -165,7 +165,7 @@ export const RentalIssueExpiration = ({
                   customInvalidator: undefined,
                   disablePartialExtension: undefined,
                   claimRentalReceipt: undefined,
-                  rentalType: 'expiration'
+                  rentalType: 'expiration',
                 },
                 {
                   onSuccess: (txData) => {

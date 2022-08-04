@@ -2,6 +2,7 @@ import { css } from '@emotion/react'
 import { ChevronDown } from 'assets/ChevronDown'
 import { ChevronRight } from 'assets/ChevronRight'
 import { GlyphSelectClear } from 'assets/GlyphSelectClear'
+import { darken } from 'polished'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useEffect, useRef, useState } from 'react'
 
@@ -15,6 +16,7 @@ type Props<T> = {
   isClearable?: boolean
   onChange?: (arg?: Option<T>) => void
   colorized?: boolean
+  highlight?: boolean
 }
 
 export const Selector = <T,>({
@@ -26,6 +28,7 @@ export const Selector = <T,>({
   isClearable,
   options = [],
   colorized,
+  highlight,
 }: Props<T>) => {
   const { config } = useProjectConfig()
   const [isOpen, setIsOpen] = useState(false)
@@ -53,6 +56,10 @@ export const Selector = <T,>({
         css={
           colorized &&
           css`
+            ${highlight &&
+            css`
+              background-color: ${darken(0.4, config.colors.accent)} !important;
+            `}
             &:hover {
               border-color: ${config.colors.accent} !important;
             }

@@ -76,6 +76,7 @@ export type ProjectConfig = {
   badges?: Badge[]
   disableListing?: boolean
   filter?: TokenFilter
+  subFilters?: { label: string; filter: TokenFilter }[]
   sections?: TokenSection[]
   rentalCard: RentalCardConfig
   airdrops?: AirdropMetadata[]
@@ -227,15 +228,46 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     filter: {
       type: 'creators',
       value: [
-        'CbPuZtVMAWwPySvsUAEbZhe8y9rkeAZ5qLhsGBVvtau9',
-        'EpgYkzyAXPDq11G5ngctWcjq7pKSfUtEnjVcYPs2jhGY',
-        'EoYTpE5HuTaXkN2AWDAgGA3JbhtPdeqnUiY9rdG7hMf',
-        '3TVyY5Tw9CuKj7EJwaawacDqBM5jnbeL1kRUvhDPvxH4',
-        'GgT69RnQwQhE8cmnTivRHSPfvXwd3HirdbnHQBaHgqwt',
-        '4hgG6XRBwGNsFpuCnBJMGi9iQteWmULM4nX6zSsgDKgz',
+        'CbPuZtVMAWwPySvsUAEbZhe8y9rkeAZ5qLhsGBVvtau9', // S1
+        'EoYTpE5HuTaXkN2AWDAgGA3JbhtPdeqnUiY9rdG7hMf', // S1
+        'EpgYkzyAXPDq11G5ngctWcjq7pKSfUtEnjVcYPs2jhGY', // S2
+        '3TVyY5Tw9CuKj7EJwaawacDqBM5jnbeL1kRUvhDPvxH4', // S2
+        'GgT69RnQwQhE8cmnTivRHSPfvXwd3HirdbnHQBaHgqwt', // Sank
+        '4hgG6XRBwGNsFpuCnBJMGi9iQteWmULM4nX6zSsgDKgz', // Sank
       ],
     },
-    disallowedMints: ['6kJ37VLS5rcCNKKW2ZxEtBpcbtVAEKsdyeZw3qPFtXUD'],
+    subFilters: [
+      {
+        label: 'Season 2',
+        filter: {
+          type: 'creators',
+          value: [
+            'EpgYkzyAXPDq11G5ngctWcjq7pKSfUtEnjVcYPs2jhGY',
+            '3TVyY5Tw9CuKj7EJwaawacDqBM5jnbeL1kRUvhDPvxH4',
+          ],
+        },
+      },
+      {
+        label: 'Season 1',
+        filter: {
+          type: 'creators',
+          value: [
+            'CbPuZtVMAWwPySvsUAEbZhe8y9rkeAZ5qLhsGBVvtau9',
+            'EoYTpE5HuTaXkN2AWDAgGA3JbhtPdeqnUiY9rdG7hMf',
+          ],
+        },
+      },
+      {
+        label: 'Sank season',
+        filter: {
+          type: 'creators',
+          value: [
+            'GgT69RnQwQhE8cmnTivRHSPfvXwd3HirdbnHQBaHgqwt',
+            '4hgG6XRBwGNsFpuCnBJMGi9iQteWmULM4nX6zSsgDKgz',
+          ],
+        },
+      },
+    ],
     rentalCard: {
       invalidators: ['rate', 'duration', 'expiration', 'manual'],
       invalidationOptions: {

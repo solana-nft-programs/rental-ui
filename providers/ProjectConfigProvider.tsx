@@ -1,5 +1,5 @@
 import type { TokenData } from 'apis/api'
-import type { ProjectConfig } from 'config/config'
+import type { ProjectConfig, TokenFilter } from 'config/config'
 import { projectConfigs } from 'config/config'
 import type { NextPageContext } from 'next'
 import type { ReactChild } from 'react'
@@ -106,6 +106,8 @@ export interface ProjectConfigValues {
   config: ProjectConfig
   setProjectConfig: (s: string) => void
   configFromToken: (tokenData?: TokenData) => ProjectConfig
+  subFilter?: TokenFilter
+  setSubFilter: (arg: TokenFilter) => void
 }
 
 const ProjectConfigValues: React.Context<ProjectConfigValues> =
@@ -113,6 +115,7 @@ const ProjectConfigValues: React.Context<ProjectConfigValues> =
     config: projectConfigs['default']!,
     setProjectConfig: () => {},
     configFromToken: () => projectConfigs['default']!,
+    setSubFilter: () => {},
   })
 
 export function ProjectConfigProvider({
@@ -123,6 +126,9 @@ export function ProjectConfigProvider({
   defaultConfig: ProjectConfig
 }) {
   const [config, setConfig] = useState<ProjectConfig>(defaultConfig)
+  const [subFilter, setSubFilter] = useState<TokenFilter | undefined>(
+    config.subFilters ? config.subFilters[0]?.filter : undefined
+  )
   return (
     <ProjectConfigValues.Provider
       value={{
@@ -130,6 +136,9 @@ export function ProjectConfigProvider({
         setProjectConfig: (project: string) => {
           if (projectConfigs[project]) {
             setConfig(projectConfigs[project]!)
+            if (projectConfigs[project]?.subFilters) {
+              setSubFilter(projectConfigs[project]!.subFilters![0]?.filter)
+            }
           }
         },
         configFromToken: (tokenData?: TokenData) =>
@@ -138,6 +147,8 @@ export function ProjectConfigProvider({
               (c) => filterTokens([tokenData], c.filter).length > 0
             )) ??
           config,
+        subFilter,
+        setSubFilter,
       }}
     >
       {children}

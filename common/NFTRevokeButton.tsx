@@ -52,7 +52,7 @@ export const NFTRevokeButton: React.FC<NFTRevokeButtonProps> = ({
                       configFromToken(tokenData),
                       tokenData
                     )
-                    queryClient.removeQueries(TOKEN_DATA_KEY)
+                    queryClient.resetQueries(TOKEN_DATA_KEY)
                   },
                 }
               ))

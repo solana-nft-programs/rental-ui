@@ -34,7 +34,7 @@ export const NFTHeader: React.FC<NFTHeaderProps> = ({
         logConfigTokenDataEvent('nft: click claim link', config, tokenData)
         handleCopy(
           getLink(
-            `/${config.name}/claim/${tokenData.tokenManager?.pubkey.toBase58()}`
+            `/${config.name}/${tokenData.tokenManager?.pubkey.toBase58()}`
           )
         )
       }}

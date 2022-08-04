@@ -28,6 +28,7 @@ export const mintMetadataQuery = async (
       },
     }
   }
+
   if (
     'indexedData' in tokenData &&
     tokenData?.indexedData?.mint_address_nfts?.uri

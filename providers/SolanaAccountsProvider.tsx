@@ -248,19 +248,19 @@ export const fetchAccountDataById = async (
 export const cacheKey = (key: PublicKey | string) => key.toString()
 
 export interface SolanaAccountsContextValues {
-  getAccountDatum: (
-    key: PublicKey | null
-  ) => Promise<AccountCacheData | undefined>
-  getAccountData: (
-    keys: (PublicKey | null)[]
-  ) => Promise<(AccountCacheData | null | undefined)[]>
+  // getAccountDatum: (
+  //   key: PublicKey | null
+  // ) => Promise<AccountCacheData | undefined>
+  // getAccountData: (
+  //   keys: (PublicKey | null)[]
+  // ) => Promise<(AccountCacheData | null | undefined)[]>
   getAccountDataById: (keys: (PublicKey | null)[]) => Promise<AccountDataById>
 }
 
 const SolanaAccountsContext: React.Context<SolanaAccountsContextValues> =
   React.createContext<SolanaAccountsContextValues>({
-    getAccountDatum: async () => undefined,
-    getAccountData: async () => [],
+    // getAccountDatum: async () => undefined,
+    // getAccountData: async () => [],
     getAccountDataById: async () => ({}),
   })
 
@@ -300,40 +300,40 @@ export function SolanaAccountsProvider({
     }
   }, [Object.keys(accountDataById).length])
 
-  /**
-   * Get multiple accounts and backfill cache
-   */
-  const getAccountData = async (keys: (PublicKey | null)[]) => {
-    const keysToFetch = keys.filter(
-      (key) => key && !(cacheKey(key) in accountDataById)
-    )
-    const fetchedData = await fetchAccountDataById(connection, keysToFetch)
-    console.log(
-      `[cacheMiss] (${keysToFetch.length}/${keys.length}) cacheSize: ${
-        Object.keys(accountDataById).length
-      }`
-    )
-    const results = keys.map((key) =>
-      key ? accountDataById[cacheKey(key)] ?? fetchedData[cacheKey(key)] : null
-    )
-    setAccountDataById((v) => ({ ...v, ...fetchedData }))
-    return results
-  }
+  // /**
+  //  * Get multiple accounts and backfill cache
+  //  */
+  // const getAccountData = async (keys: (PublicKey | null)[]) => {
+  //   const keysToFetch = keys.filter(
+  //     (key) => key && !(cacheKey(key) in accountDataById)
+  //   )
+  //   const fetchedData = await fetchAccountDataById(connection, keysToFetch)
+  //   console.log(
+  //     `[cacheMiss] (${keysToFetch.length}/${keys.length}) cacheSize: ${
+  //       Object.keys(accountDataById).length
+  //     }`
+  //   )
+  //   const results = keys.map((key) =>
+  //     key ? accountDataById[cacheKey(key)] ?? fetchedData[cacheKey(key)] : null
+  //   )
+  //   setAccountDataById((v) => ({ ...v, ...fetchedData }))
+  //   return results
+  // }
 
-  /**
-   * Get singular account from cache or add to cache if not found
-   */
-  const getAccountDatum = async (key: PublicKey | null) => {
-    if (!key) return undefined
-    if (cacheKey(key) in accountDataById) {
-      return accountDataById[cacheKey(key)]
-    }
-    console.log(`[cacheMissSingle] ${key.toString()}`)
-    const fetchedData = await fetchAccountDataById(connection, [key])
-    const results = accountDataById[cacheKey(key)] ?? fetchedData[cacheKey(key)]
-    setAccountDataById((v) => ({ ...v, ...fetchedData }))
-    return results
-  }
+  // /**
+  //  * Get singular account from cache or add to cache if not found
+  //  */
+  // const getAccountDatum = async (key: PublicKey | null) => {
+  //   if (!key) return undefined
+  //   if (cacheKey(key) in accountDataById) {
+  //     return accountDataById[cacheKey(key)]
+  //   }
+  //   console.log(`[cacheMissSingle] ${key.toString()}`)
+  //   const fetchedData = await fetchAccountDataById(connection, [key])
+  //   const results = accountDataById[cacheKey(key)] ?? fetchedData[cacheKey(key)]
+  //   setAccountDataById((v) => ({ ...v, ...fetchedData }))
+  //   return results
+  // }
 
   /**
    * Get multiple accounts and backfill cache return as map
@@ -349,7 +349,7 @@ export function SolanaAccountsProvider({
         keys.length
       }) cacheSize: ${Object.keys(accountDataById).length}`
     )
-    setAccountDataById((v) => ({ ...v, ...fetchedData }))
+    // setAccountDataById((v) => ({ ...v, ...fetchedData }))
     const matchedData = Object.fromEntries(
       presentKeys
         .map((k) => cacheKey(k ?? ''))
@@ -362,8 +362,8 @@ export function SolanaAccountsProvider({
   return (
     <SolanaAccountsContext.Provider
       value={{
-        getAccountDatum,
-        getAccountData,
+        // getAccountDatum,
+        // getAccountData,
         getAccountDataById,
       }}
     >

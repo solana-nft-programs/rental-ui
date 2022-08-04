@@ -6,6 +6,7 @@ import { getAllAttributes } from 'common/NFTAttributeFilters'
 import { SelecterDrawer } from 'common/SelectedDrawer'
 import { elligibleForRent, getMintfromTokenData } from 'common/tokenDataUtils'
 import type { TokenFilter } from 'config/config'
+import { TOKEN_DATA_KEY } from 'hooks/useBrowseAvailableTokenDatas'
 import { useManagedTokens } from 'hooks/useManagedTokens'
 import { useUserTokenData } from 'hooks/useUserTokenData'
 import { useWalletId } from 'hooks/useWalletId'
@@ -90,6 +91,7 @@ export const Manage = () => {
   const managedTokens = useManagedTokens()
   const allManagedTokens = useQuery(
     [
+      TOKEN_DATA_KEY,
       'useAllManagedTokens',
       walletId?.toString(),
       tokenDatasId(userTokenDatas.data),
@@ -114,6 +116,7 @@ export const Manage = () => {
   )
   const availableTokens = useQuery(
     [
+      TOKEN_DATA_KEY,
       'availableTokens',
       walletId?.toString(),
       tokenDatasId(userTokenDatas.data),
@@ -130,6 +133,7 @@ export const Manage = () => {
 
   const rentedTokens = useQuery(
     [
+      TOKEN_DATA_KEY,
       'useRentedTokens',
       walletId?.toString(),
       tokenDatasId(userTokenDatas.data),

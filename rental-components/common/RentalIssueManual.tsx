@@ -122,7 +122,7 @@ export const RentalIssueManual = ({
         disabled={!confirmRentalTerms || !!error || !customInvalidator}
         loading={handleIssueRental.isLoading}
         onClick={async () => {
-          txResults
+          txResults?.length === 0 && !txResults[0]?.error
             ? handleCopy(txResults[0]?.claimLink ?? '')
             : handleIssueRental.mutate(
                 {

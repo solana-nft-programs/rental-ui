@@ -201,7 +201,7 @@ export const useHandleClaimRental = () => {
     },
     {
       onSuccess: () => {
-        queryClient.removeQueries(TOKEN_DATA_KEY)
+        queryClient.resetQueries(TOKEN_DATA_KEY)
       },
       onError: async (e) => {
         if (e instanceof Error) {

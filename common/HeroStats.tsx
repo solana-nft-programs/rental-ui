@@ -95,10 +95,10 @@ const calculateFloorPrice = (
 export const HeroStats: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   className,
 }: React.HTMLAttributes<HTMLDivElement>) => {
-  const { config } = useProjectConfig()
+  const { config, subFilter } = useProjectConfig()
   const projectStats = useProjectStats()
   const paymentMints = usePaymentMints()
-  const availableTokens = useBrowseAvailableTokenDatas(false, true)
+  const availableTokens = useBrowseAvailableTokenDatas(false, true, subFilter)
   return (
     <div className={`flex flex-wrap gap-y-5 ${className}`}>
       <div className="flex flex-col items-center justify-center">
