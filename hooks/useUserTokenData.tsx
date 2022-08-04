@@ -36,7 +36,10 @@ export type UserTokenData = Pick<
   | 'recipientTokenAccount'
 >
 
-export const useUserTokenData = (filter?: TokenFilter) => {
+export const useUserTokenData = (
+  filter?: TokenFilter,
+  fetchMetadata?: boolean
+) => {
   const walletId = useWalletId()
   const { connection, environment } = useEnvironmentCtx()
   const { config } = useProjectConfig()
@@ -192,27 +195,29 @@ export const useUserTokenData = (filter?: TokenFilter) => {
         )),
       }
 
-      const metadata = await withTrace(
-        () =>
-          Promise.all(
-            tokenAccounts.map(async (tokenAccount) => {
-              try {
-                const md = metaplexData[tokenAccount.pubkey.toString()]
-                const uri = md?.parsed.data.uri
-                if (!md || !uri) {
-                  return null
-                }
-                const json = await fetch(uri).then((r) => r.json())
-                return {
-                  pubkey: md.pubkey,
-                  parsed: json,
-                }
-              } catch (e) {}
-            })
-          ),
-        trace,
-        { op: 'fetch-metadata' }
-      )
+      const metadata = fetchMetadata
+        ? await withTrace(
+            () =>
+              Promise.all(
+                tokenAccounts.map(async (tokenAccount) => {
+                  try {
+                    const md = metaplexData[tokenAccount.pubkey.toString()]
+                    const uri = md?.parsed.data.uri
+                    if (!md || !uri) {
+                      return null
+                    }
+                    const json = await fetch(uri).then((r) => r.json())
+                    return {
+                      pubkey: md.pubkey,
+                      parsed: json,
+                    }
+                  } catch (e) {}
+                })
+              ),
+            trace,
+            { op: 'fetch-metadata' }
+          )
+        : []
 
       trace.finish()
       return tokenAccounts.map((tokenAccount, i) => {
@@ -251,7 +256,7 @@ export const useUserTokenData = (filter?: TokenFilter) => {
                 parsed: metaplex.EditionData | metaplex.MasterEditionData
               }
             | undefined,
-          metadata: metadata.find((data) =>
+          metadata: metadata?.find((data) =>
             data
               ? data.pubkey.toBase58() ===
                 metaplexData[tokenAccount.pubkey.toString()]?.pubkey.toBase58()

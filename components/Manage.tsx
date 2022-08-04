@@ -87,7 +87,7 @@ export const Manage = () => {
   const walletId = useWalletId()
   const { config } = useProjectConfig()
 
-  const userTokenDatas = useUserTokenData(config.filter)
+  const userTokenDatas = useUserTokenData(config.filter, true)
   const managedTokens = useManagedTokens()
   const allManagedTokens = useQuery(
     [
