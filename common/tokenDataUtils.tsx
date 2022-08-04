@@ -1,4 +1,6 @@
+import type { AccountData } from '@cardinal/common'
 import { secondsToString } from '@cardinal/common'
+import type { TimeInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
 import { shouldTimeInvalidate } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator/utils'
 import { BN } from '@project-serum/anchor'
 import type * as splToken from '@solana/spl-token'
@@ -11,7 +13,11 @@ import { SolanaLogo } from 'rental-components/common/icons'
 import type { InvalidatorOption } from 'rental-components/components/RentalIssueCard'
 
 export const getTokenMaxDuration = (
-  tokenData: Pick<TokenData, 'timeInvalidator'>,
+  tokenData: {
+    timeInvalidator?: AccountData<
+      Pick<TimeInvalidatorData, 'maxExpiration'>
+    > | null
+  },
   UTCNow: number
 ) => {
   if (tokenData.timeInvalidator?.parsed.maxExpiration) {
@@ -201,7 +207,14 @@ export const getPriceOrRentalRate = (
 }
 
 export const getRentalDuration = (
-  tokenData: Pick<TokenData, 'timeInvalidator'>,
+  tokenData: {
+    timeInvalidator?: AccountData<
+      Pick<
+        TimeInvalidatorData,
+        'expiration' | 'durationSeconds' | 'maxExpiration'
+      >
+    > | null
+  },
   UTCNow: number,
   claimed?: boolean
 ) => {

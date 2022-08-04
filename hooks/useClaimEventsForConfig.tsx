@@ -12,7 +12,7 @@ export type IndexedClaimEvent = {
   mint?: string
   token_manager_address?: string
   state?: number
-  state_changed_at?: number
+  state_changed_at?: string
   issuer?: string
   recipient_token_account?: string
   paid_claim_approver_payment_mint?: string
@@ -65,6 +65,7 @@ export const useClaimEventsForConfig = () => {
                   cardinal_claim_events(
                     limit: $limit
                     offset: $offset
+                    order_by: { state_changed_at: desc }
                     where: {
                       mint_address_nfts: {
                         metadatas_metadata_creators: {
@@ -111,6 +112,7 @@ export const useClaimEventsForConfig = () => {
                   $limit: Int!
                   $offset: Int!
                   $issuers: [String!]!
+                  order_by: {state_changed_at: desc}
                 ) {
                   cardinal_claim_events(
                     limit: $limit
@@ -150,7 +152,10 @@ export const useClaimEventsForConfig = () => {
         'cardinal_claim_events'
       ] as IndexedClaimEvent[]
       transaction.finish()
-      return indexedClaimEvents
+      return indexedClaimEvents.map((e) => ({
+        ...e,
+        state_changed_at: `${e.state_changed_at}Z`,
+      }))
     },
     {
       refetchOnMount: false,

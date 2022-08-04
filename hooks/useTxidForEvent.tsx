@@ -3,9 +3,9 @@ import { Connection, PublicKey } from '@solana/web3.js'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useQuery } from 'react-query'
 
-export const useTransactionSignature = (
+export const useTxidForEvent = (
   tokenManagerId: string | undefined,
-  stateChangedAt: number | undefined,
+  stateChangedAt: string | undefined,
   enabled = false
 ) => {
   const { environment } = useEnvironmentCtx()
@@ -19,10 +19,7 @@ export const useTransactionSignature = (
     async () => {
       if (!tokenManagerId || !stateChangedAt) return
       let lastSignature: TransactionSignature | undefined
-      const stateChanged = Math.floor(new Date(stateChangedAt, { }).getTime() / 1000)
-      console.log(stateChangedAt, stateChanged)
-
-      console.log(tokenManagerId)
+      const stateChanged = Math.floor(new Date(stateChangedAt).getTime() / 1000)
       for (let i = 0; i < maxIterations; i++) {
         const confirmedSignatures =
           await connection.getConfirmedSignaturesForAddress2(
@@ -30,18 +27,21 @@ export const useTransactionSignature = (
             { before: lastSignature },
             'confirmed'
           )
-        const found = confirmedSignatures.find((sig) => {
-          console.log(
-            stateChangedAt,
-            sig.blockTime,
-            sig.signature,
-            new Date(sig.blockTime * 1000).toLocaleString(),
-            new Date(stateChanged * 1000).toLocaleString()
-          )
-          return sig.blockTime && sig.blockTime <= stateChanged - 100000
+        const foundIndex = confirmedSignatures.findIndex((sig) => {
+          return sig.blockTime && sig.blockTime <= stateChanged
         })
-        if (found) return found.signature
-
+        if (foundIndex) {
+          const closestSignature = [
+            confirmedSignatures[foundIndex - 1],
+            confirmedSignatures[foundIndex],
+            confirmedSignatures[foundIndex + 1],
+          ]
+          return closestSignature.sort(
+            (a, b) =>
+              Math.abs((a?.blockTime ?? 0) - stateChanged) -
+              Math.abs((b?.blockTime ?? 0) - stateChanged)
+          )[0]?.signature
+        }
         lastSignature =
           confirmedSignatures[confirmedSignatures.length - 1]?.signature
       }
