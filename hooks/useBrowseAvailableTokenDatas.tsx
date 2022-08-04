@@ -50,6 +50,9 @@ export const indexedDataBody = `
     uri
     name
     edition_pda
+    metadata_json {
+      image
+    }
     metadatas_attributes {
       metadata_address
       trait_type
@@ -74,6 +77,9 @@ export type IndexedData = {
     name?: string
     uri?: string
     edition_pda?: string
+    metadata_json?: {
+      image?: string
+    }
     metadatas_attributes?: {
       metadata_address: string
       trait_type: string

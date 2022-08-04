@@ -19,6 +19,17 @@ export const mintMetadataQuery = async (
   if ('metadata' in tokenData && tokenData.metadata) return tokenData.metadata
   if (
     'indexedData' in tokenData &&
+    tokenData?.indexedData?.mint_address_nfts?.metadata_json?.image
+  ) {
+    return {
+      pubkey: tryPublicKey(tokenData.indexedData.address)!,
+      parsed: {
+        image: tokenData?.indexedData?.mint_address_nfts?.metadata_json?.image,
+      },
+    }
+  }
+  if (
+    'indexedData' in tokenData &&
     tokenData?.indexedData?.mint_address_nfts?.uri
   ) {
     const json = await fetch(
@@ -42,7 +53,7 @@ export const mintMetadataQuery = async (
 export const useMintMetadata = (
   tokenData: Pick<TokenData, 'metaplexData'> | Pick<TokenData, 'indexedData'>
 ) => {
-  return useQuery<AccountData<any> | undefined>(
+  return useQuery<AccountData<{ image: string }> | undefined>(
     mintMetadataQueryKey(tokenData),
     async () => {
       return mintMetadataQuery(tokenData)
