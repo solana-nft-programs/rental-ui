@@ -21,7 +21,8 @@ import { useQuery } from 'react-query'
 
 import type { IndexedData } from './useBrowseAvailableTokenDatas'
 import {
-  collectIndexedData,
+  filterKnownInvalidators,
+  indexedDataBody,
   TOKEN_DATA_KEY,
 } from './useBrowseAvailableTokenDatas'
 import { useWalletId } from './useWalletId'
@@ -84,32 +85,7 @@ export const useManagedTokens = () => {
                             }
                           }
                         }
-                      ) {
-                        address
-                        mint
-                        state
-                        state_changed_at
-                        invalidator_address {
-                          invalidator
-                        }
-                        time_invalidator_address {
-                          time_invalidator_address
-                        }
-                        mint_address_nfts {
-                          uri
-                          name
-                          edition_pda
-                          metadatas_attributes {
-                            metadata_address
-                            trait_type
-                            value
-                          }
-                          metadatas_metadata_creators {
-                            creator_address
-                            verified
-                          }
-                        }
-                      }
+                      ) ${indexedDataBody}
                     }
                   `,
                   variables: {
@@ -122,32 +98,7 @@ export const useManagedTokens = () => {
                     query GetTokenManagersForIssuer($issuer: String!) {
                       cardinal_token_managers(
                         where: { issuer: { _eq: $issuer } }
-                      ) {
-                        address
-                        mint
-                        state
-                        state_changed_at
-                        invalidator_address {
-                          invalidator
-                        }
-                        time_invalidator_address {
-                          time_invalidator_address
-                        }
-                        mint_address_nfts {
-                          uri
-                          name
-                          edition_pda
-                          metadatas_attributes {
-                            metadata_address
-                            trait_type
-                            value
-                          }
-                          metadatas_metadata_creators {
-                            creator_address
-                            verified
-                          }
-                        }
-                      }
+                      ) ${indexedDataBody}
                     }
                   `,
                   variables: {
@@ -164,7 +115,7 @@ export const useManagedTokens = () => {
 
         ////
         const { tokenManagerIds, indexedTokenManagerDatas } =
-          await collectIndexedData(indexedTokenManagers, trace)
+          await filterKnownInvalidators(true, indexedTokenManagers, trace)
 
         ////
         const tokenManagerDatas = await withTrace(

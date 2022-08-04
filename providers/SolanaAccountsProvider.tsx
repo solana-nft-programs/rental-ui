@@ -339,18 +339,19 @@ export function SolanaAccountsProvider({
    * Get multiple accounts and backfill cache return as map
    */
   const getAccountDataById = async (keys: (PublicKey | null)[]) => {
-    const keysToFetch = keys.filter(
+    const presentKeys = keys.filter((k) => k)
+    const keysToFetch = presentKeys.filter(
       (key) => key && !(cacheKey(key) in accountDataById)
     )
     const fetchedData = await fetchAccountDataById(connection, keysToFetch)
     console.log(
-      `[cacheMiss] (${keysToFetch.length}/${keys.length}) cacheSize: ${
-        Object.keys(accountDataById).length
-      }`
+      `[cacheMiss] (${keysToFetch.length}/${presentKeys.length}/${
+        keys.length
+      }) cacheSize: ${Object.keys(accountDataById).length}`
     )
     setAccountDataById((v) => ({ ...v, ...fetchedData }))
     const matchedData = Object.fromEntries(
-      keys
+      presentKeys
         .map((k) => cacheKey(k ?? ''))
         .filter((key) => key in accountDataById)
         .map((key) => [key, accountDataById[key]!])

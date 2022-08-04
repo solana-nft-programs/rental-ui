@@ -39,7 +39,7 @@ export const allowedToRent = async (
   connection: Connection,
   walletId: PublicKey,
   config: ProjectConfig,
-  tokenData: { tokenManager?: AccountData<TokenManagerData> },
+  tokenData: { tokenManager?: AccountData<Pick<TokenManagerData, 'issuer'>> },
   claimingRental: boolean,
   tokenDatasByIssuer: TokenData[]
 ): Promise<boolean> => {

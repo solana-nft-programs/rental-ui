@@ -69,6 +69,7 @@ export type ProjectConfig = {
     icon: IconKey
     link: string
   }[]
+  disallowedMints?: string[]
   logoImage: string
   logoPadding?: boolean
   colors: Colors
@@ -234,6 +235,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         '4hgG6XRBwGNsFpuCnBJMGi9iQteWmULM4nX6zSsgDKgz',
       ],
     },
+    disallowedMints: ['6kJ37VLS5rcCNKKW2ZxEtBpcbtVAEKsdyeZw3qPFtXUD'],
     rentalCard: {
       invalidators: ['rate', 'duration', 'expiration', 'manual'],
       invalidationOptions: {
