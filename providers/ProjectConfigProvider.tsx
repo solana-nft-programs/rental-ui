@@ -138,6 +138,8 @@ export function ProjectConfigProvider({
             setConfig(projectConfigs[project]!)
             if (projectConfigs[project]?.subFilters) {
               setSubFilter(projectConfigs[project]!.subFilters![0]?.filter)
+            } else {
+              setSubFilter(undefined)
             }
           }
         },
