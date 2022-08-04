@@ -133,7 +133,7 @@ export function getTokenRentalRate(
       displayText: `${tokenPrice ? `${tokenPrice} + ` : ''}${fmtMintAmount(
         paymentMints[extensionPaymentMint.toString()],
         new BN(marketplaceRate)
-      )}${getSymbolFromTokenData(tokenData)} / ${rateOption?.substring(
+      )} ${getSymbolFromTokenData(tokenData)} / ${rateOption?.substring(
         0,
         rateOption.length - 1
       )}`,

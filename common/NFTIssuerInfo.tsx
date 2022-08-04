@@ -86,14 +86,14 @@ export const getRentalRateDisplayText = (
     </>
   ) : (
     <>
-      {getPriceFromTokenData(tokenData, paymentMints)}
+      {getPriceFromTokenData(tokenData, paymentMints)}{' '}
       {getSymbolFromTokenData(tokenData)}
       <span className={accentColor}>
         {' '}
         ={' '}
         {Number(
           getPriceOrRentalRate(config, tokenData, paymentMints).toFixed(4)
-        )}
+        )}{' '}
         {getSymbolFromTokenData(tokenData)} /{' '}
         {(config.marketplaceRate ?? 'days').slice(0, -1)}
       </span>

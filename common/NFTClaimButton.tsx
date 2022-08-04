@@ -47,7 +47,7 @@ export const priceAndSymbol = (
   return `${fmtMintAmount(
     paymentMintInfos[paymentMint.toString()],
     paymentAmount ?? new BN(0)
-  )}${mintSymbol(paymentMint)}`
+  )} ${mintSymbol(paymentMint)}`
 }
 
 interface NFTClaimButtonProps extends React.HTMLAttributes<HTMLDivElement> {

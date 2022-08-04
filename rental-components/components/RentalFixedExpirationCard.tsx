@@ -63,13 +63,13 @@ export const RentalFixedExpirationCard = ({
           <div>
             <div className="mb-1 text-base text-light-0">Fixed price</div>
             <div className="text-base text-medium-3">
-              {getPriceFromTokenData(tokenData, paymentMints.data)}
+              {getPriceFromTokenData(tokenData, paymentMints.data)}{' '}
               {getSymbolFromTokenData(tokenData)} ={' '}
               {getPriceOrRentalRate(
                 config,
                 tokenData,
                 paymentMints.data
-              ).toFixed(4)}
+              ).toFixed(4)}{' '}
               {getSymbolFromTokenData(tokenData)} /{' '}
               {capitalizeFirstLetter(config.marketplaceRate ?? 'days').slice(
                 0,
