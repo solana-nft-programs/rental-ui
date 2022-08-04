@@ -324,7 +324,7 @@ export const useHandleIssueRental = () => {
         claimLink: getLink(
           `/${
             config.name
-          }/claim/${txData.tokenManagerId.toString()}${`?mintIdString=${txData.tokenData.tokenManager?.parsed.mint}`}${
+          }/claim/${txData.tokenManagerId.toString()}${`?mintIdString=${txData.tokenData.mint?.pubkey.toString()}`}${
             txData.otpKeypair
               ? `&otp=${utils.bytes.bs58.encode(txData.otpKeypair.secretKey)}`
               : ''

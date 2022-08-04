@@ -60,9 +60,9 @@ function Claim(props: {
           name="twitter:image"
           content={`${
             process.env.NEXT_PUBLIC_BASE_URL
-          }/api/generateTwitterImage?nftImageUri=${props.nftImageUrl}${
-            props.isClaimed ? '&claimed=true' : ''
-          }`}
+          }/api/generateTwitterImage?nftImageUri=${encodeURIComponent(
+            props.nftImageUrl
+          )}${props.isClaimed ? '&claimed=true' : ''}`}
         />
       </Head>
       <HeaderSlim />
