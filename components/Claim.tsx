@@ -1,7 +1,6 @@
 import { tryPublicKey } from '@cardinal/common'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { css } from '@emotion/react'
-import type { TokenData } from 'apis/api'
 import { GlyphQuestion } from 'assets/GlyphQuestion'
 import { ButtonSmall } from 'common/ButtonSmall'
 import { Card } from 'common/Card'
@@ -15,6 +14,7 @@ import { NFTRevokeButton } from 'common/NFTRevokeButton'
 import { StyledBackground } from 'common/StyledBackground'
 import ClaimQRCode from 'components/ClaimQRCode'
 import { useOtp } from 'hooks/useOtp'
+import type { SingleTokenData } from 'hooks/useTokenData'
 import { useTokenData } from 'hooks/useTokenData'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
@@ -37,7 +37,10 @@ function Claim(props: {
   const { tokenManagerString, qrcode } = router.query
   const tokenManagerId = tryPublicKey(tokenManagerString)
   const tokenQuery = useTokenData(tokenManagerId ?? undefined)
-  const tokenData = tokenQuery.data as TokenData
+  const tokenData = tokenQuery.data as Omit<
+    SingleTokenData,
+    'recipientTokenAccount'
+  >
 
   return (
     <div className="flex h-screen flex-col">

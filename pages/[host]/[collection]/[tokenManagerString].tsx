@@ -1,5 +1,4 @@
 import { tryPublicKey } from '@cardinal/common'
-import type { AccountData } from '@cardinal/token-manager'
 import { tokenManager } from '@cardinal/token-manager/dist/cjs/programs'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import * as metaplex from '@metaplex-foundation/mpl-token-metadata'
@@ -34,6 +33,8 @@ export async function getServerSideProps(context: any) {
 
   let mintId
   let isClaimed
+  let nftImageUrl
+  let nftName
   if (mintIdString) {
     mintId = tryPublicKey(mintIdString)
     isClaimed = false
@@ -63,27 +64,17 @@ export async function getServerSideProps(context: any) {
     console.log('Failed to get metaplex data', e)
     return null
   })
-  const metaplexData = metaplexDataRaw
-    ? {
-        pubkey: metaplexDataRaw?.pubkey,
-        parsed: metaplexDataRaw?.data,
-      }
-    : undefined
+  const metaplexData = metaplexDataRaw?.data
 
-  let metadata: AccountData<any> | null = null
   if (metaplexData) {
     try {
-      const json = await fetch(metaplexData.parsed.data.uri).then((r) =>
-        r.json()
-      )
-      metadata = { pubkey: metaplexData.pubkey, parsed: json }
+      const json = await fetch(metaplexData.data.uri).then((r) => r.json())
+      nftImageUrl = json.image as string
+      nftName = json.name as string
     } catch (e) {
       console.log('Failed to get metadata data', e)
     }
   }
-
-  const nftImageUrl = metadata?.parsed?.image as string
-  const nftName = metadata?.parsed?.name as string
 
   return {
     props: {
