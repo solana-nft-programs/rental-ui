@@ -59,7 +59,7 @@ export const PANE_TABS: {
       </div>
     ),
     value: 'activity',
-    disabled: true,
+    disabled: false,
     tooltip: 'Coming soon',
   },
 ]

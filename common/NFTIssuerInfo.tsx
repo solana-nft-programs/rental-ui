@@ -76,7 +76,7 @@ export const getDurationText = (tokenData: TokenData, UTCNow: number) => {
 
 export const getRentalRateDisplayText = (
   config: ProjectConfig,
-  tokenData: TokenData,
+  tokenData: Pick<TokenData, 'timeInvalidator' | 'claimApprover'>,
   paymentMints?: { [name: string]: Pick<splToken.MintInfo, 'decimals'> },
   accentColor = 'text-light-2'
 ) => {
@@ -102,7 +102,10 @@ export const getRentalRateDisplayText = (
 }
 
 interface NFTIssuerInfoProps extends React.HTMLAttributes<HTMLDivElement> {
-  tokenData: Pick<TokenData, 'tokenManager' | 'recipientTokenAccount'>
+  tokenData: Pick<
+    TokenData,
+    'tokenManager' | 'recipientTokenAccount' | 'timeInvalidator'
+  >
 }
 
 export const NFTIssuerInfo: React.FC<NFTIssuerInfoProps> = ({

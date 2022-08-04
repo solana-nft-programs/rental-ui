@@ -15,10 +15,18 @@ export type IndexedClaimEvent = {
   state_changed_at?: number
   issuer?: string
   recipient_token_account?: string
+  paid_claim_approver_payment_mint?: string
   paid_claim_approver_payment_amount?: number
+  time_invalidator_duration_seconds?: number
+  time_invalidator_extension_duration_seconds?: number
+  time_invalidator_extension_payment_amount?: number
+  time_invalidator_extension_payment_mint?: string
   mint_address_nfts?: {
     name?: string
     uri?: string
+    metadata_json?: {
+      image?: string
+    }
   }
 }
 
@@ -75,10 +83,18 @@ export const useClaimEventsForConfig = () => {
                     state_changed_at
                     issuer
                     recipient_token_account
+                    paid_claim_approver_payment_mint
                     paid_claim_approver_payment_amount
+                    time_invalidator_duration_seconds
+                    time_invalidator_extension_duration_seconds
+                    time_invalidator_extension_payment_amount
+                    time_invalidator_extension_payment_mint
                     mint_address_nfts {
                       name
                       uri
+                      metadata_json {
+                        image
+                      }
                     }
                   }
                 }
@@ -107,10 +123,18 @@ export const useClaimEventsForConfig = () => {
                     state_changed_at
                     issuer
                     recipient_token_account
+                    paid_claim_approver_payment_mint
                     paid_claim_approver_payment_amount
+                    time_invalidator_duration_seconds
+                    time_invalidator_extension_duration_seconds
+                    time_invalidator_extension_payment_amount
+                    time_invalidator_extension_payment_mint
                     mint_address_nfts {
                       name
                       uri
+                      metadata_json {
+                        image
+                      }
                     }
                   }
                 }
