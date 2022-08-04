@@ -27,7 +27,10 @@ export interface TokenData {
   indexedData?: IndexedData
   tokenManager?: AccountData<TokenManagerData>
   metaplexData?: AccountData<metaplex.MetadataData>
-  metadata?: AccountData<any> | null
+  metadata?: AccountData<{
+    image?: string
+    attributes?: { trait_type: string; value: string }[]
+  }> | null
   editionData?: AccountData<metaplex.EditionData | metaplex.MasterEditionData>
   claimApprover?: AccountData<PaidClaimApproverData> | null
   useInvalidator?: AccountData<UseInvalidatorData> | null

@@ -29,7 +29,6 @@ export const RefreshButton: React.FC<Props> = ({
 }: Props) => {
   const { config } = useProjectConfig()
   const { UTCNow } = useUTCNow()
-  if (!dataUpdatdAtMs) return <></>
   return (
     <Tooltip title="Click to refresh latest data">
       <div
@@ -44,7 +43,11 @@ export const RefreshButton: React.FC<Props> = ({
           `
         }
       >
-        <div>{refreshSecondsString((Date.now() - dataUpdatdAtMs) / 1000)}</div>
+        <div>
+          {dataUpdatdAtMs
+            ? refreshSecondsString((Date.now() - dataUpdatdAtMs) / 1000)
+            : 'loading'}
+        </div>
         <BiRefresh className={`text-2xl ${isFetching && 'animate-spin'}`} />
       </div>
     </Tooltip>

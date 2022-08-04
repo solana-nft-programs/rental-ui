@@ -4,7 +4,6 @@ import { tryPublicKey } from '@cardinal/common'
 import type { PaidClaimApproverData } from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
 import type { TimeInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
 import { TIME_INVALIDATOR_ADDRESS } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
-import { findTimeInvalidatorAddress } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator/pda'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import {
   getTokenManagers,
@@ -14,11 +13,9 @@ import {
 import type { UseInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
 import { USE_INVALIDATOR_ADDRESS } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
 import * as Sentry from '@sentry/browser'
-import type * as spl from '@solana/spl-token'
 import type { Connection, PublicKey } from '@solana/web3.js'
 import type { TokenData } from 'apis/api'
 import { getTokenDatas } from 'apis/api'
-import { elligibleForClaim } from 'common/tokenDataUtils'
 import type { Trace } from 'common/trace'
 import { withTrace } from 'common/trace'
 import type { ProjectConfig, TokenFilter } from 'config/config'
@@ -32,13 +29,42 @@ export const TOKEN_DATA_KEY = 'tokenData'
 
 export type BrowseAvailableTokenData = Pick<
   TokenData,
-  | 'mint'
   | 'indexedData'
   | 'tokenManager'
   | 'claimApprover'
   | 'useInvalidator'
   | 'timeInvalidator'
 >
+
+export const indexedDataBody = `
+{
+  address
+  mint
+  invalidator_address {
+    invalidator
+  }
+  time_invalidator_address {
+    time_invalidator_address
+  }
+  mint_address_nfts {
+    uri
+    name
+    edition_pda
+    metadata_json {
+      image
+    }
+    metadatas_attributes {
+      metadata_address
+      trait_type
+      value
+    }
+    metadatas_metadata_creators {
+      creator_address
+      verified
+    }
+  }
+}
+`
 
 export type IndexedData = {
   mint?: string
@@ -51,6 +77,9 @@ export type IndexedData = {
     name?: string
     uri?: string
     edition_pda?: string
+    metadata_json?: {
+      image?: string
+    }
     metadatas_attributes?: {
       metadata_address: string
       trait_type: string
@@ -66,39 +95,28 @@ export type IndexedData = {
 export async function filterKnownInvalidators<
   T extends {
     address?: string
+    time_invalidator_address?: {
+      time_invalidator_address: string
+    }
     invalidator_address?: { invalidator: string }[]
   }
->(config: ProjectConfig, indexedTokenManagers: T[], trace?: Trace) {
+>(showUnknownInvalidators: boolean, indexedTokenManagers: T[], trace?: Trace) {
   /////
-  const collectSpan = trace?.startChild({
-    op: 'collect-known-invalidators',
-  })
-  const knownInvalidators: string[][] = await Promise.all(
-    indexedTokenManagers.map(async ({ address }): Promise<string[]> => {
-      const tokenManagerId = tryPublicKey(address)
-      if (!tokenManagerId) return []
-      const [timeInvalidatorId] = await findTimeInvalidatorAddress(
-        tokenManagerId
-      )
-      return [timeInvalidatorId.toString()]
-    })
-  )
-  collectSpan?.finish()
-
   const filterSpan = trace?.startChild({
-    op: 'filter-known-invalidators-v2',
+    op: 'filter-known-invalidators',
   })
-  const indexedTokenManagerDatas = Object.fromEntries(
-    indexedTokenManagers
-      .filter(
-        (data, i) =>
+  const filteredData = showUnknownInvalidators
+    ? indexedTokenManagers
+    : indexedTokenManagers.filter(
+        (data) =>
           !data.invalidator_address?.some(
             ({ invalidator }) =>
-              !config.showUnknownInvalidators &&
-              !knownInvalidators[i]?.includes(invalidator)
+              invalidator !==
+              data.time_invalidator_address?.time_invalidator_address
           )
       )
-      .map((data) => [data.address ?? '', data])
+  const indexedTokenManagerDatas = Object.fromEntries(
+    filteredData.map((data) => [data.address ?? '', data])
   )
   const tokenManagerIds = Object.keys(indexedTokenManagerDatas).reduce(
     (acc, id) => {
@@ -108,7 +126,6 @@ export async function filterKnownInvalidators<
     [] as PublicKey[]
   )
   filterSpan?.finish()
-
   return { tokenManagerIds, indexedTokenManagerDatas }
 }
 
@@ -139,6 +156,7 @@ export const getTokenIndexData = async (
   filter: TokenFilter,
   showUnknownInvalidators: boolean,
   state: TokenManagerState,
+  disallowedMints: string[],
   trace: Trace
 ) => {
   const indexSpan = trace.startChild({ op: 'index-lookup' })
@@ -153,6 +171,7 @@ export const getTokenIndexData = async (
             query GetTokenManagers(
               $creators: [String!]!
               $tokenManagerState: smallint!
+              $disallowedMints: [String!]!
             ) {
               cardinal_token_managers(
                 where: {
@@ -166,39 +185,20 @@ export const getTokenIndexData = async (
                       }
                     }
                   }
+                  mint: {_nin: $disallowedMints}
                   ${
                     showUnknownInvalidators
                       ? ''
                       : `time_invalidator_address: {}`
                   }
                 }
-              ) {
-                address
-                mint
-                state
-                state_changed_at
-                invalidator_address {
-                  invalidator
-                }
-                time_invalidator_address {
-                  time_invalidator_address
-                }
-                mint_address_nfts {
-                  uri
-                  name
-                  edition_pda
-                  metadatas_attributes {
-                    metadata_address
-                    trait_type
-                    value
-                  }
-                }
-              }
+              ) ${indexedDataBody}
             }
           `,
           variables: {
             creators: filter.value,
             tokenManagerState: state,
+            disallowedMints,
           },
         })
       : await indexer.query({
@@ -206,44 +206,26 @@ export const getTokenIndexData = async (
             query GetTokenManagers(
               $issuers: [String!]!
               $tokenManagerState: smallint!
+              $disallowedMints: [String!]!
             ) {
               cardinal_token_managers(
                 where: {
                   state: { _eq: $tokenManagerState }
                   issuer: { _in: $issuers }
+                  mint: {_nin: $disallowedMints}
                   ${
                     showUnknownInvalidators
                       ? ''
                       : `time_invalidator_address: {}`
                   }
                 }
-              ) {
-                address
-                mint
-                state
-                state_changed_at
-                invalidator_address {
-                  invalidator
-                }
-                time_invalidator_address {
-                  time_invalidator_address
-                }
-                mint_address_nfts {
-                  uri
-                  name
-                  edition_pda
-                  metadatas_attributes {
-                    metadata_address
-                    trait_type
-                    value
-                  }
-                }
-              }
+              ) ${indexedDataBody}
             }
           `,
           variables: {
             issuers: filter.value,
             tokenManagerState: state,
+            disallowedMints,
           },
         })
   /////
@@ -276,14 +258,19 @@ export const useBrowseAvailableTokenDatas = (
           config.filter,
           config.showUnknownInvalidators ?? false,
           state,
+          config.disallowedMints ?? [],
           trace
         )
 
         /////
         const { tokenManagerIds, indexedTokenManagerDatas } =
-          await collectIndexedData(indexedTokenManagers, trace)
+          await filterKnownInvalidators(
+            config.showUnknownInvalidators ?? false,
+            indexedTokenManagers,
+            trace
+          )
 
-        ////
+        /////
         const tokenManagerDatas = await withTrace(
           async () =>
             (
@@ -296,14 +283,13 @@ export const useBrowseAvailableTokenDatas = (
         )
 
         ////
-        const mintIds = tokenManagerDatas.map((tm) => tm.parsed.mint)
         const idsToFetch = tokenManagerDatas.reduce(
           (acc, tm) => [
             ...acc,
             tm.parsed.claimApprover,
             ...tm.parsed.invalidators,
           ],
-          [...mintIds] as (PublicKey | null)[]
+          [] as (PublicKey | null)[]
         )
 
         const accountsById = await withTrace(
@@ -327,8 +313,6 @@ export const useBrowseAvailableTokenDatas = (
             indexedData:
               indexedTokenManagerDatas[tokenManagerData.pubkey.toString()],
             tokenManager: tokenManagerData,
-            mint: (accountsById[tokenManagerData.parsed.mint.toString()] ??
-              null) as AccountData<spl.MintInfo> | null,
             claimApprover: tokenManagerData.parsed.claimApprover?.toString()
               ? (accountsById[
                   tokenManagerData.parsed.claimApprover?.toString()
@@ -347,12 +331,7 @@ export const useBrowseAvailableTokenDatas = (
           }
         })
         trace.finish()
-        return tokenDatas.filter((tokenData) =>
-          elligibleForClaim(
-            tokenData,
-            tokenData.indexedData?.mint_address_nfts?.edition_pda
-          )
-        )
+        return tokenDatas
       } else {
         const trace = Sentry.startTransaction({
           name: `[useBrowseAvailableTokenDatas-non-indexed] ${config.name}`,

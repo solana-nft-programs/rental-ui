@@ -5,6 +5,7 @@ import { useMintMetadata } from 'hooks/useMintMetadata'
 import { useUTCNow } from 'providers/UTCNowProvider'
 
 import { NFTContexualMenu } from './NFTContexualMenu'
+import { getNameFromTokenData } from './tokenDataUtils'
 
 export const getExpiration = (
   tokenData: Pick<TokenData, 'timeInvalidator' | 'tokenManager'>,
@@ -58,7 +59,7 @@ export function NFT({ tokenData }: NFTProps) {
           <img
             loading="lazy"
             src={metadata.parsed.image}
-            alt={metadata.parsed.name}
+            alt={getNameFromTokenData(tokenData)}
             className={`w-full rounded-xl object-contain`}
           />
         ) : (

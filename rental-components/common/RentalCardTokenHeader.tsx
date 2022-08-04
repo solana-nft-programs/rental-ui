@@ -48,7 +48,7 @@ export const RentalCardTokenHeader: React.FC<Props> = ({
               <img
                 className={`w-full`}
                 src={mintMetadata.data.parsed.image}
-                alt={mintMetadata.data.parsed.name}
+                alt={getNameFromTokenData(tokenDatas[i]!)}
               />
             )}
           </div>
@@ -72,7 +72,7 @@ export const RentalClaimCardTokenHeader: React.FC<RentalClaimCardProps> = ({
   return (
     <>
       <div className="text-center text-2xl text-light-0">
-        Rent {mintMetadata.data?.parsed.name}
+        Rent {getNameFromTokenData(tokenData)}
       </div>
       <div className="mb-2 text-center text-lg text-medium-4">
         {config.displayName}
@@ -85,7 +85,7 @@ export const RentalClaimCardTokenHeader: React.FC<RentalClaimCardProps> = ({
             <img
               className="rounded-lg"
               src={mintMetadata.data.parsed.image}
-              alt={mintMetadata.data.parsed.name}
+              alt={getNameFromTokenData(tokenData)}
             />
           )}
           <Pill

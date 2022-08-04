@@ -69,7 +69,7 @@ export const RentalSuccessCard = ({
             <img
               className="rounded-lg"
               src={metadata.parsed.image}
-              alt={metadata.parsed.name}
+              alt={getNameFromTokenData(tokenData)}
             />
           )}
           <a
