@@ -93,7 +93,7 @@ export const PaymentMintImage: React.FC<
 
 export function getTokenRentalRate(
   config: ProjectConfig,
-  paymentMints: { [name: string]: splToken.MintInfo },
+  paymentMints: { [name: string]: Pick<splToken.MintInfo, 'decimals'> },
   tokenData: Pick<TokenData, 'timeInvalidator' | 'claimApprover'>
 ) {
   const rateOption = config.marketplaceRate ?? 'days'
@@ -145,7 +145,7 @@ export function getTokenRentalRate(
 
 export const getPriceFromTokenData = (
   tokenData: Pick<TokenData, 'claimApprover'>,
-  paymentMints?: { [name: string]: splToken.MintInfo }
+  paymentMints?: { [name: string]: Pick<splToken.MintInfo, 'decimals'> }
 ): number => {
   if (
     tokenData.claimApprover?.parsed &&
@@ -170,7 +170,7 @@ export const getPriceFromTokenData = (
 export const getPriceOrRentalRate = (
   config: ProjectConfig,
   tokenData: Pick<TokenData, 'timeInvalidator' | 'claimApprover'>,
-  paymentMints?: { [name: string]: splToken.MintInfo }
+  paymentMints?: { [name: string]: Pick<splToken.MintInfo, 'decimals'> }
 ) => {
   if (!paymentMints) return 0
 

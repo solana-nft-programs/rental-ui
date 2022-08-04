@@ -77,7 +77,7 @@ export const getDurationText = (tokenData: TokenData, UTCNow: number) => {
 export const getRentalRateDisplayText = (
   config: ProjectConfig,
   tokenData: TokenData,
-  paymentMints?: { [name: string]: splToken.MintInfo },
+  paymentMints?: { [name: string]: Pick<splToken.MintInfo, 'decimals'> },
   accentColor = 'text-light-2'
 ) => {
   return isRateBasedListing(tokenData) ? (

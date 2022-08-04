@@ -105,7 +105,7 @@ export function sortTokens<
   config: ProjectConfig,
   UTCNow: number,
   claimed: boolean,
-  paymentMints: { [name: string]: splToken.MintInfo }
+  paymentMints: { [name: string]: Pick<splToken.MintInfo, 'decimals'> }
 ): T[] {
   let sortedTokens
   switch (selectedOrderCategory) {
@@ -197,7 +197,10 @@ export const Browse = () => {
     selectedGroup !== 0,
     subFilter
   )
-  const claimedTokenDatas = useBrowseClaimedTokenDatas(selectedGroup !== 1, subFilter)
+  const claimedTokenDatas = useBrowseClaimedTokenDatas(
+    selectedGroup !== 1,
+    subFilter
+  )
   const tokenQuery =
     selectedGroup === 0 ? availableTokenDatas : claimedTokenDatas
 

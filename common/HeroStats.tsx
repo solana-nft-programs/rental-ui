@@ -23,7 +23,9 @@ const calculateFloorPrice = (
     'tokenManager' | 'claimApprover' | 'timeInvalidator'
   >[],
   config: ProjectConfig,
-  paymentMints: { [name: string]: splToken.MintInfo } | undefined
+  paymentMints:
+    | { [name: string]: Pick<splToken.MintInfo, 'decimals'> }
+    | undefined
 ): number => {
   const onlyRateTokens = (tokenData: Pick<TokenData, 'timeInvalidator'>) => {
     if (config.marketplaceRate) {
