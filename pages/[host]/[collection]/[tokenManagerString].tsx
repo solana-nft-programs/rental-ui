@@ -18,6 +18,8 @@ function ClaimHome(props: {
 export async function getServerSideProps(context: any) {
   const query = context.query
   const tokenManagerString = query.tokenManagerString
+  const mintIdString = query.mintIdString
+
   const cluster = (query.project || query.host)?.includes('dev')
     ? 'devnet'
     : query.host?.includes('test')
@@ -30,17 +32,29 @@ export async function getServerSideProps(context: any) {
     commitment: 'recent',
   })
 
-  const tokenManagerId = tryPublicKey(tokenManagerString)
-  if (!tokenManagerId) {
+  let mintId
+  let isClaimed
+  if (mintIdString) {
+    mintId = tryPublicKey(mintIdString)
+    isClaimed = false
+  } else {
+    const tokenManagerId = tryPublicKey(tokenManagerString)
+    if (!tokenManagerId) {
+      return {}
+    }
+    const tokenManagerData = await tokenManager.accounts.getTokenManager(
+      connection,
+      tokenManagerId
+    )
+    mintId = tokenManagerData.parsed.mint
+    isClaimed = tokenManagerData.parsed.state === TokenManagerState.Claimed
+  }
+
+  if (!mintId) {
     return {}
   }
-  const tokenManagerData = await tokenManager.accounts.getTokenManager(
-    connection,
-    tokenManagerId
-  )
-
   const [metaplexId] = await metaplex.MetadataProgram.findMetadataAccount(
-    tokenManagerData.parsed.mint
+    mintId
   )
   const metaplexDataRaw = await metaplex.Metadata.load(
     connection,
@@ -68,7 +82,6 @@ export async function getServerSideProps(context: any) {
     }
   }
 
-  const isClaimed = tokenManagerData.parsed.state === TokenManagerState.Claimed
   const nftImageUrl = metadata?.parsed?.image as string
   const nftName = metadata?.parsed?.name as string
 

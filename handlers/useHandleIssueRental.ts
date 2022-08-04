@@ -322,10 +322,12 @@ export const useHandleIssueRental = () => {
         txid: txResults[i]?.txid ?? undefined,
         otpKeypair: txData.otpKeypair,
         claimLink: getLink(
-          `/${config.name}/claim/${txData.tokenManagerId.toString()}${
+          `/${
+            config.name
+          }/claim/${txData.tokenManagerId.toString()}${`?mintIdString=${txData.tokenData.tokenManager?.parsed.mint}`}${
             txData.otpKeypair
-              ? `?otp=${utils.bytes.bs58.encode(txData.otpKeypair.secretKey)}`
-              : '?'
+              ? `&otp=${utils.bytes.bs58.encode(txData.otpKeypair.secretKey)}`
+              : ''
           }`
         ),
       }))
