@@ -1,6 +1,7 @@
 import { tryPublicKey } from '@cardinal/common'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { css } from '@emotion/react'
+import type { TokenData } from 'apis/api'
 import { GlyphQuestion } from 'assets/GlyphQuestion'
 import { ButtonSmall } from 'common/ButtonSmall'
 import { Card } from 'common/Card'
@@ -28,16 +29,15 @@ function Claim(props: {
   nftName: string
   nftImageUrl: string
 }) {
-  const { configFromToken } = useProjectConfig()
   const router = useRouter()
   const [showQRCode, setShowQRCode] = useState(false)
   const otpKeypair = useOtp()
+  const { config } = useProjectConfig()
 
   const { tokenManagerString, qrcode } = router.query
   const tokenManagerId = tryPublicKey(tokenManagerString)
   const tokenQuery = useTokenData(tokenManagerId ?? undefined)
-  const tokenData = tokenQuery.data
-  const config = configFromToken(tokenData)
+  const tokenData = tokenQuery.data as TokenData
 
   return (
     <div className="flex h-screen flex-col">
