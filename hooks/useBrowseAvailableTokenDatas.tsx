@@ -55,6 +55,10 @@ export const indexedDataBody = `
       trait_type
       value
     }
+    metadatas_metadata_creators {
+      creator_address
+      verified
+    }
   }
 }
 `
