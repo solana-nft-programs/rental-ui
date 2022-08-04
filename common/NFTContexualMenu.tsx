@@ -108,7 +108,7 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
                 href={getLink(
                   `/${
                     config.name
-                  }/claim/${tokenData.tokenManager?.pubkey.toBase58()}`
+                  }/${tokenData.tokenManager?.pubkey.toBase58()}`
                 )}
                 onClick={() => {
                   logConfigTokenDataEvent(
