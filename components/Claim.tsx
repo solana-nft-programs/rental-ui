@@ -1,9 +1,6 @@
-import type { AccountData } from '@cardinal/common'
 import { tryPublicKey } from '@cardinal/common'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { css } from '@emotion/react'
-import type { TokenData } from 'apis/api'
-import { convertStringsToPubkeys } from 'apis/api'
 import { GlyphQuestion } from 'assets/GlyphQuestion'
 import { ButtonSmall } from 'common/ButtonSmall'
 import { Card } from 'common/Card'
@@ -15,7 +12,6 @@ import { NFTHeader } from 'common/NFTHeader'
 import { NFTIssuerInfo } from 'common/NFTIssuerInfo'
 import { NFTRevokeButton } from 'common/NFTRevokeButton'
 import { StyledBackground } from 'common/StyledBackground'
-import { getNameFromTokenData } from 'common/tokenDataUtils'
 import ClaimQRCode from 'components/ClaimQRCode'
 import { useOtp } from 'hooks/useOtp'
 import { useTokenData } from 'hooks/useTokenData'
@@ -27,7 +23,11 @@ import { useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { BiQr } from 'react-icons/bi'
 
-function Claim(props: { tokenDataString: string }) {
+function Claim(props: {
+  isClaimed: boolean
+  nftName: string
+  nftImageUrl: string
+}) {
   const { configFromToken } = useProjectConfig()
   const router = useRouter()
   const [showQRCode, setShowQRCode] = useState(false)
@@ -36,9 +36,7 @@ function Claim(props: { tokenDataString: string }) {
   const { tokenManagerString, qrcode } = router.query
   const tokenManagerId = tryPublicKey(tokenManagerString)
   const tokenQuery = useTokenData(tokenManagerId ?? undefined)
-  const tokenData = convertStringsToPubkeys(
-    JSON.parse(props.tokenDataString)
-  ) as TokenData & { metadata: AccountData<any> }
+  const tokenData = tokenQuery.data
   const config = configFromToken(tokenData)
 
   return (
@@ -49,15 +47,9 @@ function Claim(props: { tokenDataString: string }) {
         <meta
           name="twitter:title"
           content={
-            tokenData.tokenManager?.parsed.state === TokenManagerState.Claimed
-              ? `Just claimed ${getNameFromTokenData(
-                  tokenData,
-                  'unknown'
-                )} on Cardinal's NFT Rental Marketplace`
-              : `Rent ${getNameFromTokenData(
-                  tokenData,
-                  'unknown'
-                )} on Cardinal's NFT Rental Marketplace`
+            props.isClaimed
+              ? `Just claimed ${props.nftName} on Cardinal's NFT Rental Marketplace`
+              : `Rent ${props.nftName} on Cardinal's NFT Rental Marketplace`
           }
         />
         <meta
@@ -68,12 +60,8 @@ function Claim(props: { tokenDataString: string }) {
           name="twitter:image"
           content={`${
             process.env.NEXT_PUBLIC_BASE_URL
-          }/api/generateTwitterImage?nftImageUri=${
-            tokenData.metadata?.parsed.image
-          }${
-            tokenData.tokenManager?.parsed.state === TokenManagerState.Claimed
-              ? '&claimed=true'
-              : ''
+          }/api/generateTwitterImage?nftImageUri=${props.nftImageUrl}${
+            props.isClaimed ? '&claimed=true' : ''
           }`}
         />
       </Head>
