@@ -85,11 +85,17 @@ export const tokenDatasId = (
 
 export const Dashboard = () => {
   const walletId = useWalletId()
-  const { connection } = useEnvironmentCtx()
+  const { secondaryConnection } = useEnvironmentCtx()
   const { config, setProjectConfig } = useProjectConfig()
   const userTokenDatas = useUserTokenData(config.filter)
-  const { addressImage, loadingImage } = useAddressImage(connection, walletId)
-  const { displayName, loadingName } = useAddressName(connection, walletId)
+  const { addressImage, loadingImage } = useAddressImage(
+    secondaryConnection,
+    walletId
+  )
+  const { displayName, loadingName } = useAddressName(
+    secondaryConnection,
+    walletId
+  )
   const managedTokens = useManagedTokens()
   const allManagedTokens = useQuery(
     [
