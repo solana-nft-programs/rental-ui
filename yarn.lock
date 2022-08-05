@@ -1451,10 +1451,10 @@
     ts-mocha "^8.0.0"
     typescript "^4.5.5"
 
-"@cardinal/token-manager@^1.5.6":
-  version "1.5.6"
-  resolved "https://registry.yarnpkg.com/@cardinal/token-manager/-/token-manager-1.5.6.tgz#7642964dbfc58fd45ad5c473c7265547fda36d6d"
-  integrity sha512-PDBiqFzjoifCjMDncnayPSZkzMMncph6b+MIS65Y1L3nzEXWLKNSUAesUsJVhAuhPzLkpJLspJDJfOjujYmT1g==
+"@cardinal/token-manager@^1.4.13":
+  version "1.4.13"
+  resolved "https://registry.yarnpkg.com/@cardinal/token-manager/-/token-manager-1.4.13.tgz#f635d157fe22c771f6d572cc46c27e9a0944d5de"
+  integrity sha512-K2nLPSU0jm2a4qpXkjqDLeAWUXikybt9RmUWdKPW24HsPW5tX1+0QTL/w9TQaESV6VjWG62mx6PKU5Qgju6sgQ==
   dependencies:
     "@metaplex-foundation/mpl-token-metadata" "^1.2.3"
     "@solana/buffer-layout" "^4.0.0"
