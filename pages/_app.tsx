@@ -1,8 +1,9 @@
+import 'antd/dist/antd.dark.css'
 import './styles.css'
-import 'antd/dist/antd.css'
-import '../styles/globals.css'
+import '@cardinal/namespaces-components/dist/esm/styles.css'
 import 'tailwindcss/tailwind.css'
 
+import * as amplitude from '@amplitude/analytics-browser'
 import { WalletIdentityProvider } from '@cardinal/namespaces-components'
 import { WalletProvider } from '@solana/wallet-adapter-react'
 import { WalletModalProvider } from '@solana/wallet-adapter-react-ui'
@@ -11,17 +12,15 @@ import { ToastContainer } from 'common/Notification'
 import type { ProjectConfig } from 'config/config'
 import type { AppProps } from 'next/app'
 import { EnvironmentProvider } from 'providers/EnvironmentProvider'
+import { ModalProvider } from 'providers/ModalProvider'
 import {
   getInitialProps,
   ProjectConfigProvider,
 } from 'providers/ProjectConfigProvider'
+import { SolanaAccountsProvider } from 'providers/SolanaAccountsProvider'
 import { UTCNowProvider } from 'providers/UTCNowProvider'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
-import { QRCodeProvider } from 'rental-components/QRCodeProvider'
-import { RentalExtensionModalProvider } from 'rental-components/RentalExtensionModalProvider'
-import { RentalModalProvider } from 'rental-components/RentalModalProvider'
-import { RentalRateModalProvider } from 'rental-components/RentalRateModalProvider'
 
 require('@solana/wallet-adapter-react-ui/styles.css')
 
@@ -33,43 +32,44 @@ export const queryClient = new QueryClient({
   },
 })
 
-export const DEBUG = false
+export const DEBUG = true
 
 const App = ({
   Component,
   pageProps,
   config,
-}: AppProps & { config: ProjectConfig }) => (
-  <EnvironmentProvider>
-    <UTCNowProvider>
-      <WalletProvider wallets={getWalletAdapters()} autoConnect>
-        <WalletIdentityProvider>
-          <ProjectConfigProvider defaultConfig={config}>
-            <QueryClientProvider client={queryClient}>
-              <QRCodeProvider>
-                <RentalModalProvider>
-                  <RentalExtensionModalProvider>
-                    <RentalRateModalProvider>
-                      <WalletModalProvider>
-                        <>
-                          <ToastContainer />
-                          <Component {...pageProps} />
-                          {DEBUG && (
-                            <ReactQueryDevtools initialIsOpen={false} />
-                          )}
-                        </>
-                      </WalletModalProvider>
-                    </RentalRateModalProvider>
-                  </RentalExtensionModalProvider>
-                </RentalModalProvider>
-              </QRCodeProvider>
-            </QueryClientProvider>
-          </ProjectConfigProvider>
-        </WalletIdentityProvider>
-      </WalletProvider>
-    </UTCNowProvider>
-  </EnvironmentProvider>
-)
+  cluster,
+}: AppProps & { config: ProjectConfig; cluster: string }) => {
+  amplitude.init(
+    process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY ??
+      '5416da0efc30dc892889733916be497b'
+  )
+  return (
+    <EnvironmentProvider defaultCluster={cluster}>
+      <UTCNowProvider>
+        <SolanaAccountsProvider>
+          <WalletProvider wallets={getWalletAdapters()} autoConnect>
+            <WalletIdentityProvider>
+              <ProjectConfigProvider defaultConfig={config}>
+                <QueryClientProvider client={queryClient}>
+                  <ModalProvider>
+                    <WalletModalProvider>
+                      <>
+                        <ToastContainer />
+                        <Component {...pageProps} />
+                        {DEBUG && <ReactQueryDevtools initialIsOpen={false} />}
+                      </>
+                    </WalletModalProvider>
+                  </ModalProvider>
+                </QueryClientProvider>
+              </ProjectConfigProvider>
+            </WalletIdentityProvider>
+          </WalletProvider>
+        </SolanaAccountsProvider>
+      </UTCNowProvider>
+    </EnvironmentProvider>
+  )
+}
 
 App.getInitialProps = getInitialProps
 

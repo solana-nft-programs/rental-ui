@@ -13,14 +13,20 @@ export function getTimestampFromDays(days: number) {
 }
 
 /// Formats mint amount (natural units) as a decimal string
-export function fmtMintAmount(mint: MintInfo | undefined, mintAmount: BN) {
+export function fmtMintAmount(
+  mint: Pick<MintInfo, 'decimals'> | undefined,
+  mintAmount: BN
+) {
   return mint
     ? getMintDecimalAmount(mint, mintAmount).toFormat()
     : new BigNumber(mintAmount.toString()).toFormat()
 }
 
 // Converts mint amount (natural units) to decimals
-export function getMintDecimalAmount(mint: MintInfo, mintAmount: BN) {
+export function getMintDecimalAmount(
+  mint: Pick<MintInfo, 'decimals'>,
+  mintAmount: BN
+) {
   return new BigNumber(mintAmount.toString()).shiftedBy(-mint.decimals)
 }
 
