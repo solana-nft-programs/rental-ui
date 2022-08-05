@@ -576,6 +576,28 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       accent: '#b55b5e',
       glow: '#b55b5e',
     },
+    twitterHandle: '@MetaOpsGaming',
+    description:
+      'Team up with friends and put your skills to the test with MetaOps, a tactical 6v6 first-person shooter built on Unity. Discover how to play, earn, and own by renting a MetaOps NFT today.',
+    socialLinks: [
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/metaops',
+      },
+      {
+        icon: 'web',
+        link: 'https://metaopsgaming.com/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/MetaOpsGaming',
+      },
+      {
+        icon: 'twitch',
+        link: 'https://www.twitch.tv/metaopsgaming',
+      },
+    ],
+
     filter: {
       type: 'creators',
       value: [
