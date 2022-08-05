@@ -312,11 +312,14 @@ export const Dashboard = () => {
           </div>
         </div>
         {tokenQuery.isFetched && groupedTokens.length === 0 ? (
-          <div className="my-10 flex w-full flex-col items-center justify-center gap-1">
+          <div className="my-40 flex w-full flex-col items-center justify-center gap-1">
             <GlyphLargeClose />
             <div className="mt-4 text-medium-4">
               No results at this moment...
             </div>
+            <ButtonSmall onClick={() => tokenQuery.refetch()}>
+              Retry
+            </ButtonSmall>
           </div>
         ) : (
           <div className="mx-auto mt-12 px-10">

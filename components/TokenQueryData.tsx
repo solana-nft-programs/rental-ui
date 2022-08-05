@@ -2,6 +2,7 @@ import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tok
 import { css } from '@emotion/react'
 import type { TokenData } from 'apis/api'
 import { GlyphLargeClose } from 'assets/GlyphLargeClose'
+import { ButtonSmall } from 'common/ButtonSmall'
 import { Card } from 'common/Card'
 import { NFT } from 'common/NFT'
 import { NFTClaimButton } from 'common/NFTClaimButton'
@@ -31,6 +32,7 @@ export const DEFAULT_PAGE: [number, number] = [2, 0]
 export const TokenQueryData: React.FC<Props> = ({
   tokenDatas,
   isFetched,
+  refetch,
   selectedTokens,
   handleClick,
 }: Props) => {
@@ -123,6 +125,9 @@ export const TokenQueryData: React.FC<Props> = ({
           <div className="mt-4 text-medium-4">
             No active {config.displayName} results at this moment...
           </div>
+          {refetch && (
+            <ButtonSmall onClick={() => refetch()}>Refresh</ButtonSmall>
+          )}
         </div>
       )}
     </div>

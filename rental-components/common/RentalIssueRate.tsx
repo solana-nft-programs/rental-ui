@@ -184,7 +184,7 @@ export const RentalIssueRate = ({
           />
         </div>
       </div>
-      {txResults ? (
+      {!!txResults ? (
         <RentalIssueResults txResults={txResults} tokenDatas={tokenDatas} />
       ) : error ? (
         <Alert variant="error" showClose onClick={() => setError(undefined)}>

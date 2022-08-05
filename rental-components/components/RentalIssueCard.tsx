@@ -7,7 +7,7 @@ import type { IssueTxResult } from 'handlers/useHandleIssueRental'
 import { lighten } from 'polished'
 import { useModal } from 'providers/ModalProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { PoweredByFooter } from 'rental-components/common/PoweredByFooter'
 import { RentalCardTokenHeader } from 'rental-components/common/RentalCardTokenHeader'
 import type {
@@ -54,9 +54,13 @@ export type RentalCardConfig = {
 
 export type RentalIssueCardProps = {
   tokenDatas: TokenData[]
+  onResults?: (ix: IssueTxResult[]) => void
 }
 
-export const RentalIssueCard = ({ tokenDatas }: RentalIssueCardProps) => {
+export const RentalIssueCard = ({
+  tokenDatas,
+  onResults,
+}: RentalIssueCardProps) => {
   const { configFromToken } = useProjectConfig()
   const config = configFromToken(tokenDatas[0])
   const rentalCardConfig = config.rentalCard
@@ -69,7 +73,9 @@ export const RentalIssueCard = ({ tokenDatas }: RentalIssueCardProps) => {
   const [txResults, setTxResults] = useState<IssueTxResult[]>()
   const invalidatorOptions = rentalCardConfig.invalidators
 
-  if (txResults && !txResults.some(({ txid }) => !txid)) {
+  useEffect(() => txResults && onResults && onResults(txResults), [txResults])
+
+  if (!!txResults && !txResults.some(({ txid }) => !txid)) {
     return (
       <RentalIssueSuccessCard tokenDatas={tokenDatas} txResults={txResults} />
     )

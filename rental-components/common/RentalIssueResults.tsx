@@ -27,13 +27,13 @@ export const RentalIssueResults = ({
       )}
       {successfulListings.length > 0 && (
         <Alert variant="success" className="text-left">
-          Successfully listed: ({txResults.filter(({ txid }) => txid)} /{' '}
+          Successfully listed: ({txResults.filter(({ txid }) => txid).length} /{' '}
           {tokenDatas.length}){' '}
         </Alert>
       )}
       {successfulListings.map(
         (txResult, i) =>
-          txResult.otpKeypair && (
+          !!txResult.otpKeypair && (
             <Alert
               variant="success"
               className="cursor-pointer"

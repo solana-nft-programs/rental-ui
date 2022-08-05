@@ -52,6 +52,7 @@ export const SelecterDrawer: React.FC<Props> = ({
             }
             rentalIsseuCard.showModal({
               tokenDatas: selectedTokens,
+              onResults: () => onClose && onClose(),
             })
           }}
         >
