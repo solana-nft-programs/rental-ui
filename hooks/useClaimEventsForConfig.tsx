@@ -99,7 +99,7 @@ export const claimApproverFromIndexedClaimEvent = (
   }
 }
 
-export const useClaimEventsForConfig = () => {
+export const useClaimEventsForConfig = (disabled?: boolean) => {
   const { config } = useProjectConfig()
   const { environment } = useEnvironmentCtx()
   return useQuery<IndexedClaimEvent[]>(
@@ -231,7 +231,7 @@ export const useClaimEventsForConfig = () => {
     },
     {
       refetchOnMount: false,
-      enabled: !!config,
+      enabled: !disabled && !!config,
     }
   )
 }

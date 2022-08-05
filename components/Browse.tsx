@@ -23,6 +23,7 @@ import type { BrowseAvailableTokenData } from 'hooks/useBrowseAvailableTokenData
 import { useBrowseAvailableTokenDatas } from 'hooks/useBrowseAvailableTokenDatas'
 import type { BrowseClaimedTokenData } from 'hooks/useBrowseClaimedTokenDatas'
 import { useBrowseClaimedTokenDatas } from 'hooks/useBrowseClaimedTokenDatas'
+import { useClaimEventsForConfig } from 'hooks/useClaimEventsForConfig'
 import { usePaymentMints } from 'hooks/usePaymentMints'
 import { useWalletId } from 'hooks/useWalletId'
 import type { Environment } from 'providers/EnvironmentProvider'
@@ -59,7 +60,7 @@ export const PANE_TABS: {
       </div>
     ),
     value: 'activity',
-    disabled: true,
+    disabled: false,
     tooltip: 'Coming soon',
   },
 ]
@@ -204,6 +205,8 @@ export const Browse = () => {
   const tokenQuery =
     selectedGroup === 0 ? availableTokenDatas : claimedTokenDatas
 
+  const claimEvents = useClaimEventsForConfig(true)
+
   const sortedAttributes = getAllAttributes(tokenQuery.data ?? [])
   const filteredAndSortedTokens = sortTokens(
     filterTokensByAttributes<BrowseAvailableTokenData | BrowseClaimedTokenData>(
@@ -324,9 +327,17 @@ export const Browse = () => {
         <div className="flex gap-4">
           <RefreshButton
             colorized
-            isFetching={tokenQuery.isFetching}
-            dataUpdatdAtMs={tokenQuery.dataUpdatedAt}
-            handleClick={() => tokenQuery.refetch()}
+            isFetching={
+              pane === 'browse' ? tokenQuery.isFetching : claimEvents.isFetching
+            }
+            dataUpdatdAtMs={
+              pane === 'browse'
+                ? tokenQuery.dataUpdatedAt
+                : claimEvents.dataUpdatedAt
+            }
+            handleClick={() =>
+              pane === 'browse' ? tokenQuery.refetch() : claimEvents.refetch()
+            }
           />
           <TabSelector<PANE_OPTIONS>
             defaultOption={PANE_TABS[0]}
