@@ -32,7 +32,7 @@ function Claim(props: {
   const router = useRouter()
   const [showQRCode, setShowQRCode] = useState(false)
   const otpKeypair = useOtp()
-  const { config } = useProjectConfig()
+  const { configFromToken } = useProjectConfig()
 
   const { tokenManagerString, qrcode } = router.query
   const tokenManagerId = tryPublicKey(tokenManagerString)
@@ -41,6 +41,7 @@ function Claim(props: {
     SingleTokenData,
     'recipientTokenAccount'
   >
+  const config = configFromToken(tokenData)
 
   return (
     <div className="flex h-screen flex-col">

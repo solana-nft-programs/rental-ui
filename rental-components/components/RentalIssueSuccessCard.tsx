@@ -14,7 +14,7 @@ import type { IssueTxResult } from 'handlers/useHandleIssueRental'
 import { useMintMetadatas } from 'hooks/useMintMetadata'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
-import { FaTwitter } from 'react-icons/fa'
+import { FaLink, FaTwitter } from 'react-icons/fa'
 import { PoweredByFooter } from 'rental-components/common/PoweredByFooter'
 
 export type RentalIssueSuccessCard = {
@@ -141,7 +141,12 @@ export const RentalIssueSuccessCard = ({
         }}
         className="mx-auto mt-4 block text-center hover:cursor-pointer hover:text-gray-400"
       >
-        Copy Claim Link
+        <div
+          style={{ gap: '8px' }}
+          className="flex items-center justify-center text-base"
+        >
+          <FaLink /> Claim link
+        </div>
       </div>
       <PoweredByFooter />
     </div>
