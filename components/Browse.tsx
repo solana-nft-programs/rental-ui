@@ -51,6 +51,7 @@ export const PANE_TABS: {
   {
     label: <GlyphBrowse />,
     value: 'browse',
+    tooltip: 'Browse this collection',
   },
   {
     label: (
@@ -61,7 +62,7 @@ export const PANE_TABS: {
     ),
     value: 'activity',
     disabled: false,
-    tooltip: 'Coming soon',
+    tooltip: 'View recent activity',
   },
 ]
 
