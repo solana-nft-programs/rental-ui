@@ -10,6 +10,7 @@ import {
   useClaimEventsForConfig,
 } from 'hooks/useClaimEventsForConfig'
 import { usePaymentMints } from 'hooks/usePaymentMints'
+import { useTokenAccountInfo } from 'hooks/useTokenAccountInfo'
 import { useTxidForEvent } from 'hooks/useTxidForEvent'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
@@ -127,12 +128,8 @@ export const ActivityRow = ({
         />
       </div>
       <div className="my-auto flex-1">
-        <DisplayAddress
-          dark
-          address={
-            tryPublicKey(claimEvent.recipient_token_account) ?? undefined
-          }
-          connection={secondaryConnection}
+        <ActivityRecipient
+          recipientTokenAccount={claimEvent.recipient_token_account}
         />
       </div>
       <div className="my-auto flex-1">
@@ -168,6 +165,30 @@ export const ActivityRow = ({
         })}
       </div>
     </div>
+  )
+}
+
+export const ActivityRecipient = ({
+  recipientTokenAccount,
+}: {
+  recipientTokenAccount?: string
+}) => {
+  const { secondaryConnection } = useEnvironmentCtx()
+  const tokenAccount = useTokenAccountInfo(
+    tryPublicKey(recipientTokenAccount) ?? undefined
+  )
+  return (
+    <DisplayAddress
+      dark
+      address={
+        tryPublicKey(
+          tokenAccount.isFetched
+            ? tokenAccount.data?.parsed?.owner
+            : tokenAccount.data?.parsed?.owner ?? recipientTokenAccount
+        ) ?? undefined
+      }
+      connection={secondaryConnection}
+    />
   )
 }
 
