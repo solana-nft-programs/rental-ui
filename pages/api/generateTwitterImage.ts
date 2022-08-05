@@ -16,8 +16,8 @@ const generateTwitterImage = async (
 
   // draw base image
   const baseImgUri = claimed
-    ? 'https://rent-v2.cardinal.so/assets/twitter-claimed.png'
-    : 'https://rent-v2.cardinal.so/assets/twitter-rented.png'
+    ? 'https://rent.cardinal.so/assets/twitter-claimed.png'
+    : 'https://rent.cardinal.so/assets/twitter-rented.png'
 
   const backgroundCtx = imageCanvas.getContext('2d')
   backgroundCtx.fillStyle = 'rgba(26, 27, 32, 1)'

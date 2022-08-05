@@ -35,7 +35,7 @@ export const shareTwitterClaimedLink = (
           : `a ${config.twitterHandle ? `${config.twitterHandle} ` : ''}NFT`
       }${
         issuerName ? ` from ${issuerName}` : ''
-      } using @cardinal_labs rental UI! Check it out at https://rent-v2.cardinal.so/${
+      } using @cardinal_labs rental UI! Check it out at https://rent.cardinal.so/${
         config.name
       }/${tokenData.tokenManager?.pubkey.toString()}`
     ),
@@ -67,7 +67,7 @@ export const shareTwitterListedLink = (
     encodeURIComponent(
       `I just listed ${txResults.length} ${
         config.twitterHandle ? `${config.twitterHandle} ` : ''
-      }NFTs! Check it out at https://rent-v2.cardinal.so/${config.name}`
+      }NFTs! Check it out at https://rent.cardinal.so/${config.name}`
     ),
   ].join('')
 }
