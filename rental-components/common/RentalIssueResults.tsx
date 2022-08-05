@@ -18,38 +18,36 @@ export const RentalIssueResults = ({
     [[], []] as [IssueTxResult[], IssueTxResult[]]
   )
   return (
-    <div className="flex flex-col gap-2">
-      {txResults.some((v) => v.error) && (
-        <div className="mb-2 text-medium-3">
+    <div className="flex flex-col gap-2 border-t border-border pt-4">
+      <div className="text-base text-medium-3">
+        Successfully listed: ({txResults.filter(({ txid }) => txid).length} /{' '}
+        {tokenDatas.length}){' '}
+      </div>
+      {txResults.some((v) => v.otpKeypair) && (
+        <div className="mb-2 text-yellow-500">
           Private links generated below include claim password in the link.
           These can only be used once and cannot be regenerated.
         </div>
       )}
-      {successfulListings.length > 0 && (
-        <Alert variant="success" className="text-left">
-          Successfully listed: ({txResults.filter(({ txid }) => txid).length} /{' '}
-          {tokenDatas.length}){' '}
+      {successfulListings.map((txResult, i) => (
+        <Alert
+          key={i}
+          variant="success"
+          className="cursor-pointer"
+          onClick={() => handleCopy(txResult.claimLink)}
+        >
+          <div className="">
+            Success ({i + 1}/{txResults.length}): Click
+            <div className="text-blue-500 mx-1 inline-block">here</div>to copy{' '}
+            {txResult.otpKeypair && (
+              <span className="text-yellow-500">private </span>
+            )}
+            claim link
+          </div>
         </Alert>
-      )}
-      {successfulListings.map(
-        (txResult, i) =>
-          !!txResult.otpKeypair && (
-            <Alert
-              variant="success"
-              className="cursor-pointer"
-              onClick={() => handleCopy(txResult.claimLink)}
-            >
-              <div className="">
-                Success ({i + 1}/{txResults.length}): Private link generated.
-                Click
-                <div className="text-blue-500 mx-1 inline-block">here</div>to
-                copy
-              </div>
-            </Alert>
-          )
-      )}
+      ))}
       {errorListings.map(({ error }, i) => (
-        <Alert variant="error" key={error}>
+        <Alert variant="error" key={i}>
           Error ({i + 1}/{txResults.length}): {error}
         </Alert>
       ))}

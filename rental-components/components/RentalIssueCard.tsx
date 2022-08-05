@@ -58,11 +58,12 @@ export type RentalIssueCardProps = {
 }
 
 export const RentalIssueCard = ({
-  tokenDatas,
+  tokenDatas: startingTokenDatas,
   onResults,
 }: RentalIssueCardProps) => {
   const { configFromToken } = useProjectConfig()
-  const config = configFromToken(tokenDatas[0])
+  const config = configFromToken(startingTokenDatas[0])
+  const [tokenDatas, setTokenDatas] = useState(startingTokenDatas)
   const rentalCardConfig = config.rentalCard
   const visibilities =
     rentalCardConfig.invalidationOptions?.visibilities || VISIBILITY_OPTIONS
@@ -73,7 +74,24 @@ export const RentalIssueCard = ({
   const [txResults, setTxResults] = useState<IssueTxResult[]>()
   const invalidatorOptions = rentalCardConfig.invalidators
 
-  useEffect(() => txResults && onResults && onResults(txResults), [txResults])
+  useEffect(() => {
+    // deselect drawer
+    txResults && onResults && onResults(txResults)
+
+    // handle remainig tokens
+    txResults &&
+      setTokenDatas((tk) =>
+        tk.filter(
+          (tk) =>
+            !txResults?.find(
+              (txResult) =>
+                txResult.txid &&
+                txResult.tokenData.tokenAccount?.pubkey.toString() ===
+                  tk.tokenAccount?.pubkey?.toString()
+            )
+        )
+      )
+  }, [txResults])
 
   if (!!txResults && !txResults.some(({ txid }) => !txid)) {
     return (
