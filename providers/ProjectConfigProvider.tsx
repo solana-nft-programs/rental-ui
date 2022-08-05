@@ -43,6 +43,7 @@ export const filterTokens = (
       return false
     }
     if (
+      token.indexedData?.mint_address_nfts?.metadata_json &&
       token.indexedData?.mint_address_nfts &&
       (token.indexedData.mint_address_nfts.metadatas_attributes?.length ?? 0) <=
         0
