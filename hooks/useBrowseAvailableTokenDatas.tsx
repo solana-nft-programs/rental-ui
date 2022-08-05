@@ -246,8 +246,9 @@ export const useBrowseAvailableTokenDatas = (
     [TOKEN_DATA_KEY, 'useBrowseAvailableTokenDatas', config.name, subFilter],
     async () => {
       if (
-        (environment.index && config.filter?.type === 'creators') ||
-        (config.filter?.type === 'issuer' && !config.indexDisabled)
+        environment.index &&
+        !config.indexDisabled &&
+        (config.filter?.type === 'creators' || config.filter?.type === 'issuer')
       ) {
         const trace = Sentry.startTransaction({
           name: `[useBrowseAvailableTokenDatas] ${config.name}`,

@@ -131,11 +131,11 @@ export const useProjectStats = () => {
           totalRentalDuration: null,
         }
         return stats
-      } else if (!config.filter) {
+      } else if (config.filter?.type === 'issuer') {
         const collectionClaimEvents = await index.query({
           query: gql`
-            query GetCardinalClaimEvents($creators: [String!]) {
-              cardinal_claim_events {
+            query GetCardinalClaimEvents($issuers: [String!]!) {
+              cardinal_claim_events(where: { issuer: { _in: $issuers } }) {
                 mint_address_nfts {
                   name
                   symbol
@@ -154,10 +154,12 @@ export const useProjectStats = () => {
               }
             }
           `,
+          variables: {
+            issuers: config.filter?.value,
+          },
         })
 
         const claimEvents = collectionClaimEvents.data['cardinal_claim_events']
-
         if (claimEvents.length === 0) {
           return {}
         }
