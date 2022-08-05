@@ -208,10 +208,14 @@ export const Browse = () => {
 
   const claimEvents = useClaimEventsForConfig(true)
 
-  const sortedAttributes = getAllAttributes(tokenQuery.data ?? [])
-  const filteredAndSortedTokens = sortTokens(
+  const tokenDatas = [
+    ...(availableTokenDatas.data ?? []),
+    ...(claimedTokenDatas.data ?? []),
+  ]
+  const sortedAttributes = getAllAttributes(tokenDatas)
+  const attrFilteredAndSortedTokens = sortTokens(
     filterTokensByAttributes<BrowseAvailableTokenData | BrowseClaimedTokenData>(
-      tokenQuery.data ?? [],
+      tokenDatas,
       selectedFilters
     ),
     selectedOrderCategory,
@@ -219,6 +223,11 @@ export const Browse = () => {
     UTCNow,
     selectedGroup === 1,
     paymentMintInfos.data ?? {}
+  )
+  // safety check due to stale data stuck in the index
+  const filteredAndSortedTokens = filterTokens(
+    attrFilteredAndSortedTokens,
+    tokenSections[selectedGroup]?.filter
   )
   return (
     <>
@@ -234,11 +243,15 @@ export const Browse = () => {
         ]}
       />
       <HeroLarge />
-      <div className="mx-10 mt-4 flex items-end gap-2">
+      <div className="mx-10 mt-4 flex items-center gap-2">
         <div className="text-xl text-light-0">Results</div>
-        <div className="relative -top-[0.6px] text-base text-medium-4">
-          {filteredAndSortedTokens?.length ?? 0}{' '}
-        </div>
+        {!tokenQuery.isFetched ? (
+          <div className="h-6 w-8 animate-pulse rounded-md bg-border" />
+        ) : (
+          <div className="text-base text-medium-4">
+            {filteredAndSortedTokens?.length ?? 0}{' '}
+          </div>
+        )}
       </div>
       <div className="mx-10 mt-4 flex flex-wrap justify-between gap-4">
         <div className="flex flex-wrap gap-4">
@@ -298,7 +311,7 @@ export const Browse = () => {
             }
             onChange={(v) => !v && setSelectedFilters({})}
             groups={getNFTAtrributeFilters({
-              tokenDatas: tokenQuery.data,
+              tokenDatas,
               config,
               sortedAttributes,
               selectedFilters,

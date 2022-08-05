@@ -24,6 +24,7 @@ import {
 import type { ProjectConfig } from 'config/config'
 import { useOtp } from 'hooks/useOtp'
 import { usePaymentMints } from 'hooks/usePaymentMints'
+import { useTokenAccountInfo } from 'hooks/useTokenAccountInfo'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useUTCNow } from 'providers/UTCNowProvider'
@@ -138,26 +139,33 @@ export const NFTIssuerInfo: React.FC<NFTIssuerInfoProps> = ({
     isPrivateListing(tokenData) &&
     otpKeypair?.publicKey.toString() ===
       tokenData.tokenManager?.parsed.claimApprover?.toString()
+  const recipientTokenAccountInfo = useTokenAccountInfo(
+    tokenData.tokenManager?.parsed.state === TokenManagerState.Claimed &&
+      !tokenData.recipientTokenAccount
+      ? tokenData.tokenManager.parsed.recipientTokenAccount
+      : undefined
+  )
   return (
     <div>
-      {tokenData.tokenManager?.parsed.state === TokenManagerState.Claimed &&
-        tokenData.recipientTokenAccount?.parsed.owner && (
-          <div className="flex flex-col text-secondary">
-            <div className="flex">
-              <div>Claimed by&nbsp;</div>
-              <DisplayAddress
-                connection={secondaryConnection}
-                address={
-                  tryPublicKey(tokenData.recipientTokenAccount?.parsed.owner) ??
-                  undefined
-                }
-                height="18px"
-                width="100px"
-                dark={true}
-              />
-            </div>
+      {tokenData.tokenManager?.parsed.state === TokenManagerState.Claimed && (
+        <div className="flex flex-col text-secondary">
+          <div className="flex">
+            <div>Claimed by&nbsp;</div>
+            <DisplayAddress
+              connection={secondaryConnection}
+              address={
+                tryPublicKey(
+                  tokenData.recipientTokenAccount?.parsed.owner ??
+                    recipientTokenAccountInfo.data?.parsed.owner
+                ) ?? undefined
+              }
+              height="18px"
+              width="100px"
+              dark={true}
+            />
           </div>
-        )}
+        </div>
+      )}
       {isPrivateListing(tokenData) &&
       tokenData.tokenManager?.parsed.state === TokenManagerState.Issued ? (
         <Tooltip

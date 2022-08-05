@@ -299,7 +299,7 @@ export const useBrowseAvailableTokenDatas = (
           { op: 'fetch-accounts' }
         )
 
-        const tokenDatas = tokenManagerDatas.map((tokenManagerData, i) => {
+        const tokenDatas = tokenManagerDatas.map((tokenManagerData) => {
           const timeInvalidatorId = tokenManagerData.parsed.invalidators.filter(
             (invalidator) =>
               accountsById[invalidator.toString()]?.owner?.toString() ===
