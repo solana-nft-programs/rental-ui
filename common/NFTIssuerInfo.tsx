@@ -1,9 +1,12 @@
+import type { AccountData } from '@cardinal/common'
 import {
   getExpirationString,
   secondsToString,
   tryPublicKey,
 } from '@cardinal/common'
 import { DisplayAddress } from '@cardinal/namespaces-components'
+import type { PaidClaimApproverData } from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
+import type { TimeInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import type * as splToken from '@solana/spl-token'
 import type { TokenData } from 'apis/api'
@@ -76,7 +79,22 @@ export const getDurationText = (tokenData: TokenData, UTCNow: number) => {
 
 export const getRentalRateDisplayText = (
   config: ProjectConfig,
-  tokenData: Pick<TokenData, 'timeInvalidator' | 'claimApprover'>,
+  tokenData: {
+    timeInvalidator?: AccountData<
+      Pick<
+        TimeInvalidatorData,
+        | 'durationSeconds'
+        | 'expiration'
+        | 'maxExpiration'
+        | 'extensionDurationSeconds'
+        | 'extensionPaymentAmount'
+        | 'extensionPaymentMint'
+      >
+    > | null
+    claimApprover?: AccountData<
+      Pick<PaidClaimApproverData, 'paymentAmount' | 'paymentMint'>
+    > | null
+  },
   paymentMints?: { [name: string]: Pick<splToken.MintInfo, 'decimals'> },
   accentColor = 'text-light-2'
 ) => {

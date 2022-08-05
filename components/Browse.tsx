@@ -59,7 +59,7 @@ export const PANE_TABS: {
       </div>
     ),
     value: 'activity',
-    disabled: false,
+    disabled: true,
     tooltip: 'Coming soon',
   },
 ]
@@ -271,6 +271,7 @@ export const Browse = () => {
             }))}
             onChange={(o) => {
               setSelectedGroup(o.value)
+              setPane('browse')
             }}
           />
 
@@ -330,13 +331,23 @@ export const Browse = () => {
           <TabSelector<PANE_OPTIONS>
             defaultOption={PANE_TABS[0]}
             options={PANE_TABS}
+            value={PANE_TABS.find((p) => p.value === pane)}
             onChange={(o) => {
               setPane(o.value)
             }}
           />
         </div>
       </div>
-      <Info colorized {...tokenSections[selectedGroup]} />
+      {pane === 'browse' ? (
+        <Info colorized {...tokenSections[selectedGroup]} />
+      ) : (
+        <Info
+          colorized
+          icon="activity"
+          header="Activity"
+          description="View recent activity for this collection"
+        />
+      )}
       {
         {
           activity: <Activity />,

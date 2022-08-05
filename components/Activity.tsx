@@ -3,7 +3,12 @@ import { DisplayAddress } from '@cardinal/namespaces-components'
 import { GlyphLargeClose } from 'assets/GlyphLargeClose'
 import { getRentalRateDisplayText } from 'common/NFTIssuerInfo'
 import type { IndexedClaimEvent } from 'hooks/useClaimEventsForConfig'
-import { useClaimEventsForConfig } from 'hooks/useClaimEventsForConfig'
+import {
+  claimApproverFromIndexedClaimEvent,
+  timeInvalidatorFromIndexedClaimEvent,
+  useClaimEventsForConfig,
+} from 'hooks/useClaimEventsForConfig'
+import { usePaymentMints } from 'hooks/usePaymentMints'
 import { useTxidForEvent } from 'hooks/useTxidForEvent'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
@@ -25,12 +30,12 @@ export const Activity = () => {
             <div className="flex-1">Date</div>
           </div>
           {!claimEvents.isFetched ? (
-            <div className="flex flex-col gap-4 px-8 py-4">
-              <div className="h-10 w-full animate-pulse rounded-lg bg-border"></div>
-              <div className="h-10 w-full animate-pulse rounded-lg bg-border"></div>
-              <div className="h-10 w-full animate-pulse rounded-lg bg-border"></div>
-              <div className="h-10 w-full animate-pulse rounded-lg bg-border"></div>
-              <div className="h-10 w-full animate-pulse rounded-lg bg-border"></div>
+            <div className="flex flex-col gap-6 px-8 py-4">
+              <div className="h-14 w-full animate-pulse rounded-lg bg-border"></div>
+              <div className="h-14 w-full animate-pulse rounded-lg bg-border"></div>
+              <div className="h-14 w-full animate-pulse rounded-lg bg-border"></div>
+              <div className="h-14 w-full animate-pulse rounded-lg bg-border"></div>
+              <div className="h-14 w-full animate-pulse rounded-lg bg-border"></div>
             </div>
           ) : claimEvents.data && claimEvents.data.length > 0 ? (
             <div className="flex flex-col px-8">
@@ -70,6 +75,7 @@ export const ActivityRow = ({
     claimEvent.state_changed_at,
     lookupTx
   )
+  const paymentMints = usePaymentMints()
 
   return (
     <div
@@ -90,7 +96,14 @@ export const ActivityRow = ({
         </div>
       </div>
       <div className="my-auto min-w-[100px] flex-1">
-        {getRentalRateDisplayText(config, {})}
+        {getRentalRateDisplayText(
+          config,
+          {
+            timeInvalidator: timeInvalidatorFromIndexedClaimEvent(claimEvent),
+            claimApprover: claimApproverFromIndexedClaimEvent(claimEvent),
+          },
+          paymentMints.data
+        )}
       </div>
       <div className="my-auto flex-1">
         <DisplayAddress
@@ -109,11 +122,13 @@ export const ActivityRow = ({
         />
       </div>
       <div className="my-auto flex-1">
-        {txSignature.data ? (
+        {txSignature.isLoading ? (
+          <div className="h-6 w-32 animate-pulse rounded-md bg-border" />
+        ) : txSignature.data ? (
           <span>{formatShortSignature(txSignature.data)}</span>
         ) : (
           <div
-            className={`w-32 cursor-pointer rounded-lg border-[1px] border-border bg-dark-4 p-1 text-center`}
+            className={`w-32 cursor-pointer rounded-lg border-[1px] border-border bg-dark-4 p-1 text-center transition-colors hover:bg-border`}
             onClick={async () => {
               if (
                 claimEvent.token_manager_address &&
@@ -123,11 +138,7 @@ export const ActivityRow = ({
               }
             }}
           >
-            {txSignature.isLoading ? (
-              <div className="h-6 animate-pulse rounded-md bg-border" />
-            ) : (
-              'View Transaction'
-            )}
+            View Transaction
           </div>
         )}
       </div>

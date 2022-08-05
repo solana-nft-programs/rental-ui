@@ -1,4 +1,5 @@
 import { css } from '@emotion/react'
+import { GlyphActivity } from 'assets/GlyphActivity'
 import { GlyphPerformance } from 'assets/GlyphPerformance'
 import { GlyphQuestion } from 'assets/GlyphQuestion'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
@@ -13,6 +14,7 @@ export type InfoIcon =
   | 'available'
   | 'info'
   | 'performance'
+  | 'activity'
 
 type Props = {
   colorized?: boolean
@@ -58,6 +60,13 @@ export const Info: React.FC<Props> = ({
               <MdSell className="h-[68px] w-[68px] rounded-full border-[2px] border-medium-4 p-3" />
             ),
             info: <GlyphQuestion />,
+            activity: (
+              <div className="flex h-[68px] w-[68px] items-center justify-center rounded-full border-[2px] border-medium-4 p-3">
+                <div className="scale-[2]">
+                  <GlyphActivity />
+                </div>
+              </div>
+            ),
             performance: <GlyphPerformance />,
           }[icon]}
       </div>
