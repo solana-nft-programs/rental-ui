@@ -483,6 +483,54 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     ],
     marketplaceRate: 'days',
   },
+  degenape: {
+    name: 'degenape',
+    displayName: 'Degenerate Ape Academy',
+    type: 'Collection',
+    websiteUrl: 'https://degenape.academy/',
+    logoImage: '/logos/degenape.png',
+    hero: '/logos/degenape-hero.png',
+    description:
+      'Our mission here at the academy is simple: Take 10,000 of the smoothest brained apes, put them all in one location and let the mayhem ensue. The academy was founded on the principles of friendship making, crayon eating and absolute, unregulated, deplorable, degenerate behaviour. Welcome fellow apes, to the Degenerate Ape Academy.',
+    socialLinks: [
+      {
+        icon: 'discord',
+        link: 'https://discord.com/invite/degendaoo',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/DegenApeAcademy',
+      },
+      {
+        icon: 'web',
+        link: 'https://degenape.academy/',
+      },
+    ],
+    colors: {
+      accent: '#e0b23d',
+      glow: '#e0b23d',
+    },
+    filter: {
+      type: 'creators',
+      value: ['DC2mkgwhy56w3viNtHDjJQmc7SGu2QX785bS4aexojwX'],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration', 'manual'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
   br1: {
     name: 'br1',
     displayName: 'BR1',
