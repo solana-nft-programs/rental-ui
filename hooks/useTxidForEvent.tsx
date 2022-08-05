@@ -30,11 +30,13 @@ export const useTxidForEvent = (
         const foundIndex = confirmedSignatures.findIndex((sig) => {
           return sig.blockTime && sig.blockTime <= stateChanged
         })
-        if (foundIndex) {
+        if (foundIndex !== -1) {
           const closestSignature = [
-            confirmedSignatures[foundIndex - 1],
+            foundIndex > 0 ? confirmedSignatures[foundIndex - 1] : null,
             confirmedSignatures[foundIndex],
-            confirmedSignatures[foundIndex + 1],
+            foundIndex < confirmedSignatures.length - 1
+              ? confirmedSignatures[foundIndex + 1]
+              : null,
           ]
           return closestSignature.sort(
             (a, b) =>

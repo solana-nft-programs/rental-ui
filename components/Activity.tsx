@@ -17,6 +17,7 @@ import { useState } from 'react'
 export const Activity = () => {
   const { config } = useProjectConfig()
   const claimEvents = useClaimEventsForConfig()
+  console.log(claimEvents)
   return (
     <div className="mx-auto mt-12 px-10">
       <div className="w-full overflow-x-scroll rounded-xl border border-border p-4">
@@ -76,7 +77,6 @@ export const ActivityRow = ({
     lookupTx
   )
   const paymentMints = usePaymentMints()
-
   return (
     <div
       className="flex w-full gap-4 border-b border-border py-4 md:flex-row"
@@ -126,7 +126,7 @@ export const ActivityRow = ({
           <div className="h-6 w-32 animate-pulse rounded-md bg-border" />
         ) : txSignature.data ? (
           <span>{formatShortSignature(txSignature.data)}</span>
-        ) : (
+        ) : !txSignature.isFetched ? (
           <div
             className={`w-32 cursor-pointer rounded-lg border-[1px] border-border bg-dark-4 p-1 text-center transition-colors hover:bg-border`}
             onClick={async () => {
@@ -140,6 +140,8 @@ export const ActivityRow = ({
           >
             View Transaction
           </div>
+        ) : (
+          <div>Not found</div>
         )}
       </div>
       <div className="my-auto flex-1">

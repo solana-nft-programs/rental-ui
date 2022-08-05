@@ -89,7 +89,8 @@ export const claimApproverFromIndexedClaimEvent = (
   const address = tryPublicKey(claimEvent.claim_approver)
   const paymentMint = tryPublicKey(claimEvent.paid_claim_approver_payment_mint)
   const paymentAmount = tryBN(claimEvent.paid_claim_approver_payment_amount)
-  if (!address || !paymentMint || !paymentAmount) return null
+  if (!address || !paymentMint || !paymentAmount || !claimEvent.claim_approver)
+    return null
   return {
     pubkey: address,
     parsed: {
@@ -152,6 +153,7 @@ export const useClaimEventsForConfig = (disabled?: boolean) => {
                     state
                     state_changed_at
                     issuer
+                    claim_approver
                     recipient_token_account
                     paid_claim_approver_payment_mint
                     paid_claim_approver_payment_amount
@@ -184,25 +186,29 @@ export const useClaimEventsForConfig = (disabled?: boolean) => {
                   $limit: Int!
                   $offset: Int!
                   $issuers: [String!]!
-                  order_by: {state_changed_at: desc}
                 ) {
                   cardinal_claim_events(
                     limit: $limit
                     offset: $offset
                     where: { issuer: { _in: $issuers } }
+                    order_by: { state_changed_at: desc }
                   ) {
                     token_manager_address
                     mint
                     state
                     state_changed_at
                     issuer
+                    claim_approver
                     recipient_token_account
                     paid_claim_approver_payment_mint
                     paid_claim_approver_payment_amount
+                    time_invalidator_address
                     time_invalidator_duration_seconds
                     time_invalidator_extension_duration_seconds
                     time_invalidator_extension_payment_amount
                     time_invalidator_extension_payment_mint
+                    time_invalidator_max_expiration
+                    time_invalidator_expiration
                     mint_address_nfts {
                       name
                       uri
