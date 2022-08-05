@@ -5,30 +5,20 @@ import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai'
 
 import { Selector } from './Selector'
 
-export type DurationOption =
-  | 'minutes'
-  | 'hours'
-  | 'days'
-  | 'weeks'
-  | 'months'
-  | 'years'
+export type DurationOption = 'hours' | 'days' | 'weeks' | 'months'
 
 export const DURATION_DATA: { [key in DurationOption]: number } = {
-  minutes: 60,
   hours: 3600,
   days: 86400,
   weeks: 604800,
   months: 2419200,
-  years: 31449600,
 }
 
 export const SECONDS_TO_DURATION: { [key in number]: DurationOption } = {
-  60: 'minutes',
   3600: 'hours',
   86400: 'days',
   604800: 'weeks',
   2419200: 'months',
-  31449600: 'years',
 }
 
 export const largestDurationOptionForSeconds = (
