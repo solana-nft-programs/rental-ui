@@ -396,8 +396,8 @@ export const Dashboard = () => {
                                 tokenData?.tokenManager?.parsed
                                   .state as TokenManagerState
                               ]
-                            ) : (
-                              <div className="flex justify-end -mt-1 h-100">
+                            ) : elligibleForRent(config, tokenData) ? (
+                              <div className="flex h-full items-end justify-end">
                                 <ButtonSmall
                                   disabled={!walletId}
                                   className="inline-block flex-none px-4 py-2 text-lg"
@@ -419,6 +419,8 @@ export const Dashboard = () => {
                                   Select
                                 </ButtonSmall>
                               </div>
+                            ) : (
+                              <></>
                             )
                           }
                         />
