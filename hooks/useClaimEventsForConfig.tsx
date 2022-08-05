@@ -147,6 +147,11 @@ export const useClaimEventsForConfig = (disabled?: boolean) => {
                           }
                         }
                       }
+                      ${
+                        config.showUnknownInvalidators
+                          ? ''
+                          : `time_invalidator_address: {_is_null: false}`
+                      }
                     }
                   ) {
                     token_manager_address
@@ -191,7 +196,14 @@ export const useClaimEventsForConfig = (disabled?: boolean) => {
                   cardinal_claim_events(
                     limit: $limit
                     offset: $offset
-                    where: { issuer: { _in: $issuers } }
+                    where: { 
+                      issuer: { _in: $issuers }
+                      ${
+                        config.showUnknownInvalidators
+                          ? ''
+                          : `time_invalidator_address: {_is_null: false}`
+                      }
+                    }
                     order_by: { state_changed_at: desc }
                   ) {
                     token_manager_address
