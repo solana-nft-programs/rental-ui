@@ -43,16 +43,19 @@ export async function getServerSideProps(context: any) {
     if (!tokenManagerId) {
       return {}
     }
-    const tokenManagerData = await tokenManager.accounts.getTokenManager(
-      connection,
-      tokenManagerId
-    )
-    mintId = tokenManagerData.parsed.mint
-    isClaimed = tokenManagerData.parsed.state === TokenManagerState.Claimed
+    const tokenManagerData = await tokenManager.accounts
+      .getTokenManager(connection, tokenManagerId)
+      .catch((e) => {
+        console.log('Failed to get token manager data', e)
+        return null
+      })
+    mintId = tokenManagerData?.parsed.mint
+    isClaimed = tokenManagerData?.parsed.state === TokenManagerState.Claimed
   }
+  console.log(mintId)
 
   if (!mintId) {
-    return {}
+    return { props: {} }
   }
   const [metaplexId] = await metaplex.MetadataProgram.findMetadataAccount(
     mintId
