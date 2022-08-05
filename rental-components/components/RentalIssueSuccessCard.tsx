@@ -13,7 +13,7 @@ import { transactionUrl } from 'common/utils'
 import type { IssueTxResult } from 'handlers/useHandleIssueRental'
 import { useMintMetadatas } from 'hooks/useMintMetadata'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
-import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
+import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { FaTwitter } from 'react-icons/fa'
 import { PoweredByFooter } from 'rental-components/common/PoweredByFooter'
 
