@@ -2,6 +2,7 @@ import type { AccountData } from '@cardinal/common'
 import { tryPublicKey } from '@cardinal/common'
 import type { TokenData } from 'apis/api'
 import { getMintfromTokenData } from 'common/tokenDataUtils'
+import { tracer, withTrace } from 'common/trace'
 import { useQueries, useQuery } from 'react-query'
 
 export const mintMetadataQueryKey = (
@@ -56,9 +57,10 @@ export const useMintMetadata = (
 ) => {
   return useQuery<AccountData<{ image: string }> | undefined>(
     mintMetadataQueryKey(tokenData),
-    async () => {
-      return mintMetadataQuery(tokenData)
-    },
+    () =>
+      withTrace(() => {
+        return mintMetadataQuery(tokenData)
+      }, tracer({ name: 'useMintMetadata' })),
     { refetchOnMount: false }
   )
 }

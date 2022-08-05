@@ -1,3 +1,4 @@
+import * as SentryBrowser from '@sentry/browser'
 import type * as Sentry from '@sentry/types'
 
 export type Trace = ReturnType<Sentry.Hub['startTransaction']>
@@ -13,8 +14,12 @@ export const withTrace = async <T>(
     >
   >
 ) => {
-  const tokenManagerSpan = trace?.startChild(ctx)
+  const s = trace?.startChild(ctx)
   const r = await fn()
-  tokenManagerSpan?.finish()
+  ctx ? s?.finish() : trace?.finish()
   return r
+}
+
+export const tracer = (ctx: Sentry.TransactionContext) => {
+  return SentryBrowser.startTransaction(ctx)
 }

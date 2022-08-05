@@ -6,7 +6,7 @@ import { tryPublicKey } from '@cardinal/common'
 import type { PaidClaimApproverData } from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
 import type { TimeInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
 import { BN } from '@project-serum/anchor'
-import * as Sentry from '@sentry/browser'
+import { tracer } from 'common/trace'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useInfiniteQuery } from 'react-query'
@@ -108,9 +108,6 @@ export const useClaimEventsForConfig = (disabled?: boolean) => {
   return useInfiniteQuery<IndexedClaimEvent[]>(
     [ACTIVITY_KEY, 'useClaimEventsForConfig', config.name],
     async ({ pageParam }) => {
-      const transaction = Sentry.startTransaction({
-        name: `[useClaimEventsForConfig] ${config.name}`,
-      })
       /////
       const indexer = new ApolloClient({
         uri: environment.index,
@@ -125,6 +122,9 @@ export const useClaimEventsForConfig = (disabled?: boolean) => {
         return []
       }
 
+      const trace = tracer({
+        name: `[useClaimEventsForConfig] ${config.name}`,
+      })
       const tokenManagerResponse =
         config.filter.type === 'creators'
           ? await indexer.query({
@@ -231,7 +231,7 @@ export const useClaimEventsForConfig = (disabled?: boolean) => {
       const indexedClaimEvents = tokenManagerResponse.data[
         'cardinal_claim_events'
       ] as IndexedClaimEvent[]
-      transaction.finish()
+      trace.finish()
       return indexedClaimEvents.map((e) => ({
         ...e,
         state_changed_at: `${e.state_changed_at}Z`,

@@ -1,5 +1,6 @@
 import type { TransactionSignature } from '@solana/web3.js'
 import { Connection, PublicKey } from '@solana/web3.js'
+import { tracer, withTrace } from 'common/trace'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useQuery } from 'react-query'
 
@@ -20,13 +21,18 @@ export const useTxidForEvent = (
       if (!tokenManagerId || !stateChangedAt) return
       let lastSignature: TransactionSignature | undefined
       const stateChanged = Math.floor(new Date(stateChangedAt).getTime() / 1000)
+      const trace = tracer({ name: `[useTransactionSignature]` })
       for (let i = 0; i < maxIterations; i++) {
-        const confirmedSignatures =
-          await connection.getConfirmedSignaturesForAddress2(
-            new PublicKey(tokenManagerId),
-            { before: lastSignature },
-            'confirmed'
-          )
+        const confirmedSignatures = await withTrace(
+          () =>
+            connection.getConfirmedSignaturesForAddress2(
+              new PublicKey(tokenManagerId),
+              { before: lastSignature },
+              'confirmed'
+            ),
+          trace,
+          { op: `[getConfirmedSignaturesForAddress2] - ${i}` }
+        )
         const foundIndex = confirmedSignatures.findIndex((sig) => {
           return sig.blockTime && sig.blockTime <= stateChanged
         })
@@ -38,6 +44,7 @@ export const useTxidForEvent = (
               ? confirmedSignatures[foundIndex + 1]
               : null,
           ]
+          trace.finish()
           return closestSignature.sort(
             (a, b) =>
               Math.abs((a?.blockTime ?? 0) - stateChanged) -
