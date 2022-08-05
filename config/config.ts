@@ -58,6 +58,7 @@ export type ProjectConfig = {
   type: 'Collection' | 'Guild'
   hidden?: boolean
   indexDisabled?: boolean
+  indexMetadataDisabled?: boolean
   issuedOnly?: boolean
   name: string
   displayName: string
@@ -542,6 +543,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         '8m4TTZz3RsDVakDSwn7T89GyButxLiMqn2zq7DWfANu7', // cat, cow, dog
       ],
     },
+    indexMetadataDisabled: true,
     rentalCard: {
       invalidators: ['rate', 'duration'],
       invalidationOptions: {

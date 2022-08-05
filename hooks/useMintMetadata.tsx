@@ -3,6 +3,8 @@ import { tryPublicKey } from '@cardinal/common'
 import type { TokenData } from 'apis/api'
 import { getMintfromTokenData } from 'common/tokenDataUtils'
 import { tracer, withTrace } from 'common/trace'
+import type { ProjectConfig } from 'config/config'
+import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useQueries, useQuery } from 'react-query'
 
 export const mintMetadataQueryKey = (
@@ -12,6 +14,7 @@ export const mintMetadataQueryKey = (
 }
 
 export const mintMetadataQuery = async (
+  config: ProjectConfig,
   tokenData:
     | Pick<TokenData, 'metadata'>
     | Pick<TokenData, 'metaplexData'>
@@ -20,7 +23,8 @@ export const mintMetadataQuery = async (
   if ('metadata' in tokenData && tokenData.metadata) return tokenData.metadata
   if (
     'indexedData' in tokenData &&
-    tokenData?.indexedData?.mint_address_nfts?.metadata_json?.image
+    tokenData?.indexedData?.mint_address_nfts?.metadata_json?.image &&
+    !config.indexMetadataDisabled
   ) {
     return {
       pubkey: tryPublicKey(tokenData.indexedData.address)!,
@@ -55,22 +59,24 @@ export const mintMetadataQuery = async (
 export const useMintMetadata = (
   tokenData: Pick<TokenData, 'metaplexData'> | Pick<TokenData, 'indexedData'>
 ) => {
+  const { config } = useProjectConfig()
   return useQuery<AccountData<{ image: string }> | undefined>(
     mintMetadataQueryKey(tokenData),
     () =>
       withTrace(() => {
-        return mintMetadataQuery(tokenData)
+        return mintMetadataQuery(config, tokenData)
       }, tracer({ name: 'useMintMetadata' })),
     { refetchOnMount: false }
   )
 }
 
 export const useMintMetadatas = (tokenDatas: TokenData[]) => {
+  const { config } = useProjectConfig()
   return useQueries(
     tokenDatas.map((tokenData) => {
       return {
         queryKey: mintMetadataQueryKey(tokenData),
-        queryFn: () => mintMetadataQuery(tokenData),
+        queryFn: () => mintMetadataQuery(config, tokenData),
       }
     })
   )
