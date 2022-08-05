@@ -1,5 +1,7 @@
 import { logConfigEvent } from 'apis/amplitude'
 import type { TokenData } from 'apis/api'
+import { GlyphActivity } from 'assets/GlyphActivity'
+import { GlyphBrowse } from 'assets/GlyphBrowse'
 import { Info } from 'common/Info'
 import { MultiSelector } from 'common/MultiSelector'
 import type { NFTAtrributeFilterValues } from 'common/NFTAttributeFilters'
@@ -17,11 +19,34 @@ import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useState } from 'react'
 import type { UseQueryResult } from 'react-query'
 
-import { PANE_TABS } from './Browse'
 import type { ManageTokenGroup, ManageTokenGroupId } from './Manage'
 import { manageTokenGroups } from './Manage'
 import { TokenQueryData } from './TokenQueryData'
 
+export type PANE_OPTIONS = 'browse' | 'activity'
+export const PANE_TABS: {
+  label: JSX.Element
+  value: PANE_OPTIONS
+  disabled?: boolean
+  tooltip?: string
+}[] = [
+  {
+    label: <GlyphBrowse />,
+    value: 'browse',
+    tooltip: 'Browse this collection',
+  },
+  {
+    label: (
+      <div className="flex items-center gap-2">
+        <GlyphActivity />
+        Activity
+      </div>
+    ),
+    value: 'activity',
+    disabled: true,
+    tooltip: 'Coming soon',
+  },
+]
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   setSelectedGroup: (id: ManageTokenGroupId) => void
   tokenQuery: Pick<
