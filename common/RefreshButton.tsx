@@ -10,7 +10,7 @@ export const refreshSecondsString = (refreshedSeconds: number) => {
   return refreshedSeconds < 3
     ? 'just now'
     : refreshedSeconds > 180
-    ? 'awhile ago'
+    ? 'a while ago'
     : secondsToString(refreshedSeconds)
 }
 

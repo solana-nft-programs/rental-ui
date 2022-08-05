@@ -1,6 +1,6 @@
 import { css } from '@emotion/react'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { Tooltip } from './Tooltip'
 
@@ -14,6 +14,7 @@ type Option<T> = {
 type Props<T> = {
   colorized?: boolean
   placeholder?: string
+  value?: Option<T>
   options: Option<T>[]
   defaultOption?: Option<T>
   onChange?: (arg: Option<T>) => void
@@ -22,11 +23,21 @@ type Props<T> = {
 export const TabSelector = <T,>({
   colorized,
   defaultOption,
+  value,
   onChange,
   options = [],
 }: Props<T>) => {
   const { config } = useProjectConfig()
-  const [value, setValue] = useState<Option<T> | undefined>(defaultOption)
+  const [internalValue, setInternalValue] = useState<Option<T> | undefined>(
+    defaultOption
+  )
+
+  useEffect(() => {
+    value?.label &&
+      value?.label !== internalValue?.label &&
+      setInternalValue(value)
+  }, [value?.label])
+
   return (
     <div className="flex rounded-lg border-[1px] border-border bg-dark-4">
       {options.map((o, i) => (
@@ -36,7 +47,7 @@ export const TabSelector = <T,>({
               o.disabled
                 ? 'cursor-default opacity-25'
                 : 'cursor-pointer hover:text-primary'
-            } ${value?.value === o.value ? 'bg-dark-6' : ''}`}
+            } ${internalValue?.value === o.value ? 'bg-dark-6' : ''}`}
             css={css`
               ${!o.disabled &&
               colorized &&
@@ -48,7 +59,7 @@ export const TabSelector = <T,>({
             `}
             onClick={() => {
               if (o.disabled) return
-              setValue(o)
+              setInternalValue(o)
               onChange && onChange(o)
             }}
           >

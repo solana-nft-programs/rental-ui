@@ -75,7 +75,6 @@ export const RentalIssueCard = ({ tokenDatas }: RentalIssueCardProps) => {
   const [txResults, setTxResults] = useState<IssueTxResult[]>()
   const invalidatorOptions = rentalCardConfig.invalidators
 
-  console.log(txResults)
   if (txResults && !txResults.some(({ txid }) => !txid)) {
     return (
       <RentalIssueSuccessCard tokenDatas={tokenDatas} txResults={txResults} />

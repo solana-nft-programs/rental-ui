@@ -1,4 +1,7 @@
+import type { AccountData } from '@cardinal/common'
 import { secondsToString } from '@cardinal/common'
+import type { PaidClaimApproverData } from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
+import type { TimeInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
 import { shouldTimeInvalidate } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator/utils'
 import { BN } from '@project-serum/anchor'
 import type * as splToken from '@solana/spl-token'
@@ -11,7 +14,11 @@ import { SolanaLogo } from 'rental-components/common/icons'
 import type { InvalidatorOption } from 'rental-components/components/RentalIssueCard'
 
 export const getTokenMaxDuration = (
-  tokenData: Pick<TokenData, 'timeInvalidator'>,
+  tokenData: {
+    timeInvalidator?: AccountData<
+      Pick<TimeInvalidatorData, 'maxExpiration'>
+    > | null
+  },
   UTCNow: number
 ) => {
   if (tokenData.timeInvalidator?.parsed.maxExpiration) {
@@ -64,9 +71,12 @@ export const getMintfromTokenData = (
   )
 }
 
-export const getSymbolFromTokenData = (
-  tokenData: Pick<TokenData, 'claimApprover' | 'timeInvalidator'>
-) => {
+export const getSymbolFromTokenData = (tokenData: {
+  timeInvalidator?: AccountData<
+    Pick<TimeInvalidatorData, 'extensionPaymentMint'>
+  > | null
+  claimApprover?: AccountData<Pick<PaidClaimApproverData, 'paymentMint'>> | null
+}) => {
   return mintSymbol(
     tokenData.claimApprover?.parsed?.paymentMint ??
       tokenData.timeInvalidator?.parsed.extensionPaymentMint
@@ -94,7 +104,19 @@ export const PaymentMintImage: React.FC<
 export function getTokenRentalRate(
   config: ProjectConfig,
   paymentMints: { [name: string]: Pick<splToken.MintInfo, 'decimals'> },
-  tokenData: Pick<TokenData, 'timeInvalidator' | 'claimApprover'>
+  tokenData: {
+    timeInvalidator?: AccountData<
+      Pick<
+        TimeInvalidatorData,
+        | 'extensionDurationSeconds'
+        | 'extensionPaymentAmount'
+        | 'extensionPaymentMint'
+      >
+    > | null
+    claimApprover?: AccountData<
+      Pick<PaidClaimApproverData, 'paymentAmount' | 'paymentMint'>
+    > | null
+  }
 ) {
   const rateOption = config.marketplaceRate ?? 'days'
   const rateSeconds = new BN(DURATION_DATA[rateOption])
@@ -144,7 +166,11 @@ export function getTokenRentalRate(
 }
 
 export const getPriceFromTokenData = (
-  tokenData: Pick<TokenData, 'claimApprover'>,
+  tokenData: {
+    claimApprover?: AccountData<
+      Pick<PaidClaimApproverData, 'paymentMint' | 'paymentAmount'>
+    > | null
+  },
   paymentMints?: { [name: string]: Pick<splToken.MintInfo, 'decimals'> }
 ): number => {
   if (
@@ -169,7 +195,22 @@ export const getPriceFromTokenData = (
 
 export const getPriceOrRentalRate = (
   config: ProjectConfig,
-  tokenData: Pick<TokenData, 'timeInvalidator' | 'claimApprover'>,
+  tokenData: {
+    timeInvalidator?: AccountData<
+      Pick<
+        TimeInvalidatorData,
+        | 'durationSeconds'
+        | 'expiration'
+        | 'maxExpiration'
+        | 'extensionDurationSeconds'
+        | 'extensionPaymentAmount'
+        | 'extensionPaymentMint'
+      >
+    > | null
+    claimApprover?: AccountData<
+      Pick<PaidClaimApproverData, 'paymentAmount' | 'paymentMint'>
+    > | null
+  },
   paymentMints?: { [name: string]: Pick<splToken.MintInfo, 'decimals'> }
 ) => {
   if (!paymentMints) return 0
@@ -201,7 +242,14 @@ export const getPriceOrRentalRate = (
 }
 
 export const getRentalDuration = (
-  tokenData: Pick<TokenData, 'timeInvalidator'>,
+  tokenData: {
+    timeInvalidator?: AccountData<
+      Pick<
+        TimeInvalidatorData,
+        'expiration' | 'durationSeconds' | 'maxExpiration'
+      >
+    > | null
+  },
   UTCNow: number,
   claimed?: boolean
 ) => {
@@ -229,9 +277,11 @@ export const isPrivateListing = (
   tokenData.tokenManager?.parsed.claimApprover &&
   !tokenData.claimApprover?.parsed
 
-export const isRateBasedListing = (
-  tokenData: Pick<TokenData, 'timeInvalidator'>
-) =>
+export const isRateBasedListing = (tokenData: {
+  timeInvalidator?: AccountData<
+    Pick<TimeInvalidatorData, 'durationSeconds' | 'extensionDurationSeconds'>
+  > | null
+}) =>
   !!tokenData.timeInvalidator?.parsed.durationSeconds &&
   tokenData.timeInvalidator?.parsed.durationSeconds.eq(new BN(0)) &&
   !!tokenData.timeInvalidator?.parsed.extensionDurationSeconds
