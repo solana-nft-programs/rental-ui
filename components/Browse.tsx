@@ -358,6 +358,9 @@ export const Browse = () => {
             options={PANE_TABS}
             value={PANE_TABS.find((p) => p.value === pane)}
             onChange={(o) => {
+              logConfigEvent('collection: set pane', config, {
+                pane_value: o?.label,
+              })
               setPane(o.value)
             }}
           />

@@ -153,7 +153,15 @@ export const TokenQueryResults: React.FC<Props> = ({
             dataUpdatdAtMs={tokenQuery.dataUpdatedAt}
             handleClick={() => tokenQuery.refetch()}
           />
-          <TabSelector defaultOption={PANE_TABS[0]} options={PANE_TABS} />
+          <TabSelector
+            defaultOption={PANE_TABS[0]}
+            options={PANE_TABS}
+            onChange={(o) => {
+              logConfigEvent('collection: set pane', config, {
+                pane_value: o?.label,
+              })
+            }}
+          />
         </div>
       </div>
       <Info colorized {...tokenGroup} />
