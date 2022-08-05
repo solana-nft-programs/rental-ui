@@ -3,6 +3,7 @@ import { DisplayAddress } from '@cardinal/namespaces-components'
 import { GlyphLargeClose } from 'assets/GlyphLargeClose'
 import { ButtonSmall } from 'common/ButtonSmall'
 import { getRentalRateDisplayText } from 'common/NFTIssuerInfo'
+import { Tooltip } from 'common/Tooltip'
 import type { IndexedClaimEvent } from 'hooks/useClaimEventsForConfig'
 import {
   claimApproverFromIndexedClaimEvent,
@@ -177,18 +178,30 @@ export const ActivityRecipient = ({
   const tokenAccount = useTokenAccountInfo(
     tryPublicKey(recipientTokenAccount) ?? undefined
   )
+  const notFound = tokenAccount.isFetched && !tokenAccount.data?.parsed?.owner
   return (
-    <DisplayAddress
-      dark
-      address={
-        tryPublicKey(
-          tokenAccount.isFetched
-            ? tokenAccount.data?.parsed?.owner
-            : tokenAccount.data?.parsed?.owner ?? recipientTokenAccount
-        ) ?? undefined
+    <Tooltip
+      title={
+        !!notFound
+          ? 'Owner not found, showing their token account address here'
+          : ''
       }
-      connection={secondaryConnection}
-    />
+    >
+      <div className="flex">
+        <DisplayAddress
+          dark
+          address={
+            tryPublicKey(
+              tokenAccount.isFetched
+                ? tokenAccount.data?.parsed?.owner ?? recipientTokenAccount
+                : undefined
+            ) ?? undefined
+          }
+          connection={secondaryConnection}
+        />
+        {notFound && <>*</>}
+      </div>
+    </Tooltip>
   )
 }
 
