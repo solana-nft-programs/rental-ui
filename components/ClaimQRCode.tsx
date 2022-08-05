@@ -1,7 +1,7 @@
 import { utils } from '@project-serum/anchor'
 import QRCodeStyling from '@solana/qr-code-styling'
 import type { Keypair } from '@solana/web3.js'
-import type { TokenData } from 'apis/api'
+import type { TokenData } from 'api/api'
 import { useRecentSignatures } from 'hooks/useRecentSignatures'
 import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
 import React, { useEffect, useMemo, useRef, useState } from 'react'

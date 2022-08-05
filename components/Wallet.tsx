@@ -1,7 +1,7 @@
 import { DisplayAddress } from '@cardinal/namespaces-components'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { useWallet } from '@solana/wallet-adapter-react'
-import type { TokenData } from 'apis/api'
+import type { TokenData } from 'api/api'
 import { Airdrop } from 'common/Airdrop'
 import { Header } from 'common/Header'
 import { elligibleForRent, NFT, NFTPlaceholder, TokensOuter } from 'common/NFT'

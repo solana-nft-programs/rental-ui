@@ -1,5 +1,5 @@
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
-import type { TokenData } from 'apis/api'
+import type { TokenData } from 'api/api'
 import type { AirdropMetadata } from 'common/Airdrop'
 import type {
   DurationOption,

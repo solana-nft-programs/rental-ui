@@ -1,6 +1,6 @@
 import type { Wallet } from '@saberhq/solana-contrib'
 import type { Connection } from '@solana/web3.js'
-import type { TokenData } from 'apis/api'
+import type { TokenData } from 'api/api'
 import { withSleep } from 'common/utils'
 import React, { useContext, useState } from 'react'
 
@@ -39,9 +39,7 @@ export const RentalModalProvider: React.FC<Props> = ({
   const [cluster, setCluster] = useState<string | undefined>(undefined)
   const [dev, setDev] = useState<boolean | undefined>(undefined)
   const [showRentalModal, setShowRentalModal] = useState<boolean>(false)
-  const [tokenDatas, setTokenDatas] = useState<TokenData[] | undefined>(
-    undefined
-  )
+  const [tokenDatas, setTokenDatas] = useState<TokenData[] | undefined>(undefined)
   const [rentalCardConfig, setRentalCardConfig] = useState<
     RentalCardConfig | undefined
   >(undefined)

@@ -5,7 +5,7 @@ import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tok
 import { getTokenManager } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/accounts'
 import { findTokenManagerAddress } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/pda'
 import { Connection } from '@solana/web3.js'
-import { accountDataById } from 'apis/api'
+import { accountDataById } from 'api/api'
 import type { NextApiHandler } from 'next'
 import { ENVIRONMENTS } from 'providers/EnvironmentProvider'
 

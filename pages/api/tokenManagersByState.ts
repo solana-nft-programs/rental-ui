@@ -1,7 +1,7 @@
 import type { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { getTokenManagersByState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/accounts'
 import { Connection } from '@solana/web3.js'
-import { getTokenDatas } from 'apis/api'
+import { getTokenDatas } from 'api/api'
 import { firstParam } from 'common/utils'
 import { projectConfigs } from 'config/config'
 import type { NextApiRequest, NextApiResponse } from 'next'
