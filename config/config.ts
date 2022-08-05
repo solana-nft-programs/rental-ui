@@ -132,7 +132,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidators: ['rate', 'duration'],
       invalidationOptions: {
         visibilities: ['public', 'private'],
-        durationOptions: ['minutes', 'hours', 'days', 'weeks'],
+        durationOptions: ['hours', 'days', 'weeks'],
         invalidationTypes: ['reissue'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,
@@ -181,7 +181,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidators: ['rate'],
       invalidationOptions: {
         visibilities: ['public', 'private'],
-        durationOptions: ['minutes', 'hours', 'days', 'weeks'],
+        durationOptions: ['hours', 'days', 'weeks'],
         invalidationTypes: ['reissue'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,
@@ -272,7 +272,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidators: ['rate', 'duration', 'expiration', 'manual'],
       invalidationOptions: {
         visibilities: ['public', 'private'],
-        durationOptions: ['minutes', 'hours', 'days', 'weeks'],
+        durationOptions: ['hours', 'days', 'weeks'],
         invalidationTypes: ['reissue', 'return'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,
@@ -371,7 +371,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidators: ['rate', 'expiration', 'duration', 'manual'],
       invalidationOptions: {
         visibilities: ['public', 'private'],
-        durationOptions: ['minutes', 'hours', 'days', 'weeks'],
+        durationOptions: ['hours', 'days', 'weeks'],
         invalidationTypes: ['reissue', 'return'],
         customInvalidationTypes: {
           '41qJ9dJemw8mrry2BD1wU6B2aHXN4RoNY79bS7xwDPhM': ['return'],
@@ -447,7 +447,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidators: ['rate', 'duration', 'manual'],
       invalidationOptions: {
         visibilities: ['public', 'private'],
-        durationOptions: ['minutes', 'hours', 'days', 'weeks'],
+        durationOptions: ['hours', 'days', 'weeks'],
         invalidationTypes: ['reissue'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,
@@ -507,7 +507,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
           value: '1',
           durationOption: 'days',
         },
-        durationOptions: ['hours', 'days', 'weeks', 'years'],
+        durationOptions: ['hours', 'days', 'weeks'],
         visibilities: ['public'],
         invalidationTypes: ['reissue'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
@@ -549,7 +549,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
           value: '1',
           durationOption: 'days',
         },
-        durationOptions: ['hours', 'days', 'weeks', 'years'],
+        durationOptions: ['hours', 'days', 'weeks'],
         visibilities: ['public'],
         invalidationTypes: ['reissue'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
@@ -590,7 +590,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
           value: '1',
           durationOption: 'days',
         },
-        durationOptions: ['hours', 'days', 'weeks', 'years'],
+        durationOptions: ['hours', 'days', 'weeks'],
         visibilities: ['public'],
         invalidationTypes: ['reissue'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
@@ -653,7 +653,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
           value: '1',
           durationOption: 'days',
         },
-        durationOptions: ['hours', 'days', 'weeks', 'years'],
+        durationOptions: ['hours', 'days', 'weeks'],
         visibilities: ['public'],
         invalidationTypes: ['reissue'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
@@ -706,7 +706,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
   //     invalidators: ['expiration'],
   //     invalidationOptions: {
   //       visibilities: ['public'],
-  //       durationOptions: ['minutes', 'hours', 'days', 'weeks'],
+  //       durationOptions: [ 'hours', 'days', 'weeks'],
   //       invalidationTypes: ['reissue'],
   //       paymentMints: ['So11111111111111111111111111111111111111112'],
   //       showClaimRentalReceipt: false,
@@ -813,7 +813,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
           durationOption: 'days',
         },
         visibilities: ['public'],
-        durationOptions: ['minutes', 'hours', 'days', 'weeks'],
+        durationOptions: ['hours', 'days', 'weeks'],
         invalidationTypes: ['reissue'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,
@@ -863,7 +863,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidators: ['rate', 'duration'],
       invalidationOptions: {
         visibilities: ['public'],
-        durationOptions: ['minutes', 'hours', 'days', 'weeks'],
+        durationOptions: ['hours', 'days', 'weeks'],
         invalidationTypes: ['reissue'],
         paymentMints: [
           'MLKmUCaj1dpBY881aFsrBwR9RUMoKic8SWT3u1q5Nkj',
@@ -915,7 +915,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidators: ['rate', 'duration'],
       invalidationOptions: {
         visibilities: ['public'],
-        durationOptions: ['minutes', 'hours', 'days', 'weeks'],
+        durationOptions: ['hours', 'days', 'weeks'],
         invalidationTypes: ['reissue'],
         paymentMints: ['FdviznPoMEakdJ37fikNxhoscyruUHSHNkKyvntSqbuo'],
         showClaimRentalReceipt: false,
@@ -964,7 +964,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidators: ['rate'],
       invalidationOptions: {
         visibilities: ['public'],
-        durationOptions: ['minutes', 'hours', 'days', 'weeks'],
+        durationOptions: ['hours', 'days', 'weeks'],
         invalidationTypes: ['reissue'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,
@@ -1013,7 +1013,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidators: ['rate', 'duration'],
       invalidationOptions: {
         visibilities: ['public'],
-        durationOptions: ['minutes', 'hours', 'days', 'weeks'],
+        durationOptions: ['hours', 'days', 'weeks'],
         invalidationTypes: ['reissue'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,

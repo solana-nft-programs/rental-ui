@@ -13,7 +13,7 @@ import { transactionUrl } from 'common/utils'
 import type { IssueTxResult } from 'handlers/useHandleIssueRental'
 import { useMintMetadatas } from 'hooks/useMintMetadata'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
-import { useProjectConfig } from 'providers/ProjectConfigProvider'
+import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { FaTwitter } from 'react-icons/fa'
 import { PoweredByFooter } from 'rental-components/common/PoweredByFooter'
 
@@ -130,6 +130,18 @@ export const RentalIssueSuccessCard = ({
             Share on Twitter!
           </div>
         </ShareTwitterButton>
+      </div>
+      <div
+        onClick={() => {
+          handleCopy(
+            txResults.length === 1
+              ? txResults[0]!.claimLink
+              : `https://rent-v2.cardinal.so/${config.name}`
+          )
+        }}
+        className="mx-auto mt-4 block text-center hover:cursor-pointer hover:text-gray-400"
+      >
+        Copy Claim Link
       </div>
       <PoweredByFooter />
     </div>

@@ -8,9 +8,11 @@ import { css } from '@emotion/react'
 import { logConfigEvent } from 'apis/amplitude'
 import type { TokenData } from 'apis/api'
 import { GlyphLargeClose } from 'assets/GlyphLargeClose'
+import { ButtonSmall } from 'common/ButtonSmall'
 import { Card } from 'common/Card'
 import { HeaderSlim } from 'common/HeaderSlim'
 import { NFT } from 'common/NFT'
+import { NFTClaimButton } from 'common/NFTClaimButton'
 import { NFTHeader } from 'common/NFTHeader'
 import { NFTIssuerInfo } from 'common/NFTIssuerInfo'
 import { NFTRevokeButton } from 'common/NFTRevokeButton'
@@ -376,24 +378,49 @@ export const Dashboard = () => {
                           hero={<NFT tokenData={tokenData} />}
                           header={<NFTHeader tokenData={tokenData} />}
                           content={
-                            {
-                              [TokenManagerState.Initialized]: <></>,
-                              [TokenManagerState.Issued]: (
-                                <div className="flex h-full w-full flex-row items-center justify-between text-sm">
-                                  <NFTIssuerInfo tokenData={tokenData} />
-                                </div>
-                              ),
-                              [TokenManagerState.Claimed]: (
-                                <div className="flex h-full flex-row justify-between text-sm">
-                                  <NFTIssuerInfo tokenData={tokenData} />
-                                  <NFTRevokeButton tokenData={tokenData} />
-                                </div>
-                              ),
-                              [TokenManagerState.Invalidated]: <></>,
-                            }[
-                              tokenData?.tokenManager?.parsed
-                                .state as TokenManagerState
-                            ]
+                            tokenData.tokenManager ? (
+                              {
+                                [TokenManagerState.Initialized]: <></>,
+                                [TokenManagerState.Issued]: (
+                                  <div className="flex h-full w-full flex-row items-center justify-between text-sm">
+                                    <NFTIssuerInfo tokenData={tokenData} />
+                                  </div>
+                                ),
+                                [TokenManagerState.Claimed]: (
+                                  <div className="flex h-full flex-row justify-between text-sm">
+                                    <NFTIssuerInfo tokenData={tokenData} />
+                                    <NFTRevokeButton tokenData={tokenData} />
+                                  </div>
+                                ),
+                                [TokenManagerState.Invalidated]: <></>,
+                              }[
+                                tokenData?.tokenManager?.parsed
+                                  .state as TokenManagerState
+                              ]
+                            ) : (
+                              <div className="flex justify-end -mt-1 h-100">
+                                <ButtonSmall
+                                  disabled={!walletId}
+                                  className="inline-block flex-none px-4 py-2 text-lg"
+                                  onClick={async () => {
+                                    if (elligibleForRent(config, tokenData)) {
+                                      setSelectedTokens([
+                                        ...selectedTokens,
+                                        tokenData,
+                                      ])
+                                    } else {
+                                      notify({
+                                        message: 'Not elligible',
+                                        description:
+                                          'This token is not ellgibile for rent!',
+                                      })
+                                    }
+                                  }}
+                                >
+                                  Select
+                                </ButtonSmall>
+                              </div>
+                            )
                           }
                         />
                       ))}
