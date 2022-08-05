@@ -113,9 +113,9 @@ export const Header = ({
           }}
         >
           <div className="text-xs font-semibold text-yellow-500">
-            👀
+            👀 UI{' '}
             <a className="text-blue-500" href="https://rent-v2.cardinal.so">
-              V2 UI
+              redesign
             </a>{' '}
             coming soon...
           </div>
