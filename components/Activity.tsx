@@ -1,6 +1,7 @@
 import { tryPublicKey } from '@cardinal/common'
 import { DisplayAddress } from '@cardinal/namespaces-components'
 import { GlyphLargeClose } from 'assets/GlyphLargeClose'
+import { ButtonSmall } from 'common/ButtonSmall'
 import { getRentalRateDisplayText } from 'common/NFTIssuerInfo'
 import type { IndexedClaimEvent } from 'hooks/useClaimEventsForConfig'
 import {
@@ -17,7 +18,6 @@ import { useState } from 'react'
 export const Activity = () => {
   const { config } = useProjectConfig()
   const claimEvents = useClaimEventsForConfig()
-  console.log(claimEvents)
   return (
     <div className="mx-auto mt-12 px-10">
       <div className="w-full overflow-x-scroll rounded-xl border border-border p-4">
@@ -37,10 +37,15 @@ export const Activity = () => {
               <div className="h-14 w-full animate-pulse rounded-lg bg-border"></div>
               <div className="h-14 w-full animate-pulse rounded-lg bg-border"></div>
               <div className="h-14 w-full animate-pulse rounded-lg bg-border"></div>
+              <div className="h-14 w-full animate-pulse rounded-lg bg-border"></div>
+              <div className="h-14 w-full animate-pulse rounded-lg bg-border"></div>
+              <div className="h-14 w-full animate-pulse rounded-lg bg-border"></div>
+              <div className="h-14 w-full animate-pulse rounded-lg bg-border"></div>
+              <div className="h-14 w-full animate-pulse rounded-lg bg-border"></div>
             </div>
-          ) : claimEvents.data && claimEvents.data.length > 0 ? (
+          ) : claimEvents.data && claimEvents.data.pages.flat().length > 0 ? (
             <div className="flex flex-col px-8">
-              {claimEvents.data.map((claimEvent) => {
+              {claimEvents.data.pages.flat().map((claimEvent) => {
                 return (
                   <ActivityRow
                     key={claimEvent.state_changed_at}
@@ -48,6 +53,14 @@ export const Activity = () => {
                   />
                 )
               })}
+              <div className="mt-4">
+                <ButtonSmall
+                  loading={claimEvents.isFetchingNextPage}
+                  onClick={() => claimEvents.fetchNextPage()}
+                >
+                  Load more
+                </ButtonSmall>
+              </div>
             </div>
           ) : (
             <div className="my-40 flex w-full flex-col items-center justify-center gap-1">
@@ -77,6 +90,7 @@ export const ActivityRow = ({
     lookupTx
   )
   const paymentMints = usePaymentMints()
+
   return (
     <div
       className="flex w-full gap-4 border-b border-border py-4 md:flex-row"

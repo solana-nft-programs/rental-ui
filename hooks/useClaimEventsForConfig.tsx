@@ -9,7 +9,7 @@ import { BN } from '@project-serum/anchor'
 import * as Sentry from '@sentry/browser'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
-import { useQuery } from 'react-query'
+import { useInfiniteQuery } from 'react-query'
 
 export const ACTIVITY_KEY = 'activity'
 
@@ -100,12 +100,14 @@ export const claimApproverFromIndexedClaimEvent = (
   }
 }
 
+const PAGE_SIZE = 10
+
 export const useClaimEventsForConfig = (disabled?: boolean) => {
   const { config } = useProjectConfig()
   const { environment } = useEnvironmentCtx()
-  return useQuery<IndexedClaimEvent[]>(
+  return useInfiniteQuery<IndexedClaimEvent[]>(
     [ACTIVITY_KEY, 'useClaimEventsForConfig', config.name],
-    async () => {
+    async ({ pageParam }) => {
       const transaction = Sentry.startTransaction({
         name: `[useClaimEventsForConfig] ${config.name}`,
       })
@@ -176,8 +178,8 @@ export const useClaimEventsForConfig = (disabled?: boolean) => {
               `,
               variables: {
                 creators: config.filter.value,
-                limit: 10,
-                offset: 0,
+                limit: PAGE_SIZE,
+                offset: pageParam * PAGE_SIZE,
               },
             })
           : await indexer.query({
@@ -221,8 +223,8 @@ export const useClaimEventsForConfig = (disabled?: boolean) => {
               `,
               variables: {
                 issuers: config.filter.value,
-                limit: 10,
-                offset: 0,
+                limit: PAGE_SIZE,
+                offset: pageParam * PAGE_SIZE,
               },
             })
       /////
@@ -238,6 +240,7 @@ export const useClaimEventsForConfig = (disabled?: boolean) => {
     {
       refetchOnMount: false,
       enabled: !disabled && !!config,
+      getNextPageParam: (_lastPage, pages) => pages.length,
     }
   )
 }
