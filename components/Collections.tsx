@@ -133,7 +133,9 @@ export const Collections = () => {
                     badges={config.badges}
                     hero={
                       <div
-                        className="flex h-full w-full items-center justify-center p-12"
+                        className={`flex h-full w-full items-center justify-center ${
+                          config.logoPadding && 'p-8'
+                        }`}
                         css={css`
                           background: ${transparentize(
                             0.8,

@@ -203,9 +203,8 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     websiteUrl: 'https://miniroyale.io/',
     hero: '/logos/miniroyale-hero.png',
     description:
-      'MiniRoyale is a web browser game with battle royale game mode. The game comes with 3D graphics and unique style.',
+      'Mini Royale: Nations is a browser-based first-person-shooter set on top of a land strategy game. Players can earn mintable items through Battle Pass and Quests, join or create Clans to participate in Clan Wars, fuse weapons and characters for ultra rare skins, and more.',
     logoImage: '/logos/miniroyale.png',
-    logoPadding: true,
     twitterHandle: '@MiniNations',
     colors: {
       accent: '#2584df',
