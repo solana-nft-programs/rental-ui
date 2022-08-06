@@ -2,6 +2,7 @@ import { tryPublicKey } from '@cardinal/common'
 import { tokenManager } from '@cardinal/token-manager/dist/cjs/programs'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import * as metaplex from '@metaplex-foundation/mpl-token-metadata'
+import type { PublicKey } from '@solana/web3.js'
 import { Connection } from '@solana/web3.js'
 import Claim from 'components/Claim'
 import { ENVIRONMENTS } from 'providers/EnvironmentProvider'
@@ -31,10 +32,10 @@ export async function getServerSideProps(context: any) {
     commitment: 'recent',
   })
 
-  let mintId
-  let isClaimed
-  let nftImageUrl
-  let nftName
+  let mintId: PublicKey | null = null
+  let isClaimed: boolean | null = null
+  let nftImageUrl: string | null = null
+  let nftName: string | null = null
   if (mintIdString) {
     mintId = tryPublicKey(mintIdString)
     isClaimed = false
@@ -49,7 +50,7 @@ export async function getServerSideProps(context: any) {
         console.log('Failed to get token manager data', e)
         return null
       })
-    mintId = tokenManagerData?.parsed.mint
+    mintId = tokenManagerData?.parsed.mint ?? null
     isClaimed = tokenManagerData?.parsed.state === TokenManagerState.Claimed
   }
   console.log(mintId)
@@ -71,9 +72,11 @@ export async function getServerSideProps(context: any) {
 
   if (metaplexData) {
     try {
-      const json = await fetch(metaplexData.data.uri).then((r) => r.json())
-      nftImageUrl = json.image as string
-      nftName = json.name as string
+      const json = (await fetch(metaplexData.data.uri).then((r) =>
+        r.json()
+      )) as { image?: string; name?: string } | null
+      nftImageUrl = json?.image ?? null
+      nftName = json?.name ?? null
     } catch (e) {
       console.log('Failed to get metadata data', e)
     }
