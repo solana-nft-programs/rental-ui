@@ -20,15 +20,30 @@ export const FooterSlim = () => {
           })}
         </div>
         <div className="flex flex-col gap-8 text-center text-base text-medium-4 md:flex-row md:text-left">
-          <div className="cursor-pointer transition-colors hover:text-primary">
+          <a
+            href="https://docs.cardinal.so/"
+            target="_blank"
+            rel="noreferrer"
+            className="cursor-pointer transition-colors hover:text-primary"
+          >
             Documentation
-          </div>
-          <div className="cursor-pointer transition-colors hover:text-primary">
+          </a>
+          <a
+            href="https://github.com/cardinal-labs"
+            target="_blank"
+            rel="noreferrer"
+            className="cursor-pointer transition-colors hover:text-primary"
+          >
             Github
-          </div>
-          <div className="cursor-pointer transition-colors hover:text-primary">
+          </a>
+          <a
+            href="mailto:team@cardinal.so"
+            target="_blank"
+            rel="noreferrer"
+            className="cursor-pointer transition-colors hover:text-primary"
+          >
             Contact
-          </div>
+          </a>
         </div>
       </div>
     </div>
