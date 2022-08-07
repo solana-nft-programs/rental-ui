@@ -34,6 +34,7 @@ export const filterTokens = (
   cluster?: string | undefined
 ): TokenData[] => {
   return tokens.filter((token) => {
+    // filter tokens with no URI
     if (
       (!token.metaplexData?.parsed.data.uri ||
         token.metaplexData?.parsed.data.uri.length <= 0) &&
@@ -42,14 +43,14 @@ export const filterTokens = (
     ) {
       return false
     }
-    if (
-      token.indexedData?.mint_address_nfts?.metadata_json &&
-      token.indexedData?.mint_address_nfts &&
-      (token.indexedData.mint_address_nfts.metadatas_attributes?.length ?? 0) <=
-        0
-    ) {
-      return false
-    }
+    // if (
+    //   token.indexedData?.mint_address_nfts?.metadata_json &&
+    //   token.indexedData?.mint_address_nfts &&
+    //   (token.indexedData.mint_address_nfts.metadatas_attributes?.length ?? 0) <=
+    //     0
+    // ) {
+    //   return false
+    // }
     if (!filter) return true
     switch (filter.type) {
       case 'creators':
