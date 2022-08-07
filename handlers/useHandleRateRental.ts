@@ -76,7 +76,7 @@ export const useHandleRateRental = () => {
 
       // wrap sol if there is payment required
       const paymentAmount =
-        (tokenData?.claimApprover?.parsed.paymentAmount.toNumber() ?? 0) +
+        (tokenData?.claimApprover?.parsed?.paymentAmount.toNumber() ?? 0) + // parsed can be null for private rental
         ((extensionPaymentAmount?.toNumber() ?? 0) /
           (extensionDurationSeconds?.toNumber() ?? 0)) *
           extensionSeconds
@@ -156,7 +156,9 @@ export const useHandleRateRental = () => {
           },
           signers:
             otpKeypair &&
-            tokenData?.claimApprover?.pubkey.equals(otpKeypair.publicKey)
+            tokenData?.tokenManager.parsed.claimApprover?.equals(
+              otpKeypair.publicKey
+            )
               ? [otpKeypair]
               : [],
           notificationConfig: {},

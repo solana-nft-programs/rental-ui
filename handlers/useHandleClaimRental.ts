@@ -169,7 +169,9 @@ export const useHandleClaimRental = () => {
           },
           signers:
             otpKeypair &&
-            tokenData?.claimApprover?.pubkey.equals(otpKeypair.publicKey)
+            tokenData?.tokenManager.parsed.claimApprover?.equals(
+              otpKeypair.publicKey
+            )
               ? [otpKeypair]
               : [],
           notificationConfig: {},

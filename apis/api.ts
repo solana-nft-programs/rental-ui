@@ -319,11 +319,14 @@ export async function getTokenData(
   return {
     metaplexData,
     tokenManager: tokenManagerData,
-    claimApprover: tokenManagerData.parsed.claimApprover?.toString()
-      ? (accountsById[
-          tokenManagerData.parsed.claimApprover?.toString()
-        ] as AccountData<PaidClaimApproverData>)
-      : undefined,
+    claimApprover:
+      tokenManagerData.parsed.claimApprover?.toString() &&
+      accountsById[tokenManagerData.parsed.claimApprover?.toString()]?.type ===
+        'paidClaimApprover'
+        ? (accountsById[
+            tokenManagerData.parsed.claimApprover?.toString()
+          ] as AccountData<PaidClaimApproverData>)
+        : undefined,
     useInvalidator: useInvalidatorId
       ? (accountsById[
           useInvalidatorId.toString()

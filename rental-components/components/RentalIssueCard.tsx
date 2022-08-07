@@ -7,7 +7,7 @@ import type { IssueTxResult } from 'handlers/useHandleIssueRental'
 import { lighten } from 'polished'
 import { useModal } from 'providers/ModalProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { PoweredByFooter } from 'rental-components/common/PoweredByFooter'
 import { RentalCardTokenHeader } from 'rental-components/common/RentalCardTokenHeader'
 import type {
@@ -54,11 +54,16 @@ export type RentalCardConfig = {
 
 export type RentalIssueCardProps = {
   tokenDatas: TokenData[]
+  onResults?: (ix: IssueTxResult[]) => void
 }
 
-export const RentalIssueCard = ({ tokenDatas }: RentalIssueCardProps) => {
+export const RentalIssueCard = ({
+  tokenDatas: startingTokenDatas,
+  onResults,
+}: RentalIssueCardProps) => {
   const { configFromToken } = useProjectConfig()
-  const config = configFromToken(tokenDatas[0])
+  const config = configFromToken(startingTokenDatas[0])
+  const [tokenDatas, setTokenDatas] = useState(startingTokenDatas)
   const rentalCardConfig = config.rentalCard
   const visibilities =
     rentalCardConfig.invalidationOptions?.visibilities || VISIBILITY_OPTIONS
@@ -69,7 +74,26 @@ export const RentalIssueCard = ({ tokenDatas }: RentalIssueCardProps) => {
   const [txResults, setTxResults] = useState<IssueTxResult[]>()
   const invalidatorOptions = rentalCardConfig.invalidators
 
-  if (txResults && !txResults.some(({ txid }) => !txid)) {
+  useEffect(() => {
+    // deselect drawer
+    txResults && onResults && onResults(txResults)
+
+    // handle remainig tokens
+    txResults &&
+      setTokenDatas((tk) =>
+        tk.filter(
+          (tk) =>
+            !txResults?.find(
+              (txResult) =>
+                txResult.txid &&
+                txResult.tokenData.tokenAccount?.pubkey.toString() ===
+                  tk.tokenAccount?.pubkey?.toString()
+            )
+        )
+      )
+  }, [txResults])
+
+  if (!!txResults && !txResults.some(({ txid }) => !txid)) {
     return (
       <RentalIssueSuccessCard tokenDatas={tokenDatas} txResults={txResults} />
     )
