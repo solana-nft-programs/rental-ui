@@ -137,7 +137,12 @@ export const useHandleClaimRental = () => {
           )
         }
       }
-      if (paymentMint) {
+      if (
+        paymentMint &&
+        (paymentMint?.toString() !== WRAPPED_SOL_MINT.toString() ||
+          (transaction.instructions.length === 0 &&
+            paymentMint?.toString() === WRAPPED_SOL_MINT.toString()))
+      ) {
         await withFindOrInitAssociatedTokenAccount(
           transaction,
           connection,
