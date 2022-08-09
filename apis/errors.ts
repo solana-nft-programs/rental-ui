@@ -60,7 +60,7 @@ export const nativeErrors: ErrorCode[] = [
   },
   // token program errors
   {
-    code: '1',
+    code: 'insufficient lamports',
     message:
       'Insufficient funds. User does not have enough balance of token to complete the transaction',
   },
