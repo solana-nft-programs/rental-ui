@@ -120,7 +120,8 @@ export const useClaimEventsForConfig = (
       if (
         !(
           (environment.index && config.filter?.type === 'creators') ||
-          (config.filter?.type === 'issuer' && !config.indexDisabled)
+          (config.filter?.type === 'issuer' && !config.indexDisabled) ||
+          user
         )
       ) {
         return []
@@ -130,7 +131,7 @@ export const useClaimEventsForConfig = (
         name: `[useClaimEventsForConfig] ${config.name}`,
       })
       const tokenManagerResponse =
-        config.filter.type === 'creators'
+        config.filter?.type === 'creators'
           ? await indexer.query({
               query: gql`
                 query GetActivity(
@@ -240,7 +241,7 @@ export const useClaimEventsForConfig = (
                 }
               `,
               variables: {
-                issuers: config.filter.value,
+                issuers: config.filter?.value ?? user,
                 limit: PAGE_SIZE,
                 offset: pageParam * PAGE_SIZE,
               },

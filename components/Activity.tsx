@@ -1,4 +1,4 @@
-import { tryPublicKey } from '@cardinal/common'
+import { shortPubKey, tryPublicKey } from '@cardinal/common'
 import { DisplayAddress } from '@cardinal/namespaces-components'
 import type { PublicKey } from '@solana/web3.js'
 import { GlyphLargeClose } from 'assets/GlyphLargeClose'
@@ -69,7 +69,8 @@ export const Activity = ({ user }: { user?: PublicKey }) => {
             <div className="my-40 flex w-full flex-col items-center justify-center gap-1">
               <GlyphLargeClose />
               <div className="mt-4 text-medium-4">
-                No transactions have been recorded for {config.displayName}
+                No transactions have been recorded for{' '}
+                {user ? shortPubKey(user) : config.displayName}
               </div>
             </div>
           )}
