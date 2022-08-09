@@ -159,6 +159,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       accent: '#10abf0',
       glow: '#005eff',
     },
+    twitterHandle: '@parcl',
     socialLinks: [
       {
         icon: 'discord',
@@ -544,6 +545,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       accent: 'rgb(169,60,239)',
       glow: 'rgb(169,60,239)',
     },
+    twitterHandle: '@BR1INFINITE',
     filter: {
       type: 'creators',
       value: [
@@ -583,6 +585,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       accent: '#CD9373',
       glow: '#CD9373',
     },
+    twitterHandle: '@DeFi_Land',
     filter: {
       type: 'creators',
       value: [
