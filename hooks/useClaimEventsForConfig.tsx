@@ -6,6 +6,7 @@ import { tryPublicKey } from '@cardinal/common'
 import type { PaidClaimApproverData } from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
 import type { TimeInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
 import { BN } from '@project-serum/anchor'
+import type { PublicKey } from '@solana/web3.js'
 import { tracer } from 'common/trace'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
@@ -102,11 +103,14 @@ export const claimApproverFromIndexedClaimEvent = (
 
 const PAGE_SIZE = 10
 
-export const useClaimEventsForConfig = (disabled?: boolean) => {
+export const useClaimEventsForConfig = (
+  disabled?: boolean,
+  user?: PublicKey
+) => {
   const { config } = useProjectConfig()
   const { environment } = useEnvironmentCtx()
   return useInfiniteQuery<IndexedClaimEvent[]>(
-    [ACTIVITY_KEY, 'useClaimEventsForConfig', config.name],
+    [ACTIVITY_KEY, 'useClaimEventsForConfig', config.name, user?.toString()],
     async ({ pageParam }) => {
       /////
       const indexer = new ApolloClient({
@@ -133,6 +137,7 @@ export const useClaimEventsForConfig = (disabled?: boolean) => {
                   $limit: Int!
                   $offset: Int!
                   $creators: [String!]!
+                  ${user ? '$issuer: String!' : ''}
                 ) {
                   cardinal_claim_events(
                     limit: $limit
@@ -147,6 +152,7 @@ export const useClaimEventsForConfig = (disabled?: boolean) => {
                           }
                         }
                       }
+                      ${user ? 'issuer: {_eq: $issuer}' : ''}
                       ${
                         config.showUnknownInvalidators
                           ? ''
@@ -184,6 +190,7 @@ export const useClaimEventsForConfig = (disabled?: boolean) => {
                 creators: config.filter.value,
                 limit: PAGE_SIZE,
                 offset: pageParam * PAGE_SIZE,
+                issuer: user,
               },
             })
           : await indexer.query({

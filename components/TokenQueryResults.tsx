@@ -1,7 +1,5 @@
 import { logConfigEvent } from 'apis/amplitude'
 import type { TokenData } from 'apis/api'
-import { GlyphActivity } from 'assets/GlyphActivity'
-import { GlyphBrowse } from 'assets/GlyphBrowse'
 import { Info } from 'common/Info'
 import { MultiSelector } from 'common/MultiSelector'
 import type { NFTAtrributeFilterValues } from 'common/NFTAttributeFilters'
@@ -19,34 +17,13 @@ import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useState } from 'react'
 import type { UseQueryResult } from 'react-query'
 
+import { Activity } from './Activity'
+import type { PANE_OPTIONS } from './Browse'
+import { PANE_TABS } from './Browse'
 import type { ManageTokenGroup, ManageTokenGroupId } from './Manage'
 import { manageTokenGroups } from './Manage'
 import { TokenQueryData } from './TokenQueryData'
 
-export type PANE_OPTIONS = 'browse' | 'activity'
-export const PANE_TABS: {
-  label: JSX.Element
-  value: PANE_OPTIONS
-  disabled?: boolean
-  tooltip?: string
-}[] = [
-  {
-    label: <GlyphBrowse />,
-    value: 'browse',
-    tooltip: 'Browse this collection',
-  },
-  {
-    label: (
-      <div className="flex items-center gap-2">
-        <GlyphActivity />
-        Activity
-      </div>
-    ),
-    value: 'activity',
-    disabled: true,
-    tooltip: 'Coming soon',
-  },
-]
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   setSelectedGroup: (id: ManageTokenGroupId) => void
   tokenQuery: Pick<
@@ -78,6 +55,7 @@ export const TokenQueryResults: React.FC<Props> = ({
   const walletId = useWalletId()
 
   const [selectedTokens, setSelectedTokens] = useState<TokenData[]>([])
+  const [pane, setPane] = useState<PANE_OPTIONS>('browse')
   const [selectedFilters, setSelectedFilters] =
     useState<NFTAtrributeFilterValues>({})
   const allTokens = tokenQuery.data ?? []
@@ -115,6 +93,7 @@ export const TokenQueryResults: React.FC<Props> = ({
               })
               setSelectedTokens([])
               setSelectedGroup(o.value)
+              setPane('browse')
             }}
           />
           {attributeFilterOptions && (
@@ -160,34 +139,51 @@ export const TokenQueryResults: React.FC<Props> = ({
               logConfigEvent('collection: set pane', config, {
                 pane_value: o?.label,
               })
+              setPane(o.value)
             }}
           />
         </div>
       </div>
-      <Info colorized {...tokenGroup} />
-      <TokenQueryData
-        tokenDatas={filteredAndSortedTokens}
-        isFetched={tokenQuery.isFetched}
-        selectedTokens={selectedTokens}
-        handleClick={(tokenData) => {
-          if (isSelected(tokenData, selectedTokens)) {
-            setSelectedTokens(
-              selectedTokens.filter(
-                (t) =>
-                  t.tokenAccount?.parsed.mint.toString() !==
-                  tokenData.tokenAccount?.parsed.mint.toString()
-              )
-            )
-          } else if (elligibleForRent(config, tokenData)) {
-            setSelectedTokens([...selectedTokens, tokenData])
-          } else {
-            notify({
-              message: 'Not elligible',
-              description: 'This token is not ellgibile for rent!',
-            })
-          }
-        }}
-      />
+      {pane === 'browse' ? (
+        <Info colorized {...tokenGroup} />
+      ) : (
+        <Info
+          colorized
+          icon="activity"
+          header="Activity"
+          description="View recent activity for this collection"
+        />
+      )}
+      {
+        {
+          activity: <Activity user={walletId} />,
+          browse: (
+            <TokenQueryData
+              tokenDatas={filteredAndSortedTokens}
+              isFetched={tokenQuery.isFetched}
+              selectedTokens={selectedTokens}
+              handleClick={(tokenData) => {
+                if (isSelected(tokenData, selectedTokens)) {
+                  setSelectedTokens(
+                    selectedTokens.filter(
+                      (t) =>
+                        t.tokenAccount?.parsed.mint.toString() !==
+                        tokenData.tokenAccount?.parsed.mint.toString()
+                    )
+                  )
+                } else if (elligibleForRent(config, tokenData)) {
+                  setSelectedTokens([...selectedTokens, tokenData])
+                } else {
+                  notify({
+                    message: 'Not elligible',
+                    description: 'This token is not ellgibile for rent!',
+                  })
+                }
+              }}
+            />
+          ),
+        }[pane]
+      }
     </>
   )
 }
