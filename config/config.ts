@@ -767,56 +767,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     ],
     marketplaceRate: 'days',
   },
-  tag: {
-    name: 'tag',
-    displayName: 'Trading Apes Gang',
-    type: 'Collection',
-    websiteUrl: 'https://tradingapesgang.com/',
-    logoImage: '/logos/tag.png',
-    hero: '/logos/tag-hero.png',
-    colors: {
-      accent: '#FF080B',
-      glow: '#FF080B',
-    },
-    description:
-      'Trading Apes Gang is a Revenue Sharing project. 500 Miscreant Trading Apes competing in NFT trading competitions, All TAG NFTs with Scalp Empire access, Create Your Own Raffle Site, CoinFlip game live! Weekly competitions for SOL!',
-    twitterHandle: '@tradingapesgang',
-    socialLinks: [
-      {
-        icon: 'discord',
-        link: 'https://discord.gg/9QPKxnyKbq',
-      },
-      {
-        icon: 'web',
-        link: 'https://tradingapesgang.com/',
-      },
-      {
-        icon: 'twitter',
-        link: 'https://twitter.com/TradingApesGang',
-      },
-    ],
-    badges: [{ badgeType: 'recent' }],
-    filter: {
-      type: 'creators',
-      value: ['5ibTc761cQ1mDAomiPNT8tPMREr2RrDL77qfFsWxLkc1'],
-    },
-    rentalCard: {
-      invalidators: ['rate'],
-      invalidationOptions: {
-        visibilities: ['public', 'private'],
-        durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
-        paymentMints: ['So11111111111111111111111111111111111111112'],
-        showClaimRentalReceipt: false,
-        setClaimRentalReceipt: false,
-        maxDurationAllowed: {
-          displayText: '4 weeks',
-          value: 2419200,
-        },
-      },
-    },
-    marketplaceRate: 'days',
-  },
   // empiredao: {
   //   name: 'empiredao',
   //   displayName: 'Empire DAO',
@@ -1149,6 +1099,56 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         maxDurationAllowed: {
           displayText: '12 weeks',
           value: 7258000,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
+  tag: {
+    name: 'tag',
+    displayName: 'Trading Apes Gang',
+    type: 'Guild',
+    websiteUrl: 'https://tradingapesgang.com/',
+    logoImage: '/logos/tag.png',
+    hero: '/logos/tag-hero.png',
+    colors: {
+      accent: '#FF080B',
+      glow: '#FF080B',
+    },
+    description:
+      'Trading Apes Gang is a Revenue Sharing project. 500 Miscreant Trading Apes competing in NFT trading competitions, All TAG NFTs with Scalp Empire access, Create Your Own Raffle Site, CoinFlip game live! Weekly competitions for SOL!',
+    twitterHandle: '@tradingapesgang',
+    socialLinks: [
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/9QPKxnyKbq',
+      },
+      {
+        icon: 'web',
+        link: 'https://tradingapesgang.com/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/TradingApesGang',
+      },
+    ],
+    badges: [{ badgeType: 'recent' }],
+    filter: {
+      type: 'issuer',
+      value: ['8FkMivDfqqFLH3eRBnJ8krkbQemUfDthLcTXjwSqkQee'],
+    },
+    rentalCard: {
+      invalidators: ['rate'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '4 weeks',
+          value: 2419200,
         },
       },
     },
