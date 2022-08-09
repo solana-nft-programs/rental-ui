@@ -1143,7 +1143,10 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         visibilities: ['public', 'private'],
         durationOptions: ['hours', 'days', 'weeks'],
         invalidationTypes: ['reissue'],
-        paymentMints: ['So11111111111111111111111111111111111111112'],
+        paymentMints: [
+          'So11111111111111111111111111111111111111112',
+          'DUSTawucrTsGU8hcqRdHDCbuYhCPADMLM2VcCb8VnFnQ',
+        ],
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
         maxDurationAllowed: {

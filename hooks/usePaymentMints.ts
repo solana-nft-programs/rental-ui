@@ -34,6 +34,13 @@ export const PAYMENT_MINTS: PaymentMintInfo[] = [
       'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/FdviznPoMEakdJ37fikNxhoscyruUHSHNkKyvntSqbuo/logo.png',
     decimals: 9,
   },
+  {
+    mint: 'DUSTawucrTsGU8hcqRdHDCbuYhCPADMLM2VcCb8VnFnQ',
+    symbol: 'DUST',
+    image:
+      'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/DUSTawucrTsGU8hcqRdHDCbuYhCPADMLM2VcCb8VnFnQ/logo.jpg',
+    decimals: 9,
+  },
 ]
 
 export const WRAPPED_SOL_MINT = 'So11111111111111111111111111111111111111112'
