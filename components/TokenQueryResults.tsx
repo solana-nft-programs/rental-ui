@@ -12,6 +12,7 @@ import { RefreshButton } from 'common/RefreshButton'
 import { SelecterDrawer } from 'common/SelectedDrawer'
 import { TabSelector } from 'common/TabSelector'
 import { elligibleForRent } from 'common/tokenDataUtils'
+import { useClaimEventsForConfig } from 'hooks/useClaimEventsForConfig'
 import { useWalletId } from 'hooks/useWalletId'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useState } from 'react'
@@ -63,6 +64,7 @@ export const TokenQueryResults: React.FC<Props> = ({
     allTokens,
     selectedFilters
   )
+  const claimEvents = useClaimEventsForConfig(true, walletId)
   return (
     <>
       <SelecterDrawer
@@ -128,9 +130,17 @@ export const TokenQueryResults: React.FC<Props> = ({
         <div className="flex gap-4">
           <RefreshButton
             colorized
-            isFetching={tokenQuery.isFetching}
-            dataUpdatdAtMs={tokenQuery.dataUpdatedAt}
-            handleClick={() => tokenQuery.refetch()}
+            isFetching={
+              pane === 'browse' ? tokenQuery.isFetching : claimEvents.isFetching
+            }
+            dataUpdatdAtMs={
+              pane === 'browse'
+                ? tokenQuery.dataUpdatedAt
+                : claimEvents.dataUpdatedAt
+            }
+            handleClick={() =>
+              pane === 'browse' ? tokenQuery.refetch() : claimEvents.refetch()
+            }
           />
           <TabSelector
             defaultOption={PANE_TABS[0]}

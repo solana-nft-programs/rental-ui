@@ -23,6 +23,7 @@ import { TabSelector } from 'common/TabSelector'
 import { elligibleForRent, getMintfromTokenData } from 'common/tokenDataUtils'
 import type { ProjectConfig } from 'config/config'
 import { projectConfigs } from 'config/config'
+import { useClaimEventsForConfig } from 'hooks/useClaimEventsForConfig'
 import { useManagedTokens } from 'hooks/useManagedTokens'
 import { useUserTokenData } from 'hooks/useUserTokenData'
 import { useWalletId } from 'hooks/useWalletId'
@@ -162,6 +163,7 @@ export const Dashboard = () => {
   const [selectedConfig, setSelectedConfig] = useState<
     ProjectConfig | undefined
   >(undefined)
+  const claimEvents = useClaimEventsForConfig(true, walletId)
 
   const tokenQuery = {
     all: allManagedTokens,
@@ -302,14 +304,26 @@ export const Dashboard = () => {
           <div className="flex gap-4">
             <RefreshButton
               colorized
-              isFetching={userTokenDatas.isFetching || managedTokens.isFetching}
-              dataUpdatdAtMs={Math.min(
-                tokenQuery.dataUpdatedAt,
-                managedTokens.dataUpdatedAt
-              )}
+              isFetching={
+                pane === 'browse'
+                  ? userTokenDatas.isFetching || managedTokens.isFetching
+                  : claimEvents.isFetching
+              }
+              dataUpdatdAtMs={
+                pane === 'browse'
+                  ? Math.min(
+                      tokenQuery.dataUpdatedAt,
+                      managedTokens.dataUpdatedAt
+                    )
+                  : claimEvents.dataUpdatedAt
+              }
               handleClick={() => {
-                userTokenDatas.refetch()
-                managedTokens.refetch()
+                if (pane === 'browse') {
+                  userTokenDatas.refetch()
+                  managedTokens.refetch()
+                } else {
+                  claimEvents.refetch()
+                }
               }}
             />
             <TabSelector
