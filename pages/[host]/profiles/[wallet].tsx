@@ -1,9 +1,11 @@
-import { tryPublicKey } from '@cardinal/common'
+import { firstParam, tryPublicKey } from '@cardinal/common'
 import { useAddressName } from '@cardinal/namespaces-components'
 import { Banner } from 'common/Banner'
 import { FooterSlim } from 'common/FooterSlim'
 import { Dashboard } from 'components/Dashboard'
 import Error from 'components/Error'
+import LoadingScreen from 'components/LoadingScreen'
+import { useNameEntry } from 'hooks/useNameEntry'
 import { useWalletId } from 'hooks/useWalletId'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
@@ -13,9 +15,18 @@ export default function Profile() {
   const walletId = useWalletId()
   const { query } = useRouter()
   const { connection } = useEnvironmentCtx()
+  const nameEntry = useNameEntry(firstParam(query.wallet), true)
   const { displayName } = useAddressName(connection, walletId)
 
-  if (tryPublicKey(query.wallet) && walletId?.toString() !== query.wallet) {
+  if (!tryPublicKey(query.wallet) && !nameEntry.isFetched) {
+    return <LoadingScreen />
+  }
+
+  if (
+    tryPublicKey(query.wallet)
+      ? walletId?.toString() !== query.wallet
+      : !nameEntry.data?.parsed.name
+  ) {
     return <Error />
   }
 
