@@ -23,6 +23,7 @@ import { TabSelector } from 'common/TabSelector'
 import { elligibleForRent, getMintfromTokenData } from 'common/tokenDataUtils'
 import type { ProjectConfig } from 'config/config'
 import { projectConfigs } from 'config/config'
+import { useClaimEventsForConfig } from 'hooks/useClaimEventsForConfig'
 import { useManagedTokens } from 'hooks/useManagedTokens'
 import { useUserTokenData } from 'hooks/useUserTokenData'
 import { useWalletId } from 'hooks/useWalletId'
@@ -33,6 +34,8 @@ import { HiUserCircle } from 'react-icons/hi'
 import { useQuery } from 'react-query'
 import { SolanaLogo } from 'rental-components/common/icons'
 
+import { Activity } from './Activity'
+import type { PANE_OPTIONS } from './Browse'
 import { PANE_TABS } from './Browse'
 import type { ManageTokenGroupId } from './Manage'
 import { manageTokenGroups } from './Manage'
@@ -89,6 +92,7 @@ export const Dashboard = () => {
   const { secondaryConnection } = useEnvironmentCtx()
   const { config, setProjectConfig } = useProjectConfig()
   const userTokenDatas = useUserTokenData(config.filter)
+  const [pane, setPane] = useState<PANE_OPTIONS>('browse')
   const { addressImage, loadingImage } = useAddressImage(
     secondaryConnection,
     walletId
@@ -159,6 +163,7 @@ export const Dashboard = () => {
   const [selectedConfig, setSelectedConfig] = useState<
     ProjectConfig | undefined
   >(undefined)
+  const claimEvents = useClaimEventsForConfig(true, walletId)
 
   const tokenQuery = {
     all: allManagedTokens,
@@ -265,6 +270,7 @@ export const Dashboard = () => {
                 })
                 setSelectedTokens([])
                 setSelectedGroup(o.value)
+                setPane('browse')
               }}
             />
             <Selector<string>
@@ -298,143 +304,186 @@ export const Dashboard = () => {
           <div className="flex gap-4">
             <RefreshButton
               colorized
-              isFetching={userTokenDatas.isFetching || managedTokens.isFetching}
-              dataUpdatdAtMs={Math.min(
-                tokenQuery.dataUpdatedAt,
-                managedTokens.dataUpdatedAt
-              )}
+              isFetching={
+                pane === 'browse'
+                  ? userTokenDatas.isFetching || managedTokens.isFetching
+                  : claimEvents.isFetching
+              }
+              dataUpdatdAtMs={
+                pane === 'browse'
+                  ? Math.min(
+                      tokenQuery.dataUpdatedAt,
+                      managedTokens.dataUpdatedAt
+                    )
+                  : claimEvents.dataUpdatedAt
+              }
               handleClick={() => {
-                userTokenDatas.refetch()
-                managedTokens.refetch()
+                if (pane === 'browse') {
+                  userTokenDatas.refetch()
+                  managedTokens.refetch()
+                } else {
+                  claimEvents.refetch()
+                }
               }}
             />
-            <TabSelector defaultOption={PANE_TABS[0]} options={PANE_TABS} />
+            <TabSelector
+              defaultOption={PANE_TABS[0]}
+              options={PANE_TABS}
+              onChange={(o) => {
+                logConfigEvent('dashboard: set pane', config, {
+                  pane_value: o?.label,
+                })
+                setPane(o.value)
+              }}
+            />
           </div>
         </div>
-        {tokenQuery.isFetched && groupedTokens.length === 0 ? (
-          <div className="my-40 flex w-full flex-col items-center justify-center gap-1">
-            <GlyphLargeClose />
-            <div className="mt-4 text-medium-4">
-              No results at this moment...
-            </div>
-            <ButtonSmall onClick={() => tokenQuery.refetch()}>
-              Retry
-            </ButtonSmall>
-          </div>
-        ) : (
-          <div className="mx-auto mt-12 px-10">
-            {!tokenQuery.isFetched ? (
-              <div className="flex flex-wrap justify-center gap-4 md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-                <Card skeleton header={<></>} subHeader={<></>} />
-                <Card skeleton header={<></>} subHeader={<></>} />
-                <Card skeleton header={<></>} subHeader={<></>} />
-                <Card skeleton header={<></>} subHeader={<></>} />
-                <Card skeleton header={<></>} subHeader={<></>} />
-                <Card skeleton header={<></>} subHeader={<></>} />
-                <Card skeleton header={<></>} subHeader={<></>} />
-                <Card skeleton header={<></>} subHeader={<></>} />
-              </div>
-            ) : (
-              <div className="flex flex-col gap-12">
-                {groupedTokens.map(({ config, tokenDatas }) => (
-                  <div key={config.name} className="flex flex-col gap-6">
-                    <div className="flex items-center gap-3">
-                      <div className="text-2xl text-light-0">
-                        {config.displayName}
-                      </div>
-                      <div className="text-xl">{tokenDatas.length}</div>
-                    </div>
+        {
+          {
+            activity: <Activity user={walletId} />,
+            browse:
+              tokenQuery.isFetched && groupedTokens.length === 0 ? (
+                <div className="my-40 flex w-full flex-col items-center justify-center gap-1">
+                  <GlyphLargeClose />
+                  <div className="mt-4 text-medium-4">
+                    No results at this moment...
+                  </div>
+                  <ButtonSmall onClick={() => tokenQuery.refetch()}>
+                    Retry
+                  </ButtonSmall>
+                </div>
+              ) : (
+                <div className="mx-auto mt-12 px-10">
+                  {!tokenQuery.isFetched ? (
                     <div className="flex flex-wrap justify-center gap-4 md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-                      {tokenDatas.map((tokenData) => (
-                        <Card
-                          key={`${tokenData.tokenManager?.pubkey.toString()}-${tokenData.tokenAccount?.pubkey.toString()}`}
-                          className={`cursor-pointer ${
-                            isSelected(tokenData, selectedTokens)
-                              ? 'border-[1px] border-secondary'
-                              : ''
-                          }`}
-                          css={css`
-                            box-shadow: ${isSelected(tokenData, selectedTokens)
-                              ? `0px 0px 30px ${config.colors.accent}`
-                              : ''};
-                          `}
-                          onClick={() => {
-                            if (isSelected(tokenData, selectedTokens)) {
-                              setSelectedTokens(
-                                selectedTokens.filter(
-                                  (t) =>
-                                    t.tokenAccount?.parsed.mint.toString() !==
-                                    tokenData.tokenAccount?.parsed.mint.toString()
-                                )
-                              )
-                            } else if (elligibleForRent(config, tokenData)) {
-                              setSelectedTokens([...selectedTokens, tokenData])
-                            } else {
-                              notify({
-                                message: 'Not elligible',
-                                description:
-                                  'This token is not ellgibile for rent!',
-                              })
-                            }
-                          }}
-                          hero={<NFT tokenData={tokenData} />}
-                          header={<NFTHeader tokenData={tokenData} />}
-                          content={
-                            tokenData.tokenManager ? (
-                              {
-                                [TokenManagerState.Initialized]: <></>,
-                                [TokenManagerState.Issued]: (
-                                  <div className="flex h-full w-full flex-row items-center justify-between text-sm">
-                                    <NFTIssuerInfo tokenData={tokenData} />
-                                  </div>
-                                ),
-                                [TokenManagerState.Claimed]: (
-                                  <div className="flex h-full flex-row justify-between text-sm">
-                                    <NFTIssuerInfo tokenData={tokenData} />
-                                    <NFTRevokeButton tokenData={tokenData} />
-                                  </div>
-                                ),
-                                [TokenManagerState.Invalidated]: <></>,
-                              }[
-                                tokenData?.tokenManager?.parsed
-                                  .state as TokenManagerState
-                              ]
-                            ) : elligibleForRent(config, tokenData) ? (
-                              <div className="flex h-full items-end justify-end">
-                                <ButtonSmall
-                                  disabled={!walletId}
-                                  className="inline-block flex-none px-4 py-2 text-lg"
-                                  onClick={async () => {
-                                    if (elligibleForRent(config, tokenData)) {
-                                      setSelectedTokens([
-                                        ...selectedTokens,
-                                        tokenData,
-                                      ])
-                                    } else {
-                                      notify({
-                                        message: 'Not elligible',
-                                        description:
-                                          'This token is not ellgibile for rent!',
-                                      })
-                                    }
-                                  }}
-                                >
-                                  Select
-                                </ButtonSmall>
-                              </div>
-                            ) : (
-                              <></>
-                            )
-                          }
-                        />
+                      <Card skeleton header={<></>} subHeader={<></>} />
+                      <Card skeleton header={<></>} subHeader={<></>} />
+                      <Card skeleton header={<></>} subHeader={<></>} />
+                      <Card skeleton header={<></>} subHeader={<></>} />
+                      <Card skeleton header={<></>} subHeader={<></>} />
+                      <Card skeleton header={<></>} subHeader={<></>} />
+                      <Card skeleton header={<></>} subHeader={<></>} />
+                      <Card skeleton header={<></>} subHeader={<></>} />
+                    </div>
+                  ) : (
+                    <div className="flex flex-col gap-12">
+                      {groupedTokens.map(({ config, tokenDatas }) => (
+                        <div key={config.name} className="flex flex-col gap-6">
+                          <div className="flex items-center gap-3">
+                            <div className="text-2xl text-light-0">
+                              {config.displayName}
+                            </div>
+                            <div className="text-xl">{tokenDatas.length}</div>
+                          </div>
+                          <div className="flex flex-wrap justify-center gap-4 md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+                            {tokenDatas.map((tokenData) => (
+                              <Card
+                                key={`${tokenData.tokenManager?.pubkey.toString()}-${tokenData.tokenAccount?.pubkey.toString()}`}
+                                className={`cursor-pointer ${
+                                  isSelected(tokenData, selectedTokens)
+                                    ? 'border-[1px] border-secondary'
+                                    : ''
+                                }`}
+                                css={css`
+                                  box-shadow: ${isSelected(
+                                    tokenData,
+                                    selectedTokens
+                                  )
+                                    ? `0px 0px 30px ${config.colors.accent}`
+                                    : ''};
+                                `}
+                                onClick={() => {
+                                  if (isSelected(tokenData, selectedTokens)) {
+                                    setSelectedTokens(
+                                      selectedTokens.filter(
+                                        (t) =>
+                                          t.tokenAccount?.parsed.mint.toString() !==
+                                          tokenData.tokenAccount?.parsed.mint.toString()
+                                      )
+                                    )
+                                  } else if (
+                                    elligibleForRent(config, tokenData)
+                                  ) {
+                                    setSelectedTokens([
+                                      ...selectedTokens,
+                                      tokenData,
+                                    ])
+                                  } else {
+                                    notify({
+                                      message: 'Not elligible',
+                                      description:
+                                        'This token is not ellgibile for rent!',
+                                    })
+                                  }
+                                }}
+                                hero={<NFT tokenData={tokenData} />}
+                                header={<NFTHeader tokenData={tokenData} />}
+                                content={
+                                  tokenData.tokenManager ? (
+                                    {
+                                      [TokenManagerState.Initialized]: <></>,
+                                      [TokenManagerState.Issued]: (
+                                        <div className="flex h-full w-full flex-row items-center justify-between text-sm">
+                                          <NFTIssuerInfo
+                                            tokenData={tokenData}
+                                          />
+                                        </div>
+                                      ),
+                                      [TokenManagerState.Claimed]: (
+                                        <div className="flex h-full flex-row justify-between text-sm">
+                                          <NFTIssuerInfo
+                                            tokenData={tokenData}
+                                          />
+                                          <NFTRevokeButton
+                                            tokenData={tokenData}
+                                          />
+                                        </div>
+                                      ),
+                                      [TokenManagerState.Invalidated]: <></>,
+                                    }[
+                                      tokenData?.tokenManager?.parsed
+                                        .state as TokenManagerState
+                                    ]
+                                  ) : elligibleForRent(config, tokenData) ? (
+                                    <div className="flex h-full items-end justify-end">
+                                      <ButtonSmall
+                                        disabled={!walletId}
+                                        className="inline-block flex-none px-4 py-2 text-lg"
+                                        onClick={async () => {
+                                          if (
+                                            elligibleForRent(config, tokenData)
+                                          ) {
+                                            setSelectedTokens([
+                                              ...selectedTokens,
+                                              tokenData,
+                                            ])
+                                          } else {
+                                            notify({
+                                              message: 'Not elligible',
+                                              description:
+                                                'This token is not ellgibile for rent!',
+                                            })
+                                          }
+                                        }}
+                                      >
+                                        Select
+                                      </ButtonSmall>
+                                    </div>
+                                  ) : (
+                                    <></>
+                                  )
+                                }
+                              />
+                            ))}
+                          </div>
+                        </div>
                       ))}
                     </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
+                  )}
+                </div>
+              ),
+          }[pane]
+        }
       </>
     </>
   )

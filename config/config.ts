@@ -595,6 +595,8 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         'Ajp7uzkyPUU35pGdkjZd9Gbe4zgDQXterWY8ZzvP4sCk', // boat
         '8m4TTZz3RsDVakDSwn7T89GyButxLiMqn2zq7DWfANu7', // cat, cow, dog
         '5B9AwfGpR5GRYTipUrFuvishUmPA86R5E1JcGodEsPq1', // fishing rod
+        'CDNsHymcJadDkoXxzhpDe2i6723ezm15QZqkEP91uXij', // harverster 2
+        'DhHpYwT9oy75BB8XXb8Fz6HBLxktwqc1yhUPvcCg5GPB', // gun 2
       ],
     },
     indexMetadataDisabled: true,
@@ -702,6 +704,56 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         uri: 'https://www.magiceden.io/item-details/4r9jMVm5rXdiCLa2oMLkV2ecL3wmmcoFtsMUJJoum38r',
       },
     ],
+    marketplaceRate: 'days',
+  },
+  solset: {
+    name: 'solset',
+    displayName: 'Solset',
+    type: 'Collection',
+    websiteUrl: 'https://solset.io',
+    logoImage: '/logos/solset.png',
+    hero: '/logos/solset-hero.png',
+    colors: {
+      accent: '#FCB316',
+      glow: '#FCB316',
+    },
+    description:
+      'Solset.io is a plug and play experience that works out of the box and offers sniping speed and precision with a simple and effective user interface. Set your snipes and forget about them until you get notified about your purchases through telegram. Welcome to the new breed of on chain snipers on Solana, welcome to Solset.io.',
+    twitterHandle: '@solset_io',
+    socialLinks: [
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/solset ',
+      },
+      {
+        icon: 'web',
+        link: 'https://solset.io/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/solset_io',
+      },
+    ],
+    badges: [{ badgeType: 'recent' }],
+    filter: {
+      type: 'creators',
+      value: ['GUzQipbCSFz77ZhskMzG9VhDJ7HGioQv4dPpJ6id2ZX2'],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '6 weeks',
+          value: 3629000,
+        },
+      },
+    },
     marketplaceRate: 'days',
   },
   psyker: {
@@ -1152,6 +1204,162 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         maxDurationAllowed: {
           displayText: '4 weeks',
           value: 2419200,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
+  droidcapital: {
+    name: 'droidcapital',
+    displayName: 'Droid Capital',
+    type: 'Guild',
+    websiteUrl: 'https://droidcapital.net/',
+    logoImage: '/logos/droid.png',
+    hero: '/logos/droid-hero.png',
+    colors: {
+      accent: '#981F2B',
+      glow: '#981F2B',
+    },
+    description:
+      'Droid Capital is a cross-chain hive, HQ, and home base for ALL entrepreneurial-degen-big-brains. We are an NFT based, 100% DAO managed "VC firm”',
+    twitterHandle: '@droidcapital',
+    socialLinks: [
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/droid',
+      },
+      {
+        icon: 'web',
+        link: 'https://droidcapital.net/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/droidcapital',
+      },
+    ],
+    badges: [{ badgeType: 'recent' }],
+    filter: {
+      type: 'issuer',
+      value: ['35qpvWNknAxGj5BEBjcUnNybYXdnNvGbuvWJS2rpaXMZ'],
+    },
+    rentalCard: {
+      invalidators: ['rate'],
+      invalidationOptions: {
+        visibilities: ['public'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: [
+          'So11111111111111111111111111111111111111112',
+          'GkywroLpkvYQc5dmFfd2RchVYycXZdaA5Uzix42iJdNo',
+        ],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '2 weeks',
+          value: 1209600,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
+  metakitchen: {
+    name: 'metakitchen',
+    displayName: 'metaKitchen',
+    type: 'Guild',
+    websiteUrl: 'https://metakitchen.io/',
+    logoImage: '/logos/metakitchen.png',
+    hero: '/logos/metakitchen-hero.png',
+    colors: {
+      accent: '#E7001B',
+      glow: '#E7001B',
+    },
+    description:
+      'metaKitchen bridges the digital and physical world of food into a Game-Fi ecosystem built for chefs, home cooks, and gamers. Through our love of food we are uniting the industry in a fully integrated culinary web3 platform.',
+    twitterHandle: '@meta_Kitchen',
+    socialLinks: [
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/ayTcwAeQpW',
+      },
+      {
+        icon: 'web',
+        link: 'https://metakitchen.io/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/meta_Kitchen',
+      },
+    ],
+    badges: [{ badgeType: 'recent' }],
+    filter: {
+      type: 'issuer',
+      value: ['EFNxcRU6eidLMaVj7ZL5ikA6BqaXWYpEhaGa2hQvFAV3'],
+    },
+    rentalCard: {
+      invalidators: ['duration'],
+      invalidationOptions: {
+        visibilities: ['public'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: [
+          'So11111111111111111111111111111111111111112',
+          '7BPCwgL97UMWcSuyUmDdNTzGnDvruyfGKTmUaSbLzohP',
+        ],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
+  solset: {
+    name: 'solset',
+    displayName: 'Solset',
+    type: 'Guild',
+    websiteUrl: 'https://solset.io',
+    logoImage: '/logos/solset.png',
+    hero: '/logos/solset-hero.png',
+    colors: {
+      accent: '#FCB316',
+      glow: '#FCB316',
+    },
+    description:
+      'Solset.io is a plug and play experience that works out of the box and offers sniping speed and precision with a simple and effective user interface. Set your snipes and forget about them until you get notified about your purchases through telegram. Welcome to the new breed of on chain snipers on Solana, welcome to Solset.io.',
+    twitterHandle: '@solset_io',
+    socialLinks: [
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/solset ',
+      },
+      {
+        icon: 'web',
+        link: 'https://solset.io/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/solset_io',
+      },
+    ],
+    badges: [{ badgeType: 'recent' }],
+    filter: {
+      type: 'issuer',
+      value: ['SLSETzAUois5Wfy1jAxEDPkWiwmLgRcsDSUV6GRGoR2'],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '6 weeks',
+          value: 3629000,
         },
       },
     },
