@@ -1188,7 +1188,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     badges: [{ badgeType: 'recent' }],
     filter: {
       type: 'issuer',
-      value: ['C88kKdEmTrCh43GC1w3BUFLsW3oKMEWWBGCyweQAaEYa'],
+      value: ['35qpvWNknAxGj5BEBjcUnNybYXdnNvGbuvWJS2rpaXMZ'],
     },
     rentalCard: {
       invalidators: ['rate'],
@@ -1205,6 +1205,59 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         maxDurationAllowed: {
           displayText: '2 weeks',
           value: 1209600,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
+  metakitchen: {
+    name: 'metakitchen',
+    displayName: 'metaKitchen',
+    type: 'Guild',
+    websiteUrl: 'https://metakitchen.io/',
+    logoImage: '/logos/metakitchen.png',
+    hero: '/logos/metakitchen-hero.png',
+    colors: {
+      accent: '#E7001B',
+      glow: '#E7001B',
+    },
+    description:
+      'metaKitchen bridges the digital and physical world of food into a Game-Fi ecosystem built for chefs, home cooks, and gamers. Through our love of food we are uniting the industry in a fully integrated culinary web3 platform.',
+    twitterHandle: '@meta_Kitchen',
+    socialLinks: [
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/ayTcwAeQpW',
+      },
+      {
+        icon: 'web',
+        link: 'https://metakitchen.io/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/meta_Kitchen',
+      },
+    ],
+    badges: [{ badgeType: 'recent' }],
+    filter: {
+      type: 'issuer',
+      value: ['EFNxcRU6eidLMaVj7ZL5ikA6BqaXWYpEhaGa2hQvFAV3'],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration'],
+      invalidationOptions: {
+        visibilities: ['public'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: [
+          'So11111111111111111111111111111111111111112',
+          '7BPCwgL97UMWcSuyUmDdNTzGnDvruyfGKTmUaSbLzohP',
+        ],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
         },
       },
     },

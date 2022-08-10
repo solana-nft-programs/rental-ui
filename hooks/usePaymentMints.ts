@@ -48,6 +48,12 @@ export const PAYMENT_MINTS: PaymentMintInfo[] = [
       'https://raw.githubusercontent.com/LinYu1992/Droid_Capital_Token/main/Droid_coin_tiny_1.png',
     decimals: 9,
   },
+  {
+    mint: '7BPCwgL97UMWcSuyUmDdNTzGnDvruyfGKTmUaSbLzohP',
+    symbol: 'CHEF',
+    image: 'https://metakitchen.io/static/media/mk.66f4827037442397afe6.jpeg',
+    decimals: 0,
+  },
 ]
 
 export const WRAPPED_SOL_MINT = 'So11111111111111111111111111111111111111112'
