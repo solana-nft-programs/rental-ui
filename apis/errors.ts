@@ -254,7 +254,7 @@ export const nativeErrors: ErrorCode[] = [
     message:
       'Deprecated: The API being used is deprecated and should no longer be used',
   },
-]
+].reverse()
 
 export const handleError = (
   e: any,
