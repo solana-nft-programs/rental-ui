@@ -1157,4 +1157,57 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     },
     marketplaceRate: 'days',
   },
+  droidcapital: {
+    name: 'droidcapital',
+    displayName: 'Droid Capital',
+    type: 'Guild',
+    websiteUrl: 'https://droidcapital.net/',
+    logoImage: '/logos/droid.png',
+    hero: '/logos/droid-hero.png',
+    colors: {
+      accent: '#981F2B',
+      glow: '#981F2B',
+    },
+    description:
+      'Droid Capital is a cross-chain hive, HQ, and home base for ALL entrepreneurial-degen-big-brains. We are an NFT based, 100% DAO managed "VC firm”',
+    twitterHandle: '@droidcapital',
+    socialLinks: [
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/droid',
+      },
+      {
+        icon: 'web',
+        link: 'https://droidcapital.net/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/droidcapital',
+      },
+    ],
+    badges: [{ badgeType: 'recent' }],
+    filter: {
+      type: 'issuer',
+      value: ['C88kKdEmTrCh43GC1w3BUFLsW3oKMEWWBGCyweQAaEYa'],
+    },
+    rentalCard: {
+      invalidators: ['rate'],
+      invalidationOptions: {
+        visibilities: ['public'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: [
+          'So11111111111111111111111111111111111111112',
+          'GkywroLpkvYQc5dmFfd2RchVYycXZdaA5Uzix42iJdNo',
+        ],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '2 weeks',
+          value: 1209600,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
 }
