@@ -1,5 +1,6 @@
-import { tryPublicKey } from '@cardinal/common'
+import { shortPubKey, tryPublicKey } from '@cardinal/common'
 import { DisplayAddress } from '@cardinal/namespaces-components'
+import type { PublicKey } from '@solana/web3.js'
 import { GlyphLargeClose } from 'assets/GlyphLargeClose'
 import { ButtonSmall } from 'common/ButtonSmall'
 import { getRentalRateDisplayText } from 'common/NFTIssuerInfo'
@@ -17,9 +18,9 @@ import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useState } from 'react'
 
-export const Activity = () => {
+export const Activity = ({ user }: { user?: PublicKey }) => {
   const { config } = useProjectConfig()
-  const claimEvents = useClaimEventsForConfig()
+  const claimEvents = useClaimEventsForConfig(false, user)
   return (
     <div className="mx-auto mt-12 px-10">
       <div className="w-full overflow-x-scroll rounded-xl border border-border p-4">
@@ -68,7 +69,8 @@ export const Activity = () => {
             <div className="my-40 flex w-full flex-col items-center justify-center gap-1">
               <GlyphLargeClose />
               <div className="mt-4 text-medium-4">
-                No transactions have been recorded for {config.displayName}
+                No transactions have been recorded for{' '}
+                {user ? shortPubKey(user) : config.displayName}
               </div>
             </div>
           )}

@@ -50,9 +50,17 @@ export const nativeErrors: ErrorCode[] = [
     code: 'Attempt to debit an account but found no record of a prior credit',
     message: 'Wallet has never had any sol before. Try adding sol first.',
   },
+  {
+    code: 'Provided owner is not allowed',
+    message: 'Token account is already created for this user',
+  },
+  {
+    code: '0x3',
+    message: 'Account not associated with this Mint',
+  },
   // token program errors
   {
-    code: '1',
+    code: 'insufficient lamports',
     message:
       'Insufficient funds. User does not have enough balance of token to complete the transaction',
   },
@@ -317,6 +325,8 @@ export const handleError = (
       },
     ],
   ]
+
+  console.log('Matched errors:', matchedErrors)
 
   return (
     matchedErrors.find((e) => e.programMatch && e.errorMatch)?.errorMatch ||
