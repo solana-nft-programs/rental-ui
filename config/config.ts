@@ -1244,7 +1244,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       value: ['EFNxcRU6eidLMaVj7ZL5ikA6BqaXWYpEhaGa2hQvFAV3'],
     },
     rentalCard: {
-      invalidators: ['rate', 'duration'],
+      invalidators: ['duration'],
       invalidationOptions: {
         visibilities: ['public'],
         durationOptions: ['hours', 'days', 'weeks'],
