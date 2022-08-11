@@ -60,7 +60,7 @@ export const nativeErrors: ErrorCode[] = [
   },
   // token program errors
   {
-    code: 'insufficient lamports',
+    code: '0x1',
     message:
       'Insufficient funds. User does not have enough balance of token to complete the transaction',
   },
@@ -326,7 +326,8 @@ export const handleError = (
     ],
   ]
 
-  console.log('Matched errors:', matchedErrors)
+  console.log('Matched errors:')
+  matchedErrors.map((e) => console.log(e.errorMatch, e.programMatch))
 
   return (
     matchedErrors.find((e) => e.programMatch && e.errorMatch)?.errorMatch ||
