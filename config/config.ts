@@ -92,111 +92,6 @@ export type ProjectConfig = {
 }
 
 export const projectConfigs: { [key: string]: ProjectConfig } = {
-  rooniverse: {
-    name: 'rooniverse',
-    displayName: 'Rooniverse',
-    type: 'Collection',
-    websiteUrl: 'https://www.playrooniverse.com/',
-    logoImage: '/logos/rooniverse.png',
-    hero: '/logos/rooniverse-hero.png',
-    colors: {
-      accent: '#b338ef',
-      // #1abfdd alternative
-      glow: '#b338ef',
-    },
-    description:
-      'Enter the world of savage, tribal Roos who fight to the death for sport and glory! Collect resources across lands, battle with friends, and build your own corner of Rooniverse! Adopt a Roo to access our Mini-Rooyale pre-alpha demo sessions!',
-    twitterHandle: '@playrooniverse',
-    socialLinks: [
-      {
-        icon: 'discord',
-        link: 'https://discord.gg/rooniverse',
-      },
-      {
-        icon: 'web',
-        link: 'https://www.playrooniverse.com/',
-      },
-      {
-        icon: 'twitter',
-        link: 'https://twitter.com/playrooniverse',
-      },
-    ],
-    badges: [{ badgeType: 'recent' }],
-    filter: {
-      type: 'creators',
-      value: [
-        '3v6SQ2s8w5TYYzXeS5QLn2AD3sfwQLsg9HM3W2t2QDqE',
-        'FzeXx41UqWRqYxic3ftehHSTeq5bmaruYbsMrBn4b9qv',
-      ],
-    },
-    rentalCard: {
-      invalidators: ['rate', 'duration'],
-      invalidationOptions: {
-        visibilities: ['public', 'private'],
-        durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
-        paymentMints: ['So11111111111111111111111111111111111111112'],
-        showClaimRentalReceipt: false,
-        setClaimRentalReceipt: false,
-        maxDurationAllowed: {
-          displayText: '12 weeks',
-          value: 7258000,
-        },
-      },
-    },
-    marketplaceRate: 'days',
-  },
-  hoa: {
-    name: 'hoa',
-    displayName: 'Homeowners Association (Parcl)',
-    type: 'Collection',
-    websiteUrl: 'https://www.hoa.house/',
-    hero: '/logos/parcl-hero.png',
-    description:
-      'Homeowners Association (HOA) is an NFT project by Parcl, consisting of 7,777 unique combinations of iconic homes from four unique cities.',
-    logoImage: '/logos/parcl.gif',
-    colors: {
-      accent: '#10abf0',
-      glow: '#005eff',
-    },
-    twitterHandle: '@parcl',
-    socialLinks: [
-      {
-        icon: 'discord',
-        link: 'https://discord.gg/parcl',
-      },
-      {
-        icon: 'web',
-        link: 'https://www.hoa.house/',
-      },
-      {
-        icon: 'twitter',
-        link: 'https://twitter.com/parcl',
-      },
-    ],
-    badges: [{ badgeType: 'recent' }],
-    filter: {
-      type: 'creators',
-      value: ['Cp3Fn6azbwtSG9LV1BWtQcAkQQiaQWDkc2LcqwaEuLuq'],
-    },
-    rentalCard: {
-      invalidators: ['rate'],
-      invalidationOptions: {
-        visibilities: ['public', 'private'],
-        durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
-        paymentMints: ['So11111111111111111111111111111111111111112'],
-        showClaimRentalReceipt: false,
-        setClaimRentalReceipt: false,
-        maxDurationAllowed: {
-          displayText: '12 weeks',
-          value: 7258000,
-        },
-      },
-    },
-    marketplaceRate: 'days',
-    airdrops: [],
-  },
   miniroyale: {
     name: 'miniroyale',
     displayName: 'Mini Royale',
@@ -307,6 +202,57 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         uri: 'https://tokens.miniroyale.io/token-data?expires=4806495451&id=904c950a-309b-4fee-9bd4-504771ed2df9&token=BhknUWE6vXAElVhxWKE-YX6_4_acumpPP8q3ZQnsvR8',
       },
     ],
+  },
+  hoa: {
+    name: 'hoa',
+    displayName: 'Homeowners Association (Parcl)',
+    type: 'Collection',
+    websiteUrl: 'https://www.hoa.house/',
+    hero: '/logos/parcl-hero.png',
+    description:
+      'Homeowners Association (HOA) is an NFT project by Parcl, consisting of 7,777 unique combinations of iconic homes from four unique cities.',
+    logoImage: '/logos/parcl.gif',
+    colors: {
+      accent: '#10abf0',
+      glow: '#005eff',
+    },
+    twitterHandle: '@parcl',
+    socialLinks: [
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/parcl',
+      },
+      {
+        icon: 'web',
+        link: 'https://www.hoa.house/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/parcl',
+      },
+    ],
+    badges: [{ badgeType: 'recent' }],
+    filter: {
+      type: 'creators',
+      value: ['Cp3Fn6azbwtSG9LV1BWtQcAkQQiaQWDkc2LcqwaEuLuq'],
+    },
+    rentalCard: {
+      invalidators: ['rate'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+    airdrops: [],
   },
   portals: {
     name: 'portals',
@@ -519,6 +465,109 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     },
     rentalCard: {
       invalidators: ['rate', 'duration', 'manual'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
+  'serum-surfers': {
+    name: 'serum-surfers',
+    displayName: 'Serum Surfers',
+    type: 'Collection',
+    websiteUrl: 'https://www.projectserum.com/',
+    badges: [{ badgeType: 'recent' }],
+    logoImage: '/logos/serum-surfers.png',
+    hero: '/logos/serum-surfers-hero.png',
+    description:
+      'The Serum Surfers are a collection of 5,000 generative NFTs minted and launched on Solana through Burnt Finance’s Ignition Launchpad. They are a special homage to the Solana network’s inception, where founders Raj Gokal and Anatoly Yakovenko surfed alongside many of the early employees at Solana Beach, California. The Serum Surfers are the centerpiece of the quickly growing Serum NFT Ecosystem, and a key access ticket to everything it has in store!',
+    twitterHandle: '@SurfersDAO',
+    socialLinks: [
+      {
+        icon: 'discord',
+        link: 'https://discord.com/invite/projectserum',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/SurfersDAO',
+      },
+      {
+        icon: 'web',
+        link: 'https://www.projectserum.com/',
+      },
+    ],
+    colors: {
+      accent: '#49cbde',
+      glow: '#49cbde',
+    },
+    filter: {
+      type: 'creators',
+      value: ['5v3tpTWZmn8JCzTFVE3eZLLQhhqSLLmTcRR2DZ8Gx2JX'],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
+  rooniverse: {
+    name: 'rooniverse',
+    displayName: 'Rooniverse',
+    type: 'Collection',
+    websiteUrl: 'https://www.playrooniverse.com/',
+    logoImage: '/logos/rooniverse.png',
+    hero: '/logos/rooniverse-hero.png',
+    colors: {
+      accent: '#b338ef',
+      // #1abfdd alternative
+      glow: '#b338ef',
+    },
+    description:
+      'Enter the world of savage, tribal Roos who fight to the death for sport and glory! Collect resources across lands, battle with friends, and build your own corner of Rooniverse! Adopt a Roo to access our Mini-Rooyale pre-alpha demo sessions!',
+    twitterHandle: '@playrooniverse',
+    socialLinks: [
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/rooniverse',
+      },
+      {
+        icon: 'web',
+        link: 'https://www.playrooniverse.com/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/playrooniverse',
+      },
+    ],
+    filter: {
+      type: 'creators',
+      value: [
+        '3v6SQ2s8w5TYYzXeS5QLn2AD3sfwQLsg9HM3W2t2QDqE',
+        'FzeXx41UqWRqYxic3ftehHSTeq5bmaruYbsMrBn4b9qv',
+      ],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration'],
       invalidationOptions: {
         visibilities: ['public', 'private'],
         durationOptions: ['hours', 'days', 'weeks'],
