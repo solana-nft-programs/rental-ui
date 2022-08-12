@@ -152,7 +152,11 @@ export const Collections = () => {
                         />
                       </div>
                     }
-                    header={config.displayName}
+                    header={
+                      <div className="overflow-hidden text-ellipsis whitespace-nowrap">
+                        {config.displayName}
+                      </div>
+                    }
                     content={
                       <Stats
                         stats={[
