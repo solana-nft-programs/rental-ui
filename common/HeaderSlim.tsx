@@ -28,7 +28,7 @@ export const HeaderSlim: React.FC<Props> = ({ tabs, hideDashboard }: Props) => {
   const wallet = useWallet()
   const walletModal = useWalletModal()
   const { secondaryConnection, environment } = useEnvironmentCtx()
-  const { displayName } = useAddressName(
+  const { data: displayName } = useAddressName(
     secondaryConnection,
     wallet.publicKey ?? undefined
   )

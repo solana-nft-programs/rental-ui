@@ -35,7 +35,7 @@ export const RentalSuccessCard = ({
   const walletId = useWalletId()
   const { durationSeconds } = tokenData.timeInvalidator?.parsed || {}
   const { UTCNow } = useUTCNow()
-  const { displayName: issuerName, loadingName } = useAddressName(
+  const { data: issuerName, isFetching: loadingName } = useAddressName(
     connection,
     tokenData.tokenManager?.parsed.issuer
   )

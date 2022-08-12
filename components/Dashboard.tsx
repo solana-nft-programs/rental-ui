@@ -93,11 +93,11 @@ export const Dashboard = () => {
   const { config, setProjectConfig } = useProjectConfig()
   const userTokenDatas = useUserTokenData(config.filter)
   const [pane, setPane] = useState<PANE_OPTIONS>('browse')
-  const { addressImage, loadingImage } = useAddressImage(
+  const { data: addressImage, isFetching: loadingImage } = useAddressImage(
     secondaryConnection,
     walletId
   )
-  const { displayName, loadingName } = useAddressName(
+  const { data: displayName, isFetching: loadingName } = useAddressName(
     secondaryConnection,
     walletId
   )

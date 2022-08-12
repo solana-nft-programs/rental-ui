@@ -51,11 +51,9 @@ export const NFTHeader: React.FC<NFTHeaderProps> = ({
       </div>
       <div className="text-sm text-light-2">
         <DisplayAddress
+          dark
           connection={secondaryConnection}
           address={tokenData.tokenManager?.parsed.issuer || undefined}
-          height="18px"
-          width="100px"
-          dark={true}
         />
       </div>
     </div>
