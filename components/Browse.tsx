@@ -224,10 +224,28 @@ export const Browse = () => {
     selectedGroup === 1,
     paymentMintInfos.data ?? {}
   )
+
+  const onlySolForCollection = (tokens: TokenData[]) => {
+    return tokens.filter((token) => {
+      if (
+        config.type === 'Collection' &&
+        token.timeInvalidator?.parsed.extensionPaymentMint
+      ) {
+        return (
+          token.timeInvalidator.parsed.extensionPaymentMint.toString() ===
+          'So11111111111111111111111111111111111111112'
+        )
+      }
+      return true
+    })
+  }
+
   // safety check due to stale data stuck in the index
-  const filteredAndSortedTokens = filterTokens(
-    attrFilteredAndSortedTokens,
-    tokenSections[selectedGroup]?.filter
+  const filteredAndSortedTokens = onlySolForCollection(
+    filterTokens(
+      attrFilteredAndSortedTokens,
+      tokenSections[selectedGroup]?.filter
+    )
   )
   return (
     <>
