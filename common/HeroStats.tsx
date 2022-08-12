@@ -27,22 +27,11 @@ const calculateFloorPrice = (
     | { [name: string]: Pick<splToken.MintInfo, 'decimals'> }
     | undefined
 ): number => {
-  const onlyRateTokens = (tokenData: Pick<TokenData, 'timeInvalidator'>) => {
-    if (config.marketplaceRate) {
-      return (
-        tokenData.timeInvalidator?.parsed?.durationSeconds?.toNumber() === 0
-      )
-    } else {
-      return false
-    }
-  }
-
   const rentalPrices = tokenDatas
     .filter(
       (tokenData) =>
         tokenData.timeInvalidator?.parsed &&
         tokenData.tokenManager?.parsed.state === TokenManagerState.Issued &&
-        onlyRateTokens(tokenData) &&
         !isPrivateListing(tokenData)
     )
     .map((tokenData) => {
