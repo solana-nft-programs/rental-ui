@@ -336,7 +336,7 @@ export const useBrowseAvailableTokenDatas = (
           tokenDatas = tokenDatas.filter((token) => {
             if (
               token.timeInvalidator?.parsed.extensionPaymentMint ||
-              token.claimApprover?.parsed.paymentMint
+              token.claimApprover?.parsed?.paymentMint
             ) {
               return (
                 token.timeInvalidator?.parsed.extensionPaymentMint?.toString() ===

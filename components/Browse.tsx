@@ -230,7 +230,7 @@ export const Browse = () => {
       if (
         config.type === 'Collection' &&
         (token.timeInvalidator?.parsed.extensionPaymentMint ||
-          token.claimApprover?.parsed.paymentMint)
+          token.claimApprover?.parsed?.paymentMint)
       ) {
         return (
           token.timeInvalidator?.parsed.extensionPaymentMint?.toString() ===
