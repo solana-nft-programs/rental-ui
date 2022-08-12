@@ -283,33 +283,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         link: 'https://twitter.com/_portals_',
       },
     ],
-    // sections: [
-    // {
-    //   header: 'Featured',
-    //   description: 'Cardinal Room Design Competition',
-    //   icon: 'featured',
-    //   filter: {
-    //     type: 'issuer',
-    //     value: ['5grvMeoBqv5ZdHq9JMy5RrxLPNAt1nzc9cpqYWFUwizz'],
-    //   },
-    // },
-    // {
-    //   header: 'Listed',
-    //   icon: 'listed',
-    //   filter: {
-    //     type: 'state',
-    //     value: [TokenManagerState.Issued.toString()],
-    //   },
-    // },
-    // {
-    //   header: 'Claimed',
-    //   icon: 'time',
-    //   filter: {
-    //     type: 'state',
-    //     value: [TokenManagerState.Claimed.toString()],
-    //   },
-    // },
-    // ],
     filter: {
       type: 'creators',
       value: ['5grvMeoBqv5ZdHq9JMy5RrxLPNAt1nzc9cpqYWFUwizz'],
@@ -350,14 +323,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       },
     ],
     marketplaceRate: 'days',
-    // allowOneByCreators: [
-    //   {
-    //     address: '41qJ9dJemw8mrry2BD1wU6B2aHXN4RoNY79bS7xwDPhM',
-    //     enforceTwitter: true,
-    //     preventMultipleClaims: true,
-    //     disableReturn: false,
-    //   },
-    // ],
   },
   smb: {
     name: 'smb',
@@ -1115,6 +1080,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     type: 'Guild',
     websiteUrl: 'https://fatcatscapital.com/',
     logoImage: 'logos/fatcats.png',
+    logoPadding: true,
     colors: {
       accent: '#397fd6',
       glow: '#397fd6',
@@ -1148,6 +1114,56 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         durationOptions: ['hours', 'days', 'weeks'],
         invalidationTypes: ['reissue'],
         paymentMints: ['FdviznPoMEakdJ37fikNxhoscyruUHSHNkKyvntSqbuo'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
+  ['monkettes']: {
+    name: 'monkettes',
+    displayName: 'The Monkettes',
+    type: 'Guild',
+    websiteUrl: 'https://monkettes.io/',
+    logoImage: 'logos/monkettes.png',
+    logoPadding: true,
+    hero: 'logos/monkettes-hero.png',
+    colors: {
+      accent: '#fe5d9f',
+      glow: '#fe5d9f',
+    },
+    description:
+      'Be part of one of the most knowledgeable communities on Solana by holding a Monkette. Rent one out today!',
+    socialLinks: [
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/MonkettesNFT',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.com/invite/monkettes',
+      },
+      {
+        icon: 'web',
+        link: 'https://monkettes.io/',
+      },
+    ],
+    badges: [{ badgeType: 'recent' }],
+    filter: {
+      type: 'issuer',
+      value: ['22aCNyykzcpX6r1ThuZLoqgMHSzsByBBz5bbNkqpMP4q'],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration'],
+      invalidationOptions: {
+        visibilities: ['public'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: ['8o66EVAf4u2Hr21m2tuRrPtEXFPLr8G8aL1ETStP8fDu'],
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
         maxDurationAllowed: {
