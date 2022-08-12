@@ -203,56 +203,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       },
     ],
   },
-  nftsoloist: {
-    name: 'nftsoloist',
-    displayName: 'NFTSoloist Genesis Pass',
-    type: 'Collection',
-    websiteUrl: 'https://nftnerds.ai/',
-    logoImage: '/logos/nftsoloist.png',
-    hero: '/logos/nftsoloist-hero.png',
-    description:
-      '250 Genesis Passes for early supporters of NFTSoloist. Grants full access to https://nftsoloist.ai',
-    colors: {
-      accent: '#8863d4',
-      glow: '#8863d4',
-    },
-    twitterHandle: '@NFTNerdsAI',
-    socialLinks: [
-      {
-        icon: 'discord',
-        link: 'https://discord.com/invite/nftnerds',
-      },
-      {
-        icon: 'web',
-        link: 'https://www.hoa.house/',
-      },
-      {
-        icon: 'twitter',
-        link: 'https://twitter.com/NFTNerdsAI',
-      },
-    ],
-    badges: [{ badgeType: 'recent' }],
-    filter: {
-      type: 'creators',
-      value: ['FpJ3h2dzuvmdedmuV4ECz8S31RacnCxiw2ykXNhMntVt'],
-    },
-    rentalCard: {
-      invalidators: ['rate', 'duration'],
-      invalidationOptions: {
-        visibilities: ['public', 'private'],
-        durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
-        paymentMints: ['So11111111111111111111111111111111111111112'],
-        showClaimRentalReceipt: false,
-        setClaimRentalReceipt: false,
-        maxDurationAllowed: {
-          displayText: '12 weeks',
-          value: 7258000,
-        },
-      },
-    },
-    marketplaceRate: 'days',
-  },
   hoa: {
     name: 'hoa',
     displayName: 'Homeowners Association (Parcl)',
@@ -281,7 +231,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         link: 'https://twitter.com/parcl',
       },
     ],
-    badges: [{ badgeType: 'recent' }],
+    badges: [{ badgeType: 'trending' }],
     filter: {
       type: 'creators',
       value: ['Cp3Fn6azbwtSG9LV1BWtQcAkQQiaQWDkc2LcqwaEuLuq'],
@@ -478,6 +428,107 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         uri: 'https://arweave.net/JR_l_iOJVvVSiuySnFKsMbDtZ61deFwkr4-wch_TJzc',
       },
     ],
+    marketplaceRate: 'days',
+  },
+  nftsoloist: {
+    name: 'nftsoloist',
+    displayName: 'NFTSoloist Genesis Pass',
+    type: 'Collection',
+    websiteUrl: 'https://nftnerds.ai/',
+    logoImage: '/logos/nftsoloist.png',
+    hero: '/logos/nftsoloist-hero.png',
+    description:
+      '250 Genesis Passes for early supporters of NFTSoloist. Grants full access to https://nftsoloist.ai',
+    colors: {
+      accent: '#8863d4',
+      glow: '#8863d4',
+    },
+    twitterHandle: '@NFTNerdsAI',
+    socialLinks: [
+      {
+        icon: 'discord',
+        link: 'https://discord.com/invite/nftnerds',
+      },
+      {
+        icon: 'web',
+        link: 'https://www.hoa.house/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/NFTNerdsAI',
+      },
+    ],
+    badges: [{ badgeType: 'recent' }],
+    filter: {
+      type: 'creators',
+      value: ['FpJ3h2dzuvmdedmuV4ECz8S31RacnCxiw2ykXNhMntVt'],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
+  solrarity: {
+    name: 'solrarity',
+    displayName: 'SolRarity Rarikeys',
+    type: 'Collection',
+    websiteUrl: 'https://solrarity.app/',
+    logoImage: '/logos/solrarity.png',
+    logoPadding: true,
+    hero: '/logos/solrarity-hero.png',
+    description:
+      '2,600 unique Rarikeys allowing you to be part of SolRarity journey in the Solana ecosystem. Hold these precious keys to unlock access to premium tools and more...',
+    colors: {
+      accent: '#d40e99',
+      glow: '#d40e99',
+    },
+    twitterHandle: '@NFTNerdsAI',
+    socialLinks: [
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/solrarity',
+      },
+      {
+        icon: 'web',
+        link: 'https://solrarity.app/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/SolRarity_',
+      },
+    ],
+    badges: [{ badgeType: 'recent' }],
+    filter: {
+      type: 'creators',
+      value: ['53EmnGdMxnmNcaPUE6wJ2NHz6iUVpge4a7RViTdfb8Dq'],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
     marketplaceRate: 'days',
   },
   degenape: {
