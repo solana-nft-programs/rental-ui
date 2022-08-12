@@ -596,6 +596,56 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     },
     marketplaceRate: 'days',
   },
+  scalpempire: {
+    name: 'scalpempire',
+    displayName: 'Scalp Empire',
+    type: 'Collection',
+    websiteUrl: 'https://www.scalp-empire.com/',
+    logoImage: '/logos/scalpempire.png',
+    hero: '/logos/scalpempire-hero.png',
+    colors: {
+      accent: '#93c34d',
+      glow: '#93c34d',
+    },
+    description:
+      "Scalp Empire Nestor Collection is all about Nestor's journey in-between realms. From Midgar to Asgard, you will see him evolve in different shapes, colors, and universes. This NFT will give you access to a collection of tools made by Scalp Empire. We have everything that will help you trade NFTs.",
+    twitterHandle: '@ScalpEmpireNFT',
+    socialLinks: [
+      {
+        icon: 'discord',
+        link: 'https://discord.com/invite/scalpempire',
+      },
+      {
+        icon: 'web',
+        link: 'https://www.scalp-empire.com/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/ScalpEmpireNFT',
+      },
+    ],
+    filter: {
+      type: 'creators',
+      value: ['5g3T8224Ha5as4Ho7tcRxsHQFr4pzeEa1wEtnir93m3t'],
+    },
+    badges: [{ badgeType: 'recent' }],
+    rentalCard: {
+      invalidators: ['rate', 'duration'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
   rooniverse: {
     name: 'rooniverse',
     displayName: 'Rooniverse',
