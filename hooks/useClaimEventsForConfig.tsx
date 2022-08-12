@@ -101,6 +101,29 @@ export const claimApproverFromIndexedClaimEvent = (
   }
 }
 
+const dedupeClaimEvents = (
+  claimEvents: IndexedClaimEvent[],
+  thresholdSeconds = 4
+) => {
+  return claimEvents.reduce(
+    (acc, e) =>
+      !acc.some(
+        (e2) =>
+          e.mint === e2.mint &&
+          e.issuer === e2.issuer &&
+          e.recipient_token_account === e2.recipient_token_account &&
+          Math.abs(
+            new Date(e.state_changed_at ?? 0).getTime() -
+              new Date(e2.state_changed_at ?? 0).getTime()
+          ) <=
+            thresholdSeconds * 1000 // 4 seconds
+      )
+        ? [...acc, e]
+        : acc,
+    [] as IndexedClaimEvent[]
+  )
+}
+
 const PAGE_SIZE = 10
 
 export const useClaimEventsForConfig = (
@@ -251,10 +274,13 @@ export const useClaimEventsForConfig = (
         'cardinal_claim_events'
       ] as IndexedClaimEvent[]
       trace.finish()
-      return indexedClaimEvents.map((e) => ({
-        ...e,
-        state_changed_at: `${e.state_changed_at}Z`,
-      }))
+
+      return dedupeClaimEvents(
+        indexedClaimEvents.map((e) => ({
+          ...e,
+          state_changed_at: `${e.state_changed_at}Z`,
+        }))
+      )
     },
     {
       refetchOnMount: false,
