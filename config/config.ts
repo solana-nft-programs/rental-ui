@@ -203,6 +203,56 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       },
     ],
   },
+  nftsoloist: {
+    name: 'nftsoloist',
+    displayName: 'NFTSoloist Genesis Pass',
+    type: 'Collection',
+    websiteUrl: 'https://nftnerds.ai/',
+    logoImage: '/logos/nftsoloist.png',
+    hero: '/logos/nftsoloist-hero.png',
+    description:
+      '250 Genesis Passes for early supporters of NFTSoloist. Grants full access to https://nftsoloist.ai',
+    colors: {
+      accent: '#8863d4',
+      glow: '#8863d4',
+    },
+    twitterHandle: '@NFTNerdsAI',
+    socialLinks: [
+      {
+        icon: 'discord',
+        link: 'https://discord.com/invite/nftnerds',
+      },
+      {
+        icon: 'web',
+        link: 'https://www.hoa.house/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/NFTNerdsAI',
+      },
+    ],
+    badges: [{ badgeType: 'recent' }],
+    filter: {
+      type: 'creators',
+      value: ['FpJ3h2dzuvmdedmuV4ECz8S31RacnCxiw2ykXNhMntVt'],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
   hoa: {
     name: 'hoa',
     displayName: 'Homeowners Association (Parcl)',
