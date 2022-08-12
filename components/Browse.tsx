@@ -229,11 +229,14 @@ export const Browse = () => {
     return tokens.filter((token) => {
       if (
         config.type === 'Collection' &&
-        token.timeInvalidator?.parsed.extensionPaymentMint
+        (token.timeInvalidator?.parsed.extensionPaymentMint ||
+          token.claimApprover?.parsed.paymentMint)
       ) {
         return (
-          token.timeInvalidator.parsed.extensionPaymentMint.toString() ===
-          'So11111111111111111111111111111111111111112'
+          token.timeInvalidator?.parsed.extensionPaymentMint?.toString() ===
+            'So11111111111111111111111111111111111111112' ||
+          token.claimApprover?.parsed.paymentMint.toString() ===
+            'So11111111111111111111111111111111111111112'
         )
       }
       return true

@@ -299,7 +299,7 @@ export const useBrowseAvailableTokenDatas = (
           { op: 'fetch-accounts' }
         )
 
-        const tokenDatas = tokenManagerDatas.map((tokenManagerData) => {
+        let tokenDatas = tokenManagerDatas.map((tokenManagerData) => {
           const timeInvalidatorId = tokenManagerData.parsed.invalidators.filter(
             (invalidator) =>
               accountsById[invalidator.toString()]?.owner?.toString() ===
@@ -332,6 +332,22 @@ export const useBrowseAvailableTokenDatas = (
           }
         })
         trace.finish()
+        if (config.type === 'Collection') {
+          tokenDatas = tokenDatas.filter((token) => {
+            if (
+              token.timeInvalidator?.parsed.extensionPaymentMint ||
+              token.claimApprover?.parsed.paymentMint
+            ) {
+              return (
+                token.timeInvalidator?.parsed.extensionPaymentMint?.toString() ===
+                  'So11111111111111111111111111111111111111112' ||
+                token.claimApprover?.parsed.paymentMint.toString() ===
+                  'So11111111111111111111111111111111111111112'
+              )
+            }
+            return true
+          })
+        }
         return tokenDatas
       } else {
         const trace = Sentry.startTransaction({
