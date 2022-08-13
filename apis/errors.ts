@@ -55,202 +55,208 @@ export const nativeErrors: ErrorCode[] = [
     message: 'Token account is already created for this user',
   },
   {
-    code: '0x3',
-    message: 'Account not associated with this Mint',
+    code: 'not associated with',
+    message: 'Account not associated with this mint',
   },
   // token program errors
   {
-    code: '0x1',
+    code: 'insufficient funds',
     message:
       'Insufficient funds. User does not have enough balance of token to complete the transaction',
   },
   {
-    code: '91',
+    code: 'not ellgible',
     message: 'Token is not ellgible for rent',
   },
   // anchor errors
   {
-    code: '100',
+    code: 'InstructionMissing',
     message: 'InstructionMissing: 8 byte instruction identifier not provided',
   },
   {
-    code: '101',
+    code: 'InstructionFallbackNotFound',
     message:
       'InstructionFallbackNotFound: Fallback functions are not supported',
   },
   {
-    code: '102',
+    code: 'InstructionDidNotDeserialize',
     message:
       'InstructionDidNotDeserialize: The program could not deserialize the given instruction',
   },
   {
-    code: '103',
+    code: 'InstructionDidNotSerialize',
     message:
       'InstructionDidNotSerialize: The program could not serialize the given instruction',
   },
   {
-    code: '1000',
+    code: 'IdlInstructionStub',
     message:
       'IdlInstructionStub: The program was compiled without idl instructions',
   },
   {
-    code: '1001',
+    code: 'IdlInstructionInvalidProgram',
     message:
       'IdlInstructionInvalidProgram: Invalid program given to the IDL instruction',
   },
-  { code: '2000', message: 'ConstraintMut: A mut constraint was violated' },
   {
-    code: '2001',
+    code: 'ConstraintMut',
+    message: 'ConstraintMut: A mut constraint was violated',
+  },
+  {
+    code: 'ConstraintHasOne',
     message: 'ConstraintHasOne: A has one constraint was violated',
   },
   {
-    code: '2002',
+    code: 'ConstraintSigner',
     message: 'ConstraintSigner: A signer constraint as violated',
   },
-  { code: '2003', message: 'ConstraintRaw: A raw constraint was violated' },
   {
-    code: '2004',
+    code: 'ConstraintRaw',
+    message: 'ConstraintRaw: A raw constraint was violated',
+  },
+  {
+    code: 'ConstraintOwner',
     message: 'ConstraintOwner: An owner constraint was violated',
   },
   {
-    code: '2005',
+    code: 'ConstraintRentExempt',
     message: 'ConstraintRentExempt: A rent exemption constraint was violated',
   },
   {
-    code: '2006',
+    code: 'ConstraintSeeds',
     message: 'ConstraintSeeds: A seeds constraint was violated',
   },
   {
-    code: '2007',
+    code: 'ConstraintExecutable',
     message: 'ConstraintExecutable: An executable constraint was violated',
   },
   {
-    code: '2008',
+    code: 'ConstraintState',
     message: 'ConstraintState: A state constraint was violated',
   },
   {
-    code: '2009',
+    code: 'ConstraintAssociated',
     message: 'ConstraintAssociated: An associated constraint was violated',
   },
   {
-    code: '2010',
+    code: 'ConstraintAssociatedInit',
     message:
       'ConstraintAssociatedInit: An associated init constraint was violated',
   },
   {
-    code: '2011',
+    code: 'ConstraintClose',
     message: 'ConstraintClose: A close constraint was violated',
   },
   {
-    code: '2012',
+    code: 'ConstraintAddress',
     message: 'ConstraintAddress: An address constraint was violated',
   },
   {
-    code: '2013',
+    code: 'ConstraintZero',
     message: 'ConstraintZero: Expected zero account discriminant',
   },
   {
-    code: '2014',
+    code: 'ConstraintTokenMint',
     message: 'ConstraintTokenMint: A token mint constraint was violated',
   },
   {
-    code: '2015',
+    code: 'ConstraintTokenOwner',
     message: 'ConstraintTokenOwner: A token owner constraint was violated',
   },
   {
-    code: '2016',
+    code: 'ConstraintMintMintAuthority',
     message:
       'ConstraintMintMintAuthority: A mint mint authority constraint was violated',
   },
   {
-    code: '2017',
+    code: 'ConstraintMintFreezeAuthority',
     message:
       'ConstraintMintFreezeAuthority: A mint freeze authority constraint was violated',
   },
   {
-    code: '2018',
+    code: 'ConstraintMintDecimals',
     message: 'ConstraintMintDecimals: A mint decimals constraint was violated',
   },
   {
-    code: '2019',
+    code: 'ConstraintSpace',
     message: 'ConstraintSpace: A space constraint was violated',
   },
   {
-    code: '3000',
+    code: 'AccountDiscriminatorAlreadySet',
     message:
       'AccountDiscriminatorAlreadySet: The account discriminator was already set on this account',
   },
   {
-    code: '3001',
+    code: 'AccountDiscriminatorNotFound',
     message:
       'AccountDiscriminatorNotFound: No 8 byte discriminator was found on the account',
   },
   {
-    code: '3002',
+    code: 'AccountDiscriminatorMismatch',
     message:
       'AccountDiscriminatorMismatch: 8 byte discriminator did not match what was expected',
   },
   {
-    code: '3003',
+    code: 'AccountDidNotDeserialize',
     message: 'AccountDidNotDeserialize: Failed to deserialize the account',
   },
   {
-    code: '3004',
+    code: 'AccountDidNotSerialize',
     message: 'AccountDidNotSerialize: Failed to serialize the account',
   },
   {
-    code: '3005',
+    code: '30AccountNotEnoughKeys',
     message:
       'AccountNotEnoughKeys: Not enough account keys given to the instruction',
   },
   {
-    code: '3006',
+    code: 'AccountNotMutable',
     message: 'AccountNotMutable: The given account is not mutable',
   },
   {
-    code: '3007',
+    code: 'AccountNotProgramOwned',
     message:
       'AccountNotProgramOwned: The given account is not owned by the executing program',
   },
   {
-    code: '3008',
+    code: 'InvalidProgramId',
     message: 'InvalidProgramId: Program ID was not as expected',
   },
   {
-    code: '3009',
+    code: 'InvalidProgramExecutable',
     message: 'InvalidProgramExecutable: Program account is not executable',
   },
   {
-    code: '3010',
+    code: 'AccountNotSigner',
     message: 'AccountNotSigner: The given account did not sign',
   },
   {
-    code: '3011',
+    code: 'AccountNotSystemOwned',
     message:
       'AccountNotSystemOwned: The given account is not owned by the system program',
   },
   {
-    code: '3012',
+    code: 'AccountNotInitialized',
     message:
       'AccountNotInitialized: The program expected this account to be already initialized',
   },
   {
-    code: '3013',
+    code: 'AccountNotProgramData',
     message:
       'AccountNotProgramData: The given account is not a program data account',
   },
   {
-    code: '3014',
+    code: 'AccountNotAssociatedTokenAccount',
     message:
       'AccountNotAssociatedTokenAccount: The given account is not the associated token account',
   },
   {
-    code: '4000',
+    code: 'StateInvalidAddress',
     message:
       'StateInvalidAddress: The given state account does not have the correct address',
   },
   {
-    code: '5000',
+    code: 'Deprecated',
     message:
       'Deprecated: The API being used is deprecated and should no longer be used',
   },
