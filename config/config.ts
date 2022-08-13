@@ -755,6 +755,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       type: 'creators',
       value: [
         '4exgPiVhpromTi8duBsMnscoodAjU1as13s1AXZGsGHP', // harvester
+        'FF1uGW7AUvUBskvWNqda1ehFX1jCkvaUk6FRcbWUEaBw', // harvester
         '3XE8DuYzqZLKr1XqXrvADRTxXWL91KuakqsKfD3cYoLP', // gun
         '5XTbjtKM1whecjXMMdDUz3BzWqEDRuJxTRPX3xTF1qmG',
         'Ajp7uzkyPUU35pGdkjZd9Gbe4zgDQXterWY8ZzvP4sCk', // boat
