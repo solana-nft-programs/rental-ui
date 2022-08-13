@@ -584,7 +584,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidationOptions: {
         visibilities: ['public', 'private'],
         durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
+        invalidationTypes: ['reissue', 'return'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
