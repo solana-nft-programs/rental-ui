@@ -987,6 +987,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         },
       },
     },
+    indexMetadataDisabled: true,
     airdrops: [
       {
         name: 'Origin Jambo',
