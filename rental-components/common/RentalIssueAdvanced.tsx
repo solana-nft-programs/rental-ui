@@ -103,7 +103,7 @@ export const RentalIssueAdvanced = ({
             border-color: rgba(200, 138, 244, 0.12);
           `}
         >
-          <div className="text-base text-light-0">Recurring Listing:</div>
+          <div className="text-base text-light-0">Listing Type:</div>
           <div>
             {invalidationTypes.length === 2 &&
             invalidationTypes
@@ -144,7 +144,7 @@ export const RentalIssueAdvanced = ({
                 [InvalidationType.Return]:
                   'Upon the rental expiration this NFT will be securely returned into your wallet.',
                 [InvalidationType.Release]:
-                  'Upon the rental expiration this NFT will be released to the current renter to own.',
+                  'WARNING: Upon the rental expiration this NFT will be released to the renter to own.',
                 [InvalidationType.Invalidate]:
                   'Upon the rental expiration this NFT will be marked as invalid forever.',
               }[invalidationType]
