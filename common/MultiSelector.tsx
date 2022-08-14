@@ -46,7 +46,7 @@ export const MultiSelector = <T,>({
   }, [ref])
 
   return (
-    <div className="relative z-40 text-base" ref={ref}>
+    <div className="relative z-50 text-base" ref={ref}>
       <div
         className="flex min-w-[250px] cursor-pointer items-center justify-between rounded-lg border-[1px] border-border bg-dark-4 px-3 py-2 transition-all hover:border-primary"
         css={
