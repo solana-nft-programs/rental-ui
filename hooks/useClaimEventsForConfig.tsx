@@ -103,7 +103,7 @@ export const claimApproverFromIndexedClaimEvent = (
 
 const dedupeClaimEvents = (
   claimEvents: IndexedClaimEvent[],
-  thresholdSeconds = 4
+  thresholdSeconds = 10
 ) => {
   return claimEvents.reduce(
     (acc, e) =>
@@ -116,7 +116,7 @@ const dedupeClaimEvents = (
             new Date(e.state_changed_at ?? 0).getTime() -
               new Date(e2.state_changed_at ?? 0).getTime()
           ) <=
-            thresholdSeconds * 1000 // 4 seconds
+            thresholdSeconds * 1000 // 10 seconds
       )
         ? [...acc, e]
         : acc,
