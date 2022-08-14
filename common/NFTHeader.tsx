@@ -8,8 +8,8 @@ import { FaLink } from 'react-icons/fa'
 import { notify } from './Notification'
 import { getNameFromTokenData } from './tokenDataUtils'
 
-export const handleCopy = (shareUrl: string) => {
-  navigator.clipboard.writeText(shareUrl)
+export const handleCopy = async (shareUrl: string) => {
+  await navigator.clipboard.writeText(shareUrl)
   notify({
     message: 'Share link copied',
     description: 'Paste this link from your clipboard',
