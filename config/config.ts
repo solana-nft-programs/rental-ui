@@ -646,6 +646,162 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     },
     marketplaceRate: 'days',
   },
+  soultools: {
+    name: 'soultools',
+    displayName: 'SOuLTools',
+    type: 'Collection',
+    websiteUrl: 'https://soultools.io/',
+    logoImage: '/logos/soultools.png',
+    logoPadding: true,
+    hero: '/logos/soultools-hero.png',
+    colors: {
+      accent: '#3fb0e8',
+      glow: '#3fb0e8',
+    },
+    description:
+      "The NFT animals living in the spirit world never sleep and are hard-working. SOuLTools offers an all-in-one Solana's toolkit. We are the first and only hybrid-CLI sniper and minter solution in Solana.",
+    twitterHandle: '@SOuLTools_',
+    socialLinks: [
+      {
+        icon: 'discord',
+        link: 'https://www.discord.gg/VVpHCSR4Vs',
+      },
+      {
+        icon: 'web',
+        link: 'https://soultools.io/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://www.twitter.com/SOuLTools_',
+      },
+    ],
+    filter: {
+      type: 'creators',
+      value: ['AtsVWP3hh1MdF2Zz8XWNWwNxbZzt7AtjJBxxPAajnMsY'],
+    },
+    badges: [{ badgeType: 'recent' }],
+    rentalCard: {
+      invalidators: ['rate', 'duration'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
+  smartseasociety: {
+    name: 'smartseasociety',
+    displayName: 'Smart Sea Society',
+    type: 'Collection',
+    websiteUrl: 'https://www.smartseasociety.com/',
+    logoImage: '/logos/smartseasociety.png',
+    logoPadding: true,
+    hero: '/logos/smartseasociety-hero.png',
+    colors: {
+      accent: '#63a7d4',
+      glow: '#63a7d4',
+    },
+    description:
+      'Smart Sea Society uses AI to build tools that give their holders unprecedented alpha about the NFT market. By holding an NFT you get exclusive access to our current and future tools.',
+    twitterHandle: '@SmartSeaSociety',
+    socialLinks: [
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/SmartSeaSociety',
+      },
+      {
+        icon: 'web',
+        link: 'https://www.smartseasociety.com/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/SmartSeaSociety',
+      },
+    ],
+    filter: {
+      type: 'creators',
+      value: ['D1UkjD34JBSynjUs8QDuhfntqkN7rqamj5ds1o2hQFNq'],
+    },
+    badges: [{ badgeType: 'recent' }],
+    rentalCard: {
+      invalidators: ['rate', 'duration'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
+  myceliumpass: {
+    name: 'myceliumpass',
+    displayName: 'Mycelium Pass',
+    type: 'Collection',
+    websiteUrl: 'https://myceliumlabs.io/',
+    logoImage: '/logos/myceliumpass.png',
+    logoPadding: true,
+    hero: '/logos/myceliumpass-hero.png',
+    colors: {
+      accent: '#c5abd8',
+      glow: '#c5abd8',
+    },
+    description:
+      'Mycelium Pass grants you access to the Mycelium Tool Suite, the next generation of NFT analysis and automation software. OG Pass holders get exclusive rewards, royalties & premium features access.',
+    twitterHandle: '@MyceliumLabsNFT',
+    socialLinks: [
+      {
+        icon: 'discord',
+        link: 'https://www.discord.gg/myceliumnft',
+      },
+      {
+        icon: 'web',
+        link: 'https://myceliumlabs.io/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://www.twitter.com/MyceliumLabsNFT',
+      },
+    ],
+    filter: {
+      type: 'creators',
+      value: [
+        'PMEnb53GA9xNuC2hfhKLtNh9sUduqHU3TxW55TF8WWu',
+        '7BpqmFDeUt38cXM8wdxBALJEgnJwHjJa9MjmK63PpFdn',
+      ],
+    },
+    badges: [{ badgeType: 'recent' }],
+    rentalCard: {
+      invalidators: ['rate', 'duration'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
   rooniverse: {
     name: 'rooniverse',
     displayName: 'Rooniverse',
