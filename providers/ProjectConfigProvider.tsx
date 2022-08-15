@@ -107,7 +107,7 @@ export function getLink(path: string, withParams = true) {
 export interface ProjectConfigValues {
   config: ProjectConfig
   setProjectConfig: (s: string) => void
-  configFromToken: (tokenData?: TokenData) => ProjectConfig
+  configFromToken: (tokenData?: TokenData, issuer?: string) => ProjectConfig
   subFilter?: TokenFilter
   setSubFilter: (arg: TokenFilter) => void
 }
@@ -145,12 +145,23 @@ export function ProjectConfigProvider({
             }
           }
         },
-        configFromToken: (tokenData?: TokenData) =>
-          (tokenData &&
-            Object.values(projectConfigs).find(
+        configFromToken: (tokenData?: TokenData, issuer?: string) => {
+          console.log(issuer)
+          let newConfig
+          if (tokenData) {
+            newConfig = Object.values(projectConfigs).find(
               (c) => filterTokens([tokenData], c.filter).length > 0
-            )) ??
-          config,
+            )
+          }
+          if (issuer) {
+            newConfig = Object.values(projectConfigs).find(
+              (c) =>
+                c.filter?.type === 'issuer' && c.filter?.value.includes(issuer)
+            )
+          }
+          console.log(newConfig)
+          return newConfig ?? config
+        },
         subFilter,
         setSubFilter,
       }}
