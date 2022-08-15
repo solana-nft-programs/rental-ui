@@ -146,7 +146,6 @@ export function ProjectConfigProvider({
           }
         },
         configFromToken: (tokenData?: TokenData, issuer?: string) => {
-          console.log(issuer)
           let newConfig
           if (tokenData) {
             newConfig = Object.values(projectConfigs).find(
@@ -159,7 +158,6 @@ export function ProjectConfigProvider({
                 c.filter?.type === 'issuer' && c.filter?.value.includes(issuer)
             )
           }
-          console.log(newConfig)
           return newConfig ?? config
         },
         subFilter,
