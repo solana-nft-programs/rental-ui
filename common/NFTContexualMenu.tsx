@@ -106,9 +106,7 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
               <a
                 className={`${popoverItemClass}`}
                 href={getLink(
-                  `/${
-                    config.name
-                  }/${tokenData.tokenManager?.pubkey.toBase58()}`
+                  `/${config.name}/${tokenData.tokenManager?.pubkey.toBase58()}`
                 )}
                 onClick={() => {
                   logConfigTokenDataEvent(
@@ -140,7 +138,7 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
                     config,
                     tokenData,
                     {
-                      batch_uploaded: false
+                      batch_uploaded: false,
                     }
                   )
                   rentalIssueCard.showModal({
@@ -194,8 +192,9 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
                 Scan
               </div>
             )}
-          {recipientTokenAccount?.parsed.owner.toString() ===
-            walletId?.toString() &&
+          {walletId &&
+            recipientTokenAccount?.parsed.owner.toString() ===
+              walletId?.toString() &&
             tokenManager &&
             (tokenManager.parsed.invalidationType ===
               InvalidationType.Reissue ||
@@ -227,8 +226,9 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
                 Return
               </div>
             )}
-          {recipientTokenAccount?.parsed.owner.toString() ===
-            walletId?.toString() &&
+          {walletId &&
+            recipientTokenAccount?.parsed.owner.toString() ===
+              walletId?.toString() &&
             timeInvalidator?.parsed?.extensionDurationSeconds &&
             tokenManager && (
               <div
