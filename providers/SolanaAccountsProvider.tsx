@@ -167,20 +167,22 @@ export const deserializeAccountInfos = (
         return acc
       case TOKEN_PROGRAM_ID.toString():
         const accountData = accountInfo?.data as ParsedAccountData
-        acc[accountIds[i]!.toString()] =
-          accountData.space === spl.MintLayout.span
-            ? {
-                ...baseData,
-                type: 'mint',
-                ...(accountInfo as AccountInfo<Buffer>),
-                parsed: accountData.parsed?.info as spl.MintInfo,
-              }
-            : {
-                ...baseData,
-                type: 'tokenAccount',
-                ...(accountInfo as AccountInfo<Buffer>),
-                parsed: accountData.parsed?.info as ParsedTokenAccountData,
-              }
+        if (accountData.parsed?.info) {
+          acc[accountIds[i]!.toString()] =
+            accountData.space === spl.MintLayout.span
+              ? {
+                  ...baseData,
+                  type: 'mint',
+                  ...(accountInfo as AccountInfo<Buffer>),
+                  parsed: accountData.parsed?.info as spl.MintInfo,
+                }
+              : {
+                  ...baseData,
+                  type: 'tokenAccount',
+                  ...(accountInfo as AccountInfo<Buffer>),
+                  parsed: accountData.parsed?.info as ParsedTokenAccountData,
+                }
+        }
         return acc
       case metaplex.MetadataProgram.PUBKEY.toString():
         try {
