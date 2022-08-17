@@ -42,6 +42,16 @@ module.exports = withSentryConfig(
         },
       ]
     },
+    webpack: (config, { isServer, webpack }) => {
+      if (isServer) {
+        config.plugins.push(
+          new webpack.IgnorePlugin({
+            resourceRegExp: /canvas/,
+          })
+        )
+      }
+      return config
+    },
   },
   {
     // Additional config options for the Sentry Webpack plugin. Keep in mind that
