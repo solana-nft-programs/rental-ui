@@ -28,7 +28,7 @@ export const HeaderSlim: React.FC<Props> = ({ tabs, hideDashboard }: Props) => {
   const wallet = useWallet()
   const walletModal = useWalletModal()
   const { secondaryConnection, environment } = useEnvironmentCtx()
-  const { displayName } = useAddressName(
+  const { data: displayName } = useAddressName(
     secondaryConnection,
     wallet.publicKey ?? undefined
   )
@@ -42,23 +42,30 @@ export const HeaderSlim: React.FC<Props> = ({ tabs, hideDashboard }: Props) => {
   useEffect(() => {
     if (wallet.connected && wallet.publicKey) {
       const userId = wallet.publicKey.toString()
-      amplitude.setUserId(userId)
 
+      // amplitude setup
+      amplitude.setUserId(userId)
+      if (displayName) {
+        const identify = new amplitude.Identify()
+          .setOnce('handle', displayName[0])
+          .setOnce('namespace', displayName[1])
+        amplitude.identify(identify)
+      }
+
+      // sentry config
       Sentry.configureScope((scope) => {
         scope.setUser({
-          username: displayName ?? wallet.publicKey?.toString(),
+          username: displayName
+            ? displayName.join('.')
+            : wallet.publicKey?.toString(),
           wallet: wallet.publicKey?.toString(),
         })
         scope.setTag('wallet', wallet.publicKey?.toString())
+        if (displayName) {
+          scope.setTag('handle', displayName[0])
+          scope.setTag('namespace', displayName[1])
+        }
       })
-
-      if (displayName) {
-        const identify = new amplitude.Identify().setOnce(
-          'twitter_handle',
-          displayName
-        )
-        amplitude.identify(identify)
-      }
     }
   }, [wallet.connected, wallet.publicKey?.toString(), displayName])
 

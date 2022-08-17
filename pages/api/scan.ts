@@ -122,7 +122,7 @@ export async function getScanTokenAccounts(
     ...(await fetchAccountDataById(connection, idsToFetch)),
   }
 
-  return tokenAccounts.reduce((acc, tokenAccount, i) => {
+  return tokenAccounts.reduce((acc, tokenAccount) => {
     const delegateData =
       accountsById[tokenAccount.account.data.parsed.info.delegate]
 
