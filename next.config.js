@@ -46,7 +46,7 @@ module.exports = withSentryConfig(
       if (isServer) {
         config.plugins.push(
           new webpack.IgnorePlugin({
-            resourceRegExp: /awesome-qr/,
+            resourceRegExp: /canvas/,
           })
         )
       }
