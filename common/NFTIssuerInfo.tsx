@@ -53,7 +53,8 @@ export const getDurationText = (tokenData: TokenData, UTCNow: number) => {
               : '0'}
           </b>
         </p>
-      ) : tokenData.timeInvalidator?.parsed.expiration ? (
+      ) : tokenData.timeInvalidator?.parsed.expiration &&
+        tokenData.tokenManager?.parsed.state === TokenManagerState.Claimed ? (
         <p className="float-left inline-block text-ellipsis whitespace-nowrap">
           Expires:{' '}
           <b>
