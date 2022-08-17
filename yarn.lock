@@ -1427,6 +1427,22 @@
     tiny-invariant "^1.2.0"
     tslib "^2.3.1"
 
+"@cardinal/common@^2.0.11":
+  version "2.0.11"
+  resolved "https://registry.yarnpkg.com/@cardinal/common/-/common-2.0.11.tgz#deffdb250ab3ece574b1f1df30853798536e38ff"
+  integrity sha512-3PVRTJTSpdkDkTW2fXpTJZ9HQnI+wKj/dvzRv8DXB4qpGV6BruK99OvQYI7HRTF3nOYT8iJuYljtI1EVv271/g==
+  dependencies:
+    "@metaplex-foundation/mpl-token-metadata" "^1.2.5"
+    "@project-serum/anchor" "^0.24.2"
+    "@saberhq/anchor-contrib" "^1.14.1"
+    "@saberhq/solana-contrib" "^1.14.1"
+    "@saberhq/token-utils" "^1.14.1"
+    "@solana/buffer-layout" "^4.0.0"
+    "@solana/spl-token" "^0.1.8"
+    "@ubeswap/token-math" "^4.4.4"
+    tiny-invariant "^1.2.0"
+    tslib "^2.3.1"
+
 "@cardinal/eslint-config-react@^1.0.10":
   version "1.0.10"
   resolved "https://registry.yarnpkg.com/@cardinal/eslint-config-react/-/eslint-config-react-1.0.10.tgz#60c955886995d42dd11577d735a4fb0e9d1e1526"
