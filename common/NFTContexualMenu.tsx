@@ -172,7 +172,7 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
             )}
           {tokenManager &&
             tokenManager.parsed.state === TokenManagerState.Claimed &&
-            tokenData.recipientTokenAccount?.parsed.owner.toString() ===
+            tokenData.recipientTokenAccount?.parsed?.owner.toString() ===
               walletId?.toString() && (
               <div
                 className={`${popoverItemClass} flex cursor-pointer items-center`}
@@ -193,7 +193,7 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
               </div>
             )}
           {walletId &&
-            recipientTokenAccount?.parsed.owner.toString() ===
+            recipientTokenAccount?.parsed?.owner.toString() ===
               walletId?.toString() &&
             tokenManager &&
             (tokenManager.parsed.invalidationType ===
@@ -227,7 +227,7 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
               </div>
             )}
           {walletId &&
-            recipientTokenAccount?.parsed.owner.toString() ===
+            recipientTokenAccount?.parsed?.owner.toString() ===
               walletId?.toString() &&
             timeInvalidator?.parsed?.extensionDurationSeconds &&
             tokenManager && (
