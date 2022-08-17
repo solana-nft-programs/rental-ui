@@ -4,10 +4,7 @@ import '@cardinal/namespaces-components/dist/esm/styles.css'
 import 'tailwindcss/tailwind.css'
 
 import * as amplitude from '@amplitude/analytics-browser'
-import {
-  IDENTITIES,
-  WalletIdentityProvider,
-} from '@cardinal/namespaces-components'
+import { WalletIdentityProvider } from '@cardinal/namespaces-components'
 import { WalletProvider } from '@solana/wallet-adapter-react'
 import { WalletModalProvider } from '@solana/wallet-adapter-react-ui'
 import { getWalletAdapters } from '@solana/wallet-adapter-wallets'
@@ -52,7 +49,7 @@ const App = ({
       <UTCNowProvider>
         <SolanaAccountsProvider>
           <WalletProvider wallets={getWalletAdapters()} autoConnect>
-            <WalletIdentityProvider identities={[IDENTITIES['twitter']]}>
+            <WalletIdentityProvider>
               <ProjectConfigProvider defaultConfig={config}>
                 <QueryClientProvider client={queryClient}>
                   <ModalProvider>
