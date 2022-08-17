@@ -14,7 +14,7 @@
     "@amplitude/analytics-browser": "^1.1.1",
     "@apollo/client": "^3.6.0",
     "@babel/core": "^7.17.0",
-    "@cardinal/common": "^2.0.7",
+    "@cardinal/common": "^2.0.10",
     "@cardinal/eslint-config-react": "^1.0.10",
     "@cardinal/namespaces": "^4.1.43",
     "@cardinal/namespaces-components": "^4.1.13",
