@@ -16,7 +16,7 @@ export default function Profile() {
   const { query } = useRouter()
   const { connection } = useEnvironmentCtx()
   const nameEntry = useNameEntry(firstParam(query.wallet), true)
-  const { data: displayName } = useAddressName(connection, walletId)
+  const { displayName } = useAddressName(connection, walletId)
 
   if (!tryPublicKey(query.wallet) && !nameEntry.isFetched) {
     return <LoadingScreen />

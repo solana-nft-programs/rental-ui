@@ -35,7 +35,7 @@ export const RentalSuccessCard = ({
   const walletId = useWalletId()
   const { durationSeconds } = tokenData.timeInvalidator?.parsed || {}
   const { UTCNow } = useUTCNow()
-  const { data: issuerName, isFetching: loadingName } = useAddressName(
+  const { displayName: issuerName, loadingName } = useAddressName(
     connection,
     tokenData.tokenManager?.parsed.issuer
   )
@@ -103,11 +103,7 @@ export const RentalSuccessCard = ({
       <div className="flex justify-center">
         <ShareTwitterButton
           className="px-8"
-          shareLink={shareTwitterClaimedLink(
-            tokenData,
-            config,
-            issuerName ? issuerName[0] : undefined
-          )}
+          shareLink={shareTwitterClaimedLink(tokenData, config, issuerName)}
           shareType="claim"
           tokenDatas={[tokenData]}
           disabled={loadingName}

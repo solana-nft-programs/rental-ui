@@ -152,7 +152,6 @@ export const NFTIssuerInfo: React.FC<NFTIssuerInfoProps> = ({
           <div className="flex">
             <div>Claimed by&nbsp;</div>
             <DisplayAddress
-              dark
               connection={secondaryConnection}
               address={
                 tryPublicKey(
@@ -160,6 +159,9 @@ export const NFTIssuerInfo: React.FC<NFTIssuerInfoProps> = ({
                     recipientTokenAccountInfo.data?.parsed.owner
                 ) ?? undefined
               }
+              height="18px"
+              width="100px"
+              dark={true}
             />
           </div>
         </div>
