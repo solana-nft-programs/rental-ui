@@ -103,7 +103,11 @@ export const RentalSuccessCard = ({
       <div className="flex justify-center">
         <ShareTwitterButton
           className="px-8"
-          shareLink={shareTwitterClaimedLink(tokenData, config, issuerName)}
+          shareLink={shareTwitterClaimedLink(
+            tokenData,
+            config,
+            issuerName ? issuerName[0] : undefined
+          )}
           shareType="claim"
           tokenDatas={[tokenData]}
           disabled={loadingName}
