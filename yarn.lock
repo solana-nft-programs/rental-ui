@@ -1443,22 +1443,6 @@
     tiny-invariant "^1.2.0"
     tslib "^2.3.1"
 
-"@cardinal/common@^2.0.9":
-  version "2.0.9"
-  resolved "https://registry.yarnpkg.com/@cardinal/common/-/common-2.0.9.tgz#1631aab70921182c96bc6da4a3143969a882419c"
-  integrity sha512-4wQ+zsHM5jnCVGW/fevbDm9E97iA50pyFpT31L/5Fs1vVApJHCPEL0XJOUF+EXWryB50qqVbq760nEZ7tOhFxQ==
-  dependencies:
-    "@metaplex-foundation/mpl-token-metadata" "^1.2.5"
-    "@project-serum/anchor" "^0.24.2"
-    "@saberhq/anchor-contrib" "^1.12.48"
-    "@saberhq/solana-contrib" "^1.12.48"
-    "@saberhq/token-utils" "^1.12.48"
-    "@solana/buffer-layout" "^4.0.0"
-    "@solana/spl-token" "^0.1.8"
-    "@ubeswap/token-math" "^4.4.4"
-    tiny-invariant "^1.2.0"
-    tslib "^2.3.1"
-
 "@cardinal/eslint-config-react@^1.0.10":
   version "1.0.10"
   resolved "https://registry.yarnpkg.com/@cardinal/eslint-config-react/-/eslint-config-react-1.0.10.tgz#60c955886995d42dd11577d735a4fb0e9d1e1526"
@@ -1469,15 +1453,15 @@
     eslint-plugin-react "^7.29.3"
     eslint-plugin-react-hooks "^4.3.0"
 
-"@cardinal/namespaces-components@^4.1.13":
-  version "4.1.13"
-  resolved "https://registry.yarnpkg.com/@cardinal/namespaces-components/-/namespaces-components-4.1.13.tgz#e4fc7541ae5b35d70f5c03fc6e5f80adb96fc17a"
-  integrity sha512-wMSy6SZRTHJOcmWt3xMPla/iyRj/b4qTVwVnJfnDYYV+Er5UcNNQrV38pdtGYDN0MqWVzIWeuZe9EPspPpj6qw==
+"@cardinal/namespaces-components@^4.1.17":
+  version "4.1.17"
+  resolved "https://registry.yarnpkg.com/@cardinal/namespaces-components/-/namespaces-components-4.1.17.tgz#fe4e0375132f65987396530c7a593d8fd9dd4aeb"
+  integrity sha512-QxnIrv7V6gDgQIyPnKSPnS31tw8pbqXS0ohRMH1wLv3dMpa5tqIt+Mku4E6BI5hTBL3rNvaOPNzdEsYrHGoqOg==
   dependencies:
     "@cardinal/certificates" "^2.0.1"
-    "@cardinal/common" "^2.0.9"
+    "@cardinal/common" "^2.0.10"
     "@cardinal/eslint-config-react" "^1.0.10"
-    "@cardinal/namespaces" "^4.1.51"
+    "@cardinal/namespaces" "^4.1.53"
     "@cardinal/token-manager" "^1.5.12"
     "@emotion/babel-preset-css-prop" "^11.10.0"
     "@emotion/core" "^11.0.0"
@@ -1507,25 +1491,16 @@
     typescript "^4.1.2"
     webpack-merge "^5.8.0"
 
-"@cardinal/namespaces@^4.1.43":
-  version "4.1.43"
-  resolved "https://registry.yarnpkg.com/@cardinal/namespaces/-/namespaces-4.1.43.tgz#b51799a0f9da1e0e79eaa5c473b9d547da848419"
-  integrity sha512-ApKxLcXL6BZJoDmoNVol3ods4RKacdXaTyM7uA01wPvdIxgj/RXtYgano4RJIF1JHLaQznXX7smuvn7QrCDbuw==
+"@cardinal/namespaces@^4.1.53":
+  version "4.1.53"
+  resolved "https://registry.yarnpkg.com/@cardinal/namespaces/-/namespaces-4.1.53.tgz#30afa1e1de24b8d16c799cbb38bdaa413a741a24"
+  integrity sha512-6Rylvjsu30hYQDJsBtksrlrhxRKP0K+7gt/hW8xcDJqaQpnyaOG+d2JK2YlFA0BYhb5iuUQlQFuZzB0w9GkraA==
   dependencies:
     "@cardinal/certificates" "^2.0.1"
-    "@cardinal/common" "^2.0.1"
-    "@cardinal/token-manager" "=1.5.6"
-    "@metaplex-foundation/mpl-token-metadata" "^1.2.5"
-
-"@cardinal/namespaces@^4.1.51":
-  version "4.1.51"
-  resolved "https://registry.yarnpkg.com/@cardinal/namespaces/-/namespaces-4.1.51.tgz#40b0062cf867e1481b6ef7108c82f8d2bc18cc05"
-  integrity sha512-CqVReOmAi6P6EoIHJz08IC92yZVCVsQVwCCzfyrFNgCSY/CRL1IS5Bf4NI+zBfffRw5kbeub5EtPjDgG6Xv9cQ==
-  dependencies:
-    "@cardinal/certificates" "^2.0.1"
-    "@cardinal/common" "^2.0.1"
+    "@cardinal/common" "^2.0.10"
     "@cardinal/token-manager" "1.5.12"
     "@metaplex-foundation/mpl-token-metadata" "^1.2.5"
+    "@project-serum/anchor" "^0.24.2"
 
 "@cardinal/scanner@^0.1.4":
   version "0.1.4"
@@ -1540,20 +1515,6 @@
   integrity sha512-KM91oWVlh5/6uiRRGvvhp8h2GwPylTVUlN97rQhLts+gzvww1jb8tYOkEFbenEmiHvaf9anIBeJU5eNM1CD8bQ==
   dependencies:
     "@metaplex-foundation/mpl-token-metadata" "^1.2.5"
-    "@solana/buffer-layout" "^4.0.0"
-    "@solana/spl-token" "^0.1.8"
-    borsh "^0.7.0"
-    bs58 "^4.0.1"
-    superstruct "^0.15.4"
-    tiny-invariant "^1.2.0"
-    tslib "^2.3.1"
-
-"@cardinal/token-manager@=1.5.6":
-  version "1.5.6"
-  resolved "https://registry.yarnpkg.com/@cardinal/token-manager/-/token-manager-1.5.6.tgz#7642964dbfc58fd45ad5c473c7265547fda36d6d"
-  integrity sha512-PDBiqFzjoifCjMDncnayPSZkzMMncph6b+MIS65Y1L3nzEXWLKNSUAesUsJVhAuhPzLkpJLspJDJfOjujYmT1g==
-  dependencies:
-    "@metaplex-foundation/mpl-token-metadata" "^1.2.3"
     "@solana/buffer-layout" "^4.0.0"
     "@solana/spl-token" "^0.1.8"
     borsh "^0.7.0"
