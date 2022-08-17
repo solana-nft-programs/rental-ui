@@ -11,7 +11,7 @@ import type { PublicKey } from '@solana/web3.js'
 import type { TokenData } from 'apis/api'
 import { getTokenDatas } from 'apis/api'
 import { withTrace } from 'common/trace'
-import { TokenFilter } from 'config/config'
+import type { TokenFilter } from 'config/config'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import type { ParsedTokenAccountData } from 'providers/SolanaAccountsProvider'
@@ -131,11 +131,15 @@ export const useBrowseClaimedTokenDatas = (
                   timeInvalidatorId.toString()
                 ] as AccountData<TimeInvalidatorData>)
               : undefined,
-            recipientTokenAccount: tokenManagerData.parsed.recipientTokenAccount
-              ? (accountsById[
-                  tokenManagerData.parsed.recipientTokenAccount?.toString()
-                ] as AccountData<ParsedTokenAccountData>)
-              : undefined,
+            recipientTokenAccount:
+              tokenManagerData.parsed.recipientTokenAccount &&
+              accountsById[
+                tokenManagerData.parsed.recipientTokenAccount.toString()
+              ]?.parsed
+                ? (accountsById[
+                    tokenManagerData.parsed.recipientTokenAccount?.toString()
+                  ] as AccountData<ParsedTokenAccountData>)
+                : undefined,
           }
         })
         trace.finish()
