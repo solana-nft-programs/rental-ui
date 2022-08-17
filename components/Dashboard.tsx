@@ -198,7 +198,11 @@ export const Dashboard = () => {
             }`}
           >
             {addressImage ? (
-              <img className="w-full" src={addressImage} alt={displayName} />
+              <img
+                className="w-full"
+                src={addressImage[0]}
+                alt={displayName ? displayName[0] : addressImage[0]}
+              />
             ) : (
               !loadingImage && (
                 <HiUserCircle className="relative h-full w-full scale-[1.25]" />
@@ -213,7 +217,7 @@ export const Dashboard = () => {
           ) : (
             <div className="flex flex-col gap-2">
               <div className="text-2xl text-light-0">
-                {displayName ?? shortPubKey(walletId)}
+                {displayName ? displayName[0] : shortPubKey(walletId)}
               </div>
               <div className="flex items-center gap-2 text-lg text-medium-3">
                 <SolanaLogo height={16} />
