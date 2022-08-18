@@ -1758,8 +1758,8 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
         maxDurationAllowed: {
-          displayText: '3 days',
-          value: 259200,
+          displayText: '12 weeks',
+          value: 7258000,
         },
       },
     },
