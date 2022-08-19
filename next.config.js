@@ -19,6 +19,9 @@ module.exports = withSentryConfig(
     env: {
       MAINNET_PRIMARY: process.env.MAINNET_PRIMARY,
       BASE_CLUSTER: process.env.BASE_CLUSTER || 'devnet',
+      BASE_CLUSTER: process.env.BASE_CLUSTER || 'devnet',
+      NEXT_PUBLIC_BASE_URL:
+        process.env.NEXT_PUBLIC_BASE_URL || 'https://rent.cardinal.so',
     },
     async rewrites() {
       return [
@@ -41,16 +44,6 @@ module.exports = withSentryConfig(
           destination: '/:hostName/default/:tokenManagerString*',
         },
       ]
-    },
-    webpack: (config, { isServer, webpack }) => {
-      if (isServer) {
-        config.plugins.push(
-          new webpack.IgnorePlugin({
-            resourceRegExp: /canvas/,
-          })
-        )
-      }
-      return config
     },
   },
   {

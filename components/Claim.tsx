@@ -42,7 +42,7 @@ function Claim(props: {
     'recipientTokenAccount'
   >
   const config = configFromToken(tokenData)
-
+  console.log(process.env.NEXT_PUBLIC_BASE_URL)
   return (
     <div className="flex h-screen flex-col">
       <Head>
