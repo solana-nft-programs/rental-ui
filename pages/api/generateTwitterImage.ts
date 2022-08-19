@@ -1,4 +1,4 @@
-import * as canvas from 'canvas'
+import * as canvas from '@napi-rs/canvas'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 const generateTwitterImage = async (
@@ -24,7 +24,7 @@ const generateTwitterImage = async (
   backgroundCtx.fillRect(0, 0, WIDTH, HEIGHT)
 
   function drawRoundedImage(
-    ctx: canvas.CanvasRenderingContext2D,
+    ctx: canvas.SKRSContext2D,
     x: number,
     y: number,
     width: number,

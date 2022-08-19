@@ -1,17 +1,5 @@
 const { withSentryConfig } = require('@sentry/nextjs')
 
-// For building on vercel: https://github.com/Automattic/node-canvas/issues/1779
-if (
-  !process.env.LD_LIBRARY_PATH ||
-  !process.env.LD_LIBRARY_PATH.includes(
-    `${process.env.PWD}/node_modules/canvas/build/Release:`
-  )
-) {
-  process.env.LD_LIBRARY_PATH = `${
-    process.env.PWD
-  }/node_modules/canvas/build/Release:${process.env.LD_LIBRARY_PATH || ''}`
-}
-
 /** @type {import('next').NextConfig} */
 module.exports = withSentryConfig(
   {
@@ -22,8 +10,6 @@ module.exports = withSentryConfig(
       BASE_CLUSTER: process.env.BASE_CLUSTER || 'devnet',
       NEXT_PUBLIC_BASE_URL:
         process.env.NEXT_PUBLIC_BASE_URL || 'https://rent.cardinal.so',
-      LD_LIBRARY_PATH:
-        '/var/task/node_modules/canvas/build/Release:$LD_LIBRARY_PATH',
     },
     async rewrites() {
       return [
