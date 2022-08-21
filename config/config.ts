@@ -1332,6 +1332,56 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     },
     marketplaceRate: 'days',
   },
+  ['solanapuppypound']: {
+    name: 'solanapuppypound',
+    displayName: 'Solana Puppy Pound',
+    type: 'Guild',
+    websiteUrl: 'https://www.puppypound.io/',
+    logoImage: 'logos/solanapuppypound.png',
+    logoPadding: true,
+    hero: 'logos/solanapuppypound-hero.png',
+    colors: {
+      accent: '#a14613',
+      glow: '#a14613',
+    },
+    description:
+      'Solana Puppy Pound is the Solana Blockchains first gamified staking algorithms. Different breeds of puppies fight for $TREATS dominance. SPP contains a Gen1 & Gen2 puppy collection along with a DAO research pass for future collections made by Solana Puppy Pound.',
+    socialLinks: [
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/puppypoundnft',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/m9Xru2RY4d',
+      },
+      {
+        icon: 'web',
+        link: 'https://www.puppypound.io/',
+      },
+    ],
+    badges: [{ badgeType: 'recent' }],
+    filter: {
+      type: 'issuer',
+      value: ['CVnJiJJCTtQWDmgDpLXe4bAKehLsE7oxHyTmygw566QB'],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration'],
+      invalidationOptions: {
+        visibilities: ['public'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: ['14r8dWfzmUUBpw59w5swNRb5F1YWqmUnSPgD6djUs1Jj'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
   ['monkettes']: {
     name: 'monkettes',
     displayName: 'The Monkettes',

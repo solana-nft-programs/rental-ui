@@ -61,6 +61,13 @@ export const PAYMENT_MINTS: PaymentMintInfo[] = [
       'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/8o66EVAf4u2Hr21m2tuRrPtEXFPLr8G8aL1ETStP8fDu/VIBE-logo.png',
     decimals: 9,
   },
+  {
+    mint: '14r8dWfzmUUBpw59w5swNRb5F1YWqmUnSPgD6djUs1Jj',
+    symbol: 'TREATS',
+    image:
+      'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/14r8dWfzmUUBpw59w5swNRb5F1YWqmUnSPgD6djUs1Jj/logo.png',
+    decimals: 9,
+  },
 ]
 
 export const WRAPPED_SOL_MINT = 'So11111111111111111111111111111111111111112'
