@@ -423,7 +423,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         link: 'https://twitter.com/NFTNerdsAI',
       },
     ],
-    badges: [{ badgeType: 'recent' }],
     filter: {
       type: 'creators',
       value: ['FpJ3h2dzuvmdedmuV4ECz8S31RacnCxiw2ykXNhMntVt'],
@@ -474,7 +473,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         link: 'https://twitter.com/SolRarity_',
       },
     ],
-    badges: [{ badgeType: 'recent' }],
     filter: {
       type: 'creators',
       value: ['53EmnGdMxnmNcaPUE6wJ2NHz6iUVpge4a7RViTdfb8Dq'],
@@ -551,7 +549,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     displayName: 'Serum Surfers',
     type: 'Collection',
     websiteUrl: 'https://www.projectserum.com/',
-    badges: [{ badgeType: 'recent' }],
     logoImage: '/logos/serum-surfers.png',
     hero: '/logos/serum-surfers-hero.png',
     description:
@@ -628,7 +625,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       type: 'creators',
       value: ['5g3T8224Ha5as4Ho7tcRxsHQFr4pzeEa1wEtnir93m3t'],
     },
-    badges: [{ badgeType: 'recent' }],
     rentalCard: {
       invalidators: ['rate', 'duration'],
       invalidationOptions: {
@@ -679,7 +675,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       type: 'creators',
       value: ['AtsVWP3hh1MdF2Zz8XWNWwNxbZzt7AtjJBxxPAajnMsY'],
     },
-    badges: [{ badgeType: 'recent' }],
     rentalCard: {
       invalidators: ['rate', 'duration'],
       invalidationOptions: {
@@ -730,7 +725,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       type: 'creators',
       value: ['D1UkjD34JBSynjUs8QDuhfntqkN7rqamj5ds1o2hQFNq'],
     },
-    badges: [{ badgeType: 'recent' }],
     rentalCard: {
       invalidators: ['rate', 'duration'],
       invalidationOptions: {
@@ -784,7 +778,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         '7BpqmFDeUt38cXM8wdxBALJEgnJwHjJa9MjmK63PpFdn',
       ],
     },
-    badges: [{ badgeType: 'recent' }],
     rentalCard: {
       invalidators: ['rate', 'duration'],
       invalidationOptions: {
@@ -1028,6 +1021,263 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     ],
     marketplaceRate: 'days',
   },
+  'p2-farmers-genesis': {
+    name: 'p2-farmers-genesis',
+    displayName: 'P2 Farmers Genesis Series',
+    type: 'Collection',
+    websiteUrl: 'https://player2.world',
+    logoImage: '/logos/p2-farmers-genesis.png',
+    hero: '/logos/p2-farmers-genesis-hero.png',
+    colors: {
+      accent: '#C7C7C7',
+      glow: '#C7C7C7',
+    },
+    description:
+      'Player 2 is a gamified world where communities and businesses meet.',
+    twitterHandle: '@player2world',
+    socialLinks: [
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/player2',
+      },
+      {
+        icon: 'web',
+        link: 'https://player2.world',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/player2world',
+      },
+    ],
+    filter: {
+      type: 'creators',
+      value: [
+        '36wtjjwj3BtLrcBGVkWg4r4VwbhDDDGkVYLMNT4mx8y7',
+        'A2x7GX7JbKzXwXjzkRBCxenoKCH1LTEVp6RxQ4yg75q6',
+      ],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
+    badges: [{ badgeType: 'recent' }],
+    marketplaceRate: 'days',
+  },
+  ratzclub: {
+    name: 'ratzclub',
+    displayName: 'Ratz Club',
+    type: 'Collection',
+    websiteUrl: 'https://www.ratzclub.com/',
+    logoImage: '/logos/ratzclub.gif',
+    hero: '/logos/ratzclub-hero.png',
+    colors: {
+      accent: '#000',
+      glow: '#000',
+    },
+    description:
+      'Ratz are more than just an avatar. They are a collection of 2,000 PFPs endowed with unique abilities. Each Ratz unlocks Vtuber Zilverk private club membership. Ratz are ready to conquer the underground world.',
+    twitterHandle: '@ratz_club',
+    socialLinks: [
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/ratzclub',
+      },
+      {
+        icon: 'web',
+        link: 'https://www.ratzclub.com/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/ratz_club',
+      },
+    ],
+    filter: {
+      type: 'creators',
+      value: ['9L8nh1VxgyNP86XgCfuuUrZxB5UP4hD4JF27kkb6tFXR'],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '4 weeks',
+          value: 2419200,
+        },
+      },
+    },
+    badges: [{ badgeType: 'recent' }],
+    marketplaceRate: 'days',
+  },
+  theremnants: {
+    name: 'theremnants',
+    displayName: 'The Remnants',
+    type: 'Collection',
+    websiteUrl: 'theremnants.app',
+    logoImage: '/logos/theremnants.png',
+    hero: '/logos/theremnants-hero.png',
+    colors: {
+      accent: '#6B2FB3',
+      glow: '#6B2FB3',
+    },
+    description:
+      'The Remnants is a collection of 8000 survivors living in Longwood Valley. Send your Remnants on Loot Trips through the Valley in search of loot. Upgrade your Camp to generate tokens and increase your power within Longwood.',
+    twitterHandle: '@RemnantsNFT',
+    socialLinks: [
+      {
+        icon: 'discord',
+        link: 'discord.gg/remnantsnft',
+      },
+      {
+        icon: 'web',
+        link: 'theremnants.app',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/RemnantsNFT',
+      },
+    ],
+    filter: {
+      type: 'creators',
+      value: [
+        'CBaS8mRViYezLL6RKvnnjWe3psUHjSQZbMcD2ardgNyR',
+        'ChwagUKd6nRS6H2VnvuwDHsAkfzUhBuG5XJVaPVJNmgq',
+        'FPce5x7kdKnzpLa7bPRxQq7CoZce2LU21vxsMgCzqVhs',
+      ],
+    },
+    rentalCard: {
+      invalidators: ['duration'],
+      invalidationOptions: {
+        visibilities: ['private'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '2 weeks',
+          value: 1209600,
+        },
+      },
+    },
+    badges: [{ badgeType: 'recent' }],
+    marketplaceRate: 'days',
+  },
+  shiguardians: {
+    name: 'shiguardians',
+    displayName: 'Shi Guardians',
+    type: 'Collection',
+    websiteUrl: 'https://solanafloor.com/',
+    logoImage: '/logos/shiguardians.png',
+    hero: '/logos/shiguardians-hero.png',
+    colors: {
+      accent: '#9e71da',
+      glow: '#9e71da',
+    },
+    description:
+      'Shi Guardians give you access to SolanaFloor PRO (by @cryptowazza) with extra features. There are 4 types of lions. Pick your favorite one!',
+    twitterHandle: '@SolanaFloor',
+    socialLinks: [
+      {
+        icon: 'discord',
+        link: 'http://discord.gg/kDhPZqA2mS',
+      },
+      {
+        icon: 'web',
+        link: 'https://solanafloor.com/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/SolanaFloor',
+      },
+    ],
+    filter: {
+      type: 'creators',
+      value: ['2UR2afaRgE5THeqJi7jGWMRMxRS8knbPVQEYekBG8bNd'],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
+    badges: [{ badgeType: 'recent' }],
+    marketplaceRate: 'days',
+  },
+  'pixelpilotz-node': {
+    name: 'pixelpilotz-node',
+    displayName: 'PixelPilotz Node',
+    type: 'Collection',
+    websiteUrl: 'https://pixelpilotz.com',
+    logoImage: '/logos/pixelpilotz-node.png',
+    hero: '/logos/pixelpilotz-node-hero.png',
+    colors: {
+      accent: '#00a2ff',
+      glow: '#00a2ff',
+    },
+    description:
+      '500 Pilots that grant their owner access to the Pixel Pilotz RPC/Validator Network.',
+    twitterHandle: '@PixelPilotzNFT',
+    socialLinks: [
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/pixelpilotz',
+      },
+      {
+        icon: 'web',
+        link: 'https://pixelpilotz.com',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/PixelPilotzNFT',
+      },
+    ],
+    filter: {
+      type: 'creators',
+      value: ['62KHBtXLF8DbxCETzQrnFGv2A3VJWoRtofmKKHyNhgcm'],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 2419200,
+        },
+      },
+    },
+    badges: [{ badgeType: 'recent' }],
+    marketplaceRate: 'days',
+  },
   psyker: {
     name: 'psyker',
     displayName: 'Psyker',
@@ -1257,7 +1507,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         link: 'https://www.udderchaos.io/',
       },
     ],
-    badges: [{ badgeType: 'recent' }],
+    badges: [{ badgeType: 'trending' }],
     filter: {
       type: 'issuer',
       value: ['F65oeXXQaDQYnmQKTmmMpZ5XaLBzoUC16pMTg59RfpK6'],
@@ -1310,7 +1560,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         link: 'https://fatcatscapital.com/',
       },
     ],
-    badges: [{ badgeType: 'recent' }],
     filter: {
       type: 'issuer',
       value: ['Dx2svFqyhm1eFQTvKrETehLmrNHpNXhioqSHpXGzp5Xe'],
@@ -1360,7 +1609,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         link: 'https://www.puppypound.io/',
       },
     ],
-    badges: [{ badgeType: 'recent' }],
     filter: {
       type: 'issuer',
       value: ['CVnJiJJCTtQWDmgDpLXe4bAKehLsE7oxHyTmygw566QB'],
@@ -1410,7 +1658,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         link: 'https://monkettes.io/',
       },
     ],
-    badges: [{ badgeType: 'recent' }],
     filter: {
       type: 'issuer',
       value: ['22aCNyykzcpX6r1ThuZLoqgMHSzsByBBz5bbNkqpMP4q'],
@@ -1459,7 +1706,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         link: 'https://thedegen.app/',
       },
     ],
-    badges: [{ badgeType: 'recent' }],
     filter: {
       type: 'issuer',
       value: ['E6m3sYbjbzCVqtMpDuWjMBnJneJu5a4VnTorz8hpCDB5'],
@@ -1508,7 +1754,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         link: 'https://www.twitch.tv/syndicateinitiative',
       },
     ],
-    badges: [{ badgeType: 'recent' }],
     filter: {
       type: 'issuer',
       value: ['7Rinf5mQGHccRnxE6J2p2xNFjpNCh4sgVdpsiyQ9NRHc'],
@@ -1558,7 +1803,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         link: 'https://twitter.com/TradingApesGang',
       },
     ],
-    badges: [{ badgeType: 'recent' }],
     filter: {
       type: 'issuer',
       value: ['8FkMivDfqqFLH3eRBnJ8krkbQemUfDthLcTXjwSqkQee'],
@@ -1611,7 +1855,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         link: 'https://twitter.com/droidcapital',
       },
     ],
-    badges: [{ badgeType: 'recent' }],
     filter: {
       type: 'issuer',
       value: ['35qpvWNknAxGj5BEBjcUnNybYXdnNvGbuvWJS2rpaXMZ'],
@@ -1664,7 +1907,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         link: 'https://twitter.com/meta_Kitchen',
       },
     ],
-    badges: [{ badgeType: 'recent' }],
     filter: {
       type: 'issuer',
       value: ['EFNxcRU6eidLMaVj7ZL5ikA6BqaXWYpEhaGa2hQvFAV3'],
@@ -1717,7 +1959,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         link: 'https://twitter.com/solset_io',
       },
     ],
-    badges: [{ badgeType: 'recent' }],
     filter: {
       type: 'issuer',
       value: ['SLSETzAUois5Wfy1jAxEDPkWiwmLgRcsDSUV6GRGoR2'],
@@ -1767,7 +2008,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         link: 'https://twitter.com/degenclub15k',
       },
     ],
-    badges: [{ badgeType: 'recent' }],
     filter: {
       type: 'issuer',
       value: [
