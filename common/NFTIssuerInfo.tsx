@@ -53,7 +53,8 @@ export const getDurationText = (tokenData: TokenData, UTCNow: number) => {
               : '0'}
           </b>
         </p>
-      ) : tokenData.timeInvalidator?.parsed.expiration ? (
+      ) : tokenData.timeInvalidator?.parsed.expiration &&
+        tokenData.tokenManager?.parsed.state === TokenManagerState.Claimed ? (
         <p className="float-left inline-block text-ellipsis whitespace-nowrap">
           Expires:{' '}
           <b>
@@ -152,6 +153,7 @@ export const NFTIssuerInfo: React.FC<NFTIssuerInfoProps> = ({
           <div className="flex">
             <div>Claimed by&nbsp;</div>
             <DisplayAddress
+              dark
               connection={secondaryConnection}
               address={
                 tryPublicKey(
@@ -159,9 +161,6 @@ export const NFTIssuerInfo: React.FC<NFTIssuerInfoProps> = ({
                     recipientTokenAccountInfo.data?.parsed.owner
                 ) ?? undefined
               }
-              height="18px"
-              width="100px"
-              dark={true}
             />
           </div>
         </div>

@@ -28,6 +28,12 @@ export const PAYMENT_MINTS: PaymentMintInfo[] = [
     decimals: 9,
   },
   {
+    mint: 'Gbi4F6tEUz7sucsUfyjS28W5Ssd8jiGgdw6hB8XZGJke',
+    symbol: 'DEGEN',
+    image: 'https://arweave.net/Ehsfm_gcjIiRgebVlzVYG9ank4Y3Fi0aM_dQHS87kis',
+    decimals: 6,
+  },
+  {
     mint: 'FdviznPoMEakdJ37fikNxhoscyruUHSHNkKyvntSqbuo',
     symbol: 'CATNIP',
     image:

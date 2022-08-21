@@ -10,11 +10,10 @@ import type { RentalCardConfig } from 'rental-components/components/RentalIssueC
 export const VISIBILITY_OPTIONS = ['public', 'private'] as const
 export type VisibilityOption = typeof VISIBILITY_OPTIONS[number]
 
-export type InvalidationTypeOption =
-  | 'return'
-  | 'invalidate'
-  | 'release'
-  | 'reissue'
+export type InvalidationTypeOption = 'return' | 'reissue'
+// | 'invalidate'
+// | 'release'
+
 export const INVALIDATION_TYPES: {
   type: InvalidationType
   label: InvalidationTypeOption
@@ -23,18 +22,18 @@ export const INVALIDATION_TYPES: {
     type: InvalidationType.Return,
     label: 'return',
   },
-  // {
-  //   type: InvalidationType.Invalidate,
-  //   label: 'invalidate',
-  // },
-  {
-    type: InvalidationType.Release,
-    label: 'release',
-  },
   {
     type: InvalidationType.Reissue,
     label: 'reissue',
   },
+  // {
+  //   type: InvalidationType.Invalidate,
+  //   label: 'invalidate',
+  // },
+  // {
+  //   type: InvalidationType.Release,
+  //   label: 'release',
+  // },
 ]
 
 export type RentalIssueAdvancedValues = {

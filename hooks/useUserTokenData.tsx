@@ -145,15 +145,16 @@ export const useUserTokenData = (
       if (filter?.type === 'issuer') {
         tokenAccounts = tokenAccounts.filter(
           (tokenAccount) =>
-            tokenAccountDelegateData[tokenAccount.parsed.delegate]?.type ===
+            filter.value.includes(tokenAccount.parsed.owner.toString()) ||
+            (tokenAccountDelegateData[tokenAccount.parsed.delegate]?.type ===
               'tokenManager' &&
-            filter.value.includes(
-              (
-                tokenAccountDelegateData[
-                  tokenAccount.parsed.delegate
-                ] as AccountData<TokenManagerData>
-              ).parsed.issuer.toString()
-            )
+              filter.value.includes(
+                (
+                  tokenAccountDelegateData[
+                    tokenAccount.parsed.delegate
+                  ] as AccountData<TokenManagerData>
+                ).parsed.issuer.toString()
+              ))
         )
       }
 
