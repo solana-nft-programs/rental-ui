@@ -1021,8 +1021,8 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     ],
     marketplaceRate: 'days',
   },
-  'p2-farmers-genesis': {
-    name: 'p2-farmers-genesis',
+  p2FarmersGenesis: {
+    name: 'p2FarmersGenesis',
     displayName: 'P2 Farmers Genesis Series',
     type: 'Collection',
     websiteUrl: 'https://player2.world',
@@ -1228,8 +1228,8 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     badges: [{ badgeType: 'recent' }],
     marketplaceRate: 'days',
   },
-  'pixelpilotz-node': {
-    name: 'pixelpilotz-node',
+  pixelpilotzNode: {
+    name: 'pixelpilotzNode',
     displayName: 'PixelPilotz Node',
     type: 'Collection',
     websiteUrl: 'https://pixelpilotz.com',
