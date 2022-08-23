@@ -23,7 +23,11 @@ const INDEX_ENABLED = true
 export const ENVIRONMENTS: Environment[] = [
   {
     label: 'mainnet-beta',
-    primary: process.env.MAINNET_PRIMARY || 'https://ssc-dao.genesysgo.net',
+    primary:
+      [
+        process.env.SYNDICA_MAINNET_PRIMARY,
+        process.env.ALCHEMY_MAINNET_PRIMARY,
+      ][Math.round(Math.random())] || 'https://ssc-dao.genesysgo.net',
     secondary: 'https://ssc-dao.genesysgo.net',
     index: INDEX_ENABLED
       ? 'https://prod-holaplex.hasura.app/v1/graphql'
