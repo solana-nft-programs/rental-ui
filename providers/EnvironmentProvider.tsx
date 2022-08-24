@@ -6,6 +6,7 @@ import React, { useContext, useMemo, useState } from 'react'
 export interface Environment {
   label: Cluster
   primary: string
+  primaryBeta?: string
   secondary?: string
   api?: string
   index?: string
@@ -19,16 +20,18 @@ export interface EnvironmentContextValues {
 }
 
 const INDEX_ENABLED = true
+const RPC_BETA_THRESHOLD = 0.25
 
 export const ENVIRONMENTS: Environment[] = [
   {
     label: 'mainnet-beta',
     primary: process.env.MAINNET_PRIMARY || 'https://ssc-dao.genesysgo.net',
+    primaryBeta:
+      process.env.MAINNET_PRIMARY_BETA || 'https://ssc-dao.genesysgo.net',
     secondary: 'https://ssc-dao.genesysgo.net',
     index: INDEX_ENABLED
       ? 'https://prod-holaplex.hasura.app/v1/graphql'
       : undefined,
-    // api: '/api',
   },
   {
     label: 'testnet',
@@ -66,17 +69,28 @@ export function EnvironmentProvider({
     setEnvironment(foundEnvironment ?? ENVIRONMENTS[0]!)
   }, [cluster])
 
-  const connection = useMemo(
-    () => new Connection(environment.primary, { commitment: 'recent' }),
-    [environment]
-  )
+  const connection = useMemo(() => {
+    setEnvironment((e) => ({
+      ...e,
+      primary:
+        Math.random() < RPC_BETA_THRESHOLD
+          ? environment.primaryBeta ?? environment.primary
+          : environment.primary,
+    }))
+    return new Connection(
+      Math.random() < RPC_BETA_THRESHOLD
+        ? environment.primaryBeta ?? environment.primary
+        : environment.primary,
+      { commitment: 'recent' }
+    )
+  }, [environment.label])
 
   const secondaryConnection = useMemo(
     () =>
       new Connection(environment.secondary ?? environment.primary, {
         commitment: 'recent',
       }),
-    [environment]
+    [environment.label]
   )
 
   return (

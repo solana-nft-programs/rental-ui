@@ -22,6 +22,7 @@ import {
   getPriceFromTokenData,
   getTokenRentalRate,
 } from 'common/tokenDataUtils'
+import { tracer, withTrace } from 'common/trace'
 import { executeTransaction } from 'common/Transactions'
 import { asWallet } from 'common/Wallets'
 import { TOKEN_DATA_KEY } from 'hooks/useBrowseAvailableTokenDatas'
@@ -73,6 +74,7 @@ export const useHandleRateRental = () => {
       if (!extensionSeconds) throw 'No duration specified'
       if (!wallet.publicKey) throw 'Wallet not connected'
       const transaction = new Transaction()
+      const trace = tracer({ name: 'useHandleRateRental' })
 
       // wrap sol if there is payment required
       const paymentAmount =
@@ -125,45 +127,55 @@ export const useHandleRateRental = () => {
             tokenData.tokenManager?.pubkey
           )
         }
-        await withClaimToken(
-          transaction,
-          environment.secondary
-            ? new Connection(environment.secondary)
-            : connection,
-          asWallet(wallet),
-          tokenData.tokenManager?.pubkey,
-          {
-            otpKeypair: otpKeypair,
-          }
+        await withTrace(
+          () =>
+            withClaimToken(
+              transaction,
+              environment.secondary
+                ? new Connection(environment.secondary)
+                : connection,
+              asWallet(wallet),
+              tokenData.tokenManager!.pubkey,
+              {
+                otpKeypair: otpKeypair,
+              }
+            ),
+          trace,
+          { op: 'withClaimToken' }
         )
       }
 
-      await withExtendExpiration(
-        transaction,
-        connection,
-        asWallet(wallet),
-        tokenData.tokenManager?.pubkey,
-        extensionSeconds
+      await withTrace(
+        () =>
+          withExtendExpiration(
+            transaction,
+            connection,
+            asWallet(wallet),
+            tokenData.tokenManager!.pubkey,
+            extensionSeconds
+          ),
+        trace,
+        { op: 'withExtendExpiration' }
       )
 
-      const tx = await executeTransaction(
-        connection,
-        asWallet(wallet),
-        transaction,
-        {
-          confirmOptions: {
-            commitment: 'confirmed',
-            maxRetries: 3,
-          },
-          signers:
-            otpKeypair &&
-            tokenData?.tokenManager.parsed.claimApprover?.equals(
-              otpKeypair.publicKey
-            )
-              ? [otpKeypair]
-              : [],
-          notificationConfig: {},
-        }
+      const tx = await withTrace(
+        () =>
+          executeTransaction(connection, asWallet(wallet), transaction, {
+            confirmOptions: {
+              commitment: 'confirmed',
+              maxRetries: 3,
+            },
+            signers:
+              otpKeypair &&
+              tokenData?.tokenManager!.parsed.claimApprover?.equals(
+                otpKeypair.publicKey
+              )
+                ? [otpKeypair]
+                : [],
+            notificationConfig: {},
+          }),
+        trace,
+        { op: 'executeTransaction' }
       )
       logConfigTokenDataEvent(
         `nft rental: ${claim ? 'claim' : 'extend duration'}`,
@@ -219,6 +231,7 @@ export const useHandleRateRental = () => {
           )[0]?.symbol,
         }
       )
+      trace.finish()
       return tx
     },
     {

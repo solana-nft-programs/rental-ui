@@ -6,7 +6,7 @@ module.exports = withSentryConfig(
     reactStrictMode: false,
     env: {
       MAINNET_PRIMARY: process.env.MAINNET_PRIMARY,
-      BASE_CLUSTER: process.env.BASE_CLUSTER || 'devnet',
+      MAINNET_PRIMARY_BETA: process.env.MAINNET_PRIMARY_BETA,
       BASE_CLUSTER: process.env.BASE_CLUSTER || 'devnet',
       NEXT_PUBLIC_BASE_URL:
         process.env.NEXT_PUBLIC_BASE_URL || 'https://rent.cardinal.so',

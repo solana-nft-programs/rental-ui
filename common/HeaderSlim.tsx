@@ -45,6 +45,8 @@ export const HeaderSlim: React.FC<Props> = ({ tabs, hideDashboard }: Props) => {
 
       // amplitude setup
       amplitude.setUserId(userId)
+      amplitude.setGroup('solana_primary_rpc', environment.primary)
+      amplitude.setGroup('solana_secondary_rpc', environment.secondary ?? '')
       if (displayName) {
         const identify = new amplitude.Identify()
           .setOnce('handle', displayName[0])
@@ -60,6 +62,8 @@ export const HeaderSlim: React.FC<Props> = ({ tabs, hideDashboard }: Props) => {
             : wallet.publicKey?.toString(),
           wallet: wallet.publicKey?.toString(),
         })
+        scope.setTag('solana_primary_rpc', environment.primary)
+        scope.setTag('solana_secondary_rpc', environment.secondary)
         scope.setTag('wallet', wallet.publicKey?.toString())
         if (displayName) {
           scope.setTag('handle', displayName[0])

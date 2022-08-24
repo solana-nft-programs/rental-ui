@@ -14,6 +14,7 @@ import { logConfigTokenDataEvent } from 'apis/amplitude'
 import type { TokenData } from 'apis/api'
 import { notify } from 'common/Notification'
 import { getPriceFromTokenData } from 'common/tokenDataUtils'
+import { tracer, withTrace } from 'common/trace'
 import { executeTransaction } from 'common/Transactions'
 import { asWallet } from 'common/Wallets'
 import type { ProjectConfig } from 'config/config'
@@ -112,6 +113,7 @@ export const useHandleClaimRental = () => {
     }: HandleClaimRentalParams): Promise<string> => {
       if (!tokenData.tokenManager) throw new Error('No token manager data')
       if (!wallet.publicKey) throw new Error('Wallet not connected')
+      const trace = tracer({ name: 'useHandleClaimRental' })
 
       const transaction = new Transaction()
       const paymentMint =
@@ -164,24 +166,24 @@ export const useHandleClaimRental = () => {
           otpKeypair,
         }
       )
-      const tx = await executeTransaction(
-        connection,
-        asWallet(wallet),
-        transaction,
-        {
-          confirmOptions: {
-            commitment: 'confirmed',
-            maxRetries: 3,
-          },
-          signers:
-            otpKeypair &&
-            tokenData?.tokenManager.parsed.claimApprover?.equals(
-              otpKeypair.publicKey
-            )
-              ? [otpKeypair]
-              : [],
-          notificationConfig: {},
-        }
+      const tx = await withTrace(
+        () =>
+          executeTransaction(connection, asWallet(wallet), transaction, {
+            confirmOptions: {
+              commitment: 'confirmed',
+              maxRetries: 3,
+            },
+            signers:
+              otpKeypair &&
+              tokenData?.tokenManager?.parsed.claimApprover?.equals(
+                otpKeypair.publicKey
+              )
+                ? [otpKeypair]
+                : [],
+            notificationConfig: {},
+          }),
+        trace,
+        { op: 'executeTransaction' }
       )
       logConfigTokenDataEvent('nft rental: claim', config, tokenData, {
         rental_type: rentalType,
@@ -205,6 +207,7 @@ export const useHandleClaimRental = () => {
             tokenData.timeInvalidator?.parsed.extensionPaymentMint?.toString()
         )[0]?.symbol,
       })
+      trace.finish()
       return tx
     },
     {
