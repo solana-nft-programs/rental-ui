@@ -17,7 +17,7 @@
     "@cardinal/common": "^2.0.11",
     "@cardinal/eslint-config-react": "^1.0.10",
     "@cardinal/namespaces": "^4.1.53",
-    "@cardinal/namespaces-components": "^4.1.17",
+    "@cardinal/namespaces-components": "^4.1.19",
     "@cardinal/scanner": "^0.1.5",
     "@cardinal/token-manager": "^1.5.11",
     "@emotion/babel-plugin": "^11.7.2",
