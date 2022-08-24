@@ -3,6 +3,7 @@ import { useWallet } from '@solana/wallet-adapter-react'
 import { Transaction } from '@solana/web3.js'
 import { logConfigTokenDataEvent } from 'apis/amplitude'
 import type { TokenData } from 'apis/api'
+import { tracer, withTrace } from 'common/trace'
 import { executeTransaction } from 'common/Transactions'
 import { asWallet } from 'common/Wallets'
 import { TOKEN_DATA_KEY } from 'hooks/useBrowseAvailableTokenDatas'
@@ -25,31 +26,47 @@ export const useHandleReturnRental = () => {
       if (!wallet.publicKey) throw new Error('Wallet not connected')
 
       const transaction = new Transaction()
+      const trace = tracer({ name: 'useHandleReturnRental' })
 
-      await withReturn(
-        transaction,
-        connection,
-        asWallet(wallet),
-        tokenData.tokenManager
+      await withTrace(
+        () =>
+          withReturn(
+            transaction,
+            connection,
+            asWallet(wallet),
+            tokenData.tokenManager!
+          ),
+        trace,
+        { op: 'withReturn' }
       )
 
       if (tokenData.timeInvalidator) {
-        await withResetExpiration(
-          transaction,
-          connection,
-          asWallet(wallet),
-          tokenData.tokenManager?.pubkey
+        await withTrace(
+          () =>
+            withResetExpiration(
+              transaction,
+              connection,
+              asWallet(wallet),
+              tokenData.tokenManager!.pubkey
+            ),
+          trace,
+          { op: 'withResetExpiration' }
         )
       }
 
-      const tx = executeTransaction(connection, asWallet(wallet), transaction, {
-        silent: false,
-        confirmOptions: {
-          commitment: 'confirmed',
-          maxRetries: 3,
-        },
-        notificationConfig: {},
-      })
+      const tx = withTrace(
+        () =>
+          executeTransaction(connection, asWallet(wallet), transaction, {
+            silent: false,
+            confirmOptions: {
+              commitment: 'confirmed',
+              maxRetries: 3,
+            },
+            notificationConfig: {},
+          }),
+        trace,
+        { op: 'executeTransaction' }
+      )
       logConfigTokenDataEvent(
         'nft rental: return',
         configFromToken(tokenData),
@@ -62,6 +79,7 @@ export const useHandleReturnRental = () => {
             tokenData.timeInvalidator?.parsed?.maxExpiration?.toNumber(),
         }
       )
+      trace.finish()
       return tx
     },
     {

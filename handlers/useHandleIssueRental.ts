@@ -21,6 +21,7 @@ import {
   getPriceFromTokenData,
   getTokenRentalRate,
 } from 'common/tokenDataUtils'
+import { tracer, withTrace } from 'common/trace'
 import { fmtMintAmount } from 'common/units'
 import { asWallet } from 'common/Wallets'
 import { TOKEN_DATA_KEY } from 'hooks/useBrowseAvailableTokenDatas'
@@ -142,6 +143,7 @@ export const useHandleIssueRental = () => {
         throw 'Max expiration required'
       }
 
+      const trace = tracer({ name: 'useHandleIssueRental' })
       const transactions: Transaction[] = []
       const receiptMintKeypairs: Keypair[] = []
       const txData = []
@@ -236,10 +238,10 @@ export const useHandleIssueRental = () => {
         }
 
         console.log('----', issueParams)
-        const [issueTransaction, tokenManagerId, otpKeypair] = await issueToken(
-          connection,
-          asWallet(wallet),
-          issueParams
+        const [issueTransaction, tokenManagerId, otpKeypair] = await withTrace(
+          () => issueToken(connection, asWallet(wallet), issueParams),
+          trace,
+          { op: 'issueToken' }
         )
 
         txData.push({
@@ -261,22 +263,22 @@ export const useHandleIssueRental = () => {
           : issueTransaction.instructions
         transactions.push(transaction)
       }
-      const txResults = await executeAllTransactions(
-        connection,
-        asWallet(wallet),
-        transactions,
-        {
-          signers: claimRentalReceipt ? [receiptMintKeypairs] : [],
-          confirmOptions: {
-            maxRetries: 3,
-          },
-          notificationConfig: {
-            successSummary: true,
-            message: 'Successfully rented out NFTs',
-            description:
-              'These NFTs are now available to rent in the browse tab',
-          },
-        }
+      const txResults = await withTrace(
+        () =>
+          executeAllTransactions(connection, asWallet(wallet), transactions, {
+            signers: claimRentalReceipt ? [receiptMintKeypairs] : [],
+            confirmOptions: {
+              maxRetries: 3,
+            },
+            notificationConfig: {
+              successSummary: true,
+              message: 'Successfully rented out NFTs',
+              description:
+                'These NFTs are now available to rent in the browse tab',
+            },
+          }),
+        trace,
+        { op: 'executeAllTransaction' }
       )
       for (let i = 0; i < txData.length; i++) {
         const txResult = txResults[i]
@@ -316,6 +318,7 @@ export const useHandleIssueRental = () => {
         }
       }
 
+      trace.finish()
       return txData.map((txData, i) => ({
         ...txData,
         error: txResults[i]?.error ?? undefined,
