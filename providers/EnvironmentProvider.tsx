@@ -69,23 +69,28 @@ export function EnvironmentProvider({
     setEnvironment(foundEnvironment ?? ENVIRONMENTS[0]!)
   }, [cluster])
 
-  const connection = useMemo(
-    () =>
-      new Connection(
+  const connection = useMemo(() => {
+    setEnvironment((e) => ({
+      ...e,
+      primary:
         Math.random() < RPC_BETA_THRESHOLD
           ? environment.primaryBeta ?? environment.primary
           : environment.primary,
-        { commitment: 'recent' }
-      ),
-    [environment]
-  )
+    }))
+    return new Connection(
+      Math.random() < RPC_BETA_THRESHOLD
+        ? environment.primaryBeta ?? environment.primary
+        : environment.primary,
+      { commitment: 'recent' }
+    )
+  }, [environment.label])
 
   const secondaryConnection = useMemo(
     () =>
       new Connection(environment.secondary ?? environment.primary, {
         commitment: 'recent',
       }),
-    [environment]
+    [environment.label]
   )
 
   return (
