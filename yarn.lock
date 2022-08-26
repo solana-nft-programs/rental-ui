@@ -1800,6 +1800,17 @@
     "@metaplex-foundation/mpl-token-metadata" "^1.2.5"
     "@project-serum/anchor" "^0.24.2"
 
+"@cardinal/namespaces@^4.1.56":
+  version "4.1.56"
+  resolved "https://registry.yarnpkg.com/@cardinal/namespaces/-/namespaces-4.1.56.tgz#3fe5c3c8077f12af16765dc13ebc281bc197f97c"
+  integrity sha512-7XCT1hxJ8o3qDZt+tGpVgC9OkTn/20wxThNs9BVBK7RGt8hOqmsx3EDk0H5cpRh63g7b436cAEINPMxi8D3bhA==
+  dependencies:
+    "@cardinal/certificates" "^2.0.1"
+    "@cardinal/common" "^2.0.10"
+    "@cardinal/token-manager" "1.5.12"
+    "@metaplex-foundation/mpl-token-metadata" "^1.2.5"
+    "@project-serum/anchor" "^0.24.2"
+
 "@cardinal/scanner@^0.1.5":
   version "0.1.5"
   resolved "https://registry.yarnpkg.com/@cardinal/scanner/-/scanner-0.1.5.tgz#03b4cdca076bfe27b38da3eea861ea3edfaaad71"

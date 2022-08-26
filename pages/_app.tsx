@@ -52,7 +52,9 @@ const App = ({
       <UTCNowProvider>
         <SolanaAccountsProvider>
           <WalletProvider wallets={getWalletAdapters()} autoConnect>
-            <WalletIdentityProvider identities={[IDENTITIES['twitter']]}>
+            <WalletIdentityProvider
+              identities={[IDENTITIES['twitter'], IDENTITIES['discord']]}
+            >
               <ProjectConfigProvider defaultConfig={config}>
                 <QueryClientProvider client={queryClient}>
                   <ModalProvider>
