@@ -395,55 +395,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     ],
     marketplaceRate: 'days',
   },
-  nftsoloist: {
-    name: 'nftsoloist',
-    displayName: 'NFTSoloist Genesis Pass',
-    type: 'Collection',
-    websiteUrl: 'https://nftnerds.ai/',
-    logoImage: '/logos/nftsoloist.png',
-    hero: '/logos/nftsoloist-hero.png',
-    description:
-      '250 Genesis Passes for early supporters of NFTSoloist. Grants full access to https://nftsoloist.ai',
-    colors: {
-      accent: '#8863d4',
-      glow: '#8863d4',
-    },
-    twitterHandle: '@NFTNerdsAI',
-    socialLinks: [
-      {
-        icon: 'discord',
-        link: 'https://discord.com/invite/nftnerds',
-      },
-      {
-        icon: 'web',
-        link: 'https://www.hoa.house/',
-      },
-      {
-        icon: 'twitter',
-        link: 'https://twitter.com/NFTNerdsAI',
-      },
-    ],
-    filter: {
-      type: 'creators',
-      value: ['FpJ3h2dzuvmdedmuV4ECz8S31RacnCxiw2ykXNhMntVt'],
-    },
-    rentalCard: {
-      invalidators: ['rate', 'duration'],
-      invalidationOptions: {
-        visibilities: ['public', 'private'],
-        durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
-        paymentMints: ['So11111111111111111111111111111111111111112'],
-        showClaimRentalReceipt: false,
-        setClaimRentalReceipt: false,
-        maxDurationAllowed: {
-          displayText: '12 weeks',
-          value: 7258000,
-        },
-      },
-    },
-    marketplaceRate: 'days',
-  },
   solrarity: {
     name: 'solrarity',
     displayName: 'SolRarity Rarikeys',
@@ -651,7 +602,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     type: 'Collection',
     websiteUrl: 'https://soultools.io/',
     logoImage: '/logos/soultools.png',
-    logoPadding: true,
     hero: '/logos/soultools-hero.png',
     colors: {
       accent: '#3fb0e8',
@@ -695,13 +645,111 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     },
     marketplaceRate: 'days',
   },
+  rakkudos: {
+    name: 'rakkudos',
+    displayName: 'Rakkudos',
+    type: 'Collection',
+    websiteUrl: 'https://www.rakkudos.com/',
+    logoImage: '/logos/rakkudos.png',
+    hero: '/logos/rakkudos-hero.png',
+    badges: [{ badgeType: 'recent' }],
+    colors: {
+      accent: '#444444',
+      glow: '#888888',
+    },
+    description:
+      "10,000 Raccoons empowering web3 builders brought to you by Shakudo - the platform that unites all of the data tools and services you'll ever need.",
+    twitterHandle: '@rakkudos',
+    socialLinks: [
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/shakudo',
+      },
+      {
+        icon: 'web',
+        link: 'https://www.rakkudos.com/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/rakkudos',
+      },
+    ],
+    filter: {
+      type: 'creators',
+      value: ['HAvvubBRmiKECTCBBtYzhUx53SyZn3GZ2fcvw79MQqtY'],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
+  nftsoloist: {
+    name: 'nftsoloist',
+    displayName: 'NFTSoloist Genesis Pass',
+    type: 'Collection',
+    websiteUrl: 'https://nftnerds.ai/',
+    logoImage: '/logos/nftsoloist.png',
+    hero: '/logos/nftsoloist-hero.png',
+    description:
+      '250 Genesis Passes for early supporters of NFTSoloist. Grants full access to https://nftsoloist.ai',
+    colors: {
+      accent: '#8863d4',
+      glow: '#8863d4',
+    },
+    twitterHandle: '@NFTNerdsAI',
+    socialLinks: [
+      {
+        icon: 'discord',
+        link: 'https://discord.com/invite/nftnerds',
+      },
+      {
+        icon: 'web',
+        link: 'https://www.hoa.house/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/NFTNerdsAI',
+      },
+    ],
+    filter: {
+      type: 'creators',
+      value: ['FpJ3h2dzuvmdedmuV4ECz8S31RacnCxiw2ykXNhMntVt'],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
   smartseasociety: {
     name: 'smartseasociety',
     displayName: 'Smart Sea Society',
     type: 'Collection',
     websiteUrl: 'https://www.smartseasociety.com/',
     logoImage: '/logos/smartseasociety.png',
-    logoPadding: true,
     hero: '/logos/smartseasociety-hero.png',
     colors: {
       accent: '#63a7d4',
@@ -751,7 +799,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     type: 'Collection',
     websiteUrl: 'https://myceliumlabs.io/',
     logoImage: '/logos/myceliumpass.png',
-    logoPadding: true,
     hero: '/logos/myceliumpass-hero.png',
     colors: {
       accent: '#c5abd8',
