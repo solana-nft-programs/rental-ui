@@ -845,6 +845,63 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     },
     marketplaceRate: 'days',
   },
+  hydrascripts: {
+    name: 'hydrascripts',
+    displayName: 'HydraScripts',
+    type: 'Collection',
+    websiteUrl: 'https://twitter.com/HydraScripts',
+    logoImage: '/logos/hydrascripts.png',
+    hero: '/logos/hydrascripts-hero.png',
+    badges: [{ badgeType: 'recent' }],
+    colors: {
+      accent: '#dd1fda',
+      glow: '#dd1fda',
+    },
+    description:
+      'Owning a Hydra Pass will grant you access to HydraScripts: an NFT minting and sniping CLI bot living on the Solana Blockchain.',
+    twitterHandle: '@HydraScripts',
+    socialLinks: [
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/Wrv6NKeyFX',
+      },
+      {
+        icon: 'web',
+        link: 'https://twitter.com/HydraScripts',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/HydraScripts',
+      },
+    ],
+    filter: {
+      type: 'creators',
+      value: [
+        'F5H94UB5TVyPBvHC8sZhRUK8j47EPm426M6qx9EgreD',
+        'EQSoRhbN9fEEYXKEE5Lg63Mqf17P3JydcWTvDhdMJW1N',
+        '3RvhT5J2ffn4UAFCh3dqgMRvqoPKUWaNbPoD6rhuQ6SV',
+        '75CPiM9ywLgxhii9SQsNoA1SH3h66o5EhrYsazHR5Tqk',
+        '6kMe4oQWEK1zfaXTUUAv7amgbCLqkuzeg8NxTXdmcxXf',
+        '4VM2pJQWN1W8ELyrPFwxFFY5cqzmYJdRJpMUuYQPhpkK',
+      ],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
   rooniverse: {
     name: 'rooniverse',
     displayName: 'Rooniverse',
