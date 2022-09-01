@@ -2087,6 +2087,58 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     },
     marketplaceRate: 'days',
   },
+  soliendao: {
+    name: 'soliendao',
+    displayName: 'Solien DAO',
+    type: 'Guild',
+    websiteUrl: 'https://www.solien.io/',
+    logoImage: '/logos/soliendao.png',
+    hero: '/logos/soliendao-hero.png',
+    colors: {
+      accent: '#FCB316',
+      glow: '#FCB316',
+    },
+    description:
+      'NFT collection of Extraterrestrial mugshots which serve as entry key to a DAO focusing heavily on investment in metaverse assets and the broader Solana Ecosystem.',
+    twitterHandle: '@SolienDAO',
+    socialLinks: [
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/ZZSvwqr4Mb',
+      },
+      {
+        icon: 'web',
+        link: 'https://www.solien.io/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/SolienDAO',
+      },
+    ],
+    filter: {
+      type: 'issuer',
+      value: ['Dp32k9fx6mDo7FnvGaqaPDHX9fPEQXyYKUevjrypGkF8'],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: [
+          'C5EefTmWXHJWFkN3Dh7QyFUnBG3UXSu8h6qVs6xtaLxy',
+          'So11111111111111111111111111111111111111112',
+        ],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '6 weeks',
+          value: 3629000,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
   degenclub15k: {
     name: 'degenclub15k',
     displayName: 'Degen Club 15K',
