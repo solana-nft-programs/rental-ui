@@ -1497,6 +1497,104 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     },
     marketplaceRate: 'days',
   },
+  thesuites: {
+    name: 'thesuites',
+    displayName: 'The Suites',
+    type: 'Collection',
+    websiteUrl: 'https://thesuites.app/',
+    badges: [{ badgeType: 'recent' }],
+    logoImage: '/logos/thesuites.png',
+    hero: '/logos/thesuites-hero.png',
+    colors: {
+      accent: '#af9467',
+      glow: '#fff',
+    },
+    description: `Introducing "The Suites", an exclusive collection of virtual hangouts on the Solana blockchain! Built by a veteran game development team from EA Sports and FanDuel with decades of experience, The Suites aim to recreate that feeling of going to your local pub dedicated to a single team. Stream live games and events on TV's in your space, audio and text chat, and make wagers in $SUITE tokens across sports, casino, and fun games inside your very own Luxury Suite!`,
+    twitterHandle: '@TheSuitesNFT',
+    socialLinks: [
+      {
+        icon: 'discord',
+        link: 'https://discord.com/invite/zhzYGxtx9D',
+      },
+      {
+        icon: 'web',
+        link: 'https://twitter.com/TheSuitesNFT',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/TheSuitesNFT',
+      },
+    ],
+    filter: {
+      type: 'creators',
+      value: ['AQ98oUJQuTsX446cYJgEJJRTnQL4b2LiaFTp95nfa2qc'],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7257600,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
+  geomancer: {
+    name: 'geomancer',
+    displayName: 'Geomancer',
+    type: 'Collection',
+    websiteUrl: 'https://geomancer.store/',
+    badges: [{ badgeType: 'recent' }],
+    logoImage: '/logos/geomancer.png',
+    hero: '/logos/geomancer-hero.png',
+    colors: {
+      accent: '#161929',
+      glow: '#3858e9',
+    },
+    description: 'A collection of 2000 Geomancy on Solana Blockchain.',
+    twitterHandle: '@GeomancerSol',
+    socialLinks: [
+      {
+        icon: 'discord',
+        link: 'discord.gg/57SXEecNdB',
+      },
+      {
+        icon: 'web',
+        link: 'https://geomancer.store/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/GeomancerSol',
+      },
+    ],
+    filter: {
+      type: 'creators',
+      value: ['ADBwZNsoicd81UiCrbQbACypZDtXhn17UphEVLkNdu9N'],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7257600,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
   // empiredao: {
   //   name: 'empiredao',
   //   displayName: 'Empire DAO',
