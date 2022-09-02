@@ -2,7 +2,6 @@ import { tryPublicKey } from '@cardinal/common'
 import { tokenManager } from '@cardinal/token-manager/dist/cjs/programs'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import * as metaplex from '@metaplex-foundation/mpl-token-metadata'
-import type { PublicKey } from '@solana/web3.js'
 import { Connection } from '@solana/web3.js'
 import Claim from 'components/Claim'
 import { ENVIRONMENTS } from 'providers/EnvironmentProvider'
@@ -32,28 +31,21 @@ export async function getServerSideProps(context: any) {
     commitment: 'recent',
   })
 
-  let mintId: PublicKey | null = null
-  let isClaimed: boolean | null = null
   let nftImageUrl: string | null = null
   let nftName: string | null = null
-  if (mintIdString) {
-    mintId = tryPublicKey(mintIdString)
-    isClaimed = false
-  } else {
-    const tokenManagerId = tryPublicKey(tokenManagerString)
-    if (!tokenManagerId) {
-      return {}
-    }
-    const tokenManagerData = await tokenManager.accounts
-      .getTokenManager(connection, tokenManagerId)
-      .catch((e) => {
-        console.log('Failed to get token manager data', e)
-        return null
-      })
-    mintId = tokenManagerData?.parsed.mint ?? null
-    isClaimed = tokenManagerData?.parsed.state === TokenManagerState.Claimed
+
+  const tokenManagerId = tryPublicKey(tokenManagerString)
+  if (!tokenManagerId) {
+    return {}
   }
-  console.log(mintId)
+  const tokenManagerData = await tokenManager.accounts
+    .getTokenManager(connection, tokenManagerId)
+    .catch((e) => {
+      console.log('Failed to get token manager data', e)
+      return null
+    })
+  const mintId = tokenManagerData?.parsed.mint ?? tryPublicKey(mintIdString)
+  const isClaimed = tokenManagerData?.parsed.state === TokenManagerState.Claimed
 
   if (!mintId) {
     return { props: {} }
