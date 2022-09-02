@@ -28,7 +28,7 @@ export const ENVIRONMENTS: Environment[] = [
     primary: process.env.MAINNET_PRIMARY || 'https://ssc-dao.genesysgo.net',
     primaryBeta:
       process.env.MAINNET_PRIMARY_BETA || 'https://ssc-dao.genesysgo.net',
-    secondary: 'https://ssc-dao.genesysgo.net',
+    secondary: process.env.MAINNET_SECONDARY || 'https://ssc-dao.genesysgo.net',
     index: INDEX_ENABLED
       ? 'https://prod-holaplex.hasura.app/v1/graphql'
       : undefined,
