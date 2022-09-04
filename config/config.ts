@@ -429,6 +429,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       value: [
         '53EmnGdMxnmNcaPUE6wJ2NHz6iUVpge4a7RViTdfb8Dq',
         'BF2rThtdXMSbFBHbHjTVKXndQnJ1k8HALsX2HCL1QvSc',
+        'GfuaX8U67NBYHv133cvTDekqWy6EmYUrdH7UxPqKRgCL',
       ],
     },
     rentalCard: {
