@@ -1596,37 +1596,151 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     },
     marketplaceRate: 'days',
   },
-  // empiredao: {
-  //   name: 'empiredao',
-  //   displayName: 'Empire DAO',
-  //   type: 'Collection',
-  //   websiteUrl: 'https://empiredao.xyz/',
-  //   logoImage: '/logos/empiredao.png',
-  //   colors: {
-  //     accent: '#CCCDFF',
-  //   },
-  //   filter: {
-  //     type: 'issuer',
-  //     value: ['edaoJQRZZ3hfNottaxe9z5o2owJDJgL1bUChiPk15KN'],
-  //   },
-  //   rentalCard: {
-  //     invalidators: ['expiration'],
-  //     invalidationOptions: {
-  //       visibilities: ['public'],
-  //       durationOptions: [ 'hours', 'days', 'weeks'],
-  //       invalidationTypes: ['reissue'],
-  //       paymentMints: ['So11111111111111111111111111111111111111112'],
-  //       showClaimRentalReceipt: false,
-  //       setClaimRentalReceipt: false,
-  //       maxDurationAllowed: {
-  //         displayText: '3 weeks',
-  //         value: 7258000,
-  //       },
-  //     },
-  //   },
-  //   marketplaceRate: 'days',
-  //   airdrops: [],
-  // },
+  starbots: {
+    name: 'starbots',
+    displayName: 'Starbots',
+    type: 'Collection',
+    badges: [{ badgeType: 'recent' }],
+    websiteUrl: 'https://starbots.net',
+    logoImage: '/logos/starbots.jpeg',
+    hero: '/logos/starbots-hero.jpeg',
+    description:
+      'Starbots is a BattleBots-inspired universe and the first-ever robot battle NFT game where players create fantasy robots to fight against other competitors, then collect NFT items and GEAR tokens.',
+    twitterHandle: '@Starbots_game',
+    socialLinks: [
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/starbots',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/Starbots_game',
+      },
+      {
+        icon: 'web',
+        link: 'https://starbots.net',
+      },
+    ],
+    colors: {
+      accent: '#5602de',
+      glow: '#b202e9',
+    },
+    filter: {
+      type: 'creators',
+      value: [
+        'AHzUsxj2Ey65UUwivgxyvYv669YYpiBuk98jvv51BFx7',
+        '93NBFwRaNwKgyYRJJSfohjcYzRRQs5fdDiC5kLSdUfWk',
+      ],
+    },
+    showUnknownInvalidators: true,
+    rentalCard: {
+      invalidators: ['rate', 'duration', 'manual'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '21 days',
+          value: 1814400,
+        },
+      },
+    },
+    airdrops: [
+      {
+        name: 'SMB #1148',
+        symbol: 'SMB',
+        uri: 'https://arweave.net/c2i2nLtanzMcWqLwFOE9yiwHoJ1WdvJcpdS54drBD9g',
+      },
+      {
+        name: 'SMB #2712',
+        symbol: 'SMB',
+        uri: 'https://arweave.net/xhUWFiFbhEz6EjzE05XNvYvpP5U43bNRXvtSKku12oA',
+      },
+      {
+        name: 'SMB #931',
+        symbol: 'SMB',
+        uri: 'https://arweave.net/d8IpVzCnR5sqkmimkbpxUKj4CLiOQl89ASvt6dTTyWA',
+      },
+      {
+        name: 'SMB #1785',
+        symbol: 'SMB',
+        uri: 'https://arweave.net/JR_l_iOJVvVSiuySnFKsMbDtZ61deFwkr4-wch_TJzc',
+      },
+    ],
+    marketplaceRate: 'days',
+  },
+  zionlabs: {
+    name: 'zionlabs',
+    displayName: 'Zion Labs',
+    type: 'Collection',
+    badges: [{ badgeType: 'recent' }],
+    websiteUrl: 'https://zionlabs.xyz/',
+    logoImage: '/logos/zionlabs.jpeg',
+    hero: '/logos/zionlabs-hero.jpeg',
+    description:
+      'A Web 3 experiment studio. Built Cypher, an NFT trading engine with a fully automated trading bot. 777 keys.',
+    twitterHandle: '@zion_labs',
+    socialLinks: [
+      {
+        icon: 'discord',
+        link: 'https://discord.com/invite/DJFafA5Aaz',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/zion_labs',
+      },
+      {
+        icon: 'web',
+        link: 'https://zionlabs.xyz/',
+      },
+    ],
+    colors: {
+      accent: '#d4fcfe',
+      glow: '#cccdff',
+    },
+    filter: {
+      type: 'creators',
+      value: ['Ha8Q9MJij5sP84eegUY4Kj6jAFcRu3rHZ2vUeqKkVDUD'],
+    },
+    showUnknownInvalidators: true,
+    rentalCard: {
+      invalidators: ['rate', 'duration', 'manual'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+      },
+    },
+    airdrops: [
+      {
+        name: 'SMB #1148',
+        symbol: 'SMB',
+        uri: 'https://arweave.net/c2i2nLtanzMcWqLwFOE9yiwHoJ1WdvJcpdS54drBD9g',
+      },
+      {
+        name: 'SMB #2712',
+        symbol: 'SMB',
+        uri: 'https://arweave.net/xhUWFiFbhEz6EjzE05XNvYvpP5U43bNRXvtSKku12oA',
+      },
+      {
+        name: 'SMB #931',
+        symbol: 'SMB',
+        uri: 'https://arweave.net/d8IpVzCnR5sqkmimkbpxUKj4CLiOQl89ASvt6dTTyWA',
+      },
+      {
+        name: 'SMB #1785',
+        symbol: 'SMB',
+        uri: 'https://arweave.net/JR_l_iOJVvVSiuySnFKsMbDtZ61deFwkr4-wch_TJzc',
+      },
+    ],
+    marketplaceRate: 'days',
+  },
   default: {
     name: 'default',
     displayName: 'Unverified',
