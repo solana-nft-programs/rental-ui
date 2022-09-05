@@ -81,6 +81,19 @@ export const PAYMENT_MINTS: PaymentMintInfo[] = [
       'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/C5EefTmWXHJWFkN3Dh7QyFUnBG3UXSu8h6qVs6xtaLxy/daologo.png',
     decimals: 6,
   },
+  {
+    mint: 'BsYZmmEXPVPA31aax5pawZtYppoGiowPckxTcituaUCY',
+    symbol: 'GOLD',
+    image: 'https://s3.amazonaws.com/assets.pixelguild.gg/tokens/gold.png',
+    decimals: 0,
+  },
+  {
+    mint: '2YJH1Y5NbdwJGEUAMY6hoTycKWrRCP6kLKs62xiSKWHM',
+    symbol: 'GEMS',
+    image:
+      'https://public.djib.io/QmdLDat9CvntvFPG98CcXJJ3tE1mQZkf5DEfPNhK8F3guq',
+    decimals: 9,
+  },
 ]
 
 export const WRAPPED_SOL_MINT = 'So11111111111111111111111111111111111111112'

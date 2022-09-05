@@ -2427,4 +2427,110 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     },
     marketplaceRate: 'days',
   },
+  pixelguild: {
+    name: 'pixelguild',
+    displayName: 'Pixel Guild',
+    type: 'Guild',
+    websiteUrl: 'https://pixelguild.gg/',
+    badges: [{ badgeType: 'recent' }],
+    logoImage: '/logos/pixelguild.png',
+    hero: '/logos/pixelguild-hero.gif',
+    colors: {
+      accent: '#F5AF40',
+      glow: '#8c7b7f',
+    },
+    description:
+      "Solana's First P2E Action Platformer. Immerse yourself in a brand new Web 3 gaming experience with Heroes, Spells and Monsters accompanied by fantastic gameplay and a mystical soundtrack.",
+    twitterHandle: '@PixelGuild_SOL',
+    socialLinks: [
+      {
+        icon: 'discord',
+        link: 'https://discord.com/invite/pixelguild',
+      },
+      {
+        icon: 'web',
+        link: 'https://pixelguild.gg/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/PixelGuild_SOL',
+      },
+    ],
+    filter: {
+      type: 'issuer',
+      value: ['FwSbBiWbXBgVvRvZ4FqXQ6qAxmTZaWRNabuH9j6n1Jie'],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: [
+          'BsYZmmEXPVPA31aax5pawZtYppoGiowPckxTcituaUCY',
+          'So11111111111111111111111111111111111111112',
+        ],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '7 days',
+          value: 604800,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
+  bigduckmedia: {
+    name: 'bigduckmedia',
+    displayName: 'Big Duck Media',
+    type: 'Guild',
+    websiteUrl: 'https://bigduckmedia.store',
+    badges: [{ badgeType: 'recent' }],
+    logoImage: '/logos/bigduckmedia.png',
+    // hero: '/logos/bigduckmedia-hero.png',
+    colors: {
+      accent: '#1f1f21',
+      glow: '#e3fc01',
+    },
+    description:
+      "Solana's First P2E Action Platformer. Immerse yourself in a brand new Web 3 gaming experience with Heroes, Spells and Monsters accompanied by fantastic gameplay and a mystical soundtrack.",
+    twitterHandle: '@BigDuckMedia',
+    socialLinks: [
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/cDXqHbcwP7',
+      },
+      {
+        icon: 'web',
+        link: 'https://bigduckmedia.store',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/BigDuckMedia',
+      },
+    ],
+    filter: {
+      type: 'issuer',
+      value: ['8wF44TUzf4VENHghJoyy9w4Dv4sFE84kfBDCqUshU27U'],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: [
+          '2YJH1Y5NbdwJGEUAMY6hoTycKWrRCP6kLKs62xiSKWHM',
+          'So11111111111111111111111111111111111111112',
+        ],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '2 weeks',
+          value: 1296000,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
 }
