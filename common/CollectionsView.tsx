@@ -87,11 +87,11 @@ export const CollectionsView = ({
       {view === 'grid' ? (
         <div>
           <CollectionsGrid configs={configs.slice(0, 8)} />
-          <div className="mt-3 flex items-center justify-center">
+          <div className="mt-3 flex items-center justify-center text-xl">
             <ButtonSmall onClick={() => setView('list')}>
-              <div className="flex items-center">
+              <div className="flex items-center px-2">
                 <div>See all</div>
-                <div className="text-xl">
+                <div className="text-2xl">
                   <BiChevronDown />
                 </div>
               </div>
@@ -101,11 +101,11 @@ export const CollectionsView = ({
       ) : (
         <div>
           <CollectionsList configs={configs} />
-          <div className="mt-3 flex items-center justify-center">
+          <div className="mt-3 flex items-center justify-center text-xl">
             <ButtonSmall onClick={() => setView('grid')}>
-              <div className="flex items-center">
-                <div>View</div>
-                <div className="text-xl">
+              <div className="flex items-center px-2">
+                <div>Featured</div>
+                <div className="text-2xl">
                   <BiChevronUp />
                 </div>
               </div>
