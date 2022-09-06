@@ -1,7 +1,7 @@
 import { logEvent } from '@amplitude/analytics-browser'
 import { GlyphBrowse } from 'assets/GlyphBrowse'
 import type { ProjectConfig } from 'config/config'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { AiOutlineMenu } from 'react-icons/ai'
 import { BiChevronDown, BiChevronUp } from 'react-icons/bi'
 
@@ -35,13 +35,21 @@ export const CollectionsView = ({
   header?: { title?: string; description?: string }
 }) => {
   const [view, setView] = useState<VIEW_OPTIONS>('grid')
+  const ref = useRef<HTMLDivElement | null>(null)
 
+  useEffect(
+    () =>
+      window.scrollTo({
+        behavior: 'smooth',
+        top: (ref.current?.offsetTop ?? 0) - 50,
+      }),
+    [view]
+  )
   return (
-    <div>
+    <div ref={ref}>
       <div className="flex flex-col gap-2">
         {header?.title && (
           <>
-            <div className="mx-auto mt-8 mb-10 h-[2px] w-full rounded-lg"></div>
             <div className="text-5xl text-light-0">{header.title}</div>
           </>
         )}

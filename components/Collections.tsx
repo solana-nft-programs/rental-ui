@@ -29,7 +29,7 @@ export const Collections = () => {
         <HeaderSlim />
         <RentalHero />
       </div>
-      <div className="mx-auto px-8 md:px-16">
+      <div className="mx-auto flex flex-col gap-16 px-8 md:px-16">
         {Object.entries(categories).map(([type, configs], i) => (
           <CollectionsView
             key={type}

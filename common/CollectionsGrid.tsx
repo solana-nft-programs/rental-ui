@@ -62,7 +62,7 @@ export const CollectionsGrid = ({ configs }: { configs: ProjectConfig[] }) => {
                   value:
                     stats.data &&
                     !!stats.data[queryId(config.name, true)]?.aggregate
-                      .count ? (
+                      .count !== undefined ? (
                       stats.data[
                         queryId(config.name, true)
                       ]!.aggregate.count.toString()
@@ -75,7 +75,7 @@ export const CollectionsGrid = ({ configs }: { configs: ProjectConfig[] }) => {
                   value:
                     stats.data &&
                     !!stats.data[queryId(config.name, false)]?.aggregate
-                      .count ? (
+                      .count !== undefined ? (
                       stats.data[
                         queryId(config.name, false)
                       ]!.aggregate.count.toString()

@@ -5,14 +5,17 @@ import { queryId, useGlobalStats } from 'hooks/useGlobalStats'
 import { useRouter } from 'next/router'
 import { transparentize } from 'polished'
 import { useState } from 'react'
-import { BiChevronDown } from 'react-icons/bi'
+import { BiChevronDown, BiChevronUp } from 'react-icons/bi'
 
 import { SocialIcon } from './Socials'
 
 export const CollectionsList = ({ configs }: { configs: ProjectConfig[] }) => {
   const router = useRouter()
   const stats = useGlobalStats()
-  const [sort, setSort] = useState<'total' | 'listed'>()
+  const [sort, setSort] = useState<'total' | 'listed'>('total')
+  const [sortDirection, setSortDirection] = useState<
+    'ascending' | 'descending'
+  >('descending')
 
   return (
     <div className="w-full overflow-x-scroll overflow-y-scroll rounded-xl border border-border p-4">
@@ -21,17 +24,45 @@ export const CollectionsList = ({ configs }: { configs: ProjectConfig[] }) => {
           <div className="flex-[4]">Collection</div>
           <div
             className="flex flex-1 cursor-pointer items-center"
-            onClick={() => setSort('total')}
+            onClick={() => {
+              if (sort === 'total') {
+                setSortDirection((d) =>
+                  d === 'ascending' ? 'descending' : 'ascending'
+                )
+              } else {
+                setSort('total')
+                setSortDirection('descending')
+              }
+            }}
           >
             <div>Total rentals</div>
-            {sort === 'total' && <BiChevronDown />}
+            {sort === 'total' &&
+              (sortDirection === 'descending' ? (
+                <BiChevronDown />
+              ) : (
+                <BiChevronUp />
+              ))}
           </div>
           <div
             className="flex flex-1 cursor-pointer items-center"
-            onClick={() => setSort('listed')}
+            onClick={() => {
+              if (sort === 'listed') {
+                setSortDirection((d) =>
+                  d === 'ascending' ? 'descending' : 'ascending'
+                )
+              } else {
+                setSort('listed')
+                setSortDirection('descending')
+              }
+            }}
           >
             <div>Listed rentals</div>
-            {sort === 'listed' && <BiChevronDown />}
+            {sort === 'listed' &&
+              (sortDirection === 'descending' ? (
+                <BiChevronDown />
+              ) : (
+                <BiChevronUp />
+              ))}
           </div>
           <div className="flex-1">Links</div>
         </div>
@@ -39,9 +70,18 @@ export const CollectionsList = ({ configs }: { configs: ProjectConfig[] }) => {
           {configs
             .sort((a, b) =>
               stats.data && sort
-                ? stats.data[queryId(a.name, sort === 'total')]!.aggregate
-                    .count -
-                  stats.data[queryId(b.name, sort === 'total')]!.aggregate.count
+                ? stats.data[
+                    queryId(
+                      sortDirection === 'ascending' ? a.name : b.name,
+                      sort === 'total'
+                    )
+                  ]!.aggregate.count -
+                  stats.data[
+                    queryId(
+                      sortDirection === 'ascending' ? b.name : a.name,
+                      sort === 'total'
+                    )
+                  ]!.aggregate.count
                 : 0
             )
             .map((config) => (
@@ -77,7 +117,8 @@ export const CollectionsList = ({ configs }: { configs: ProjectConfig[] }) => {
 
                 <div className="my-auto flex-1">
                   {stats.data &&
-                  !!stats.data[queryId(config.name, true)]?.aggregate.count ? (
+                  !!stats.data[queryId(config.name, true)]?.aggregate.count !==
+                    undefined ? (
                     <div>
                       {stats.data[
                         queryId(config.name, true)
@@ -89,7 +130,8 @@ export const CollectionsList = ({ configs }: { configs: ProjectConfig[] }) => {
                 </div>
                 <div className="my-auto flex-1">
                   {stats.data &&
-                  !!stats.data[queryId(config.name, false)]?.aggregate.count ? (
+                  !!stats.data[queryId(config.name, false)]?.aggregate.count !==
+                    undefined ? (
                     <div>
                       {stats.data[
                         queryId(config.name, false)
