@@ -1696,43 +1696,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       },
     ],
   },
-  ['3dgamersguild']: {
-    name: '3dgamersguild',
-    displayName: '3D Gamers Guild',
-    type: 'Guild',
-    websiteUrl: 'https://www.3dgamersguild.com/',
-    logoImage:
-      'https://images.squarespace-cdn.com/content/v1/618b2aec73c8ed19abf2fd2f/c4a759b4-91d5-462a-bd6d-ce3766ffda2f/3D+Gamers+Logo+with+white+letters+white+text.png?format=1500w',
-    logoPadding: true,
-    colors: {
-      accent: '#34659b',
-      glow: '#34659b',
-    },
-    filter: {
-      type: 'issuer',
-      value: ['9qoRqZmrAf6bqtmTAPA1UkgCRvKuaugF17xBdympy1vd'],
-    },
-    rentalCard: {
-      invalidators: ['rate', 'duration'],
-      invalidationOptions: {
-        freezeRentalRateDuration: {
-          value: '1',
-          durationOption: 'days',
-        },
-        visibilities: ['public'],
-        durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
-        paymentMints: ['So11111111111111111111111111111111111111112'],
-        showClaimRentalReceipt: false,
-        setClaimRentalReceipt: false,
-        maxDurationAllowed: {
-          displayText: '12 weeks',
-          value: 7258000,
-        },
-      },
-    },
-    marketplaceRate: 'days',
-  },
   ['udderchaos']: {
     name: 'udderchaos',
     displayName: 'Udder Chaos',
@@ -1824,6 +1787,43 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         durationOptions: ['hours', 'days', 'weeks'],
         invalidationTypes: ['reissue'],
         paymentMints: ['FdviznPoMEakdJ37fikNxhoscyruUHSHNkKyvntSqbuo'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
+  ['3dgamersguild']: {
+    name: '3dgamersguild',
+    displayName: '3D Gamers Guild',
+    type: 'Guild',
+    websiteUrl: 'https://www.3dgamersguild.com/',
+    logoImage:
+      'https://images.squarespace-cdn.com/content/v1/618b2aec73c8ed19abf2fd2f/c4a759b4-91d5-462a-bd6d-ce3766ffda2f/3D+Gamers+Logo+with+white+letters+white+text.png?format=1500w',
+    logoPadding: true,
+    colors: {
+      accent: '#34659b',
+      glow: '#34659b',
+    },
+    filter: {
+      type: 'issuer',
+      value: ['9qoRqZmrAf6bqtmTAPA1UkgCRvKuaugF17xBdympy1vd'],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration'],
+      invalidationOptions: {
+        freezeRentalRateDuration: {
+          value: '1',
+          durationOption: 'days',
+        },
+        visibilities: ['public'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
         maxDurationAllowed: {

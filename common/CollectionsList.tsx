@@ -87,7 +87,7 @@ export const CollectionsList = ({ configs }: { configs: ProjectConfig[] }) => {
             .map((config) => (
               <div
                 key={`${config.name}`}
-                className="flex w-full cursor-pointer gap-4 rounded-xl border-b border-border px-8 py-4 md:flex-row"
+                className="flex w-full cursor-pointer gap-4 border-b border-border px-8 py-4 md:flex-row"
                 css={css`
                   &:hover {
                     background: ${transparentize(0.9, config.colors.glow)};
