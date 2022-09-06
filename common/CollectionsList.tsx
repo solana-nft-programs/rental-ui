@@ -67,7 +67,7 @@ export const CollectionsList = ({ configs }: { configs: ProjectConfig[] }) => {
           <div className="flex-1">Links</div>
         </div>
         <div className="flex flex-col">
-          {configs
+          {[...configs]
             .sort((a, b) =>
               stats.data && sort
                 ? stats.data[
