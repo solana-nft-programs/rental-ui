@@ -645,56 +645,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     },
     marketplaceRate: 'days',
   },
-  rakkudos: {
-    name: 'rakkudos',
-    displayName: 'Rakkudos',
-    type: 'Collection',
-    websiteUrl: 'https://www.rakkudos.com/',
-    logoImage: '/logos/rakkudos.png',
-    hero: '/logos/rakkudos-hero.png',
-    badges: [{ badgeType: 'recent' }],
-    colors: {
-      accent: '#444444',
-      glow: '#888888',
-    },
-    description:
-      "10,000 Raccoons empowering web3 builders brought to you by Shakudo - the platform that unites all of the data tools and services you'll ever need.",
-    twitterHandle: '@rakkudos',
-    socialLinks: [
-      {
-        icon: 'web',
-        link: 'https://www.rakkudos.com/',
-      },
-      {
-        icon: 'twitter',
-        link: 'https://twitter.com/rakkudos',
-      },
-      {
-        icon: 'discord',
-        link: 'https://discord.gg/shakudo',
-      },
-    ],
-    filter: {
-      type: 'creators',
-      value: ['HAvvubBRmiKECTCBBtYzhUx53SyZn3GZ2fcvw79MQqtY'],
-    },
-    rentalCard: {
-      invalidators: ['rate', 'duration'],
-      invalidationOptions: {
-        visibilities: ['public', 'private'],
-        durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
-        paymentMints: ['So11111111111111111111111111111111111111112'],
-        showClaimRentalReceipt: false,
-        setClaimRentalReceipt: false,
-        maxDurationAllowed: {
-          displayText: '12 weeks',
-          value: 7258000,
-        },
-      },
-    },
-    marketplaceRate: 'days',
-  },
   nftsoloist: {
     name: 'nftsoloist',
     displayName: 'NFTSoloist Genesis Pass',
@@ -845,6 +795,56 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     },
     marketplaceRate: 'days',
   },
+  rakkudos: {
+    name: 'rakkudos',
+    displayName: 'Rakkudos',
+    type: 'Collection',
+    websiteUrl: 'https://www.rakkudos.com/',
+    logoImage: '/logos/rakkudos.png',
+    hero: '/logos/rakkudos-hero.png',
+    badges: [{ badgeType: 'recent' }],
+    colors: {
+      accent: '#444444',
+      glow: '#888888',
+    },
+    description:
+      "10,000 Raccoons empowering web3 builders brought to you by Shakudo - the platform that unites all of the data tools and services you'll ever need.",
+    twitterHandle: '@rakkudos',
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://www.rakkudos.com/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/rakkudos',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/shakudo',
+      },
+    ],
+    filter: {
+      type: 'creators',
+      value: ['HAvvubBRmiKECTCBBtYzhUx53SyZn3GZ2fcvw79MQqtY'],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
   hydrascripts: {
     name: 'hydrascripts',
     displayName: 'HydraScripts',
@@ -967,6 +967,20 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       glow: 'rgb(169,60,239)',
     },
     twitterHandle: '@BR1INFINITE',
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://www.br1game.com/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/BR1INFINITE',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/SuCjkc4MRF',
+      },
+    ],
     filter: {
       type: 'creators',
       value: [
@@ -1006,6 +1020,20 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       accent: '#CD9373',
       glow: '#CD9373',
     },
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://defiland.app/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/DeFi_Land',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/defiland',
+      },
+    ],
     twitterHandle: '@DeFi_Land',
     filter: {
       type: 'creators',
@@ -1405,6 +1433,20 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         // 'HMduKVo3A19U5EpQdEhPjo9hq9zfZXn8aGVYZp7Vc7fX',
       ],
     },
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://psyker.game/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://mobile.twitter.com/psykergame',
+      },
+      {
+        icon: 'discord',
+        link: 'http://discord.gg/psykergame',
+      },
+    ],
     rentalCard: {
       invalidators: ['rate', 'duration'],
       invalidationOptions: {
@@ -1809,6 +1851,20 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       accent: '#34659b',
       glow: '#34659b',
     },
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://www.3dgamersguild.io/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/3DGamersGuild',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/ads4wj6Z8z',
+      },
+    ],
     filter: {
       type: 'issuer',
       value: ['9qoRqZmrAf6bqtmTAPA1UkgCRvKuaugF17xBdympy1vd'],

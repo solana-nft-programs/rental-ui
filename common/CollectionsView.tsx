@@ -86,7 +86,7 @@ export const CollectionsView = ({
       </div>
       {view === 'grid' ? (
         <div>
-          <CollectionsGrid configs={configs.slice(0, 8)} />
+          <CollectionsGrid configs={configs.slice(0, 12)} />
           <div className="mt-3 flex items-center justify-center text-xl">
             <ButtonSmall onClick={() => setView('list')}>
               <div className="flex items-center px-2">
