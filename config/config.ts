@@ -108,16 +108,16 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     },
     socialLinks: [
       {
-        icon: 'discord',
-        link: 'https://discord.com/invite/miniroyale',
-      },
-      {
         icon: 'web',
         link: 'https://miniroyale.io/',
       },
       {
         icon: 'twitter',
         link: 'https://twitter.com/MiniNations',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.com/invite/miniroyale',
       },
     ],
     badges: [{ badgeType: 'trending' }],
@@ -219,16 +219,16 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     twitterHandle: '@parcl',
     socialLinks: [
       {
-        icon: 'discord',
-        link: 'https://discord.gg/parcl',
-      },
-      {
         icon: 'web',
         link: 'https://www.hoa.house/',
       },
       {
         icon: 'twitter',
         link: 'https://twitter.com/parcl',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/parcl',
       },
     ],
     badges: [{ badgeType: 'trending' }],
@@ -271,16 +271,16 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       'The Metaverse on Solana. Explore downtown, invite friends, chat, build, show off your NFTs — right in the browser.',
     socialLinks: [
       {
-        icon: 'discord',
-        link: 'https://discord.gg/9uMBaCPW3f',
-      },
-      {
         icon: 'web',
         link: 'https://theportal.to/',
       },
       {
         icon: 'twitter',
         link: 'https://twitter.com/_portals_',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/9uMBaCPW3f',
       },
     ],
     filter: {
@@ -335,16 +335,16 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     twitterHandle: '@SolanaMBS',
     socialLinks: [
       {
-        icon: 'discord',
-        link: 'https://discord.com/invite/solanamonkeybusiness',
+        icon: 'web',
+        link: 'https://solanamonkey.business/',
       },
       {
         icon: 'twitter',
         link: 'https://twitter.com/SolanaMBS',
       },
       {
-        icon: 'web',
-        link: 'https://solanamonkey.business/',
+        icon: 'discord',
+        link: 'https://discord.com/invite/solanamonkeybusiness',
       },
     ],
     colors: {
@@ -412,16 +412,16 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     twitterHandle: '@NFTNerdsAI',
     socialLinks: [
       {
-        icon: 'discord',
-        link: 'https://discord.gg/solrarity',
-      },
-      {
         icon: 'web',
         link: 'https://solrarity.app/',
       },
       {
         icon: 'twitter',
         link: 'https://twitter.com/SolRarity_',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/solrarity',
       },
     ],
     filter: {
@@ -462,16 +462,16 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     twitterHandle: '@DegenApeAcademy',
     socialLinks: [
       {
-        icon: 'discord',
-        link: 'https://discord.com/invite/degendaoo',
+        icon: 'web',
+        link: 'https://degenape.academy/',
       },
       {
         icon: 'twitter',
         link: 'https://twitter.com/DegenApeAcademy',
       },
       {
-        icon: 'web',
-        link: 'https://degenape.academy/',
+        icon: 'discord',
+        link: 'https://discord.com/invite/degendaoo',
       },
     ],
     colors: {
@@ -511,16 +511,16 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     twitterHandle: '@SurfersDAO',
     socialLinks: [
       {
-        icon: 'discord',
-        link: 'https://discord.com/invite/projectserum',
+        icon: 'web',
+        link: 'https://www.projectserum.com/',
       },
       {
         icon: 'twitter',
         link: 'https://twitter.com/SurfersDAO',
       },
       {
-        icon: 'web',
-        link: 'https://www.projectserum.com/',
+        icon: 'discord',
+        link: 'https://discord.com/invite/projectserum',
       },
     ],
     colors: {
@@ -564,16 +564,16 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     twitterHandle: '@ScalpEmpireNFT',
     socialLinks: [
       {
-        icon: 'discord',
-        link: 'https://discord.com/invite/scalpempire',
-      },
-      {
         icon: 'web',
         link: 'https://www.scalp-empire.com/',
       },
       {
         icon: 'twitter',
         link: 'https://twitter.com/ScalpEmpireNFT',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.com/invite/scalpempire',
       },
     ],
     filter: {
@@ -613,10 +613,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     twitterHandle: '@SOuLTools_',
     socialLinks: [
       {
-        icon: 'discord',
-        link: 'https://www.discord.gg/VVpHCSR4Vs',
-      },
-      {
         icon: 'web',
         link: 'https://soultools.io/',
       },
@@ -624,60 +620,14 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         icon: 'twitter',
         link: 'https://www.twitter.com/SOuLTools_',
       },
+      {
+        icon: 'discord',
+        link: 'https://www.discord.gg/VVpHCSR4Vs',
+      },
     ],
     filter: {
       type: 'creators',
       value: ['AtsVWP3hh1MdF2Zz8XWNWwNxbZzt7AtjJBxxPAajnMsY'],
-    },
-    rentalCard: {
-      invalidators: ['rate', 'duration'],
-      invalidationOptions: {
-        visibilities: ['public', 'private'],
-        durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
-        paymentMints: ['So11111111111111111111111111111111111111112'],
-        showClaimRentalReceipt: false,
-        setClaimRentalReceipt: false,
-        maxDurationAllowed: {
-          displayText: '12 weeks',
-          value: 7258000,
-        },
-      },
-    },
-    marketplaceRate: 'days',
-  },
-  rakkudos: {
-    name: 'rakkudos',
-    displayName: 'Rakkudos',
-    type: 'Collection',
-    websiteUrl: 'https://www.rakkudos.com/',
-    logoImage: '/logos/rakkudos.png',
-    hero: '/logos/rakkudos-hero.png',
-    badges: [{ badgeType: 'recent' }],
-    colors: {
-      accent: '#444444',
-      glow: '#888888',
-    },
-    description:
-      "10,000 Raccoons empowering web3 builders brought to you by Shakudo - the platform that unites all of the data tools and services you'll ever need.",
-    twitterHandle: '@rakkudos',
-    socialLinks: [
-      {
-        icon: 'discord',
-        link: 'https://discord.gg/shakudo',
-      },
-      {
-        icon: 'web',
-        link: 'https://www.rakkudos.com/',
-      },
-      {
-        icon: 'twitter',
-        link: 'https://twitter.com/rakkudos',
-      },
-    ],
-    filter: {
-      type: 'creators',
-      value: ['HAvvubBRmiKECTCBBtYzhUx53SyZn3GZ2fcvw79MQqtY'],
     },
     rentalCard: {
       invalidators: ['rate', 'duration'],
@@ -712,16 +662,16 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     twitterHandle: '@NFTNerdsAI',
     socialLinks: [
       {
-        icon: 'discord',
-        link: 'https://discord.com/invite/nftnerds',
-      },
-      {
         icon: 'web',
         link: 'https://www.hoa.house/',
       },
       {
         icon: 'twitter',
         link: 'https://twitter.com/NFTNerdsAI',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.com/invite/nftnerds',
       },
     ],
     filter: {
@@ -761,16 +711,16 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     twitterHandle: '@SmartSeaSociety',
     socialLinks: [
       {
-        icon: 'discord',
-        link: 'https://discord.gg/SmartSeaSociety',
-      },
-      {
         icon: 'web',
         link: 'https://www.smartseasociety.com/',
       },
       {
         icon: 'twitter',
         link: 'https://twitter.com/SmartSeaSociety',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/SmartSeaSociety',
       },
     ],
     filter: {
@@ -810,16 +760,16 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     twitterHandle: '@MyceliumLabsNFT',
     socialLinks: [
       {
-        icon: 'discord',
-        link: 'https://www.discord.gg/myceliumnft',
-      },
-      {
         icon: 'web',
         link: 'https://myceliumlabs.io/',
       },
       {
         icon: 'twitter',
         link: 'https://www.twitter.com/MyceliumLabsNFT',
+      },
+      {
+        icon: 'discord',
+        link: 'https://www.discord.gg/myceliumnft',
       },
     ],
     filter: {
@@ -828,6 +778,56 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         'PMEnb53GA9xNuC2hfhKLtNh9sUduqHU3TxW55TF8WWu',
         '7BpqmFDeUt38cXM8wdxBALJEgnJwHjJa9MjmK63PpFdn',
       ],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
+  rakkudos: {
+    name: 'rakkudos',
+    displayName: 'Rakkudos',
+    type: 'Collection',
+    websiteUrl: 'https://www.rakkudos.com/',
+    logoImage: '/logos/rakkudos.png',
+    hero: '/logos/rakkudos-hero.png',
+    badges: [{ badgeType: 'recent' }],
+    colors: {
+      accent: '#444444',
+      glow: '#888888',
+    },
+    description:
+      "10,000 Raccoons empowering web3 builders brought to you by Shakudo - the platform that unites all of the data tools and services you'll ever need.",
+    twitterHandle: '@rakkudos',
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://www.rakkudos.com/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/rakkudos',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/shakudo',
+      },
+    ],
+    filter: {
+      type: 'creators',
+      value: ['HAvvubBRmiKECTCBBtYzhUx53SyZn3GZ2fcvw79MQqtY'],
     },
     rentalCard: {
       invalidators: ['rate', 'duration'],
@@ -863,16 +863,16 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     twitterHandle: '@HydraScripts',
     socialLinks: [
       {
-        icon: 'discord',
-        link: 'https://discord.gg/Wrv6NKeyFX',
-      },
-      {
         icon: 'web',
         link: 'https://twitter.com/HydraScripts',
       },
       {
         icon: 'twitter',
         link: 'https://twitter.com/HydraScripts',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/Wrv6NKeyFX',
       },
     ],
     filter: {
@@ -920,16 +920,16 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     twitterHandle: '@playrooniverse',
     socialLinks: [
       {
-        icon: 'discord',
-        link: 'https://discord.gg/rooniverse',
-      },
-      {
         icon: 'web',
         link: 'https://www.playrooniverse.com/',
       },
       {
         icon: 'twitter',
         link: 'https://twitter.com/playrooniverse',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/rooniverse',
       },
     ],
     filter: {
@@ -968,6 +968,20 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       glow: 'rgb(169,60,239)',
     },
     twitterHandle: '@BR1INFINITE',
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://www.br1game.com/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/BR1INFINITE',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/SuCjkc4MRF',
+      },
+    ],
     filter: {
       type: 'creators',
       value: [
@@ -1007,6 +1021,20 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       accent: '#CD9373',
       glow: '#CD9373',
     },
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://defiland.app/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/DeFi_Land',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/defiland',
+      },
+    ],
     twitterHandle: '@DeFi_Land',
     filter: {
       type: 'creators',
@@ -1060,16 +1088,16 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       'Team up with friends and put your skills to the test with MetaOps, a tactical 6v6 first-person shooter built on Unity. Discover how to play, earn, and own by renting a MetaOps NFT today.',
     socialLinks: [
       {
-        icon: 'discord',
-        link: 'https://discord.gg/metaops',
-      },
-      {
         icon: 'web',
         link: 'https://metaopsgaming.com/',
       },
       {
         icon: 'twitter',
         link: 'https://twitter.com/MetaOpsGaming',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/metaops',
       },
       {
         icon: 'twitch',
@@ -1145,16 +1173,16 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     twitterHandle: '@player2world',
     socialLinks: [
       {
-        icon: 'discord',
-        link: 'https://discord.gg/player2',
-      },
-      {
         icon: 'web',
         link: 'https://player2.world',
       },
       {
         icon: 'twitter',
         link: 'https://twitter.com/player2world',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/player2',
       },
     ],
     filter: {
@@ -1198,16 +1226,16 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     twitterHandle: '@ratz_club',
     socialLinks: [
       {
-        icon: 'discord',
-        link: 'https://discord.gg/ratzclub',
-      },
-      {
         icon: 'web',
         link: 'https://www.ratzclub.com/',
       },
       {
         icon: 'twitter',
         link: 'https://twitter.com/ratz_club',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/ratzclub',
       },
     ],
     filter: {
@@ -1248,16 +1276,16 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     twitterHandle: '@RemnantsNFT',
     socialLinks: [
       {
-        icon: 'discord',
-        link: 'discord.gg/remnantsnft',
-      },
-      {
         icon: 'web',
         link: 'theremnants.app',
       },
       {
         icon: 'twitter',
         link: 'https://twitter.com/RemnantsNFT',
+      },
+      {
+        icon: 'discord',
+        link: 'discord.gg/remnantsnft',
       },
     ],
     filter: {
@@ -1302,16 +1330,16 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     twitterHandle: '@SolanaFloor',
     socialLinks: [
       {
-        icon: 'discord',
-        link: 'http://discord.gg/kDhPZqA2mS',
-      },
-      {
         icon: 'web',
         link: 'https://solanafloor.com/',
       },
       {
         icon: 'twitter',
         link: 'https://twitter.com/SolanaFloor',
+      },
+      {
+        icon: 'discord',
+        link: 'http://discord.gg/kDhPZqA2mS',
       },
     ],
     filter: {
@@ -1352,16 +1380,16 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     twitterHandle: '@PixelPilotzNFT',
     socialLinks: [
       {
-        icon: 'discord',
-        link: 'https://discord.gg/pixelpilotz',
-      },
-      {
         icon: 'web',
         link: 'https://pixelpilotz.com',
       },
       {
         icon: 'twitter',
         link: 'https://twitter.com/PixelPilotzNFT',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/pixelpilotz',
       },
     ],
     filter: {
@@ -1406,6 +1434,20 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         // 'HMduKVo3A19U5EpQdEhPjo9hq9zfZXn8aGVYZp7Vc7fX',
       ],
     },
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://psyker.game/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://mobile.twitter.com/psykergame',
+      },
+      {
+        icon: 'discord',
+        link: 'http://discord.gg/psykergame',
+      },
+    ],
     rentalCard: {
       invalidators: ['rate', 'duration'],
       invalidationOptions: {
@@ -1465,16 +1507,16 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     twitterHandle: '@solset_io',
     socialLinks: [
       {
-        icon: 'discord',
-        link: 'https://discord.gg/solset ',
-      },
-      {
         icon: 'web',
         link: 'https://solset.io/',
       },
       {
         icon: 'twitter',
         link: 'https://twitter.com/solset_io',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/solset ',
       },
     ],
     filter: {
@@ -1514,16 +1556,16 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     twitterHandle: '@TheSuitesNFT',
     socialLinks: [
       {
-        icon: 'discord',
-        link: 'https://discord.com/invite/zhzYGxtx9D',
-      },
-      {
         icon: 'web',
         link: 'https://twitter.com/TheSuitesNFT',
       },
       {
         icon: 'twitter',
         link: 'https://twitter.com/TheSuitesNFT',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.com/invite/zhzYGxtx9D',
       },
     ],
     filter: {
@@ -1563,16 +1605,16 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     twitterHandle: '@GeomancerSol',
     socialLinks: [
       {
-        icon: 'discord',
-        link: 'discord.gg/57SXEecNdB',
-      },
-      {
         icon: 'web',
         link: 'https://geomancer.store/',
       },
       {
         icon: 'twitter',
         link: 'https://twitter.com/GeomancerSol',
+      },
+      {
+        icon: 'discord',
+        link: 'discord.gg/57SXEecNdB',
       },
     ],
     filter: {
@@ -1811,43 +1853,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       },
     ],
   },
-  ['3dgamersguild']: {
-    name: '3dgamersguild',
-    displayName: '3D Gamers Guild',
-    type: 'Guild',
-    websiteUrl: 'https://www.3dgamersguild.com/',
-    logoImage:
-      'https://images.squarespace-cdn.com/content/v1/618b2aec73c8ed19abf2fd2f/c4a759b4-91d5-462a-bd6d-ce3766ffda2f/3D+Gamers+Logo+with+white+letters+white+text.png?format=1500w',
-    logoPadding: true,
-    colors: {
-      accent: '#34659b',
-      glow: '#34659b',
-    },
-    filter: {
-      type: 'issuer',
-      value: ['9qoRqZmrAf6bqtmTAPA1UkgCRvKuaugF17xBdympy1vd'],
-    },
-    rentalCard: {
-      invalidators: ['rate', 'duration'],
-      invalidationOptions: {
-        freezeRentalRateDuration: {
-          value: '1',
-          durationOption: 'days',
-        },
-        visibilities: ['public'],
-        durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
-        paymentMints: ['So11111111111111111111111111111111111111112'],
-        showClaimRentalReceipt: false,
-        setClaimRentalReceipt: false,
-        maxDurationAllowed: {
-          displayText: '12 weeks',
-          value: 7258000,
-        },
-      },
-    },
-    marketplaceRate: 'days',
-  },
   ['udderchaos']: {
     name: 'udderchaos',
     displayName: 'Udder Chaos',
@@ -1863,17 +1868,16 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     hero: 'logos/udderchaos-hero.png',
     socialLinks: [
       {
+        icon: 'web',
+        link: 'https://www.udderchaos.io/',
+      },
+      {
         icon: 'twitter',
         link: 'https://twitter.com/UdderChaosSOL',
       },
       {
         icon: 'discord',
         link: 'https://discord.gg/udderchaos',
-      },
-      {
-        icon: 'web',
-
-        link: 'https://www.udderchaos.io/',
       },
     ],
     badges: [{ badgeType: 'trending' }],
@@ -1917,16 +1921,16 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     hero: 'logos/fatcats-hero.png',
     socialLinks: [
       {
+        icon: 'web',
+        link: 'https://fatcatscapital.com/',
+      },
+      {
         icon: 'twitter',
         link: 'https://twitter.com/fatcatscapital',
       },
       {
         icon: 'discord',
         link: 'https://discord.com/invite/9FnX58FWVB',
-      },
-      {
-        icon: 'web',
-        link: 'https://fatcatscapital.com/',
       },
     ],
     filter: {
@@ -1940,6 +1944,57 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         durationOptions: ['hours', 'days', 'weeks'],
         invalidationTypes: ['reissue'],
         paymentMints: ['FdviznPoMEakdJ37fikNxhoscyruUHSHNkKyvntSqbuo'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
+  ['3dgamersguild']: {
+    name: '3dgamersguild',
+    displayName: '3D Gamers Guild',
+    type: 'Guild',
+    websiteUrl: 'https://www.3dgamersguild.com/',
+    logoImage:
+      'https://images.squarespace-cdn.com/content/v1/618b2aec73c8ed19abf2fd2f/c4a759b4-91d5-462a-bd6d-ce3766ffda2f/3D+Gamers+Logo+with+white+letters+white+text.png?format=1500w',
+    logoPadding: true,
+    colors: {
+      accent: '#34659b',
+      glow: '#34659b',
+    },
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://www.3dgamersguild.io/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/3DGamersGuild',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/ads4wj6Z8z',
+      },
+    ],
+    filter: {
+      type: 'issuer',
+      value: ['9qoRqZmrAf6bqtmTAPA1UkgCRvKuaugF17xBdympy1vd'],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration'],
+      invalidationOptions: {
+        freezeRentalRateDuration: {
+          value: '1',
+          durationOption: 'days',
+        },
+        visibilities: ['public'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
         maxDurationAllowed: {
@@ -1966,16 +2021,16 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       'Solana Puppy Pound is the Solana Blockchains first gamified staking algorithms. Different breeds of puppies fight for $TREATS dominance. SPP contains a Gen1 & Gen2 puppy collection along with a DAO research pass for future collections made by Solana Puppy Pound.',
     socialLinks: [
       {
+        icon: 'web',
+        link: 'https://www.puppypound.io/',
+      },
+      {
         icon: 'twitter',
         link: 'https://twitter.com/puppypoundnft',
       },
       {
         icon: 'discord',
         link: 'https://discord.gg/m9Xru2RY4d',
-      },
-      {
-        icon: 'web',
-        link: 'https://www.puppypound.io/',
       },
     ],
     filter: {
@@ -2015,16 +2070,16 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       'Be part of one of the most knowledgeable communities on Solana by holding a Monkette. Rent one out today!',
     socialLinks: [
       {
+        icon: 'web',
+        link: 'https://monkettes.io/',
+      },
+      {
         icon: 'twitter',
         link: 'https://twitter.com/MonkettesNFT',
       },
       {
         icon: 'discord',
         link: 'https://discord.com/invite/monkettes',
-      },
-      {
-        icon: 'web',
-        link: 'https://monkettes.io/',
       },
     ],
     filter: {
@@ -2063,16 +2118,16 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     hero: 'logos/thedegenerates-hero.png',
     socialLinks: [
       {
+        icon: 'web',
+        link: 'https://thedegen.app/',
+      },
+      {
         icon: 'twitter',
         link: 'https://twitter.com/_DegeneratesNFT',
       },
       {
         icon: 'discord',
         link: 'https://discord.gg/thedegenerates',
-      },
-      {
-        icon: 'web',
-        link: 'https://thedegen.app/',
       },
     ],
     filter: {
@@ -2111,16 +2166,16 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     hero: 'logos/syndicate-initiative-hero.png',
     socialLinks: [
       {
+        icon: 'web',
+        link: 'https://www.twitch.tv/syndicateinitiative',
+      },
+      {
         icon: 'twitter',
         link: 'https://twitter.com/ItzSyNi',
       },
       {
         icon: 'discord',
         link: 'https://discord.gg/gz34uBgQMN',
-      },
-      {
-        icon: 'web',
-        link: 'https://www.twitch.tv/syndicateinitiative',
       },
     ],
     filter: {
@@ -2160,16 +2215,16 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     twitterHandle: '@tradingapesgang',
     socialLinks: [
       {
-        icon: 'discord',
-        link: 'https://discord.gg/9QPKxnyKbq',
-      },
-      {
         icon: 'web',
         link: 'https://tradingapesgang.com/',
       },
       {
         icon: 'twitter',
         link: 'https://twitter.com/TradingApesGang',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/9QPKxnyKbq',
       },
     ],
     filter: {
@@ -2212,16 +2267,16 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     twitterHandle: '@droidcapital',
     socialLinks: [
       {
-        icon: 'discord',
-        link: 'https://discord.gg/droid',
-      },
-      {
         icon: 'web',
         link: 'https://droidcapital.net/',
       },
       {
         icon: 'twitter',
         link: 'https://twitter.com/droidcapital',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/droid',
       },
     ],
     filter: {
@@ -2316,16 +2371,16 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     twitterHandle: '@SolienDAO',
     socialLinks: [
       {
-        icon: 'discord',
-        link: 'https://discord.gg/ZZSvwqr4Mb',
-      },
-      {
         icon: 'web',
         link: 'https://www.solien.io/',
       },
       {
         icon: 'twitter',
         link: 'https://twitter.com/SolienDAO',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/ZZSvwqr4Mb',
       },
     ],
     filter: {
@@ -2368,16 +2423,16 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     twitterHandle: '@degenclub15k',
     socialLinks: [
       {
-        icon: 'discord',
-        link: 'https://discord.com/invite/hKpfQgqq55 ',
-      },
-      {
         icon: 'web',
         link: 'https://15k.io',
       },
       {
         icon: 'twitter',
         link: 'https://twitter.com/degenclub15k',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.com/invite/hKpfQgqq55 ',
       },
     ],
     filter: {
