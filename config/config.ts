@@ -2487,7 +2487,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     websiteUrl: 'https://bigduckmedia.store',
     badges: [{ badgeType: 'recent' }],
     logoImage: '/logos/bigduckmedia.png',
-    // hero: '/logos/bigduckmedia-hero.png',
+    hero: '/logos/bigduckmedia-hero.png',
     colors: {
       accent: '#1f1f21',
       glow: '#e3fc01',
