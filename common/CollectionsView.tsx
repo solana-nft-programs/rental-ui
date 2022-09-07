@@ -34,11 +34,12 @@ export const CollectionsView = ({
   configs: ProjectConfig[]
   header?: { title?: string; description?: string }
 }) => {
-  const [view, setView] = useState<VIEW_OPTIONS>('grid')
+  const [view, setView] = useState<VIEW_OPTIONS>()
   const ref = useRef<HTMLDivElement | null>(null)
 
   useEffect(
     () =>
+      view &&
       window.scrollTo({
         behavior: 'smooth',
         top: (ref.current?.offsetTop ?? 0) - 50,
@@ -84,21 +85,7 @@ export const CollectionsView = ({
               </div> */}
         </div>
       </div>
-      {view === 'grid' ? (
-        <div>
-          <CollectionsGrid configs={configs.slice(0, 12)} />
-          <div className="mt-3 flex items-center justify-center text-xl">
-            <ButtonSmall onClick={() => setView('list')}>
-              <div className="flex items-center px-2">
-                <div>See all</div>
-                <div className="text-2xl">
-                  <BiChevronDown />
-                </div>
-              </div>
-            </ButtonSmall>
-          </div>
-        </div>
-      ) : (
+      {view === 'list' ? (
         <div>
           <CollectionsList configs={configs} />
           <div className="mt-3 flex items-center justify-center text-xl">
@@ -107,6 +94,20 @@ export const CollectionsView = ({
                 <div>Featured</div>
                 <div className="text-2xl">
                   <BiChevronUp />
+                </div>
+              </div>
+            </ButtonSmall>
+          </div>
+        </div>
+      ) : (
+        <div>
+          <CollectionsGrid configs={configs.slice(0, 12)} />
+          <div className="mt-3 flex items-center justify-center text-xl">
+            <ButtonSmall onClick={() => setView('list')}>
+              <div className="flex items-center px-2">
+                <div>See all</div>
+                <div className="text-2xl">
+                  <BiChevronDown />
                 </div>
               </div>
             </ButtonSmall>
