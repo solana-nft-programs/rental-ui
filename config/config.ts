@@ -2435,7 +2435,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     type: 'Guild',
     websiteUrl: 'https://pixelguild.gg/',
     badges: [{ badgeType: 'recent' }],
-    logoImage: '/logos/pixelguild.png',
+    logoImage: '/logos/pixelguild.gif',
     hero: '/logos/pixelguild-hero.gif',
     colors: {
       accent: '#F5AF40',
