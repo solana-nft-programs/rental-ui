@@ -1157,59 +1157,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     ],
     marketplaceRate: 'days',
   },
-  p2FarmersGenesis: {
-    name: 'p2FarmersGenesis',
-    displayName: 'P2 Farmers Genesis Series',
-    type: 'Collection',
-    websiteUrl: 'https://player2.world',
-    logoImage: '/logos/p2-farmers-genesis.png',
-    hero: '/logos/p2-farmers-genesis-hero.png',
-    colors: {
-      accent: '#C7C7C7',
-      glow: '#C7C7C7',
-    },
-    description:
-      'Player 2 is a gamified world where communities and businesses meet.',
-    twitterHandle: '@player2world',
-    socialLinks: [
-      {
-        icon: 'web',
-        link: 'https://player2.world',
-      },
-      {
-        icon: 'twitter',
-        link: 'https://twitter.com/player2world',
-      },
-      {
-        icon: 'discord',
-        link: 'https://discord.gg/player2',
-      },
-    ],
-    filter: {
-      type: 'creators',
-      value: [
-        '36wtjjwj3BtLrcBGVkWg4r4VwbhDDDGkVYLMNT4mx8y7',
-        'A2x7GX7JbKzXwXjzkRBCxenoKCH1LTEVp6RxQ4yg75q6',
-      ],
-    },
-    rentalCard: {
-      invalidators: ['rate', 'duration'],
-      invalidationOptions: {
-        visibilities: ['public', 'private'],
-        durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
-        paymentMints: ['So11111111111111111111111111111111111111112'],
-        showClaimRentalReceipt: false,
-        setClaimRentalReceipt: false,
-        maxDurationAllowed: {
-          displayText: '12 weeks',
-          value: 7258000,
-        },
-      },
-    },
-    badges: [{ badgeType: 'recent' }],
-    marketplaceRate: 'days',
-  },
   ratzclub: {
     name: 'ratzclub',
     displayName: 'Ratz Club',
