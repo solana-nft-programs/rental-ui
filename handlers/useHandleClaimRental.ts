@@ -8,8 +8,8 @@ import { withClaimToken } from '@cardinal/token-manager'
 import type { TokenManagerData } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { BN } from '@project-serum/anchor'
 import { useWallet } from '@solana/wallet-adapter-react'
-import type { Connection, Keypair } from '@solana/web3.js'
-import { PublicKey, Transaction } from '@solana/web3.js'
+import type { Connection, Ed25519Keypair } from '@solana/web3.js'
+import { Keypair, PublicKey, Transaction } from '@solana/web3.js'
 import { logConfigTokenDataEvent } from 'apis/amplitude'
 import type { TokenData } from 'apis/api'
 import { notify } from 'common/Notification'
@@ -155,6 +155,15 @@ export const useHandleClaimRental = () => {
           true
         )
       }
+
+      class EmptyKeypair extends Keypair {
+        constructor(keypair?: Ed25519Keypair) {
+          super(keypair)
+        }
+        override get publicKey(): PublicKey {
+          return otpKeypair?.publicKey || wallet.publicKey!
+        }
+      }
       await withClaimToken(
         transaction,
         tokenData?.tokenManager.parsed.receiptMint
@@ -163,7 +172,7 @@ export const useHandleClaimRental = () => {
         asWallet(wallet),
         tokenData.tokenManager?.pubkey,
         {
-          otpKeypair,
+          otpKeypair: new EmptyKeypair(),
         }
       )
       const tx = await withTrace(

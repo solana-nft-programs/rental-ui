@@ -105,7 +105,9 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
     !paymentMintInfos.data ||
     (isPrivateListing(tokenData) &&
       otpKeypair?.publicKey.toString() !==
-        tokenData.tokenManager?.parsed.claimApprover?.toString())
+        tokenData.tokenManager?.parsed.claimApprover?.toString() &&
+      tokenData.tokenManager?.parsed.claimApprover?.toString() !==
+        walletId?.toString())
   ) {
     return <></>
   }
