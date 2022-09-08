@@ -21,7 +21,7 @@ export const RentalHero = () => {
           <div
             className="flex cursor-pointer items-center gap-1 rounded-lg bg-primary p-3 text-light-0 transition-colors hover:bg-primary-hover"
             onClick={() => {
-              window.open('https://forms.gle/7K1EQ9SWGE93sWHUA')
+              window.open('https://forms.gle/63hjWaSdSzbGmXzJ6')
             }}
           >
             <>Add your collection</>
