@@ -241,7 +241,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidationOptions: {
         visibilities: ['public', 'private'],
         durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
+        invalidationTypes: ['reissue', 'return'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
@@ -361,7 +361,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidationOptions: {
         visibilities: ['public', 'private'],
         durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
+        invalidationTypes: ['reissue', 'return'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
@@ -437,7 +437,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidationOptions: {
         visibilities: ['public', 'private'],
         durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
+        invalidationTypes: ['reissue', 'return'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
@@ -487,7 +487,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidationOptions: {
         visibilities: ['public', 'private'],
         durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
+        invalidationTypes: ['reissue', 'return'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
@@ -585,7 +585,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidationOptions: {
         visibilities: ['public', 'private'],
         durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
+        invalidationTypes: ['reissue', 'return'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
@@ -634,7 +634,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidationOptions: {
         visibilities: ['public', 'private'],
         durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
+        invalidationTypes: ['reissue', 'return'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
@@ -683,7 +683,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidationOptions: {
         visibilities: ['public', 'private'],
         durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
+        invalidationTypes: ['reissue', 'return'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
@@ -732,7 +732,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidationOptions: {
         visibilities: ['public', 'private'],
         durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
+        invalidationTypes: ['reissue', 'return'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
@@ -784,7 +784,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidationOptions: {
         visibilities: ['public', 'private'],
         durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
+        invalidationTypes: ['reissue', 'return'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
@@ -834,7 +834,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidationOptions: {
         visibilities: ['public', 'private'],
         durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
+        invalidationTypes: ['reissue', 'return'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
@@ -891,7 +891,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidationOptions: {
         visibilities: ['public', 'private'],
         durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
+        invalidationTypes: ['reissue', 'return'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
@@ -944,7 +944,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidationOptions: {
         visibilities: ['public', 'private'],
         durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
+        invalidationTypes: ['reissue', 'return'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
@@ -998,7 +998,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         },
         durationOptions: ['hours', 'days', 'weeks'],
         visibilities: ['public'],
-        invalidationTypes: ['reissue'],
+        invalidationTypes: ['reissue', 'return'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         setClaimRentalReceipt: true,
         showClaimRentalReceipt: false,
@@ -1060,7 +1060,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         },
         durationOptions: ['hours', 'days', 'weeks'],
         visibilities: ['public'],
-        invalidationTypes: ['reissue'],
+        invalidationTypes: ['reissue', 'return'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         setClaimRentalReceipt: true,
         showClaimRentalReceipt: false,
@@ -1123,7 +1123,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         },
         durationOptions: ['hours', 'days', 'weeks'],
         visibilities: ['public'],
-        invalidationTypes: ['reissue'],
+        invalidationTypes: ['reissue', 'return'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         setClaimRentalReceipt: true,
         showClaimRentalReceipt: false,
@@ -1194,7 +1194,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidationOptions: {
         visibilities: ['public', 'private'],
         durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
+        invalidationTypes: ['reissue', 'return'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
@@ -1248,7 +1248,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidationOptions: {
         visibilities: ['private'],
         durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
+        invalidationTypes: ['reissue', 'return'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
@@ -1298,7 +1298,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidationOptions: {
         visibilities: ['public', 'private'],
         durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
+        invalidationTypes: ['reissue', 'return'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
@@ -1348,7 +1348,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidationOptions: {
         visibilities: ['public', 'private'],
         durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
+        invalidationTypes: ['reissue', 'return'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
@@ -1404,7 +1404,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         },
         durationOptions: ['hours', 'days', 'weeks'],
         visibilities: ['public'],
-        invalidationTypes: ['reissue'],
+        invalidationTypes: ['reissue', 'return'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         setClaimRentalReceipt: true,
         showClaimRentalReceipt: false,
@@ -1475,7 +1475,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidationOptions: {
         visibilities: ['public', 'private'],
         durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
+        invalidationTypes: ['reissue', 'return'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
@@ -1524,7 +1524,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidationOptions: {
         visibilities: ['public', 'private'],
         durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
+        invalidationTypes: ['reissue', 'return'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
@@ -1573,7 +1573,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidationOptions: {
         visibilities: ['public', 'private'],
         durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
+        invalidationTypes: ['reissue', 'return'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
@@ -1627,7 +1627,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidationOptions: {
         visibilities: ['public', 'private'],
         durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
+        invalidationTypes: ['reissue', 'return'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
@@ -1700,7 +1700,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidationOptions: {
         visibilities: ['public', 'private'],
         durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
+        invalidationTypes: ['reissue', 'return'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
@@ -1837,7 +1837,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidationOptions: {
         visibilities: ['public'],
         durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
+        invalidationTypes: ['reissue', 'return'],
         paymentMints: [
           'MLKmUCaj1dpBY881aFsrBwR9RUMoKic8SWT3u1q5Nkj',
           'So11111111111111111111111111111111111111112',
@@ -1889,7 +1889,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidationOptions: {
         visibilities: ['public'],
         durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
+        invalidationTypes: ['reissue', 'return'],
         paymentMints: ['FdviznPoMEakdJ37fikNxhoscyruUHSHNkKyvntSqbuo'],
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
@@ -1940,7 +1940,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         },
         visibilities: ['public'],
         durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
+        invalidationTypes: ['reissue', 'return'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
@@ -1989,7 +1989,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidationOptions: {
         visibilities: ['public'],
         durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
+        invalidationTypes: ['reissue', 'return'],
         paymentMints: ['14r8dWfzmUUBpw59w5swNRb5F1YWqmUnSPgD6djUs1Jj'],
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
@@ -2038,7 +2038,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidationOptions: {
         visibilities: ['public'],
         durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
+        invalidationTypes: ['reissue', 'return'],
         paymentMints: ['8o66EVAf4u2Hr21m2tuRrPtEXFPLr8G8aL1ETStP8fDu'],
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
@@ -2086,7 +2086,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidationOptions: {
         visibilities: ['public'],
         durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
+        invalidationTypes: ['reissue', 'return'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
@@ -2134,7 +2134,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidationOptions: {
         visibilities: ['public'],
         durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
+        invalidationTypes: ['reissue', 'return'],
         paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
@@ -2183,7 +2183,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidationOptions: {
         visibilities: ['public', 'private'],
         durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
+        invalidationTypes: ['reissue', 'return'],
         paymentMints: [
           'So11111111111111111111111111111111111111112',
           'DUSTawucrTsGU8hcqRdHDCbuYhCPADMLM2VcCb8VnFnQ',
@@ -2235,7 +2235,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidationOptions: {
         visibilities: ['public'],
         durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
+        invalidationTypes: ['reissue', 'return'],
         paymentMints: [
           'So11111111111111111111111111111111111111112',
           'GkywroLpkvYQc5dmFfd2RchVYycXZdaA5Uzix42iJdNo',
@@ -2287,7 +2287,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidationOptions: {
         visibilities: ['public'],
         durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
+        invalidationTypes: ['reissue', 'return'],
         paymentMints: [
           'So11111111111111111111111111111111111111112',
           '7BPCwgL97UMWcSuyUmDdNTzGnDvruyfGKTmUaSbLzohP',
@@ -2339,7 +2339,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidationOptions: {
         visibilities: ['public', 'private'],
         durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
+        invalidationTypes: ['reissue', 'return'],
         paymentMints: [
           'C5EefTmWXHJWFkN3Dh7QyFUnBG3UXSu8h6qVs6xtaLxy',
           'So11111111111111111111111111111111111111112',
@@ -2414,7 +2414,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidationOptions: {
         visibilities: ['public', 'private'],
         durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
+        invalidationTypes: ['reissue', 'return'],
         paymentMints: [
           'Gbi4F6tEUz7sucsUfyjS28W5Ssd8jiGgdw6hB8XZGJke',
           'So11111111111111111111111111111111111111112',
@@ -2446,16 +2446,16 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     twitterHandle: '@PixelGuild_SOL',
     socialLinks: [
       {
-        icon: 'discord',
-        link: 'https://discord.com/invite/pixelguild',
-      },
-      {
         icon: 'web',
         link: 'https://pixelguild.gg/',
       },
       {
         icon: 'twitter',
         link: 'https://twitter.com/PixelGuild_SOL',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.com/invite/pixelguild',
       },
     ],
     filter: {
@@ -2467,7 +2467,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidationOptions: {
         visibilities: ['public', 'private'],
         durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
+        invalidationTypes: ['reissue', 'return'],
         paymentMints: [
           'BsYZmmEXPVPA31aax5pawZtYppoGiowPckxTcituaUCY',
           'So11111111111111111111111111111111111111112',
@@ -2520,7 +2520,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidationOptions: {
         visibilities: ['public', 'private'],
         durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue'],
+        invalidationTypes: ['reissue', 'return'],
         paymentMints: [
           '2YJH1Y5NbdwJGEUAMY6hoTycKWrRCP6kLKs62xiSKWHM',
           'So11111111111111111111111111111111111111112',
@@ -2530,6 +2530,56 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         maxDurationAllowed: {
           displayText: '2 weeks',
           value: 1296000,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
+  degenvampires: {
+    name: 'degenvampires',
+    displayName: 'Degen Vampies',
+    type: 'Guild',
+    websiteUrl: 'https://twitter.com/DegenVampires',
+    badges: [{ badgeType: 'recent' }],
+    logoImage: '/logos/degenvampires.png',
+    hero: '/logos/degenvampires-hero.png',
+    colors: {
+      accent: '#aa2f49',
+      glow: '#aa2f49',
+    },
+    description:
+      'Degen Vampires is a collection of 3333 vamps & bringing new values to tokenomics with $Blood. Strong community building from nothing & only getting stronger.',
+    twitterHandle: '@DegenVampires',
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://twitter.com/DegenVampires',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/DegenVampires',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/yaSusknMND',
+      },
+    ],
+    filter: {
+      type: 'issuer',
+      value: ['3TGQmQrRr6yEgPR2BmSvaHubLyfXjyPXsKgGgVF8cp9Z'],
+    },
+    rentalCard: {
+      invalidators: ['duration'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue', 'return'],
+        paymentMints: ['HMUcxWNfogJ6m5ogFryyiuqrQDXf1nSgV9wZgtnbtcwJ'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '3 days',
+          value: 259200,
         },
       },
     },
