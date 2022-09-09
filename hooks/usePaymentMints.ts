@@ -94,6 +94,13 @@ export const PAYMENT_MINTS: PaymentMintInfo[] = [
       'https://public.djib.io/QmdLDat9CvntvFPG98CcXJJ3tE1mQZkf5DEfPNhK8F3guq',
     decimals: 9,
   },
+  {
+    mint: 'HMUcxWNfogJ6m5ogFryyiuqrQDXf1nSgV9wZgtnbtcwJ',
+    symbol: 'BLOOD',
+    image:
+      'https://raw.githubusercontent.com/GZDragonHead/DGV/main/IMG_6148.JPG',
+    decimals: 6,
+  },
 ]
 
 export const WRAPPED_SOL_MINT = 'So11111111111111111111111111111111111111112'
