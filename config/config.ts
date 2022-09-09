@@ -2544,8 +2544,8 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     logoImage: '/logos/degenvampires.png',
     hero: '/logos/degenvampires-hero.png',
     colors: {
-      accent: '#1f1f21',
-      glow: '#e3fc01',
+      accent: '#aa2f49',
+      glow: '#aa2f49',
     },
     description:
       'Degen Vampires is a collection of 3333 vamps & bringing new values to tokenomics with $Blood. Strong community building from nothing & only getting stronger.',
