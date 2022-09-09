@@ -2566,7 +2566,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     ],
     filter: {
       type: 'issuer',
-      value: ['Hmb974x2hTeaumZvPYkXA9sqNdHSKEt5PJH2kHtJRbyS'],
+      value: ['3TGQmQrRr6yEgPR2BmSvaHubLyfXjyPXsKgGgVF8cp9Z'],
     },
     rentalCard: {
       invalidators: ['duration'],
