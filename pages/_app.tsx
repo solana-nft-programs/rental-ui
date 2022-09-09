@@ -35,8 +35,6 @@ export const queryClient = new QueryClient({
   },
 })
 
-export const DEBUG = true
-
 const App = ({
   Component,
   pageProps,
@@ -62,7 +60,7 @@ const App = ({
                       <>
                         <ToastContainer />
                         <Component {...pageProps} />
-                        {DEBUG && <ReactQueryDevtools initialIsOpen={false} />}
+                        {<ReactQueryDevtools initialIsOpen={false} />}
                       </>
                     </WalletModalProvider>
                   </ModalProvider>

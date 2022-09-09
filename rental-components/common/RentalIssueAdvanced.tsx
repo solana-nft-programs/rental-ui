@@ -19,12 +19,12 @@ export const INVALIDATION_TYPES: {
   label: InvalidationTypeOption
 }[] = [
   {
-    type: InvalidationType.Return,
-    label: 'return',
-  },
-  {
     type: InvalidationType.Reissue,
     label: 'reissue',
+  },
+  {
+    type: InvalidationType.Return,
+    label: 'return',
   },
   // {
   //   type: InvalidationType.Invalidate,
@@ -102,7 +102,7 @@ export const RentalIssueAdvanced = ({
             border-color: rgba(200, 138, 244, 0.12);
           `}
         >
-          <div className="text-base text-light-0">Listing Type:</div>
+          <div className="text-base text-light-0">Relisting:</div>
           <div>
             {invalidationTypes.length === 2 &&
             invalidationTypes

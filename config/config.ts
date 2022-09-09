@@ -2537,7 +2537,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
   },
   degenvampires: {
     name: 'degenvampires',
-    displayName: 'Degen Vampires',
+    displayName: 'Degen Vampies',
     type: 'Guild',
     websiteUrl: 'https://twitter.com/DegenVampires',
     badges: [{ badgeType: 'recent' }],
