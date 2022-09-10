@@ -407,8 +407,8 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     ],
     marketplaceRate: 'days',
   },
-  solrarity: {
-    name: 'solrarity',
+  'solrarity-rarikeys': {
+    name: 'solrarity-rarikeys',
     displayName: 'SolRarity Rarikeys',
     type: 'Collection',
     websiteUrl: 'https://solrarity.app/',
@@ -440,9 +440,58 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       type: 'creators',
       value: [
         '53EmnGdMxnmNcaPUE6wJ2NHz6iUVpge4a7RViTdfb8Dq',
-        'BF2rThtdXMSbFBHbHjTVKXndQnJ1k8HALsX2HCL1QvSc',
         'GfuaX8U67NBYHv133cvTDekqWy6EmYUrdH7UxPqKRgCL',
       ],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue', 'return'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
+  'solrarity-snipies': {
+    name: 'solrarity-snipies',
+    displayName: 'SolRarity Snipies',
+    type: 'Collection',
+    websiteUrl: 'https://solrarity.app/',
+    logoImage: '/logos/solrarity-snipies.gif',
+    logoPadding: false,
+    hero: '/logos/solrarity-hero.png',
+    description:
+      '2,600 Snipies Airdropped to Rarikeys Holders. The more Snipies you hold, the more power you will have through the SolRarity tools. Access the new premium feature Clever Wallet, the must-have wallet in the Solana ecosystem.',
+    colors: {
+      accent: '#d40e99',
+      glow: '#d40e99',
+    },
+    twitterHandle: '@NFTNerdsAI',
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://solrarity.app/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/SolRarity_',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/solrarity',
+      },
+    ],
+    filter: {
+      type: 'creators',
+      value: ['BF2rThtdXMSbFBHbHjTVKXndQnJ1k8HALsX2HCL1QvSc'],
     },
     rentalCard: {
       invalidators: ['rate', 'duration'],
