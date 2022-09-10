@@ -439,11 +439,30 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     filter: {
       type: 'creators',
       value: [
-        '53EmnGdMxnmNcaPUE6wJ2NHz6iUVpge4a7RViTdfb8Dq',
-        'BF2rThtdXMSbFBHbHjTVKXndQnJ1k8HALsX2HCL1QvSc',
-        'GfuaX8U67NBYHv133cvTDekqWy6EmYUrdH7UxPqKRgCL',
+        '53EmnGdMxnmNcaPUE6wJ2NHz6iUVpge4a7RViTdfb8Dq', // rarikeys 1
+        'GfuaX8U67NBYHv133cvTDekqWy6EmYUrdH7UxPqKRgCL', // rarikeys 2
+        'BF2rThtdXMSbFBHbHjTVKXndQnJ1k8HALsX2HCL1QvSc', // snipies
       ],
     },
+    subFilters: [
+      {
+        label: 'Rarikeys',
+        filter: {
+          type: 'creators',
+          value: [
+            '53EmnGdMxnmNcaPUE6wJ2NHz6iUVpge4a7RViTdfb8Dq',
+            'GfuaX8U67NBYHv133cvTDekqWy6EmYUrdH7UxPqKRgCL',
+          ],
+        },
+      },
+      {
+        label: 'Snipies',
+        filter: {
+          type: 'creators',
+          value: ['BF2rThtdXMSbFBHbHjTVKXndQnJ1k8HALsX2HCL1QvSc'],
+        },
+      },
+    ],
     rentalCard: {
       invalidators: ['rate', 'duration'],
       invalidationOptions: {
