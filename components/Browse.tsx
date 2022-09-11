@@ -375,6 +375,7 @@ export const Browse = () => {
             }
           />
           <TabSelector<PANE_OPTIONS>
+            colorized
             defaultOption={PANE_TABS[0]}
             options={PANE_TABS}
             value={PANE_TABS.find((p) => p.value === pane)}

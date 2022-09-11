@@ -1891,8 +1891,8 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     websiteUrl: 'https://theunveiled.xyz/',
     logoImage: 'logos/the-unveiled.png',
     colors: {
-      accent: '#333333',
-      glow: '#333333',
+      accent: '#FFF',
+      glow: '#FFF',
     },
     description:
       'Manifest your dreams - join the Unveiled!\nWhere brand meets utility! Building BraveIncubator, streetwear brand, and more. Rent your favorite utility based NFTs with $VEIL now!',
