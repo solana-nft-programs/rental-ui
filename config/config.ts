@@ -1915,7 +1915,10 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     badges: [{ badgeType: 'recent' }],
     filter: {
       type: 'issuer',
-      value: ['EVnkZ9PEZ4wnriFVyN5ET7cakaeffPn5xFXggxAWCgyf'],
+      value: [
+        'EVnkZ9PEZ4wnriFVyN5ET7cakaeffPn5xFXggxAWCgyf',
+        '7H5MibNxDDqMx1ZtfcbpZjj8Vi62cXmreY2T6NTwNZx9',
+      ],
     },
     rentalCard: {
       invalidators: ['rate', 'duration'],
