@@ -1844,6 +1844,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     description:
       'Udder Chaos is a project built on a sustainable business model. Operating a Solana Validator drives consistent income for the project on top of accent sales, while also being supported by their RPC rentals and NFT rental treasury. They are also developing Alpha Audits, an NFT reviewing platform with a review-to-earn mechanism.',
     hero: 'logos/udderchaos-hero.png',
+    twitterHandle: 'UdderChaosSOL',
     socialLinks: [
       {
         icon: 'web',
@@ -1878,6 +1879,62 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         maxDurationAllowed: {
           displayText: '12 weeks',
           value: 7258000,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
+  ['the-unveiled']: {
+    name: 'the-unveiled',
+    displayName: 'The Unveiled',
+    type: 'Guild',
+    websiteUrl: 'https://theunveiled.xyz/',
+    logoImage: 'logos/the-unveiled.png',
+    colors: {
+      accent: '#FFF',
+      glow: '#FFF',
+    },
+    description:
+      'Manifest your dreams - join the Unveiled!\nWhere brand meets utility! Building BraveIncubator, streetwear brand, and more. Rent your favorite utility based NFTs with $VEIL now!',
+    hero: 'logos/the-unveiled-hero.png',
+    twitterHandle: '@theunveiled222',
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://theunveiled.xyz/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/theunveiled222',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/udderchaos',
+      },
+    ],
+    badges: [{ badgeType: 'recent' }],
+    filter: {
+      type: 'issuer',
+      value: [
+        'EVnkZ9PEZ4wnriFVyN5ET7cakaeffPn5xFXggxAWCgyf',
+        '7H5MibNxDDqMx1ZtfcbpZjj8Vi62cXmreY2T6NTwNZx9',
+      ],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration'],
+      invalidationOptions: {
+        visibilities: ['public'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue', 'return'],
+        paymentMints: [
+          'vE1LVWTLu1zJf5gyoG8c39cgJCWCXgx5hARY7fms5Dp',
+          'So11111111111111111111111111111111111111112',
+        ],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '52 weeks',
+          value: 86400 * 365,
         },
       },
     },

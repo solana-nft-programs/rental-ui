@@ -101,6 +101,13 @@ export const PAYMENT_MINTS: PaymentMintInfo[] = [
       'https://raw.githubusercontent.com/GZDragonHead/DGV/main/IMG_6148.JPG',
     decimals: 6,
   },
+  {
+    mint: 'vE1LVWTLu1zJf5gyoG8c39cgJCWCXgx5hARY7fms5Dp',
+    symbol: 'VEIL',
+    image:
+      'https://zewj2letnb5tw2brhe5cmunew5wke5tkmda7k7qavcpg4gikmmra.arweave.net/ySydLJNoeztoMTk6JlGkt2yidmpgwfV-AKiebhkKYyI?ext=png',
+    decimals: 9,
+  },
 ]
 
 export const WRAPPED_SOL_MINT = 'So11111111111111111111111111111111111111112'
