@@ -1094,7 +1094,10 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         durationOptions: ['hours', 'days', 'weeks'],
         visibilities: ['public'],
         invalidationTypes: ['reissue', 'return'],
-        paymentMints: ['So11111111111111111111111111111111111111112'],
+        paymentMints: [
+          'DFL1zNkaGPWm1BqAVqRjCZvHmwTFrEaJtbzJWgseoNJh', // defiland
+          'GoLDYyyiVeXnVf9qgoK712N5esm1cCbHEK9aNJFx47Sx', // goldy
+        ],
         setClaimRentalReceipt: true,
         showClaimRentalReceipt: false,
         maxDurationAllowed: {
