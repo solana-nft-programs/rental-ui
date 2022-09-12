@@ -30,6 +30,8 @@ export const mintMetadataQuery = async (
       pubkey: tryPublicKey(tokenData.indexedData.address)!,
       parsed: {
         image: tokenData?.indexedData?.mint_address_nfts?.metadata_json?.image,
+        attributes:
+          tokenData?.indexedData?.mint_address_nfts?.metadatas_attributes,
       },
     }
   }
@@ -60,7 +62,13 @@ export const useMintMetadata = (
   tokenData: Pick<TokenData, 'metaplexData'> | Pick<TokenData, 'indexedData'>
 ) => {
   const { config } = useProjectConfig()
-  return useQuery<AccountData<{ image: string }> | undefined>(
+  return useQuery<
+    | AccountData<{
+        image: string
+        attributes?: { trait_type: string; value: string }[]
+      }>
+    | undefined
+  >(
     mintMetadataQueryKey(tokenData),
     () =>
       withTrace(() => {

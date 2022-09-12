@@ -2,6 +2,7 @@ import { getExpirationString } from '@cardinal/common'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import type { TokenData } from 'apis/api'
 import { useMintMetadata } from 'hooks/useMintMetadata'
+import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useUTCNow } from 'providers/UTCNowProvider'
 
 import { NFTContexualMenu } from './NFTContexualMenu'
@@ -37,7 +38,12 @@ interface NFTProps {
 
 export function NFT({ tokenData }: NFTProps) {
   const { UTCNow } = useUTCNow()
+  const { config } = useProjectConfig()
   const metadata = useMintMetadata(tokenData).data
+  const attributesByTraitType = metadata?.parsed.attributes?.reduce(
+    (acc, attr) => ({ ...acc, [attr.trait_type]: attr }),
+    {} as { [trait_type: string]: { value: string } }
+  )
   return (
     <div className="relative min-w-full rounded-xl bg-dark-5">
       <NFTContexualMenu tokenData={tokenData} />
@@ -55,6 +61,22 @@ export function NFT({ tokenData }: NFTProps) {
             </div>
           )
         )}
+        {attributesByTraitType &&
+          config.attributeDisplay &&
+          config.attributeDisplay.map(
+            ({ displayName, attributeName }, i) =>
+              attributesByTraitType[attributeName] && (
+                <div
+                  key={i}
+                  className={`absolute bottom-3 right-3 z-20 rounded-md bg-dark-5 px-2 py-1 text-sm text-light-0`}
+                >
+                  <span className="font-semibold">
+                    {displayName || attributeName}:{' '}
+                  </span>
+                  {attributesByTraitType[attributeName]?.value}
+                </div>
+              )
+          )}
         {metadata && metadata.parsed.image ? (
           <img
             loading="lazy"

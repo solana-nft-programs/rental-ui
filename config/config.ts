@@ -78,6 +78,7 @@ export type ProjectConfig = {
   disableListing?: boolean
   filter?: TokenFilter
   subFilters?: { label: string; filter: TokenFilter }[]
+  attributeDisplay?: [{ displayName?: string; attributeName: string }]
   sections?: TokenSection[]
   rentalCard: RentalCardConfig
   airdrops?: AirdropMetadata[]
@@ -1081,6 +1082,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         'DhHpYwT9oy75BB8XXb8Fz6HBLxktwqc1yhUPvcCg5GPB', // gun 2
       ],
     },
+    attributeDisplay: [{ attributeName: 'Health' }],
     indexMetadataDisabled: true,
     rentalCard: {
       invalidators: ['rate', 'duration'],
