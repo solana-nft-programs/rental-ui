@@ -7,11 +7,9 @@ import {
   rentalTypeColor,
   rentalTypeName,
 } from 'common/tokenDataUtils'
-import { Tooltip } from 'common/Tooltip'
 import type { ProjectConfig } from 'config/config'
 import { useMintMetadata, useMintMetadatas } from 'hooks/useMintMetadata'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
-import { BsFillInfoCircleFill } from 'react-icons/bs'
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   config: ProjectConfig
