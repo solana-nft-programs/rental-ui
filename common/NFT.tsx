@@ -4,9 +4,11 @@ import type { TokenData } from 'apis/api'
 import { useMintMetadata } from 'hooks/useMintMetadata'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useUTCNow } from 'providers/UTCNowProvider'
+import { BsFillInfoCircleFill } from 'react-icons/bs'
 
 import { NFTContexualMenu } from './NFTContexualMenu'
 import { getNameFromTokenData } from './tokenDataUtils'
+import { Tooltip } from './Tooltip'
 
 export const getExpiration = (
   tokenData: Pick<TokenData, 'timeInvalidator' | 'tokenManager'>,
@@ -61,22 +63,53 @@ export function NFT({ tokenData }: NFTProps) {
             </div>
           )
         )}
-        {attributesByTraitType &&
-          config.attributeDisplay &&
-          config.attributeDisplay.map(
-            ({ displayName, attributeName }, i) =>
-              attributesByTraitType[attributeName] && (
-                <div
-                  key={i}
-                  className={`absolute bottom-3 right-3 z-20 rounded-md bg-dark-5 px-2 py-1 text-sm text-light-0`}
-                >
-                  <span className="font-semibold">
-                    {displayName || attributeName}:{' '}
-                  </span>
-                  {attributesByTraitType[attributeName]?.value}
+        {attributesByTraitType && (
+          <div
+            className={`absolute bottom-3 right-3 z-20 flex items-center gap-3 rounded-md text-light-0 ${
+              config.attributeDisplay && 'bg-dark-5 px-2 py-1'
+            }`}
+          >
+            {config.attributeDisplay &&
+              config.attributeDisplay.map(
+                ({ displayName, attributeName }, i) =>
+                  attributesByTraitType[attributeName] && (
+                    <div className="flex items-center gap-1">
+                      <div className="font-semibold">
+                        {displayName || attributeName}:{' '}
+                      </div>
+                      <div>{attributesByTraitType[attributeName]?.value}</div>
+                    </div>
+                  )
+              )}
+            <Tooltip
+              className={`rounded-md text-light-0`}
+              title={
+                <div>
+                  {metadata?.parsed.attributes?.map((attr, i) => (
+                    <div
+                      key={i}
+                      className={`flex items-center justify-between gap-1 rounded-md py-[2px] text-sm text-light-0`}
+                    >
+                      <div className="font-bold">{attr.trait_type}</div>
+                      <div className="text-light-2">{attr?.value}</div>
+                    </div>
+                  ))}
                 </div>
-              )
-          )}
+              }
+            >
+              <div
+                className={`flex cursor-pointer items-center gap-1 ${
+                  config.attributeDisplay
+                    ? 'scale-[1.25] text-light-2'
+                    : 'scale-[1.5] text-dark-6'
+                }`}
+              >
+                <BsFillInfoCircleFill />
+              </div>
+            </Tooltip>
+          </div>
+        )}
+
         {metadata && metadata.parsed.image ? (
           <img
             loading="lazy"
