@@ -1,4 +1,5 @@
 import type { TokenData } from 'apis/api'
+import { NFTAttributeInfo } from 'common/NFTAttributeInfo'
 import { Pill } from 'common/Pill'
 import {
   getNameFromTokenData,
@@ -90,26 +91,10 @@ export const RentalClaimCardTokenHeader: React.FC<RentalClaimCardProps> = ({
               alt={getNameFromTokenData(tokenData)}
             />
           )}
-          <Tooltip
-            className={`absolute top-3 right-3 z-20 rounded-md`}
-            title={
-              <div>
-                {mintMetadata?.data?.parsed.attributes?.map((attr, i) => (
-                  <div
-                    key={i}
-                    className={`flex items-center justify-between gap-1 rounded-md py-[2px] text-sm text-light-0`}
-                  >
-                    <div className="font-bold">{attr.trait_type}</div>
-                    <div className="text-light-2">{attr?.value}</div>
-                  </div>
-                ))}
-              </div>
-            }
-          >
-            <div className="flex scale-[1.5] cursor-pointer items-center gap-1  text-dark-6">
-              <BsFillInfoCircleFill />
-            </div>
-          </Tooltip>
+          <NFTAttributeInfo
+            className={`absolute top-3 right-3 z-20`}
+            tokenData={tokenData}
+          />
           <Pill
             className={`absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-1/2 border-[1px] border-border ${rentalTypeColor(
               type

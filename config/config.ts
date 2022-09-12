@@ -78,7 +78,7 @@ export type ProjectConfig = {
   disableListing?: boolean
   filter?: TokenFilter
   subFilters?: { label: string; filter: TokenFilter }[]
-  attributeDisplay?: [{ displayName?: string; attributeName: string }]
+  attributeDisplay?: { displayName?: string; attributeName: string }[]
   sections?: TokenSection[]
   rentalCard: RentalCardConfig
   airdrops?: AirdropMetadata[]
