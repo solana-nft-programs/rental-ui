@@ -60,7 +60,7 @@ export default function Home() {
         <link
           href="https://fonts.googleapis.com/css2?family=Karla:wght@600&display=swap"
           rel="stylesheet"
-        />       
+        />
       </Head>
       <Banner />
       {config.name !== 'default' || router.query.host?.includes(config.name) ? (

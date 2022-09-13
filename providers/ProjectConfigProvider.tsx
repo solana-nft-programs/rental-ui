@@ -20,7 +20,11 @@ export const getInitialProps = async ({
 
   return {
     config: project
-      ? projectConfigs[project] || projectConfigs['default']!
+      ? projectConfigs[project] ||
+        Object.values(projectConfigs).find(
+          (config) => config.hostname && projectParams.includes(config.hostname)
+        ) ||
+        projectConfigs['default']!
       : projectConfigs['default']!,
   }
 }
