@@ -58,6 +58,11 @@ export const nativeErrors: ErrorCode[] = [
     code: 'not associated with',
     message: 'Account not associated with this mint',
   },
+  {
+    code: 'rent-exempt',
+    message:
+      'Insufficient funds. User does not have enough sol to complete the transaction',
+  },
   // token program errors
   {
     code: 'insufficient funds',
