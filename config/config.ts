@@ -78,6 +78,7 @@ export type ProjectConfig = {
   disableListing?: boolean
   filter?: TokenFilter
   subFilters?: { label: string; filter: TokenFilter }[]
+  attributeDisplay?: { displayName?: string; attributeName: string }[]
   sections?: TokenSection[]
   rentalCard: RentalCardConfig
   airdrops?: AirdropMetadata[]
@@ -530,55 +531,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     },
     marketplaceRate: 'days',
   },
-  'serum-surfers': {
-    name: 'serum-surfers',
-    displayName: 'Serum Surfers',
-    type: 'Collection',
-    websiteUrl: 'https://www.projectserum.com/',
-    logoImage: '/logos/serum-surfers.png',
-    hero: '/logos/serum-surfers-hero.png',
-    description:
-      'The Serum Surfers are a collection of 5,000 generative NFTs minted and launched on Solana through Burnt Finance’s Ignition Launchpad. They are a special homage to the Solana network’s inception, where founders Raj Gokal and Anatoly Yakovenko surfed alongside many of the early employees at Solana Beach, California. The Serum Surfers are the centerpiece of the quickly growing Serum NFT Ecosystem, and a key access ticket to everything it has in store!',
-    twitterHandle: '@SurfersDAO',
-    socialLinks: [
-      {
-        icon: 'web',
-        link: 'https://www.projectserum.com/',
-      },
-      {
-        icon: 'twitter',
-        link: 'https://twitter.com/SurfersDAO',
-      },
-      {
-        icon: 'discord',
-        link: 'https://discord.com/invite/projectserum',
-      },
-    ],
-    colors: {
-      accent: '#49cbde',
-      glow: '#49cbde',
-    },
-    filter: {
-      type: 'creators',
-      value: ['5v3tpTWZmn8JCzTFVE3eZLLQhhqSLLmTcRR2DZ8Gx2JX'],
-    },
-    rentalCard: {
-      invalidators: ['rate', 'duration'],
-      invalidationOptions: {
-        visibilities: ['public', 'private'],
-        durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue', 'return'],
-        paymentMints: ['So11111111111111111111111111111111111111112'],
-        showClaimRentalReceipt: false,
-        setClaimRentalReceipt: false,
-        maxDurationAllowed: {
-          displayText: '12 weeks',
-          value: 7258000,
-        },
-      },
-    },
-    marketplaceRate: 'days',
-  },
   scalpempire: {
     name: 'scalpempire',
     displayName: 'Scalp Empire',
@@ -610,6 +562,122 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     filter: {
       type: 'creators',
       value: ['5g3T8224Ha5as4Ho7tcRxsHQFr4pzeEa1wEtnir93m3t'],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue', 'return'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
+  defiland: {
+    name: 'defiland',
+    displayName: 'Defi Land',
+    type: 'Collection',
+    websiteUrl: 'https://www.defiland.app/',
+    logoImage: 'https://defiland.app/_nuxt/img/defiland.74b3850.svg',
+    logoPadding: true,
+    colors: {
+      accent: '#CD9373',
+      glow: '#CD9373',
+    },
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://defiland.app/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/DeFi_Land',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/defiland',
+      },
+    ],
+    twitterHandle: '@DeFi_Land',
+    filter: {
+      type: 'creators',
+      value: [
+        '4exgPiVhpromTi8duBsMnscoodAjU1as13s1AXZGsGHP', // harvester
+        'FF1uGW7AUvUBskvWNqda1ehFX1jCkvaUk6FRcbWUEaBw', // harvester
+        '3XE8DuYzqZLKr1XqXrvADRTxXWL91KuakqsKfD3cYoLP', // gun
+        '5XTbjtKM1whecjXMMdDUz3BzWqEDRuJxTRPX3xTF1qmG',
+        'Ajp7uzkyPUU35pGdkjZd9Gbe4zgDQXterWY8ZzvP4sCk', // boat
+        '8m4TTZz3RsDVakDSwn7T89GyButxLiMqn2zq7DWfANu7', // cat, cow, dog
+        '5B9AwfGpR5GRYTipUrFuvishUmPA86R5E1JcGodEsPq1', // fishing rod
+        'CDNsHymcJadDkoXxzhpDe2i6723ezm15QZqkEP91uXij', // harverster 2
+        'DhHpYwT9oy75BB8XXb8Fz6HBLxktwqc1yhUPvcCg5GPB', // gun 2
+      ],
+    },
+    attributeDisplay: [{ attributeName: 'Health' }],
+    indexMetadataDisabled: true,
+    rentalCard: {
+      invalidators: ['rate', 'duration'],
+      invalidationOptions: {
+        freezeRentalRateDuration: {
+          value: '1',
+          durationOption: 'days',
+        },
+        durationOptions: ['hours', 'days', 'weeks'],
+        visibilities: ['public'],
+        invalidationTypes: ['reissue', 'return'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        // paymentMints: [
+        //   'DFL1zNkaGPWm1BqAVqRjCZvHmwTFrEaJtbzJWgseoNJh', // defiland
+        //   'GoLDYyyiVeXnVf9qgoK712N5esm1cCbHEK9aNJFx47Sx', // goldy
+        // ],
+        setClaimRentalReceipt: true,
+        showClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
+  'serum-surfers': {
+    name: 'serum-surfers',
+    displayName: 'Serum Surfers',
+    type: 'Collection',
+    websiteUrl: 'https://www.projectserum.com/',
+    logoImage: '/logos/serum-surfers.png',
+    hero: '/logos/serum-surfers-hero.png',
+    description:
+      'The Serum Surfers are a collection of 5,000 generative NFTs minted and launched on Solana through Burnt Finance’s Ignition Launchpad. They are a special homage to the Solana network’s inception, where founders Raj Gokal and Anatoly Yakovenko surfed alongside many of the early employees at Solana Beach, California. The Serum Surfers are the centerpiece of the quickly growing Serum NFT Ecosystem, and a key access ticket to everything it has in store!',
+    twitterHandle: '@SurfersDAO',
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://www.projectserum.com/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/SurfersDAO',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.com/invite/projectserum',
+      },
+    ],
+    colors: {
+      accent: '#49cbde',
+      glow: '#49cbde',
+    },
+    filter: {
+      type: 'creators',
+      value: ['5v3tpTWZmn8JCzTFVE3eZLLQhhqSLLmTcRR2DZ8Gx2JX'],
     },
     rentalCard: {
       invalidators: ['rate', 'duration'],
@@ -1020,68 +1088,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         'BTzGQ6yk1uFN9q9Po3LGSvmZ3dxq8nf8WPwr4D12APxo',
       ],
     },
-    rentalCard: {
-      invalidators: ['rate', 'duration'],
-      invalidationOptions: {
-        freezeRentalRateDuration: {
-          value: '1',
-          durationOption: 'days',
-        },
-        durationOptions: ['hours', 'days', 'weeks'],
-        visibilities: ['public'],
-        invalidationTypes: ['reissue', 'return'],
-        paymentMints: ['So11111111111111111111111111111111111111112'],
-        setClaimRentalReceipt: true,
-        showClaimRentalReceipt: false,
-        maxDurationAllowed: {
-          displayText: '12 weeks',
-          value: 7258000,
-        },
-      },
-    },
-    marketplaceRate: 'days',
-  },
-  defiland: {
-    name: 'defiland',
-    displayName: 'Defi Land',
-    type: 'Collection',
-    websiteUrl: 'https://www.defiland.app/',
-    logoImage: 'https://defiland.app/_nuxt/img/defiland.74b3850.svg',
-    logoPadding: true,
-    colors: {
-      accent: '#CD9373',
-      glow: '#CD9373',
-    },
-    socialLinks: [
-      {
-        icon: 'web',
-        link: 'https://defiland.app/',
-      },
-      {
-        icon: 'twitter',
-        link: 'https://twitter.com/DeFi_Land',
-      },
-      {
-        icon: 'discord',
-        link: 'https://discord.gg/defiland',
-      },
-    ],
-    twitterHandle: '@DeFi_Land',
-    filter: {
-      type: 'creators',
-      value: [
-        '4exgPiVhpromTi8duBsMnscoodAjU1as13s1AXZGsGHP', // harvester
-        'FF1uGW7AUvUBskvWNqda1ehFX1jCkvaUk6FRcbWUEaBw', // harvester
-        '3XE8DuYzqZLKr1XqXrvADRTxXWL91KuakqsKfD3cYoLP', // gun
-        '5XTbjtKM1whecjXMMdDUz3BzWqEDRuJxTRPX3xTF1qmG',
-        'Ajp7uzkyPUU35pGdkjZd9Gbe4zgDQXterWY8ZzvP4sCk', // boat
-        '8m4TTZz3RsDVakDSwn7T89GyButxLiMqn2zq7DWfANu7', // cat, cow, dog
-        '5B9AwfGpR5GRYTipUrFuvishUmPA86R5E1JcGodEsPq1', // fishing rod
-        'CDNsHymcJadDkoXxzhpDe2i6723ezm15QZqkEP91uXij', // harverster 2
-        'DhHpYwT9oy75BB8XXb8Fz6HBLxktwqc1yhUPvcCg5GPB', // gun 2
-      ],
-    },
-    indexMetadataDisabled: true,
     rentalCard: {
       invalidators: ['rate', 'duration'],
       invalidationOptions: {

@@ -4,6 +4,7 @@ import type { TokenData } from 'apis/api'
 import { useMintMetadata } from 'hooks/useMintMetadata'
 import { useUTCNow } from 'providers/UTCNowProvider'
 
+import { NFTAttributeInfo } from './NFTAttributeInfo'
 import { NFTContexualMenu } from './NFTContexualMenu'
 import { getNameFromTokenData } from './tokenDataUtils'
 
@@ -55,6 +56,10 @@ export function NFT({ tokenData }: NFTProps) {
             </div>
           )
         )}
+        <NFTAttributeInfo
+          className={`absolute bottom-3 right-3 z-20`}
+          tokenData={tokenData}
+        />
         {metadata && metadata.parsed.image ? (
           <img
             loading="lazy"

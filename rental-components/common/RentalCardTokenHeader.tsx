@@ -1,4 +1,5 @@
 import type { TokenData } from 'apis/api'
+import { NFTAttributeInfo } from 'common/NFTAttributeInfo'
 import { Pill } from 'common/Pill'
 import {
   getNameFromTokenData,
@@ -88,6 +89,10 @@ export const RentalClaimCardTokenHeader: React.FC<RentalClaimCardProps> = ({
               alt={getNameFromTokenData(tokenData)}
             />
           )}
+          <NFTAttributeInfo
+            className={`absolute top-3 right-3 z-20`}
+            tokenData={tokenData}
+          />
           <Pill
             className={`absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-1/2 border-[1px] border-border ${rentalTypeColor(
               type

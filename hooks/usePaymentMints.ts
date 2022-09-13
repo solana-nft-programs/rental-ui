@@ -108,6 +108,20 @@ export const PAYMENT_MINTS: PaymentMintInfo[] = [
       'https://zewj2letnb5tw2brhe5cmunew5wke5tkmda7k7qavcpg4gikmmra.arweave.net/ySydLJNoeztoMTk6JlGkt2yidmpgwfV-AKiebhkKYyI?ext=png',
     decimals: 9,
   },
+  {
+    mint: 'DFL1zNkaGPWm1BqAVqRjCZvHmwTFrEaJtbzJWgseoNJh',
+    symbol: 'DFL',
+    image:
+      'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/DFL1zNkaGPWm1BqAVqRjCZvHmwTFrEaJtbzJWgseoNJh/logo.png',
+    decimals: 9,
+  },
+  {
+    mint: 'GoLDYyyiVeXnVf9qgoK712N5esm1cCbHEK9aNJFx47Sx',
+    symbol: 'GOLDY',
+    image:
+      'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/GoLDYyyiVeXnVf9qgoK712N5esm1cCbHEK9aNJFx47Sx/logo.png',
+    decimals: 9,
+  },
 ]
 
 export const WRAPPED_SOL_MINT = 'So11111111111111111111111111111111111111112'
