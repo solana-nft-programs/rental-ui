@@ -2055,7 +2055,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     type: 'Guild',
     websiteUrl: 'https://fatcatscapital.com/',
     logoImage: 'logos/fatcats.png',
-    logoPadding: true,
     colors: {
       accent: '#397fd6',
       glow: '#397fd6',
@@ -2204,7 +2203,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     type: 'Guild',
     websiteUrl: 'https://monkettes.io/',
     logoImage: 'logos/monkettes.png',
-    logoPadding: true,
     hero: 'logos/monkettes-hero.png',
     colors: {
       accent: '#fe5d9f',
