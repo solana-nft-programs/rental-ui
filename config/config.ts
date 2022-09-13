@@ -65,6 +65,7 @@ export type ProjectConfig = {
   websiteUrl: string
   hero?: string
   description?: string
+  hostname?: string
   twitterHandle?: string
   socialLinks?: {
     icon: IconKey
@@ -1109,8 +1110,11 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     displayName: 'BR1',
     type: 'Collection',
     websiteUrl: 'https://www.br1game.com/',
-    logoImage:
-      'https://static.wixstatic.com/media/a5e645_ede493815397419cad3c618bd7cb4aa4~mv2.png/v1/fill/w_888,h_390,al_c,usm_0.66_1.00_0.01,enc_auto/Artboard%202%20copy%204-1.png',
+    logoImage: '/logos/br1.png',
+    hero: '/logos/br1-hero.png',
+    description:
+      'BR1: Infinite is the leading third person, risk-based shooter where gamers pay-to-spawn and earn $USDC for every player they eliminate. Rent one of the 2500 Ape or 7500 Droid Operatives to shoot and loot your way to victory.',
+    hostname: 'rent.br1game.com',
     colors: {
       accent: 'rgb(169,60,239)',
       glow: 'rgb(169,60,239)',
@@ -1127,7 +1131,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       },
       {
         icon: 'discord',
-        link: 'https://discord.gg/SuCjkc4MRF',
+        link: 'https://discord.com/invite/br1metaverse',
       },
     ],
     filter: {
