@@ -1244,6 +1244,56 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     badges: [{ badgeType: 'recent' }],
     marketplaceRate: 'days',
   },
+  suitcats: {
+    name: 'suitcats',
+    displayName: 'Suitcats',
+    type: 'Collection',
+    websiteUrl: 'https://suitcats.com',
+    logoImage: '/logos/suitcats.png',
+    hero: '/logos/suitcats-hero.png',
+    colors: {
+      accent: '#497060',
+      glow: '#497060',
+    },
+    description:
+      'Suitcats will monitor, track and be notified of mint activity according to your presets to stay ahead of your competition and discover potential opportunities.\nDeals/Snipes, Portfolio Tracking, FFF Token Market Charts, STEPN Tracking are also included and cloud minting automations are currently in development',
+    twitterHandle: '@SuitcatsNFT',
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://suitcats.com',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/SuitcatsNFT',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/suitcat',
+      },
+    ],
+    filter: {
+      type: 'creators',
+      value: ['8LGV2YeEGXnnBA7owtEdtMR3rM69CX1jaA1oSsb33vD7'],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue', 'return'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '3 days',
+          value: 86400 * 3,
+        },
+      },
+    },
+    badges: [{ badgeType: 'recent' }],
+    marketplaceRate: 'days',
+  },
   theremnants: {
     name: 'theremnants',
     displayName: 'The Remnants',
