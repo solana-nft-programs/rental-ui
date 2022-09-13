@@ -11,6 +11,7 @@ import {
   timeInvalidatorFromIndexedClaimEvent,
   useClaimEventsForConfig,
 } from 'hooks/useClaimEventsForConfig'
+import { useMintMetadata } from 'hooks/useMintMetadata'
 import { usePaymentMints } from 'hooks/usePaymentMints'
 import { useTokenAccountInfo } from 'hooks/useTokenAccountInfo'
 import { useTxidForEvent } from 'hooks/useTxidForEvent'
@@ -87,6 +88,15 @@ export const ActivityRow = ({
 }) => {
   const { config } = useProjectConfig()
   const { secondaryConnection } = useEnvironmentCtx()
+  const mintMetadata = useMintMetadata({
+    indexedData: {
+      mint: claimEvent.mint,
+      mint_address_nfts: {
+        ...claimEvent.mint_address_nfts,
+        metadatas_metadata_creators: [],
+      },
+    },
+  })
   const [lookupTx, setLookupTx] = useState(false)
   const txSignature = useTxidForEvent(
     claimEvent.token_manager_address,
@@ -104,7 +114,7 @@ export const ActivityRow = ({
         <div className="flex items-center gap-5 md:flex-row">
           <img
             loading="lazy"
-            src={claimEvent.mint_address_nfts?.metadata_json?.image}
+            src={mintMetadata.data?.parsed.image}
             alt="nft-pic"
             className={`h-[50px] rounded-xl`}
           />
