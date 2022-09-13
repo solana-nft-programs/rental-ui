@@ -44,7 +44,7 @@ export const NFTAttributeInfo = ({ tokenData, className }: Props) => {
             {config.attributeDisplay.map(
               ({ displayName, attributeName }, i) =>
                 attributesByTraitType[attributeName] && (
-                  <>
+                  <div key={i} className="flex items-center gap-2">
                     <div className="flex items-center gap-1">
                       <div className="font-semibold">
                         {displayName || attributeName}:{' '}
@@ -54,7 +54,7 @@ export const NFTAttributeInfo = ({ tokenData, className }: Props) => {
                     {config.attributeDisplay &&
                       config.attributeDisplay?.length > 1 &&
                       i !== config.attributeDisplay?.length - 1 && <div>|</div>}
-                  </>
+                  </div>
                 )
             )}
           </div>
