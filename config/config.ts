@@ -945,6 +945,55 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     },
     marketplaceRate: 'days',
   },
+  notifish: {
+    name: 'notifish',
+    displayName: 'Notifish',
+    type: 'Collection',
+    websiteUrl: 'https://notifi.network/',
+    logoImage: '/logos/notifish.png',
+    hero: '/logos/notifish-hero.png',
+    description:
+      'We are the only messaging infrastructure for dapps to engage with their users in the Web3 world.',
+    twitterHandle: '@NotifiNetwork',
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://notifi.network/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/NotifiNetwork',
+      },
+      {
+        icon: 'discord',
+        link: 'https://t.co/xNA0ATndwL',
+      },
+    ],
+    colors: {
+      accent: '#fcc698',
+      glow: '#fcc698',
+    },
+    filter: {
+      type: 'creators',
+      value: ['4DyoBc7mp8AjGUy5Ux8EWkp4g9SZw2znvyzsZ6GGBFUi'],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue', 'return'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
   hydrascripts: {
     name: 'hydrascripts',
     displayName: 'HydraScripts',
