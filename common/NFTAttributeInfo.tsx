@@ -63,7 +63,7 @@ export const NFTAttributeInfo = ({ tokenData, className }: Props) => {
           className={`flex items-center gap-1 ${
             config.attributeDisplay
               ? 'scale-[1.25] text-light-2'
-              : 'scale-[1.5] text-dark-6'
+              : 'scale-[1.5] rounded-full bg-light-0 text-dark-6'
           }`}
         >
           <BsFillInfoCircleFill />
