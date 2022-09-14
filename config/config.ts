@@ -619,6 +619,9 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         '5B9AwfGpR5GRYTipUrFuvishUmPA86R5E1JcGodEsPq1', // fishing rod
         'CDNsHymcJadDkoXxzhpDe2i6723ezm15QZqkEP91uXij', // harverster 2
         'DhHpYwT9oy75BB8XXb8Fz6HBLxktwqc1yhUPvcCg5GPB', // gun 2
+        'CXDvGCdJjr7pT6hPuouT1aQBYw7soWWCRoV7h3YvAYjW', // animals
+        '8UCcoezxS7sWxZL71H1aobhTsoWbyzKeFibykcEjnree', // animals
+        'Gk8mH3mPqZuEiQRLqzEcGRVqWVeZ7cjKnbGbpb5z9x1H', // animals
       ],
     },
     attributeDisplay: [{ attributeName: 'Health' }],
