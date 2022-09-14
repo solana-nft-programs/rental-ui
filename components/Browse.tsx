@@ -278,6 +278,7 @@ export const Browse = () => {
         <div className="flex flex-wrap gap-4">
           {config.subFilters && config.subFilters[0]?.filter && (
             <Selector<TokenFilter>
+              z={50}
               colorized
               highlight
               className="min-w-[140px]"

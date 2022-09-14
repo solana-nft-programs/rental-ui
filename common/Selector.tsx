@@ -17,6 +17,7 @@ type Props<T> = {
   onChange?: (arg?: Option<T>) => void
   colorized?: boolean
   highlight?: boolean
+  z?: number
 }
 
 export const Selector = <T,>({
@@ -29,6 +30,7 @@ export const Selector = <T,>({
   options = [],
   colorized,
   highlight,
+  z = 30,
 }: Props<T>) => {
   const { config } = useProjectConfig()
   const [isOpen, setIsOpen] = useState(false)
@@ -46,7 +48,7 @@ export const Selector = <T,>({
   }, [ref])
 
   return (
-    <div className="relative z-40 text-base" ref={ref}>
+    <div className={`relative z-${z} text-base`} ref={ref}>
       <div
         className={`flex justify-between gap-2 rounded-lg border-[1px] border-border bg-dark-4 px-3 py-2 transition-all ${
           disabled
