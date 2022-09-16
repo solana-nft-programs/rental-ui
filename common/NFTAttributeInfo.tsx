@@ -10,7 +10,8 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export const NFTAttributeInfo = ({ tokenData, className }: Props) => {
-  const { config } = useProjectConfig()
+  const { configFromToken } = useProjectConfig()
+  const config = configFromToken(tokenData)
   const metadata = useMintMetadata(tokenData).data
   const attributesByTraitType = (metadata?.parsed.attributes || [])?.reduce(
     (acc, attr) => ({ ...acc, [attr.trait_type]: attr }),

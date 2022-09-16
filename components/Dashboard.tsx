@@ -377,9 +377,7 @@ export const Dashboard = () => {
                             <div className="text-2xl text-light-0">
                               {config.displayName !== 'Unverified' ? (
                                 <a
-                                  href={`https://rent.cardinal.so/${
-                                    config.name
-                                  }${
+                                  href={`/${config.name}${
                                     environment.label === 'devnet'
                                       ? '?cluster=devnet'
                                       : ''
