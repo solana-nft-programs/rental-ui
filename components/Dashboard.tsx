@@ -375,7 +375,13 @@ export const Dashboard = () => {
                         <div key={config.name} className="flex flex-col gap-6">
                           <div className="flex items-center gap-3">
                             <div className="text-2xl text-light-0">
-                              {config.displayName}
+                              {config.displayName !== 'Unverified' ? (
+                                <a href={config.websiteUrl}>
+                                  {config.displayName}
+                                </a>
+                              ) : (
+                                config.displayName
+                              )}
                             </div>
                             <div className="text-xl">{tokenDatas.length}</div>
                           </div>
