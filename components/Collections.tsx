@@ -1,7 +1,5 @@
-import { css } from '@emotion/react'
 import { CollectionsView } from 'common/CollectionsView'
 import { FooterSlim } from 'common/FooterSlim'
-import { HeaderSlim } from 'common/HeaderSlim'
 import { HowItWorks } from 'common/HowItWorks'
 import { RentalHero } from 'common/RentalHero'
 import type { ProjectConfig } from 'config/config'
@@ -18,17 +16,7 @@ const categories = Object.entries(projectConfigs).reduce((acc, [, config]) => {
 export const Collections = () => {
   return (
     <div className="bg-dark-5">
-      <div
-        className="relative z-0"
-        css={css`
-          background: linear-gradient(180deg, #140a51 0%, #0b0b0b 100%);
-        `}
-      >
-        <div className="blur-4xl absolute left-8 top-52 -z-10 h-[120px] w-[400px] -rotate-[60deg] bg-glow blur-[100px]" />
-        <div className="blur-4xl absolute -right-20 top-72 -z-10 h-[100px] w-[550px] -rotate-[60deg] bg-glow blur-[120px]" />
-        <HeaderSlim />
-        <RentalHero />
-      </div>
+      <RentalHero />
       <div className="mx-auto flex flex-col gap-16 px-8 md:px-16">
         {Object.entries(categories).map(([type, configs], i) => (
           <CollectionsView
