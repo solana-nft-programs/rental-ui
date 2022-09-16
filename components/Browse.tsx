@@ -114,8 +114,8 @@ export function sortTokens<
     case OrderCategories.RecentlyListed:
       sortedTokens = tokens.sort((a, b) => {
         return (
-          (a.tokenManager?.parsed.stateChangedAt.toNumber() ?? 0) -
-          (b.tokenManager?.parsed.stateChangedAt.toNumber() ?? 0)
+          (b.tokenManager?.parsed.stateChangedAt.toNumber() ?? 0) -
+          (a.tokenManager?.parsed.stateChangedAt.toNumber() ?? 0)
         )
       })
       break
