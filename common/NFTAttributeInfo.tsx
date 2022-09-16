@@ -12,7 +12,7 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
 export const NFTAttributeInfo = ({ tokenData, className }: Props) => {
   const { config } = useProjectConfig()
   const metadata = useMintMetadata(tokenData).data
-  const attributesByTraitType = metadata?.parsed.attributes?.reduce(
+  const attributesByTraitType = (metadata?.parsed.attributes || [])?.reduce(
     (acc, attr) => ({ ...acc, [attr.trait_type]: attr }),
     {} as { [trait_type: string]: { value: string } }
   )
@@ -22,7 +22,7 @@ export const NFTAttributeInfo = ({ tokenData, className }: Props) => {
       className={`cursor-pointer rounded-md text-light-0`}
       title={
         <div>
-          {metadata?.parsed.attributes?.map((attr, i) => (
+          {(metadata?.parsed.attributes || [])?.map((attr, i) => (
             <div
               key={i}
               className={`flex items-center justify-between gap-1 rounded-md py-[2px] text-sm text-light-0`}

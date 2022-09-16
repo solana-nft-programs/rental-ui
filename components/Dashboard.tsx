@@ -89,7 +89,7 @@ export const tokenDatasId = (
 
 export const Dashboard = () => {
   const walletId = useWalletId()
-  const { secondaryConnection } = useEnvironmentCtx()
+  const { secondaryConnection, environment } = useEnvironmentCtx()
   const { config, setProjectConfig } = useProjectConfig()
   const userTokenDatas = useUserTokenData(config.filter)
   const [pane, setPane] = useState<PANE_OPTIONS>('browse')
@@ -376,7 +376,15 @@ export const Dashboard = () => {
                           <div className="flex items-center gap-3">
                             <div className="text-2xl text-light-0">
                               {config.displayName !== 'Unverified' ? (
-                                <a href={config.websiteUrl}>
+                                <a
+                                  href={`https://rent.cardinal.so/${
+                                    config.name
+                                  }${
+                                    environment.label === 'devnet'
+                                      ? '?cluster=devnet'
+                                      : ''
+                                  }`}
+                                >
                                   {config.displayName}
                                 </a>
                               ) : (
