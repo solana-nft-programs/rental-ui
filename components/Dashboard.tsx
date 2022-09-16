@@ -376,7 +376,7 @@ export const Dashboard = () => {
                           <div className="flex items-center gap-3">
                             <div className="text-2xl text-light-0">
                               {config.displayName !== 'Unverified' ? (
-                                <a href={config.websiteUrl}>
+                                <a href={`/${config.name}`}>
                                   {config.displayName}
                                 </a>
                               ) : (
