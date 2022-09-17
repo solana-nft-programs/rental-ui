@@ -1434,7 +1434,12 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     ],
     filter: {
       type: 'creators',
-      value: ['2UR2afaRgE5THeqJi7jGWMRMxRS8knbPVQEYekBG8bNd'],
+      value: [
+        '2UR2afaRgE5THeqJi7jGWMRMxRS8knbPVQEYekBG8bNd', // stone
+        'AwZFMVBBKf8VvLnXLQc9dMn8TWvAADRY4a3Ev6NPSq47', // griffin
+        '5X8jX6WK61wfq3wDCT2iRacvJ2Do3kUT3X7SqowDYET6', // mech
+        '478v2sRtdYrd4H4HEzHV4LaoyHoRc2Dd4xyq82XbsiZh', // dance
+      ],
     },
     rentalCard: {
       invalidators: ['rate', 'duration'],
