@@ -583,7 +583,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
   },
   defiland: {
     name: 'defiland',
-    displayName: 'Defi Land',
+    displayName: 'DeFi Land',
     type: 'Collection',
     websiteUrl: 'https://www.defiland.app/',
     logoImage: 'https://defiland.app/_nuxt/img/defiland.74b3850.svg',
