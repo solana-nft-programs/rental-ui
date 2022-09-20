@@ -730,7 +730,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     ],
     filter: {
       type: 'creators',
-      value: ['AtsVWP3hh1MdF2Zz8XWNWwNxbZzt7AtjJBxxPAajnMsY'],
+      value: ['AtsVWP3hh1MdF2Zz8XWNWwNxbZzt7AtjJBxxPAajnMsY', "Eu1kGtLdb8hjdbhkvH16q76E66gUgVvw8Uw2xrsVqCSE", ],
     },
     rentalCard: {
       invalidators: ['rate', 'duration'],
