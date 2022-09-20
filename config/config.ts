@@ -385,28 +385,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         },
       },
     },
-    airdrops: [
-      {
-        name: 'SMB #1148',
-        symbol: 'SMB',
-        uri: 'https://arweave.net/c2i2nLtanzMcWqLwFOE9yiwHoJ1WdvJcpdS54drBD9g',
-      },
-      {
-        name: 'SMB #2712',
-        symbol: 'SMB',
-        uri: 'https://arweave.net/xhUWFiFbhEz6EjzE05XNvYvpP5U43bNRXvtSKku12oA',
-      },
-      {
-        name: 'SMB #931',
-        symbol: 'SMB',
-        uri: 'https://arweave.net/d8IpVzCnR5sqkmimkbpxUKj4CLiOQl89ASvt6dTTyWA',
-      },
-      {
-        name: 'SMB #1785',
-        symbol: 'SMB',
-        uri: 'https://arweave.net/JR_l_iOJVvVSiuySnFKsMbDtZ61deFwkr4-wch_TJzc',
-      },
-    ],
+    airdrops: [],
     marketplaceRate: 'days',
   },
   solrarity: {
@@ -1749,16 +1728,16 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     twitterHandle: '@Starbots_game',
     socialLinks: [
       {
-        icon: 'discord',
-        link: 'https://discord.gg/starbots',
-      },
-      {
         icon: 'twitter',
         link: 'https://twitter.com/Starbots_game',
       },
       {
         icon: 'web',
         link: 'https://starbots.net',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/starbots',
       },
     ],
     colors: {
@@ -1772,7 +1751,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         '93NBFwRaNwKgyYRJJSfohjcYzRRQs5fdDiC5kLSdUfWk',
       ],
     },
-    showUnknownInvalidators: true,
     rentalCard: {
       invalidators: ['rate', 'duration', 'manual'],
       invalidationOptions: {
@@ -1788,28 +1766,57 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         },
       },
     },
-    airdrops: [
+    airdrops: [],
+    marketplaceRate: 'days',
+  },
+  ['the-chimpions']: {
+    name: 'the-chimpions',
+    displayName: 'The Chimpions',
+    type: 'Collection',
+    badges: [{ badgeType: 'recent' }],
+    websiteUrl: 'chimpions.co',
+    logoImage: '/logos/the-chimpions.png',
+    hero: '/logos/the-chimpions-hero.png',
+    description:
+      'The Chimpions are a Web3 community focused on empowering artists, and elevating the NFT space. The community aims to support the development and advancement of the decentralised web by bringing together skilled individuals from across prominent Solana and Ethereum communities.',
+    twitterHandle: '@TheChimpions',
+    socialLinks: [
       {
-        name: 'SMB #1148',
-        symbol: 'SMB',
-        uri: 'https://arweave.net/c2i2nLtanzMcWqLwFOE9yiwHoJ1WdvJcpdS54drBD9g',
+        icon: 'twitter',
+        link: 'https://twitter.com/TheChimpions',
       },
       {
-        name: 'SMB #2712',
-        symbol: 'SMB',
-        uri: 'https://arweave.net/xhUWFiFbhEz6EjzE05XNvYvpP5U43bNRXvtSKku12oA',
+        icon: 'web',
+        link: 'chimpions.co',
       },
       {
-        name: 'SMB #931',
-        symbol: 'SMB',
-        uri: 'https://arweave.net/d8IpVzCnR5sqkmimkbpxUKj4CLiOQl89ASvt6dTTyWA',
-      },
-      {
-        name: 'SMB #1785',
-        symbol: 'SMB',
-        uri: 'https://arweave.net/JR_l_iOJVvVSiuySnFKsMbDtZ61deFwkr4-wch_TJzc',
+        icon: 'discord',
+        link: 'https://discord.com/invite/thechimpions',
       },
     ],
+    colors: {
+      accent: '#b8ecf5',
+      glow: '#b8ecf5',
+    },
+    filter: {
+      type: 'creators',
+      value: ['D7hKRyCsdaaSGVGwSAgcEfkSofBb6gn68UPD3yWW59zW'],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration', 'manual'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue', 'return'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7257600,
+        },
+      },
+    },
     marketplaceRate: 'days',
   },
   zionlabs: {
@@ -1825,16 +1832,16 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     twitterHandle: '@zion_labs',
     socialLinks: [
       {
-        icon: 'discord',
-        link: 'https://discord.com/invite/DJFafA5Aaz',
+        icon: 'web',
+        link: 'https://zionlabs.xyz/',
       },
       {
         icon: 'twitter',
         link: 'https://twitter.com/zion_labs',
       },
       {
-        icon: 'web',
-        link: 'https://zionlabs.xyz/',
+        icon: 'discord',
+        link: 'https://discord.com/invite/DJFafA5Aaz',
       },
     ],
     colors: {
@@ -1857,28 +1864,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         setClaimRentalReceipt: false,
       },
     },
-    airdrops: [
-      {
-        name: 'SMB #1148',
-        symbol: 'SMB',
-        uri: 'https://arweave.net/c2i2nLtanzMcWqLwFOE9yiwHoJ1WdvJcpdS54drBD9g',
-      },
-      {
-        name: 'SMB #2712',
-        symbol: 'SMB',
-        uri: 'https://arweave.net/xhUWFiFbhEz6EjzE05XNvYvpP5U43bNRXvtSKku12oA',
-      },
-      {
-        name: 'SMB #931',
-        symbol: 'SMB',
-        uri: 'https://arweave.net/d8IpVzCnR5sqkmimkbpxUKj4CLiOQl89ASvt6dTTyWA',
-      },
-      {
-        name: 'SMB #1785',
-        symbol: 'SMB',
-        uri: 'https://arweave.net/JR_l_iOJVvVSiuySnFKsMbDtZ61deFwkr4-wch_TJzc',
-      },
-    ],
+    airdrops: [],
     marketplaceRate: 'days',
   },
   default: {
