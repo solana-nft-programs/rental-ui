@@ -730,7 +730,10 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     ],
     filter: {
       type: 'creators',
-      value: ['AtsVWP3hh1MdF2Zz8XWNWwNxbZzt7AtjJBxxPAajnMsY', "Eu1kGtLdb8hjdbhkvH16q76E66gUgVvw8Uw2xrsVqCSE", ],
+      value: [
+        'AtsVWP3hh1MdF2Zz8XWNWwNxbZzt7AtjJBxxPAajnMsY',
+        'Eu1kGtLdb8hjdbhkvH16q76E66gUgVvw8Uw2xrsVqCSE',
+      ],
     },
     rentalCard: {
       invalidators: ['rate', 'duration'],
@@ -2680,6 +2683,54 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         maxDurationAllowed: {
           displayText: '7 days',
           value: 604800,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
+  ['good-ape-dao']: {
+    name: 'good-ape-dao',
+    displayName: 'Good Ape Dao',
+    type: 'Guild',
+    websiteUrl: 'https://discord.gg/goodapedao',
+    logoImage: '/logos/good-ape-dao.png',
+    hero: '/logos/good-ape-dao-hero.png',
+    colors: {
+      accent: '#FFD700',
+      glow: '#FFD700',
+    },
+    description: 'GOOD APE DAO',
+    twitterHandle: '@GAD_IH',
+    socialLinks: [
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/goodapedao',
+      },
+      {
+        icon: 'web',
+        link: 'https://discord.gg/goodapedao',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/GAD_IH',
+      },
+    ],
+    filter: {
+      type: 'issuer',
+      value: ['2kL7xAqUnimT1FDa5QqQHTKv6eHS7aAm2MsqCmB2NEhC'],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue', 'return'],
+        paymentMints: ['2x21ucCAxvWCVHVnGd71DNmZsWJ2yp3bETNF3Uty7Evh'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '4 weeks',
+          value: 86400 * 7 * 4,
         },
       },
     },

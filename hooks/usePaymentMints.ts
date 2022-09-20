@@ -122,6 +122,13 @@ export const PAYMENT_MINTS: PaymentMintInfo[] = [
       'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/GoLDYyyiVeXnVf9qgoK712N5esm1cCbHEK9aNJFx47Sx/logo.png',
     decimals: 9,
   },
+  {
+    mint: '2x21ucCAxvWCVHVnGd71DNmZsWJ2yp3bETNF3Uty7Evh',
+    symbol: 'CRAP',
+    image:
+      'https://4hxx27jusn3am4k4c6kag3lnyxmy743tdquofvp2p4e4xm7tqmta.arweave.net/4e99fTSTdgZxXBeUA21txdmP83McKOLV-n8Jy7PzgyY?ext=png',
+    decimals: 9,
+  },
 ]
 
 export const WRAPPED_SOL_MINT = 'So11111111111111111111111111111111111111112'
