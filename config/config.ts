@@ -2674,8 +2674,8 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     },
     marketplaceRate: 'days',
   },
-  ['good-ape-dao']: {
-    name: 'good-ape-dao',
+  ['goodapedao']: {
+    name: 'goodapedao',
     displayName: 'Good Ape Dao',
     type: 'Guild',
     websiteUrl: 'https://discord.gg/goodapedao',
