@@ -8,7 +8,11 @@ export const attributesForTokenData = (
   return (
     ('metadata' in tokenData && tokenData.metadata?.parsed?.attributes) ||
     ('indexedData' in tokenData &&
-      tokenData.indexedData?.mint_address_nfts?.metadatas_attributes) ||
+    Array.isArray(
+      tokenData?.indexedData?.mint_address_nfts?.metadatas_attributes
+    )
+      ? tokenData?.indexedData?.mint_address_nfts?.metadatas_attributes
+      : []) ||
     []
   )
 }

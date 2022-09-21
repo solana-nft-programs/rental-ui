@@ -30,8 +30,11 @@ export const mintMetadataQuery = async (
       pubkey: tryPublicKey(tokenData.indexedData.address)!,
       parsed: {
         image: tokenData?.indexedData?.mint_address_nfts?.metadata_json?.image,
-        attributes:
-          tokenData?.indexedData?.mint_address_nfts?.metadatas_attributes,
+        attributes: Array.isArray(
+          tokenData?.indexedData?.mint_address_nfts?.metadatas_attributes
+        )
+          ? tokenData?.indexedData?.mint_address_nfts?.metadatas_attributes
+          : [],
       },
     }
   }
