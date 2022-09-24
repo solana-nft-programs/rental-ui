@@ -1902,9 +1902,8 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       type: 'creators',
       value: ['Ha8Q9MJij5sP84eegUY4Kj6jAFcRu3rHZ2vUeqKkVDUD'],
     },
-    showUnknownInvalidators: true,
     rentalCard: {
-      invalidators: ['rate', 'duration', 'manual'],
+      invalidators: ['rate', 'duration', 'expiration', 'manual'],
       invalidationOptions: {
         visibilities: ['public', 'private'],
         durationOptions: ['hours', 'days', 'weeks'],
@@ -1912,9 +1911,61 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         paymentMints: ['So11111111111111111111111111111111111111112'],
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
       },
     },
-    airdrops: [],
+    marketplaceRate: 'days',
+  },
+  mintin: {
+    name: 'mintin',
+    displayName: 'Mintin',
+    type: 'Collection',
+    websiteUrl: 'https://mintin.app',
+    logoImage: '/logos/mintin.jpeg',
+    hero: '/logos/mintin-hero.jpeg',
+    description:
+      'Explore, analyze, and mint NFTs in the Solana world. This is a collection of 1500 Mintins on the blockchain that unlock the best market tools for NFT enthusiasts!',
+    twitterHandle: '@mintinnft',
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://mintin.app',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/mintinnft',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/hfvPRd8aRX',
+      },
+    ],
+    colors: {
+      accent: '#205C7F',
+      glow: '#205C7F',
+    },
+    filter: {
+      type: 'creators',
+      value: ['mintXVuzRRWjTPfuCXJhSCiQRXHnk3q33ssPPYneJbs'],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration', 'expiration', 'manual'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue', 'return'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
     marketplaceRate: 'days',
   },
   default: {
