@@ -6,6 +6,7 @@ import { useRouter } from 'next/router'
 import { transparentize } from 'polished'
 import { useState } from 'react'
 import { BiChevronDown, BiChevronUp } from 'react-icons/bi'
+import { CollectionBadge } from './CollectionBadge'
 
 import { SocialIcon } from './Socials'
 
@@ -112,6 +113,9 @@ export const CollectionsList = ({ configs }: { configs: ProjectConfig[] }) => {
                       alt={config.name}
                     />
                     <div className="min-w-[100px]">{config.displayName}</div>
+                    {config.badges?.map((badge, i) => (
+                      <CollectionBadge key={i} badge={badge} />
+                    ))}
                   </div>
                 </div>
 
