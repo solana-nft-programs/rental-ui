@@ -2875,4 +2875,53 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     },
     marketplaceRate: 'days',
   },
+  ['ghost-kid-dao']: {
+    name: 'ghost-kid-dao',
+    displayName: 'Ghost Kid DAO',
+    type: 'Guild',
+    websiteUrl: 'https://ghostkid.io',
+    badges: [{ badgeType: 'recent' }],
+    logoImage: '/logos/degenvampires.png',
+    hero: '/logos/degenvampires-hero.png',
+    colors: {
+      accent: '#9b51ff',
+      glow: '#9b51ff',
+    },
+    description: 'We are coming from the shadows',
+    twitterHandle: '@DegenVampires',
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://ghostkid.io',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/GhostKidDAO',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/ghostkiddao',
+      },
+    ],
+    filter: {
+      type: 'issuer',
+      value: ['HwmaNqSh7JAfwufTVjNdh7KjDnDsbHzYVWB99PVEUjts'],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration', 'expiration', 'manual'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue', 'return'],
+        paymentMints: ['boooCKXQn9YTK2aqN5pWftQeb9TH7cj7iUKuVCShWQx'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
 }
