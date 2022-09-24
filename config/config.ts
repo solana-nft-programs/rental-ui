@@ -1441,6 +1441,55 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     badges: [{ badgeType: 'recent' }],
     marketplaceRate: 'days',
   },
+  okaybears: {
+    name: 'okaybears',
+    displayName: 'Okay Bears',
+    type: 'Collection',
+    websiteUrl: 'https://www.okaybears.com/',
+    logoImage: '/logos/okaybears.png',
+    hero: '/logos/okaybears-hero.png',
+    colors: {
+      accent: '#2E8B57',
+      glow: '#2E8B57',
+    },
+    description: 'Okay Bears is a culture shift.',
+    twitterHandle: '@okaybears',
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://www.okaybears.com/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/okaybears',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/okaybears',
+      },
+    ],
+    filter: {
+      type: 'creators',
+      value: ['3xVDoLaecZwXXtN59o6T3Gfxwjcgf8Hc9RfoqBn995P9'],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration', 'expiration', 'manual'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue', 'return'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
+    badges: [{ badgeType: 'recent' }],
+    marketplaceRate: 'days',
+  },
   pixelpilotzNode: {
     name: 'pixelpilotzNode',
     displayName: 'PixelPilotz Node',
