@@ -2881,14 +2881,14 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     type: 'Guild',
     websiteUrl: 'https://ghostkid.io',
     badges: [{ badgeType: 'recent' }],
-    logoImage: '/logos/degenvampires.png',
-    hero: '/logos/degenvampires-hero.png',
+    logoImage: '/logos/ghost-kid-dao.png',
+    hero: '/logos/ghost-kid-dao-hero.png',
     colors: {
       accent: '#9b51ff',
       glow: '#9b51ff',
     },
     description: 'We are coming from the shadows',
-    twitterHandle: '@DegenVampires',
+    twitterHandle: '@GhostKidDAO',
     socialLinks: [
       {
         icon: 'web',
