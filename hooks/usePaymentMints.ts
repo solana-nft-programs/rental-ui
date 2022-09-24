@@ -129,6 +129,19 @@ export const PAYMENT_MINTS: PaymentMintInfo[] = [
       'https://4hxx27jusn3am4k4c6kag3lnyxmy743tdquofvp2p4e4xm7tqmta.arweave.net/4e99fTSTdgZxXBeUA21txdmP83McKOLV-n8Jy7PzgyY?ext=png',
     decimals: 9,
   },
+  {
+    mint: 'boooCKXQn9YTK2aqN5pWftQeb9TH7cj7iUKuVCShWQx',
+    symbol: 'BOO',
+    image: 'https://arweave.net/Reo2_w4k9PGdtYX3p8BllNZpSbbIJ-zype0qdbQgsoE',
+    decimals: 9,
+  },
+  {
+    mint: '3TMxuBEMAV3BQunMBrFtKf8UQT2LmJchVbnV2o2ddkZU',
+    symbol: 'Orbs',
+    image:
+      'https://www.arweave.net/_l3i1PFY9rC1qesPFZmJwdjABTX4NmrGZV5hTR71XQk?ext=png',
+    decimals: 9,
+  },
 ]
 
 export const WRAPPED_SOL_MINT = 'So11111111111111111111111111111111111111112'
