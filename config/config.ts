@@ -3024,4 +3024,54 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     },
     marketplaceRate: 'days',
   },
+  ['unfrgtn-orbit']: {
+    name: 'unfrgtn-orbit',
+    displayName: 'Unfrgtn Orbit',
+    type: 'Guild',
+    websiteUrl: 'https://unfrgtn.space/',
+    badges: [{ badgeType: 'recent' }],
+    logoImage: '/logos/unfrgtn-orbit.png',
+    hero: '/logos/unfrgtn-orbit-hero.png',
+    colors: {
+      accent: '#57009a',
+      glow: '#57009a',
+    },
+    description:
+      '2121 high rewarding UFOs on a mission to abduct the #Solana blockchain!🛸',
+    twitterHandle: '@UnfrgtnOrbit',
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://unfrgtn.space/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/UnfrgtnOrbit',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/U2RQ8tZvV9',
+      },
+    ],
+    filter: {
+      type: 'issuer',
+      value: ['FAik6Utptqgd6skopVBt6ZLRULPwXCCJ2JTVQ8NWccfT'],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration', 'expiration', 'manual'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue', 'return'],
+        paymentMints: ['3TMxuBEMAV3BQunMBrFtKf8UQT2LmJchVbnV2o2ddkZU'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
 }
