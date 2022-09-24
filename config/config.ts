@@ -888,7 +888,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     websiteUrl: 'https://www.rakkudos.com/',
     logoImage: '/logos/rakkudos.png',
     hero: '/logos/rakkudos-hero.png',
-    badges: [{ badgeType: 'recent' }],
     colors: {
       accent: '#444444',
       glow: '#888888',
@@ -987,7 +986,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     websiteUrl: 'https://twitter.com/HydraScripts',
     logoImage: '/logos/hydrascripts.png',
     hero: '/logos/hydrascripts-hero.png',
-    badges: [{ badgeType: 'recent' }],
     colors: {
       accent: '#dd1fda',
       glow: '#dd1fda',
@@ -1279,7 +1277,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         },
       },
     },
-    badges: [{ badgeType: 'recent' }],
     marketplaceRate: 'days',
   },
   suitcats: {
@@ -1329,7 +1326,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         },
       },
     },
-    badges: [{ badgeType: 'recent' }],
     marketplaceRate: 'days',
   },
   theremnants: {
@@ -1383,7 +1379,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         },
       },
     },
-    badges: [{ badgeType: 'recent' }],
     marketplaceRate: 'days',
   },
   shiguardians: {
@@ -1438,7 +1433,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         },
       },
     },
-    badges: [{ badgeType: 'recent' }],
     marketplaceRate: 'days',
   },
   okaybears: {
@@ -1452,6 +1446,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       accent: '#2E8B57',
       glow: '#2E8B57',
     },
+    badges: [{ badgeType: 'recent' }],
     description: 'Okay Bears is a culture shift.',
     twitterHandle: '@okaybears',
     socialLinks: [
@@ -1487,7 +1482,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         },
       },
     },
-    badges: [{ badgeType: 'recent' }],
     marketplaceRate: 'days',
   },
   pixelpilotzNode: {
@@ -1537,7 +1531,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         },
       },
     },
-    badges: [{ badgeType: 'recent' }],
     marketplaceRate: 'days',
   },
   psyker: {
@@ -1671,7 +1664,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     displayName: 'The Suites',
     type: 'Collection',
     websiteUrl: 'https://thesuites.app/',
-    badges: [{ badgeType: 'recent' }],
     logoImage: '/logos/thesuites.png',
     hero: '/logos/thesuites-hero.png',
     colors: {
@@ -1720,7 +1712,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     displayName: 'Geomancer',
     type: 'Collection',
     websiteUrl: 'https://geomancer.store/',
-    badges: [{ badgeType: 'recent' }],
     logoImage: '/logos/geomancer.png',
     hero: '/logos/geomancer-hero.png',
     colors: {
@@ -1768,7 +1759,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     name: 'starbots',
     displayName: 'Starbots',
     type: 'Collection',
-    badges: [{ badgeType: 'recent' }],
     websiteUrl: 'https://starbots.net',
     logoImage: '/logos/starbots.jpeg',
     hero: '/logos/starbots-hero.jpeg',
@@ -1922,7 +1912,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     name: 'zionlabs',
     displayName: 'Zion Labs',
     type: 'Collection',
-    badges: [{ badgeType: 'recent' }],
     websiteUrl: 'https://zionlabs.xyz/',
     logoImage: '/logos/zionlabs.jpeg',
     hero: '/logos/zionlabs-hero.jpeg',
@@ -1973,8 +1962,8 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     displayName: 'Mintin',
     type: 'Collection',
     websiteUrl: 'https://mintin.app',
-    logoImage: '/logos/mintin.jpeg',
-    hero: '/logos/mintin-hero.jpeg',
+    logoImage: '/logos/mintin.png',
+    hero: '/logos/mintin-hero.png',
     description:
       'Explore, analyze, and mint NFTs in the Solana world. This is a collection of 1500 Mintins on the blockchain that unlock the best market tools for NFT enthusiasts!',
     twitterHandle: '@mintinnft',
@@ -2168,7 +2157,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         link: 'https://discord.gg/udderchaos',
       },
     ],
-    badges: [{ badgeType: 'recent' }],
     filter: {
       type: 'issuer',
       value: [
@@ -2776,7 +2764,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     displayName: 'Pixel Guild',
     type: 'Guild',
     websiteUrl: 'https://pixelguild.gg/',
-    badges: [{ badgeType: 'recent' }],
     logoImage: '/logos/pixelguild.gif',
     hero: '/logos/pixelguild-hero.gif',
     colors: {
@@ -2877,7 +2864,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     displayName: 'Big Duck Media',
     type: 'Guild',
     websiteUrl: 'https://bigduckmedia.store',
-    badges: [{ badgeType: 'recent' }],
     logoImage: '/logos/bigduckmedia.png',
     hero: '/logos/bigduckmedia-hero.png',
     colors: {
@@ -2930,7 +2916,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     displayName: 'Degen Vampies',
     type: 'Guild',
     websiteUrl: 'https://twitter.com/DegenVampires',
-    badges: [{ badgeType: 'recent' }],
     logoImage: '/logos/degenvampires.png',
     hero: '/logos/degenvampires-hero.png',
     colors: {

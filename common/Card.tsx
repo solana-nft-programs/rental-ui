@@ -1,4 +1,5 @@
 import type { Badge } from 'config/config'
+import { CollectionBadge } from './CollectionBadge'
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   header?: string | JSX.Element
@@ -25,7 +26,7 @@ export const Card: React.FC<Props> = ({
       {...props}
       className={`${className} relative flex flex-col gap-2 rounded-lg border-[1px] border-border bg-white bg-opacity-5 p-4`}
     >
-      {badges?.map(({ badgeType, position, content }, i) => (
+      {badges?.map((badge, i) => (
         <div
           key={i}
           className={`absolute z-20 rounded-md bg-dark-5 px-2 py-1 text-sm ${
@@ -34,17 +35,10 @@ export const Card: React.FC<Props> = ({
               'top-left': 'left-6 top-6',
               'bottom-right': 'right-6 bottom-6',
               'bottom-left': 'left-6 bottom-6',
-            }[position ?? 'top-right']
+            }[badge.position ?? 'top-right']
           }`}
         >
-          {
-            {
-              recent: <span className="text-primary">👋 Recently listed</span>,
-              trending: <span className="text-primary">🔥 Trending</span>,
-              expiration: <span className="text-light-0">⏰ {content}</span>,
-              content: { content },
-            }[badgeType]
-          }
+          <CollectionBadge badge={badge} />
         </div>
       ))}
       <div className="aspect-square w-full overflow-hidden rounded-xl">
