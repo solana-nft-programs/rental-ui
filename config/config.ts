@@ -1819,6 +1819,56 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     },
     marketplaceRate: 'days',
   },
+  ['voxel-monkes']: {
+    name: 'voxel-monkes',
+    displayName: 'Voxel Monkes',
+    type: 'Collection',
+    badges: [{ badgeType: 'recent' }],
+    websiteUrl: 'https://voxelmonkes.com',
+    logoImage: '/logos/voxel-monkes.gif',
+    hero: '/logos/voxel-monkes-hero.png',
+    description:
+      '75 pieces of handcrafted 3D art, built on the classic monke silhouette, remixed with unique new traits, themes, and styles.',
+    twitterHandle: '@VoxelMonkes',
+    socialLinks: [
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/VoxelMonkes',
+      },
+      {
+        icon: 'web',
+        link: 'https://voxelmonkes.com',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/23WrCkyCCt',
+      },
+    ],
+    colors: {
+      accent: '#EEEEEE',
+      glow: '#EEEEEE',
+    },
+    filter: {
+      type: 'creators',
+      value: ['31iYFbZjMnzZi2PDq7KGKV8DC4nJAptBp5tr7LbZUYUj'],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration', 'manual'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue', 'return'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7257600,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
   zionlabs: {
     name: 'zionlabs',
     displayName: 'Zion Labs',
