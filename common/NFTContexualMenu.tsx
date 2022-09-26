@@ -16,11 +16,10 @@ import { AiOutlineDatabase } from 'react-icons/ai'
 import { BsArrowReturnLeft } from 'react-icons/bs'
 import { FaEllipsisH, FaLink } from 'react-icons/fa'
 import { FiExternalLink, FiSend } from 'react-icons/fi'
-import { IoAddSharp, IoClose, IoQrCodeOutline } from 'react-icons/io5'
+import { IoAddSharp, IoClose } from 'react-icons/io5'
 import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 import { useRentalIssueCard } from 'rental-components/components/RentalIssueCard'
 import { useRentalRateCard } from 'rental-components/components/RentalRateCard'
-import { useScanCard } from 'rental-components/components/ScanCard'
 
 import { notify } from './Notification'
 import { Popover } from './Popover'
@@ -32,7 +31,6 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
   const { environment } = useEnvironmentCtx()
   const { config } = useProjectConfig()
   const walletId = useWalletId()
-  const scanCard = useScanCard()
   const rentalRateCard = useRentalRateCard()
   const rentalIssueCard = useRentalIssueCard()
   const handleReturnRental = useHandleReturnRental()
@@ -170,7 +168,7 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
                 Delist
               </div>
             )}
-          {tokenManager &&
+          {/* {tokenManager &&
             tokenManager.parsed.state === TokenManagerState.Claimed &&
             tokenData.recipientTokenAccount?.parsed?.owner.toString() ===
               walletId?.toString() && (
@@ -191,7 +189,7 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
                 <IoQrCodeOutline />
                 Scan
               </div>
-            )}
+            )} */}
           {walletId &&
             recipientTokenAccount?.parsed?.owner.toString() ===
               walletId?.toString() &&
