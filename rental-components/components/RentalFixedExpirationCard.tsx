@@ -26,6 +26,55 @@ export type RentalFixedExpirationParams = {
   otpKeypair?: Keypair
 }
 
+export const RentalFixedExpirationText = ({
+  tokenData,
+}: {
+  tokenData: TokenData
+}) => {
+  const { maxExpiration } = tokenData.timeInvalidator?.parsed || {}
+  if (!maxExpiration) return <></>
+  return (
+    <div className="mb-8 px-8 text-center text-base text-medium-3">
+      This NFT can be rented and you will hold it until{' '}
+      {new Date(maxExpiration.toNumber() * 1000).toLocaleString('en-US')}
+    </div>
+  )
+}
+
+export const RentalFixedExpirationInfo = ({
+  tokenData,
+}: {
+  tokenData: TokenData
+}) => {
+  const paymentMints = usePaymentMints()
+  const { configFromToken } = useProjectConfig()
+  const config = configFromToken(tokenData)
+  const { maxExpiration } = tokenData.timeInvalidator?.parsed || {}
+  return (
+    <div className="flex justify-between gap-4">
+      <div>
+        <div className="mb-1 text-base text-light-0">Rental expiration</div>
+        <div className="text-base text-medium-3">
+          {maxExpiration &&
+            new Date(maxExpiration.toNumber() * 1000).toLocaleString('en-US')}
+        </div>
+      </div>
+      <div>
+        <div className="mb-1 text-base text-light-0">Fixed price</div>
+        <div className="text-base text-medium-3">
+          {getPriceFromTokenData(tokenData, paymentMints.data)}{' '}
+          {getSymbolFromTokenData(tokenData)} ={' '}
+          {getPriceOrRentalRate(config, tokenData, paymentMints.data).toFixed(
+            4
+          )}{' '}
+          {getSymbolFromTokenData(tokenData)} /{' '}
+          {capitalizeFirstLetter(config.marketplaceRate ?? 'days').slice(0, -1)}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export const RentalFixedExpirationCard = ({
   tokenData,
   otpKeypair,
@@ -33,51 +82,15 @@ export const RentalFixedExpirationCard = ({
   const [error, setError] = useState<string>()
   const [txid, setTxid] = useState<string>()
   const handleClaimRental = useHandleClaimRental()
-  const paymentMints = usePaymentMints()
   const { environment } = useEnvironmentCtx()
-  const { configFromToken } = useProjectConfig()
-  const config = configFromToken(tokenData)
-  const { maxExpiration } = tokenData.timeInvalidator?.parsed || {}
 
   if (txid) return <RentalSuccessCard tokenData={tokenData} txid={txid} />
   return (
     <div className="rounded-lg bg-dark-6 p-8">
       <RentalClaimCardTokenHeader tokenData={tokenData} />
-      {maxExpiration && (
-        <div className="mb-8 px-8 text-center text-base text-medium-3">
-          This NFT can be rented and you will hold it until{' '}
-          {new Date(maxExpiration.toNumber() * 1000).toLocaleString('en-US')}
-        </div>
-      )}
+      <RentalFixedExpirationText tokenData={tokenData} />
       <div className="flex flex-col gap-4">
-        <div className="flex justify-between gap-4">
-          <div>
-            <div className="mb-1 text-base text-light-0">Rental expiration</div>
-            <div className="text-base text-medium-3">
-              {maxExpiration &&
-                new Date(maxExpiration.toNumber() * 1000).toLocaleString(
-                  'en-US'
-                )}
-            </div>
-          </div>
-          <div>
-            <div className="mb-1 text-base text-light-0">Fixed price</div>
-            <div className="text-base text-medium-3">
-              {getPriceFromTokenData(tokenData, paymentMints.data)}{' '}
-              {getSymbolFromTokenData(tokenData)} ={' '}
-              {getPriceOrRentalRate(
-                config,
-                tokenData,
-                paymentMints.data
-              ).toFixed(4)}{' '}
-              {getSymbolFromTokenData(tokenData)} /{' '}
-              {capitalizeFirstLetter(config.marketplaceRate ?? 'days').slice(
-                0,
-                -1
-              )}
-            </div>
-          </div>
-        </div>
+        <RentalFixedExpirationInfo tokenData={tokenData} />
         <RentalSummary tokenData={tokenData} />
         {txid && (
           <Alert variant="success">

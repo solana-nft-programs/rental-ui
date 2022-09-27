@@ -24,6 +24,64 @@ export type RentalRateCardProps = {
   otpKeypair?: Keypair
 }
 
+export const RentalRateText = ({ tokenData }: { tokenData: TokenData }) => {
+  const { maxExpiration } = tokenData.timeInvalidator?.parsed || {}
+  if (!maxExpiration) return <></>
+  return (
+    <p className="mb-2 flex flex-col gap-4 text-center text-[16px] text-gray-800">
+      <span className="mb-2 text-[13px] text-gray-500">
+        This NFT can be rented for a specified duration<br></br>
+        <b>Max rental duration:&nbsp;</b>{' '}
+        {maxExpiration
+          ? `${new Date(maxExpiration?.toNumber() * 1000).toLocaleString(
+              'en-US',
+              {
+                year: '2-digit',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: undefined,
+              }
+            )}
+          `
+          : 'N/A'}{' '}
+        (Local time)
+      </span>
+    </p>
+  )
+}
+
+export const RentalRateInfo = ({ tokenData }: { tokenData: TokenData }) => {
+  const { maxExpiration } = tokenData.timeInvalidator?.parsed || {}
+  const { configFromToken } = useProjectConfig()
+  const config = configFromToken(tokenData)
+  const paymentMints = usePaymentMints()
+  return (
+    <div className="flex justify-between gap-4 text-base">
+      <div>
+        <div className="mb-1 text-light-0">Max expiration</div>
+        <div className="text-medium-3">
+          {maxExpiration &&
+            new Date(maxExpiration.toNumber() * 1000).toLocaleString('en-US', {
+              month: 'numeric',
+              day: 'numeric',
+              year: '2-digit',
+              hour: 'numeric',
+              minute: 'numeric',
+            })}
+        </div>
+      </div>
+      <div>
+        <div className="mb-1 text-light-0">Rental rate</div>
+        <div className="text-medium-3">
+          {getRentalRateDisplayText(config, tokenData, paymentMints.data)}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export const RentalRateCard = ({
   tokenData,
   otpKeypair,
@@ -73,28 +131,7 @@ export const RentalRateCard = ({
   return (
     <div className="rounded-lg bg-dark-6 p-6">
       <RentalClaimCardTokenHeader tokenData={tokenData} />
-      <p className="mb-2 flex flex-col gap-4 text-center text-[16px] text-gray-800">
-        <span className="mb-2 text-[13px] text-gray-500">
-          This NFT can be rented for a specified duration<br></br>
-          <b>Max rental duration:&nbsp;</b>{' '}
-          {maxExpiration
-            ? `${new Date(maxExpiration?.toNumber() * 1000).toLocaleString(
-                'en-US',
-                {
-                  year: '2-digit',
-                  month: '2-digit',
-                  day: '2-digit',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  second: undefined,
-                }
-              )}
-              `
-            : 'N/A'}{' '}
-          (Local time)
-        </span>
-      </p>
-
+      <RentalRateText tokenData={tokenData} />
       <div className="flex flex-col gap-4">
         <div className="flex justify-between gap-4">
           <div>

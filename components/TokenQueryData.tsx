@@ -8,7 +8,7 @@ import { NFT } from 'common/NFT'
 import { NFTClaimButton } from 'common/NFTClaimButton'
 import { NFTHeader } from 'common/NFTHeader'
 import { NFTIssuerInfo } from 'common/NFTIssuerInfo'
-import { NFTRevokeButton } from 'common/NFTRevokeButton'
+import { NFTViewRental } from 'common/NFTViewRental'
 import { getMintfromTokenData } from 'common/tokenDataUtils'
 import type { BrowseAvailableTokenData } from 'hooks/useBrowseAvailableTokenDatas'
 import type { BrowseClaimedTokenData } from 'hooks/useBrowseClaimedTokenDatas'
@@ -110,7 +110,7 @@ export const TokenQueryData: React.FC<Props> = ({
                   [TokenManagerState.Claimed]: (
                     <div className="flex h-full flex-row justify-between text-sm">
                       <NFTIssuerInfo tokenData={tokenData} />
-                      <NFTRevokeButton tokenData={tokenData} />
+                      <NFTViewRental tokenData={tokenData} />
                     </div>
                   ),
                   [TokenManagerState.Invalidated]: <></>,
