@@ -28,7 +28,7 @@ export const NFTHeader: React.FC<NFTHeaderProps> = ({
   return (
     <div className="flex w-full flex-col justify-between">
       <div
-        className="flex w-full cursor-pointer items-center justify-between gap-2 font-bold"
+        className="flex w-full cursor-pointer items-center gap-2 font-bold"
         onClick={(e) => {
           if (!tokenData.tokenManager) return
           e.stopPropagation()
