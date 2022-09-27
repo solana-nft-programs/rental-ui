@@ -41,7 +41,7 @@ export const CollectionsGrid = ({ configs }: { configs: ProjectConfig[] }) => {
               `}
             >
               <img
-                className={`max-h-full rounded-xl ${
+                className={`h-full max-h-full rounded-xl ${
                   config.logoPadding && 'p-3'
                 }`}
                 src={config.logoImage}
