@@ -18,6 +18,28 @@ export type RentalManualCardParams = {
   otpKeypair?: Keypair
 }
 
+export const RentalManualText = () => {
+  return (
+    <div className="mb-8 px-8 text-center text-base text-medium-3">
+      You may own this NFT asset until a designated owner revokes the rental.
+    </div>
+  )
+}
+
+export const RentalManualInfo = ({ tokenData }: { tokenData: TokenData }) => {
+  const { connection } = useEnvironmentCtx()
+  return (
+    <>
+      <div className="text-base">Manual revocation can be triggered by</div>
+      {tokenData.tokenManager?.parsed.invalidators.map((i) => (
+        <div key={i.toString()} className="rounded-xl bg-dark-4 px-4 py-2">
+          <ProfileSmall dark connection={connection} address={i} />
+        </div>
+      ))}
+    </>
+  )
+}
+
 export const RentalManualCard = ({
   tokenData,
   otpKeypair,
@@ -25,22 +47,14 @@ export const RentalManualCard = ({
   const [error, setError] = useState<string>()
   const [txid, setTxid] = useState<string>()
   const handleClaimRental = useHandleClaimRental()
-  const { connection } = useEnvironmentCtx()
 
   if (txid) return <RentalSuccessCard tokenData={tokenData} txid={txid} />
   return (
     <div className="rounded-lg bg-dark-6 p-8">
       <RentalClaimCardTokenHeader tokenData={tokenData} />
-      <div className="mb-8 px-8 text-center text-base text-medium-3">
-        You may own this NFT asset until a designated owner revokes the rental.
-      </div>
+      <RentalManualText />
       <div className="flex flex-col gap-4">
-        <div className="text-base">Manual revocation can be triggered by</div>
-        {tokenData.tokenManager?.parsed.invalidators.map((i) => (
-          <div key={i.toString()} className="rounded-xl bg-dark-4 px-4 py-2">
-            <ProfileSmall dark connection={connection} address={i} />
-          </div>
-        ))}
+        <RentalManualInfo tokenData={tokenData} />
         {error && (
           <Alert variant="error" showClose onClick={() => setError(undefined)}>
             {error}

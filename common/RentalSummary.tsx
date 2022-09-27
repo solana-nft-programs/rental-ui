@@ -1,4 +1,5 @@
 import { capitalizeFirstLetter, shortDateString } from '@cardinal/common'
+import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { BN } from '@project-serum/anchor'
 import type * as splToken from '@solana/spl-token'
 import type { TokenData } from 'apis/api'
@@ -15,6 +16,7 @@ import { getMintDecimalAmount } from './units'
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   tokenData: TokenData
   extensionSeconds?: number
+  extendedSeconds?: number
 }
 
 export const getExtensionPrice = (
@@ -159,33 +161,33 @@ export const rentalExpirationWithExtension = (
 export const RentalSummary: React.FC<Props> = ({
   tokenData,
   extensionSeconds,
+  extendedSeconds,
 }: Props) => {
   const { UTCNow } = useUTCNow()
   const paymentMints = usePaymentMints()
   return (
     <div className="flex justify-between gap-4 border-t-[1px] border-border pt-4">
       <div className="flex gap-4">
-        <div>
-          <PaymentMintImage
-            width={24}
-            height={24}
-            className="mt-2"
-            tokenData={tokenData}
-          />
-        </div>
+        <PaymentMintImage
+          width={24}
+          height={24}
+          className="mt-2"
+          tokenData={tokenData}
+        />
         <div className="mb-2">
           <div className="text-lg font-medium">
-            {extensionSeconds
+            {extensionSeconds ?? extendedSeconds
               ? getPriceFromTokenData(tokenData, paymentMints.data) +
                 getExtensionPrice(
                   tokenData,
-                  extensionSeconds,
+                  extensionSeconds ?? extendedSeconds ?? 0,
                   paymentMints.data
                 )
               : getPriceFromTokenData(tokenData, paymentMints.data)}{' '}
             {getSymbolFromTokenData(tokenData)} for{' '}
             {secondsToStringForDisplay(
               extensionSeconds ??
+                extendedSeconds ??
                 tokenData.timeInvalidator?.parsed?.durationSeconds?.toNumber() ??
                 0,
               {
@@ -201,6 +203,16 @@ export const RentalSummary: React.FC<Props> = ({
           </div>
         </div>
       </div>
+      {tokenData.tokenManager?.parsed.state === TokenManagerState.Claimed && (
+        <div className="mb-2 text-right">
+          <div className="text-sm text-medium-3">
+            Claimed at{' '}
+            {shortDateString(
+              tokenData.tokenManager?.parsed.stateChangedAt.toNumber()
+            )}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

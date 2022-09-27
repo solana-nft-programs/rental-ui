@@ -10,7 +10,7 @@ import { NFT } from 'common/NFT'
 import { NFTClaimButton } from 'common/NFTClaimButton'
 import { NFTHeader } from 'common/NFTHeader'
 import { NFTIssuerInfo } from 'common/NFTIssuerInfo'
-import { NFTRevokeButton } from 'common/NFTRevokeButton'
+import { NFTViewRental } from 'common/NFTViewRental'
 import { StyledBackground } from 'common/StyledBackground'
 import ClaimQRCode from 'components/ClaimQRCode'
 import { useOtp } from 'hooks/useOtp'
@@ -139,7 +139,7 @@ function Claim(props: {
                     [TokenManagerState.Claimed]: (
                       <div className="flex h-full flex-row justify-between text-sm">
                         <NFTIssuerInfo tokenData={tokenData} />
-                        <NFTRevokeButton tokenData={tokenData} />
+                        <NFTViewRental tokenData={tokenData} />
                       </div>
                     ),
                     [TokenManagerState.Invalidated]: <></>,

@@ -8,7 +8,6 @@ export interface Props extends React.HTMLAttributes<HTMLDivElement> {
   loading?: boolean
   disabled?: boolean
   accented?: boolean
-  onClick?: () => void
 }
 
 export const ButtonSmall: React.FC<Props> = ({
@@ -31,11 +30,11 @@ export const ButtonSmall: React.FC<Props> = ({
       css={css`
         white-space: break-spaces;
       `}
-      onClick={async () => {
+      onClick={async (e) => {
         if (!onClick) return
         try {
           setLoadingClick(true)
-          await onClick()
+          await onClick(e)
         } finally {
           setLoadingClick(false)
         }

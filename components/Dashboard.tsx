@@ -14,7 +14,7 @@ import { HeaderSlim } from 'common/HeaderSlim'
 import { NFT } from 'common/NFT'
 import { NFTHeader } from 'common/NFTHeader'
 import { NFTIssuerInfo } from 'common/NFTIssuerInfo'
-import { NFTRevokeButton } from 'common/NFTRevokeButton'
+import { NFTViewRental } from 'common/NFTViewRental'
 import { notify } from 'common/Notification'
 import { RefreshButton } from 'common/RefreshButton'
 import { SelecterDrawer } from 'common/SelectedDrawer'
@@ -450,7 +450,7 @@ export const Dashboard = () => {
                                           <NFTIssuerInfo
                                             tokenData={tokenData}
                                           />
-                                          <NFTRevokeButton
+                                          <NFTViewRental
                                             tokenData={tokenData}
                                           />
                                         </div>

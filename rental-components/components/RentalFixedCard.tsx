@@ -21,6 +21,53 @@ export type RentalFixedCardParams = {
   otpKeypair?: Keypair
 }
 
+export const RentalFixedText = ({ tokenData }: { tokenData: TokenData }) => {
+  const { durationSeconds } = tokenData.timeInvalidator?.parsed || {}
+  if (!durationSeconds) return <></>
+  return (
+    <div className="mb-8 px-8 text-center text-base text-medium-3">
+      This NFT can be rented for a fixed duration of{' '}
+      {secondsToStringForDisplay(durationSeconds?.toNumber() ?? 0, {
+        fullSuffix: true,
+        delimiter: ' ',
+        showTrailingZeros: false,
+      })}
+    </div>
+  )
+}
+
+export const RentalFixedInfo = ({ tokenData }: { tokenData: TokenData }) => {
+  const paymentMints = usePaymentMints()
+  const { configFromToken } = useProjectConfig()
+  const config = configFromToken(tokenData)
+  const { durationSeconds } = tokenData.timeInvalidator?.parsed || {}
+  return (
+    <div className="flex justify-between gap-4">
+      <div>
+        <div className="mb-1 text-base text-light-0">Rental duration</div>
+        <div className="text-base text-medium-3">
+          {secondsToStringForDisplay(durationSeconds?.toNumber() ?? 0, {
+            fullSuffix: true,
+            delimiter: ' ',
+            showTrailingZeros: false,
+          })}
+        </div>
+      </div>
+      <div>
+        <div className="mb-1 text-base text-light-0">Fixed price</div>
+        <div className="text-base text-medium-3">
+          {getRentalRateDisplayText(
+            config,
+            tokenData,
+            paymentMints.data,
+            'text-medium-3'
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export const RentalFixedCard = ({
   tokenData,
   otpKeypair,
@@ -28,50 +75,15 @@ export const RentalFixedCard = ({
   const [error, setError] = useState<string>()
   const [txid, setTxid] = useState<string>()
   const handleClaimRental = useHandleClaimRental()
-  const paymentMints = usePaymentMints()
   const { environment } = useEnvironmentCtx()
-  const { configFromToken } = useProjectConfig()
-  const config = configFromToken(tokenData)
-  const { durationSeconds } = tokenData.timeInvalidator?.parsed || {}
 
   if (txid) return <RentalSuccessCard tokenData={tokenData} txid={txid} />
   return (
     <div className="rounded-lg bg-dark-6 p-8">
       <RentalClaimCardTokenHeader tokenData={tokenData} />
-      {durationSeconds && (
-        <div className="mb-8 px-8 text-center text-base text-medium-3">
-          This NFT can be rented for a fixed duration of{' '}
-          {secondsToStringForDisplay(durationSeconds?.toNumber() ?? 0, {
-            fullSuffix: true,
-            delimiter: ' ',
-            showTrailingZeros: false,
-          })}
-        </div>
-      )}
+      <RentalFixedText tokenData={tokenData} />
       <div className="flex flex-col gap-4">
-        <div className="flex justify-between gap-4">
-          <div>
-            <div className="mb-1 text-base text-light-0">Rental duration</div>
-            <div className="text-base text-medium-3">
-              {secondsToStringForDisplay(durationSeconds?.toNumber() ?? 0, {
-                fullSuffix: true,
-                delimiter: ' ',
-                showTrailingZeros: false,
-              })}
-            </div>
-          </div>
-          <div>
-            <div className="mb-1 text-base text-light-0">Fixed price</div>
-            <div className="text-base text-medium-3">
-              {getRentalRateDisplayText(
-                config,
-                tokenData,
-                paymentMints.data,
-                'text-medium-3'
-              )}
-            </div>
-          </div>
-        </div>
+        <RentalFixedInfo tokenData={tokenData} />
         <RentalSummary tokenData={tokenData} />
         {txid && (
           <Alert variant="success">
