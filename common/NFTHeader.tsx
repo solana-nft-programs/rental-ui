@@ -27,29 +27,23 @@ export const NFTHeader: React.FC<NFTHeaderProps> = ({
   const { secondaryConnection } = useEnvironmentCtx()
   return (
     <div className="flex w-full flex-col justify-between">
-      <div className="flex items-center justify-between">
-        <div
-          className="flex cursor-pointer items-center gap-2 font-bold"
-          onClick={(e) => {
-            if (!tokenData.tokenManager) return
-            e.stopPropagation()
-            logConfigTokenDataEvent('nft: click claim link', config, tokenData)
-            handleCopy(
-              getLink(
-                `/${config.name}/${tokenData.tokenManager?.pubkey.toBase58()}`
-              )
+      <div
+        className="flex w-full cursor-pointer items-center justify-between gap-2 font-bold"
+        onClick={(e) => {
+          if (!tokenData.tokenManager) return
+          e.stopPropagation()
+          logConfigTokenDataEvent('nft: click claim link', config, tokenData)
+          handleCopy(
+            getLink(
+              `/${config.name}/${tokenData.tokenManager?.pubkey.toBase58()}`
             )
-          }}
-        >
-          <div className="w-fit overflow-hidden text-ellipsis whitespace-nowrap text-left text-lg">
-            {getNameFromTokenData(tokenData, 'Unknown')}
-          </div>
-          {tokenData.tokenManager && (
-            <div className="flex w-fit">
-              <FaLink />
-            </div>
-          )}
+          )
+        }}
+      >
+        <div className="overflow-hidden text-ellipsis whitespace-nowrap text-left text-lg">
+          {getNameFromTokenData(tokenData, 'Unknown')}
         </div>
+        {tokenData.tokenManager && <FaLink />}
       </div>
       <div className="flex items-center justify-between text-sm text-light-2">
         <DisplayAddress
