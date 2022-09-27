@@ -119,6 +119,7 @@ export const RentalIssueRate = ({
       <RentalIssueAdvanced
         rentalCardConfig={rentalCardConfig}
         showAdvanced={showAdvanced}
+        defaultInvalidationOption={'reissue'}
         onChange={(advancedValues) => {
           setAdvancedValues(advancedValues)
         }}

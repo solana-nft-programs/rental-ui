@@ -44,12 +44,14 @@ export type RentalIssueAdvancedValues = {
 export type RentalIssueAdvancedProps = {
   showAdvanced: boolean
   rentalCardConfig: RentalCardConfig
+  defaultInvalidationOption: InvalidationTypeOption
   onChange?: (values: RentalIssueAdvancedValues) => void
 }
 
 export const RentalIssueAdvanced = ({
   showAdvanced,
   rentalCardConfig,
+  defaultInvalidationOption,
   onChange,
 }: RentalIssueAdvancedProps) => {
   const walletId = useWalletId()
@@ -78,7 +80,8 @@ export const RentalIssueAdvanced = ({
   // defaults
   const [visibility, setVisibiliy] = useState<VisibilityOption>(visibilities[0])
   const [invalidationType, setInvalidationType] = useState(
-    invalidationTypes[0]!.type
+    INVALIDATION_TYPES.find(({ label }) => label === defaultInvalidationOption)
+      ?.type ?? invalidationTypes[0]!.type
   )
 
   useEffect(() => {

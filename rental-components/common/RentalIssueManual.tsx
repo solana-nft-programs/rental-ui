@@ -48,6 +48,7 @@ export const RentalIssueManual = ({
       <RentalIssueAdvanced
         rentalCardConfig={rentalCardConfig}
         showAdvanced={showAdvanced}
+        defaultInvalidationOption={'return'}
         onChange={(advancedValues) => {
           setAdvancedValues(advancedValues)
         }}
