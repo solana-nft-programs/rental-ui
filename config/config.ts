@@ -2990,7 +2990,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     ],
     filter: {
       type: 'issuer',
-      value: ['HwmaNqSh7JAfwufTVjNdh7KjDnDsbHzYVWB99PVEUjts'],
+      value: ['GkDKTomikDzJMLupsWCuSFqb6A5sap3jHhYuPXFBXsmR'],
     },
     rentalCard: {
       invalidators: ['rate', 'duration', 'expiration', 'manual'],
