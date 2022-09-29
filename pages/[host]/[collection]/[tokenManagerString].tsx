@@ -24,7 +24,6 @@ export async function getServerSideProps(context: any) {
     : query.host?.includes('test')
     ? 'testnet'
     : query.cluster || process.env.BASE_CLUSTER || 'mainnet'
-  console.log(process.env.BASE_CLUSTER)
   const foundEnvironment = ENVIRONMENTS.find((e) => e.label === cluster)
   const environment = foundEnvironment ?? ENVIRONMENTS[0]!
   const connection = new Connection(environment.primary, {
