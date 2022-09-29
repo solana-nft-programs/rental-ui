@@ -6,6 +6,7 @@ import type { TimeInvalidatorData } from '@cardinal/token-manager/dist/cjs/progr
 import { TIME_INVALIDATOR_ADDRESS } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
 import { findTimeInvalidatorAddress } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator/pda'
 import type { TokenManagerData } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
+import { findTokenManagerAddress } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/pda'
 import type { UseInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
 import { USE_INVALIDATOR_ADDRESS } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
 import { findUseInvalidatorAddress } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator/pda'
@@ -234,12 +235,14 @@ export async function getTokenDatas(
 
 export async function getTokenData(
   connection: Connection,
-  tokenManagerId: PublicKey
+  tokenManagerIdOrMintId: PublicKey
 ): Promise<SingleTokenData> {
-  const tokenManagerData = await tokenManager.accounts.getTokenManager(
-    connection,
-    tokenManagerId
-  )
+  const tokenManagerData = await tokenManager.accounts
+    .getTokenManager(connection, tokenManagerIdOrMintId)
+    .catch(async () => {
+      const [tmId] = await findTokenManagerAddress(tokenManagerIdOrMintId)
+      return tokenManager.accounts.getTokenManager(connection, tmId)
+    })
 
   const [metaplexId] = await metaplex.MetadataProgram.findMetadataAccount(
     tokenManagerData.parsed.mint
