@@ -1,4 +1,3 @@
-import { useWallet } from '@solana/wallet-adapter-react'
 import { logConfigTokenDataEvent } from 'apis/amplitude'
 import type { TokenData } from 'apis/api'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
@@ -15,7 +14,6 @@ interface NFTViewRentalProps extends React.HTMLAttributes<HTMLDivElement> {
 export const NFTViewRental: React.FC<NFTViewRentalProps> = ({
   tokenData,
 }: NFTViewRentalProps) => {
-  const wallet = useWallet()
   const { config } = useProjectConfig()
   const rentalViewCard = useRentalViewCard()
 
@@ -23,7 +21,6 @@ export const NFTViewRental: React.FC<NFTViewRentalProps> = ({
     <div className="flex gap-1">
       <NFTRevokeButton tokenData={tokenData} />
       <ButtonSmall
-        disabled={!wallet.connected}
         onClick={(e) => {
           e.stopPropagation()
           rentalViewCard.showModal({ tokenData })
