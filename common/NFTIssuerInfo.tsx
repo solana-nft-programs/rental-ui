@@ -25,6 +25,7 @@ import type { ProjectConfig } from 'config/config'
 import { useOtp } from 'hooks/useOtp'
 import { usePaymentMints } from 'hooks/usePaymentMints'
 import { useTokenAccountInfo } from 'hooks/useTokenAccountInfo'
+import { useWalletId } from 'hooks/useWalletId'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useUTCNow } from 'providers/UTCNowProvider'
@@ -136,10 +137,13 @@ export const NFTIssuerInfo: React.FC<NFTIssuerInfoProps> = ({
   const { config } = useProjectConfig()
   const otpKeypair = useOtp()
   const paymentMints = usePaymentMints()
+  const walletId = useWalletId()
   const isPriveApproved =
     isPrivateListing(tokenData) &&
-    otpKeypair?.publicKey.toString() ===
-      tokenData.tokenManager?.parsed.claimApprover?.toString()
+    (otpKeypair?.publicKey.toString() ===
+      tokenData.tokenManager?.parsed.claimApprover?.toString() ||
+      tokenData.tokenManager?.parsed.claimApprover?.toString() ===
+        walletId?.toString())
   const recipientTokenAccountInfo = useTokenAccountInfo(
     tokenData.tokenManager?.parsed.state === TokenManagerState.Claimed &&
       !tokenData.recipientTokenAccount
