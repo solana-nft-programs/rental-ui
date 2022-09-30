@@ -2455,7 +2455,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       },
       {
         icon: 'discord',
-        link: 'https://discord.gg/gz34uBgQMN',
+        link: 'https://discord.gg/E2E6eFWV5T',
       },
     ],
     filter: {
