@@ -217,41 +217,64 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       },
     ],
   },
-  hoa: {
-    name: 'hoa',
-    displayName: 'Homeowners Association (Parcl)',
+  solrarity: {
+    name: 'solrarity',
+    displayName: 'SolRarity Rarikeys',
     type: 'Collection',
-    websiteUrl: 'https://www.hoa.house/',
-    hero: '/logos/parcl-hero.png',
+    websiteUrl: 'https://solrarity.app/',
+    logoImage: '/logos/solrarity.png',
+    logoPadding: true,
+    hero: '/logos/solrarity-hero.png',
     description:
-      'Homeowners Association (HOA) is an NFT project by Parcl, consisting of 7,777 unique combinations of iconic homes from four unique cities.',
-    logoImage: '/logos/parcl.gif',
+      '2,600 unique Rarikeys allowing you to be part of SolRarity journey in the Solana ecosystem. Hold these precious keys to unlock access to premium tools and more...',
     colors: {
-      accent: '#10abf0',
-      glow: '#005eff',
+      accent: '#d40e99',
+      glow: '#d40e99',
     },
-    twitterHandle: '@parcl',
+    twitterHandle: '@NFTNerdsAI',
     socialLinks: [
       {
         icon: 'web',
-        link: 'https://www.hoa.house/',
+        link: 'https://solrarity.app/',
       },
       {
         icon: 'twitter',
-        link: 'https://twitter.com/parcl',
+        link: 'https://twitter.com/SolRarity_',
       },
       {
         icon: 'discord',
-        link: 'https://discord.gg/parcl',
+        link: 'https://discord.gg/solrarity',
       },
     ],
-    badges: [{ badgeType: 'trending' }],
     filter: {
       type: 'creators',
-      value: ['Cp3Fn6azbwtSG9LV1BWtQcAkQQiaQWDkc2LcqwaEuLuq'],
+      value: [
+        '53EmnGdMxnmNcaPUE6wJ2NHz6iUVpge4a7RViTdfb8Dq', // rarikeys 1
+        'GfuaX8U67NBYHv133cvTDekqWy6EmYUrdH7UxPqKRgCL', // rarikeys 2
+        'BF2rThtdXMSbFBHbHjTVKXndQnJ1k8HALsX2HCL1QvSc', // snipies
+      ],
     },
+    subFilters: [
+      {
+        label: 'Rarikeys',
+        filter: {
+          type: 'creators',
+          value: [
+            '53EmnGdMxnmNcaPUE6wJ2NHz6iUVpge4a7RViTdfb8Dq',
+            'GfuaX8U67NBYHv133cvTDekqWy6EmYUrdH7UxPqKRgCL',
+          ],
+        },
+      },
+      {
+        label: 'Snipies',
+        filter: {
+          type: 'creators',
+          value: ['BF2rThtdXMSbFBHbHjTVKXndQnJ1k8HALsX2HCL1QvSc'],
+        },
+      },
+    ],
     rentalCard: {
-      invalidators: ['rate'],
+      invalidators: ['rate', 'duration'],
       invalidationOptions: {
         visibilities: ['public', 'private'],
         durationOptions: ['hours', 'days', 'weeks'],
@@ -266,7 +289,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       },
     },
     marketplaceRate: 'days',
-    airdrops: [],
   },
   portals: {
     name: 'portals',
@@ -388,79 +410,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     airdrops: [],
     marketplaceRate: 'days',
   },
-  solrarity: {
-    name: 'solrarity',
-    displayName: 'SolRarity Rarikeys',
-    type: 'Collection',
-    websiteUrl: 'https://solrarity.app/',
-    logoImage: '/logos/solrarity.png',
-    logoPadding: true,
-    hero: '/logos/solrarity-hero.png',
-    description:
-      '2,600 unique Rarikeys allowing you to be part of SolRarity journey in the Solana ecosystem. Hold these precious keys to unlock access to premium tools and more...',
-    colors: {
-      accent: '#d40e99',
-      glow: '#d40e99',
-    },
-    twitterHandle: '@NFTNerdsAI',
-    socialLinks: [
-      {
-        icon: 'web',
-        link: 'https://solrarity.app/',
-      },
-      {
-        icon: 'twitter',
-        link: 'https://twitter.com/SolRarity_',
-      },
-      {
-        icon: 'discord',
-        link: 'https://discord.gg/solrarity',
-      },
-    ],
-    filter: {
-      type: 'creators',
-      value: [
-        '53EmnGdMxnmNcaPUE6wJ2NHz6iUVpge4a7RViTdfb8Dq', // rarikeys 1
-        'GfuaX8U67NBYHv133cvTDekqWy6EmYUrdH7UxPqKRgCL', // rarikeys 2
-        'BF2rThtdXMSbFBHbHjTVKXndQnJ1k8HALsX2HCL1QvSc', // snipies
-      ],
-    },
-    subFilters: [
-      {
-        label: 'Rarikeys',
-        filter: {
-          type: 'creators',
-          value: [
-            '53EmnGdMxnmNcaPUE6wJ2NHz6iUVpge4a7RViTdfb8Dq',
-            'GfuaX8U67NBYHv133cvTDekqWy6EmYUrdH7UxPqKRgCL',
-          ],
-        },
-      },
-      {
-        label: 'Snipies',
-        filter: {
-          type: 'creators',
-          value: ['BF2rThtdXMSbFBHbHjTVKXndQnJ1k8HALsX2HCL1QvSc'],
-        },
-      },
-    ],
-    rentalCard: {
-      invalidators: ['rate', 'duration'],
-      invalidationOptions: {
-        visibilities: ['public', 'private'],
-        durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue', 'return'],
-        paymentMints: ['So11111111111111111111111111111111111111112'],
-        showClaimRentalReceipt: false,
-        setClaimRentalReceipt: false,
-        maxDurationAllowed: {
-          displayText: '12 weeks',
-          value: 7258000,
-        },
-      },
-    },
-    marketplaceRate: 'days',
-  },
   degenape: {
     name: 'degenape',
     displayName: 'Degenerate Ape Academy',
@@ -559,6 +508,57 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       },
     },
     marketplaceRate: 'days',
+  },
+  hoa: {
+    name: 'hoa',
+    displayName: 'Homeowners Association (Parcl)',
+    type: 'Collection',
+    websiteUrl: 'https://www.hoa.house/',
+    hero: '/logos/parcl-hero.png',
+    description:
+      'Homeowners Association (HOA) is an NFT project by Parcl, consisting of 7,777 unique combinations of iconic homes from four unique cities.',
+    logoImage: '/logos/parcl.gif',
+    colors: {
+      accent: '#10abf0',
+      glow: '#005eff',
+    },
+    twitterHandle: '@parcl',
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://www.hoa.house/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/parcl',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/parcl',
+      },
+    ],
+    badges: [{ badgeType: 'trending' }],
+    filter: {
+      type: 'creators',
+      value: ['Cp3Fn6azbwtSG9LV1BWtQcAkQQiaQWDkc2LcqwaEuLuq'],
+    },
+    rentalCard: {
+      invalidators: ['rate'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue', 'return'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+    airdrops: [],
   },
   defiland: {
     name: 'defiland',
