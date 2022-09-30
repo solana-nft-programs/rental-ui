@@ -1707,6 +1707,54 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     },
     marketplaceRate: 'days',
   },
+  trogg: {
+    name: 'trogg',
+    displayName: 'Troff',
+    type: 'Collection',
+    websiteUrl: 'https://tro.gg/',
+    logoImage: '/logos/trogg.png',
+    hero: '/logos/trogg-hero.png',
+    colors: {
+      accent: '#90EE90',
+      glow: '#90EE90',
+    },
+    description: `Building ENDAZE - the first on-chain Web3 learning platform, elevate your overall crypto & Solana knowledge with us! The Troggs welcome you in their newfound magical cave!  Join them to learn more about their surroundings and help them reach their final destination!`,
+    twitterHandle: '@TroggNFT',
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://tro.gg/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/TroggNFT',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.com/invite/trogg',
+      },
+    ],
+    filter: {
+      type: 'creators',
+      value: ['GTNpG4iJfKC65EFVHZpgMViLFm8kTTJYtH3DmTsXZu6R'],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue', 'return'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7257600,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
   geomancer: {
     name: 'geomancer',
     displayName: 'Geomancer',
