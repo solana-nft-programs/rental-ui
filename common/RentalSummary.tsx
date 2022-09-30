@@ -6,10 +6,16 @@ import type { TokenData } from 'apis/api'
 import {
   getPriceFromTokenData,
   getSymbolFromTokenData,
+  invalidationTypeInfo,
   PaymentMintImage,
+  rentalType,
+  rentalTypeColor,
+  rentalTypeName,
 } from 'common/tokenDataUtils'
 import { usePaymentMints } from 'hooks/usePaymentMints'
 import { useUTCNow } from 'providers/UTCNowProvider'
+import { Pill } from './Pill'
+import { Tooltip } from './Tooltip'
 
 import { getMintDecimalAmount } from './units'
 
@@ -165,6 +171,9 @@ export const RentalSummary: React.FC<Props> = ({
 }: Props) => {
   const { UTCNow } = useUTCNow()
   const paymentMints = usePaymentMints()
+  const invalidationType = invalidationTypeInfo(
+    tokenData.tokenManager?.parsed.invalidationType
+  )
   return (
     <div className="flex justify-between gap-4 border-t-[1px] border-border pt-4">
       <div className="flex gap-4">
@@ -205,12 +214,19 @@ export const RentalSummary: React.FC<Props> = ({
       </div>
       {tokenData.tokenManager?.parsed.state === TokenManagerState.Claimed && (
         <div className="mb-2 text-right">
-          <div className="text-sm text-medium-3">
+          <div className="mb-1 text-sm text-medium-3">
             Claimed at{' '}
             {shortDateString(
               tokenData.tokenManager?.parsed.stateChangedAt.toNumber()
             )}
           </div>
+          <Tooltip title={invalidationType.tooltip}>
+            <div
+              className={`flex cursor-pointer items-end justify-end text-sm ${invalidationType.color}`}
+            >
+              {invalidationType.disaplyName}
+            </div>
+          </Tooltip>
         </div>
       )}
     </div>

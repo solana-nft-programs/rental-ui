@@ -3,6 +3,7 @@ import { secondsToString } from '@cardinal/common'
 import type { PaidClaimApproverData } from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
 import type { TimeInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
 import { shouldTimeInvalidate } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator/utils'
+import { InvalidationType } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { BN } from '@project-serum/anchor'
 import type * as splToken from '@solana/spl-token'
 import type { TokenData } from 'apis/api'
@@ -311,6 +312,39 @@ export const rentalTypeName = (type: InvalidatorOption) =>
     duration: 'Fixed duration',
     expiration: 'Fixed expiration',
   }[type])
+
+export const invalidationTypeInfo = (type: InvalidationType | undefined) => {
+  if (!type)
+    return {
+      disaplyName: 'Unknown',
+      tooltip: 'Unknown invalidation type',
+      color: 'text-medium-3',
+    }
+  return {
+    [InvalidationType.Return]: {
+      disaplyName: 'Return',
+      tooltip: 'Token will be returned to the issuer after expiration',
+      color: 'text-secondary',
+    },
+    [InvalidationType.Invalidate]: {
+      disaplyName: 'Invalidate',
+      tooltip:
+        'Token will be marked as invalid never to be rented again after expiration',
+      color: 'text-medium-3',
+    },
+    [InvalidationType.Release]: {
+      disaplyName: 'Release',
+      tooltip: 'Token will be released to the current renter after expiration',
+      color: 'text-medium-3',
+    },
+    [InvalidationType.Reissue]: {
+      disaplyName: 'Reissue',
+      tooltip:
+        'Token will be reissue with the same parameters after expiration',
+      color: 'text-primary',
+    },
+  }[type]
+}
 
 export const elligibleForRent = (
   config: ProjectConfig,
