@@ -1,6 +1,5 @@
 import { capitalizeFirstLetter, shortDateString } from '@cardinal/common'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
-import { css } from '@emotion/react'
 import { BN } from '@project-serum/anchor'
 import type * as splToken from '@solana/spl-token'
 import type { TokenData } from 'apis/api'
@@ -12,7 +11,7 @@ import {
 } from 'common/tokenDataUtils'
 import { usePaymentMints } from 'hooks/usePaymentMints'
 import { useUTCNow } from 'providers/UTCNowProvider'
-import { BsFillInfoCircleFill, BsInfoCircle } from 'react-icons/bs'
+import { BsFillInfoCircleFill } from 'react-icons/bs'
 
 import { Tooltip } from './Tooltip'
 import { getMintDecimalAmount } from './units'
