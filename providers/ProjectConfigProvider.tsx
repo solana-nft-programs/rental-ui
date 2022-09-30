@@ -1,3 +1,4 @@
+import { tryPublicKey } from '@cardinal/common'
 import type { TokenData } from 'apis/api'
 import type { ProjectConfig, TokenFilter } from 'config/config'
 import { projectConfigs } from 'config/config'
@@ -18,14 +19,23 @@ export const getInitialProps = async ({
       ?.split('.')[0]
       ?.replace('dev-', '')
 
+  const address = tryPublicKey(projectParams)
+  let defaultConfig = projectConfigs['default']!
+  if (address) {
+    defaultConfig = {
+      ...defaultConfig,
+      name: address.toString(),
+      filter: { type: 'creators', value: [address.toString()] },
+    }
+  }
   return {
     config: project
       ? projectConfigs[project] ||
         Object.values(projectConfigs).find(
           (config) => config.hostname && projectParams.includes(config.hostname)
         ) ||
-        projectConfigs['default']!
-      : projectConfigs['default']!,
+        defaultConfig
+      : defaultConfig,
   }
 }
 

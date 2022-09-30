@@ -2009,10 +2009,13 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
   default: {
     name: 'default',
     displayName: 'Unverified',
+    description:
+      'This is an unverified collection. Feel free to use at your own risk, these NFTs may or may not be the real verified versions. Visit https://rent.cardinal.so and request to add a verified collection.',
     hidden: true,
     type: 'Collection',
+    logoImage: 'logos/default.png',
+    hero: 'logos/default-hero.png',
     websiteUrl: 'https://cardinal.so',
-    logoImage: 'https://main.cardinal.so/assets/cardinal-titled.png',
     colors: {
       accent: '#7560FF',
       glow: '#7560FF',
