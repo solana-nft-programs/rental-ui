@@ -329,7 +329,7 @@ export const invalidationTypeInfo = (type: InvalidationType | undefined) => {
     [InvalidationType.Invalidate]: {
       disaplyName: 'Invalidate',
       tooltip:
-        'Token will be marked as invalid never to be rented again after expiration',
+        'Token will be marked as invalid after expiration, never to be rented again',
       color: 'text-medium-3',
     },
     [InvalidationType.Release]: {
@@ -340,7 +340,7 @@ export const invalidationTypeInfo = (type: InvalidationType | undefined) => {
     [InvalidationType.Reissue]: {
       disaplyName: 'Reissue',
       tooltip:
-        'Token will be reissue with the same parameters after expiration',
+        'Token will be reissued with the same parameters after expiration',
       color: 'text-medium-3',
     },
   }[type]
