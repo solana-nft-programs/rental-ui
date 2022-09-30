@@ -231,6 +231,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       accent: '#d40e99',
       glow: '#d40e99',
     },
+    badges: [{ badgeType: 'trending' }],
     twitterHandle: '@NFTNerdsAI',
     socialLinks: [
       {
@@ -537,7 +538,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         link: 'https://discord.gg/parcl',
       },
     ],
-    badges: [{ badgeType: 'trending' }],
     filter: {
       type: 'creators',
       value: ['Cp3Fn6azbwtSG9LV1BWtQcAkQQiaQWDkc2LcqwaEuLuq'],
