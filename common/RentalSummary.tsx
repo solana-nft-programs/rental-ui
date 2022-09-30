@@ -1,5 +1,6 @@
 import { capitalizeFirstLetter, shortDateString } from '@cardinal/common'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
+import { css } from '@emotion/react'
 import { BN } from '@project-serum/anchor'
 import type * as splToken from '@solana/spl-token'
 import type { TokenData } from 'apis/api'
@@ -11,6 +12,7 @@ import {
 } from 'common/tokenDataUtils'
 import { usePaymentMints } from 'hooks/usePaymentMints'
 import { useUTCNow } from 'providers/UTCNowProvider'
+import { BsFillInfoCircleFill, BsInfoCircle } from 'react-icons/bs'
 
 import { Tooltip } from './Tooltip'
 import { getMintDecimalAmount } from './units'
@@ -208,7 +210,7 @@ export const RentalSummary: React.FC<Props> = ({
           </div>
         </div>
       </div>
-      <div className="mb-2 text-right">
+      <div className="mb-2 flex flex-col items-end text-right">
         {tokenData.tokenManager?.parsed.state === TokenManagerState.Claimed && (
           <div className="my-1 text-sm text-medium-3">
             Claimed at{' '}
@@ -219,9 +221,12 @@ export const RentalSummary: React.FC<Props> = ({
         )}
         <Tooltip title={invalidationType.tooltip}>
           <div
-            className={`flex cursor-pointer items-end justify-end text-sm ${invalidationType.color}`}
+            className={`flex cursor-pointer items-center justify-center gap-1 text-sm text-medium-3`}
           >
-            {invalidationType.disaplyName}
+            <div className={`${invalidationType.color}`}>
+              {invalidationType.disaplyName}
+            </div>
+            <BsFillInfoCircleFill className="text-xs" />
           </div>
         </Tooltip>
       </div>
