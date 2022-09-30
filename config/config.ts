@@ -1709,7 +1709,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
   },
   trogg: {
     name: 'trogg',
-    displayName: 'Troff',
+    displayName: 'Trogg',
     type: 'Collection',
     websiteUrl: 'https://tro.gg/',
     logoImage: '/logos/trogg.png',
