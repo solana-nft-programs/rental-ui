@@ -1,16 +1,20 @@
 import { capitalizeFirstLetter, shortDateString } from '@cardinal/common'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
+import { css } from '@emotion/react'
 import { BN } from '@project-serum/anchor'
 import type * as splToken from '@solana/spl-token'
 import type { TokenData } from 'apis/api'
 import {
   getPriceFromTokenData,
   getSymbolFromTokenData,
+  invalidationTypeInfo,
   PaymentMintImage,
 } from 'common/tokenDataUtils'
 import { usePaymentMints } from 'hooks/usePaymentMints'
 import { useUTCNow } from 'providers/UTCNowProvider'
+import { BsFillInfoCircleFill, BsInfoCircle } from 'react-icons/bs'
 
+import { Tooltip } from './Tooltip'
 import { getMintDecimalAmount } from './units'
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
@@ -165,6 +169,9 @@ export const RentalSummary: React.FC<Props> = ({
 }: Props) => {
   const { UTCNow } = useUTCNow()
   const paymentMints = usePaymentMints()
+  const invalidationType = invalidationTypeInfo(
+    tokenData.tokenManager?.parsed.invalidationType
+  )
   return (
     <div className="flex justify-between gap-4 border-t-[1px] border-border pt-4">
       <div className="flex gap-4">
@@ -203,16 +210,26 @@ export const RentalSummary: React.FC<Props> = ({
           </div>
         </div>
       </div>
-      {tokenData.tokenManager?.parsed.state === TokenManagerState.Claimed && (
-        <div className="mb-2 text-right">
-          <div className="text-sm text-medium-3">
+      <div className="mb-2 flex flex-col items-end text-right">
+        {tokenData.tokenManager?.parsed.state === TokenManagerState.Claimed && (
+          <div className="my-1 text-sm text-medium-3">
             Claimed at{' '}
             {shortDateString(
               tokenData.tokenManager?.parsed.stateChangedAt.toNumber()
             )}
           </div>
-        </div>
-      )}
+        )}
+        <Tooltip title={invalidationType.tooltip}>
+          <div
+            className={`flex cursor-pointer items-center justify-center gap-1 text-sm text-medium-3`}
+          >
+            <div className={`${invalidationType.color}`}>
+              {invalidationType.disaplyName}
+            </div>
+            <BsFillInfoCircleFill className="text-xs" />
+          </div>
+        </Tooltip>
+      </div>
     </div>
   )
 }
