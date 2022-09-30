@@ -324,7 +324,7 @@ export const invalidationTypeInfo = (type: InvalidationType | undefined) => {
     [InvalidationType.Return]: {
       disaplyName: 'Return',
       tooltip: 'Token will be returned to the issuer after expiration',
-      color: 'text-secondary',
+      color: 'text-medium-3',
     },
     [InvalidationType.Invalidate]: {
       disaplyName: 'Invalidate',
@@ -341,7 +341,7 @@ export const invalidationTypeInfo = (type: InvalidationType | undefined) => {
       disaplyName: 'Reissue',
       tooltip:
         'Token will be reissue with the same parameters after expiration',
-      color: 'text-primary',
+      color: 'text-medium-3',
     },
   }[type]
 }
