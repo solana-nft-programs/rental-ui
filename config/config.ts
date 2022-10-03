@@ -1484,6 +1484,56 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     },
     marketplaceRate: 'days',
   },
+  rifters: {
+    name: 'rifters',
+    displayName: 'Rifters',
+    type: 'Collection',
+    websiteUrl: 'https://rifters.io/',
+    logoImage: '/logos/rifters.png',
+    // hero: '/logos/rifters-hero.png',
+    colors: {
+      accent: '#89d7fa',
+      glow: '#89d7fa',
+    },
+    badges: [{ badgeType: 'recent' }],
+    description:
+      'Rifters is the first ever MOCERPG - Massive Online Community Event Role Playing Game. $1,000,000 cash prize pool for the winning player / DAO for season 1.',
+    twitterHandle: '@riftersio',
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://rifters.io/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/riftersio',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.com/invite/c1g',
+      },
+    ],
+    filter: {
+      type: 'creators',
+      value: ['22Fkgw3TqKEZGd6zmGcQPb4srWr3YtwKMts57H2RKmH3'],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration', 'expiration', 'manual'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue', 'return'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
   pixelpilotzNode: {
     name: 'pixelpilotzNode',
     displayName: 'PixelPilotz Node',
