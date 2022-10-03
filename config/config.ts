@@ -1490,7 +1490,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     type: 'Collection',
     websiteUrl: 'https://rifters.io/',
     logoImage: '/logos/rifters.png',
-    // hero: '/logos/rifters-hero.png',
+    hero: '/logos/rifters-hero.png',
     disableListing: true,
     hidden: true,
     colors: {
