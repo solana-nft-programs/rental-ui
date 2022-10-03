@@ -154,7 +154,9 @@ export function sortTokens<
         } else {
           return (
             getPriceOrRentalRate(config, a, paymentMints) -
-            getPriceOrRentalRate(config, b, paymentMints)
+              getPriceOrRentalRate(config, b, paymentMints) ||
+            getRentalDuration(a, UTCNow, claimed) -
+              getRentalDuration(b, UTCNow, claimed)
           )
         }
       })
@@ -174,7 +176,9 @@ export function sortTokens<
         } else {
           return (
             getPriceOrRentalRate(config, b, paymentMints) -
-            getPriceOrRentalRate(config, a, paymentMints)
+              getPriceOrRentalRate(config, a, paymentMints) ||
+            getRentalDuration(a, UTCNow, claimed) -
+              getRentalDuration(b, UTCNow, claimed)
           )
         }
       })
@@ -194,7 +198,9 @@ export function sortTokens<
         } else {
           return (
             getRentalDuration(a, UTCNow, claimed) -
-            getRentalDuration(b, UTCNow, claimed)
+              getRentalDuration(b, UTCNow, claimed) ||
+            getPriceOrRentalRate(config, b, paymentMints) -
+              getPriceOrRentalRate(config, a, paymentMints)
           )
         }
       })
@@ -214,7 +220,9 @@ export function sortTokens<
         } else {
           return (
             getRentalDuration(b, UTCNow, claimed) -
-            getRentalDuration(a, UTCNow, claimed)
+              getRentalDuration(a, UTCNow, claimed) ||
+            getPriceOrRentalRate(config, b, paymentMints) -
+              getPriceOrRentalRate(config, a, paymentMints)
           )
         }
       })
