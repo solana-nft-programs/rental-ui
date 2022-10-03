@@ -1,5 +1,8 @@
 import { getExpirationString } from '@cardinal/common'
-import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
+import {
+  InvalidationType,
+  TokenManagerState,
+} from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import type { TokenData } from 'apis/api'
 import { useMintMetadata } from 'hooks/useMintMetadata'
 import { useUTCNow } from 'providers/UTCNowProvider'
@@ -12,8 +15,12 @@ export const getExpiration = (
   tokenData: Pick<TokenData, 'timeInvalidator' | 'tokenManager'>,
   UTCNow: number
 ): string | undefined => {
-  if (tokenData?.tokenManager?.parsed.state !== TokenManagerState.Claimed)
+  if (
+    tokenData?.tokenManager?.parsed.state !== TokenManagerState.Claimed &&
+    tokenData.tokenManager?.parsed.invalidationType !== InvalidationType.Vest
+  ) {
     return
+  }
   const { durationSeconds, expiration, maxExpiration } =
     tokenData.timeInvalidator?.parsed || {}
 

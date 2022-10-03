@@ -2,6 +2,7 @@ import type { AccountData } from '@cardinal/common'
 import {
   getExpirationString,
   secondsToString,
+  shortPubKey,
   tryPublicKey,
 } from '@cardinal/common'
 import { DisplayAddress } from '@cardinal/namespaces-components'
@@ -138,7 +139,7 @@ export const NFTIssuerInfo: React.FC<NFTIssuerInfoProps> = ({
   const otpKeypair = useOtp()
   const paymentMints = usePaymentMints()
   const walletId = useWalletId()
-  const isPriveApproved =
+  const isPrivateApproved =
     isPrivateListing(tokenData) &&
     (otpKeypair?.publicKey.toString() ===
       tokenData.tokenManager?.parsed.claimApprover?.toString() ||
@@ -173,14 +174,16 @@ export const NFTIssuerInfo: React.FC<NFTIssuerInfoProps> = ({
       tokenData.tokenManager?.parsed.state === TokenManagerState.Issued ? (
         <Tooltip
           title={
-            isPriveApproved
+            isPrivateApproved
               ? 'You are approved to claim this private rental'
-              : 'This rental is private and only specific recipients can claim.'
+              : `This rental is private and only recipients specified by ${shortPubKey(
+                  tokenData.tokenManager.parsed.claimApprover
+                )} can claim.`
           }
         >
-          {isPrivateListing(tokenData) && isPriveApproved ? (
+          {isPrivateListing(tokenData) && isPrivateApproved ? (
             <div className="my-auto flex cursor-default items-center gap-1 rounded-lg bg-gray-800 px-3 py-2 text-secondary">
-              {isPriveApproved && (
+              {isPrivateApproved && (
                 <div className="text-base text-secondary">
                   <FiCheck />
                 </div>

@@ -1491,6 +1491,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     websiteUrl: 'https://rifters.io/',
     logoImage: '/logos/rifters.png',
     // hero: '/logos/rifters-hero.png',
+    hidden: true,
     colors: {
       accent: '#89d7fa',
       glow: '#89d7fa',

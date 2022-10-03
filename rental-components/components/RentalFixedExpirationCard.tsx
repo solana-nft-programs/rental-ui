@@ -8,6 +8,7 @@ import {
   getPriceFromTokenData,
   getPriceOrRentalRate,
   getSymbolFromTokenData,
+  invalidationTypeInfo,
 } from 'common/tokenDataUtils'
 import { useHandleClaimRental } from 'handlers/useHandleClaimRental'
 import { usePaymentMints } from 'hooks/usePaymentMints'
@@ -32,10 +33,14 @@ export const RentalFixedExpirationText = ({
   tokenData: TokenData
 }) => {
   const { maxExpiration } = tokenData.timeInvalidator?.parsed || {}
+  const invalidationType = invalidationTypeInfo(
+    tokenData.tokenManager?.parsed.invalidationType
+  )
   if (!maxExpiration) return <></>
   return (
     <div className="mb-8 px-8 text-center text-base text-medium-3">
-      This NFT can be rented and you will hold it until{' '}
+      You can {invalidationType.claimText?.toLowerCase()} this NFT and it will
+      be locked in your wallet until{' '}
       {new Date(maxExpiration.toNumber() * 1000).toLocaleString('en-US')}
     </div>
   )
@@ -53,7 +58,7 @@ export const RentalFixedExpirationInfo = ({
   return (
     <div className="flex justify-between gap-4">
       <div>
-        <div className="mb-1 text-base text-light-0">Rental expiration</div>
+        <div className="mb-1 text-base text-light-0">Expiration</div>
         <div className="text-base text-medium-3">
           {maxExpiration &&
             new Date(maxExpiration.toNumber() * 1000).toLocaleString('en-US')}
@@ -83,6 +88,9 @@ export const RentalFixedExpirationCard = ({
   const [txid, setTxid] = useState<string>()
   const handleClaimRental = useHandleClaimRental()
   const { environment } = useEnvironmentCtx()
+  const invalidationType = invalidationTypeInfo(
+    tokenData.tokenManager?.parsed.invalidationType
+  )
 
   if (txid) return <RentalSuccessCard tokenData={tokenData} txid={txid} />
   return (
@@ -142,7 +150,7 @@ export const RentalFixedExpirationCard = ({
               style={{ gap: '5px' }}
               className="flex items-center justify-center text-base"
             >
-              Rent NFT
+              {invalidationType.claimText} NFT
             </div>
           )}
         </Button>

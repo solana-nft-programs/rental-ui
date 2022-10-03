@@ -1832,12 +1832,12 @@
     tiny-invariant "^1.2.0"
     tslib "^2.3.1"
 
-"@cardinal/token-manager@^1.5.11":
-  version "1.5.11"
-  resolved "https://registry.yarnpkg.com/@cardinal/token-manager/-/token-manager-1.5.11.tgz#1193b1e6e8e042502fb736697faa61c30ab09fba"
-  integrity sha512-7dtTBKukWqx+9TyLF5qcIK+o4QS8gxXwUbbk3M4TfCY55JKfBQsYSRAWKQjEPnvDps6VZrdmzVcNwszUmIDaig==
+"@cardinal/token-manager@^1.6.0":
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/@cardinal/token-manager/-/token-manager-1.6.0.tgz#10507cd2e261c87e26f20d2b21b90f5d3664cbe6"
+  integrity sha512-IlyIfF8+ydqYZ5jFActUzahHlbz5LdwKg+sAox0jt6fFRe5uDfqFdtpYQv49SIOouVz5N3P7T6eJ16RtmdMVvg==
   dependencies:
-    "@metaplex-foundation/mpl-token-metadata" "^1.2.3"
+    "@metaplex-foundation/mpl-token-metadata" "^1.2.5"
     "@solana/buffer-layout" "^4.0.0"
     "@solana/spl-token" "^0.1.8"
     borsh "^0.7.0"
@@ -2493,15 +2493,6 @@
   dependencies:
     "@solana/web3.js" "^1.31.0"
     bs58 "^4.0.1"
-
-"@metaplex-foundation/mpl-token-metadata@^1.2.3":
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/@metaplex-foundation/mpl-token-metadata/-/mpl-token-metadata-1.2.3.tgz#d321f6be8aa64ede398dd2902acf7e3c786cd178"
-  integrity sha512-Zoowvt+iQyryf3lWyRpW6fZq6rkoaHquWnEk1pgzNK/QdNRt9ASpcQIhDe/Pc3VcXJVFbv5Mfr+roBkQxK8BWg==
-  dependencies:
-    "@metaplex-foundation/mpl-core" "^0.0.2"
-    "@solana/spl-token" "^0.1.8"
-    "@solana/web3.js" "^1.31.0"
 
 "@metaplex-foundation/mpl-token-metadata@^1.2.5":
   version "1.2.5"

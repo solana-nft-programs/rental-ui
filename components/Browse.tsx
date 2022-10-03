@@ -1,5 +1,6 @@
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import type * as splToken from '@solana/spl-token'
+import type { Keypair, PublicKey } from '@solana/web3.js'
 import { logConfigEvent } from 'apis/amplitude'
 import type { TokenData } from 'apis/api'
 import { GlyphActivity } from 'assets/GlyphActivity'
@@ -16,7 +17,11 @@ import {
 import { RefreshButton } from 'common/RefreshButton'
 import { Selector } from 'common/Selector'
 import { TabSelector } from 'common/TabSelector'
-import { getPriceOrRentalRate, getRentalDuration } from 'common/tokenDataUtils'
+import {
+  getPriceOrRentalRate,
+  getRentalDuration,
+  isClaimable,
+} from 'common/tokenDataUtils'
 import { Activity } from 'components/Activity'
 import type { ProjectConfig, TokenFilter, TokenSection } from 'config/config'
 import type { BrowseAvailableTokenData } from 'hooks/useBrowseAvailableTokenDatas'
@@ -24,6 +29,7 @@ import { useBrowseAvailableTokenDatas } from 'hooks/useBrowseAvailableTokenDatas
 import type { BrowseClaimedTokenData } from 'hooks/useBrowseClaimedTokenDatas'
 import { useBrowseClaimedTokenDatas } from 'hooks/useBrowseClaimedTokenDatas'
 import { useClaimEventsForConfig } from 'hooks/useClaimEventsForConfig'
+import { useOtp } from 'hooks/useOtp'
 import { usePaymentMints } from 'hooks/usePaymentMints'
 import { useWalletId } from 'hooks/useWalletId'
 import type { Environment } from 'providers/EnvironmentProvider'
@@ -104,51 +110,113 @@ export function sortTokens<
 >(
   tokens: T[],
   selectedOrderCategory: OrderCategories,
+  walletId: PublicKey | undefined,
   config: ProjectConfig,
   UTCNow: number,
   claimed: boolean,
-  paymentMints: { [name: string]: Pick<splToken.MintInfo, 'decimals'> }
+  paymentMints: { [name: string]: Pick<splToken.MintInfo, 'decimals'> },
+  otpKeypair: Keypair | undefined
 ): T[] {
   let sortedTokens
   switch (selectedOrderCategory) {
     case OrderCategories.RecentlyListed:
       sortedTokens = tokens.sort((a, b) => {
-        return (
-          (b.tokenManager?.parsed.stateChangedAt.toNumber() ?? 0) -
-          (a.tokenManager?.parsed.stateChangedAt.toNumber() ?? 0)
-        )
+        if (
+          isClaimable(a, walletId, otpKeypair) &&
+          !isClaimable(b, walletId, otpKeypair)
+        ) {
+          return -1
+        } else if (
+          !isClaimable(a, walletId, otpKeypair) &&
+          isClaimable(b, walletId, otpKeypair)
+        ) {
+          return 1
+        } else {
+          return (
+            (b.tokenManager?.parsed.stateChangedAt.toNumber() ?? 0) -
+            (a.tokenManager?.parsed.stateChangedAt.toNumber() ?? 0)
+          )
+        }
       })
       break
     case OrderCategories.RateLowToHigh:
       sortedTokens = tokens.sort((a, b) => {
-        return (
-          getPriceOrRentalRate(config, a, paymentMints) -
-          getPriceOrRentalRate(config, b, paymentMints)
-        )
+        if (
+          isClaimable(a, walletId, otpKeypair) &&
+          !isClaimable(b, walletId, otpKeypair)
+        ) {
+          return -1
+        } else if (
+          !isClaimable(a, walletId, otpKeypair) &&
+          isClaimable(b, walletId, otpKeypair)
+        ) {
+          return 1
+        } else {
+          return (
+            getPriceOrRentalRate(config, a, paymentMints) -
+            getPriceOrRentalRate(config, b, paymentMints)
+          )
+        }
       })
       break
     case OrderCategories.RateHighToLow:
       sortedTokens = tokens.sort((a, b) => {
-        return (
-          getPriceOrRentalRate(config, b, paymentMints) -
-          getPriceOrRentalRate(config, a, paymentMints)
-        )
+        if (
+          isClaimable(a, walletId, otpKeypair) &&
+          !isClaimable(b, walletId, otpKeypair)
+        ) {
+          return -1
+        } else if (
+          !isClaimable(a, walletId, otpKeypair) &&
+          isClaimable(b, walletId, otpKeypair)
+        ) {
+          return 1
+        } else {
+          return (
+            getPriceOrRentalRate(config, b, paymentMints) -
+            getPriceOrRentalRate(config, a, paymentMints)
+          )
+        }
       })
       break
     case OrderCategories.DurationLowToHigh:
       sortedTokens = tokens.sort((a, b) => {
-        return (
-          getRentalDuration(a, UTCNow, claimed) -
-          getRentalDuration(b, UTCNow, claimed)
-        )
+        if (
+          isClaimable(a, walletId, otpKeypair) &&
+          !isClaimable(b, walletId, otpKeypair)
+        ) {
+          return -1
+        } else if (
+          !isClaimable(a, walletId, otpKeypair) &&
+          isClaimable(b, walletId, otpKeypair)
+        ) {
+          return 1
+        } else {
+          return (
+            getRentalDuration(a, UTCNow, claimed) -
+            getRentalDuration(b, UTCNow, claimed)
+          )
+        }
       })
       break
     case OrderCategories.DurationHighToLow:
       sortedTokens = tokens.sort((a, b) => {
-        return (
-          getRentalDuration(b, UTCNow, claimed) -
-          getRentalDuration(a, UTCNow, claimed)
-        )
+        if (
+          isClaimable(a, walletId, otpKeypair) &&
+          !isClaimable(b, walletId, otpKeypair)
+        ) {
+          return -1
+        } else if (
+          !isClaimable(a, walletId, otpKeypair) &&
+          isClaimable(b, walletId, otpKeypair)
+        ) {
+          return 1
+        } else {
+          return (
+            getRentalDuration(b, UTCNow, claimed) -
+            getRentalDuration(a, UTCNow, claimed)
+          )
+        }
       })
       break
     default:
@@ -182,6 +250,7 @@ export const groupTokens = (
 
 export const Browse = () => {
   const walletId = useWalletId()
+  const otpKeypair = useOtp()
   const { config, setSubFilter, subFilter } = useProjectConfig()
   const { UTCNow } = useUTCNow()
   const paymentMintInfos = usePaymentMints()
@@ -219,10 +288,12 @@ export const Browse = () => {
       selectedFilters
     ),
     selectedOrderCategory,
+    walletId,
     config,
     UTCNow,
     selectedGroup === 1,
-    paymentMintInfos.data ?? {}
+    paymentMintInfos.data ?? {},
+    otpKeypair
   )
 
   const onlySolForCollection = (tokens: TokenData[]) => {

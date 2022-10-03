@@ -6,6 +6,7 @@ import { shouldTimeInvalidate } from '@cardinal/token-manager/dist/cjs/programs/
 import { InvalidationType } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { BN } from '@project-serum/anchor'
 import type * as splToken from '@solana/spl-token'
+import type { Keypair, PublicKey } from '@solana/web3.js'
 import type { TokenData } from 'apis/api'
 import { DURATION_DATA } from 'common/DurationInput'
 import { mintImage, mintSymbol } from 'common/NFTClaimButton'
@@ -267,6 +268,8 @@ export const getRentalDuration = (
     return tokenData.timeInvalidator?.parsed.durationSeconds?.toNumber()
   } else if (tokenData.timeInvalidator?.parsed.expiration?.toNumber()) {
     return tokenData.timeInvalidator?.parsed.expiration?.toNumber() - UTCNow
+  } else if (tokenData.timeInvalidator?.parsed.maxExpiration?.toNumber()) {
+    return tokenData.timeInvalidator?.parsed.maxExpiration?.toNumber() - UTCNow
   } else {
     return 0
   }
@@ -277,6 +280,17 @@ export const isPrivateListing = (
 ) =>
   tokenData.tokenManager?.parsed.claimApprover &&
   !tokenData.claimApprover?.parsed
+
+export const isClaimable = (
+  tokenData: Pick<TokenData, 'claimApprover' | 'tokenManager'>,
+  walletId: PublicKey | undefined,
+  otpKeypair?: Keypair
+) =>
+  !isPrivateListing(tokenData) ||
+  otpKeypair?.publicKey.toString() ===
+    tokenData.tokenManager?.parsed.claimApprover?.toString() ||
+  tokenData.tokenManager?.parsed.claimApprover?.toString() ===
+    walletId?.toString()
 
 export const isRateBasedListing = (tokenData: {
   timeInvalidator?: AccountData<
@@ -325,23 +339,34 @@ export const invalidationTypeInfo = (type: InvalidationType | undefined) => {
       disaplyName: 'Return',
       tooltip: 'Token will be returned to the issuer after expiration',
       color: 'text-medium-3',
+      claimText: 'Rent',
     },
     [InvalidationType.Invalidate]: {
       disaplyName: 'Invalidate',
       tooltip:
         'Token will be marked as invalid after expiration, never to be rented again',
       color: 'text-medium-3',
+      claimText: 'Claim',
     },
     [InvalidationType.Release]: {
       disaplyName: 'Release',
       tooltip: 'Token will be released to the current renter after expiration',
       color: 'text-medium-3',
+      claimText: 'Claim',
     },
     [InvalidationType.Reissue]: {
       disaplyName: 'Reissue',
       tooltip:
         'Token will be reissued with the same parameters after expiration',
       color: 'text-medium-3',
+      claimText: 'Rent',
+    },
+    [InvalidationType.Vest]: {
+      disaplyName: 'Vesting',
+      tooltip:
+        'Token will be vested at the expiration time and sent to the target recipient',
+      color: 'text-medium-3',
+      claimText: 'Claim',
     },
   }[type]
 }

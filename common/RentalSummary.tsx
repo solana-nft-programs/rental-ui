@@ -156,7 +156,8 @@ export const rentalExpirationWithExtension = (
         ) + extensionSeconds
       : Math.min(
           maxExpiration?.toNumber() ?? Infinity,
-          expiration?.toNumber() ?? UTCNow + (durationSeconds?.toNumber() ?? 0)
+          expiration?.toNumber() ??
+            UTCNow + (durationSeconds?.toNumber() ?? Infinity)
         )
   )
 }
