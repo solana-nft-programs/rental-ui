@@ -122,14 +122,15 @@ export const useHandleClaimRental = () => {
 
       // wrap sol if there is payment required
       if (
-        tokenData?.claimApprover?.parsed.paymentAmount &&
+        tokenData?.claimApprover?.parsed?.paymentAmount &&
         tokenData?.claimApprover?.parsed?.paymentMint.toString() ===
           WRAPPED_SOL_MINT.toString() &&
-        tokenData?.claimApprover?.parsed.paymentAmount.gt(new BN(0))
+        tokenData?.claimApprover?.parsed?.paymentAmount.gt(new BN(0))
       ) {
-        const amountToWrap = tokenData?.claimApprover?.parsed.paymentAmount.sub(
-          userWSolTokenAccount.data?.amount || new BN(0)
-        )
+        const amountToWrap =
+          tokenData?.claimApprover?.parsed?.paymentAmount.sub(
+            userWSolTokenAccount.data?.amount || new BN(0)
+          )
         if (amountToWrap.gt(new BN(0))) {
           console.log('init ata')
           await withWrapSol(
