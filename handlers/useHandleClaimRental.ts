@@ -117,13 +117,13 @@ export const useHandleClaimRental = () => {
 
       const transaction = new Transaction()
       const paymentMint =
-        tokenData?.claimApprover?.parsed.paymentMint ||
-        tokenData?.timeInvalidator?.parsed.extensionPaymentMint
+        tokenData?.claimApprover?.parsed?.paymentMint ||
+        tokenData?.timeInvalidator?.parsed?.extensionPaymentMint
 
       // wrap sol if there is payment required
       if (
         tokenData?.claimApprover?.parsed.paymentAmount &&
-        tokenData?.claimApprover?.parsed.paymentMint.toString() ===
+        tokenData?.claimApprover?.parsed?.paymentMint.toString() ===
           WRAPPED_SOL_MINT.toString() &&
         tokenData?.claimApprover?.parsed.paymentAmount.gt(new BN(0))
       ) {
