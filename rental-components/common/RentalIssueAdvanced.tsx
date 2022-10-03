@@ -149,6 +149,8 @@ export const RentalIssueAdvanced = ({
                   'WARNING: Upon the rental expiration this NFT will be released to the renter to own.',
                 [InvalidationType.Invalidate]:
                   'Upon the rental expiration this NFT will be marked as invalid forever.',
+                [InvalidationType.Vest]:
+                  'Upon the rental expiration if unclaimed this NFT will be vested to the target recipient.',
               }[invalidationType]
             }
           </div>

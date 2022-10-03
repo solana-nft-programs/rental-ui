@@ -138,10 +138,7 @@ const post: NextApiHandler<PostResponse> = async (req, res) => {
       ? new Connection(foundEnvironment.secondary)
       : new Connection(foundEnvironment.primary),
     emptyWallet(accountId),
-    tokenManagerId!,
-    {
-      otpKeypair: keypair,
-    }
+    tokenManagerId!
   )
 
   // build transaction

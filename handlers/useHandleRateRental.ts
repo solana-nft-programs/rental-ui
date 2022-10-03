@@ -135,10 +135,7 @@ export const useHandleRateRental = () => {
                 ? new Connection(environment.secondary)
                 : connection,
               asWallet(wallet),
-              tokenData.tokenManager!.pubkey,
-              {
-                otpKeypair: otpKeypair,
-              }
+              tokenData.tokenManager!.pubkey
             ),
           trace,
           { op: 'withClaimToken' }
