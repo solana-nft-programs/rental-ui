@@ -1494,8 +1494,8 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     disableListing: true,
     hidden: true,
     colors: {
-      accent: '#89d7fa',
-      glow: '#89d7fa',
+      accent: '#ff4f5a',
+      glow: '#ff4f5a',
     },
     badges: [{ badgeType: 'recent' }],
     description:
