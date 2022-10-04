@@ -151,7 +151,7 @@ export const PAYMENT_MINTS: PaymentMintInfo[] = [
   },
   {
     mint: 'E4DRAz5D9iMND9PJ7tq1HQbZPxavDWHxmeizUtk68o8S',
-    symbol: 'RadRugs',
+    symbol: 'SAFE',
     image: 'https://radrugs.io/assets/images/token_logo.png',
     decimals: 6,
   },
