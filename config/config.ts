@@ -2154,6 +2154,54 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     },
     marketplaceRate: 'days',
   },
+  ['alpha-pharaohs']: {
+    name: 'alpha-pharaohs',
+    displayName: 'Alpha Pharaohs',
+    type: 'Collection',
+    websiteUrl: 'https://twitter.com/alphapharaohs',
+    logoImage: '/logos/alpha-pharaohs.png',
+    hero: '/logos/alpha-pharaohs-hero.png',
+    description: `4444 Pharaohs tasked with resurrecting the Egyptian Gods; Ra and Anubis. Enter the Sacred DAO & possess the key to unlocking the full power of the ultimate Ra v Anubis collection.`,
+    twitterHandle: '@alphapharaohs',
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://twitter.com/alphapharaohs',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/alphapharaohs',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/alphapharaohs',
+      },
+    ],
+    colors: {
+      accent: '#EEE',
+      glow: '#DCC7FE',
+    },
+    filter: {
+      type: 'creators',
+      value: ['4tZaYkFCtsbRLJDD9LVHi22ZMhTWCCxQHeQQbtuhSr34'],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration', 'expiration', 'manual'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue', 'return'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
   default: {
     name: 'default',
     displayName: 'Unverified',
