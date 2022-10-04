@@ -1,3 +1,4 @@
+import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import type { Keypair } from '@solana/web3.js'
 import type { TokenData } from 'apis/api'
 import { RentalSummary } from 'common/RentalSummary'
@@ -45,7 +46,9 @@ export const RentalViewCard = ({ tokenData }: RentalViewCardParams) => {
         <RentalSummary
           tokenData={tokenData}
           extendedSeconds={
-            type === 'rate' && tokenData.tokenManager
+            type === 'rate' &&
+            tokenData.tokenManager &&
+            tokenData.tokenManager.parsed.state === TokenManagerState.Claimed
               ? tokenData.timeInvalidator?.parsed.expiration
                   ?.sub(tokenData.tokenManager?.parsed.stateChangedAt)
                   .toNumber()

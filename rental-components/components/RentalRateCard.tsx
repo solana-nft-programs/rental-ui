@@ -1,12 +1,19 @@
+import { css } from '@emotion/react'
+import { BN } from '@project-serum/anchor'
 import type { Keypair } from '@solana/web3.js'
+import { DatePicker } from 'antd'
 import type { TokenData } from 'apis/api'
+import { GlyphEdit } from 'assets/GlyphEdit'
 import { Alert } from 'common/Alert'
 import { Button } from 'common/Button'
 import { DurationInput } from 'common/DurationInput'
 import { getRentalRateDisplayText } from 'common/NFTIssuerInfo'
 import { RentalSummary } from 'common/RentalSummary'
 import { useHandleRateRental } from 'handlers/useHandleRateRental'
+import { useHandleUpdateMaxExpiration } from 'handlers/useHandleUpdateMaxExpiration'
 import { usePaymentMints } from 'hooks/usePaymentMints'
+import { useWalletId } from 'hooks/useWalletId'
+import moment from 'moment'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useModal } from 'providers/ModalProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
@@ -57,20 +64,64 @@ export const RentalRateInfo = ({ tokenData }: { tokenData: TokenData }) => {
   const { configFromToken } = useProjectConfig()
   const config = configFromToken(tokenData)
   const paymentMints = usePaymentMints()
+  const walletId = useWalletId()
+  const [newMaxExpiration, setNewMaxExpiration] = useState<number | undefined>(
+    maxExpiration?.toNumber()
+  )
+  const canEdit =
+    walletId?.toString() === tokenData.tokenManager?.parsed.issuer.toString()
+  const handleUpdateMaxExpiration = useHandleUpdateMaxExpiration()
+
   return (
     <div className="flex justify-between gap-4 text-base">
       <div>
-        <div className="mb-1 text-light-0">Max expiration</div>
-        <div className="text-medium-3">
-          {maxExpiration &&
-            new Date(maxExpiration.toNumber() * 1000).toLocaleString('en-US', {
-              month: 'numeric',
-              day: 'numeric',
-              year: '2-digit',
-              hour: 'numeric',
-              minute: 'numeric',
-            })}
+        <div className="mb-1 flex items-center gap-2 text-light-0">
+          Max expiration {canEdit && <GlyphEdit />}
         </div>
+        {canEdit ? (
+          handleUpdateMaxExpiration.isLoading ? (
+            <div className="mt-2 h-[38px] w-full animate-pulse rounded-md bg-border" />
+          ) : (
+            <DatePicker
+              className="rounded-xl bg-dark-4 py-2 px-3 text-base"
+              css={css`
+                input {
+                  line-height: 1.5rem !important;
+                }
+              `}
+              value={
+                maxExpiration
+                  ? moment((newMaxExpiration ?? 0) * 1000)
+                  : undefined
+              }
+              showTime
+              onChange={(e) => {
+                const newMaxExpiration = e ? e.valueOf() / 1000 : undefined
+                setNewMaxExpiration(e ? e.valueOf() / 1000 : undefined)
+                handleUpdateMaxExpiration.mutate({
+                  tokenData,
+                  maxExpiration: newMaxExpiration
+                    ? new BN(newMaxExpiration)
+                    : undefined,
+                })
+              }}
+            />
+          )
+        ) : (
+          <div className="text-medium-3">
+            {maxExpiration &&
+              new Date(maxExpiration.toNumber() * 1000).toLocaleString(
+                'en-US',
+                {
+                  month: 'numeric',
+                  day: 'numeric',
+                  year: '2-digit',
+                  hour: 'numeric',
+                  minute: 'numeric',
+                }
+              )}
+          </div>
+        )}
       </div>
       <div>
         <div className="mb-1 text-light-0">Rental rate</div>

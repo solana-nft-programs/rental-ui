@@ -6,6 +6,7 @@ import {
 import Tooltip from '@mui/material/Tooltip'
 import { logConfigTokenDataEvent } from 'apis/amplitude'
 import type { TokenData } from 'apis/api'
+import { GlyphEdit } from 'assets/GlyphEdit'
 import { metadataUrl, pubKeyUrl } from 'common/utils'
 import { useHandleReturnRental } from 'handlers/useHandleReturnRental'
 import { useHandleUnissueRental } from 'handlers/useHandleUnissueRental'
@@ -20,6 +21,7 @@ import { IoAddSharp, IoClose } from 'react-icons/io5'
 import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 import { useRentalIssueCard } from 'rental-components/components/RentalIssueCard'
 import { useRentalRateCard } from 'rental-components/components/RentalRateCard'
+import { useRentalViewCard } from 'rental-components/components/RentalViewCard'
 
 import { notify } from './Notification'
 import { Popover } from './Popover'
@@ -35,6 +37,7 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
   const rentalIssueCard = useRentalIssueCard()
   const handleReturnRental = useHandleReturnRental()
   const handleUnissueRental = useHandleUnissueRental()
+  const rentalViewCard = useRentalViewCard()
 
   const { tokenManager, tokenAccount, recipientTokenAccount, timeInvalidator } =
     tokenData
@@ -74,7 +77,7 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
             rel="noreferrer"
           >
             <FiExternalLink />
-            View
+            Explorer
           </a>
           {environment.label !== 'devnet' && (
             <a
@@ -129,7 +132,6 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
               } flex items-center`}
               onClick={(e) => {
                 e.stopPropagation()
-
                 if (elligibleForRent(config, tokenData)) {
                   logConfigTokenDataEvent(
                     'nft: click issue',
@@ -149,6 +151,24 @@ export const NFTContexualMenu = ({ tokenData }: { tokenData: TokenData }) => {
               Rent
             </div>
           )}
+          {tokenManager &&
+            tokenManager.parsed.issuer.toString() === walletId?.toString() && (
+              <div
+                className={`${popoverItemClass} cursor-pointer`}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  rentalViewCard.showModal({ tokenData })
+                  logConfigTokenDataEvent(
+                    'nft menu: click edit',
+                    config,
+                    tokenData
+                  )
+                }}
+              >
+                <GlyphEdit size={14} />
+                Edit
+              </div>
+            )}
           {tokenManager &&
             tokenManager?.parsed.issuer.toString() === walletId?.toString() &&
             tokenManager.parsed.state !== TokenManagerState.Claimed && (
