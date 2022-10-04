@@ -1237,40 +1237,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     ],
     rentalCard: defaultRentalCardConfig,
   },
-  solset: {
-    name: 'solset',
-    displayName: 'Solset',
-    type: 'Collection',
-    websiteUrl: 'https://solset.io',
-    logoImage: '/logos/solset.png',
-    hero: '/logos/solset-hero.png',
-    colors: {
-      accent: '#FCB316',
-      glow: '#FCB316',
-    },
-    description:
-      'Solset.io is a plug and play experience that works out of the box and offers sniping speed and precision with a simple and effective user interface. Set your snipes and forget about them until you get notified about your purchases through telegram. Welcome to the new breed of on chain snipers on Solana, welcome to Solset.io.',
-    twitterHandle: '@solset_io',
-    socialLinks: [
-      {
-        icon: 'web',
-        link: 'https://solset.io/',
-      },
-      {
-        icon: 'twitter',
-        link: 'https://twitter.com/solset_io',
-      },
-      {
-        icon: 'discord',
-        link: 'https://discord.gg/solset ',
-      },
-    ],
-    filter: {
-      type: 'creators',
-      value: ['GUzQipbCSFz77ZhskMzG9VhDJ7HGioQv4dPpJ6id2ZX2'],
-    },
-    rentalCard: defaultRentalCardConfig,
-  },
   thesuites: {
     name: 'thesuites',
     displayName: 'The Suites',
@@ -2507,6 +2473,40 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         paymentMints: ['3TMxuBEMAV3BQunMBrFtKf8UQT2LmJchVbnV2o2ddkZU'],
       },
     },
+  },
+  solset: {
+    name: 'solset',
+    displayName: 'Solset',
+    type: 'Guild',
+    websiteUrl: 'https://solset.io',
+    logoImage: '/logos/solset.png',
+    hero: '/logos/solset-hero.png',
+    colors: {
+      accent: '#FCB316',
+      glow: '#FCB316',
+    },
+    description:
+      'Solset.io is a plug and play experience that works out of the box and offers sniping speed and precision with a simple and effective user interface. Set your snipes and forget about them until you get notified about your purchases through telegram. Welcome to the new breed of on chain snipers on Solana, welcome to Solset.io.',
+    twitterHandle: '@solset_io',
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://solset.io/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/solset_io',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/solset ',
+      },
+    ],
+    filter: {
+      type: 'issuer',
+      value: ['SLSETzAUois5Wfy1jAxEDPkWiwmLgRcsDSUV6GRGoR2'],
+    },
+    rentalCard: defaultRentalCardConfig,
   },
   zalez: {
     name: 'zalez',
