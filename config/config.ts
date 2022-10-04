@@ -2106,6 +2106,54 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     },
     marketplaceRate: 'days',
   },
+  blockfriend: {
+    name: 'blockfriend',
+    displayName: 'BlockFriend NFT',
+    type: 'Collection',
+    websiteUrl: 'https://blockfriend.net',
+    logoImage: '/logos/blockfriend.gif',
+    hero: '/logos/blockfriend-hero.png',
+    description: `BlockFriend is an exclusive collection of 132 NFTs granting access to top tier automation tools for multi-chain minting and purchasing. Login to the BlockFriend dashboard and connect your discord account after purchasing, to get access to the holder discord: https://blockfriend.net"`,
+    twitterHandle: '@BlockFriendNFT',
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://blockfriend.net',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/BlockFriendNFT',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.com/invite/2xHWsxGAdH',
+      },
+    ],
+    colors: {
+      accent: '#DCC7FE',
+      glow: '#DCC7FE',
+    },
+    filter: {
+      type: 'creators',
+      value: ['Fu7g7cgUCkG6qFsASwhV65sEhRjDJfH9H8XdmPtKyKKr'],
+    },
+    rentalCard: {
+      invalidators: ['rate', 'duration', 'expiration', 'manual'],
+      invalidationOptions: {
+        visibilities: ['public', 'private'],
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue', 'return'],
+        paymentMints: ['So11111111111111111111111111111111111111112'],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
+    marketplaceRate: 'days',
+  },
   default: {
     name: 'default',
     displayName: 'Unverified',
@@ -2929,16 +2977,16 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     twitterHandle: '@GAD_IH',
     socialLinks: [
       {
-        icon: 'discord',
-        link: 'https://discord.gg/goodapedao',
-      },
-      {
         icon: 'web',
         link: 'https://discord.gg/goodapedao',
       },
       {
         icon: 'twitter',
         link: 'https://twitter.com/GAD_IH',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/goodapedao',
       },
     ],
     filter: {
@@ -2978,16 +3026,16 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     twitterHandle: '@BigDuckMedia',
     socialLinks: [
       {
-        icon: 'discord',
-        link: 'https://discord.gg/cDXqHbcwP7',
-      },
-      {
         icon: 'web',
         link: 'https://bigduckmedia.store',
       },
       {
         icon: 'twitter',
         link: 'https://twitter.com/BigDuckMedia',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/cDXqHbcwP7',
       },
     ],
     filter: {
