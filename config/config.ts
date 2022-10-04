@@ -1625,8 +1625,17 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       accent: '#7560FF',
       glow: '#7560FF',
     },
-    rentalCard: defaultRentalCardConfig,
     indexMetadataDisabled: true,
+    rentalCard: {
+      invalidators: ['rate', 'duration', 'expiration', 'manual'],
+      extensionOptions: { showDisablePartialExtension: true },
+      invalidationOptions: {
+        maxDurationAllowed: {
+          displayText: '12 weeks',
+          value: 7258000,
+        },
+      },
+    },
     airdrops: [
       {
         name: 'Origin Jambo',
