@@ -80,7 +80,7 @@ export const RentalRateInfo = ({ tokenData }: { tokenData: TokenData }) => {
         </div>
         {canEdit ? (
           handleUpdateMaxExpiration.isLoading ? (
-            <div className="mt-2 h-8 w-full animate-pulse rounded-md bg-border" />
+            <div className="mt-2 h-[38px] w-full animate-pulse rounded-md bg-border" />
           ) : (
             <DatePicker
               className="rounded-xl bg-dark-4 py-2 px-3 text-base"
