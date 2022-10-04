@@ -149,6 +149,12 @@ export const PAYMENT_MINTS: PaymentMintInfo[] = [
       'https://cdn.discordapp.com/attachments/979654810179625060/1002530226909229077/Tak_berjudul302_20220729185304.png',
     decimals: 6,
   },
+  {
+    mint: 'E4DRAz5D9iMND9PJ7tq1HQbZPxavDWHxmeizUtk68o8S',
+    symbol: 'RadRugs',
+    image: 'https://radrugs.io/assets/images/token_logo.png',
+    decimals: 6,
+  },
 ]
 
 export const WRAPPED_SOL_MINT = 'So11111111111111111111111111111111111111112'

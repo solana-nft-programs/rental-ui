@@ -2538,4 +2538,43 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       },
     },
   },
+  radrugs: {
+    name: 'radrugs',
+    displayName: 'RadRugs',
+    type: 'Guild',
+    websiteUrl: 'https://radrugs.io/',
+    logoImage: '/logos/radrugs.png',
+    hero: '/logos/radrugs-hero.png',
+    colors: {
+      accent: '#A755D9',
+      glow: '#A755D9',
+    },
+    description: `5,555 uniquely generated rad rugs that decided to right some wrongs! Our collection gives you access to an exclusive NFT security platform and unlocks premium features in our ecosystem.`,
+    twitterHandle: '@radrugs_io',
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://radrugs.io/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/radrugs_io',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/Q9SU49mD8Q',
+      },
+    ],
+    filter: {
+      type: 'issuer',
+      value: ['DPsW9zSWh94J3865U712SzdzyYD1Xf2VZaaohRH1fToV'],
+    },
+    rentalCard: {
+      ...defaultRentalCardConfig,
+      invalidationOptions: {
+        ...defaultRentalCardConfig.invalidationOptions,
+        paymentMints: ['E4DRAz5D9iMND9PJ7tq1HQbZPxavDWHxmeizUtk68o8S'],
+      },
+    },
+  },
 }
