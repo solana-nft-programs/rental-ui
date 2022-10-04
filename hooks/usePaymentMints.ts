@@ -142,6 +142,13 @@ export const PAYMENT_MINTS: PaymentMintInfo[] = [
       'https://www.arweave.net/_l3i1PFY9rC1qesPFZmJwdjABTX4NmrGZV5hTR71XQk?ext=png',
     decimals: 9,
   },
+  {
+    mint: '8qyhuqWvBKYn2FT19G41rwK6WAC6PMsAvQpXUihEwLAa',
+    symbol: 'Paw',
+    image:
+      'https://cdn.discordapp.com/attachments/979654810179625060/1002530226909229077/Tak_berjudul302_20220729185304.png',
+    decimals: 6,
+  },
 ]
 
 export const WRAPPED_SOL_MINT = 'So11111111111111111111111111111111111111112'

@@ -2499,4 +2499,43 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       },
     },
   },
+  zalez: {
+    name: 'zalez',
+    displayName: 'Zalez',
+    type: 'Guild',
+    websiteUrl: 'https://zalezlabs.com/',
+    logoImage: '/logos/zalez.png',
+    hero: '/logos/zalez-hero.png',
+    colors: {
+      accent: '#594a7d',
+      glow: '#594a7d',
+    },
+    description: `We are surfer on internet, brand for community!. built by @zalezlabs. Join the beach! Surf on #Solana`,
+    twitterHandle: '@zalez_ale',
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://zalezlabs.com/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/zalez_ale',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/2WXNRpR6tC',
+      },
+    ],
+    filter: {
+      type: 'issuer',
+      value: ['A9Tcy6BHrqu5WhuDAcDN8Rhj9vpQtEG5EkyBiHr4vyiX'],
+    },
+    rentalCard: {
+      ...defaultRentalCardConfig,
+      invalidationOptions: {
+        ...defaultRentalCardConfig.invalidationOptions,
+        paymentMints: ['8qyhuqWvBKYn2FT19G41rwK6WAC6PMsAvQpXUihEwLAa'],
+      },
+    },
+  },
 }
