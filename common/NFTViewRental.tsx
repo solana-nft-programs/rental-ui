@@ -1,5 +1,6 @@
 import { logConfigTokenDataEvent } from 'apis/amplitude'
 import type { TokenData } from 'apis/api'
+import { useWalletId } from 'hooks/useWalletId'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useRentalViewCard } from 'rental-components/components/RentalViewCard'
 
@@ -15,6 +16,7 @@ export const NFTViewRental: React.FC<NFTViewRentalProps> = ({
   tokenData,
 }: NFTViewRentalProps) => {
   const { config } = useProjectConfig()
+  const walletId = useWalletId()
   const rentalViewCard = useRentalViewCard()
 
   return (
@@ -29,7 +31,10 @@ export const NFTViewRental: React.FC<NFTViewRentalProps> = ({
           })
         }}
       >
-        View
+        {walletId?.toString() ===
+        tokenData.tokenManager?.parsed.issuer.toString()
+          ? 'Edit'
+          : 'View'}
       </ButtonSmall>
     </div>
   )
