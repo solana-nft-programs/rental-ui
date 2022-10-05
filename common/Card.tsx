@@ -67,7 +67,7 @@ export const Card: React.FC<Props> = ({
         </div>
       )}
       {content && (
-        <div className="grow">
+        <div className="mt-2 grow">
           {skeleton ? (
             <div className="h-10 w-full animate-pulse rounded-md bg-border"></div>
           ) : (

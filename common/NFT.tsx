@@ -9,8 +9,8 @@ import { useUTCNow } from 'providers/UTCNowProvider'
 
 import { NFTAttributeInfo } from './NFTAttributeInfo'
 import { NFTContexualMenu } from './NFTContexualMenu'
-import { getNameFromTokenData, invalidationTypeInfo } from './tokenDataUtils'
-import { Tooltip } from './Tooltip'
+import { getNameFromTokenData } from './tokenDataUtils'
+// import { Tooltip } from './Tooltip'
 
 export const getExpiration = (
   tokenData: Pick<TokenData, 'timeInvalidator' | 'tokenManager'>,
@@ -47,9 +47,9 @@ interface NFTProps {
 export function NFT({ tokenData }: NFTProps) {
   const { UTCNow } = useUTCNow()
   const metadata = useMintMetadata(tokenData).data
-  const invalidationType = invalidationTypeInfo(
-    tokenData.tokenManager?.parsed.invalidationType
-  )
+  // const invalidationType = invalidationTypeInfo(
+  //   tokenData.tokenManager?.parsed.invalidationType
+  // )
   return (
     <div className="relative min-w-full rounded-xl bg-dark-5">
       <NFTContexualMenu tokenData={tokenData} />
@@ -67,18 +67,20 @@ export function NFT({ tokenData }: NFTProps) {
             </div>
           )
         )}
-        {tokenData.tokenManager?.parsed.invalidationType ===
-          InvalidationType.Vest && (
+        {/* {tokenData.tokenManager?.parsed.invalidationType ===
+          (InvalidationType.Vest ||
+            tokenData.tokenManager?.parsed.invalidationType ===
+              InvalidationType.Reissue) && (
           <Tooltip title={invalidationType.tooltip}>
             <div
-              className={`absolute bottom-3 left-3 z-20 flex cursor-pointer items-center justify-center gap-1 rounded-md bg-dark-5 px-2 py-1 text-sm text-sm text-light-0 text-medium-3`}
+              className={`absolute bottom-3 left-3 z-20 flex cursor-pointer items-center justify-center gap-1 rounded-md bg-dark-5 px-2 py-1 text-sm`}
             >
               <div className={`${invalidationType.color}`}>
                 {invalidationType.disaplyName}
               </div>
             </div>
           </Tooltip>
-        )}
+        )} */}
         <NFTAttributeInfo
           className={`absolute bottom-3 right-3 z-20`}
           tokenData={tokenData}

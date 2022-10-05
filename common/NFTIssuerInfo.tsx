@@ -8,7 +8,10 @@ import {
 import { DisplayAddress } from '@cardinal/namespaces-components'
 import type { PaidClaimApproverData } from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
 import type { TimeInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
-import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
+import {
+  InvalidationType,
+  TokenManagerState,
+} from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import type * as splToken from '@solana/spl-token'
 import type { TokenData } from 'apis/api'
 import {
@@ -17,6 +20,7 @@ import {
   getSymbolFromTokenData,
   getTokenMaxDuration,
   getTokenRentalRate,
+  invalidationTypeInfo,
   isPrivateListing,
   isRateBasedListing,
   rentalType,
@@ -151,6 +155,10 @@ export const NFTIssuerInfo: React.FC<NFTIssuerInfoProps> = ({
       ? tokenData.tokenManager.parsed.recipientTokenAccount
       : undefined
   )
+  const invalidationType = invalidationTypeInfo(
+    tokenData.tokenManager?.parsed.invalidationType
+  )
+
   return (
     <div>
       {tokenData.tokenManager?.parsed.state === TokenManagerState.Claimed && (
@@ -176,13 +184,16 @@ export const NFTIssuerInfo: React.FC<NFTIssuerInfoProps> = ({
           title={
             isPrivateApproved
               ? 'You are approved to claim this private rental'
+              : tokenData.tokenManager.parsed.invalidationType ===
+                InvalidationType.Vest
+              ? invalidationType.tooltip
               : `This rental is private and only recipients specified by ${shortPubKey(
                   tokenData.tokenManager.parsed.claimApprover
                 )} can claim.`
           }
         >
           {isPrivateListing(tokenData) && isPrivateApproved ? (
-            <div className="my-auto flex cursor-default items-center gap-1 rounded-lg bg-gray-800 px-3 py-2 text-secondary">
+            <div className="my-auto flex cursor-default items-center gap-1 rounded-lg bg-gray-800 px-3 py-1 text-secondary">
               {isPrivateApproved && (
                 <div className="text-base text-secondary">
                   <FiCheck />
@@ -191,8 +202,22 @@ export const NFTIssuerInfo: React.FC<NFTIssuerInfoProps> = ({
               Approved
             </div>
           ) : (
-            <div className="my-auto flex cursor-default items-center gap-1 rounded-lg bg-gray-800 px-5 py-2 text-white">
-              Private
+            <div className="my-auto flex cursor-default items-center gap-1 rounded-lg bg-gray-800 px-5 py-1 text-white">
+              {tokenData.tokenManager.parsed.invalidationType ===
+              InvalidationType.Vest ? (
+                <div className="flex flex-row gap-1">
+                  Vesting for
+                  <DisplayAddress
+                    dark
+                    connection={secondaryConnection}
+                    address={
+                      tokenData.tokenManager.parsed.claimApprover ?? undefined
+                    }
+                  />
+                </div>
+              ) : (
+                'Private'
+              )}
             </div>
           )}
         </Tooltip>
