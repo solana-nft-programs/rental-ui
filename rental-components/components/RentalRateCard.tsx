@@ -1,3 +1,7 @@
+import {
+  InvalidationType,
+  TokenManagerState,
+} from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { css } from '@emotion/react'
 import { BN } from '@project-serum/anchor'
 import type { Keypair } from '@solana/web3.js'
@@ -9,6 +13,8 @@ import { Button } from 'common/Button'
 import { DurationInput } from 'common/DurationInput'
 import { getRentalRateDisplayText } from 'common/NFTIssuerInfo'
 import { RentalSummary } from 'common/RentalSummary'
+import { Toggle } from 'common/Toggle'
+import { Tooltip } from 'common/Tooltip'
 import { useHandleRateRental } from 'handlers/useHandleRateRental'
 import { useHandleUpdateMaxExpiration } from 'handlers/useHandleUpdateMaxExpiration'
 import { usePaymentMints } from 'hooks/usePaymentMints'
@@ -75,7 +81,7 @@ export const RentalRateInfo = ({ tokenData }: { tokenData: TokenData }) => {
   return (
     <div className="flex justify-between gap-4 text-base">
       <div>
-        <div className="mb-1 flex items-center gap-2 text-light-0">
+        <div className="mb-2 flex items-center gap-2 text-light-0">
           Max expiration {canEdit && <GlyphEdit />}
         </div>
         {canEdit ? (
@@ -123,8 +129,47 @@ export const RentalRateInfo = ({ tokenData }: { tokenData: TokenData }) => {
           </div>
         )}
       </div>
+      {tokenData.tokenManager?.parsed.invalidationType ===
+        InvalidationType.Reissue &&
+        tokenData.timeInvalidator?.parsed.maxExpiration?.toNumber() !==
+          tokenData.timeInvalidator?.parsed.expiration?.toNumber() &&
+        tokenData.tokenManager?.parsed.state === TokenManagerState.Claimed && (
+          <div>
+            <Tooltip title="The token will return to you after the expiration of its current rental">
+              <div className="mb-2 flex items-center gap-2 text-light-0">
+                Reissue {canEdit && <GlyphEdit />}
+              </div>
+            </Tooltip>
+            {handleUpdateMaxExpiration.isLoading ? (
+              <div className="mt-2 h-[38px] w-full animate-pulse rounded-md bg-border" />
+            ) : (
+              <div className="mt-4 flex justify-center text-medium-3">
+                <Toggle
+                  defaultValue={
+                    tokenData.tokenManager?.parsed.invalidationType ===
+                    InvalidationType.Reissue
+                  }
+                  onChange={() => {
+                    const newMaxExpiration =
+                      tokenData.timeInvalidator?.parsed.expiration
+                    console.log(
+                      'newMaxExpiration',
+                      newMaxExpiration?.toNumber()
+                    )
+                    handleUpdateMaxExpiration.mutate({
+                      tokenData,
+                      maxExpiration: newMaxExpiration
+                        ? new BN(newMaxExpiration)
+                        : undefined,
+                    })
+                  }}
+                ></Toggle>
+              </div>
+            )}
+          </div>
+        )}
       <div>
-        <div className="mb-1 text-light-0">Rental rate</div>
+        <div className="mb-2 text-light-0">Rental rate</div>
         <div className="text-medium-3">
           {getRentalRateDisplayText(config, tokenData, paymentMints.data)}
         </div>

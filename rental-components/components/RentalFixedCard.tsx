@@ -1,11 +1,17 @@
+import { InvalidationType } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import type { Keypair } from '@solana/web3.js'
 import type { TokenData } from 'apis/api'
+import { GlyphEdit } from 'assets/GlyphEdit'
 import { Alert } from 'common/Alert'
 import { Button } from 'common/Button'
 import { getRentalRateDisplayText } from 'common/NFTIssuerInfo'
 import { RentalSummary, secondsToStringForDisplay } from 'common/RentalSummary'
+import { Toggle } from 'common/Toggle'
+import { Tooltip } from 'common/Tooltip'
 import { useHandleClaimRental } from 'handlers/useHandleClaimRental'
+import { useHandleUpdateInvalidationType } from 'handlers/useHandleUpdateInvalidationType'
 import { usePaymentMints } from 'hooks/usePaymentMints'
+import { useWalletId } from 'hooks/useWalletId'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useModal } from 'providers/ModalProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
@@ -37,10 +43,16 @@ export const RentalFixedText = ({ tokenData }: { tokenData: TokenData }) => {
 }
 
 export const RentalFixedInfo = ({ tokenData }: { tokenData: TokenData }) => {
+  const walletId = useWalletId()
   const paymentMints = usePaymentMints()
   const { configFromToken } = useProjectConfig()
   const config = configFromToken(tokenData)
   const { durationSeconds } = tokenData.timeInvalidator?.parsed || {}
+  const handleUpdateInvalidationType = useHandleUpdateInvalidationType()
+
+  const canEdit =
+    walletId?.toString() === tokenData.tokenManager?.parsed.issuer.toString()
+
   return (
     <div className="flex justify-between gap-4">
       <div>
@@ -53,6 +65,34 @@ export const RentalFixedInfo = ({ tokenData }: { tokenData: TokenData }) => {
           })}
         </div>
       </div>
+      {tokenData.tokenManager?.parsed.invalidationType ===
+        InvalidationType.Reissue && (
+        <div>
+          <Tooltip title="The token will return to you after the expiration of its current rental">
+            <div className="mb-2 flex items-center gap-2 text-light-0">
+              Reissue {canEdit && <GlyphEdit />}
+            </div>
+          </Tooltip>
+          {handleUpdateInvalidationType.isLoading ? (
+            <div className="mt-2 h-[38px] w-full animate-pulse rounded-md bg-border" />
+          ) : (
+            <div className="mt-4 flex justify-center text-medium-3">
+              <Toggle
+                defaultValue={
+                  tokenData.tokenManager?.parsed.invalidationType ===
+                  InvalidationType.Reissue
+                }
+                onChange={() =>
+                  handleUpdateInvalidationType.mutate({
+                    tokenData: tokenData,
+                    newInvalidationType: InvalidationType.Return,
+                  })
+                }
+              ></Toggle>
+            </div>
+          )}
+        </div>
+      )}
       <div>
         <div className="mb-1 text-base text-light-0">Fixed price</div>
         <div className="text-base text-medium-3">

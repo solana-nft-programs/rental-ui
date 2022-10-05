@@ -115,7 +115,7 @@ export const RentalIssueAdvanced = ({
               .map((v) => v.type)
               .includes(InvalidationType.Return) ? (
               <Toggle
-                defaultValue={invalidationType === InvalidationType.Reissue}
+                defaultValue={true}
                 onChange={(v) =>
                   setInvalidationType(
                     v ? InvalidationType.Reissue : InvalidationType.Return
