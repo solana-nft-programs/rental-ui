@@ -23,6 +23,7 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
   isFetching?: boolean
   refetch?: () => void
   selectedTokens?: TokenData[]
+  displayInvalidationInfo?: boolean
   handleClick?: (tokenData: TokenData) => void
 }
 
@@ -35,6 +36,7 @@ export const TokenQueryData: React.FC<Props> = ({
   refetch,
   selectedTokens,
   handleClick,
+  displayInvalidationInfo,
 }: Props) => {
   const { config } = useProjectConfig()
   const [pageNum, setPageNum] = useState<[number, number]>(DEFAULT_PAGE)
@@ -93,7 +95,12 @@ export const TokenQueryData: React.FC<Props> = ({
               onClick={() => {
                 handleClick && handleClick(tokenData)
               }}
-              hero={<NFT tokenData={tokenData} />}
+              hero={
+                <NFT
+                  tokenData={tokenData}
+                  displayInvalidationInfo={displayInvalidationInfo}
+                />
+              }
               header={<NFTHeader tokenData={tokenData} />}
               content={
                 {

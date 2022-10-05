@@ -432,7 +432,16 @@ export const Dashboard = () => {
                                     })
                                   }
                                 }}
-                                hero={<NFT tokenData={tokenData} />}
+                                hero={
+                                  <NFT
+                                    tokenData={tokenData}
+                                    displayInvalidationInfo={
+                                      tokenData.tokenManager?.parsed.issuer.toString() ===
+                                        walletId?.toString() &&
+                                      !!tokenData.timeInvalidator
+                                    }
+                                  />
+                                }
                                 header={<NFTHeader tokenData={tokenData} />}
                                 content={
                                   tokenData.tokenManager ? (

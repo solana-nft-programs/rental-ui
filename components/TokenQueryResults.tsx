@@ -172,6 +172,7 @@ export const TokenQueryResults: React.FC<Props> = ({
               tokenDatas={filteredAndSortedTokens}
               isFetched={tokenQuery.isFetched}
               selectedTokens={selectedTokens}
+              displayInvalidationInfo={true}
               handleClick={(tokenData) => {
                 if (isSelected(tokenData, selectedTokens)) {
                   setSelectedTokens(
