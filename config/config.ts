@@ -1139,7 +1139,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     logoImage: '/logos/rifters.png',
     hero: '/logos/rifters-hero.png',
     disableListing: true,
-    hidden: true,
     colors: {
       accent: '#ff4f5a',
       glow: '#ff4f5a',
