@@ -70,6 +70,7 @@ export const RentalIssueExpiration = ({
         onChange={(advancedValues) => {
           setAdvancedValues(advancedValues)
         }}
+        disableRelisting={true}
       />
       <div className="flex gap-4">
         <div className="w-3/4">

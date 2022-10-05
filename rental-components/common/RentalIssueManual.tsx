@@ -52,6 +52,7 @@ export const RentalIssueManual = ({
         onChange={(advancedValues) => {
           setAdvancedValues(advancedValues)
         }}
+        disableRelisting={true}
       />
       <div>
         <div className="mb-1 text-base text-light-0">
