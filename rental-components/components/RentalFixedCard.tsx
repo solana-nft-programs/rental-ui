@@ -65,34 +65,41 @@ export const RentalFixedInfo = ({ tokenData }: { tokenData: TokenData }) => {
           })}
         </div>
       </div>
-      {tokenData.tokenManager?.parsed.invalidationType ===
-        InvalidationType.Reissue && (
-        <div>
-          <Tooltip title="The token will return to you after the expiration of its current rental">
-            <div className="mb-2 flex items-center gap-2 text-light-0">
-              Reissue {canEdit && <GlyphEdit />}
-            </div>
-          </Tooltip>
-          {handleUpdateInvalidationType.isLoading ? (
-            <div className="mt-2 h-[38px] w-full animate-pulse rounded-md bg-border" />
-          ) : (
-            <div className="mt-4 flex justify-center text-medium-3">
-              <Toggle
-                defaultValue={
-                  tokenData.tokenManager?.parsed.invalidationType ===
-                  InvalidationType.Reissue
-                }
-                onChange={() =>
-                  handleUpdateInvalidationType.mutate({
-                    tokenData: tokenData,
-                    newInvalidationType: InvalidationType.Return,
-                  })
-                }
-              ></Toggle>
-            </div>
-          )}
-        </div>
-      )}
+      {canEdit &&
+        (tokenData.tokenManager?.parsed.invalidationType ===
+          InvalidationType.Reissue ||
+          tokenData.tokenManager?.parsed.invalidationType ===
+            InvalidationType.Return) && (
+          <div>
+            <Tooltip title="The token will return to you after the expiration of its current rental">
+              <div className="mb-2 flex items-center gap-2 text-light-0">
+                Reissue {canEdit && <GlyphEdit />}
+              </div>
+            </Tooltip>
+            {handleUpdateInvalidationType.isLoading ? (
+              <div className="mt-2 h-[38px] w-full animate-pulse rounded-md bg-border" />
+            ) : (
+              <div className="mt-4 flex justify-center text-medium-3">
+                <Toggle
+                  defaultValue={
+                    tokenData.tokenManager?.parsed.invalidationType ===
+                    InvalidationType.Reissue
+                  }
+                  onChange={() =>
+                    handleUpdateInvalidationType.mutate({
+                      tokenData: tokenData,
+                      newInvalidationType:
+                        tokenData.tokenManager?.parsed.invalidationType ===
+                        InvalidationType.Return
+                          ? InvalidationType.Reissue
+                          : InvalidationType.Return,
+                    })
+                  }
+                ></Toggle>
+              </div>
+            )}
+          </div>
+        )}
       <div>
         <div className="mb-1 text-base text-light-0">Fixed price</div>
         <div className="text-base text-medium-3">

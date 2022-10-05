@@ -1,5 +1,7 @@
+import { updateMaxExpiration } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator/instruction'
 import type { InvalidationType } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { updateInvalidationType } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/instruction'
+import type { BN } from '@project-serum/anchor'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { Transaction } from '@solana/web3.js'
 import { logConfigTokenDataEvent } from 'apis/amplitude'
@@ -28,12 +30,17 @@ export const useHandleUpdateInvalidationType = () => {
     async ({
       tokenData,
       newInvalidationType,
+      newMaxExpiration,
     }: {
       tokenData: Pick<TokenData, 'tokenManager' | 'timeInvalidator'>
       newInvalidationType: InvalidationType
+      newMaxExpiration?: BN
     }): Promise<string> => {
       const tokenManager = tokenData.tokenManager
+      const timeInvalidator = tokenData.timeInvalidator
       if (!tokenManager) throw 'Token manager not found'
+      if (newMaxExpiration && !timeInvalidator)
+        throw 'Time invalidator not found'
       if (!wallet.publicKey) throw 'Wallet not connected'
       const transaction = new Transaction()
       const trace = tracer({ name: 'useHandleUpdateMaxExpiration' })
@@ -47,12 +54,25 @@ export const useHandleUpdateInvalidationType = () => {
         )
       )
 
+      if (newMaxExpiration) {
+        transaction.add(
+          updateMaxExpiration(
+            connection,
+            asWallet(wallet),
+            timeInvalidator!.pubkey,
+            tokenManager.pubkey,
+            newMaxExpiration
+          )
+        )
+      }
+
       const tx = await withTrace(
         () =>
           executeTransaction(connection, asWallet(wallet), transaction, {
             confirmOptions: {
               commitment: 'confirmed',
               maxRetries: 3,
+              skipPreflight: true,
             },
             notificationConfig: {},
           }),

@@ -16,6 +16,7 @@ import { RentalSummary } from 'common/RentalSummary'
 import { Toggle } from 'common/Toggle'
 import { Tooltip } from 'common/Tooltip'
 import { useHandleRateRental } from 'handlers/useHandleRateRental'
+import { useHandleUpdateInvalidationType } from 'handlers/useHandleUpdateInvalidationType'
 import { useHandleUpdateMaxExpiration } from 'handlers/useHandleUpdateMaxExpiration'
 import { usePaymentMints } from 'hooks/usePaymentMints'
 import { useWalletId } from 'hooks/useWalletId'
@@ -77,6 +78,7 @@ export const RentalRateInfo = ({ tokenData }: { tokenData: TokenData }) => {
   const canEdit =
     walletId?.toString() === tokenData.tokenManager?.parsed.issuer.toString()
   const handleUpdateMaxExpiration = useHandleUpdateMaxExpiration()
+  const handleUpdateInvalidationType = useHandleUpdateInvalidationType()
 
   return (
     <div className="flex justify-between gap-4 text-base">
@@ -129,8 +131,9 @@ export const RentalRateInfo = ({ tokenData }: { tokenData: TokenData }) => {
           </div>
         )}
       </div>
-      {tokenData.tokenManager?.parsed.invalidationType ===
-        InvalidationType.Reissue &&
+      {canEdit &&
+        tokenData.tokenManager?.parsed.invalidationType ===
+          InvalidationType.Reissue &&
         tokenData.timeInvalidator?.parsed.maxExpiration?.toNumber() !==
           tokenData.timeInvalidator?.parsed.expiration?.toNumber() &&
         tokenData.tokenManager?.parsed.state === TokenManagerState.Claimed && (
@@ -152,15 +155,15 @@ export const RentalRateInfo = ({ tokenData }: { tokenData: TokenData }) => {
                   onChange={() => {
                     const newMaxExpiration =
                       tokenData.timeInvalidator?.parsed.expiration
-                    console.log(
-                      'newMaxExpiration',
-                      newMaxExpiration?.toNumber()
-                    )
-                    handleUpdateMaxExpiration.mutate({
-                      tokenData,
-                      maxExpiration: newMaxExpiration
-                        ? new BN(newMaxExpiration)
-                        : undefined,
+
+                    handleUpdateInvalidationType.mutate({
+                      tokenData: tokenData,
+                      newInvalidationType:
+                        tokenData.tokenManager?.parsed.invalidationType ===
+                        InvalidationType.Return
+                          ? InvalidationType.Reissue
+                          : InvalidationType.Return,
+                      newMaxExpiration: newMaxExpiration ?? undefined,
                     })
                   }}
                 ></Toggle>
