@@ -21,6 +21,16 @@ export const Modal: React.FC<Props> = ({
     }
   }, [isOpen])
 
+  useEffect(() => {
+    const close = (e: { keyCode: number }) => {
+      if (e.keyCode === 27) {
+        onDismiss()
+      }
+    }
+    window.addEventListener('keydown', close)
+    return () => window.removeEventListener('keydown', close)
+  }, [])
+
   return (
     <div
       {...props}
