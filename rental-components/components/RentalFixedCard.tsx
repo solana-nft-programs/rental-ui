@@ -84,7 +84,14 @@ export const RentalFixedInfo = ({ tokenData }: { tokenData: TokenData }) => {
           tokenData.tokenManager?.parsed.invalidationType ===
             InvalidationType.Return) && (
           <div className="flex flex-col gap-1">
-            <Tooltip title="The token will return to you after the expiration of its current rental">
+            <Tooltip
+              title={
+                tokenData.tokenManager?.parsed.invalidationType ===
+                InvalidationType.Reissue
+                  ? 'After the rental expiration this NFT will be automatically relisted on the marketplace.'
+                  : 'Upon the rental expiration this NFT will be securely returned into your wallet.'
+              }
+            >
               <div className="mb-2 flex items-center gap-2 text-light-0">
                 Relisting
               </div>

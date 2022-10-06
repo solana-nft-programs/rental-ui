@@ -145,7 +145,7 @@ export const RentalIssueAdvanced = ({
             {
               {
                 [InvalidationType.Reissue]:
-                  'After the rental expiration this NFT will be automatically relisted on the Marketplace.',
+                  'After the rental expiration this NFT will be automatically relisted on the marketplace.',
                 [InvalidationType.Return]:
                   'Upon the rental expiration this NFT will be securely returned into your wallet.',
                 [InvalidationType.Release]:
