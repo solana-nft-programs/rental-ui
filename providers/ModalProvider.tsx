@@ -3,11 +3,13 @@ import React, { useContext, useState } from 'react'
 
 export interface ModalProviderValues {
   showModal: (content: JSX.Element) => void
+  onDismiss: () => void
 }
 
 const ModalContext: React.Context<ModalProviderValues> =
   React.createContext<ModalProviderValues>({
     showModal: () => <></>,
+    onDismiss: () => <></>,
   })
 
 export function ModalProvider({ children }: { children: JSX.Element }) {
@@ -18,6 +20,7 @@ export function ModalProvider({ children }: { children: JSX.Element }) {
         showModal: (content: JSX.Element) => {
           setContent(content)
         },
+        onDismiss: () => setContent(undefined),
       }}
     >
       <Modal isOpen={!!content} onDismiss={() => setContent(undefined)}>

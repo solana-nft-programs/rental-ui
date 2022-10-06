@@ -330,39 +330,39 @@ export const rentalTypeName = (type: InvalidatorOption) =>
 export const invalidationTypeInfo = (type: InvalidationType | undefined) => {
   if (!type)
     return {
-      disaplyName: 'Unknown',
+      displayName: 'Unknown',
       tooltip: 'Unknown invalidation type',
       color: 'text-medium-3',
     }
   return {
     [InvalidationType.Return]: {
-      disaplyName: 'Return',
+      displayName: 'Return',
       tooltip: 'Token will be returned to the issuer after expiration',
       color: 'text-medium-3',
       claimText: 'Rent',
     },
     [InvalidationType.Invalidate]: {
-      disaplyName: 'Invalidate',
+      displayName: 'Invalidate',
       tooltip:
         'Token will be marked as invalid after expiration, never to be rented again',
       color: 'text-medium-3',
       claimText: 'Claim',
     },
     [InvalidationType.Release]: {
-      disaplyName: 'Release',
+      displayName: 'Release',
       tooltip: 'Token will be released to the current renter after expiration',
       color: 'text-medium-3',
       claimText: 'Claim',
     },
     [InvalidationType.Reissue]: {
-      disaplyName: 'Reissue',
+      displayName: 'Reissue',
       tooltip:
         'Token will be reissued with the same parameters after expiration',
       color: 'text-medium-3',
       claimText: 'Rent',
     },
     [InvalidationType.Vest]: {
-      disaplyName: 'Vesting',
+      displayName: 'Vesting',
       tooltip:
         'Token will be vested at the expiration time and sent to the target recipient',
       color: 'text-medium-3',

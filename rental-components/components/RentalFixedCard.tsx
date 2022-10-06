@@ -1,11 +1,17 @@
+import { InvalidationType } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import type { Keypair } from '@solana/web3.js'
 import type { TokenData } from 'apis/api'
 import { Alert } from 'common/Alert'
 import { Button } from 'common/Button'
 import { getRentalRateDisplayText } from 'common/NFTIssuerInfo'
 import { RentalSummary, secondsToStringForDisplay } from 'common/RentalSummary'
+import { Toggle } from 'common/Toggle'
+import { Tooltip } from 'common/Tooltip'
 import { useHandleClaimRental } from 'handlers/useHandleClaimRental'
+import { useHandleUpdateInvalidationType } from 'handlers/useHandleUpdateInvalidationType'
+import { useManagedTokens } from 'hooks/useManagedTokens'
 import { usePaymentMints } from 'hooks/usePaymentMints'
+import { useWalletId } from 'hooks/useWalletId'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useModal } from 'providers/ModalProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
@@ -37,13 +43,21 @@ export const RentalFixedText = ({ tokenData }: { tokenData: TokenData }) => {
 }
 
 export const RentalFixedInfo = ({ tokenData }: { tokenData: TokenData }) => {
+  const walletId = useWalletId()
+  const { onDismiss } = useModal()
   const paymentMints = usePaymentMints()
+  const managedTokens = useManagedTokens()
   const { configFromToken } = useProjectConfig()
   const config = configFromToken(tokenData)
   const { durationSeconds } = tokenData.timeInvalidator?.parsed || {}
+  const handleUpdateInvalidationType = useHandleUpdateInvalidationType()
+
+  const canEdit =
+    walletId?.toString() === tokenData.tokenManager?.parsed.issuer.toString()
+
   return (
     <div className="flex justify-between gap-4">
-      <div>
+      <div className="flex flex-col gap-1">
         <div className="mb-1 text-base text-light-0">Rental duration</div>
         <div className="text-base text-medium-3">
           {secondsToStringForDisplay(durationSeconds?.toNumber() ?? 0, {
@@ -53,7 +67,7 @@ export const RentalFixedInfo = ({ tokenData }: { tokenData: TokenData }) => {
           })}
         </div>
       </div>
-      <div>
+      <div className="flex flex-col gap-1">
         <div className="mb-1 text-base text-light-0">Fixed price</div>
         <div className="text-base text-medium-3">
           {getRentalRateDisplayText(
@@ -64,6 +78,49 @@ export const RentalFixedInfo = ({ tokenData }: { tokenData: TokenData }) => {
           )}
         </div>
       </div>
+      {canEdit &&
+        (tokenData.tokenManager?.parsed.invalidationType ===
+          InvalidationType.Reissue ||
+          tokenData.tokenManager?.parsed.invalidationType ===
+            InvalidationType.Return) && (
+          <div className="flex flex-col gap-1">
+            <Tooltip title="The token will return to you after the expiration of its current rental">
+              <div className="mb-2 flex items-center gap-2 text-light-0">
+                Relisting
+              </div>
+            </Tooltip>
+            {handleUpdateInvalidationType.isLoading ? (
+              <div className="h-[25px] w-full animate-pulse rounded-md bg-border" />
+            ) : (
+              <div className="flex text-medium-3">
+                <Toggle
+                  defaultValue={
+                    tokenData.tokenManager?.parsed.invalidationType ===
+                    InvalidationType.Reissue
+                  }
+                  onChange={() =>
+                    handleUpdateInvalidationType.mutate(
+                      {
+                        tokenData: tokenData,
+                        newInvalidationType:
+                          tokenData.tokenManager?.parsed.invalidationType ===
+                          InvalidationType.Return
+                            ? InvalidationType.Reissue
+                            : InvalidationType.Return,
+                      },
+                      {
+                        onSuccess: () => {
+                          managedTokens.refetch()
+                          onDismiss()
+                        },
+                      }
+                    )
+                  }
+                ></Toggle>
+              </div>
+            )}
+          </div>
+        )}
     </div>
   )
 }

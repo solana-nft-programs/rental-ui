@@ -23,6 +23,7 @@ export const NFTViewRental: React.FC<NFTViewRentalProps> = ({
     <div className="flex gap-1">
       <NFTRevokeButton tokenData={tokenData} />
       <ButtonSmall
+        className="px-5"
         onClick={(e) => {
           e.stopPropagation()
           rentalViewCard.showModal({ tokenData })

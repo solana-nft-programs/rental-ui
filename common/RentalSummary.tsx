@@ -224,7 +224,7 @@ export const RentalSummary: React.FC<Props> = ({
             className={`flex cursor-pointer items-center justify-center gap-1 text-sm text-medium-3`}
           >
             <div className={`${invalidationType.color}`}>
-              {invalidationType.disaplyName}
+              {invalidationType.displayName}
             </div>
             <BsFillInfoCircleFill className="text-xs" />
           </div>

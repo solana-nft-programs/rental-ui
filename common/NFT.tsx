@@ -68,13 +68,13 @@ export function NFT({ tokenData, displayInvalidationInfo }: NFTProps) {
             </div>
           )
         )}
-        {displayInvalidationInfo && (
+        {displayInvalidationInfo && tokenData.tokenManager && (
           <Tooltip title={invalidationType.tooltip}>
             <div
               className={`absolute bottom-3 left-3 z-20 flex cursor-pointer items-center justify-center gap-1 rounded-md bg-dark-5 px-2 py-1 text-sm`}
             >
               <div className={`${invalidationType.color}`}>
-                {invalidationType.disaplyName}
+                {invalidationType.displayName}
               </div>
             </div>
           </Tooltip>

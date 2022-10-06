@@ -1,16 +1,23 @@
+import {
+  InvalidationType,
+  TokenManagerState,
+} from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { css } from '@emotion/react'
 import { BN } from '@project-serum/anchor'
 import type { Keypair } from '@solana/web3.js'
 import { DatePicker } from 'antd'
 import type { TokenData } from 'apis/api'
-import { GlyphEdit } from 'assets/GlyphEdit'
 import { Alert } from 'common/Alert'
 import { Button } from 'common/Button'
 import { DurationInput } from 'common/DurationInput'
 import { getRentalRateDisplayText } from 'common/NFTIssuerInfo'
 import { RentalSummary } from 'common/RentalSummary'
+import { Toggle } from 'common/Toggle'
+import { Tooltip } from 'common/Tooltip'
 import { useHandleRateRental } from 'handlers/useHandleRateRental'
+import { useHandleUpdateInvalidationType } from 'handlers/useHandleUpdateInvalidationType'
 import { useHandleUpdateMaxExpiration } from 'handlers/useHandleUpdateMaxExpiration'
+import { useManagedTokens } from 'hooks/useManagedTokens'
 import { usePaymentMints } from 'hooks/usePaymentMints'
 import { useWalletId } from 'hooks/useWalletId'
 import moment from 'moment'
@@ -60,6 +67,8 @@ export const RentalRateText = ({ tokenData }: { tokenData: TokenData }) => {
 }
 
 export const RentalRateInfo = ({ tokenData }: { tokenData: TokenData }) => {
+  const { onDismiss } = useModal()
+  const managedTokens = useManagedTokens()
   const { maxExpiration } = tokenData.timeInvalidator?.parsed || {}
   const { configFromToken } = useProjectConfig()
   const config = configFromToken(tokenData)
@@ -71,16 +80,17 @@ export const RentalRateInfo = ({ tokenData }: { tokenData: TokenData }) => {
   const canEdit =
     walletId?.toString() === tokenData.tokenManager?.parsed.issuer.toString()
   const handleUpdateMaxExpiration = useHandleUpdateMaxExpiration()
+  const handleUpdateInvalidationType = useHandleUpdateInvalidationType()
 
   return (
     <div className="flex justify-between gap-4 text-base">
-      <div>
-        <div className="mb-1 flex items-center gap-2 text-light-0">
-          Max expiration {canEdit && <GlyphEdit />}
+      <div className="flex flex-col gap-3">
+        <div className="flex items-center gap-2 text-light-0">
+          Max expiration
         </div>
         {canEdit ? (
           handleUpdateMaxExpiration.isLoading ? (
-            <div className="mt-2 h-[38px] w-full animate-pulse rounded-md bg-border" />
+            <div className="h-[38px] w-full animate-pulse rounded-md bg-border" />
           ) : (
             <DatePicker
               className="rounded-xl bg-dark-4 py-2 px-3 text-base"
@@ -123,12 +133,64 @@ export const RentalRateInfo = ({ tokenData }: { tokenData: TokenData }) => {
           </div>
         )}
       </div>
-      <div>
-        <div className="mb-1 text-light-0">Rental rate</div>
+      <div className="flex flex-col gap-3">
+        <div className="mb-2 text-light-0">Rental rate</div>
         <div className="text-medium-3">
           {getRentalRateDisplayText(config, tokenData, paymentMints.data)}
         </div>
       </div>
+      {canEdit &&
+        (tokenData.tokenManager?.parsed.invalidationType ===
+          InvalidationType.Reissue ||
+          tokenData.tokenManager?.parsed.invalidationType ===
+            InvalidationType.Return) &&
+        tokenData.timeInvalidator?.parsed.maxExpiration?.toNumber() !==
+          tokenData.timeInvalidator?.parsed.expiration?.toNumber() && (
+          <div className="flex flex-col gap-3">
+            <Tooltip title="The token will return to you after the expiration of its current rental">
+              <div className="mb-2 flex items-center gap-2 text-light-0">
+                Relisting
+              </div>
+            </Tooltip>
+            {handleUpdateInvalidationType.isLoading ? (
+              <div className="h-[25px] w-full animate-pulse rounded-md bg-border" />
+            ) : (
+              <div className="flex text-medium-3">
+                <Toggle
+                  defaultValue={
+                    tokenData.tokenManager?.parsed.invalidationType ===
+                    InvalidationType.Reissue
+                  }
+                  onChange={() => {
+                    const newMaxExpiration =
+                      tokenData.tokenManager?.parsed.state ===
+                      TokenManagerState.Claimed
+                        ? tokenData.timeInvalidator?.parsed.expiration
+                        : undefined
+
+                    handleUpdateInvalidationType.mutate(
+                      {
+                        tokenData: tokenData,
+                        newInvalidationType:
+                          tokenData.tokenManager?.parsed.invalidationType ===
+                          InvalidationType.Return
+                            ? InvalidationType.Reissue
+                            : InvalidationType.Return,
+                        newMaxExpiration: newMaxExpiration ?? undefined,
+                      },
+                      {
+                        onSuccess: () => {
+                          managedTokens.refetch()
+                          onDismiss()
+                        },
+                      }
+                    )
+                  }}
+                ></Toggle>
+              </div>
+            )}
+          </div>
+        )}
     </div>
   )
 }

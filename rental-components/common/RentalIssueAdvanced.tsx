@@ -46,6 +46,7 @@ export type RentalIssueAdvancedProps = {
   rentalCardConfig: RentalCardConfig
   defaultInvalidationOption: InvalidationTypeOption
   onChange?: (values: RentalIssueAdvancedValues) => void
+  disableRelisting?: boolean
 }
 
 export const RentalIssueAdvanced = ({
@@ -53,6 +54,7 @@ export const RentalIssueAdvanced = ({
   rentalCardConfig,
   defaultInvalidationOption,
   onChange,
+  disableRelisting,
 }: RentalIssueAdvancedProps) => {
   const walletId = useWalletId()
 
@@ -115,6 +117,7 @@ export const RentalIssueAdvanced = ({
               .map((v) => v.type)
               .includes(InvalidationType.Return) ? (
               <Toggle
+                disabled={disableRelisting}
                 defaultValue={invalidationType === InvalidationType.Reissue}
                 onChange={(v) =>
                   setInvalidationType(
