@@ -153,7 +153,7 @@ export const RentalRateInfo = ({ tokenData }: { tokenData: TokenData }) => {
               </div>
             </Tooltip>
             {handleUpdateInvalidationType.isLoading ? (
-              <div className="h-[38px] w-full animate-pulse rounded-md bg-border" />
+              <div className="h-[25px] w-full animate-pulse rounded-md bg-border" />
             ) : (
               <div className="flex text-medium-3">
                 <Toggle
