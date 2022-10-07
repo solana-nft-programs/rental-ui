@@ -198,12 +198,13 @@ export const useHandleClaimRental = () => {
           tokenData.timeInvalidator?.parsed.maxExpiration?.toNumber(),
         payment_mint: PAYMENT_MINTS.filter(
           (mint) =>
-            mint.mint === tokenData.claimApprover?.parsed.paymentMint.toString()
+            mint.mint ===
+            tokenData.claimApprover?.parsed?.paymentMint.toString()
         )[0]?.symbol,
         extension_payment_mint: PAYMENT_MINTS.filter(
           (mint) =>
             mint.mint ===
-            tokenData.timeInvalidator?.parsed.extensionPaymentMint?.toString()
+            tokenData.timeInvalidator?.parsed?.extensionPaymentMint?.toString()
         )[0]?.symbol,
       })
       trace.finish()
