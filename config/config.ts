@@ -1373,41 +1373,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     },
     rentalCard: defaultRentalCardConfig,
   },
-  ['the-chimpions']: {
-    name: 'the-chimpions',
-    displayName: 'The Chimpions',
-    type: 'Collection',
-    badges: [{ badgeType: 'recent' }],
-    websiteUrl: 'chimpions.co',
-    logoImage: '/logos/the-chimpions.png',
-    hero: '/logos/the-chimpions-hero.png',
-    description:
-      'The Chimpions are a Web3 community focused on empowering artists, and elevating the NFT space. The community aims to support the development and advancement of the decentralised web by bringing together skilled individuals from across prominent Solana and Ethereum communities.',
-    twitterHandle: '@TheChimpions',
-    socialLinks: [
-      {
-        icon: 'twitter',
-        link: 'https://twitter.com/TheChimpions',
-      },
-      {
-        icon: 'web',
-        link: 'chimpions.co',
-      },
-      {
-        icon: 'discord',
-        link: 'https://discord.com/invite/thechimpions',
-      },
-    ],
-    colors: {
-      accent: '#b8ecf5',
-      glow: '#b8ecf5',
-    },
-    filter: {
-      type: 'creators',
-      value: ['D7hKRyCsdaaSGVGwSAgcEfkSofBb6gn68UPD3yWW59zW'],
-    },
-    rentalCard: defaultRentalCardConfig,
-  },
   ['voxel-monkes']: {
     name: 'voxel-monkes',
     displayName: 'Voxel Monkes',
