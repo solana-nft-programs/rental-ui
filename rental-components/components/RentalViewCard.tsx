@@ -3,6 +3,7 @@ import type { Keypair } from '@solana/web3.js'
 import type { TokenData } from 'apis/api'
 import { RentalSummary } from 'common/RentalSummary'
 import { rentalType } from 'common/tokenDataUtils'
+import { useWalletId } from 'hooks/useWalletId'
 import { useModal } from 'providers/ModalProvider'
 import { PoweredByFooter } from 'rental-components/common/PoweredByFooter'
 import { RentalClaimCardTokenHeader } from 'rental-components/common/RentalCardTokenHeader'
@@ -21,7 +22,10 @@ export type RentalViewCardParams = {
 }
 
 export const RentalViewCard = ({ tokenData }: RentalViewCardParams) => {
+  const walletId = useWalletId()
   const type = rentalType(tokenData)
+  const canEdit =
+    walletId?.toString() === tokenData.tokenManager?.parsed.issuer.toString()
 
   return (
     <div className="rounded-lg bg-dark-6 p-8">
@@ -43,18 +47,21 @@ export const RentalViewCard = ({ tokenData }: RentalViewCardParams) => {
             manual: <RentalManualInfo tokenData={tokenData} />,
           }[type]
         }
-        <RentalSummary
-          tokenData={tokenData}
-          extendedSeconds={
-            type === 'rate' &&
-            tokenData.tokenManager &&
-            tokenData.tokenManager.parsed.state === TokenManagerState.Claimed
-              ? tokenData.timeInvalidator?.parsed.expiration
-                  ?.sub(tokenData.tokenManager?.parsed.stateChangedAt)
-                  .toNumber()
-              : undefined
-          }
-        />
+        {(tokenData.tokenManager?.parsed.state === TokenManagerState.Claimed ||
+          !canEdit) && (
+          <RentalSummary
+            tokenData={tokenData}
+            extendedSeconds={
+              type === 'rate' &&
+              tokenData.tokenManager &&
+              tokenData.tokenManager.parsed.state === TokenManagerState.Claimed
+                ? tokenData.timeInvalidator?.parsed.expiration
+                    ?.sub(tokenData.tokenManager?.parsed.stateChangedAt)
+                    .toNumber()
+                : undefined
+            }
+          />
+        )}
       </div>
       <PoweredByFooter />
     </div>

@@ -355,7 +355,7 @@ export const invalidationTypeInfo = (type: InvalidationType | undefined) => {
       claimText: 'Claim',
     },
     [InvalidationType.Reissue]: {
-      displayName: 'Reissue',
+      displayName: 'Relisting',
       tooltip:
         'Token will be reissued with the same parameters after expiration',
       color: 'text-medium-3',

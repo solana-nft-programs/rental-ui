@@ -19,7 +19,7 @@
     "@cardinal/namespaces": "^4.1.56",
     "@cardinal/namespaces-components": "^4.1.19",
     "@cardinal/scanner": "^0.1.5",
-    "@cardinal/token-manager": "^1.6.0",
+    "@cardinal/token-manager": "^1.6.2",
     "@emotion/babel-plugin": "^11.7.2",
     "@emotion/babel-preset-css-prop": "^11.2.0",
     "@emotion/css": "^11.7.1",
