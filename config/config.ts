@@ -2718,4 +2718,43 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       },
     },
   },
+  astrals: {
+    name: 'astrals',
+    displayName: 'Astrals',
+    type: 'Guild',
+    websiteUrl: 'https://astralsnft.io/',
+    logoImage: '/logos/astrals.png',
+    hero: '/logos/astrals-hero.png',
+    colors: {
+      accent: '#01215E',
+      glow: '#01215E',
+    },
+    description: `Astrals has evolved beyond just one collection of the original 10,000. Ours is an ever growing Galaxy. New content and new additions are being added as we expand from 10,000 Astrals and embark on a journey to the far outer reaches of our universe.`,
+    twitterHandle: '@Astrals_NFT',
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://astralsnft.io/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/Astrals_NFT',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/astralsnft',
+      },
+    ],
+    filter: {
+      type: 'issuer',
+      value: ['B9REbEXGse3JD2EtypAt2rDwPniA57AtPMCQ8n4WfYnK'],
+    },
+    rentalCard: {
+      ...defaultRentalCardConfig,
+      invalidationOptions: {
+        ...defaultRentalCardConfig.invalidationOptions,
+        paymentMints: ['CJ5U6wPmjxFUyTJpUTS7Rt1UqhTmSVRMvmJ8WD4nndXW'],
+      },
+    },
+  },
 }

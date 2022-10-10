@@ -170,6 +170,11 @@ export const PAYMENT_MINTS: PaymentMintInfo[] = [
     symbol: 'USDT',
     decimals: 6,
   },
+  {
+    mint: 'CJ5U6wPmjxFUyTJpUTS7Rt1UqhTmSVRMvmJ8WD4nndXW',
+    symbol: 'UNKWN',
+    decimals: 9,
+  },
 ]
 
 export const WRAPPED_SOL_MINT = 'So11111111111111111111111111111111111111112'
