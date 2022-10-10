@@ -1610,6 +1610,39 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     },
     rentalCard: defaultRentalCardConfig,
   },
+  ['akeo-labs']: {
+    name: 'akeo-labs',
+    displayName: 'Alpha Pharaohs',
+    type: 'Collection',
+    websiteUrl: 'https://twitter.com/alphapharaohs',
+    logoImage: '/logos/akeo-labs.jpeg',
+    hero: '/logos/akeo-labs-hero.png',
+    description: `Akeo Labs develops tools that use artificial intelligence to provide unique information about the NFT market to their holders. We are providing an all in one suite which includes: On-chain sniper, portfolio management, Rug-Wallet Alert + more.`,
+    twitterHandle: '@akeolabs',
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://hawkeye.akeolabs/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/akeolabs',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/akeolabs',
+      },
+    ],
+    colors: {
+      accent: '#000',
+      glow: '#000',
+    },
+    filter: {
+      type: 'creators',
+      value: ['3bSUU24SBfcG5K8219gaKmW9da1BEZWSL255567CFRwN'],
+    },
+    rentalCard: defaultRentalCardConfig,
+  },
   default: {
     name: 'default',
     displayName: 'Unverified',
