@@ -1613,9 +1613,9 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
   },
   ['akeo-labs']: {
     name: 'akeo-labs',
-    displayName: 'Alpha Pharaohs',
+    displayName: 'Akeo Labs',
     type: 'Collection',
-    websiteUrl: 'https://twitter.com/alphapharaohs',
+    websiteUrl: 'https://twitter.com/akeolabs',
     logoImage: '/logos/akeo-labs.jpeg',
     hero: '/logos/akeo-labs-hero.png',
     description: `Akeo Labs develops tools that use artificial intelligence to provide unique information about the NFT market to their holders. We are providing an all in one suite which includes: On-chain sniper, portfolio management, Rug-Wallet Alert + more.`,
