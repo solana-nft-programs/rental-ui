@@ -2630,4 +2630,46 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       },
     },
   },
+  caveworld: {
+    name: 'caveworld',
+    displayName: 'CaveWorld',
+    type: 'Guild',
+    websiteUrl: 'https://radrugs.io/',
+    logoImage: '/logos/caveworld.png',
+    hero: '/logos/caveworld-hero.png',
+    colors: {
+      accent: '#F7D159',
+      glow: '#F7D159',
+    },
+    description: `Caveworld is an immersive turn based battle game where players can fight one another, strategically using an assortment of abilities and items. As players level-up, they get increasingly stronger and more valuable rewards which can be used to defeat their opponent or traded on the marketplace.`,
+    twitterHandle: '@TheCavemenClub',
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://www.caveworld.com/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/TheCavemenClub',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/caveworld',
+      },
+    ],
+    filter: {
+      type: 'issuer',
+      value: ['7gbxCxJkWcop1FCoaHnB6JJaRjpnkMxJFNbqtTS8KJbD'],
+    },
+    rentalCard: {
+      ...defaultRentalCardConfig,
+      invalidationOptions: {
+        ...defaultRentalCardConfig.invalidationOptions,
+        paymentMints: [
+          '4SZjjNABoqhbd4hnapbvoEPEqT8mnNkfbEoAwALf1V8t',
+          'So11111111111111111111111111111111111111112',
+        ],
+      },
+    },
+  },
 }
