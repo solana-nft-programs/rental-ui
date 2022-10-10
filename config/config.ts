@@ -1577,6 +1577,39 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     },
     rentalCard: defaultRentalCardConfig,
   },
+  ['harrddydao']: {
+    name: 'harrddydao',
+    displayName: 'HarrddyDAO',
+    type: 'Collection',
+    websiteUrl: 'https://harrddymerch.square.site/',
+    logoImage: '/logos/harrddydao.png',
+    hero: '/logos/harrddydao-hero.jpeg',
+    description: `The premier decentralized community of Web3, providing unparalleled value to our members. Reject humanity, return to Harrddy.`,
+    twitterHandle: '@69harrddys',
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://harrddymerch.square.site/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/69harrddys',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/GKjXzKjsCB',
+      },
+    ],
+    colors: {
+      accent: '#EEE',
+      glow: '#DCC7FE',
+    },
+    filter: {
+      type: 'creators',
+      value: ['DEgb96Xdh6tuW1mbz1KEHa6TQapRuwc4Q3nL6wER6vvW'],
+    },
+    rentalCard: defaultRentalCardConfig,
+  },
   default: {
     name: 'default',
     displayName: 'Unverified',
