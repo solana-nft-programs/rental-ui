@@ -2590,7 +2590,10 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       ...defaultRentalCardConfig,
       invalidationOptions: {
         ...defaultRentalCardConfig.invalidationOptions,
-        paymentMints: ['HGWt5FhgBXTHwNgMK4Zuj8gBaJS3om77Te3CpUDiY4cZ'],
+        paymentMints: [
+          'HGWt5FhgBXTHwNgMK4Zuj8gBaJS3om77Te3CpUDiY4cZ',
+          'So11111111111111111111111111111111111111112',
+        ],
       },
     },
   },

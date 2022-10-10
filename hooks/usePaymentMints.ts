@@ -155,6 +155,11 @@ export const PAYMENT_MINTS: PaymentMintInfo[] = [
     image: 'https://radrugs.io/assets/images/token_logo.png',
     decimals: 6,
   },
+  {
+    mint: 'HGWt5FhgBXTHwNgMK4Zuj8gBaJS3om77Te3CpUDiY4cZ',
+    symbol: 'FADE',
+    decimals: 6,
+  },
 ]
 
 export const WRAPPED_SOL_MINT = 'So11111111111111111111111111111111111111112'
