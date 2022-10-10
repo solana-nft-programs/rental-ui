@@ -1543,6 +1543,39 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     },
     rentalCard: defaultRentalCardConfig,
   },
+  ['node-doctor']: {
+    name: 'node-doctor',
+    displayName: 'Node Doctor',
+    type: 'Collection',
+    websiteUrl: 'https://twitter.com/alphapharaohs',
+    logoImage: '/logos/node-doctor.jpeg',
+    hero: '/logos/node-doctor-hero.jpeg',
+    description: `Access to Node Doctor Solana RPC services with multiple IP whitelisting.`,
+    twitterHandle: '@node_doctor',
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://twitter.com/node_doctor',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/node_doctor',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.com/invite/nodedoctor',
+      },
+    ],
+    colors: {
+      accent: '#b345ea',
+      glow: '#b345ea',
+    },
+    filter: {
+      type: 'creators',
+      value: ['HDGftbZBFH16onQBEoJBvFUkHoAzWGUE636zfC1cFYrv'],
+    },
+    rentalCard: defaultRentalCardConfig,
+  },
   default: {
     name: 'default',
     displayName: 'Unverified',
