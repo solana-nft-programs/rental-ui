@@ -165,6 +165,11 @@ export const PAYMENT_MINTS: PaymentMintInfo[] = [
     symbol: 'CAVE',
     decimals: 6,
   },
+  {
+    mint: 'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB',
+    symbol: 'USDT',
+    decimals: 6,
+  },
 ]
 
 export const WRAPPED_SOL_MINT = 'So11111111111111111111111111111111111111112'

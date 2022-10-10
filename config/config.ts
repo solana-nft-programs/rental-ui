@@ -1,6 +1,7 @@
 import type { TokenData } from 'apis/api'
 import type { AirdropMetadata } from 'common/Airdrop'
 import type { IconKey } from 'common/Socials'
+import { WRAPPED_SOL_MINT } from 'hooks/usePaymentMints'
 import type {
   DurationOption,
   RentalCardConfig,
@@ -99,7 +100,7 @@ const defaultRentalCardConfig: RentalCardConfig = {
     visibilities: ['public', 'private'],
     durationOptions: ['hours', 'days', 'weeks'],
     invalidationTypes: ['reissue', 'return'],
-    paymentMints: ['So11111111111111111111111111111111111111112'],
+    paymentMints: [WRAPPED_SOL_MINT],
     showClaimRentalReceipt: false,
     setClaimRentalReceipt: false,
     maxDurationAllowed: {
@@ -505,7 +506,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         durationOptions: ['hours', 'days', 'weeks'],
         visibilities: ['public'],
         invalidationTypes: ['reissue', 'return'],
-        paymentMints: ['So11111111111111111111111111111111111111112'],
+        paymentMints: [WRAPPED_SOL_MINT],
         // paymentMints: [
         //   'DFL1zNkaGPWm1BqAVqRjCZvHmwTFrEaJtbzJWgseoNJh', // defiland
         //   'GoLDYyyiVeXnVf9qgoK712N5esm1cCbHEK9aNJFx47Sx', // goldy
@@ -996,7 +997,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         visibilities: ['public', 'private'],
         durationOptions: ['hours', 'days', 'weeks'],
         invalidationTypes: ['reissue', 'return'],
-        paymentMints: ['So11111111111111111111111111111111111111112'],
+        paymentMints: [WRAPPED_SOL_MINT],
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
         maxDurationAllowed: {
@@ -1048,7 +1049,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         visibilities: ['private'],
         durationOptions: ['hours', 'days', 'weeks'],
         invalidationTypes: ['reissue', 'return'],
-        paymentMints: ['So11111111111111111111111111111111111111112'],
+        paymentMints: [WRAPPED_SOL_MINT],
         showClaimRentalReceipt: false,
         setClaimRentalReceipt: false,
         maxDurationAllowed: {
@@ -1688,7 +1689,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         ...defaultRentalCardConfig.invalidationOptions,
         paymentMints: [
           'MLKmUCaj1dpBY881aFsrBwR9RUMoKic8SWT3u1q5Nkj',
-          'So11111111111111111111111111111111111111112',
+          WRAPPED_SOL_MINT,
         ],
       },
     },
@@ -1734,7 +1735,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         ...defaultRentalCardConfig.invalidationOptions,
         paymentMints: [
           'vE1LVWTLu1zJf5gyoG8c39cgJCWCXgx5hARY7fms5Dp',
-          'So11111111111111111111111111111111111111112',
+          WRAPPED_SOL_MINT,
         ],
       },
     },
@@ -1994,7 +1995,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
   //       durationOptions: ['hours', 'days', 'weeks'],
   //       invalidationTypes: ['reissue', 'return'],
   //       paymentMints: [
-  //         'So11111111111111111111111111111111111111112',
+  //         WRAPPED_SOL_MINT,
   //         'DUSTawucrTsGU8hcqRdHDCbuYhCPADMLM2VcCb8VnFnQ',
   //       ],
   //       showClaimRentalReceipt: false,
@@ -2045,7 +2046,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         durationOptions: ['hours', 'days', 'weeks'],
         invalidationTypes: ['reissue', 'return'],
         paymentMints: [
-          'So11111111111111111111111111111111111111112',
+          WRAPPED_SOL_MINT,
           'GkywroLpkvYQc5dmFfd2RchVYycXZdaA5Uzix42iJdNo',
         ],
         showClaimRentalReceipt: false,
@@ -2094,7 +2095,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidationOptions: {
         ...defaultRentalCardConfig.invalidationOptions,
         paymentMints: [
-          'So11111111111111111111111111111111111111112',
+          WRAPPED_SOL_MINT,
           '7BPCwgL97UMWcSuyUmDdNTzGnDvruyfGKTmUaSbLzohP',
         ],
       },
@@ -2138,7 +2139,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         ...defaultRentalCardConfig.invalidationOptions,
         paymentMints: [
           'C5EefTmWXHJWFkN3Dh7QyFUnBG3UXSu8h6qVs6xtaLxy',
-          'So11111111111111111111111111111111111111112',
+          WRAPPED_SOL_MINT,
         ],
         maxDurationAllowed: {
           displayText: '6 weeks',
@@ -2208,7 +2209,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         ...defaultRentalCardConfig.invalidationOptions,
         paymentMints: [
           'Gbi4F6tEUz7sucsUfyjS28W5Ssd8jiGgdw6hB8XZGJke',
-          'So11111111111111111111111111111111111111112',
+          WRAPPED_SOL_MINT,
         ],
       },
     },
@@ -2251,7 +2252,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         ...defaultRentalCardConfig.invalidationOptions,
         paymentMints: [
           'BsYZmmEXPVPA31aax5pawZtYppoGiowPckxTcituaUCY',
-          'So11111111111111111111111111111111111111112',
+          WRAPPED_SOL_MINT,
         ],
       },
     },
@@ -2337,7 +2338,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         ...defaultRentalCardConfig.invalidationOptions,
         paymentMints: [
           '2YJH1Y5NbdwJGEUAMY6hoTycKWrRCP6kLKs62xiSKWHM',
-          'So11111111111111111111111111111111111111112',
+          WRAPPED_SOL_MINT,
         ],
         maxDurationAllowed: {
           displayText: '2 weeks',
@@ -2544,7 +2545,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         ...defaultRentalCardConfig.invalidationOptions,
         paymentMints: [
           '8qyhuqWvBKYn2FT19G41rwK6WAC6PMsAvQpXUihEwLAa',
-          'So11111111111111111111111111111111111111112',
+          WRAPPED_SOL_MINT,
         ],
       },
     },
@@ -2668,6 +2669,51 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         paymentMints: [
           '4SZjjNABoqhbd4hnapbvoEPEqT8mnNkfbEoAwALf1V8t',
           'So11111111111111111111111111111111111111112',
+        ],
+      },
+    },
+  },
+  ['degen-district']: {
+    name: 'degen-district',
+    displayName: 'Degen District',
+    type: 'Guild',
+    websiteUrl: 'https://twitter.com/Degen_District',
+    logoImage: '/logos/degen-district.png',
+    hero: '/logos/degen-district-hero.jpeg',
+    colors: {
+      accent: '#e28743',
+      glow: '#e28743',
+    },
+    description: `From Districts to POOLs now Degens learn how to swim with big sharks and whales.`,
+    twitterHandle: '@Degen_District',
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://twitter.com/Degen_District',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/Degen_District',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/TS7UtEhP',
+      },
+    ],
+    filter: {
+      type: 'issuer',
+      value: [
+        '5PX4iGqffGLNV6S9XPeqgSPCdGKKu53WhbHV7rxVFhsi',
+        '9JVT2QsoDA9cDgBu2VPSuKA8LtRmXorZ7t6LpouUxkPo',
+      ],
+    },
+    rentalCard: {
+      ...defaultRentalCardConfig,
+      invalidationOptions: {
+        ...defaultRentalCardConfig.invalidationOptions,
+        paymentMints: [
+          'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB',
+          WRAPPED_SOL_MINT,
         ],
       },
     },
