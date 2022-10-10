@@ -1109,7 +1109,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       accent: '#2E8B57',
       glow: '#2E8B57',
     },
-    badges: [{ badgeType: 'recent' }],
     description: 'Okay Bears is a culture shift.',
     twitterHandle: '@okaybears',
     socialLinks: [
@@ -1274,6 +1273,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
   trogg: {
     name: 'trogg',
     displayName: 'Trogg',
+    badges: [{ badgeType: 'recent' }],
     type: 'Collection',
     websiteUrl: 'https://tro.gg/',
     logoImage: '/logos/trogg.png',
@@ -1378,7 +1378,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     name: 'voxel-monkes',
     displayName: 'Voxel Monkes',
     type: 'Collection',
-    badges: [{ badgeType: 'recent' }],
     websiteUrl: 'https://voxelmonkes.com',
     logoImage: '/logos/voxel-monkes.gif',
     hero: '/logos/voxel-monkes-hero.png',
@@ -1547,6 +1546,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
   ['node-doctor']: {
     name: 'node-doctor',
     displayName: 'Node Doctor',
+    badges: [{ badgeType: 'recent' }],
     type: 'Collection',
     websiteUrl: 'https://twitter.com/alphapharaohs',
     logoImage: '/logos/node-doctor.jpeg',
@@ -1580,6 +1580,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
   ['harrddydao']: {
     name: 'harrddydao',
     displayName: 'HarrddyDAO',
+    badges: [{ badgeType: 'recent' }],
     type: 'Collection',
     websiteUrl: 'https://harrddymerch.square.site/',
     logoImage: '/logos/harrddydao.png',
@@ -1646,6 +1647,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
   ['royal-kong-club']: {
     name: 'royal-kong-club',
     displayName: 'Royal Kong Club',
+    badges: [{ badgeType: 'recent' }],
     type: 'Collection',
     websiteUrl: 'https://twitter.com/RoyalKongClub',
     logoImage: '/logos/royal-kong-club.webp',
@@ -2159,7 +2161,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
   },
   metakitchen: {
     name: 'metakitchen',
-    displayName: 'metaKitchen',
+    displayName: 'MetaKitchen',
     type: 'Guild',
     websiteUrl: 'https://metakitchen.io/',
     logoImage: '/logos/metakitchen.png',
@@ -2497,7 +2499,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     displayName: 'Ghost Kid DAO',
     type: 'Guild',
     websiteUrl: 'https://ghostkid.io',
-    badges: [{ badgeType: 'recent' }],
     logoImage: '/logos/ghost-kid-dao.png',
     hero: '/logos/ghost-kid-dao-hero.png',
     colors: {
@@ -2537,7 +2538,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     displayName: 'Unfrgtn Orbit',
     type: 'Guild',
     websiteUrl: 'https://unfrgtn.space/',
-    badges: [{ badgeType: 'recent' }],
     logoImage: '/logos/unfrgtn-orbit.png',
     hero: '/logos/unfrgtn-orbit-hero.png',
     colors: {
@@ -2691,6 +2691,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
   ['goblin-games']: {
     name: 'goblin-games',
     displayName: 'Goblin Games',
+    badges: [{ badgeType: 'recent' }],
     type: 'Guild',
     websiteUrl: 'play.goblingames.io',
     logoImage: '/logos/goblin-games.gif',
@@ -2734,6 +2735,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     name: 'caveworld',
     displayName: 'CaveWorld',
     type: 'Guild',
+    badges: [{ badgeType: 'recent' }],
     websiteUrl: 'https://radrugs.io/',
     logoImage: '/logos/caveworld.png',
     hero: '/logos/caveworld-hero.png',
@@ -2776,6 +2778,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     name: 'degen-district',
     displayName: 'Degen District',
     type: 'Guild',
+    badges: [{ badgeType: 'recent' }],
     websiteUrl: 'https://twitter.com/Degen_District',
     logoImage: '/logos/degen-district.png',
     hero: '/logos/degen-district-hero.jpeg',
@@ -2820,6 +2823,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
   astrals: {
     name: 'astrals',
     displayName: 'Astrals',
+    badges: [{ badgeType: 'recent' }],
     type: 'Guild',
     websiteUrl: 'https://astralsnft.io/',
     logoImage: '/logos/astrals.png',
