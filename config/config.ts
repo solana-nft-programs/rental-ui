@@ -2591,10 +2591,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidationOptions: {
         ...defaultRentalCardConfig.invalidationOptions,
         paymentMints: ['HGWt5FhgBXTHwNgMK4Zuj8gBaJS3om77Te3CpUDiY4cZ'],
-        maxDurationAllowed: {
-          displayText: '7 days',
-          value: 604800,
-        },
       },
     },
   },
