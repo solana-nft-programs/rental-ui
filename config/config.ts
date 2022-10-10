@@ -2555,4 +2555,47 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       },
     },
   },
+  ['goblin-games']: {
+    name: 'goblin-games',
+    displayName: 'Goblin Games',
+    type: 'Guild',
+    websiteUrl: 'play.goblingames.io',
+    logoImage: '/logos/goblin-games.gif',
+    hero: '/logos/goblin-games-hero.png',
+    colors: {
+      accent: '#72d325',
+      glow: '#72d325',
+    },
+    description: `Kingpins own everything.`,
+    twitterHandle: '@goblingamesio',
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'play.goblingames.io',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/goblingamesio',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.com/invite/VAPFyjv7PY',
+      },
+    ],
+    filter: {
+      type: 'issuer',
+      value: ['7hvDowJ52oc7qe9oXVFKhFWRonyURt6AWZrDY7Tvgt33'],
+    },
+    rentalCard: {
+      ...defaultRentalCardConfig,
+      invalidationOptions: {
+        ...defaultRentalCardConfig.invalidationOptions,
+        paymentMints: ['HGWt5FhgBXTHwNgMK4Zuj8gBaJS3om77Te3CpUDiY4cZ'],
+        maxDurationAllowed: {
+          displayText: '7 days',
+          value: 604800,
+        },
+      },
+    },
+  },
 }
