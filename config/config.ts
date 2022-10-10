@@ -1643,6 +1643,39 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     },
     rentalCard: defaultRentalCardConfig,
   },
+  ['royal-kong-club']: {
+    name: 'royal-kong-club',
+    displayName: 'Royal Kong Club',
+    type: 'Collection',
+    websiteUrl: 'https://twitter.com/RoyalKongClub',
+    logoImage: '/logos/royal-kong-club.webp',
+    hero: '/logos/royal-kong-club-hero.jpeg',
+    description: `Royal Kong Club is a collection on Solana of 5k NFTs, The first NFT that pays royalties to holders Forever! `,
+    twitterHandle: '@RoyalKongClub',
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://www.royalkongclub.com/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/RoyalKongClub',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.com/invite/royalkongclub',
+      },
+    ],
+    colors: {
+      accent: '#B900FF',
+      glow: '#B900FF',
+    },
+    filter: {
+      type: 'creators',
+      value: ['7p5aRaSyLSLQivA5dyvE3rURSMdhhrzwcayGVq1xnitE'],
+    },
+    rentalCard: defaultRentalCardConfig,
+  },
   default: {
     name: 'default',
     displayName: 'Unverified',
