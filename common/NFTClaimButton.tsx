@@ -1,7 +1,7 @@
 import { BN } from '@project-serum/anchor'
 import type * as splToken from '@solana/spl-token'
 import type { PublicKey } from '@solana/web3.js'
-import { logConfigTokenDataEvent } from 'apis/amplitude'
+import { logConfigTokenDataEvent } from 'monitoring/amplitude'
 import type { TokenData } from 'apis/api'
 import { allowedToRent } from 'handlers/useHandleClaimRental'
 import { useOtp } from 'hooks/useOtp'

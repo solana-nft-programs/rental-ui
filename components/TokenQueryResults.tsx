@@ -1,4 +1,4 @@
-import { logConfigEvent } from 'apis/amplitude'
+import { logConfigEvent } from 'monitoring/amplitude'
 import type { TokenData } from 'apis/api'
 import { Info } from 'common/Info'
 import { MultiSelector } from 'common/MultiSelector'

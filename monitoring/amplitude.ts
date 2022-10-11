@@ -1,7 +1,7 @@
 import * as amplitude from '@amplitude/analytics-browser'
 import type { ProjectConfig } from 'config/config'
 
-import type { TokenData } from './api'
+import type { TokenData } from '../apis/api'
 
 export const logConfigEvent = (
   eventName: string,

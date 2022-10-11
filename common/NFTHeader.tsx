@@ -1,5 +1,5 @@
 import { DisplayAddress } from '@cardinal/namespaces-components'
-import { logConfigTokenDataEvent } from 'apis/amplitude'
+import { logConfigTokenDataEvent } from 'monitoring/amplitude'
 import type { TokenData } from 'apis/api'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'

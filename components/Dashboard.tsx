@@ -5,7 +5,7 @@ import {
 } from '@cardinal/namespaces-components'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { css } from '@emotion/react'
-import { logConfigEvent } from 'apis/amplitude'
+import { logConfigEvent } from 'monitoring/amplitude'
 import type { TokenData } from 'apis/api'
 import { GlyphLargeClose } from 'assets/GlyphLargeClose'
 import { ButtonSmall } from 'common/ButtonSmall'
