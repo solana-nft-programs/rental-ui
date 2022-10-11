@@ -24,7 +24,6 @@ function drawRoundedImage(
 
 const preview = async (req: NextApiRequest, res: NextApiResponse) => {
   // setup
-  // overlay text
   const WIDTH = 1200
   const HEIGHT = 675
   const imageCanvas = canvas.createCanvas(WIDTH, HEIGHT)

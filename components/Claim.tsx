@@ -48,7 +48,7 @@ function Claim(props: {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@cardinal_labs" />
         <meta
-          name="twitter:title"
+          name="og:title"
           content={
             props.isClaimed
               ? `Just claimed ${props.nftName} on Cardinal's NFT Rental Marketplace`
@@ -56,11 +56,11 @@ function Claim(props: {
           }
         />
         <meta
-          name="twitter:description"
+          name="og:description"
           content="Rent and Claim your favorite NFTs on Cardinal's Rental Marketplace"
         />
         <meta
-          name="twitter:image"
+          name="og:image"
           content={`${
             process.env.NEXT_PUBLIC_BASE_URL
           }/api/preview?nftImageUri=${encodeURIComponent(props.nftImageUrl)}${
