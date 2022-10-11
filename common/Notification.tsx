@@ -1,11 +1,10 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
+import type { Cluster } from '@solana/web3.js'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import React from 'react'
 import toast, { resolveValue, ToastBar, Toaster } from 'react-hot-toast'
 import { VscClose } from 'react-icons/vsc'
-
-import type { Cluster } from './utils'
 
 interface INotifyArgs {
   message?: string
