@@ -6,8 +6,8 @@ import { useRouter } from 'next/router'
 import { transparentize } from 'polished'
 import { useState } from 'react'
 import { BiChevronDown, BiChevronUp } from 'react-icons/bi'
-import { CollectionBadge } from './CollectionBadge'
 
+import { CollectionBadge } from './CollectionBadge'
 import { SocialIcon } from './Socials'
 
 export const CollectionsList = ({ configs }: { configs: ProjectConfig[] }) => {

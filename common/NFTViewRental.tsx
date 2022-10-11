@@ -1,6 +1,6 @@
-import { logConfigTokenDataEvent } from 'apis/amplitude'
 import type { TokenData } from 'apis/api'
 import { useWalletId } from 'hooks/useWalletId'
+import { logConfigTokenDataEvent } from 'monitoring/amplitude'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useRentalViewCard } from 'rental-components/components/RentalViewCard'
 

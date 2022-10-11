@@ -16,13 +16,11 @@ import type * as splToken from '@solana/spl-token'
 import { useWallet } from '@solana/wallet-adapter-react'
 import type { Keypair } from '@solana/web3.js'
 import { Connection, Transaction } from '@solana/web3.js'
-import { logConfigTokenDataEvent } from 'apis/amplitude'
 import { getExtensionPrice } from 'common/RentalSummary'
 import {
   getPriceFromTokenData,
   getTokenRentalRate,
 } from 'common/tokenDataUtils'
-import { tracer, withTrace } from 'common/trace'
 import { executeTransaction } from 'common/Transactions'
 import { asWallet } from 'common/Wallets'
 import { TOKEN_DATA_KEY } from 'hooks/useBrowseAvailableTokenDatas'
@@ -31,6 +29,8 @@ import {
   usePaymentMints,
   WRAPPED_SOL_MINT,
 } from 'hooks/usePaymentMints'
+import { logConfigTokenDataEvent } from 'monitoring/amplitude'
+import { tracer, withTrace } from 'monitoring/trace'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useMutation, useQueryClient } from 'react-query'

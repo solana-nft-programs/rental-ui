@@ -1,6 +1,6 @@
 import { DisplayAddress } from '@cardinal/namespaces-components'
-import { logConfigTokenDataEvent } from 'monitoring/amplitude'
 import type { TokenData } from 'apis/api'
+import { logConfigTokenDataEvent } from 'monitoring/amplitude'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { getLink, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { FaLink } from 'react-icons/fa'

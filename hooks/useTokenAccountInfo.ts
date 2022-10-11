@@ -1,6 +1,6 @@
 import type { AccountData } from '@cardinal/common'
 import type { PublicKey } from '@solana/web3.js'
-import { tracer, withTrace } from 'common/trace'
+import { tracer, withTrace } from 'monitoring/trace'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import type { ParsedTokenAccountData } from 'providers/SolanaAccountsProvider'
 import { deserializeAccountInfos } from 'providers/SolanaAccountsProvider'
