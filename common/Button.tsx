@@ -1,5 +1,5 @@
+import { LoadingSpinner } from 'common/LoadingSpinner'
 import { useState } from 'react'
-import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 
 type Props = {
   children: string | JSX.Element

@@ -3,6 +3,7 @@ import type { Keypair } from '@solana/web3.js'
 import type { TokenData } from 'apis/api'
 import { Alert } from 'common/Alert'
 import { Button } from 'common/Button'
+import { LoadingSpinner } from 'common/LoadingSpinner'
 import { RentalSummary } from 'common/RentalSummary'
 import {
   getPriceFromTokenData,
@@ -16,7 +17,6 @@ import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useModal } from 'providers/ModalProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useState } from 'react'
-import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
 import { PoweredByFooter } from 'rental-components/common/PoweredByFooter'
 import { RentalClaimCardTokenHeader } from 'rental-components/common/RentalCardTokenHeader'
 

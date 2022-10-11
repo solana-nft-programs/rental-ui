@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
-import { logConfigEvent, logConfigTokenDataEvent } from 'apis/amplitude'
 import type { TokenData } from 'apis/api'
 import { GlyphClose } from 'assets/GlyphClose'
+import { logConfigEvent, logConfigTokenDataEvent } from 'monitoring/amplitude'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useRentalIssueCard } from 'rental-components/components/RentalIssueCard'
 

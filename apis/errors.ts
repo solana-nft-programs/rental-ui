@@ -284,11 +284,11 @@ export const handleError = (
     { programId: PAYMENT_MANAGER_ADDRESS, idl: PAYMENT_MANAGER_IDL },
   ]
 ): string => {
-  const hex = (e as SendTransactionError).message.split(' ').at(-1)
+  const hex = (e as SendTransactionError).message?.split(' ').at(-1)
   const dec = parseInt(hex || '', 16)
   const logs =
     (e as SendTransactionError).logs ?? [
-      (e as SendTransactionError).message,
+      (e as SendTransactionError).message ?? '',
     ] ?? [(e as Error).toString()] ??
     []
 
@@ -317,7 +317,9 @@ export const handleError = (
         errorMatch: idl.errors?.find(
           (err) =>
             // message includes error
-            (e as SendTransactionError).message.includes(err.code.toString()) ||
+            (e as SendTransactionError).message?.includes(
+              err.code.toString()
+            ) ||
             // toString includes error
             (e as Error).toString().includes(err.code.toString()) ||
             // any log includes error
@@ -330,7 +332,7 @@ export const handleError = (
         errorMatch: nativeErrors.find(
           (err) =>
             // message includes error
-            (e as SendTransactionError).message.includes(err.code) ||
+            (e as SendTransactionError).message?.includes(err.code) ||
             // toString includes error
             (e as Error).toString().includes(err.code) ||
             // any log includes error

@@ -1,12 +1,15 @@
-export const LoadingSpinner = ({
-  fill = '#FFF',
-  height = '40px',
-}: {
+interface Props extends React.HTMLAttributes<HTMLDivElement> {
   fill?: string
   height?: string
-}) => {
+}
+
+export const LoadingSpinner: React.FC<Props> = ({
+  fill = '#FFF',
+  height = '40px',
+  ...props
+}: Props) => {
   return (
-    <div style={{ height }}>
+    <div style={{ height }} {...props}>
       <svg
         version="1.1"
         id="loader-1"

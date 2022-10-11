@@ -1,6 +1,6 @@
 import { FooterSlim } from 'common/FooterSlim'
 import { HeaderSlim } from 'common/HeaderSlim'
-import { LoadingSpinner } from 'rental-components/common/LoadingSpinner'
+import { LoadingSpinner } from 'common/LoadingSpinner'
 
 export default function LoadingScreen() {
   return (
