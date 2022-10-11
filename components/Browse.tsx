@@ -228,7 +228,7 @@ export function sortTokens<
       })
       break
     default:
-      return []
+      return tokens
   }
   return sortedTokens
 }
