@@ -1615,6 +1615,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     name: 'akeo-labs',
     displayName: 'Akeo Labs',
     type: 'Collection',
+    hostname: 'rentals.akeolabs.com',
     websiteUrl: 'https://twitter.com/akeolabs',
     logoImage: '/logos/akeo-labs.jpeg',
     hero: '/logos/akeo-labs-hero.png',
