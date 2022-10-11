@@ -68,7 +68,7 @@ export default function Home() {
         />
         <meta
           name="og:image"
-          content={`${process.env.NEXT_PUBLIC_BASE_URL}/api/generateTwitterImage`}
+          content={`${process.env.NEXT_PUBLIC_BASE_URL}/api/preview`}
         />
         <meta property="og:url" content="https://rent.cardinal.so" />
         <meta name="twitter:card" content="summary_large_image" />
