@@ -64,7 +64,7 @@ function Claim(props: {
           content={`${
             process.env.NEXT_PUBLIC_BASE_URL
           }/api/preview?nftImageUri=${encodeURIComponent(props.nftImageUrl)}${
-            props.isClaimed ? '&claimed=true' : ''
+            props.isClaimed ? '&claimed=true' : '&claimed=false'
           }`}
         />
       </Head>
