@@ -10,9 +10,9 @@ import type { Keypair, PublicKey } from '@solana/web3.js'
 import type { TokenData } from 'apis/api'
 import { SolanaLogo } from 'assets/SolanaLogo'
 import { DURATION_DATA } from 'common/DurationInput'
-import { mintImage, mintSymbol } from 'common/NFTClaimButton'
 import { fmtMintAmount, getMintDecimalAmount } from 'common/units'
 import type { ProjectConfig } from 'config/config'
+import { mintImage, mintSymbol } from 'hooks/usePaymentMints'
 import type { InvalidatorOption } from 'rental-components/components/RentalIssueCard'
 
 export const getTokenMaxDuration = (

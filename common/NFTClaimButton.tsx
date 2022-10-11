@@ -4,7 +4,7 @@ import type { PublicKey } from '@solana/web3.js'
 import type { TokenData } from 'apis/api'
 import { allowedToRent } from 'handlers/useHandleClaimRental'
 import { useOtp } from 'hooks/useOtp'
-import { PAYMENT_MINTS, usePaymentMints } from 'hooks/usePaymentMints'
+import { mintSymbol, usePaymentMints } from 'hooks/usePaymentMints'
 import { useWalletId } from 'hooks/useWalletId'
 import { logConfigTokenDataEvent } from 'monitoring/amplitude'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
@@ -17,22 +17,6 @@ import { useRentalRateCard } from 'rental-components/components/RentalRateCard'
 import { ButtonSmall } from './ButtonSmall'
 import { isPrivateListing, isRateBasedListing } from './tokenDataUtils'
 import { fmtMintAmount } from './units'
-
-export const mintSymbol = (paymentMint: PublicKey | null | undefined) => {
-  const symbol = PAYMENT_MINTS.find(
-    (mint) => mint.mint === paymentMint?.toString()
-  )?.symbol
-  if (!symbol || symbol === 'SOL') {
-    return '◎'
-  } else {
-    return symbol
-  }
-}
-
-export const mintImage = (paymentMint: PublicKey | null | undefined) => {
-  return PAYMENT_MINTS.find((mint) => mint.mint === paymentMint?.toString())
-    ?.image
-}
 
 export const priceAndSymbol = (
   paymentAmount: BN,

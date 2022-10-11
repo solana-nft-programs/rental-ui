@@ -1,3 +1,4 @@
+import type { PublicKey } from '@solana/web3.js'
 import { useQuery } from 'react-query'
 
 export type PaymentMintInfo = {
@@ -5,6 +6,22 @@ export type PaymentMintInfo = {
   symbol: string
   image?: string
   decimals: number
+}
+
+export const mintSymbol = (paymentMint: PublicKey | null | undefined) => {
+  const symbol = PAYMENT_MINTS.find(
+    (mint) => mint.mint === paymentMint?.toString()
+  )?.symbol
+  if (!symbol || symbol === 'SOL') {
+    return '◎'
+  } else {
+    return symbol
+  }
+}
+
+export const mintImage = (paymentMint: PublicKey | null | undefined) => {
+  return PAYMENT_MINTS.find((mint) => mint.mint === paymentMint?.toString())
+    ?.image
 }
 
 export const PAYMENT_MINTS: PaymentMintInfo[] = [
