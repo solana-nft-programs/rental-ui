@@ -1,4 +1,5 @@
 import type { Badge } from 'config/config'
+
 import { CollectionBadge } from './CollectionBadge'
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {

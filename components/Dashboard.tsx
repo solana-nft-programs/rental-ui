@@ -32,7 +32,6 @@ import { filterTokens, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useEffect, useState } from 'react'
 import { HiUserCircle } from 'react-icons/hi'
 import { useQuery } from 'react-query'
-import { SolanaLogo } from 'rental-components/common/icons'
 
 import { Activity } from './Activity'
 import type { PANE_OPTIONS } from './Browse'
@@ -40,6 +39,7 @@ import { PANE_TABS } from './Browse'
 import type { ManageTokenGroupId } from './Manage'
 import { manageTokenGroups } from './Manage'
 import { isSelected } from './TokenQueryResults'
+import { SolanaLogo } from 'assets/SolanaLogo'
 
 export const groupByConfig = (
   tokenDatas: TokenData[],
