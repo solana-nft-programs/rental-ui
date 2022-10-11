@@ -5,7 +5,7 @@ import Head from 'next/head'
 
 export default function Me() {
   return (
-    <div className="relative z-0 min-h-screen bg-dark-5">
+    <div className="relative z-0 flex min-h-screen flex-col bg-dark-5">
       <div className="blur-4xl absolute left-10 top-52 -z-10 h-[120px] w-[300px] -rotate-[60deg] bg-glow blur-[100px]"></div>
       <div className="blur-4xl absolute right-12 top-52 -z-10 h-[120px] w-[350px] -rotate-[60deg] bg-glow blur-[120px]"></div>
       <Head>
@@ -31,7 +31,7 @@ export default function Me() {
         />
       </Head>
       <Banner />
-      <div style={{ minHeight: 'calc(100vh - 337px)' }}>
+      <div style={{ minHeight: 'calc(100vh - 337px)' }} className="grow">
         <Dashboard />
       </div>
       <FooterSlim />
