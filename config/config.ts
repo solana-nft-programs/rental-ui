@@ -1573,7 +1573,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     },
     filter: {
       type: 'creators',
-      value: ['HDGftbZBFH16onQBEoJBvFUkHoAzWGUE636zfC1cFYrv'],
+      value: ['5saQ3HZ6SYuFvz4rnc2788FWitGHdF6ETUj5hGvojyHv'],
     },
     rentalCard: defaultRentalCardConfig,
   },
