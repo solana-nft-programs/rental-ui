@@ -192,6 +192,11 @@ export const PAYMENT_MINTS: PaymentMintInfo[] = [
     symbol: 'UNKWN',
     decimals: 9,
   },
+  {
+    mint: 'FzoYRdg3QfT3jEK7R3yExmoD1jxvUsJWyifTBWVKg2wJ',
+    symbol: 'STAX',
+    decimals: 2,
+  },
 ]
 
 export const WRAPPED_SOL_MINT = 'So11111111111111111111111111111111111111112'

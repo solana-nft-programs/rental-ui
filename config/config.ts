@@ -1653,7 +1653,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     websiteUrl: 'https://twitter.com/RoyalKongClub',
     logoImage: '/logos/royal-kong-club.webp',
     hero: '/logos/royal-kong-club-hero.jpeg',
-    description: `Royal Kong Club is a collection on Solana of 5k NFTs, The first NFT that pays royalties to holders Forever! `,
+    description: `Royal Kong Club is a collection on Solana of 5k NFTs, The first NFT that pays royalties to holders Forever!`,
     twitterHandle: '@RoyalKongClub',
     socialLinks: [
       {
@@ -1676,6 +1676,144 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     filter: {
       type: 'creators',
       value: ['7p5aRaSyLSLQivA5dyvE3rURSMdhhrzwcayGVq1xnitE'],
+    },
+    rentalCard: defaultRentalCardConfig,
+  },
+  ['doge-track']: {
+    name: 'doge-track',
+    displayName: 'Doge Track',
+    badges: [{ badgeType: 'recent' }],
+    type: 'Collection',
+    websiteUrl: 'https://twitter.com/RoyalKongClub',
+    logoImage: '/logos/doge-track.jpeg',
+    hero: '/logos/doge-track-hero.png',
+    description: `The easiest and most fun race-to-earn game on ANY chain. Start racing in seconds - $SOL, $DUST, $DTRK, & more.`,
+    twitterHandle: '@theDogeTrack',
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://dogetrack.io',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/theDogeTrack',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/dogetrack',
+      },
+    ],
+    colors: {
+      accent: '#ac00df',
+      glow: '#ac00df',
+    },
+    filter: {
+      type: 'creators',
+      value: ['SCL4YPcMCXbWHGPvYxR1e2c7UMFJEZNz88Wr3U8Etj6'],
+    },
+    rentalCard: defaultRentalCardConfig,
+  },
+  ['vula-labs']: {
+    name: 'vula-labs',
+    displayName: 'Vula Labs',
+    badges: [{ badgeType: 'recent' }],
+    type: 'Collection',
+    websiteUrl: 'https://vulalabs.com',
+    logoImage: '/logos/vula-labs.jpeg',
+    hero: '/logos/vula-labs-hero.jpeg',
+    description: `The Vula Society provides a shield enabling our holders to keep their information private and leveraging the Vula Labs platform to provide access to curated content without need for subscription, profile, or email address registration.`,
+    twitterHandle: '@vulalabs',
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://vulalabs.com',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/vulalabs',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/vulalabs',
+      },
+    ],
+    colors: {
+      accent: '#000',
+      glow: '#000',
+    },
+    filter: {
+      type: 'creators',
+      value: [
+        'H425bPhHh9gX5ag6Y17JtvN6mUMpaFwDDsD48UBZck4Y',
+        '4dAnYRct3HRfDmxjsadFkQxqxadQfM7jXXaxKBh91SB2',
+      ],
+    },
+    rentalCard: defaultRentalCardConfig,
+  },
+  ['fff']: {
+    name: 'fff',
+    displayName: 'Famous Fox Federation',
+    badges: [{ badgeType: 'recent' }],
+    type: 'Collection',
+    websiteUrl: 'https://famousfoxes.com/',
+    logoImage: '/logos/fff.jpeg',
+    hero: '/logos/fff-hero.jpeg',
+    description: `The Famous Fox Federation, an independent organization of the most fabulously famous foxes on the Blockchain.`,
+    twitterHandle: '@famousfoxfed',
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://famousfoxes.com/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/famousfoxfed',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/h2x37M7J',
+      },
+    ],
+    colors: {
+      accent: '#fb933c',
+      glow: '#fb933c',
+    },
+    filter: {
+      type: 'creators',
+      value: [
+        'D3XrkNZz6wx6cofot7Zohsf2KSsu2ArngNk8VqU9cTY3',
+        '3pMvTLUA9NzZQd4gi725p89mvND1wRNQM3C8XEv1hTdA',
+      ],
+    },
+    rentalCard: defaultRentalCardConfig,
+  },
+  ['solnauts']: {
+    name: 'solnauts',
+    displayName: 'Solnauts DAO',
+    badges: [{ badgeType: 'recent' }],
+    type: 'Collection',
+    websiteUrl: 'https://twitter.com/SolnautsDAO',
+    logoImage: '/logos/solnauts.png',
+    hero: '/logos/solnauts-hero.png',
+    description: `A DAO specialized in NFT Loans investing using strategies to grow our dao funds and share benefits to our holders every month.`,
+    twitterHandle: '@SolnautsDAO',
+    socialLinks: [
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/SolnautsDAO',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/h2x37M7J',
+      },
+    ],
+    colors: {
+      accent: '#FFE027',
+      glow: '#FFE027',
+    },
+    filter: {
+      type: 'creators',
+      value: ['7M9Qfh4VEEoKdVxdahGTwRJG51snE5kmAmf9YDp6esPn'],
     },
     rentalCard: defaultRentalCardConfig,
   },
@@ -2858,6 +2996,86 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       invalidationOptions: {
         ...defaultRentalCardConfig.invalidationOptions,
         paymentMints: ['CJ5U6wPmjxFUyTJpUTS7Rt1UqhTmSVRMvmJ8WD4nndXW'],
+      },
+    },
+  },
+  // sorcery: {
+  //   name: 'sorcery',
+  //   displayName: 'Sorcery Inc.',
+  //   badges: [{ badgeType: 'recent' }],
+  //   type: 'Guild',
+  //   websiteUrl: 'https://sorcery.inc',
+  //   logoImage: '/logos/sorcery.png',
+  //   hero: '/logos/sorcery-hero.png',
+  //   colors: {
+  //     accent: '#973872',
+  //     glow: '#973872',
+  //   },
+  //   description: `Sorcery is a wizard academy with magical spells and tools powered by $LUV.`,
+  //   twitterHandle: '@sorcery_inc',
+  //   socialLinks: [
+  //     {
+  //       icon: 'web',
+  //       link: 'https://sorcery.inc',
+  //     },
+  //     {
+  //       icon: 'twitter',
+  //       link: 'https://twitter.com/sorcery_inc',
+  //     },
+  //     {
+  //       icon: 'discord',
+  //       link: 'https://discord.gg/sorcery',
+  //     },
+  //   ],
+  //   filter: {
+  //     type: 'issuer',
+  //     value: [''],
+  //   },
+  //   rentalCard: {
+  //     ...defaultRentalCardConfig,
+  //     invalidationOptions: {
+  //       ...defaultRentalCardConfig.invalidationOptions,
+  //       paymentMints: ['J8taaG2MEBQruGWE4Hhzkrahb1nMAeSZUYBs5cmzST9k'],
+  //     },
+  //   },
+  // },
+  blxckout: {
+    name: 'blxckout',
+    displayName: 'BLXCKOUT: NXDE RENTAL',
+    badges: [{ badgeType: 'recent' }],
+    type: 'Guild',
+    websiteUrl: 'https://docs.blxckout.xyz',
+    logoImage: '/logos/blxckout.png',
+    hero: '/logos/blxckout-hero.png',
+    colors: {
+      accent: '#3D2546',
+      glow: '#3D2546',
+    },
+    description: `Rent access to 3 x top spec RPC nodes in a highly redundant setting for 1 year. No monthly subscription. Can be used for building Solana products, sniping and botting. A product from BLXCKOUT.`,
+    twitterHandle: '@TheNxde',
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://docs.blxckout.xyz',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/TheNxde',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/6CvQNSU3hq',
+      },
+    ],
+    filter: {
+      type: 'issuer',
+      value: ['H6uhkNstMRG38VsTjUNRJEZbVHxHqh4cVoM38UuSh9Hn'],
+    },
+    rentalCard: {
+      ...defaultRentalCardConfig,
+      invalidationOptions: {
+        ...defaultRentalCardConfig.invalidationOptions,
+        paymentMints: ['FzoYRdg3QfT3jEK7R3yExmoD1jxvUsJWyifTBWVKg2wJ'],
       },
     },
   },
