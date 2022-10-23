@@ -125,6 +125,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       accent: '#2584df',
       glow: '#2584df',
     },
+    indexMetadataDisabled: true,
     socialLinks: [
       {
         icon: 'web',
