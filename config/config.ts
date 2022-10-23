@@ -1750,9 +1750,9 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     },
     rentalCard: defaultRentalCardConfig,
   },
-  ['fff']: {
-    name: 'fff',
-    displayName: 'Famous Fox Federation',
+  ['tfff']: {
+    name: 'tfff',
+    displayName: 'The Famous Fox Federation',
     badges: [{ badgeType: 'recent' }],
     type: 'Collection',
     websiteUrl: 'https://famousfoxes.com/',
