@@ -60,7 +60,7 @@ export const RentalIssueDuration = ({
       <RentalIssueAdvanced
         rentalCardConfig={rentalCardConfig}
         showAdvanced={showAdvanced}
-        defaultInvalidationOption={'reissue'}
+        defaultInvalidationOption={'return'}
         onChange={(advancedValues) => {
           setAdvancedValues(advancedValues)
         }}

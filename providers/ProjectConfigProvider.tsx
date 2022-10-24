@@ -166,7 +166,7 @@ export function ProjectConfigProvider({
               (c) => filterTokens([tokenData], c.filter).length > 0
             )
           }
-          if (issuer) {
+          if (newConfig?.name === 'default' && issuer) {
             newConfig = Object.values(projectConfigs).find(
               (c) =>
                 c.filter?.type === 'issuer' && c.filter?.value.includes(issuer)
