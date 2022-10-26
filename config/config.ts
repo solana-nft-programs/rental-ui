@@ -1821,7 +1821,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
   ['the-nxde']: {
     name: 'the-nxde',
     displayName: 'The NXDE',
-    hidden: true,
     type: 'Collection',
     websiteUrl: 'https://docs.blxckout.xyz',
     logoImage: '/logos/blxckout.png',
@@ -3141,43 +3140,4 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
   //     },
   //   },
   // },
-  blxckout: {
-    name: 'blxckout',
-    displayName: 'BLXCKOUT: NXDE RENTAL',
-    badges: [{ badgeType: 'recent' }],
-    type: 'Guild',
-    websiteUrl: 'https://docs.blxckout.xyz',
-    logoImage: '/logos/blxckout.png',
-    hero: '/logos/blxckout-hero.png',
-    colors: {
-      accent: '#3D2546',
-      glow: '#3D2546',
-    },
-    description: `Rent access to 3 x top spec RPC nodes in a highly redundant setting for 1 year. No monthly subscription. Can be used for building Solana products, sniping and botting. A product from BLXCKOUT.`,
-    twitterHandle: '@TheNxde',
-    socialLinks: [
-      {
-        icon: 'web',
-        link: 'https://docs.blxckout.xyz',
-      },
-      {
-        icon: 'twitter',
-        link: 'https://twitter.com/TheNxde',
-      },
-      {
-        icon: 'discord',
-        link: 'https://discord.gg/6CvQNSU3hq',
-      },
-    ],
-    filter: {
-      type: 'issuer',
-      value: ['H6uhkNstMRG38VsTjUNRJEZbVHxHqh4cVoM38UuSh9Hn'],
-    },
-    rentalCard: {
-      ...defaultRentalCardConfig,
-      invalidationOptions: {
-        ...defaultRentalCardConfig.invalidationOptions,
-      },
-    },
-  },
 }
