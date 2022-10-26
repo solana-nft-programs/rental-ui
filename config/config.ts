@@ -1852,6 +1852,40 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     },
     rentalCard: defaultRentalCardConfig,
   },
+  ['bear-market-beavers']: {
+    name: 'bear-market-beavers',
+    displayName: 'Bear Market Beavers',
+    type: 'Collection',
+    websiteUrl: 'https://bearmarketbeaver.com/',
+    logoImage: '/logos/bear-market-beavers.png',
+    hero: '/logos/bear-market-beavers-hero.png',
+    colors: {
+      accent: '#FFFFFF',
+      glow: '#FFFFFF',
+    },
+    description: `"Rent a Beaver to gain or upgrade your access to our discord server, holder discounts, and custom services and opportunities (such as Beaver Academy). Rent out other NFTs offered on our site to help support the Beavers Building the Dam and gain access to the NFT you're rentings services (Such as Bots, RPCs, Nodes, and other NFT Utilities)"`,
+    twitterHandle: '@BMBeavers',
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://bearmarketbeaver.com/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/BMBeavers',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/w737KsWhc5',
+      },
+    ],
+    filter: {
+      type: 'creators',
+      value: ['6WPXFFrpwZtHX9dZbJuxeAybm6cCBGon3sDJu4d8o8gJ'],
+    },
+    rentalCard: defaultRentalCardConfig,
+  },
+
   default: {
     name: 'default',
     displayName: 'Unverified',
