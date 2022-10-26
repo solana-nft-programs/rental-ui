@@ -1863,7 +1863,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       accent: '#FFFFFF',
       glow: '#FFFFFF',
     },
-    description: `"Rent a Beaver to gain or upgrade your access to our discord server, holder discounts, and custom services and opportunities (such as Beaver Academy). Rent out other NFTs offered on our site to help support the Beavers Building the Dam and gain access to the NFT you're rentings services (Such as Bots, RPCs, Nodes, and other NFT Utilities)"`,
+    description: `Rent a Beaver to gain or upgrade your access to our discord server, holder discounts, and custom services and opportunities (such as Beaver Academy). Rent out other NFTs offered on our site to help support the Beavers Building the Dam and gain access to the NFT you're rentings services (Such as Bots, RPCs, Nodes, and other NFT Utilities)`,
     twitterHandle: '@BMBeavers',
     socialLinks: [
       {
@@ -1882,6 +1882,39 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     filter: {
       type: 'creators',
       value: ['6WPXFFrpwZtHX9dZbJuxeAybm6cCBGon3sDJu4d8o8gJ'],
+    },
+    rentalCard: defaultRentalCardConfig,
+  },
+  ['meta-tattoo-club']: {
+    name: 'meta-tattoo-club',
+    displayName: 'Meta Tattoo Club',
+    type: 'Collection',
+    websiteUrl: 'https://metatattooclub.io/',
+    logoImage: '/logos/meta-tattoo-club.png',
+    hero: '/logos/meta-tattoo-club-hero.png',
+    colors: {
+      accent: '#FFFFFF',
+      glow: '#FFFFFF',
+    },
+    description: `Alongside monthly tattoo giveaways of a lifetime, Meta Tattoo Club will be expanding their tattoo shops worldwide where holders will receive exclusive benefits. In addition, MTC is introducing their native token $INK which u can earn in their game “DRINK THE INK”. The community will be able to accumulate & use $INK in a variety of different IRL & Web3 utilities!`,
+    twitterHandle: '@metatattooclub',
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://metatattooclub.io/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/metatattooclub',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/metatattooclub',
+      },
+    ],
+    filter: {
+      type: 'creators',
+      value: ['5brrkbBx1nvRYzWb5WHeLqSpSDJKbW144Hx1sZo4fQuW'],
     },
     rentalCard: defaultRentalCardConfig,
   },
