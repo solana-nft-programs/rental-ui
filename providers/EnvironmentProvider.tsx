@@ -25,12 +25,10 @@ const RPC_BETA_THRESHOLD = 0.25
 export const ENVIRONMENTS: Environment[] = [
   {
     label: 'mainnet-beta',
-    primary:
-      process.env.MAINNET_PRIMARY || 'https://solana-api.projectserum.com',
+    primary: process.env.MAINNET_PRIMARY || 'https://ssc-dao.genesysgo.net',
     primaryBeta:
-      process.env.MAINNET_PRIMARY_BETA || 'https://solana-api.projectserum.com',
-    secondary:
-      process.env.MAINNET_SECONDARY || 'https://solana-api.projectserum.com',
+      process.env.MAINNET_PRIMARY_BETA || 'https://ssc-dao.genesysgo.net',
+    secondary: process.env.MAINNET_SECONDARY || 'https://ssc-dao.genesysgo.net',
     index: INDEX_ENABLED
       ? 'https://prod-holaplex.hasura.app/v1/graphql'
       : undefined,
