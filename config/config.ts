@@ -82,6 +82,7 @@ export type ProjectConfig = {
   subFilters?: { label: string; filter: TokenFilter }[]
   attributeDisplay?: { displayName?: string; attributeName: string }[]
   sections?: TokenSection[]
+  allowNonSol?: boolean
   rentalCard: RentalCardConfig
   airdrops?: AirdropMetadata[]
   showUnknownInvalidators?: boolean
@@ -456,7 +457,10 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     displayName: 'DeFi Land',
     type: 'Collection',
     websiteUrl: 'https://www.defiland.app/',
-    logoImage: 'https://defiland.app/_nuxt/img/defiland.74b3850.svg',
+    logoImage: '/logos/defiland.svg',
+    hero: '/logos/defiland-hero.png',
+    description:
+      'DeFi Land is a multi-chain farming game created to gamify all aspects of web3. The main goal of the game is to make it easier and simpler for individuals to take part in the exciting world of DeFi and crypto, while also having the opportunity to have fun. Fish. Farm, Craft, Trade and more while having fun in DeFi Land.',
     logoPadding: true,
     colors: {
       accent: '#CD9373',
@@ -497,27 +501,16 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     },
     attributeDisplay: [{ attributeName: 'Health' }],
     indexMetadataDisabled: true,
+    allowNonSol: true,
     rentalCard: {
-      invalidators: ['rate', 'duration'],
+      ...defaultRentalCardConfig,
       invalidationOptions: {
-        freezeRentalRateDuration: {
-          value: '1',
-          durationOption: 'days',
-        },
-        durationOptions: ['hours', 'days', 'weeks'],
-        visibilities: ['public'],
-        invalidationTypes: ['reissue', 'return'],
-        paymentMints: [WRAPPED_SOL_MINT],
-        // paymentMints: [
-        //   'DFL1zNkaGPWm1BqAVqRjCZvHmwTFrEaJtbzJWgseoNJh', // defiland
-        //   'GoLDYyyiVeXnVf9qgoK712N5esm1cCbHEK9aNJFx47Sx', // goldy
-        // ],
-        setClaimRentalReceipt: true,
-        showClaimRentalReceipt: false,
-        maxDurationAllowed: {
-          displayText: '12 weeks',
-          value: 7258000,
-        },
+        ...defaultRentalCardConfig.invalidationOptions,
+        paymentMints: [
+          'GoLDYyyiVeXnVf9qgoK712N5esm1cCbHEK9aNJFx47Sx', // goldy
+          'DFL1zNkaGPWm1BqAVqRjCZvHmwTFrEaJtbzJWgseoNJh', // defiland
+          WRAPPED_SOL_MINT,
+        ],
       },
     },
   },
@@ -992,21 +985,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       type: 'creators',
       value: ['8LGV2YeEGXnnBA7owtEdtMR3rM69CX1jaA1oSsb33vD7'],
     },
-    rentalCard: {
-      invalidators: ['rate', 'duration'],
-      invalidationOptions: {
-        visibilities: ['public', 'private'],
-        durationOptions: ['hours', 'days', 'weeks'],
-        invalidationTypes: ['reissue', 'return'],
-        paymentMints: [WRAPPED_SOL_MINT],
-        showClaimRentalReceipt: false,
-        setClaimRentalReceipt: false,
-        maxDurationAllowed: {
-          displayText: '3 days',
-          value: 86400 * 3,
-        },
-      },
-    },
+    rentalCard: defaultRentalCardConfig,
   },
   theremnants: {
     name: 'theremnants',
