@@ -16,6 +16,7 @@ import type * as splToken from '@solana/spl-token'
 import { useWallet } from '@solana/wallet-adapter-react'
 import type { Keypair } from '@solana/web3.js'
 import { Connection, Transaction } from '@solana/web3.js'
+import { BN } from 'bn.js'
 import { getExtensionPrice } from 'common/RentalSummary'
 import {
   getPriceFromTokenData,
@@ -93,7 +94,7 @@ export const useHandleRateRental = () => {
             transaction,
             connection,
             asWallet(wallet),
-            amountToWrap
+            new BN(Math.ceil(amountToWrap)).toNumber()
           )
         }
       }
