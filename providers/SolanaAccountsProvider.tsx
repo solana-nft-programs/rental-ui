@@ -29,12 +29,13 @@ import {
 import { BorshAccountsCoder } from '@project-serum/anchor'
 import { TOKEN_PROGRAM_ID } from '@project-serum/anchor/dist/cjs/utils/token'
 import * as spl from '@solana/spl-token'
+import { u64 } from '@solana/spl-token'
 import type {
   AccountInfo,
   Connection,
   ParsedAccountData,
-  PublicKey,
 } from '@solana/web3.js'
+import { PublicKey } from '@solana/web3.js'
 import type { ReactChild } from 'react'
 import React, { useContext, useEffect, useMemo, useState } from 'react'
 
@@ -166,8 +167,8 @@ export const deserializeAccountInfos = (
         } catch (e) {}
         return acc
       case TOKEN_PROGRAM_ID.toString():
-        const accountData = accountInfo?.data as ParsedAccountData
-        if (accountData.parsed?.info) {
+        if (accountInfo?.data && 'parsed' in accountInfo?.data) {
+          const accountData = accountInfo?.data
           acc[accountIds[i]!.toString()] =
             accountData.space === spl.MintLayout.span
               ? {
@@ -182,6 +183,74 @@ export const deserializeAccountInfos = (
                   ...(accountInfo as AccountInfo<Buffer>),
                   parsed: accountData.parsed?.info as ParsedTokenAccountData,
                 }
+          // taken from account deserialization in splToken getMintInfo
+        } else if (
+          accountInfo?.data &&
+          'length' in accountInfo?.data &&
+          accountInfo?.data.length === spl.MintLayout.span
+        ) {
+          const parsed = spl.MintLayout.decode(accountInfo?.data)
+          if (parsed.mintAuthorityOption === 0) {
+            parsed.mintAuthority = null
+          } else {
+            parsed.mintAuthority = new PublicKey(parsed.mintAuthority)
+          }
+          parsed.supply = u64.fromBuffer(parsed.supply)
+          parsed.isInitialized = parsed.isInitialized !== 0
+          if (parsed.freezeAuthorityOption === 0) {
+            parsed.freezeAuthority = null
+          } else {
+            parsed.freezeAuthority = new PublicKey(parsed.freezeAuthority)
+          }
+          acc[accountIds[i]!.toString()] = {
+            ...baseData,
+            type: 'mint',
+            ...(accountInfo as AccountInfo<Buffer>),
+            parsed: parsed as spl.MintInfo,
+          }
+        } else if (
+          accountInfo?.data &&
+          'length' in accountInfo?.data &&
+          accountInfo?.data.length === spl.AccountLayout.span
+        ) {
+          try {
+            // taken from account deserialization in splToken getAccountInfo
+            const parsed = spl.AccountLayout.decode(accountInfo?.data)
+            parsed.address = accountIds[i]!
+            parsed.mint = new PublicKey(parsed.mint)
+            parsed.owner = new PublicKey(parsed.owner)
+            parsed.amount = u64.fromBuffer(parsed.amount)
+            if (parsed.delegateOption === 0) {
+              parsed.delegate = null
+              parsed.delegatedAmount = new u64(0)
+            } else {
+              parsed.delegate = new PublicKey(parsed.delegate)
+              parsed.delegatedAmount = u64.fromBuffer(parsed.delegatedAmount)
+            }
+
+            parsed.isInitialized = parsed.state !== 0
+            parsed.isFrozen = parsed.state === 2
+
+            if (parsed.isNativeOption === 1) {
+              parsed.rentExemptReserve = u64.fromBuffer(parsed.isNative)
+              parsed.isNative = true
+            } else {
+              parsed.rentExemptReserve = null
+              parsed.isNative = false
+            }
+
+            if (parsed.closeAuthorityOption === 0) {
+              parsed.closeAuthority = null
+            } else {
+              parsed.closeAuthority = new PublicKey(parsed.closeAuthority)
+            }
+            acc[accountIds[i]!.toString()] = {
+              ...baseData,
+              type: 'mint',
+              ...(accountInfo as AccountInfo<Buffer>),
+              parsed: parsed as ParsedTokenAccountData,
+            }
+          } catch {}
         }
         return acc
       case metaplex.MetadataProgram.PUBKEY.toString():
@@ -239,11 +308,7 @@ export const fetchAccountDataById = async (
   ids: (PublicKey | null)[]
 ): Promise<AccountDataById> => {
   const filteredIds = ids.filter((id): id is PublicKey => id !== null)
-  const accountInfos = await getBatchedMultipleAccounts(
-    connection,
-    filteredIds,
-    { encoding: 'jsonParsed' }
-  )
+  const accountInfos = await getBatchedMultipleAccounts(connection, filteredIds)
   return deserializeAccountInfos(filteredIds, accountInfos)
 }
 
