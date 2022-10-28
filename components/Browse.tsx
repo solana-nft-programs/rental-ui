@@ -1,3 +1,4 @@
+import { tryPublicKey } from '@cardinal/common'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import type * as splToken from '@solana/spl-token'
 import type { Keypair, PublicKey } from '@solana/web3.js'
@@ -29,7 +30,11 @@ import type { BrowseClaimedTokenData } from 'hooks/useBrowseClaimedTokenDatas'
 import { useBrowseClaimedTokenDatas } from 'hooks/useBrowseClaimedTokenDatas'
 import { useClaimEventsForConfig } from 'hooks/useClaimEventsForConfig'
 import { useOtp } from 'hooks/useOtp'
-import { usePaymentMints } from 'hooks/usePaymentMints'
+import {
+  mintSymbol,
+  usePaymentMints,
+  WRAPPED_SOL_MINT,
+} from 'hooks/usePaymentMints'
 import { useWalletId } from 'hooks/useWalletId'
 import { logConfigEvent } from 'monitoring/amplitude'
 import type { Environment } from 'providers/EnvironmentProvider'
@@ -264,6 +269,7 @@ export const Browse = () => {
   const paymentMintInfos = usePaymentMints()
   const [selectedOrderCategory, setSelectedOrderCategory] =
     useState<OrderCategories>(OrderCategories.RateLowToHigh)
+  const [paymentMint, setPaymentMint] = useState<string[] | undefined>()
 
   const [selectedFilters, setSelectedFilters] = useState<{
     [filterName: string]: string[]
@@ -311,12 +317,28 @@ export const Browse = () => {
         (token.timeInvalidator?.parsed.extensionPaymentMint ||
           token.claimApprover?.parsed?.paymentMint)
       ) {
-        return (
-          token.timeInvalidator?.parsed.extensionPaymentMint?.toString() ===
-            'So11111111111111111111111111111111111111112' ||
-          token.claimApprover?.parsed.paymentMint.toString() ===
-            'So11111111111111111111111111111111111111112'
-        )
+        if (config.allowNonSol) {
+          const allowedMints = paymentMint ??
+            config.rentalCard.invalidationOptions?.paymentMints ?? [
+              WRAPPED_SOL_MINT,
+            ]
+          return (
+            allowedMints.includes(
+              token.timeInvalidator?.parsed.extensionPaymentMint?.toString() ??
+                ''
+            ) ||
+            allowedMints.includes(
+              token.claimApprover?.parsed.paymentMint.toString() ?? ''
+            )
+          )
+        } else {
+          return (
+            token.timeInvalidator?.parsed.extensionPaymentMint?.toString() ===
+              WRAPPED_SOL_MINT ||
+            token.claimApprover?.parsed.paymentMint.toString() ===
+              WRAPPED_SOL_MINT
+          )
+        }
       }
       return true
     })
@@ -438,6 +460,36 @@ export const Browse = () => {
               Object.values(OrderCategories) as Array<OrderCategories>
             ).map((v) => ({ label: v, value: v }))}
           />
+          {config.allowNonSol &&
+            config.rentalCard.invalidationOptions?.paymentMints &&
+            config.rentalCard.invalidationOptions?.paymentMints?.length > 1 && (
+              <Selector<string | undefined>
+                colorized
+                className="min-w-[120px]"
+                defaultOption={{
+                  label: 'Any Token',
+                  value: undefined,
+                }}
+                onChange={(e) => {
+                  logConfigEvent('collection: select payment mint', config, {
+                    sort_type: e?.value,
+                  })
+                  setPaymentMint(e?.value ? [e?.value] : undefined)
+                }}
+                options={[
+                  {
+                    label: 'Any Token',
+                    value: undefined,
+                  },
+                  ...(config.rentalCard.invalidationOptions?.paymentMints).map(
+                    (v) => ({
+                      label: mintSymbol(tryPublicKey(v)),
+                      value: v,
+                    })
+                  ),
+                ]}
+              />
+            )}
         </div>
         <div className="flex gap-4">
           <RefreshButton
