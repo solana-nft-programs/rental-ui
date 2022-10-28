@@ -10,6 +10,9 @@
     "lint": "eslint '**/*.{ts,tsx}' --cache",
     "lint:fix": "eslint --fix --cache '**/*.{ts,tsx}'"
   },
+  "resolutions": {
+    "@solana/web3.js": "^1.58.0"
+  },
   "dependencies": {
     "@amplitude/analytics-browser": "^1.1.1",
     "@apollo/client": "^3.6.0",
