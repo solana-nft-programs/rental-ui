@@ -10,7 +10,17 @@ import {
 } from '@cardinal/namespaces-components'
 import { WalletProvider } from '@solana/wallet-adapter-react'
 import { WalletModalProvider } from '@solana/wallet-adapter-react-ui'
-import { getWalletAdapters } from '@solana/wallet-adapter-wallets'
+import {
+  BackpackWalletAdapter,
+  BraveWalletAdapter,
+  CoinbaseWalletAdapter,
+  FractalWalletAdapter,
+  GlowWalletAdapter,
+  LedgerWalletAdapter,
+  PhantomWalletAdapter,
+  SolflareWalletAdapter,
+  TorusWalletAdapter,
+} from '@solana/wallet-adapter-wallets'
 import { ToastContainer } from 'common/Notification'
 import type { ProjectConfig } from 'config/config'
 import type { AppProps } from 'next/app'
@@ -49,9 +59,26 @@ const App = ({
     <EnvironmentProvider defaultCluster={cluster}>
       <UTCNowProvider>
         <SolanaAccountsProvider>
-          <WalletProvider wallets={getWalletAdapters()} autoConnect>
+          <WalletProvider
+            wallets={[
+              new PhantomWalletAdapter(),
+              new BackpackWalletAdapter(),
+              new SolflareWalletAdapter(),
+              new CoinbaseWalletAdapter(),
+              new BraveWalletAdapter(),
+              new FractalWalletAdapter(),
+              new GlowWalletAdapter(),
+              new LedgerWalletAdapter(),
+              new TorusWalletAdapter(),
+            ]}
+            autoConnect
+          >
             <WalletIdentityProvider
-              identities={[IDENTITIES['twitter'], IDENTITIES['discord']]}
+              identities={[
+                IDENTITIES['twitter'],
+                IDENTITIES['discord'],
+                IDENTITIES['github'],
+              ]}
             >
               <ProjectConfigProvider defaultConfig={config}>
                 <QueryClientProvider client={queryClient}>
