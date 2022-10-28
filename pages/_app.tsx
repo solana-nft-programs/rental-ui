@@ -19,6 +19,7 @@ import {
   GlowWalletAdapter,
   LedgerWalletAdapter,
   PhantomWalletAdapter,
+  SlopeWalletAdapter,
   SolflareWalletAdapter,
   TorusWalletAdapter,
 } from '@solana/wallet-adapter-wallets'
@@ -78,6 +79,7 @@ const App = ({
       new SolflareWalletAdapter({ network }),
       new CoinbaseWalletAdapter(),
       new BraveWalletAdapter(),
+      new SlopeWalletAdapter(),
       new FractalWalletAdapter(),
       new GlowWalletAdapter({ network }),
       new LedgerWalletAdapter(),
