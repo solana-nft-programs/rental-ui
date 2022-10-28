@@ -239,11 +239,7 @@ export const fetchAccountDataById = async (
   ids: (PublicKey | null)[]
 ): Promise<AccountDataById> => {
   const filteredIds = ids.filter((id): id is PublicKey => id !== null)
-  const accountInfos = await getBatchedMultipleAccounts(
-    connection,
-    filteredIds,
-    { encoding: 'jsonParsed' }
-  )
+  const accountInfos = await getBatchedMultipleAccounts(connection, filteredIds)
   return deserializeAccountInfos(filteredIds, accountInfos)
 }
 
