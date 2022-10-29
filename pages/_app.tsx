@@ -89,7 +89,7 @@ const App = ({
   )
 
   const identities = useMemo(
-    () => [IDENTITIES['twitter'], IDENTITIES['discord']],
+    () => [IDENTITIES['twitter'], IDENTITIES['discord'], IDENTITIES['github']],
     []
   )
 
