@@ -25,16 +25,15 @@ import {
 import { Activity } from 'components/Activity'
 import type { ProjectConfig, TokenFilter, TokenSection } from 'config/config'
 import type { BrowseAvailableTokenData } from 'hooks/useBrowseAvailableTokenDatas'
-import { useBrowseAvailableTokenDatas } from 'hooks/useBrowseAvailableTokenDatas'
+import {
+  filterPaymentMints,
+  useBrowseAvailableTokenDatas,
+} from 'hooks/useBrowseAvailableTokenDatas'
 import type { BrowseClaimedTokenData } from 'hooks/useBrowseClaimedTokenDatas'
 import { useBrowseClaimedTokenDatas } from 'hooks/useBrowseClaimedTokenDatas'
 import { useClaimEventsForConfig } from 'hooks/useClaimEventsForConfig'
 import { useOtp } from 'hooks/useOtp'
-import {
-  mintSymbol,
-  usePaymentMints,
-  WRAPPED_SOL_MINT,
-} from 'hooks/usePaymentMints'
+import { mintSymbol, usePaymentMints } from 'hooks/usePaymentMints'
 import { useWalletId } from 'hooks/useWalletId'
 import { logConfigEvent } from 'monitoring/amplitude'
 import type { Environment } from 'providers/EnvironmentProvider'
@@ -310,46 +309,14 @@ export const Browse = () => {
     otpKeypair
   )
 
-  const onlySolForCollection = (tokens: TokenData[]) => {
-    return tokens.filter((token) => {
-      if (
-        config.type === 'Collection' &&
-        (token.timeInvalidator?.parsed.extensionPaymentMint ||
-          token.claimApprover?.parsed?.paymentMint)
-      ) {
-        if (config.allowNonSol) {
-          const allowedMints = paymentMint ??
-            config.rentalCard.invalidationOptions?.paymentMints ?? [
-              WRAPPED_SOL_MINT,
-            ]
-          return (
-            allowedMints.includes(
-              token.timeInvalidator?.parsed.extensionPaymentMint?.toString() ??
-                ''
-            ) ||
-            allowedMints.includes(
-              token.claimApprover?.parsed.paymentMint.toString() ?? ''
-            )
-          )
-        } else {
-          return (
-            token.timeInvalidator?.parsed.extensionPaymentMint?.toString() ===
-              WRAPPED_SOL_MINT ||
-            token.claimApprover?.parsed.paymentMint.toString() ===
-              WRAPPED_SOL_MINT
-          )
-        }
-      }
-      return true
-    })
-  }
-
   // safety check due to stale data stuck in the index
-  const filteredAndSortedTokens = onlySolForCollection(
+  const filteredAndSortedTokens = filterPaymentMints(
     filterTokens(
       attrFilteredAndSortedTokens,
       tokenSections[selectedGroup]?.filter
-    )
+    ),
+    config,
+    paymentMint
   )
   return (
     <>

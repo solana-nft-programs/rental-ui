@@ -25,6 +25,8 @@ import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useAccounts } from 'providers/SolanaAccountsProvider'
 import { useQuery } from 'react-query'
 
+import { WRAPPED_SOL_MINT } from './usePaymentMints'
+
 export const TOKEN_DATA_KEY = 'tokenData'
 
 export type BrowseAvailableTokenData = Pick<
@@ -232,6 +234,44 @@ export const getTokenIndexData = async (
   return tokenManagerResponse.data['cardinal_token_managers'] as IndexedData[]
 }
 
+export function filterPaymentMints<
+  T extends Pick<
+    TokenData,
+    'tokenManager' | 'timeInvalidator' | 'claimApprover'
+  >
+>(tokens: T[], config: ProjectConfig, paymentMints?: string[]) {
+  return tokens.filter((token) => {
+    if (
+      config.type === 'Collection' &&
+      (token.timeInvalidator?.parsed.extensionPaymentMint ||
+        token.claimApprover?.parsed?.paymentMint)
+    ) {
+      if (config.allowNonSol) {
+        const allowedMints = paymentMints ??
+          config.rentalCard.invalidationOptions?.paymentMints ?? [
+            WRAPPED_SOL_MINT,
+          ]
+        return (
+          allowedMints.includes(
+            token.timeInvalidator?.parsed.extensionPaymentMint?.toString() ?? ''
+          ) ||
+          allowedMints.includes(
+            token.claimApprover?.parsed.paymentMint.toString() ?? ''
+          )
+        )
+      } else {
+        return (
+          token.timeInvalidator?.parsed.extensionPaymentMint?.toString() ===
+            WRAPPED_SOL_MINT ||
+          token.claimApprover?.parsed.paymentMint.toString() ===
+            WRAPPED_SOL_MINT
+        )
+      }
+    }
+    return true
+  })
+}
+
 export const useBrowseAvailableTokenDatas = (
   disabled: boolean,
   disableRefetch: boolean,
@@ -333,20 +373,7 @@ export const useBrowseAvailableTokenDatas = (
         })
         trace.finish()
         if (config.type === 'Collection') {
-          tokenDatas = tokenDatas.filter((token) => {
-            if (
-              token.timeInvalidator?.parsed.extensionPaymentMint ||
-              token.claimApprover?.parsed?.paymentMint
-            ) {
-              return (
-                token.timeInvalidator?.parsed.extensionPaymentMint?.toString() ===
-                  'So11111111111111111111111111111111111111112' ||
-                token.claimApprover?.parsed.paymentMint.toString() ===
-                  'So11111111111111111111111111111111111111112'
-              )
-            }
-            return true
-          })
+          tokenDatas = filterPaymentMints(tokenDatas, config)
         }
         return tokenDatas
       } else {
