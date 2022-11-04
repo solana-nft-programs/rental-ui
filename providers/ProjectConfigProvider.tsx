@@ -161,15 +161,15 @@ export function ProjectConfigProvider({
         },
         configFromToken: (tokenData?: TokenData, issuer?: string) => {
           let newConfig
-          if (tokenData) {
-            newConfig = Object.values(projectConfigs).find(
-              (c) => filterTokens([tokenData], c.filter).length > 0
-            )
-          }
-          if (newConfig?.name === 'default' && issuer) {
+          if (tokenData && issuer) {
             newConfig = Object.values(projectConfigs).find(
               (c) =>
                 c.filter?.type === 'issuer' && c.filter?.value.includes(issuer)
+            )
+          }
+          if (tokenData && !newConfig) {
+            newConfig = Object.values(projectConfigs).find(
+              (c) => filterTokens([tokenData], c.filter).length > 0
             )
           }
           return newConfig ?? config
