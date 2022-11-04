@@ -1,10 +1,10 @@
 import { capitalizeFirstLetter } from '@cardinal/common'
 import { css } from '@emotion/react'
-import { useWallet } from '@solana/wallet-adapter-react'
 import type { TokenData } from 'apis/api'
 import { GlyphEdit } from 'assets/GlyphEdit'
 import { Tooltip } from 'common/Tooltip'
 import type { IssueTxResult } from 'handlers/useHandleIssueRental'
+import { useWalletId } from 'hooks/useWalletId'
 import { lighten } from 'polished'
 import { useModal } from 'providers/ModalProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
@@ -62,12 +62,10 @@ export const RentalIssueCard = ({
   tokenDatas: startingTokenDatas,
   onResults,
 }: RentalIssueCardProps) => {
-  const wallet = useWallet()
+  const walletId = useWalletId()
   const { configFromToken } = useProjectConfig()
-  const config = configFromToken(
-    startingTokenDatas[0],
-    wallet.publicKey?.toString()
-  )
+  const config = configFromToken(startingTokenDatas[0], walletId?.toString())
+  console.log(walletId?.toString(), config)
   const [tokenDatas, setTokenDatas] = useState(startingTokenDatas)
   const rentalCardConfig = config.rentalCard
   const visibilities =

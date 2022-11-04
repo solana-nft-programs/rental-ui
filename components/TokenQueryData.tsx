@@ -9,9 +9,10 @@ import { NFTClaimButton } from 'common/NFTClaimButton'
 import { NFTHeader } from 'common/NFTHeader'
 import { NFTIssuerInfo } from 'common/NFTIssuerInfo'
 import { NFTViewRental } from 'common/NFTViewRental'
-import { getMintfromTokenData } from 'common/tokenDataUtils'
+import { elligibleForRent, getMintfromTokenData } from 'common/tokenDataUtils'
 import type { BrowseAvailableTokenData } from 'hooks/useBrowseAvailableTokenDatas'
 import type { BrowseClaimedTokenData } from 'hooks/useBrowseClaimedTokenDatas'
+import { useWalletId } from 'hooks/useWalletId'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useEffect, useState } from 'react'
 
@@ -40,6 +41,7 @@ export const TokenQueryData: React.FC<Props> = ({
 }: Props) => {
   const { config } = useProjectConfig()
   const [pageNum, setPageNum] = useState<[number, number]>(DEFAULT_PAGE)
+  const walletId = useWalletId()
 
   useEffect(() => {
     setPageNum(DEFAULT_PAGE)
@@ -103,25 +105,41 @@ export const TokenQueryData: React.FC<Props> = ({
               }
               header={<NFTHeader tokenData={tokenData} />}
               content={
-                {
-                  [TokenManagerState.Initialized]: <></>,
-                  [TokenManagerState.Issued]: (
-                    <div className="flex h-full w-full flex-row items-center justify-between text-sm">
-                      <NFTIssuerInfo tokenData={tokenData} />
-                      <NFTClaimButton
-                        tokenData={tokenData}
-                        tokenDatas={tokenDatas}
-                      />
-                    </div>
-                  ),
-                  [TokenManagerState.Claimed]: (
-                    <div className="flex h-full flex-row justify-between text-sm">
-                      <NFTIssuerInfo tokenData={tokenData} />
-                      <NFTViewRental tokenData={tokenData} />
-                    </div>
-                  ),
-                  [TokenManagerState.Invalidated]: <></>,
-                }[tokenData?.tokenManager?.parsed.state as TokenManagerState]
+                tokenData.tokenManager ? (
+                  {
+                    [TokenManagerState.Initialized]: <></>,
+                    [TokenManagerState.Issued]: (
+                      <div className="flex h-full w-full flex-row items-center justify-between text-sm">
+                        <NFTIssuerInfo tokenData={tokenData} />
+                        <NFTClaimButton
+                          tokenData={tokenData}
+                          tokenDatas={tokenDatas}
+                        />
+                      </div>
+                    ),
+                    [TokenManagerState.Claimed]: (
+                      <div className="flex h-full flex-row justify-between text-sm">
+                        <NFTIssuerInfo tokenData={tokenData} />
+                        <NFTViewRental tokenData={tokenData} />
+                      </div>
+                    ),
+                    [TokenManagerState.Invalidated]: <></>,
+                  }[tokenData?.tokenManager?.parsed.state as TokenManagerState]
+                ) : elligibleForRent(config, tokenData) ? (
+                  <div className="flex h-full items-end justify-end">
+                    <ButtonSmall
+                      disabled={!walletId}
+                      className="inline-block flex-none px-4 py-2 text-lg"
+                      onClick={async () => {
+                        handleClick && handleClick(tokenData)
+                      }}
+                    >
+                      Select
+                    </ButtonSmall>
+                  </div>
+                ) : (
+                  <></>
+                )
               }
             />
           ))}
