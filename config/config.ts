@@ -1456,6 +1456,41 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     },
     rentalCard: defaultRentalCardConfig,
   },
+  'crypto-titans': {
+    name: 'crypto-titans',
+    displayName: 'Crypto Titans',
+    type: 'Collection',
+    websiteUrl: 'https://www.cryptotitans.com/',
+    logoImage: '/logos/crypto-titans.png',
+    hero: '/logos/crypto-titans-hero.gif',
+    colors: {
+      accent: '#4f89ce',
+      glow: '#4f89ce',
+    },
+    badges: [{ badgeType: 'recent' }],
+    description:
+      'PREPARE FOR THE BATTLE OF YOUR LIFE. MINT, COLLECT AND BATTLE IN THE EPIC WORLD OF EREO.',
+    twitterHandle: '@OfficialCTitans',
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://www.cryptotitans.com/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/OfficialCTitans',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/cryptotitans',
+      },
+    ],
+    filter: {
+      type: 'creators',
+      value: ['F1XeEHfaj1NcXMbVgtsSLjSA4WkjaMWafqMz9ecj6ACa'],
+    },
+    rentalCard: defaultRentalCardConfig,
+  },
   blockfriend: {
     name: 'blockfriend',
     displayName: 'BlockFriend NFT',
