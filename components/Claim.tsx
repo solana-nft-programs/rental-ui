@@ -16,6 +16,7 @@ import ClaimQRCode from 'components/ClaimQRCode'
 import { useOtp } from 'hooks/useOtp'
 import type { SingleTokenData } from 'hooks/useTokenData'
 import { useTokenData } from 'hooks/useTokenData'
+import { useUserRegion } from 'hooks/useUserRegion'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { transparentize } from 'polished'
@@ -24,12 +25,15 @@ import { useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { BiQr } from 'react-icons/bi'
 
+import DisallowedRegion from './DisallowedRegion'
+
 function Claim(props: {
   isClaimed: boolean
   nftName: string
   nftImageUrl: string
 }) {
   const router = useRouter()
+  const userRegion = useUserRegion()
   const [showQRCode, setShowQRCode] = useState(false)
   const otpKeypair = useOtp()
   const { configFromToken } = useProjectConfig()
@@ -42,6 +46,15 @@ function Claim(props: {
     'recipientTokenAccount'
   >
   const config = configFromToken(tokenData)
+
+  if (!userRegion.isFetched) {
+    return <></>
+  }
+
+  if (!userRegion.data?.isAllowed && !process.env.BYPASS_REGION_CHECK) {
+    return <DisallowedRegion />
+  }
+
   return (
     <div className="flex h-screen flex-col">
       <Head>

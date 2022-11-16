@@ -3,8 +3,10 @@ import { css } from '@emotion/react'
 import { Banner } from 'common/Banner'
 import { FooterSlim } from 'common/FooterSlim'
 import { Browse } from 'components/Browse'
+import DisallowedRegion from 'components/DisallowedRegion'
 import Error from 'components/Error'
 import { Manage } from 'components/Manage'
+import { useUserRegion } from 'hooks/useUserRegion'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
@@ -12,8 +14,9 @@ import { useEffect, useState } from 'react'
 
 export default function Home() {
   const { config, setProjectConfig } = useProjectConfig()
-  const router = useRouter()
   const [tab, setTab] = useState<string>()
+  const userRegion = useUserRegion()
+  const router = useRouter()
 
   useEffect(() => {
     const anchor = router.asPath.split('#')[1]
@@ -29,6 +32,14 @@ export default function Home() {
 
   if (router.query.collection !== config.name) {
     return <Error />
+  }
+
+  if (!userRegion.isFetched) {
+    return <></>
+  }
+
+  if (!userRegion.data?.isAllowed && !process.env.BYPASS_REGION_CHECK) {
+    return <DisallowedRegion />
   }
 
   return (

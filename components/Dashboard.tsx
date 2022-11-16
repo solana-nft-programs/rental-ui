@@ -25,6 +25,7 @@ import type { ProjectConfig } from 'config/config'
 import { projectConfigs } from 'config/config'
 import { useClaimEventsForConfig } from 'hooks/useClaimEventsForConfig'
 import { useManagedTokens } from 'hooks/useManagedTokens'
+import { useUserRegion } from 'hooks/useUserRegion'
 import { useUserTokenData } from 'hooks/useUserTokenData'
 import { useWalletId } from 'hooks/useWalletId'
 import { logConfigEvent } from 'monitoring/amplitude'
@@ -37,6 +38,7 @@ import { useQuery } from 'react-query'
 import { Activity } from './Activity'
 import type { PANE_OPTIONS } from './Browse'
 import { PANE_TABS } from './Browse'
+import DisallowedRegion from './DisallowedRegion'
 import type { ManageTokenGroupId } from './Manage'
 import { manageTokenGroups } from './Manage'
 import { isSelected } from './TokenQueryResults'
@@ -89,6 +91,7 @@ export const tokenDatasId = (
 
 export const Dashboard = () => {
   const walletId = useWalletId()
+  const userRegion = useUserRegion()
   const { secondaryConnection, environment } = useEnvironmentCtx()
   const { config, setProjectConfig } = useProjectConfig()
   const userTokenDatas = useUserTokenData(config.filter)
@@ -182,6 +185,14 @@ export const Dashboard = () => {
   useEffect(() => {
     setProjectConfig('default')
   }, [])
+
+  if (!userRegion.isFetched) {
+    return <></>
+  }
+
+  if (!userRegion.data?.isAllowed && !process.env.BYPASS_REGION_CHECK) {
+    return <DisallowedRegion />
+  }
 
   return (
     <>

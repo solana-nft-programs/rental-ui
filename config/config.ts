@@ -9,6 +9,13 @@ import type {
 
 import type { UserTokenData } from '../hooks/useUserTokenData'
 
+export const defaultDisallowedRegions = [
+  { code: 'CU' },
+  { code: 'IR' },
+  { code: 'KP' },
+  { code: 'SY' },
+]
+
 export const COLORS = {
   primary: '#907EFF',
   accent: '#7EFFE8',
@@ -111,6 +118,7 @@ const defaultRentalCardConfig: RentalCardConfig = {
   },
 }
 
+// test
 export const projectConfigs: { [key: string]: ProjectConfig } = {
   miniroyale: {
     name: 'miniroyale',
