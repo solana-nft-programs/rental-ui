@@ -1906,6 +1906,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     },
     rentalCard: defaultRentalCardConfig,
   },
+
   ['meta-tattoo-club']: {
     name: 'meta-tattoo-club',
     displayName: 'Meta Tattoo Club',
@@ -1936,6 +1937,42 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     filter: {
       type: 'creators',
       value: ['5brrkbBx1nvRYzWb5WHeLqSpSDJKbW144Hx1sZo4fQuW'],
+    },
+    rentalCard: defaultRentalCardConfig,
+  },
+
+  ['underground-society']: {
+    name: 'underground-society',
+    displayName: 'Underground Society',
+    type: 'Collection',
+    websiteUrl: 'https://www.undergroundsociety.xyz/',
+    logoImage: '/logos/underground-society.png',
+    hero: '/logos/underground-society-hero.png',
+    colors: {
+      accent: '#FFD942',
+      glow: '#FFD942',
+    },
+    description: `Underground Society is far more than a PFP Collection. They give you an NFT that delivers Utility while appealing to those who value Art and Community as well. Tied to the products, services, and tools of UGS Labs, they are able to provide immense value to their holders.
+UGS Labs has created 'CORE': Solana's first Automated Liquidity Provider (ALP). CORE will allow you to purchase and trade NFTs dramatically below the floor, all from the exchange or AMM you already use.
+Welcome to the Underground.`,
+    twitterHandle: '@UGS_Labs',
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://www.undergroundsociety.xyz/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/UGS_Labs',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.com/invite/undergroundsociety',
+      },
+    ],
+    filter: {
+      type: 'creators',
+      value: ['8xBMPGAj5NzAwRmdfEcksDcZyexr87AAmD6LWwKG7Dqq'],
     },
     rentalCard: defaultRentalCardConfig,
   },
