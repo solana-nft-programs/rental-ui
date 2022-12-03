@@ -1956,6 +1956,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
 UGS Labs has created 'CORE': Solana's first Automated Liquidity Provider (ALP). CORE will allow you to purchase and trade NFTs dramatically below the floor, all from the exchange or AMM you already use.
 Welcome to the Underground.`,
     twitterHandle: '@UGS_Labs',
+    showUnknownInvalidators: true,
     socialLinks: [
       {
         icon: 'web',
