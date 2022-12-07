@@ -2038,12 +2038,45 @@ Welcome to the Underground.`,
       },
       {
         icon: 'discord',
-        link: 'discord.gg/zaczdKmEZf',
+        link: 'https://discord.gg/zaczdKmEZf',
       },
     ],
     filter: {
       type: 'creators',
       value: ['G7gTAJTCgeEKzajfq89ePHjFVZypQf6kf5Yo9vVhkS4S'],
+    },
+    rentalCard: defaultRentalCardConfig,
+  },
+  ['pixel-pandas']: {
+    name: 'pixel-pandas',
+    displayName: 'Pixel Panda Crew',
+    type: 'Collection',
+    websiteUrl: 'https://play.bobosofwar.com/boboverse',
+    logoImage: '/logos/bobos.png',
+    hero: '/logos/bobos-hero.png',
+    colors: {
+      accent: '#333',
+      glow: '#333',
+    },
+    description: `554 adorable pandas, renting out an amazing portfolio tracker and we're rescuing REAL pandas! De-Rug.`,
+    twitterHandle: '@PixelPandaCrew',
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://play.bobosofwar.com/boboverse',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/PixelPandaCrew',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/uWntFJ8Rh4',
+      },
+    ],
+    filter: {
+      type: 'creators',
+      value: ['DxkToNMVckU1VeqQriABCnmRu82R7xX8iNB6ZVFaehaa'],
     },
     rentalCard: defaultRentalCardConfig,
   },
