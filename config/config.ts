@@ -1977,6 +1977,44 @@ Welcome to the Underground.`,
     },
     rentalCard: defaultRentalCardConfig,
   },
+  ['thor-node']: {
+    name: 'thor-node',
+    displayName: 'ThorNode RPCs',
+    type: 'Collection',
+    websiteUrl: 'https://thornode.io',
+    logoImage: '/logos/thor-node.png',
+    hero: '/logos/thor-node-hero.png',
+    colors: {
+      accent: '#040a05',
+      glow: '#040a05',
+    },
+    description: `The next-generation RPC platform that provides users with lightning-fast Solana connection, high performance and the ability to earn passive income.`,
+    twitterHandle: '@ThorNodeRPC',
+    showUnknownInvalidators: true,
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://thornode.io',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/ThorNodeRPC',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/thornode',
+      },
+    ],
+    filter: {
+      type: 'creators',
+      value: [
+        'AqSq2YsSPPPLzk1GQnjpgZGhNz9zRPphNaxmhzYckpha',
+        '9H78UQfqTD2ezy4CpDwT9pNievahg8ZUrt86gnpHvKqC',
+        'NLsoArwGgHoDoyuPxNi575kUFxYYkQzFZcurqnutXqJ',
+      ],
+    },
+    rentalCard: defaultRentalCardConfig,
+  },
 
   default: {
     name: 'default',
