@@ -2081,6 +2081,40 @@ Welcome to the Underground.`,
     rentalCard: defaultRentalCardConfig,
   },
 
+  ['sorcery-inc']: {
+    name: 'sorcery-inc',
+    displayName: 'Sorcery Inc',
+    type: 'Collection',
+    websiteUrl: 'https://sorcery.inc',
+    logoImage: '/logos/sorcery-inc.png',
+    hero: '/logos/sorcery-inc-hero.png',
+    colors: {
+      accent: '#973872',
+      glow: '#973872',
+    },
+    description: `Sorcery is a wizard academy with magical spells and tools powered by $LUV.`,
+    twitterHandle: '@sorcery_inc',
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://sorcery.inc',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/sorcery_inc',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/sorcery',
+      },
+    ],
+    filter: {
+      type: 'creators',
+      value: ['A5Y3vdq99j1c2Uoh2EAD5HphMC1QrTtEfiTvE1QnTUz4'],
+    },
+    rentalCard: defaultRentalCardConfig,
+  },
+
   default: {
     name: 'default',
     displayName: 'Unverified',
