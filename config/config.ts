@@ -1990,7 +1990,6 @@ Welcome to the Underground.`,
     },
     description: `The next-generation RPC platform that provides users with lightning-fast Solana connection, high performance and the ability to earn passive income.`,
     twitterHandle: '@ThorNodeRPC',
-    showUnknownInvalidators: true,
     socialLinks: [
       {
         icon: 'web',
@@ -2012,6 +2011,39 @@ Welcome to the Underground.`,
         '9H78UQfqTD2ezy4CpDwT9pNievahg8ZUrt86gnpHvKqC',
         'NLsoArwGgHoDoyuPxNi575kUFxYYkQzFZcurqnutXqJ',
       ],
+    },
+    rentalCard: defaultRentalCardConfig,
+  },
+  ['bobos-of-war']: {
+    name: 'bobos-of-war',
+    displayName: 'Bobos of War',
+    type: 'Collection',
+    websiteUrl: 'https://play.bobosofwar.com/boboverse',
+    logoImage: '/logos/bobos.png',
+    hero: '/logos/bobos-hero.png',
+    colors: {
+      accent: '#A0AECD',
+      glow: '#A0AECD',
+    },
+    description: `Solana FPS arena with the ability host any SOL project to play. A gaming metaverse where an entry is a Bobo or a Ticket.`,
+    twitterHandle: '@bobosofwar',
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://play.bobosofwar.com/boboverse',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/bobosofwar',
+      },
+      {
+        icon: 'discord',
+        link: 'discord.gg/zaczdKmEZf',
+      },
+    ],
+    filter: {
+      type: 'creators',
+      value: ['G7gTAJTCgeEKzajfq89ePHjFVZypQf6kf5Yo9vVhkS4S'],
     },
     rentalCard: defaultRentalCardConfig,
   },
