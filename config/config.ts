@@ -2012,6 +2012,7 @@ Welcome to the Underground.`,
         'NLsoArwGgHoDoyuPxNi575kUFxYYkQzFZcurqnutXqJ',
       ],
     },
+    attributeDisplay: [{ attributeName: 'Expired' }],
     rentalCard: defaultRentalCardConfig,
   },
   ['bobos-of-war']: {
