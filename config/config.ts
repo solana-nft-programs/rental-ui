@@ -161,9 +161,21 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         '4hgG6XRBwGNsFpuCnBJMGi9iQteWmULM4nX6zSsgDKgz', // Sank
         '2faPGFSk2wCusw9cesExgU4ccWGUV9r9FmaS4enUEUq3', // S3 loot
         'CArLVRRcumM2QV2zVyhEFVK8w1hFVftPK94rRrGN2wMC', // S3 premium
+        'Hph3MGKor2b2vc8xdsUijnMXM7HmLR9U6DqKt4yuMMF5', // S4 loot
+        'ENhJS2XRyp138k6GBaZ2UrwAwBGXChhtQJTCMQUBNEfs', // S4 premium
       ],
     },
     subFilters: [
+      {
+        label: 'Season 4',
+        filter: {
+          type: 'creators',
+          value: [
+            'Hph3MGKor2b2vc8xdsUijnMXM7HmLR9U6DqKt4yuMMF5',
+            'ENhJS2XRyp138k6GBaZ2UrwAwBGXChhtQJTCMQUBNEfs',
+          ],
+        },
+      },
       {
         label: 'Season 3',
         filter: {
