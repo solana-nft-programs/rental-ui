@@ -131,8 +131,8 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     logoImage: '/logos/miniroyale.png',
     twitterHandle: '@MiniNations',
     colors: {
-      accent: '#2584df',
-      glow: '#2584df',
+      accent: '#ba2a0d',
+      glow: '#ba2a0d',
     },
     indexMetadataDisabled: true,
     socialLinks: [
