@@ -517,6 +517,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         'CXDvGCdJjr7pT6hPuouT1aQBYw7soWWCRoV7h3YvAYjW', // animals
         '8UCcoezxS7sWxZL71H1aobhTsoWbyzKeFibykcEjnree', // animals
         'Gk8mH3mPqZuEiQRLqzEcGRVqWVeZ7cjKnbGbpb5z9x1H', // animals
+        'ADUWVbqXZ5PfzfPg6RqdPoyNHcCKBE4wFCmYrtw2v4NN', // shooting + animals
       ],
     },
     attributeDisplay: [{ attributeName: 'Health' }],
