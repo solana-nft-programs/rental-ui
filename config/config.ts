@@ -636,7 +636,10 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     ],
     filter: {
       type: 'creators',
-      value: ['FpJ3h2dzuvmdedmuV4ECz8S31RacnCxiw2ykXNhMntVt'],
+      value: [
+        'FpJ3h2dzuvmdedmuV4ECz8S31RacnCxiw2ykXNhMntVt',
+        'uYcpronPXSfGEJhkLJvFxMvMMa9Mo1jq1ZM9uwUjRYS',
+      ],
     },
     rentalCard: defaultRentalCardConfig,
   },
