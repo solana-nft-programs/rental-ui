@@ -20,6 +20,7 @@ export const NFTAttributeInfo = ({ tokenData, className }: Props) => {
     (acc, attr) => ({ ...acc, [attr.trait_type]: attr }),
     {} as { [trait_type: string]: { value: string } }
   )
+  console.log(attributes)
   if (!attributesByTraitType) return <></>
   return (
     <Tooltip

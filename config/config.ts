@@ -1199,6 +1199,13 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
         link: 'https://discord.gg/pixelpilotz',
       },
     ],
+    indexMetadataDisabled: true,
+    attributeDisplay: [
+      {
+        attributeName: 'renewal date',
+        displayName: 'Renewal Date',
+      },
+    ],
     filter: {
       type: 'creators',
       value: ['62KHBtXLF8DbxCETzQrnFGv2A3VJWoRtofmKKHyNhgcm'],
