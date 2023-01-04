@@ -1,6 +1,6 @@
 # Cardinal Rental UI
 
-This repository hosts the UI inteface that powers **https://rent.cardinal.so** for renting NFTs on Solana.
+This repository hosts the UI inteface that powers **https://rent.cardinal.so** for renting NFTs on Solana blockchain.
 
 Use this repo to view the code behind the rental-ui and see examples of how to use the SDK.
 
