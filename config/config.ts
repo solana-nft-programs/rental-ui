@@ -2139,6 +2139,49 @@ Welcome to the Underground.`,
     rentalCard: defaultRentalCardConfig,
   },
 
+  ['supportive-dudes']: {
+    name: 'supportive-dudes',
+    displayName: 'Supportive Dudes',
+    type: 'Collection',
+    websiteUrl: 'https://www.soleddarity.com',
+    logoImage: '/logos/supportive-dudes.png',
+    hero: '/logos/supportive-dudes-hero.png',
+    colors: {
+      accent: '#916be0',
+      glow: '#916be0',
+    },
+    description: `Supportive Dudes grant access to Toolidarity.app and plenty of bots, tools and discounts for the holders. Stake, Earn $EDD, Own-2-Earn, Sniper Bot, Wallet Spy, Portfolio tracker & more.`,
+    twitterHandle: '@soleddarity',
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://www.soleddarity.com',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/soleddarity',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/soleddarity',
+      },
+    ],
+    filter: {
+      type: 'creators',
+      value: ['D1sUtLmpn3f1yZjPxLwZG4CxPFBpvEy5HtfFWLo3gmXT'],
+    },
+    rentalCard: {
+      ...defaultRentalCardConfig,
+      invalidationOptions: {
+        ...defaultRentalCardConfig.invalidationOptions,
+        paymentMints: [
+          'CLS2aDvaKXThwNKLKYuY7pwdo1jA5oyyD78PLgxmG2Q4',
+          WRAPPED_SOL_MINT,
+        ],
+      },
+    },
+  },
+
   default: {
     name: 'default',
     displayName: 'Unverified',

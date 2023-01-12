@@ -197,6 +197,11 @@ export const PAYMENT_MINTS: PaymentMintInfo[] = [
     symbol: 'STAX',
     decimals: 2,
   },
+  {
+    mint: 'CLS2aDvaKXThwNKLKYuY7pwdo1jA5oyyD78PLgxmG2Q4',
+    symbol: 'EDD',
+    decimals: 9,
+  },
 ]
 
 export const WRAPPED_SOL_MINT = 'So11111111111111111111111111111111111111112'
