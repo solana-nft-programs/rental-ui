@@ -52,7 +52,7 @@ export const executeAllTransactions = async (
     callback?: (success: boolean) => void
   },
   preTx?: Transaction
-): Promise<(string | null)[]> => {
+): Promise<{ txid?: string | null; error?: string | null }[]> => {
   const transactions = preTx ? [preTx, ...txs] : txs
   if (transactions.length === 0) return []
 
@@ -63,7 +63,7 @@ export const executeAllTransactions = async (
   }
   const signedTransactions = await wallet.signAllTransactions(transactions)
 
-  let txIds: string[] = []
+  let txIds: { txid?: string | null; error?: string | null }[] = []
   if (preTx) {
     const signedPreTx = signedTransactions[0]!
     const txid = await sendAndConfirmRawTransaction(
@@ -71,7 +71,7 @@ export const executeAllTransactions = async (
       signedPreTx.serialize(),
       config.confirmOptions
     )
-    txIds.push(txid)
+    txIds.push({ txid })
   }
 
   const filteredSignedTransactions = preTx
@@ -104,8 +104,9 @@ export const executeAllTransactions = async (
                 description: config.notificationConfig.message,
                 txid,
               })
-            return txid
+            return { txid }
           } catch (e) {
+            const errorMessage = handleError(e, `${e}`)
             console.log(
               'Failed transaction: ',
               (e as SendTransactionError).logs,
@@ -123,11 +124,14 @@ export const executeAllTransactions = async (
                 type: 'error',
               })
             if (config.throwIndividualError) throw new Error(`${e}`)
-            return null
+            return {
+              txid: null,
+              error: config.notificationConfig?.errorMessage ?? errorMessage,
+            }
           }
         })
       )
-    ).filter((x): x is string => x !== null),
+    ).filter(({ txid }) => txid),
   ]
   console.log('Successful txs', txIds)
   const successfulTxids = txIds.filter((txid) => txid)

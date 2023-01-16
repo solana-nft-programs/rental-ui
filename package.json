@@ -21,6 +21,7 @@
     "@cardinal/eslint-config-react": "^1.0.10",
     "@cardinal/namespaces": "^4.1.56",
     "@cardinal/namespaces-components": "^4.1.27",
+    "@cardinal/payment-manager": "^2.2.0",
     "@cardinal/scanner": "^0.1.5",
     "@cardinal/token-manager": "^1.6.2",
     "@emotion/babel-plugin": "^11.7.2",

@@ -168,11 +168,9 @@ export const useHandleIssueRental = () => {
                   paymentManager: rentalCardConfig.paymentManager
                     ? tryPublicKey(rentalCardConfig.paymentManager) ||
                       new PublicKey(
-                        (
-                          await findPaymentManagerAddress(
-                            rentalCardConfig.paymentManager
-                          )
-                        )[0]
+                        findPaymentManagerAddress(
+                          rentalCardConfig.paymentManager
+                        )
                       )
                     : undefined,
                 }
