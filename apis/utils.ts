@@ -1,16 +1,22 @@
 import type { Wallet } from '@saberhq/solana-contrib'
-import * as Sentry from '@sentry/browser'
 import * as splToken from '@solana/spl-token'
-import type { Connection } from '@solana/web3.js'
-import * as web3 from '@solana/web3.js'
+import type {
+  ConfirmOptions,
+  Connection,
+  PublicKey,
+  SendTransactionError,
+  Signer,
+  Transaction,
+} from '@solana/web3.js'
+import { sendAndConfirmRawTransaction } from '@solana/web3.js'
 import { notify } from 'common/Notification'
 
 import { handleError } from './errors'
 
 export async function getATokenAccountInfo(
   connection: Connection,
-  mint: web3.PublicKey,
-  owner: web3.PublicKey
+  mint: PublicKey,
+  owner: PublicKey
 ): Promise<splToken.AccountInfo> {
   const aTokenAccount = await splToken.Token.getAssociatedTokenAddress(
     splToken.ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -31,11 +37,11 @@ export async function getATokenAccountInfo(
 export const executeAllTransactions = async (
   connection: Connection,
   wallet: Wallet,
-  transactions: web3.Transaction[],
+  txs: Transaction[],
   config: {
     throwIndividualError?: boolean
-    signers?: web3.Signer[][]
-    confirmOptions?: web3.ConfirmOptions
+    signers?: Signer[][]
+    confirmOptions?: ConfirmOptions
     notificationConfig?: {
       individualSuccesses?: boolean
       successSummary?: boolean
@@ -43,8 +49,11 @@ export const executeAllTransactions = async (
       errorMessage?: string
       description?: string
     }
-  }
-): Promise<{ txid?: string | null; error?: string | null }[]> => {
+    callback?: (success: boolean) => void
+  },
+  preTx?: Transaction
+): Promise<(string | null)[]> => {
+  const transactions = preTx ? [preTx, ...txs] : txs
   if (transactions.length === 0) return []
 
   const recentBlockhash = (await connection.getRecentBlockhash('max')).blockhash
@@ -52,65 +61,76 @@ export const executeAllTransactions = async (
     tx.feePayer = wallet.publicKey
     tx.recentBlockhash = recentBlockhash
   }
-  await wallet.signAllTransactions(transactions)
+  const signedTransactions = await wallet.signAllTransactions(transactions)
 
-  const txResults = await Promise.all(
-    transactions.map(async (tx, index) => {
-      try {
-        if (
-          config.signers &&
-          config.signers.length > 0 &&
-          config.signers[index]
-        ) {
-          tx.partialSign(...config.signers[index]!)
-        }
-        const txid = await web3.sendAndConfirmRawTransaction(
-          connection,
-          tx.serialize(),
-          config.confirmOptions
-        )
-        config.notificationConfig &&
-          config.notificationConfig.individualSuccesses &&
-          notify({
-            message: `${config.notificationConfig.message} ${index + 1}/${
-              transactions.length
-            }`,
-            description: config.notificationConfig.message,
-            txid,
-          })
-        return { txid }
-      } catch (e) {
-        console.log(
-          'Failed transaction: ',
-          e,
-          (e as web3.SendTransactionError).logs
-        )
-        const errorMessage = handleError(e, `${e}`)
-        console.log(errorMessage)
-        Sentry.captureException(e, {
-          tags: { type: 'transaction', wallet: wallet.publicKey.toString() },
-          extra: { errorMessage },
-          fingerprint: [errorMessage],
+  let txIds: string[] = []
+  if (preTx) {
+    const signedPreTx = signedTransactions[0]!
+    const txid = await sendAndConfirmRawTransaction(
+      connection,
+      signedPreTx.serialize(),
+      config.confirmOptions
+    )
+    txIds.push(txid)
+  }
+
+  const filteredSignedTransactions = preTx
+    ? signedTransactions.slice(1, signedTransactions.length)
+    : signedTransactions
+  txIds = [
+    ...txIds,
+    ...(
+      await Promise.all(
+        filteredSignedTransactions.map(async (tx, index) => {
+          try {
+            if (
+              config.signers &&
+              config.signers.length > 0 &&
+              config.signers[index]
+            ) {
+              tx.partialSign(...config.signers[index]!)
+            }
+            const txid = await sendAndConfirmRawTransaction(
+              connection,
+              tx.serialize(),
+              config.confirmOptions
+            )
+            config.notificationConfig &&
+              config.notificationConfig.individualSuccesses &&
+              notify({
+                message: `${config.notificationConfig.message} ${
+                  index + (preTx ? 2 : 1)
+                }/${transactions.length}`,
+                description: config.notificationConfig.message,
+                txid,
+              })
+            return txid
+          } catch (e) {
+            console.log(
+              'Failed transaction: ',
+              (e as SendTransactionError).logs,
+              e
+            )
+            config.notificationConfig &&
+              notify({
+                message: `${'Failed transaction'} ${index + (preTx ? 2 : 1)}/${
+                  transactions.length
+                }`,
+                description:
+                  config.notificationConfig.errorMessage ??
+                  handleError(e, `${e}`),
+                txid: '',
+                type: 'error',
+              })
+            if (config.throwIndividualError) throw new Error(`${e}`)
+            return null
+          }
         })
-        config.notificationConfig &&
-          notify({
-            message: `${
-              config.notificationConfig.errorMessage ?? 'Failed transaction'
-            } ${index + 1}/${transactions.length}`,
-            description: config.notificationConfig.errorMessage ?? errorMessage,
-            txid: '',
-            type: 'error',
-          })
-        if (config.throwIndividualError) throw new Error(`${e}`)
-        return {
-          txid: null,
-          error: config.notificationConfig?.errorMessage ?? errorMessage,
-        }
-      }
-    })
-  )
-  console.log('txResults', txResults)
-  const successfulTxids = txResults.filter(({ txid }) => txid)
+      )
+    ).filter((x): x is string => x !== null),
+  ]
+  console.log('Successful txs', txIds)
+  const successfulTxids = txIds.filter((txid) => txid)
   config.notificationConfig &&
     successfulTxids.length > 0 &&
     notify({
@@ -119,5 +139,6 @@ export const executeAllTransactions = async (
       // Consider linking all transactions
       txid: '',
     })
-  return txResults
+  config.callback && config.callback(true)
+  return txIds
 }
