@@ -1522,40 +1522,40 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     },
     rentalCard: defaultRentalCardConfig,
   },
-  blockfriend: {
-    name: 'blockfriend',
-    displayName: 'BlockFriend NFT',
-    type: 'Collection',
-    websiteUrl: 'https://blockfriend.net',
-    logoImage: '/logos/blockfriend.gif',
-    hero: '/logos/blockfriend-hero.png',
-    description: `BlockFriend is an exclusive collection of 132 NFTs granting access to top tier automation tools for multi-chain minting and purchasing. Login to the BlockFriend dashboard and connect your discord account after purchasing, to get access to the holder discord: https://blockfriend.net"`,
-    twitterHandle: '@BlockFriendNFT',
-    indexMetadataDisabled: true,
-    socialLinks: [
-      {
-        icon: 'web',
-        link: 'https://blockfriend.net',
-      },
-      {
-        icon: 'twitter',
-        link: 'https://twitter.com/BlockFriendNFT',
-      },
-      {
-        icon: 'discord',
-        link: 'https://discord.com/invite/2xHWsxGAdH',
-      },
-    ],
-    colors: {
-      accent: '#DCC7FE',
-      glow: '#DCC7FE',
-    },
-    filter: {
-      type: 'creators',
-      value: ['Fu7g7cgUCkG6qFsASwhV65sEhRjDJfH9H8XdmPtKyKKr'],
-    },
-    rentalCard: defaultRentalCardConfig,
-  },
+  // blockfriend: {
+  //   name: 'blockfriend',
+  //   displayName: 'BlockFriend NFT',
+  //   type: 'Collection',
+  //   websiteUrl: 'https://blockfriend.net',
+  //   logoImage: '/logos/blockfriend.gif',
+  //   hero: '/logos/blockfriend-hero.png',
+  //   description: `BlockFriend is an exclusive collection of 132 NFTs granting access to top tier automation tools for multi-chain minting and purchasing. Login to the BlockFriend dashboard and connect your discord account after purchasing, to get access to the holder discord: https://blockfriend.net"`,
+  //   twitterHandle: '@BlockFriendNFT',
+  //   indexMetadataDisabled: true,
+  //   socialLinks: [
+  //     {
+  //       icon: 'web',
+  //       link: 'https://blockfriend.net',
+  //     },
+  //     {
+  //       icon: 'twitter',
+  //       link: 'https://twitter.com/BlockFriendNFT',
+  //     },
+  //     {
+  //       icon: 'discord',
+  //       link: 'https://discord.com/invite/2xHWsxGAdH',
+  //     },
+  //   ],
+  //   colors: {
+  //     accent: '#DCC7FE',
+  //     glow: '#DCC7FE',
+  //   },
+  //   filter: {
+  //     type: 'creators',
+  //     value: ['Fu7g7cgUCkG6qFsASwhV65sEhRjDJfH9H8XdmPtKyKKr'],
+  //   },
+  //   rentalCard: defaultRentalCardConfig,
+  // },
   ['alpha-pharaohs']: {
     name: 'alpha-pharaohs',
     displayName: 'Alpha Pharaohs',
