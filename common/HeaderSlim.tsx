@@ -35,7 +35,7 @@ export const HeaderSlim: React.FC<Props> = ({ tabs, hideDashboard }: Props) => {
     secondaryConnection,
     wallet.publicKey ?? undefined
   )
-  const { showModal, onDismiss } = useModal()
+  const { onDismiss } = useModal()
   const [tab, setTab] = useState<string>('browse')
 
   useEffect(() => {
@@ -166,7 +166,7 @@ export const HeaderSlim: React.FC<Props> = ({ tabs, hideDashboard }: Props) => {
                 termsOfServiceModal.showModal({
                   handleAccept: () => {
                     onDismiss()
-                    walletModal.setVisible(true)
+                    setTimeout(() => walletModal.setVisible(true)) // delay to prevent body scroll lock
                   },
                 })
               }
