@@ -88,11 +88,14 @@ export const HeaderSlim: React.FC<Props> = ({ tabs, hideDashboard }: Props) => {
         <div className="p-2 text-xl leading-8">
           By connecting your wallet and using Cardinal services, you agree to
           our{' '}
-          <a href="/terms" className="text-orange-500 underline">
+          <a href="/docs/tos--1-3-23.pdf" className="text-primary underline">
             Terms of Service
           </a>{' '}
           and{' '}
-          <a href="/privacy" className="text-orange-500 underline">
+          <a
+            href="/docs/privacy-policy--1-3-23.pdf"
+            className="text-primary underline"
+          >
             Privacy Policy
           </a>
           .
