@@ -5,7 +5,6 @@ class AppDocument extends Document {
     return (
       <Html>
         <Head>
-          <title>Cardinal</title>
           <link rel="icon" href="/favicon.ico" />
           <link
             href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"

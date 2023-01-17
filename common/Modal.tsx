@@ -44,14 +44,19 @@ export const Modal: React.FC<Props> = ({
           : 'opacity: 0; backdrop-filter: blur(0px);'}
       `}
     >
-      <div
-        onClick={(e) => e.stopPropagation()}
-        css={css`
-          box-shadow: rgba(255, 255, 255, 0.15) 0px 0px 48px;
-        `}
-        className={`${className} my-[10vh] h-fit w-[560px] max-w-[98vw] rounded-xl transition-all `}
-      >
-        {children}
+      <div className="relative h-screen w-screen">
+        <div
+          onClick={(e) => e.stopPropagation()}
+          css={css`
+            box-shadow: rgba(255, 255, 255, 0.15) 0px 0px 48px;
+            transform: translate(-50%, -50%);
+          `}
+          className={`${
+            className || ''
+          } absolute top-1/2 left-1/2 overflow-hidden rounded-xl transition-all`}
+        >
+          {children}
+        </div>
       </div>
     </div>
   )
