@@ -53,7 +53,7 @@ export const Modal: React.FC<Props> = ({
           `}
           className={`${
             className || ''
-          } absolute top-1/2 left-1/2 overflow-hidden rounded-xl transition-all`}
+          } absolute top-1/2 left-1/2 min-w-[560px] max-w-[98vw] overflow-hidden rounded-xl transition-all`}
         >
           {children}
         </div>

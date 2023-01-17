@@ -104,16 +104,14 @@ const App = ({
                 <QueryClientProvider client={queryClient}>
                   <ModalProvider>
                     <WalletModalProvider>
-                      <ModalProvider>
-                        <>
-                          <Head>
-                            <title>Cardinal</title>
-                          </Head>
-                          <ToastContainer />
-                          <Component {...pageProps} />
-                          {<ReactQueryDevtools initialIsOpen={false} />}
-                        </>
-                      </ModalProvider>
+                      <>
+                        <Head>
+                          <title>Cardinal</title>
+                        </Head>
+                        <ToastContainer />
+                        <Component {...pageProps} />
+                        {<ReactQueryDevtools initialIsOpen={false} />}
+                      </>
                     </WalletModalProvider>
                   </ModalProvider>
                 </QueryClientProvider>

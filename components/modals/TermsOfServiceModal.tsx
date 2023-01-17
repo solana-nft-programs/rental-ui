@@ -1,9 +1,11 @@
-import { useWalletModal } from '@solana/wallet-adapter-react-ui'
 import { useModal } from 'providers/ModalProvider'
 
-const TermsOfService = () => {
+type Props = {
+  handleAccept: () => void
+}
+
+const TermsOfService = ({ handleAccept }: Props) => {
   const { onDismiss } = useModal()
-  const walletModal = useWalletModal()
 
   return (
     <div className="space-y-8 rounded-xl bg-gray-900 p-12 shadow-2xl">
@@ -37,12 +39,7 @@ const TermsOfService = () => {
         </button>
         <button
           className="w-1/3 cursor-pointer rounded-lg bg-primary p-3 text-light-0 transition-colors hover:bg-primary-hover"
-          onClick={() => {
-            setTimeout(() => {
-              onDismiss()
-              walletModal.setVisible(true)
-            })
-          }}
+          onClick={handleAccept}
         >
           Accept
         </button>
@@ -51,9 +48,9 @@ const TermsOfService = () => {
   )
 }
 
-export const useRentalViewCard = () => {
+export const useTermsOfServiceModal = () => {
   const { showModal } = useModal()
   return {
-    showModal: () => showModal(<TermsOfService />),
+    showModal: (params: any) => showModal(<TermsOfService {...params} />),
   }
 }
