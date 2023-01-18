@@ -2181,7 +2181,47 @@ Welcome to the Underground.`,
       },
     },
   },
-
+  ['good-ape-dao']: {
+    name: 'good-ape-dao',
+    displayName: 'Good Ape DAO',
+    type: 'Collection',
+    websiteUrl: 'https://gad-stake.vercel.app/goodapedao',
+    logoImage: '/logos/good-ape-dao.png',
+    hero: '/logos/good-ape-dao-hero.png',
+    colors: {
+      accent: '#439A97',
+      glow: '#439A97',
+    },
+    description: `Good Ape DAO is an NFT project funded by the Core Team. The goal of this project is to give back to holders and establish a new meta of GIVING, not TAKING.`,
+    twitterHandle: '@goodapedao',
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://gad-stake.vercel.app/goodapedao',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/goodapedao',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.com/invite/sZDdC9sdJa',
+      },
+    ],
+    filter: {
+      type: 'creators',
+      value: [
+        'aiiHc2bccTYhrVJQExPkX5oZLjfGvNy1o9UCmNW3KD4',
+        '8YKSifqhsUpgsKJrgXRip9RA7qavTxMg7kuzjVRE17he',
+      ],
+    },
+    rentalCard: {
+      ...defaultRentalCardConfig,
+      invalidationOptions: {
+        ...defaultRentalCardConfig.invalidationOptions,
+      },
+    },
+  },
   default: {
     name: 'default',
     displayName: 'Unverified',
