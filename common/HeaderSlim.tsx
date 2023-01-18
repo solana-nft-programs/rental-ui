@@ -4,8 +4,10 @@ import * as Sentry from '@sentry/browser'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useWalletModal } from '@solana/wallet-adapter-react-ui'
 import { GlyphWallet } from 'assets/GlyphWallet'
+import { useTermsOfServiceModal } from 'components/modals/TermsOfServiceModal'
 import { useRouter } from 'next/router'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
+import { useModal } from 'providers/ModalProvider'
 import { useEffect, useState } from 'react'
 import { LogoTitled } from 'rental-components/common/LogoTitled'
 
@@ -27,11 +29,13 @@ export const HeaderSlim: React.FC<Props> = ({ tabs, hideDashboard }: Props) => {
   const router = useRouter()
   const wallet = useWallet()
   const walletModal = useWalletModal()
+  const termsOfServiceModal = useTermsOfServiceModal()
   const { secondaryConnection, environment } = useEnvironmentCtx()
   const { data: displayName } = useAddressName(
     secondaryConnection,
     wallet.publicKey ?? undefined
   )
+  const { onDismiss } = useModal()
   const [tab, setTab] = useState<string>('browse')
 
   useEffect(() => {
@@ -158,7 +162,14 @@ export const HeaderSlim: React.FC<Props> = ({ tabs, hideDashboard }: Props) => {
           ) : (
             <ButtonSmall
               className="text-xs"
-              onClick={() => walletModal.setVisible(true)}
+              onClick={() =>
+                termsOfServiceModal.showModal({
+                  handleAccept: () => {
+                    onDismiss()
+                    setTimeout(() => walletModal.setVisible(true)) // delay to prevent body scroll lock
+                  },
+                })
+              }
             >
               <>
                 <GlyphWallet />
