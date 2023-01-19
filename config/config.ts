@@ -2013,6 +2013,7 @@ Welcome to the Underground.`,
     },
     description: `The next-generation RPC platform that provides users with lightning-fast Solana connection, high performance and the ability to earn passive income.`,
     twitterHandle: '@ThorNodeRPC',
+    indexMetadataDisabled: true,
     socialLinks: [
       {
         icon: 'web',
