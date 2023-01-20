@@ -46,6 +46,7 @@ export const mintMetadataQuery = async (
     const json = await fetch(
       tokenData?.indexedData?.mint_address_nfts?.uri
     ).then((r) => r.json())
+    if (!json) return undefined
     return {
       pubkey: tryPublicKey(tokenData.indexedData.address)!,
       parsed: json,
@@ -54,6 +55,7 @@ export const mintMetadataQuery = async (
   if ('metaplexData' in tokenData && tokenData?.metaplexData?.parsed.data.uri) {
     const uri = tokenData?.metaplexData?.parsed.data.uri
     const json = await fetch(uri).then((r) => r.json())
+    if (!json) return undefined
     return {
       pubkey: tokenData.metaplexData.pubkey,
       parsed: json,
