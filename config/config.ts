@@ -2903,49 +2903,6 @@ Welcome to the Underground.`,
       },
     },
   },
-  ['goodapedao']: {
-    name: 'goodapedao',
-    displayName: 'Good Ape Dao',
-    type: 'Guild',
-    websiteUrl: 'https://discord.gg/goodapedao',
-    logoImage: '/logos/good-ape-dao.png',
-    hero: '/logos/good-ape-dao-hero.png',
-    colors: {
-      accent: '#FFD700',
-      glow: '#FFD700',
-    },
-    description: 'GOOD APE DAO',
-    twitterHandle: '@GAD_IH',
-    socialLinks: [
-      {
-        icon: 'web',
-        link: 'https://discord.gg/goodapedao',
-      },
-      {
-        icon: 'twitter',
-        link: 'https://twitter.com/GAD_IH',
-      },
-      {
-        icon: 'discord',
-        link: 'https://discord.gg/goodapedao',
-      },
-    ],
-    filter: {
-      type: 'issuer',
-      value: ['2kL7xAqUnimT1FDa5QqQHTKv6eHS7aAm2MsqCmB2NEhC'],
-    },
-    rentalCard: {
-      ...defaultRentalCardConfig,
-      invalidationOptions: {
-        ...defaultRentalCardConfig.invalidationOptions,
-        paymentMints: ['2x21ucCAxvWCVHVnGd71DNmZsWJ2yp3bETNF3Uty7Evh'],
-        maxDurationAllowed: {
-          displayText: '4 weeks',
-          value: 86400 * 7 * 4,
-        },
-      },
-    },
-  },
   bigduckmedia: {
     name: 'bigduckmedia',
     displayName: 'Big Duck Media',

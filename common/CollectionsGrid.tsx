@@ -65,7 +65,7 @@ export const CollectionsGrid = ({ configs }: { configs: ProjectConfig[] }) => {
                       .count !== undefined ? (
                       stats.data[
                         queryId(config.name, true)
-                      ]!.aggregate.count.toString()
+                      ]?.aggregate.count.toString()
                     ) : (
                       <div className="mt-1 h-5 w-12 animate-pulse rounded-md bg-border" />
                     ),
@@ -78,7 +78,7 @@ export const CollectionsGrid = ({ configs }: { configs: ProjectConfig[] }) => {
                       .count !== undefined ? (
                       stats.data[
                         queryId(config.name, false)
-                      ]!.aggregate.count.toString()
+                      ]?.aggregate.count.toString()
                     ) : (
                       <div className="mt-1 h-5 w-12 animate-pulse rounded-md bg-border" />
                     ),
