@@ -1,7 +1,7 @@
 export const Stats = ({
   stats,
 }: {
-  stats: { header: string; value: string | JSX.Element }[]
+  stats: { header: string; value?: string | JSX.Element }[]
 }) => {
   return (
     <div className="flex w-full justify-evenly rounded-lg bg-dark-6 py-2">
