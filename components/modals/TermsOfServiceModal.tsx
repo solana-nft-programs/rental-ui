@@ -30,7 +30,7 @@ const TermsOfService = ({ handleAccept }: Props) => {
         </a>
         .
       </div>
-      <div className="flex w-full justify-around space-x-4">
+      <div className="flex w-full justify-around">
         <button
           className="w-1/3 cursor-pointer rounded-lg border bg-transparent p-3 text-light-0 transition-colors hover:bg-gray-500"
           onClick={onDismiss}
