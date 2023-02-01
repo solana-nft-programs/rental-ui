@@ -3362,44 +3362,42 @@ Welcome to the Underground.`,
       },
     },
   },
-  // sorcery: {
-  //   name: 'sorcery',
-  //   displayName: 'Sorcery Inc.',
-  //   badges: [{ badgeType: 'recent' }],
-  //   type: 'Guild',
-  //   websiteUrl: 'https://sorcery.inc',
-  //   logoImage: '/logos/sorcery.png',
-  //   hero: '/logos/sorcery-hero.png',
-  //   colors: {
-  //     accent: '#973872',
-  //     glow: '#973872',
-  //   },
-  //   description: `Sorcery is a wizard academy with magical spells and tools powered by $LUV.`,
-  //   twitterHandle: '@sorcery_inc',
-  //   socialLinks: [
-  //     {
-  //       icon: 'web',
-  //       link: 'https://sorcery.inc',
-  //     },
-  //     {
-  //       icon: 'twitter',
-  //       link: 'https://twitter.com/sorcery_inc',
-  //     },
-  //     {
-  //       icon: 'discord',
-  //       link: 'https://discord.gg/sorcery',
-  //     },
-  //   ],
-  //   filter: {
-  //     type: 'issuer',
-  //     value: [''],
-  //   },
-  //   rentalCard: {
-  //     ...defaultRentalCardConfig,
-  //     invalidationOptions: {
-  //       ...defaultRentalCardConfig.invalidationOptions,
-  //       paymentMints: ['J8taaG2MEBQruGWE4Hhzkrahb1nMAeSZUYBs5cmzST9k'],
-  //     },
-  //   },
-  // },
+  home: {
+    name: 'home',
+    displayName: 'Home',
+    badges: [{ badgeType: 'recent' }],
+    type: 'Collection',
+    websiteUrl: 'https://twitter.com/SolanaHomeNFT',
+    logoImage: '/logos/home.png',
+    hero: '/logos/home.png',
+    colors: {
+      accent: '#FF0000',
+      glow: '#FF0000',
+    },
+    description: `Rent yourself a home, and get passive income.`,
+    twitterHandle: '@SolanaHomeNFT',
+    socialLinks: [
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/SolanaHomeNFT',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/sNktZhzV',
+      },
+    ],
+    filter: {
+      type: 'creators',
+      value: [
+        '5w9bG2geStGtVhWnEwThW9MXBxdbC3zbYwWTadPdfHpU',
+        'G3KR1uqxbPgfYoGWqoA3TZaCjMvnqEfEgn7b4qN5jgBv',
+      ],
+    },
+    rentalCard: {
+      ...defaultRentalCardConfig,
+      invalidationOptions: {
+        ...defaultRentalCardConfig.invalidationOptions,
+      },
+    },
+  },
 }
