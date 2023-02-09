@@ -132,7 +132,6 @@ export const useHandleClaimRental = () => {
             userWSolTokenAccount.data?.amount || new BN(0)
           )
         if (amountToWrap.gt(new BN(0))) {
-          console.log('init ata')
           await withWrapSol(
             transaction,
             connection,

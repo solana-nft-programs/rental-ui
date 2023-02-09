@@ -105,7 +105,6 @@ export const useHandleRateRental = () => {
           (transaction.instructions.length === 0 &&
             extensionPaymentMint?.toString() === WRAPPED_SOL_MINT.toString()))
       ) {
-        console.log('init ata')
         await withFindOrInitAssociatedTokenAccount(
           transaction,
           connection,
