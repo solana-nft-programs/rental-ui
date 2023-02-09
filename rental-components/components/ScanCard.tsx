@@ -25,7 +25,7 @@ export const ScanCard: React.FC<Props> = ({ tokenData }: Props) => {
       try {
         if (!tokenData?.tokenManager) throw new Error('No token manager found')
         // eslint-disable-next-line react-hooks/rules-of-hooks
-        const transaction = await useTransaction(
+        let transaction = await useTransaction(
           connection,
           asWallet(wallet),
           tokenData.tokenManager.parsed.mint,
@@ -35,7 +35,7 @@ export const ScanCard: React.FC<Props> = ({ tokenData }: Props) => {
         transaction.recentBlockhash = (
           await connection.getRecentBlockhash('max')
         ).blockhash
-        await wallet.signTransaction(transaction)
+        transaction = await wallet.signTransaction(transaction)
         const serializedUsage = transaction.serialize().toString('base64')
         console.log(getLink(`/scan?tx=${encodeURIComponent(serializedUsage)}`))
         setQRData(serializedUsage)
