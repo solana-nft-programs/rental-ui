@@ -1,4 +1,4 @@
-import { withFindOrInitAssociatedTokenAccount } from '@cardinal/token-manager'
+import { withFindOrInitAssociatedTokenAccount } from '@cardinal/common'
 import { Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { PublicKey, Transaction } from '@solana/web3.js'

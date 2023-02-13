@@ -3,6 +3,7 @@ import type { AccountData } from '@cardinal/common'
 import type { PaidClaimApproverData } from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
 import type { TimeInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
 import { TIME_INVALIDATOR_ADDRESS } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
+import type { TokenManagerData } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import {
   getTokenManagers,
   getTokenManagersForIssuer,
@@ -121,7 +122,7 @@ export const useManagedTokens = () => {
           async () =>
             (
               await getTokenManagers(connection, tokenManagerIds)
-            ).filter((tm) => tm.parsed),
+            ).filter((tm): tm is AccountData<TokenManagerData> => !!tm.parsed),
           trace,
           {
             op: 'fetch-recent-token-managers',

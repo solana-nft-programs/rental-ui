@@ -1,5 +1,8 @@
-import { getBatchedMultipleAccounts } from '@cardinal/common'
-import type { AccountData } from '@cardinal/token-manager'
+import type { AccountData } from '@cardinal/common'
+import {
+  getBatchedMultipleAccounts,
+  METADATA_PROGRAM_ID,
+} from '@cardinal/common'
 import type { PaidClaimApproverData } from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
 import {
   CLAIM_APPROVER_ADDRESS,
@@ -21,11 +24,6 @@ import {
   USE_INVALIDATOR_IDL,
 } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
 import * as metaplex from '@metaplex-foundation/mpl-token-metadata'
-import {
-  EditionData,
-  MasterEditionV2Data,
-  MetadataKey,
-} from '@metaplex-foundation/mpl-token-metadata'
 import { BorshAccountsCoder } from '@project-serum/anchor'
 import { TOKEN_PROGRAM_ID } from '@project-serum/anchor/dist/cjs/utils/token'
 import * as spl from '@solana/spl-token'
@@ -79,9 +77,9 @@ export type AccountCacheData = AccountInfo<Buffer> &
     | PaidClaimApproverData
     | TimeInvalidatorData
     | UseInvalidatorData
-    | metaplex.MetadataData
-    | metaplex.EditionData
-    | metaplex.MasterEditionData
+    | metaplex.Metadata
+    | metaplex.Edition
+    | metaplex.MasterEditionV2
     | ParsedTokenAccountData
     | spl.MintInfo
     | null
@@ -253,42 +251,50 @@ export const deserializeAccountInfos = (
           } catch {}
         }
         return acc
-      case metaplex.MetadataProgram.PUBKEY.toString():
-        try {
-          acc[accountIds[i]!.toString()] = {
-            ...baseData,
-            type: 'metaplexMetadata',
-            ...(accountInfo as AccountInfo<Buffer>),
-            parsed: metaplex.MetadataData.deserialize(
-              accountInfo?.data as Buffer
-            ) as metaplex.MetadataData,
-          }
-        } catch (e) {}
-        try {
-          const key =
-            accountInfo === null || accountInfo === void 0
-              ? void 0
-              : (accountInfo.data as Buffer)[0]
-          let parsed
-          if (key === MetadataKey.EditionV1) {
-            parsed = EditionData.deserialize(accountInfo?.data as Buffer)
-          } else if (
-            key === MetadataKey.MasterEditionV1 ||
-            key === MetadataKey.MasterEditionV2
-          ) {
-            parsed = MasterEditionV2Data.deserialize(
-              accountInfo?.data as Buffer
-            )
-          }
-          if (parsed) {
+      case METADATA_PROGRAM_ID.toString():
+        if (accountInfo?.data) {
+          try {
             acc[accountIds[i]!.toString()] = {
               ...baseData,
-              type: 'editionData',
+              type: 'metaplexMetadata',
               ...(accountInfo as AccountInfo<Buffer>),
-              parsed,
+              parsed: metaplex.Metadata.deserialize(
+                accountInfo?.data as Buffer
+              )[0],
+            }
+          } catch (e) {
+            try {
+              acc[accountIds[i]!.toString()] = {
+                ...baseData,
+                type: 'editionData',
+                ...(accountInfo as AccountInfo<Buffer>),
+                parsed: metaplex.MasterEditionV2.deserialize(
+                  accountInfo?.data as Buffer
+                )[0],
+              }
+            } catch (e) {
+              try {
+                acc[accountIds[i]!.toString()] = {
+                  ...baseData,
+                  type: 'editionData',
+                  ...(accountInfo as AccountInfo<Buffer>),
+                  parsed: metaplex.MasterEditionV1.deserialize(
+                    accountInfo?.data as Buffer
+                  )[0],
+                }
+              } catch (e) {
+                acc[accountIds[i]!.toString()] = {
+                  ...baseData,
+                  type: 'editionData',
+                  ...(accountInfo as AccountInfo<Buffer>),
+                  parsed: metaplex.Edition.deserialize(
+                    accountInfo?.data as Buffer
+                  )[0],
+                }
+              }
             }
           }
-        } catch (e) {}
+        }
         return acc
       default:
         const type = 'unknown'

@@ -1,11 +1,11 @@
 import {
+  PAYMENT_MANAGER_ADDRESS,
+  PAYMENT_MANAGER_IDL,
+} from '@cardinal/payment-manager'
+import {
   CLAIM_APPROVER_ADDRESS,
   CLAIM_APPROVER_IDL,
 } from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
-import {
-  PAYMENT_MANAGER_ADDRESS,
-  PAYMENT_MANAGER_IDL,
-} from '@cardinal/token-manager/dist/cjs/programs/paymentManager'
 import {
   TIME_INVALIDATOR_ADDRESS,
   TIME_INVALIDATOR_IDL,

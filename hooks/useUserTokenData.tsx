@@ -1,12 +1,15 @@
 import type { AccountData } from '@cardinal/common'
-import { getBatchedMultipleAccounts } from '@cardinal/common'
+import {
+  findMintEditionId,
+  findMintMetadataId,
+  getBatchedMultipleAccounts,
+} from '@cardinal/common'
 import { tryPublicKey } from '@cardinal/namespaces-components'
 import type { PaidClaimApproverData } from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
 import type { TimeInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
 import type { TokenManagerData } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import type { UseInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
 import * as metaplex from '@metaplex-foundation/mpl-token-metadata'
-import { Edition } from '@metaplex-foundation/mpl-token-metadata'
 import * as Sentry from '@sentry/browser'
 import * as spl from '@solana/spl-token'
 import { PublicKey } from '@solana/web3.js'
@@ -77,13 +80,8 @@ export const useUserTokenData = (
       const metaplexIds = await withTrace(
         () =>
           Promise.all(
-            tokenAccounts.map(
-              async (tokenAccount) =>
-                (
-                  await metaplex.MetadataProgram.findMetadataAccount(
-                    new PublicKey(tokenAccount.parsed.mint)
-                  )
-                )[0]
+            tokenAccounts.map(async (tokenAccount) =>
+              findMintMetadataId(new PublicKey(tokenAccount.parsed.mint))
             )
           ),
         trace,
@@ -102,18 +100,18 @@ export const useUserTokenData = (
       const metaplexData = metaplexAccountInfos.reduce(
         (acc, accountInfo, i) => {
           try {
-            acc[tokenAccounts[i]!.pubkey.toString()] = {
-              pubkey: metaplexIds[i]!,
-              ...accountInfo,
-              parsed: metaplex.MetadataData.deserialize(
-                accountInfo?.data as Buffer
-              ) as metaplex.MetadataData,
+            if (accountInfo?.data) {
+              acc[tokenAccounts[i]!.pubkey.toString()] = {
+                pubkey: metaplexIds[i]!,
+                ...accountInfo,
+                parsed: metaplex.Metadata.deserialize(accountInfo?.data)[0],
+              }
             }
           } catch (e) {}
           return acc
         },
         {} as {
-          [tokenAccountId: string]: AccountData<metaplex.MetadataData>
+          [tokenAccountId: string]: AccountData<metaplex.Metadata>
         }
       )
       deserializeSpan?.finish()
@@ -164,10 +162,8 @@ export const useUserTokenData = (
       const mintIds = tokenAccounts.map((tokenAccount) =>
         tryPublicKey(tokenAccount.parsed.mint)
       )
-      const editionIds = await Promise.all(
-        tokenAccounts.map(async (tokenAccount) =>
-          Edition.getPDA(tokenAccount.parsed.mint)
-        )
+      const editionIds = tokenAccounts.map((tokenAccount) =>
+        findMintEditionId(new PublicKey(tokenAccount.parsed.mint))
       )
       const idsToFetch = Object.values(tokenAccountDelegateData).reduce(
         (acc, accountData) => [
@@ -254,7 +250,7 @@ export const useUserTokenData = (
           editionData: accountsById[editionIds[i]!.toString()] as
             | {
                 pubkey: PublicKey
-                parsed: metaplex.EditionData | metaplex.MasterEditionData
+                parsed: metaplex.Edition | metaplex.MasterEditionV2
               }
             | undefined,
           metadata: metadata?.find((data) =>

@@ -1,18 +1,18 @@
-import { createMint } from '@cardinal/common'
 import {
-  CreateMasterEditionV3,
-  CreateMetadataV2,
-  Creator,
-  DataV2,
-  MasterEdition,
-  Metadata,
+  createMintTx,
+  findMintEditionId,
+  findMintMetadataId,
+} from '@cardinal/common'
+import {
+  createCreateMasterEditionV3Instruction,
+  createCreateMetadataAccountV3Instruction,
 } from '@metaplex-foundation/mpl-token-metadata'
 import { BN } from '@project-serum/anchor'
 import type { Wallet } from '@saberhq/solana-contrib'
 import { SignerWallet } from '@saberhq/solana-contrib'
 import { useWallet } from '@solana/wallet-adapter-react'
 import type { Connection } from '@solana/web3.js'
-import { Keypair, LAMPORTS_PER_SOL, Transaction } from '@solana/web3.js'
+import { Keypair, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js'
 import { notify } from 'common/Notification'
 import { asWallet } from 'common/Wallets'
 import type { ProjectConfig } from 'config/config'
@@ -41,84 +41,75 @@ export async function airdropNFT(
   )
   await connection.confirmTransaction(fromAirdropSignature)
 
-  const [_masterEditionTokenAccountId, masterEditionMint] = await createMint(
+  const mintKeypair = Keypair.generate()
+  const [transaction] = await createMintTx(
     connection,
-    tokenCreator,
-    wallet.publicKey,
-    1,
-    tokenCreator.publicKey
+    mintKeypair.publicKey,
+    wallet.publicKey
   )
-
-  const masterEditionMetadataId = await Metadata.getPDA(
-    masterEditionMint.publicKey
-  )
-  const metadataTx = new CreateMetadataV2(
-    { feePayer: tokenCreator.publicKey },
+  const mintMetadataId = findMintMetadataId(mintKeypair.publicKey)
+  const metadataIx = createCreateMetadataAccountV3Instruction(
     {
-      metadata: masterEditionMetadataId,
-      metadataData: new DataV2({
-        name: metadata.name,
-        symbol: metadata.symbol,
-        uri: metadata.uri,
-        sellerFeeBasisPoints: 10,
-        collection: null,
-        uses: null,
-        creators:
-          config.filter?.value && config.filter?.type === 'creators'
-            ? config.filter.value
-                .map(
-                  (c) =>
-                    new Creator({
-                      address: c,
-                      verified: false,
-                      share: Math.floor(
-                        (1 /
-                          ((config.filter ?? { value: [] }).value.length + 1)) *
-                          100
-                      ),
-                    })
-                )
-                .concat(
-                  new Creator({
-                    address: tokenCreator.publicKey.toString(),
+      metadata: mintMetadataId,
+      updateAuthority: wallet.publicKey,
+      mint: mintKeypair.publicKey,
+      mintAuthority: wallet.publicKey,
+      payer: wallet.publicKey,
+    },
+    {
+      createMetadataAccountArgsV3: {
+        data: {
+          name: metadata.name,
+          symbol: metadata.symbol,
+          uri: metadata.uri,
+          sellerFeeBasisPoints: 10,
+          collection: null,
+          uses: null,
+          creators:
+            config.filter?.value && config.filter?.type === 'creators'
+              ? config.filter.value
+                  .map((c) => ({
+                    address: new PublicKey(c),
                     verified: false,
+                    share: Math.floor(
+                      (1 /
+                        ((config.filter ?? { value: [] }).value.length + 1)) *
+                        100
+                    ),
+                  }))
+                  .concat({
+                    address: wallet.publicKey,
+                    verified: true,
                     share: Math.floor(
                       (1 / (config.filter.value.length + 1)) * 100
                     ),
                   })
-                )
-            : null,
-      }),
-      updateAuthority: tokenCreator.publicKey,
-      mint: masterEditionMint.publicKey,
-      mintAuthority: tokenCreator.publicKey,
+              : null,
+        },
+        collectionDetails: null,
+        isMutable: true,
+      },
     }
   )
 
-  const masterEditionId = await MasterEdition.getPDA(
-    masterEditionMint.publicKey
-  )
-  const masterEditionTx = new CreateMasterEditionV3(
+  const mintEditionId = findMintEditionId(mintKeypair.publicKey)
+  const masterEditionIX = createCreateMasterEditionV3Instruction(
     {
-      feePayer: tokenCreator.publicKey,
-      recentBlockhash: (await connection.getRecentBlockhash('max')).blockhash,
+      edition: mintEditionId,
+      mint: mintKeypair.publicKey,
+      updateAuthority: wallet.publicKey,
+      mintAuthority: wallet.publicKey,
+      payer: wallet.publicKey,
+      metadata: mintMetadataId,
     },
     {
-      edition: masterEditionId,
-      metadata: masterEditionMetadataId,
-      updateAuthority: tokenCreator.publicKey,
-      mint: masterEditionMint.publicKey,
-      mintAuthority: tokenCreator.publicKey,
-      maxSupply: new BN(1),
+      createMasterEditionArgs: {
+        maxSupply: new BN(0),
+      },
     }
   )
-  const transaction = new Transaction()
-  transaction.instructions = [
-    ...metadataTx.instructions,
-    ...masterEditionTx.instructions,
-  ]
-
-  const txid = await executeTransaction(
+  transaction.instructions = [metadataIx, masterEditionIX]
+  return executeTransaction(
     connection,
     new SignerWallet(tokenCreator),
     transaction,
@@ -127,10 +118,6 @@ export async function airdropNFT(
       notificationConfig: { message: 'Airdrop succesful' },
     }
   )
-  console.log(
-    `Master edition (${masterEditionId.toString()}) created with metadata (${masterEditionMetadataId.toString()})`
-  )
-  return txid
 }
 
 export const Airdrop = () => {
@@ -161,8 +148,6 @@ export const AirdropSol = () => {
   const { connection } = useEnvironmentCtx()
   const wallet = useWallet()
   const userTokenData = useUserTokenData()
-  const { config } = useProjectConfig()
-
   return (
     <ButtonSmall
       disabled={!wallet.connected}

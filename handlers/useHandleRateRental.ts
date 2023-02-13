@@ -43,7 +43,7 @@ export interface HandleRateRentalParams {
     claimApprover?: AccountData<PaidClaimApproverData> | null
     tokenManager?: AccountData<TokenManagerData> | null
     timeInvalidator?: AccountData<TimeInvalidatorData> | null
-    metaplexData?: AccountData<metaplex.MetadataData>
+    metaplexData?: AccountData<metaplex.Metadata>
   }
   extensionSeconds: number | undefined | null
   userPaymentTokenAccount?: splToken.AccountInfo
