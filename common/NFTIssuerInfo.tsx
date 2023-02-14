@@ -103,7 +103,7 @@ export const getRentalRateDisplayText = (
       Pick<PaidClaimApproverData, 'paymentAmount' | 'paymentMint'>
     > | null
   },
-  paymentMints?: { [name: string]: Pick<splToken.MintInfo, 'decimals'> },
+  paymentMints?: { [name: string]: Pick<splToken.Mint, 'decimals'> },
   accentColor = 'text-light-2'
 ) => {
   return isRateBasedListing(tokenData) ? (
@@ -168,12 +168,7 @@ export const NFTIssuerInfo: React.FC<NFTIssuerInfoProps> = ({
             <DisplayAddress
               dark
               connection={secondaryConnection}
-              address={
-                tryPublicKey(
-                  tokenData.recipientTokenAccount?.parsed.owner ??
-                    recipientTokenAccountInfo.data?.parsed.owner
-                ) ?? undefined
-              }
+              address={recipientTokenAccountInfo.data?.parsed.owner}
             />
           </div>
         </div>

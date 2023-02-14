@@ -1,6 +1,7 @@
-import { updateMaxExpiration } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator/instruction'
+import { timeInvalidatorProgram } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
+import { findTimeInvalidatorAddress } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator/pda'
 import type { InvalidationType } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
-import { updateInvalidationType } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/instruction'
+import { tokenManagerProgram } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import type { BN } from '@project-serum/anchor'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { Transaction } from '@solana/web3.js'
@@ -46,23 +47,25 @@ export const useHandleUpdateInvalidationType = () => {
       const trace = tracer({ name: 'useHandleUpdateMaxExpiration' })
 
       transaction.add(
-        updateInvalidationType(
-          connection,
-          asWallet(wallet),
-          tokenManager.pubkey,
-          newInvalidationType
-        )
+        await tokenManagerProgram(connection)
+          .methods.updateInvalidationType(newInvalidationType)
+          .accountsStrict({
+            tokenManager: tokenManager.pubkey,
+            issuer: wallet.publicKey,
+          })
+          .instruction()
       )
 
       if (newMaxExpiration) {
         transaction.add(
-          updateMaxExpiration(
-            connection,
-            asWallet(wallet),
-            timeInvalidator!.pubkey,
-            tokenManager.pubkey,
-            newMaxExpiration
-          )
+          await timeInvalidatorProgram(connection)
+            .methods.updateMaxExpiration({ newMaxExpiration })
+            .accountsStrict({
+              timeInvalidator: findTimeInvalidatorAddress(tokenManager.pubkey),
+              tokenManager: tokenManager.pubkey,
+              issuer: wallet.publicKey,
+            })
+            .instruction()
         )
       }
 

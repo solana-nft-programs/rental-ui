@@ -1,4 +1,4 @@
-import { tryPublicKey } from '@cardinal/common'
+import { findMintMetadataId, tryPublicKey } from '@cardinal/common'
 import { tokenManager } from '@cardinal/token-manager/dist/cjs/programs'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import * as metaplex from '@metaplex-foundation/mpl-token-metadata'
@@ -49,18 +49,14 @@ export async function getServerSideProps(context: any) {
   if (!mintId) {
     return { props: {} }
   }
-  const [metaplexId] = await metaplex.MetadataProgram.findMetadataAccount(
-    mintId
-  )
-  const metaplexDataRaw = await metaplex.Metadata.load(
+  const metaplexId = findMintMetadataId(mintId)
+  const metaplexData = await metaplex.Metadata.fromAccountAddress(
     connection,
     metaplexId
   ).catch((e) => {
     console.log('Failed to get metaplex data', e)
     return null
   })
-  const metaplexData = metaplexDataRaw?.data
-
   if (metaplexData) {
     try {
       const json = (await fetch(metaplexData.data.uri).then((r) =>

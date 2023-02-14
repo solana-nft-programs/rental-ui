@@ -1,21 +1,29 @@
+import type { AccountData } from '@cardinal/common'
 import {
+  emptyWallet,
+  findMintEditionId,
+  findMintMetadataId,
   firstParam,
   getBatchedMultipleAccounts,
   tryPublicKey,
 } from '@cardinal/common'
-import { scan } from '@cardinal/scanner/dist/cjs/programs/cardinalScanner'
-import type { AccountData } from '@cardinal/token-manager'
+import { CRANK_KEY } from '@cardinal/payment-manager'
 import type { PaidClaimApproverData } from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
 import type { TimeInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
-import { close } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator/instruction'
+import { timeInvalidatorProgram } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
 import type { TokenManagerData } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import type { UseInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
-import { incrementUsages } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator/instruction'
+import { useInvalidatorProgram } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
 import * as metaplex from '@metaplex-foundation/mpl-token-metadata'
-import { Edition } from '@metaplex-foundation/mpl-token-metadata'
-import { utils } from '@project-serum/anchor'
-import * as spl from '@solana/spl-token'
-import { Connection, Keypair, PublicKey, Transaction } from '@solana/web3.js'
+import { BN, utils } from '@project-serum/anchor'
+import * as splToken from '@solana/spl-token'
+import {
+  Connection,
+  Keypair,
+  PublicKey,
+  Transaction,
+  TransactionInstruction,
+} from '@solana/web3.js'
 import type { TokenFilter } from 'config/config'
 import { projectConfigs } from 'config/config'
 import type { NextApiHandler } from 'next'
@@ -23,9 +31,9 @@ import { ENVIRONMENTS } from 'providers/EnvironmentProvider'
 import { fetchAccountDataById } from 'providers/SolanaAccountsProvider'
 
 export type ScanTokenData = {
-  tokenAccount?: AccountData<spl.AccountInfo>
+  tokenAccount?: AccountData<splToken.Account>
   tokenManager?: AccountData<TokenManagerData>
-  metaplexData?: AccountData<metaplex.MetadataData>
+  metaplexData?: AccountData<metaplex.Metadata>
   claimApprover?: AccountData<PaidClaimApproverData> | null
   useInvalidator?: AccountData<UseInvalidatorData> | null
   timeInvalidator?: AccountData<TimeInvalidatorData> | null
@@ -39,7 +47,7 @@ export async function getScanTokenAccounts(
 ): Promise<ScanTokenData[]> {
   const allTokenAccounts = await connection.getParsedTokenAccountsByOwner(
     new PublicKey(addressId),
-    { programId: spl.TOKEN_PROGRAM_ID }
+    { programId: splToken.TOKEN_PROGRAM_ID }
   )
   let tokenAccounts = allTokenAccounts.value
     .filter(
@@ -49,14 +57,9 @@ export async function getScanTokenAccounts(
     .sort((a, b) => a.pubkey.toBase58().localeCompare(b.pubkey.toBase58()))
 
   // lookup metaplex data
-  const metaplexIds = await Promise.all(
-    tokenAccounts.map(
-      async (tokenAccount) =>
-        (
-          await metaplex.MetadataProgram.findMetadataAccount(
-            new PublicKey(tokenAccount.account.data.parsed.info.mint)
-          )
-        )[0]
+  const metaplexIds = tokenAccounts.map((tokenAccount) =>
+    findMintMetadataId(
+      new PublicKey(tokenAccount.account.data.parsed.info.mint)
     )
   )
   // const metaplexMetadatas = await accountDataById(connection, metaplexIds)
@@ -67,16 +70,16 @@ export async function getScanTokenAccounts(
   )
   const metaplexData = metaplexAccountInfos.reduce((acc, accountInfo, i) => {
     try {
-      acc[tokenAccounts[i]!.pubkey.toString()] = {
-        pubkey: metaplexIds[i]!,
-        ...accountInfo,
-        parsed: metaplex.MetadataData.deserialize(
-          accountInfo?.data as Buffer
-        ) as metaplex.MetadataData,
+      if (accountInfo?.data) {
+        acc[tokenAccounts[i]!.pubkey.toString()] = {
+          pubkey: metaplexIds[i]!,
+          ...accountInfo,
+          parsed: metaplex.Metadata.deserialize(accountInfo?.data as Buffer)[0],
+        }
       }
     } catch (e) {}
     return acc
-  }, {} as { [tokenAccountId: string]: { pubkey: PublicKey; parsed: metaplex.MetadataData } })
+  }, {} as { [tokenAccountId: string]: { pubkey: PublicKey; parsed: metaplex.Metadata } })
 
   // filter by creators
   if (filter?.type === 'creators') {
@@ -99,10 +102,8 @@ export async function getScanTokenAccounts(
     connection,
     delegateIds
   )
-  const editionIds = await Promise.all(
-    tokenAccounts.map(async (tokenAccount) =>
-      Edition.getPDA(tokenAccount.account.data.parsed.info.mint)
-    )
+  const editionIds = tokenAccounts.map((tokenAccount) =>
+    findMintEditionId(tokenAccount.account.data.parsed.info.mint)
   )
   const idsToFetch = Object.values(tokenAccountDelegateData).reduce(
     (acc, accountData) => [
@@ -253,15 +254,11 @@ const post: NextApiHandler<PostResponse> = async (req, res) => {
 
   let transaction = new Transaction()
   if (!foundToken.timeInvalidator && !foundToken.useInvalidator) {
-    const instruction = scan(
-      connection,
-      {
-        signTransaction: async (tx: Transaction) => tx,
-        signAllTransactions: async (txs: Transaction[]) => txs,
-        publicKey: accountId,
-      },
-      accountId
-    )
+    const instruction = new TransactionInstruction({
+      programId: new PublicKey('MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr'),
+      keys: [],
+      data: Buffer.from('', 'utf8'),
+    })
     transaction.instructions = [
       {
         ...instruction,
@@ -271,17 +268,16 @@ const post: NextApiHandler<PostResponse> = async (req, res) => {
         ],
       },
     ]
-  } else if (foundToken.timeInvalidator) {
-    const instruction = close(
-      connection,
-      {
-        signTransaction: async (tx: Transaction) => tx,
-        signAllTransactions: async (txs: Transaction[]) => txs,
-        publicKey: accountId,
-      },
-      foundToken.timeInvalidator!.pubkey,
-      foundToken.tokenManager!.pubkey
-    )
+  } else if (foundToken.tokenManager && foundToken.timeInvalidator) {
+    const instruction = await timeInvalidatorProgram(connection)
+      .methods.close()
+      .accountsStrict({
+        tokenManager: foundToken.tokenManager.pubkey,
+        collector: CRANK_KEY,
+        timeInvalidator: foundToken.timeInvalidator.pubkey,
+        closer: accountId,
+      })
+      .instruction()
     transaction.instructions = [
       {
         ...instruction,
@@ -291,18 +287,18 @@ const post: NextApiHandler<PostResponse> = async (req, res) => {
         ],
       },
     ]
-  } else if (foundToken.useInvalidator) {
-    const instruction = await incrementUsages(
-      connection,
-      {
-        signTransaction: async (tx: Transaction) => tx,
-        signAllTransactions: async (txs: Transaction[]) => txs,
-        publicKey: accountId,
-      },
-      foundToken.tokenManager!.pubkey,
-      foundToken.tokenAccount!.pubkey,
-      1
-    )
+  } else if (foundToken.tokenManager && foundToken.useInvalidator) {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const instruction = await useInvalidatorProgram(connection)
+      .methods.incrementUsages(new BN(1))
+      .accountsStrict({
+        tokenManager: foundToken.tokenManager.pubkey,
+        recipientTokenAccount:
+          foundToken.tokenManager.parsed.recipientTokenAccount,
+        useInvalidator: foundToken.useInvalidator.pubkey,
+        user: accountId,
+      })
+      .instruction()
     transaction.instructions = [
       {
         ...instruction,

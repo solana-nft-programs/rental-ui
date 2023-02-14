@@ -1,9 +1,7 @@
 import type { Wallet } from '@saberhq/solana-contrib'
-import * as splToken from '@solana/spl-token'
 import type {
   ConfirmOptions,
   Connection,
-  PublicKey,
   SendTransactionError,
   Signer,
   Transaction,
@@ -12,27 +10,6 @@ import { sendAndConfirmRawTransaction } from '@solana/web3.js'
 import { notify } from 'common/Notification'
 
 import { handleError } from './errors'
-
-export async function getATokenAccountInfo(
-  connection: Connection,
-  mint: PublicKey,
-  owner: PublicKey
-): Promise<splToken.AccountInfo> {
-  const aTokenAccount = await splToken.Token.getAssociatedTokenAddress(
-    splToken.ASSOCIATED_TOKEN_PROGRAM_ID,
-    splToken.TOKEN_PROGRAM_ID,
-    mint,
-    owner
-  )
-  const token = new splToken.Token(
-    connection,
-    mint,
-    splToken.TOKEN_PROGRAM_ID,
-    // @ts-ignore
-    null
-  )
-  return token.getAccountInfo(aTokenAccount)
-}
 
 export const executeAllTransactions = async (
   connection: Connection,

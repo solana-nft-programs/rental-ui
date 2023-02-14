@@ -40,7 +40,7 @@ const get: NextApiHandler<GetResponse> = async (req, res) => {
   }
   const connection = new Connection(foundEnvironment!.primary)
 
-  const [tokenManagerId] = await findTokenManagerAddress(mintIdParam)
+  const tokenManagerId = findTokenManagerAddress(mintIdParam)
   const tokenManagerData = await tryGetAccount(() =>
     getTokenManager(connection, tokenManagerId)
   )

@@ -4,6 +4,7 @@ import { tryPublicKey } from '@cardinal/common'
 import type { PaidClaimApproverData } from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
 import type { TimeInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
 import { TIME_INVALIDATOR_ADDRESS } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
+import type { TokenManagerData } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import {
   getTokenManagers,
@@ -316,7 +317,7 @@ export const useBrowseAvailableTokenDatas = (
           async () =>
             (
               await getTokenManagers(connection, tokenManagerIds)
-            ).filter((tm) => tm.parsed),
+            ).filter((tm): tm is AccountData<TokenManagerData> => !!tm.parsed),
           trace,
           {
             op: 'fetch-recent-token-managers',

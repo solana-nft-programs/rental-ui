@@ -43,10 +43,10 @@ export interface HandleRateRentalParams {
     claimApprover?: AccountData<PaidClaimApproverData> | null
     tokenManager?: AccountData<TokenManagerData> | null
     timeInvalidator?: AccountData<TimeInvalidatorData> | null
-    metaplexData?: AccountData<metaplex.MetadataData>
+    metaplexData?: AccountData<metaplex.Metadata>
   }
   extensionSeconds: number | undefined | null
-  userPaymentTokenAccount?: splToken.AccountInfo
+  userPaymentTokenAccount?: splToken.Account
   otpKeypair?: Keypair
   claim?: boolean
 }
@@ -88,7 +88,8 @@ export const useHandleRateRental = () => {
         paymentAmount > 0
       ) {
         const amountToWrap =
-          paymentAmount - (userPaymentTokenAccount?.amount.toNumber() || 0)
+          paymentAmount -
+          (Number(userPaymentTokenAccount?.amount.toString()) || 0)
         if (amountToWrap > 0) {
           await withWrapSol(
             transaction,

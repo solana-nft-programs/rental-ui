@@ -2,11 +2,13 @@ import type { AccountData } from '@cardinal/common'
 import type { PaidClaimApproverData } from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
 import type { TimeInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
 import { TIME_INVALIDATOR_ADDRESS } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
+import type { TokenManagerData } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { getTokenManagers } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/accounts'
 import type { UseInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
 import { USE_INVALIDATOR_ADDRESS } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
 import * as Sentry from '@sentry/browser'
+import { Account } from '@solana/spl-token'
 import type { PublicKey } from '@solana/web3.js'
 import type { TokenData } from 'apis/api'
 import { getTokenDatas } from 'apis/api'
@@ -14,7 +16,6 @@ import type { TokenFilter } from 'config/config'
 import { withTrace } from 'monitoring/trace'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
-import type { ParsedTokenAccountData } from 'providers/SolanaAccountsProvider'
 import { useAccounts } from 'providers/SolanaAccountsProvider'
 import { useQuery } from 'react-query'
 
@@ -77,7 +78,7 @@ export const useBrowseClaimedTokenDatas = (
           async () =>
             (
               await getTokenManagers(connection, tokenManagerIds)
-            ).filter((tm) => tm.parsed),
+            ).filter((tm): tm is AccountData<TokenManagerData> => !!tm.parsed),
           trace,
           {
             op: 'fetch-recent-token-managers',
@@ -138,7 +139,7 @@ export const useBrowseClaimedTokenDatas = (
               ]?.parsed
                 ? (accountsById[
                     tokenManagerData.parsed.recipientTokenAccount?.toString()
-                  ] as AccountData<ParsedTokenAccountData>)
+                  ] as AccountData<Account>)
                 : undefined,
           }
         })

@@ -1,5 +1,8 @@
-import { getBatchedMultipleAccounts } from '@cardinal/common'
-import type { AccountData } from '@cardinal/token-manager'
+import type { AccountData } from '@cardinal/common'
+import {
+  getBatchedMultipleAccounts,
+  METADATA_PROGRAM_ID,
+} from '@cardinal/common'
 import type { PaidClaimApproverData } from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
 import {
   CLAIM_APPROVER_ADDRESS,
@@ -21,39 +24,15 @@ import {
   USE_INVALIDATOR_IDL,
 } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
 import * as metaplex from '@metaplex-foundation/mpl-token-metadata'
-import {
-  EditionData,
-  MasterEditionV2Data,
-  MetadataKey,
-} from '@metaplex-foundation/mpl-token-metadata'
 import { BorshAccountsCoder } from '@project-serum/anchor'
 import { TOKEN_PROGRAM_ID } from '@project-serum/anchor/dist/cjs/utils/token'
-import * as spl from '@solana/spl-token'
-import { u64 } from '@solana/spl-token'
-import type {
-  AccountInfo,
-  Connection,
-  ParsedAccountData,
-} from '@solana/web3.js'
+import * as splToken from '@solana/spl-token'
+import type { AccountInfo, Connection } from '@solana/web3.js'
 import { PublicKey } from '@solana/web3.js'
 import type { ReactChild } from 'react'
 import React, { useContext, useEffect, useMemo, useState } from 'react'
 
 import { useEnvironmentCtx } from './EnvironmentProvider'
-
-export type ParsedTokenAccountData = {
-  isNative: boolean
-  delegate: string
-  mint: string
-  owner: string
-  state: 'initialized' | 'frozen'
-  tokenAmount: {
-    amount: string
-    decimals: number
-    uiAmount: number
-    uiAmountString: string
-  }
-}
 
 export type AccountTypeData = {
   type: AccountType
@@ -79,11 +58,11 @@ export type AccountCacheData = AccountInfo<Buffer> &
     | PaidClaimApproverData
     | TimeInvalidatorData
     | UseInvalidatorData
-    | metaplex.MetadataData
-    | metaplex.EditionData
-    | metaplex.MasterEditionData
-    | ParsedTokenAccountData
-    | spl.MintInfo
+    | metaplex.Metadata
+    | metaplex.Edition
+    | metaplex.MasterEditionV2
+    | splToken.Mint
+    | splToken.Account
     | null
   >
 
@@ -93,13 +72,15 @@ export type AccountDataById = {
 
 export const deserializeAccountInfos = (
   accountIds: (PublicKey | null)[],
-  accountInfos: (AccountInfo<Buffer | ParsedAccountData> | null)[]
+  accountInfos: (AccountInfo<Buffer> | null)[]
 ): AccountDataById => {
   return accountInfos.reduce((acc, accountInfo, i) => {
+    if (!accountInfo?.data) return acc
     const ownerString = accountInfo?.owner.toString()
+    const pubkey = accountIds[i]!
     const baseData = {
       timestamp: Date.now(),
-      pubkey: accountIds[i]!,
+      pubkey,
     }
     switch (ownerString) {
       case TOKEN_MANAGER_ADDRESS.toString():
@@ -110,10 +91,10 @@ export const deserializeAccountInfos = (
             type,
             accountInfo?.data as Buffer
           ) as TokenManagerData
-          acc[accountIds[i]!.toString()] = {
+          acc[pubkey.toString()] = {
             ...baseData,
             type,
-            ...(accountInfo as AccountInfo<Buffer>),
+            ...accountInfo,
             parsed,
           }
         } catch (e) {}
@@ -126,10 +107,10 @@ export const deserializeAccountInfos = (
             type,
             accountInfo?.data as Buffer
           ) as TimeInvalidatorData
-          acc[accountIds[i]!.toString()] = {
+          acc[pubkey.toString()] = {
             ...baseData,
             type,
-            ...(accountInfo as AccountInfo<Buffer>),
+            ...accountInfo,
             parsed,
           }
         } catch (e) {}
@@ -142,10 +123,10 @@ export const deserializeAccountInfos = (
             type,
             accountInfo?.data as Buffer
           ) as UseInvalidatorData
-          acc[accountIds[i]!.toString()] = {
+          acc[pubkey.toString()] = {
             ...baseData,
             type,
-            ...(accountInfo as AccountInfo<Buffer>),
+            ...accountInfo,
             parsed,
           }
         } catch (e) {}
@@ -158,144 +139,78 @@ export const deserializeAccountInfos = (
             type,
             accountInfo?.data as Buffer
           ) as PaidClaimApproverData
-          acc[accountIds[i]!.toString()] = {
+          acc[pubkey.toString()] = {
             ...baseData,
             type,
-            ...(accountInfo as AccountInfo<Buffer>),
+            ...accountInfo,
             parsed,
           }
         } catch (e) {}
         return acc
       case TOKEN_PROGRAM_ID.toString():
-        if (accountInfo?.data && 'parsed' in accountInfo?.data) {
-          const accountData = accountInfo?.data
-          acc[accountIds[i]!.toString()] =
-            accountData.space === spl.MintLayout.span
-              ? {
-                  ...baseData,
-                  type: 'mint',
-                  ...(accountInfo as AccountInfo<Buffer>),
-                  parsed: accountData.parsed?.info as spl.MintInfo,
-                }
-              : {
-                  ...baseData,
-                  type: 'tokenAccount',
-                  ...(accountInfo as AccountInfo<Buffer>),
-                  parsed: accountData.parsed?.info as ParsedTokenAccountData,
-                }
-          // taken from account deserialization in splToken getMintInfo
-        } else if (
-          accountInfo?.data &&
-          'length' in accountInfo?.data &&
-          accountInfo?.data.length === spl.MintLayout.span
-        ) {
-          const parsed = spl.MintLayout.decode(accountInfo?.data)
-          if (parsed.mintAuthorityOption === 0) {
-            parsed.mintAuthority = null
-          } else {
-            parsed.mintAuthority = new PublicKey(parsed.mintAuthority)
-          }
-          parsed.supply = u64.fromBuffer(parsed.supply)
-          parsed.isInitialized = parsed.isInitialized !== 0
-          if (parsed.freezeAuthorityOption === 0) {
-            parsed.freezeAuthority = null
-          } else {
-            parsed.freezeAuthority = new PublicKey(parsed.freezeAuthority)
-          }
-          acc[accountIds[i]!.toString()] = {
+        try {
+          acc[pubkey.toString()] = {
             ...baseData,
+            ...accountInfo,
             type: 'mint',
-            ...(accountInfo as AccountInfo<Buffer>),
-            parsed: parsed as spl.MintInfo,
+            parsed: splToken.unpackMint(pubkey, accountInfo),
           }
-        } else if (
-          accountInfo?.data &&
-          'length' in accountInfo?.data &&
-          accountInfo?.data.length === spl.AccountLayout.span
-        ) {
+        } catch {
           try {
-            // taken from account deserialization in splToken getAccountInfo
-            const parsed = spl.AccountLayout.decode(accountInfo?.data)
-            parsed.address = accountIds[i]!
-            parsed.mint = new PublicKey(parsed.mint)
-            parsed.owner = new PublicKey(parsed.owner)
-            parsed.amount = u64.fromBuffer(parsed.amount)
-            if (parsed.delegateOption === 0) {
-              parsed.delegate = null
-              parsed.delegatedAmount = new u64(0)
-            } else {
-              parsed.delegate = new PublicKey(parsed.delegate)
-              parsed.delegatedAmount = u64.fromBuffer(parsed.delegatedAmount)
-            }
-
-            parsed.isInitialized = parsed.state !== 0
-            parsed.isFrozen = parsed.state === 2
-
-            if (parsed.isNativeOption === 1) {
-              parsed.rentExemptReserve = u64.fromBuffer(parsed.isNative)
-              parsed.isNative = true
-            } else {
-              parsed.rentExemptReserve = null
-              parsed.isNative = false
-            }
-
-            if (parsed.closeAuthorityOption === 0) {
-              parsed.closeAuthority = null
-            } else {
-              parsed.closeAuthority = new PublicKey(parsed.closeAuthority)
-            }
-            acc[accountIds[i]!.toString()] = {
+            acc[pubkey.toString()] = {
               ...baseData,
-              type: 'mint',
-              ...(accountInfo as AccountInfo<Buffer>),
-              parsed: parsed as ParsedTokenAccountData,
+              ...accountInfo,
+              type: 'tokenAccount',
+              parsed: splToken.unpackAccount(pubkey, accountInfo),
             }
           } catch {}
         }
         return acc
-      case metaplex.MetadataProgram.PUBKEY.toString():
+      case METADATA_PROGRAM_ID.toString():
         try {
-          acc[accountIds[i]!.toString()] = {
+          acc[pubkey.toString()] = {
             ...baseData,
             type: 'metaplexMetadata',
-            ...(accountInfo as AccountInfo<Buffer>),
-            parsed: metaplex.MetadataData.deserialize(
-              accountInfo?.data as Buffer
-            ) as metaplex.MetadataData,
+            ...accountInfo,
+            parsed: metaplex.Metadata.deserialize(accountInfo?.data)[0],
           }
-        } catch (e) {}
-        try {
-          const key =
-            accountInfo === null || accountInfo === void 0
-              ? void 0
-              : (accountInfo.data as Buffer)[0]
-          let parsed
-          if (key === MetadataKey.EditionV1) {
-            parsed = EditionData.deserialize(accountInfo?.data as Buffer)
-          } else if (
-            key === MetadataKey.MasterEditionV1 ||
-            key === MetadataKey.MasterEditionV2
-          ) {
-            parsed = MasterEditionV2Data.deserialize(
-              accountInfo?.data as Buffer
-            )
-          }
-          if (parsed) {
-            acc[accountIds[i]!.toString()] = {
+        } catch (e) {
+          try {
+            acc[pubkey.toString()] = {
               ...baseData,
               type: 'editionData',
-              ...(accountInfo as AccountInfo<Buffer>),
-              parsed,
+              ...accountInfo,
+              parsed: metaplex.MasterEditionV2.deserialize(
+                accountInfo?.data
+              )[0],
+            }
+          } catch (e) {
+            try {
+              acc[pubkey.toString()] = {
+                ...baseData,
+                type: 'editionData',
+                ...accountInfo,
+                parsed: metaplex.MasterEditionV1.deserialize(
+                  accountInfo?.data
+                )[0],
+              }
+            } catch (e) {
+              acc[pubkey.toString()] = {
+                ...baseData,
+                type: 'editionData',
+                ...accountInfo,
+                parsed: metaplex.Edition.deserialize(accountInfo?.data)[0],
+              }
             }
           }
-        } catch (e) {}
+        }
         return acc
       default:
         const type = 'unknown'
-        acc[accountIds[i]!.toString()] = {
+        acc[pubkey.toString()] = {
           ...baseData,
           type,
-          ...(accountInfo as AccountInfo<Buffer>),
+          ...accountInfo,
           parsed: null,
         }
         return acc

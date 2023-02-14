@@ -1,7 +1,7 @@
 import { tryPublicKey } from '@cardinal/common'
+import { findPaymentManagerAddress } from '@cardinal/payment-manager/dist/cjs/pda'
 import type { IssueParameters } from '@cardinal/token-manager'
 import { issueToken } from '@cardinal/token-manager'
-import { findPaymentManagerAddress } from '@cardinal/token-manager/dist/cjs/programs/paymentManager/pda'
 import type { InvalidationType } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { TokenManagerKind } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { BN, utils } from '@project-serum/anchor'
@@ -196,11 +196,9 @@ export const useHandleIssueRental = () => {
                   paymentManager: rentalCardConfig.paymentManager
                     ? tryPublicKey(rentalCardConfig.paymentManager) ||
                       new PublicKey(
-                        (
-                          await findPaymentManagerAddress(
-                            rentalCardConfig.paymentManager
-                          )
-                        )[0]
+                        findPaymentManagerAddress(
+                          rentalCardConfig.paymentManager
+                        )
                       )
                     : undefined,
                 }
@@ -211,11 +209,7 @@ export const useHandleIssueRental = () => {
                 paymentManager: rentalCardConfig.paymentManager
                   ? tryPublicKey(rentalCardConfig.paymentManager) ||
                     new PublicKey(
-                      (
-                        await findPaymentManagerAddress(
-                          rentalCardConfig.paymentManager
-                        )
-                      )[0]
+                      findPaymentManagerAddress(rentalCardConfig.paymentManager)
                     )
                   : undefined,
               }
