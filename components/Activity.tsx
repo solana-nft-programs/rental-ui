@@ -203,11 +203,11 @@ export const ActivityRecipient = ({
         <DisplayAddress
           dark
           address={
-            tryPublicKey(
-              tokenAccount.isFetched
-                ? tokenAccount.data?.parsed?.owner ?? recipientTokenAccount
-                : undefined
-            ) ?? undefined
+            tokenAccount.isFetched
+              ? tokenAccount.data?.parsed?.owner ??
+                tryPublicKey(recipientTokenAccount) ??
+                undefined
+              : undefined
           }
           connection={secondaryConnection}
         />
