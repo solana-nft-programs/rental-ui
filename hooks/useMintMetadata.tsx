@@ -85,12 +85,12 @@ export const useMintMetadata = (
 
 export const useMintMetadatas = (tokenDatas: TokenData[]) => {
   const { config } = useProjectConfig()
-  return useQueries(
-    tokenDatas.map((tokenData) => {
+  return useQueries({
+    queries: tokenDatas.map((tokenData) => {
       return {
         queryKey: mintMetadataQueryKey(tokenData),
         queryFn: () => mintMetadataQuery(config, tokenData),
       }
-    })
-  )
+    }),
+  })
 }

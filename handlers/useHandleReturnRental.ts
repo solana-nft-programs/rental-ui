@@ -84,7 +84,7 @@ export const useHandleReturnRental = () => {
     },
     {
       onSuccess: () => {
-        queryClient.resetQueries(TOKEN_DATA_KEY)
+        queryClient.resetQueries([TOKEN_DATA_KEY])
       },
     }
   )

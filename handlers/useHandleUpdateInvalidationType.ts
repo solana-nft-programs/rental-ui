@@ -127,7 +127,7 @@ export const useHandleUpdateInvalidationType = () => {
         return e
       },
       onSuccess: () => {
-        queryClient.resetQueries(TOKEN_DATA_KEY)
+        queryClient.resetQueries([TOKEN_DATA_KEY])
       },
     }
   )

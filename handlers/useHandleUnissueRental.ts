@@ -58,7 +58,7 @@ export const useHandleUnissueRental = () => {
     },
     {
       onSuccess: () => {
-        queryClient.resetQueries(TOKEN_DATA_KEY)
+        queryClient.resetQueries([TOKEN_DATA_KEY])
       },
     }
   )
