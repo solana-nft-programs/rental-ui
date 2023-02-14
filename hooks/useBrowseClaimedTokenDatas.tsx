@@ -8,6 +8,7 @@ import { getTokenManagers } from '@cardinal/token-manager/dist/cjs/programs/toke
 import type { UseInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
 import { USE_INVALIDATOR_ADDRESS } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
 import * as Sentry from '@sentry/browser'
+import { Account } from '@solana/spl-token'
 import type { PublicKey } from '@solana/web3.js'
 import type { TokenData } from 'apis/api'
 import { getTokenDatas } from 'apis/api'
@@ -15,7 +16,6 @@ import type { TokenFilter } from 'config/config'
 import { withTrace } from 'monitoring/trace'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
-import type { ParsedTokenAccountData } from 'providers/SolanaAccountsProvider'
 import { useAccounts } from 'providers/SolanaAccountsProvider'
 import { useQuery } from 'react-query'
 
@@ -139,7 +139,7 @@ export const useBrowseClaimedTokenDatas = (
               ]?.parsed
                 ? (accountsById[
                     tokenManagerData.parsed.recipientTokenAccount?.toString()
-                  ] as AccountData<ParsedTokenAccountData>)
+                  ] as AccountData<Account>)
                 : undefined,
           }
         })

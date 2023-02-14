@@ -50,8 +50,8 @@ export const filterTokens = (
   return tokens.filter((token) => {
     // filter tokens with no URI
     if (
-      (!token.metaplexData?.parsed.data.uri ||
-        token.metaplexData?.parsed.data.uri.length <= 0) &&
+      (!token.metaplexData?.parsed.data.uri.replace(/\0/g, '') ||
+        token.metaplexData?.parsed.data.uri.replace(/\0/g, '').length <= 0) &&
       (!token.indexedData?.mint_address_nfts?.uri ||
         token.indexedData?.mint_address_nfts?.uri?.length <= 0)
     ) {

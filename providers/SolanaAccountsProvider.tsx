@@ -34,20 +34,6 @@ import React, { useContext, useEffect, useMemo, useState } from 'react'
 
 import { useEnvironmentCtx } from './EnvironmentProvider'
 
-export type ParsedTokenAccountData = {
-  isNative: boolean
-  delegate: string
-  mint: string
-  owner: string
-  state: 'initialized' | 'frozen'
-  tokenAmount: {
-    amount: string
-    decimals: number
-    uiAmount: number
-    uiAmountString: string
-  }
-}
-
 export type AccountTypeData = {
   type: AccountType
   timestamp: number
@@ -75,7 +61,6 @@ export type AccountCacheData = AccountInfo<Buffer> &
     | metaplex.Metadata
     | metaplex.Edition
     | metaplex.MasterEditionV2
-    | ParsedTokenAccountData
     | splToken.Mint
     | splToken.Account
     | null
@@ -163,26 +148,14 @@ export const deserializeAccountInfos = (
         } catch (e) {}
         return acc
       case TOKEN_PROGRAM_ID.toString():
-        if (
-          accountInfo.data[0]! === splToken.AccountType.Mint ||
-          (accountInfo.data.length > splToken.MINT_SIZE &&
-            accountInfo.data[splToken.ACCOUNT_SIZE] ===
-              splToken.AccountType.Mint)
-        ) {
-          try {
-            acc[pubkey.toString()] = {
-              ...baseData,
-              ...accountInfo,
-              type: 'mint',
-              parsed: splToken.unpackMint(pubkey, accountInfo),
-            }
-          } catch {}
-        } else if (
-          accountInfo.data[0]! === splToken.AccountType.Account ||
-          (accountInfo.data.length > splToken.ACCOUNT_SIZE &&
-            accountInfo.data[splToken.ACCOUNT_SIZE] ===
-              splToken.AccountType.Account)
-        ) {
+        try {
+          acc[pubkey.toString()] = {
+            ...baseData,
+            ...accountInfo,
+            type: 'mint',
+            parsed: splToken.unpackMint(pubkey, accountInfo),
+          }
+        } catch {
           try {
             acc[pubkey.toString()] = {
               ...baseData,

@@ -20,11 +20,10 @@ import * as anchor from '@project-serum/anchor'
 import * as spl from '@solana/spl-token'
 import { getAccount } from '@solana/spl-token'
 import type { Connection, PublicKey } from '@solana/web3.js'
-import { Keypair } from '@solana/web3.js'
 import type { TokenFilter } from 'config/config'
 import type { IndexedData } from 'hooks/useBrowseAvailableTokenDatas'
+import { ParsedTokenAccountData } from 'hooks/useTokenAccounts'
 import type { SingleTokenData } from 'hooks/useTokenData'
-import type { ParsedTokenAccountData } from 'providers/SolanaAccountsProvider'
 import { fetchAccountDataById } from 'providers/SolanaAccountsProvider'
 
 export interface TokenData {
@@ -41,7 +40,7 @@ export interface TokenData {
   claimApprover?: AccountData<PaidClaimApproverData> | null
   useInvalidator?: AccountData<UseInvalidatorData> | null
   timeInvalidator?: AccountData<TimeInvalidatorData> | null
-  recipientTokenAccount?: AccountData<ParsedTokenAccountData>
+  recipientTokenAccount?: AccountData<spl.Account>
 }
 
 /** Converts serialized tokenData or similar to TokenData */
@@ -207,7 +206,7 @@ export async function getTokenDatas(
       recipientTokenAccount: tokenManagerData.parsed.recipientTokenAccount
         ? (accountsById[
             tokenManagerData.parsed.recipientTokenAccount?.toString()
-          ] as AccountData<ParsedTokenAccountData>)
+          ] as AccountData<spl.Account>)
         : undefined,
       metaplexData: metaplexDataById[tokenManagerData.pubkey.toString()],
       tokenManager: tokenManagerData,

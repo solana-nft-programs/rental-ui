@@ -68,7 +68,8 @@ export const getMintfromTokenData = (
     ('tokenManager' in tokenData &&
       tokenData.tokenManager?.parsed?.mint.toString()) ||
     ('indexedData' in tokenData && tokenData.indexedData?.mint) ||
-    ('metaplexData' in tokenData && tokenData.metaplexData?.parsed.mint) ||
+    ('metaplexData' in tokenData &&
+      tokenData.metaplexData?.parsed.mint.toString()) ||
     null
   )
 }

@@ -18,11 +18,11 @@ import type { TokenFilter } from 'config/config'
 import { withTrace } from 'monitoring/trace'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
-import type { ParsedTokenAccountData } from 'providers/SolanaAccountsProvider'
 import { fetchAccountDataById } from 'providers/SolanaAccountsProvider'
 import { useQuery } from 'react-query'
 
 import { TOKEN_DATA_KEY } from './useBrowseAvailableTokenDatas'
+import { getTokenAccounts } from './useTokenAccounts'
 import { useWalletId } from './useWalletId'
 
 export type UserTokenData = Pick<
@@ -56,25 +56,14 @@ export const useUserTokenData = (
       })
 
       const allTokenAccounts = await withTrace(
-        () =>
-          connection.getParsedTokenAccountsByOwner(new PublicKey(walletId), {
-            programId: spl.TOKEN_PROGRAM_ID,
-          }),
+        () => getTokenAccounts(connection, new PublicKey(walletId)),
         trace,
         { op: 'get-token-accounts' }
       )
 
-      let tokenAccounts = allTokenAccounts.value
-        .filter(
-          (tokenAccount) =>
-            tokenAccount.account.data.parsed.info.tokenAmount.uiAmount > 0
-        )
+      let tokenAccounts = allTokenAccounts
+        .filter((tokenAccount) => tokenAccount.parsed.tokenAmount.uiAmount > 0)
         .sort((a, b) => a.pubkey.toBase58().localeCompare(b.pubkey.toBase58()))
-        .map((tokenAccount) => ({
-          pubkey: tokenAccount.pubkey,
-          parsed: tokenAccount.account.data.parsed
-            .info as ParsedTokenAccountData,
-        }))
 
       // lookup metaplex data
       const metaplexIds = await withTrace(
@@ -242,7 +231,7 @@ export const useUserTokenData = (
           recipientTokenAccount: tokenManagerData?.parsed.recipientTokenAccount
             ? (accountsById[
                 tokenManagerData.parsed.recipientTokenAccount?.toString()
-              ] as AccountData<ParsedTokenAccountData>)
+              ] as AccountData<spl.Account>)
             : undefined,
           metaplexData: metaplexData[tokenAccount.pubkey.toString()],
           editionData: accountsById[editionIds[i]!.toString()] as
