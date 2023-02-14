@@ -26,7 +26,7 @@ export const logConfigTokenDataEvent = (
   logConfigEvent(eventName, config, {
     ...eventProperties,
     nft_name: tokenData.metaplexData?.parsed.data.name,
-    nft_mint_id: tokenData.metaplexData?.parsed.mint,
+    nft_mint_id: tokenData.metaplexData?.parsed.mint.toString(),
     token_manager_id: tokenData.tokenManager?.pubkey.toString(),
     token_manager_state_changed_at:
       tokenData.tokenManager?.parsed.stateChangedAt.toNumber(),
