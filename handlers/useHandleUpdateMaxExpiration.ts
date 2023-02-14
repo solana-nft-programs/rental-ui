@@ -14,7 +14,7 @@ import { logConfigTokenDataEvent } from 'monitoring/amplitude'
 import { tracer, withTrace } from 'monitoring/trace'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import type { TokenData } from './../apis/api'
 
@@ -109,7 +109,7 @@ export const useHandleUpdateMaxExpiration = () => {
         return e
       },
       onSuccess: () => {
-        queryClient.resetQueries(TOKEN_DATA_KEY)
+        queryClient.resetQueries([TOKEN_DATA_KEY])
       },
     }
   )

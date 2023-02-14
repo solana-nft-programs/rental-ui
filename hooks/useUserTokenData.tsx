@@ -19,7 +19,7 @@ import { withTrace } from 'monitoring/trace'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { fetchAccountDataById } from 'providers/SolanaAccountsProvider'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 import { TOKEN_DATA_KEY } from './useBrowseAvailableTokenDatas'
 import { getTokenAccounts } from './useTokenAccounts'

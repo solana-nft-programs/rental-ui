@@ -1,7 +1,7 @@
 import type { ConfirmedSignatureInfo, PublicKey } from '@solana/web3.js'
 import { Connection } from '@solana/web3.js'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 export const useRecentSignatures = (address: PublicKey | undefined) => {
   const { environment } = useEnvironmentCtx()

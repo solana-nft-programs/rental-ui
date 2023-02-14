@@ -5,7 +5,7 @@ import { getMintfromTokenData } from 'common/tokenDataUtils'
 import type { ProjectConfig } from 'config/config'
 import { tracer, withTrace } from 'monitoring/trace'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
-import { useQueries, useQuery } from 'react-query'
+import { useQueries, useQuery } from '@tanstack/react-query'
 
 export const mintMetadataQueryKey = (
   tokenData: Pick<TokenData, 'metaplexData'> | Pick<TokenData, 'indexedData'>
@@ -85,12 +85,12 @@ export const useMintMetadata = (
 
 export const useMintMetadatas = (tokenDatas: TokenData[]) => {
   const { config } = useProjectConfig()
-  return useQueries(
-    tokenDatas.map((tokenData) => {
+  return useQueries({
+    queries: tokenDatas.map((tokenData) => {
       return {
         queryKey: mintMetadataQueryKey(tokenData),
         queryFn: () => mintMetadataQuery(config, tokenData),
       }
-    })
-  )
+    }),
+  })
 }

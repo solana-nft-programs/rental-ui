@@ -35,7 +35,7 @@ import {
 import { SolanaAccountsProvider } from 'providers/SolanaAccountsProvider'
 import { UTCNowProvider } from 'providers/UTCNowProvider'
 import { useMemo } from 'react'
-import { QueryClient, QueryClientProvider } from 'react-query'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
 import Head from 'next/head'
 
@@ -45,6 +45,7 @@ export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,
+      refetchOnMount: false,
     },
   },
 })

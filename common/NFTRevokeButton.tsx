@@ -6,7 +6,7 @@ import { logConfigTokenDataEvent } from 'monitoring/amplitude'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useUTCNow } from 'providers/UTCNowProvider'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 
 import { ButtonSmall } from './ButtonSmall'
 import { shouldBeInvalidated } from './tokenDataUtils'
@@ -52,7 +52,7 @@ export const NFTRevokeButton: React.FC<NFTRevokeButtonProps> = ({
                       configFromToken(tokenData),
                       tokenData
                     )
-                    queryClient.resetQueries(TOKEN_DATA_KEY)
+                    queryClient.resetQueries([TOKEN_DATA_KEY])
                   },
                 }
               ))

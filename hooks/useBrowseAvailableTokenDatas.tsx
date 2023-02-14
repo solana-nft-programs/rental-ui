@@ -24,7 +24,7 @@ import type { Environment } from 'providers/EnvironmentProvider'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useAccounts } from 'providers/SolanaAccountsProvider'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 import { WRAPPED_SOL_MINT } from './usePaymentMints'
 

@@ -10,7 +10,7 @@ import type { PublicKey } from '@solana/web3.js'
 import { tracer } from 'monitoring/trace'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
-import { useInfiniteQuery } from 'react-query'
+import { useInfiniteQuery } from '@tanstack/react-query'
 
 export const ACTIVITY_KEY = 'activity'
 

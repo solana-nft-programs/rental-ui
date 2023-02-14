@@ -4,7 +4,7 @@ import type { PublicKey } from '@solana/web3.js'
 import { tracer, withTrace } from 'monitoring/trace'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { deserializeAccountInfos } from 'providers/SolanaAccountsProvider'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 export const useTokenAccountInfo = (tokenAccount: PublicKey | undefined) => {
   const { secondaryConnection } = useEnvironmentCtx()

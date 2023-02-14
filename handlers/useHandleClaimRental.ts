@@ -27,7 +27,7 @@ import { logConfigTokenDataEvent } from 'monitoring/amplitude'
 import { tracer, withTrace } from 'monitoring/trace'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import type { InvalidatorOption } from 'rental-components/components/RentalIssueCard'
 
 export interface HandleClaimRentalParams {
@@ -213,7 +213,7 @@ export const useHandleClaimRental = () => {
     },
     {
       onSuccess: () => {
-        queryClient.resetQueries(TOKEN_DATA_KEY)
+        queryClient.resetQueries([TOKEN_DATA_KEY])
       },
       onError: async (e) => {
         if (e instanceof Error) {
