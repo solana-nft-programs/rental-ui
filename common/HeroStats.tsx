@@ -23,9 +23,7 @@ const calculateFloorPrice = (
     'tokenManager' | 'claimApprover' | 'timeInvalidator'
   >[],
   config: ProjectConfig,
-  paymentMints:
-    | { [name: string]: Pick<splToken.MintInfo, 'decimals'> }
-    | undefined
+  paymentMints: { [name: string]: Pick<splToken.Mint, 'decimals'> } | undefined
 ): number => {
   const rentalPrices = tokenDatas
     .filter(

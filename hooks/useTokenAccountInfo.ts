@@ -13,12 +13,12 @@ export const useTokenAccountInfo = (tokenAccount: PublicKey | undefined) => {
     async () =>
       withTrace(async () => {
         if (!tokenAccount) return
-        const accountInfo = await secondaryConnection.getParsedAccountInfo(
+        const accountInfo = await secondaryConnection.getAccountInfo(
           tokenAccount
         )
         const deserializedAccount = deserializeAccountInfos(
           [tokenAccount],
-          [accountInfo.value]
+          [accountInfo]
         )
         return deserializedAccount[tokenAccount.toString()] as
           | AccountData<ParsedTokenAccountData>

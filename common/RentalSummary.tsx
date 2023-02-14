@@ -25,7 +25,7 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
 export const getExtensionPrice = (
   tokenData: TokenData,
   extensionSeconds: number,
-  paymentMints?: { [name: string]: Pick<splToken.MintInfo, 'decimals'> }
+  paymentMints?: { [name: string]: Pick<splToken.Mint, 'decimals'> }
 ): number => {
   if (
     !paymentMints ||

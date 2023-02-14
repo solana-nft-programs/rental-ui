@@ -118,7 +118,7 @@ export function sortTokens<
   config: ProjectConfig,
   UTCNow: number,
   claimed: boolean,
-  paymentMints: { [name: string]: Pick<splToken.MintInfo, 'decimals'> },
+  paymentMints: { [name: string]: Pick<splToken.Mint, 'decimals'> },
   otpKeypair: Keypair | undefined
 ): T[] {
   let sortedTokens

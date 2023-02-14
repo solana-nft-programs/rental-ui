@@ -23,7 +23,7 @@ export const priceAndSymbol = (
   paymentMint: PublicKey | null | undefined,
   paymentMintInfos:
     | {
-        [name: string]: Pick<splToken.MintInfo, 'decimals'>
+        [name: string]: Pick<splToken.Mint, 'decimals'>
       }
     | undefined
 ) => {

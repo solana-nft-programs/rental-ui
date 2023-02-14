@@ -8,7 +8,6 @@ import {
   tryPublicKey,
 } from '@cardinal/common'
 import { CRANK_KEY } from '@cardinal/payment-manager'
-import { scan } from '@cardinal/scanner/dist/cjs/programs/cardinalScanner'
 import type { PaidClaimApproverData } from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
 import type { TimeInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
 import { timeInvalidatorProgram } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
@@ -17,8 +16,14 @@ import type { UseInvalidatorData } from '@cardinal/token-manager/dist/cjs/progra
 import { useInvalidatorProgram } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
 import * as metaplex from '@metaplex-foundation/mpl-token-metadata'
 import { BN, utils } from '@project-serum/anchor'
-import * as spl from '@solana/spl-token'
-import { Connection, Keypair, PublicKey, Transaction } from '@solana/web3.js'
+import * as splToken from '@solana/spl-token'
+import {
+  Connection,
+  Keypair,
+  PublicKey,
+  Transaction,
+  TransactionInstruction,
+} from '@solana/web3.js'
 import type { TokenFilter } from 'config/config'
 import { projectConfigs } from 'config/config'
 import type { NextApiHandler } from 'next'
@@ -26,7 +31,7 @@ import { ENVIRONMENTS } from 'providers/EnvironmentProvider'
 import { fetchAccountDataById } from 'providers/SolanaAccountsProvider'
 
 export type ScanTokenData = {
-  tokenAccount?: AccountData<spl.AccountInfo>
+  tokenAccount?: AccountData<splToken.Account>
   tokenManager?: AccountData<TokenManagerData>
   metaplexData?: AccountData<metaplex.Metadata>
   claimApprover?: AccountData<PaidClaimApproverData> | null
@@ -42,7 +47,7 @@ export async function getScanTokenAccounts(
 ): Promise<ScanTokenData[]> {
   const allTokenAccounts = await connection.getParsedTokenAccountsByOwner(
     new PublicKey(addressId),
-    { programId: spl.TOKEN_PROGRAM_ID }
+    { programId: splToken.TOKEN_PROGRAM_ID }
   )
   let tokenAccounts = allTokenAccounts.value
     .filter(
@@ -249,7 +254,11 @@ const post: NextApiHandler<PostResponse> = async (req, res) => {
 
   let transaction = new Transaction()
   if (!foundToken.timeInvalidator && !foundToken.useInvalidator) {
-    const instruction = scan(connection, emptyWallet(accountId), accountId)
+    const instruction = new TransactionInstruction({
+      programId: new PublicKey('MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr'),
+      keys: [],
+      data: Buffer.from('', 'utf8'),
+    })
     transaction.instructions = [
       {
         ...instruction,

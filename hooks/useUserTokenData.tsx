@@ -238,9 +238,7 @@ export const useUserTokenData = (
         }
         return {
           tokenAccount,
-          mint: accountsById[
-            tokenAccount.parsed.mint
-          ] as AccountData<spl.MintInfo>,
+          mint: accountsById[tokenAccount.parsed.mint] as AccountData<spl.Mint>,
           recipientTokenAccount: tokenManagerData?.parsed.recipientTokenAccount
             ? (accountsById[
                 tokenManagerData.parsed.recipientTokenAccount?.toString()

@@ -7,7 +7,7 @@ import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useQuery } from 'react-query'
 
 export type SingleTokenData = Omit<TokenData, 'recipientTokenAccount'> & {
-  recipientTokenAccount?: AccountData<spl.AccountInfo>
+  recipientTokenAccount?: AccountData<spl.Account>
   metadata?: AccountData<any>
 }
 

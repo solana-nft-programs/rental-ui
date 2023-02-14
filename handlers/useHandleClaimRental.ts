@@ -129,7 +129,9 @@ export const useHandleClaimRental = () => {
       ) {
         const amountToWrap =
           tokenData?.claimApprover?.parsed?.paymentAmount.sub(
-            userWSolTokenAccount.data?.amount || new BN(0)
+            userWSolTokenAccount.data?.amount
+              ? new BN(userWSolTokenAccount.data?.amount.toString())
+              : new BN(0)
           )
         if (amountToWrap.gt(new BN(0))) {
           await withWrapSol(

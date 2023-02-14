@@ -18,6 +18,7 @@ import { findUseInvalidatorAddress } from '@cardinal/token-manager/dist/cjs/prog
 import * as metaplex from '@metaplex-foundation/mpl-token-metadata'
 import * as anchor from '@project-serum/anchor'
 import * as spl from '@solana/spl-token'
+import { getAccount } from '@solana/spl-token'
 import type { Connection, PublicKey } from '@solana/web3.js'
 import { Keypair } from '@solana/web3.js'
 import type { TokenFilter } from 'config/config'
@@ -28,7 +29,7 @@ import { fetchAccountDataById } from 'providers/SolanaAccountsProvider'
 
 export interface TokenData {
   tokenAccount?: AccountData<ParsedTokenAccountData>
-  mint?: AccountData<spl.MintInfo> | null
+  mint?: AccountData<spl.Mint> | null
   indexedData?: IndexedData
   tokenManager?: AccountData<TokenManagerData>
   metaplexData?: AccountData<metaplex.Metadata>
@@ -199,7 +200,7 @@ export async function getTokenDatas(
     )[0]
     return {
       mint: (accountsById[tokenManagerData.parsed.mint.toString()] ??
-        null) as AccountData<spl.MintInfo> | null,
+        null) as AccountData<spl.Mint> | null,
       editionData: accountsById[editionIds[i]!.toString()] as
         | AccountData<metaplex.Edition | metaplex.MasterEditionV2>
         | undefined,
@@ -276,16 +277,11 @@ export async function getTokenData(
     }
   }
 
-  let recipientTokenAccount: AccountData<spl.AccountInfo> | null = null
+  let recipientTokenAccount: AccountData<spl.Account> | null = null
   if (tokenManagerData?.parsed.recipientTokenAccount) {
     try {
-      const mint = new spl.Token(
+      const recipientTokenAccountParsed = await getAccount(
         connection,
-        tokenManagerData?.parsed.mint,
-        spl.TOKEN_PROGRAM_ID,
-        Keypair.generate() // not used
-      )
-      const recipientTokenAccountParsed = await mint.getAccountInfo(
         tokenManagerData?.parsed.recipientTokenAccount
       )
       recipientTokenAccount = {

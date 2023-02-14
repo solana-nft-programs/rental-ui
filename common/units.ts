@@ -1,10 +1,10 @@
-import type { BN } from '@project-serum/anchor'
-import type { MintInfo } from '@solana/spl-token'
+import { BN } from '@project-serum/anchor'
+import type { Mint } from '@solana/spl-token'
 import { BigNumber } from 'bignumber.js'
 
 /// Formats mint amount (natural units) as a decimal string
 export function fmtMintAmount(
-  mint: Pick<MintInfo, 'decimals'> | undefined,
+  mint: Pick<Mint, 'decimals'> | undefined,
   mintAmount: BN
 ) {
   return mint
@@ -14,7 +14,7 @@ export function fmtMintAmount(
 
 // Converts mint amount (natural units) to decimals
 export function getMintDecimalAmount(
-  mint: Pick<MintInfo, 'decimals'>,
+  mint: Pick<Mint, 'decimals'>,
   mintAmount: BN
 ) {
   return new BigNumber(mintAmount.toString()).shiftedBy(-mint.decimals)

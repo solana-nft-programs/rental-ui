@@ -103,7 +103,7 @@ export const getRentalRateDisplayText = (
       Pick<PaidClaimApproverData, 'paymentAmount' | 'paymentMint'>
     > | null
   },
-  paymentMints?: { [name: string]: Pick<splToken.MintInfo, 'decimals'> },
+  paymentMints?: { [name: string]: Pick<splToken.Mint, 'decimals'> },
   accentColor = 'text-light-2'
 ) => {
   return isRateBasedListing(tokenData) ? (

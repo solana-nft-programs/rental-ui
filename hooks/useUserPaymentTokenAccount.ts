@@ -1,7 +1,7 @@
-import type * as splToken from '@solana/spl-token'
+import * as splToken from '@solana/spl-token'
+import { getAssociatedTokenAddressSync } from '@solana/spl-token'
 import type { PublicKey } from '@solana/web3.js'
 import { Connection } from '@solana/web3.js'
-import { getATokenAccountInfo } from 'apis/utils'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useQuery } from 'react-query'
 
@@ -13,11 +13,14 @@ export const useUserPaymentTokenAccount = (mint: PublicKey | undefined) => {
   const connection = new Connection(environment.primary, {
     commitment: 'confirmed',
   })
-  return useQuery<splToken.AccountInfo | undefined>(
+  return useQuery<splToken.Account | undefined>(
     ['useUserPaymentTokenAccount', walletId?.toString(), mint?.toString()],
     async () => {
       if (!mint || !walletId) return
-      return await getATokenAccountInfo(connection, mint, walletId)
+      return splToken.getAccount(
+        connection,
+        getAssociatedTokenAddressSync(mint, walletId)
+      )
     },
     {}
   )

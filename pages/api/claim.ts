@@ -6,10 +6,10 @@ import {
 } from '@cardinal/common'
 import { withClaimToken } from '@cardinal/token-manager'
 import { BN, utils } from '@project-serum/anchor'
+import { getAccount, getAssociatedTokenAddressSync } from '@solana/spl-token'
 import type { PublicKey } from '@solana/web3.js'
 import { Connection, Keypair, Transaction } from '@solana/web3.js'
 import { getTokenData } from 'apis/api'
-import { getATokenAccountInfo } from 'apis/utils'
 import { projectConfigs } from 'config/config'
 import { WRAPPED_SOL_MINT } from 'hooks/usePaymentMints'
 import type { NextApiHandler } from 'next'
@@ -83,10 +83,12 @@ const post: NextApiHandler<PostResponse> = async (req, res) => {
   // get user payment token account
   let userPaymentTokenAccountData
   if (tokenData?.claimApprover?.parsed.paymentMint) {
-    userPaymentTokenAccountData = await getATokenAccountInfo(
+    userPaymentTokenAccountData = await getAccount(
       connection,
-      tokenData?.claimApprover?.parsed.paymentMint,
-      accountId
+      getAssociatedTokenAddressSync(
+        tokenData?.claimApprover?.parsed.paymentMint,
+        accountId
+      )
     )
   }
 
@@ -102,7 +104,7 @@ const post: NextApiHandler<PostResponse> = async (req, res) => {
     tokenData?.claimApprover.parsed.paymentAmount.gt(new BN(0))
   ) {
     const amountToWrap = tokenData?.claimApprover.parsed.paymentAmount.sub(
-      userPaymentTokenAccountData?.amount || new BN(0)
+      new BN(userPaymentTokenAccountData?.amount?.toString() ?? 0) || new BN(0)
     )
     if (amountToWrap.gt(new BN(0))) {
       await withWrapSol(
