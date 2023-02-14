@@ -5,7 +5,7 @@ import { getMintfromTokenData } from 'common/tokenDataUtils'
 import type { ProjectConfig } from 'config/config'
 import { tracer, withTrace } from 'monitoring/trace'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
-import { useQueries, useQuery } from 'react-query'
+import { useQueries, useQuery } from '@tanstack/react-query'
 
 export const mintMetadataQueryKey = (
   tokenData: Pick<TokenData, 'metaplexData'> | Pick<TokenData, 'indexedData'>

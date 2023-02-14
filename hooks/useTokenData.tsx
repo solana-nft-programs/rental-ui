@@ -4,7 +4,7 @@ import type { PublicKey } from '@solana/web3.js'
 import type { TokenData } from 'apis/api'
 import { getTokenData } from 'apis/api'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 export type SingleTokenData = Omit<TokenData, 'recipientTokenAccount'> & {
   recipientTokenAccount?: AccountData<spl.Account>

@@ -9,7 +9,7 @@ import { logConfigTokenDataEvent } from 'monitoring/amplitude'
 import { tracer, withTrace } from 'monitoring/trace'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 export interface HandleIssueRentalParams {
   tokenData: TokenData

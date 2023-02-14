@@ -1,5 +1,5 @@
 import { defaultDisallowedRegions } from 'config/config'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 export const useUserRegion = () => {
   return useQuery<{

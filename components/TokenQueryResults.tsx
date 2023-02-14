@@ -16,7 +16,7 @@ import { useWalletId } from 'hooks/useWalletId'
 import { logConfigEvent } from 'monitoring/amplitude'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useState } from 'react'
-import type { UseQueryResult } from 'react-query'
+import type { UseQueryResult } from '@tanstack/react-query'
 
 import { Activity } from './Activity'
 import type { PANE_OPTIONS } from './Browse'

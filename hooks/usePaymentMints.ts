@@ -1,5 +1,5 @@
 import type { PublicKey } from '@solana/web3.js'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 export type PaymentMintInfo = {
   mint: string

@@ -1,7 +1,7 @@
 import type { AccountData } from '@cardinal/common'
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import type { Connection, PublicKey } from '@solana/web3.js'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 
 import { useWalletId } from './useWalletId'

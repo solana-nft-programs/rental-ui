@@ -1,6 +1,6 @@
 import { ApolloClient, gql, InMemoryCache } from '@apollo/client'
 import { projectConfigs } from 'config/config'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 export const queryId = (s: string, historical: boolean) => {
   return `${s.replaceAll('-', '').replaceAll(/[0-9]/g, '')}${

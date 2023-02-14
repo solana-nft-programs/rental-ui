@@ -12,7 +12,7 @@ import { useUserTokenData } from 'hooks/useUserTokenData'
 import { useWalletId } from 'hooks/useWalletId'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useState } from 'react'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 import { tokenDatasId } from './Dashboard'
 import { TokenQueryResults } from './TokenQueryResults'

@@ -33,7 +33,7 @@ import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { filterTokens, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useEffect, useState } from 'react'
 import { HiUserCircle } from 'react-icons/hi'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 import { Activity } from './Activity'
 import type { PANE_OPTIONS } from './Browse'
