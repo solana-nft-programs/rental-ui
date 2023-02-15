@@ -183,7 +183,9 @@ export const getTokenIndexData = async (
                     metadatas_metadata_creators: {
                       _and: {
                         creator_address: { _in: $creators }
-                        _and: { verified: { _eq: true } }
+                        _and: { verified: { _eq: ${
+                          filter.nonVerified ? false : true
+                        } } }
                       }
                     }
                   }

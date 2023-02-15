@@ -37,6 +37,7 @@ export type Colors = {
 export type TokenFilter = {
   type: 'creators' | 'issuer' | 'state' | 'claimer' | 'owner'
   value: string[]
+  nonVerified?: boolean
 }
 
 export interface TokenSection {
@@ -364,7 +365,8 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     },
     filter: {
       type: 'creators',
-      value: ['9uBX3ASjxWvNBAD1xjbVaKA74mWGZys3RGSF7DdeDD3F'],
+      value: ['SMBhYe5hTjZB5ioeaFxnYPn2cDU893ymgMkgYipgJw4'],
+      nonVerified: true,
     },
     showUnknownInvalidators: true,
     rentalCard: defaultRentalCardConfig,

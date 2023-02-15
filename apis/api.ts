@@ -112,7 +112,7 @@ export async function getTokenDatas(
       metaplexDataById[tm.pubkey.toString()]?.parsed?.data?.creators?.some(
         (creator) =>
           filter.value.includes(creator.address.toString()) &&
-          (cluster === 'devnet' || creator.verified)
+          (cluster === 'devnet' || creator.verified || filter.nonVerified)
       )
     )
   }
