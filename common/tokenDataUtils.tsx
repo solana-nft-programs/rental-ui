@@ -376,13 +376,14 @@ export const elligibleForRent = (
   config: ProjectConfig,
   tokenData: Pick<
     TokenData,
-    'tokenAccount' | 'tokenManager' | 'editionData' | 'mint'
+    'tokenAccount' | 'tokenManager' | 'metaplexData' | 'editionData' | 'mint'
   >
 ): boolean => {
   return (
     !config.disableListing &&
     !tokenData.tokenManager &&
-    tokenData.tokenAccount?.parsed.state !== 'frozen' &&
+    (tokenData.metaplexData?.parsed.programmableConfig ||
+      tokenData.tokenAccount?.parsed.state !== 'frozen') &&
     !!tokenData.editionData &&
     (!tokenData.mint || !!tokenData.mint.parsed?.freezeAuthority)
   )

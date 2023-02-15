@@ -33,6 +33,7 @@ import type {
   InvalidatorOption,
   RentalCardConfig,
 } from 'rental-components/components/RentalIssueCard'
+import { TokenStandard } from '@metaplex-foundation/mpl-token-metadata'
 
 export type IssueTxResult = {
   tokenManagerId: PublicKey
@@ -148,7 +149,7 @@ export const useHandleIssueRental = () => {
       const receiptMintKeypairs: Keypair[] = []
       const txData = []
       for (let i = 0; i < tokenDatas.length; i = i + 1) {
-        const { tokenAccount, editionData } = tokenDatas[i]!
+        const { tokenAccount, editionData, metaplexData } = tokenDatas[i]!
         if (!tokenAccount) {
           throw 'Token acount not found'
         }
@@ -216,9 +217,15 @@ export const useHandleIssueRental = () => {
             : undefined,
           mint: rentalMint,
           issuerTokenAccountId: tokenAccount?.pubkey,
-          kind: editionData
-            ? TokenManagerKind.Edition
-            : TokenManagerKind.Managed,
+          kind:
+            metaplexData?.parsed.tokenStandard ===
+            TokenStandard.ProgrammableNonFungible
+              ? TokenManagerKind.Programmable
+              : editionData
+              ? TokenManagerKind.Edition
+              : TokenManagerKind.Managed,
+          rulesetId:
+            metaplexData?.parsed.programmableConfig?.ruleSet ?? undefined,
           invalidationType,
           visibility,
           customInvalidators: customInvalidator
@@ -229,7 +236,6 @@ export const useHandleIssueRental = () => {
             : undefined,
         }
 
-        console.log('----', issueParams)
         const [issueTransaction, tokenManagerId, otpKeypair] = await withTrace(
           () => issueToken(connection, asWallet(wallet), issueParams),
           trace,
