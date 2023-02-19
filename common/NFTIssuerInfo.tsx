@@ -168,7 +168,10 @@ export const NFTIssuerInfo: React.FC<NFTIssuerInfoProps> = ({
             <DisplayAddress
               dark
               connection={secondaryConnection}
-              address={recipientTokenAccountInfo.data?.parsed.owner}
+              address={
+                tokenData.recipientTokenAccount?.parsed.owner ??
+                recipientTokenAccountInfo.data?.parsed.owner
+              }
             />
           </div>
         </div>
