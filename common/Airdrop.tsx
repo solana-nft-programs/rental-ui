@@ -8,8 +8,7 @@ import {
   createCreateMetadataAccountV3Instruction,
 } from '@metaplex-foundation/mpl-token-metadata'
 import { BN } from '@project-serum/anchor'
-import type { Wallet } from '@saberhq/solana-contrib'
-import { SignerWallet } from '@saberhq/solana-contrib'
+import { Wallet } from '@project-serum/anchor/dist/cjs/provider'
 import { useWallet } from '@solana/wallet-adapter-react'
 import type { Connection } from '@solana/web3.js'
 import { Keypair, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js'
@@ -34,13 +33,6 @@ export async function airdropNFT(
   const randInt = Math.round(Math.random() * (airdropMetadatas.length - 1))
   const metadata: AirdropMetadata | undefined = airdropMetadatas[randInt]
   if (!metadata) throw new Error('No configured airdrops found')
-  const tokenCreator = Keypair.generate()
-  const fromAirdropSignature = await connection.requestAirdrop(
-    tokenCreator.publicKey,
-    LAMPORTS_PER_SOL
-  )
-  await connection.confirmTransaction(fromAirdropSignature)
-
   const mintKeypair = Keypair.generate()
   const [transaction] = await createMintTx(
     connection,
@@ -109,15 +101,10 @@ export async function airdropNFT(
     }
   )
   transaction.instructions = [metadataIx, masterEditionIX]
-  return executeTransaction(
-    connection,
-    new SignerWallet(tokenCreator),
-    transaction,
-    {
-      confirmOptions: { commitment: 'confirmed', maxRetries: 3 },
-      notificationConfig: { message: 'Airdrop succesful' },
-    }
-  )
+  return executeTransaction(connection, wallet, transaction, {
+    confirmOptions: { commitment: 'confirmed', maxRetries: 3 },
+    notificationConfig: { message: 'Airdrop succesful' },
+  })
 }
 
 export const Airdrop = () => {

@@ -1,4 +1,4 @@
-import type { Wallet } from '@saberhq/solana-contrib'
+import { Wallet } from '@project-serum/anchor/dist/cjs/provider'
 import * as Sentry from '@sentry/browser'
 import type {
   ConfirmOptions,

@@ -1,6 +1,5 @@
 import type { AccountData } from '@cardinal/common'
 import {
-  emptyWallet,
   findMintEditionId,
   findMintMetadataId,
   firstParam,
