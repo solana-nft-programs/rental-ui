@@ -1734,32 +1734,6 @@
     polished "^4.2.2"
     tslib "^2.4.0"
 
-"@cardinal/common@^6.0.1", "@cardinal/common@^6.1.5":
-  version "6.1.7"
-  resolved "https://registry.yarnpkg.com/@cardinal/common/-/common-6.1.7.tgz#ad150bd669e1453dc4ac08bdd6fac9830e4be60a"
-  integrity sha512-EO2DOEbm0Jqble1iLf1dpKu0MMQq+Iagh3gptnhMXMZIPK6IZ4QuaGgVXo5RgJXX+csvB2boJ0thKcJDb/uBww==
-  dependencies:
-    "@coral-xyz/anchor" "^0.26.0"
-    "@solana/buffer-layout" "^4.0.0"
-    "@solana/spl-token" "^0.3.5"
-    "@solana/web3.js" "^1.66.2"
-    bignumber.js "^9.1.0"
-    polished "^4.2.2"
-    tslib "^2.4.0"
-
-"@cardinal/common@^7.0.0":
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/@cardinal/common/-/common-7.0.0.tgz#eec9bba897e85a2d5b81444f405e1462da06ee3a"
-  integrity sha512-X7plp4uuyH7eeKISQoD70nO4QDfvLdSgvPBMyq+iv6Emkj7UA8Jn3EyJGNFyQUe9o1fSgPua6deor/ZjfJjOCQ==
-  dependencies:
-    "@coral-xyz/anchor" "^0.26.0"
-    "@solana/buffer-layout" "^4.0.0"
-    "@solana/spl-token" "^0.3.5"
-    "@solana/web3.js" "^1.66.2"
-    bignumber.js "^9.1.0"
-    polished "^4.2.2"
-    tslib "^2.4.0"
-
 "@cardinal/common@^7.1.3":
   version "7.1.3"
   resolved "https://registry.yarnpkg.com/@cardinal/common/-/common-7.1.3.tgz#1374e4ec4c7d64c95a986af82c75fc9c6b7ae240"
@@ -1787,15 +1761,15 @@
     "@solana/spl-token" "^0.3.5"
     "@solana/web3.js" "^1.66.2"
 
-"@cardinal/namespaces-components@^5.0.3":
-  version "5.0.3"
-  resolved "https://registry.yarnpkg.com/@cardinal/namespaces-components/-/namespaces-components-5.0.3.tgz#9a56c48f67902b135ea1421154c57cafd3b60d7f"
-  integrity sha512-BR+xuuQKgwsCKg0xWZa6GBzb/6gl++ebRxc6sL6e1ggJJYVmCJ5DGx3s6imSOx4dYR/WHnZbO82z2uJLOu3sxQ==
+"@cardinal/namespaces-components@^5.1.0":
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/@cardinal/namespaces-components/-/namespaces-components-5.1.0.tgz#10f8fa365df5d655f0d03d61bba0dba1568a374e"
+  integrity sha512-7t1X6LaUXA7Kq6ehPwcgq1d6Gvqpsf0ZZToAeiJNjQWVGTLogRcZ0uAELF5JIgPaBUJfaE+OVaMu2loYOTKK+g==
   dependencies:
     "@cardinal/certificates" "^4.0.0"
-    "@cardinal/common" "^6.0.1"
-    "@cardinal/namespaces" "^5.0.0"
-    "@cardinal/token-manager" "^4.0.0"
+    "@cardinal/common" "^7.1.3"
+    "@cardinal/namespaces" "^5.0.1"
+    "@cardinal/token-manager" "^4.4.1"
     "@emotion/babel-preset-css-prop" "^11.10.0"
     "@emotion/core" "^11.0.0"
     "@emotion/css" "^11.7.1"
@@ -1818,15 +1792,15 @@
     typescript "^4.1.2"
     webpack-merge "^5.8.0"
 
-"@cardinal/namespaces@^5.0.0":
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/@cardinal/namespaces/-/namespaces-5.0.0.tgz#6113afc49a81849c44c954aeda8abfb2f9b91450"
-  integrity sha512-QtPYnbvGwLuoYgr3Hc/5DoqYPraiUoeBPmTh6sLndteaANnnXihwPM93FdyvpJgs3hE9Nm+fvCeP4a7FRgxQAg==
+"@cardinal/namespaces@^5.0.1":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@cardinal/namespaces/-/namespaces-5.0.1.tgz#e0ce131cee4b9a488bfc841d9247bb13cd4671ca"
+  integrity sha512-+bbde/yjvEoBP3aSemS//9JfVocTBohWrVndn0YQYsZ+nCIlmQ/l5vPmRFt5n3cOn6KWsN+Qu35pPR0JPuzqNw==
   dependencies:
     "@cardinal/certificates" "^4.0.0"
-    "@cardinal/common" "^6.0.1"
+    "@cardinal/common" "^7.1.3"
     "@cardinal/payment-manager" "^3.0.0"
-    "@cardinal/token-manager" "^4.0.1"
+    "@cardinal/token-manager" "^4.4.1"
     "@metaplex-foundation/mpl-token-metadata" "^2.8.1"
     "@project-serum/anchor" "^0.26.0"
     "@solana/spl-token" "0.3.5"
@@ -1843,17 +1817,6 @@
     "@solana/spl-token" "^0.3.6"
     "@solana/web3.js" "^1.66.2"
 
-"@cardinal/payment-manager@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@cardinal/payment-manager/-/payment-manager-4.0.0.tgz#fc29a5e2c78583cc63ededae04d346db8716bbc9"
-  integrity sha512-AXPaKhwTW+fi+S8uBfYNOGFgT1K+tvrXGzCTXjBHGRu+fp6eI8rW/wE91gZbYZJIFKeVjNugmYVQ1jDNgERHaw==
-  dependencies:
-    "@cardinal/common" "^7.0.0"
-    "@metaplex-foundation/mpl-token-metadata" "^2.8.3"
-    "@project-serum/anchor" "^0.26.0"
-    "@solana/spl-token" "^0.3.6"
-    "@solana/web3.js" "^1.66.2"
-
 "@cardinal/payment-manager@^4.0.1":
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/@cardinal/payment-manager/-/payment-manager-4.0.1.tgz#8f3dde29998f1a3cfb51530f90221e378367aacc"
@@ -1864,21 +1827,6 @@
     "@project-serum/anchor" "^0.26.0"
     "@solana/spl-token" "^0.3.6"
     "@solana/web3.js" "^1.66.2"
-
-"@cardinal/token-manager@^4.0.0", "@cardinal/token-manager@^4.0.1":
-  version "4.2.1"
-  resolved "https://registry.yarnpkg.com/@cardinal/token-manager/-/token-manager-4.2.1.tgz#a3222d4336df95010f1180179ba4cdf8e605bd39"
-  integrity sha512-uCUXQjDmaI6NORrm2m5KV9N7KgXWRWQq98mdnoXe5cXkM28pSc/sN1iWndgzVpqaB/hhmhHvUo54PbJ6X6PEjw==
-  dependencies:
-    "@cardinal/common" "^6.1.5"
-    "@cardinal/creator-standard" "^2.1.7"
-    "@cardinal/payment-manager" "^4.0.0"
-    "@metaplex-foundation/mpl-token-auth-rules" "^1.0.0"
-    "@metaplex-foundation/mpl-token-metadata" "^2.8.3"
-    "@msgpack/msgpack" "^2.8.0"
-    "@project-serum/anchor" "^0.26.0"
-    "@solana/spl-token" "^0.3.6"
-    "@solana/web3.js" "^1.34.0"
 
 "@cardinal/token-manager@^4.4.1":
   version "4.4.1"
