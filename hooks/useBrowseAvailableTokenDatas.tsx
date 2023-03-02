@@ -15,6 +15,7 @@ import type { UseInvalidatorData } from '@cardinal/token-manager/dist/cjs/progra
 import { USE_INVALIDATOR_ADDRESS } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
 import * as Sentry from '@sentry/browser'
 import type { Connection, PublicKey } from '@solana/web3.js'
+import { useQuery } from '@tanstack/react-query'
 import type { TokenData } from 'apis/api'
 import { getTokenDatas } from 'apis/api'
 import type { ProjectConfig, TokenFilter } from 'config/config'
@@ -24,7 +25,6 @@ import type { Environment } from 'providers/EnvironmentProvider'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useAccounts } from 'providers/SolanaAccountsProvider'
-import { useQuery } from '@tanstack/react-query'
 
 import { WRAPPED_SOL_MINT } from './usePaymentMints'
 

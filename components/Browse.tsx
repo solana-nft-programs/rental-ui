@@ -29,6 +29,7 @@ import {
   filterPaymentMints,
   useBrowseAvailableTokenDatas,
 } from 'hooks/useBrowseAvailableTokenDatas'
+import { useBrowseAvailableTokenDatas2 } from 'hooks/useBrowseAvailableTokenDatas2'
 import type { BrowseClaimedTokenData } from 'hooks/useBrowseClaimedTokenDatas'
 import { useBrowseClaimedTokenDatas } from 'hooks/useBrowseClaimedTokenDatas'
 import { useClaimEventsForConfig } from 'hooks/useClaimEventsForConfig'
@@ -276,6 +277,8 @@ export const Browse = () => {
   const tokenSections = tokenSectionsForConfig(config)
   const [selectedGroup, setSelectedGroup] = useState(0)
   const [pane, setPane] = useState<PANE_OPTIONS>('browse')
+  const x = useBrowseAvailableTokenDatas2(false, selectedGroup !== 0, subFilter)
+  console.log('---', x.data)
   const availableTokenDatas = useBrowseAvailableTokenDatas(
     false,
     selectedGroup !== 0,
