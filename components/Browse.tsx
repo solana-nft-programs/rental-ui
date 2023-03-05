@@ -278,7 +278,7 @@ export const Browse = () => {
   const [selectedGroup, setSelectedGroup] = useState(0)
   const [pane, setPane] = useState<PANE_OPTIONS>('browse')
   const x = useBrowseAvailableTokenDatas2(false, selectedGroup !== 0, subFilter)
-  console.log('---', x.data)
+
   const availableTokenDatas = useBrowseAvailableTokenDatas(
     false,
     selectedGroup !== 0,
