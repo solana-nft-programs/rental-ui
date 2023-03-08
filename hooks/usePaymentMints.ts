@@ -202,6 +202,11 @@ export const PAYMENT_MINTS: PaymentMintInfo[] = [
     symbol: 'EDD',
     decimals: 9,
   },
+  {
+    mint: '4N9UUJkZM9wB4RnkVV1xdi68qtaknEEzPhxKJb216kJV',
+    symbol: 'FEE',
+    decimals: 1,
+  },
 ]
 
 export const WRAPPED_SOL_MINT = 'So11111111111111111111111111111111111111112'

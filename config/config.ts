@@ -3402,4 +3402,43 @@ Welcome to the Underground.`,
       },
     },
   },
+  palace: {
+    name: 'palace',
+    displayName: 'The Palace',
+    badges: [{ badgeType: 'recent' }],
+    type: 'Guild',
+    websiteUrl: 'https://thepalace.app',
+    logoImage: '/logos/palace.png',
+    hero: '/logos/palace-hero.png',
+    colors: {
+      accent: '#000000',
+      glow: '#000000',
+    },
+    description: `Welcome to the world of The Palace, it's a one-of-a-kind experience that brings together the best-in-class art with a multitude of features and utilities. It is designed to provide a platform that is both engaging and rewarding to its users.`,
+    twitterHandle: '@ThePalaceNFT',
+    socialLinks: [
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/ThePalaceNFT',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/thepalacenft',
+      },
+    ],
+    filter: {
+      type: 'issuer',
+      value: ['CqmcWMTex9hDTy4xQoBSXiP5HmSG9Fk4XaYLcZT8hxDg'],
+    },
+    rentalCard: {
+      ...defaultRentalCardConfig,
+      invalidationOptions: {
+        ...defaultRentalCardConfig.invalidationOptions,
+        paymentMints: [
+          WRAPPED_SOL_MINT,
+          '4N9UUJkZM9wB4RnkVV1xdi68qtaknEEzPhxKJb216kJV',
+        ],
+      },
+    },
+  },
 }
