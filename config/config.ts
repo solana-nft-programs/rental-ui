@@ -366,7 +366,6 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     filter: {
       type: 'creators',
       value: ['SMBhYe5hTjZB5ioeaFxnYPn2cDU893ymgMkgYipgJw4'],
-      nonVerified: true,
     },
     showUnknownInvalidators: true,
     rentalCard: defaultRentalCardConfig,
