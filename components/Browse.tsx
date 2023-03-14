@@ -277,7 +277,11 @@ export const Browse = () => {
   const tokenSections = tokenSectionsForConfig(config)
   const [selectedGroup, setSelectedGroup] = useState(0)
   const [pane, setPane] = useState<PANE_OPTIONS>('browse')
-  const x = useBrowseAvailableTokenDatas2(false, selectedGroup !== 0, subFilter)
+  const _availableTokenDatas2 = useBrowseAvailableTokenDatas2(
+    false,
+    selectedGroup !== 0,
+    subFilter
+  )
 
   const availableTokenDatas = useBrowseAvailableTokenDatas(
     false,

@@ -81,7 +81,7 @@ export const useBrowseAvailableTokenDatas2 = (
   const { connection } = useEnvironmentCtx()
   const page = 0
   const pageSize = 5000
-  const mintList = useMintList()
+  const mintList = useMintList(subFilter ?? config.filter)
   const { getAccountDataById } = useAccounts()
   return useQuery<BrowseAvailableTokenData[]>(
     [
@@ -120,7 +120,6 @@ export const useBrowseAvailableTokenDatas2 = (
         }
       })
 
-      console.log(tokenManagerIds, tokenManagerAccountInfos)
       // filter known invalidators
       tokenManagerDatas = config.showUnknownInvalidators
         ? tokenManagerDatas
@@ -182,7 +181,7 @@ export const useBrowseAvailableTokenDatas2 = (
     },
     {
       refetchOnMount: false,
-      enabled: !!config && !disabled,
+      enabled: !!config && !disabled && mintList.isFetched,
     }
   )
 }
