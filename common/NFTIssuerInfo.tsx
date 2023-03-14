@@ -3,7 +3,6 @@ import {
   getExpirationString,
   secondsToString,
   shortPubKey,
-  tryPublicKey,
 } from '@cardinal/common'
 import { DisplayAddress } from '@cardinal/namespaces-components'
 import type { PaidClaimApproverData } from '@cardinal/token-manager/dist/cjs/programs/claimApprover'

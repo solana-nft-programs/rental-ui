@@ -8,7 +8,7 @@ import {
   createCreateMetadataAccountV3Instruction,
 } from '@metaplex-foundation/mpl-token-metadata'
 import { BN } from '@project-serum/anchor'
-import { Wallet } from '@project-serum/anchor/dist/cjs/provider'
+import type { Wallet } from '@project-serum/anchor/dist/cjs/provider'
 import { useWallet } from '@solana/wallet-adapter-react'
 import type { Connection } from '@solana/web3.js'
 import { Keypair, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js'

@@ -8,8 +8,9 @@ import { getTokenManagers } from '@cardinal/token-manager/dist/cjs/programs/toke
 import type { UseInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
 import { USE_INVALIDATOR_ADDRESS } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
 import * as Sentry from '@sentry/browser'
-import { Account } from '@solana/spl-token'
+import type { Account } from '@solana/spl-token'
 import type { PublicKey } from '@solana/web3.js'
+import { useQuery } from '@tanstack/react-query'
 import type { TokenData } from 'apis/api'
 import { getTokenDatas } from 'apis/api'
 import type { TokenFilter } from 'config/config'
@@ -17,7 +18,6 @@ import { withTrace } from 'monitoring/trace'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useAccounts } from 'providers/SolanaAccountsProvider'
-import { useQuery } from '@tanstack/react-query'
 
 import {
   filterKnownInvalidators,
