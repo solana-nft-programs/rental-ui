@@ -35,7 +35,7 @@ export const useProjectStats = () => {
     ['useProjectStats', environment.index, config.name],
     async () => {
       const index = new ApolloClient({
-        uri: 'https://prod-holaplex.hasura.app/v1/graphql',
+        uri: 'https://graph.holaplex.tools/v1/graphql',
         cache: new InMemoryCache({ resultCaching: false }),
       })
       if (index && config.filter?.type === 'creators') {

@@ -30,7 +30,7 @@ export const ENVIRONMENTS: Environment[] = [
       process.env.MAINNET_PRIMARY_BETA || 'https://rpc.ankr.com/solana',
     secondary: process.env.MAINNET_SECONDARY || 'https://rpc.ankr.com/solana',
     index: INDEX_ENABLED
-      ? 'https://prod-holaplex.hasura.app/v1/graphql'
+      ? 'https://graph.holaplex.tools/v1/graphql'
       : undefined,
   },
   {

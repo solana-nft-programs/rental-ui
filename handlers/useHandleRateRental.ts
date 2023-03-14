@@ -16,6 +16,7 @@ import type * as splToken from '@solana/spl-token'
 import { useWallet } from '@solana/wallet-adapter-react'
 import type { Keypair } from '@solana/web3.js'
 import { Connection, Transaction } from '@solana/web3.js'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { BN } from 'bn.js'
 import { getExtensionPrice } from 'common/RentalSummary'
 import {
@@ -34,7 +35,6 @@ import { logConfigTokenDataEvent } from 'monitoring/amplitude'
 import { tracer, withTrace } from 'monitoring/trace'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import type { TokenData } from './../apis/api'
 

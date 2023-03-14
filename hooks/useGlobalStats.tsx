@@ -1,6 +1,6 @@
 import { ApolloClient, gql, InMemoryCache } from '@apollo/client'
-import { projectConfigs } from 'config/config'
 import { useQuery } from '@tanstack/react-query'
+import { projectConfigs } from 'config/config'
 
 export const queryId = (s: string, historical: boolean) => {
   return `${s.replaceAll('-', '').replaceAll(/[0-9]/g, '')}${
@@ -13,7 +13,7 @@ export const useGlobalStats = () => {
     { [key: string]: { aggregate: { count: number } } } | undefined
   >(['useProjectStats'], async () => {
     const index = new ApolloClient({
-      uri: 'https://prod-holaplex.hasura.app/v1/graphql',
+      uri: 'https://graph.holaplex.tools/v1/graphql',
       cache: new InMemoryCache({ resultCaching: false }),
     })
     const aggregateClaimEventsByConfig = await index.query({
