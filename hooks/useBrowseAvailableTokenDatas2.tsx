@@ -3,6 +3,7 @@ import { fetchAccountDataById, tryDecodeIdlAccount } from '@cardinal/common'
 import type { PaidClaimApproverData } from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
 import type { TimeInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
 import { TIME_INVALIDATOR_ADDRESS } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
+import { findTimeInvalidatorAddress } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator/pda'
 import type {
   TOKEN_MANAGER_PROGRAM,
   TokenManagerData,
@@ -85,41 +86,53 @@ export const useBrowseAvailableTokenDatas2 = (
   return useQuery<BrowseAvailableTokenData[]>(
     [
       TOKEN_DATA_KEY,
-      'useBrowseAvailableTokenDatas',
+      'useBrowseAvailableTokenDatas2',
       config.name,
       subFilter,
       page,
       mintList.data?.join(','),
     ],
     async () => {
+      // get token manager ids from mint list
       const mintIds =
         mintList.data?.slice(page * pageSize, (page + 1) * pageSize) ?? []
-      const tokenManagerIds = [...mintIds, ...mintIds, ...mintIds].map((m) =>
-        findTokenManagerAddress(new PublicKey(m))
+      const tokenManagerIds = mintIds.map(({ mint }) =>
+        findTokenManagerAddress(new PublicKey(mint))
       )
 
+      // get token managers
       const tokenManagerAccountInfos = await fetchAccountDataById(
         connection,
         tokenManagerIds
       )
-      const tokenManagerDatas: {
+      let tokenManagerDatas: {
         pubkey: PublicKey
         parsed: TokenManagerData
       }[] = []
       Object.entries(tokenManagerAccountInfos).forEach(([k, a]) => {
-        if (a) {
-          const tm = tryDecodeIdlAccount<'tokenManager', TOKEN_MANAGER_PROGRAM>(
-            a,
-            'tokenManager',
-            TOKEN_MANAGER_IDL
-          )
-          if (tm.parsed) {
-            tokenManagerDatas.push({ ...tm, pubkey: new PublicKey(k) })
-          }
+        const tm = tryDecodeIdlAccount<'tokenManager', TOKEN_MANAGER_PROGRAM>(
+          a,
+          'tokenManager',
+          TOKEN_MANAGER_IDL
+        )
+        if (tm.parsed) {
+          tokenManagerDatas.push({ ...tm, pubkey: new PublicKey(k) })
         }
       })
 
-      ////
+      console.log(tokenManagerIds, tokenManagerAccountInfos)
+      // filter known invalidators
+      tokenManagerDatas = config.showUnknownInvalidators
+        ? tokenManagerDatas
+        : tokenManagerDatas.filter(
+            ({ parsed, pubkey }) =>
+              !parsed.invalidators?.some(
+                (invalidator) =>
+                  !invalidator.equals(findTimeInvalidatorAddress(pubkey))
+              )
+          )
+
+      // fetch related accounts
       const idsToFetch = tokenManagerDatas.reduce(
         (acc, tm) => [
           ...acc,
@@ -160,14 +173,14 @@ export const useBrowseAvailableTokenDatas2 = (
             : undefined,
         }
       })
+
+      // filter payment mints
       if (config.type === 'Collection') {
         tokenDatas = filterPaymentMints(tokenDatas, config)
       }
-      console.log('====', tokenDatas)
       return tokenDatas
     },
     {
-      refetchInterval: !disableRefetch ? 60000 : undefined,
       refetchOnMount: false,
       enabled: !!config && !disabled,
     }
