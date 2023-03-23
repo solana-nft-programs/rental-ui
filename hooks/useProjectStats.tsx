@@ -1,7 +1,7 @@
 import { ApolloClient, gql, InMemoryCache } from '@apollo/client'
+import { useQuery } from '@tanstack/react-query'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
-import { useQuery } from '@tanstack/react-query'
 
 export type ProjectStats = {
   totalRentalCount?: number
@@ -178,6 +178,7 @@ export const useProjectStats = () => {
       }
     },
     {
+      enabled: !!environment.index,
       refetchOnMount: false,
     }
   )

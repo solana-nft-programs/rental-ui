@@ -1,6 +1,7 @@
 import { ApolloClient, gql, InMemoryCache } from '@apollo/client'
 import { useQuery } from '@tanstack/react-query'
 import { projectConfigs } from 'config/config'
+import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 
 export const queryId = (s: string, historical: boolean) => {
   return `${s.replaceAll('-', '').replaceAll(/[0-9]/g, '')}${
@@ -9,15 +10,18 @@ export const queryId = (s: string, historical: boolean) => {
 }
 
 export const useGlobalStats = () => {
+  const { environment } = useEnvironmentCtx()
   return useQuery<
     { [key: string]: { aggregate: { count: number } } } | undefined
-  >(['useProjectStats'], async () => {
-    const index = new ApolloClient({
-      uri: 'https://graph.holaplex.tools/v1/graphql',
-      cache: new InMemoryCache({ resultCaching: false }),
-    })
-    const aggregateClaimEventsByConfig = await index.query({
-      query: gql`
+  >(
+    ['useProjectStats'],
+    async () => {
+      const index = new ApolloClient({
+        uri: environment.index,
+        cache: new InMemoryCache({ resultCaching: false }),
+      })
+      const aggregateClaimEventsByConfig = await index.query({
+        query: gql`
           query GetCardinalClaimEvents {
             ${Object.entries(projectConfigs)
               .filter(([, c]) => !c.hidden)
@@ -89,7 +93,11 @@ export const useGlobalStats = () => {
             }
           }
         `,
-    })
-    return aggregateClaimEventsByConfig.data
-  })
+      })
+      return aggregateClaimEventsByConfig.data
+    },
+    {
+      enabled: !!environment.index,
+    }
+  )
 }

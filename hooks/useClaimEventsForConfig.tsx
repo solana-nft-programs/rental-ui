@@ -7,10 +7,10 @@ import type { PaidClaimApproverData } from '@cardinal/token-manager/dist/cjs/pro
 import type { TimeInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
 import { BN } from '@project-serum/anchor'
 import type { PublicKey } from '@solana/web3.js'
+import { useInfiniteQuery } from '@tanstack/react-query'
 import { tracer } from 'monitoring/trace'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
-import { useInfiniteQuery } from '@tanstack/react-query'
 
 export const ACTIVITY_KEY = 'activity'
 
@@ -283,8 +283,7 @@ export const useClaimEventsForConfig = (
       )
     },
     {
-      refetchOnMount: false,
-      enabled: !disabled && !!config,
+      enabled: !disabled && !!config && !!environment.index,
       getNextPageParam: (_lastPage, pages) => pages.length,
     }
   )

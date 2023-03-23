@@ -2,9 +2,9 @@ import { ApolloClient, gql, InMemoryCache } from '@apollo/client'
 import { useQuery } from '@tanstack/react-query'
 import type { TokenFilter } from 'config/config'
 
-export const useMintList = (filter: TokenFilter | undefined) => {
+export const useMintsForConfig = (filter: TokenFilter | undefined) => {
   return useQuery(
-    ['useMintList', filter?.value.join(',')],
+    ['useMintsForConfig', filter?.value.join(',')],
     async () => {
       const indexer = new ApolloClient({
         uri: 'https://welcome-elk-85.hasura.app/v1/graphql',

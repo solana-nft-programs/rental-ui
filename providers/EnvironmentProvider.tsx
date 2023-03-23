@@ -19,7 +19,7 @@ export interface EnvironmentContextValues {
   secondaryConnection: Connection
 }
 
-const INDEX_ENABLED = true
+const INDEX_ENABLED = false
 const RPC_BETA_THRESHOLD = 0.25
 
 export const ENVIRONMENTS: Environment[] = [

@@ -23,13 +23,12 @@ import {
   isClaimable,
 } from 'common/tokenDataUtils'
 import { Activity } from 'components/Activity'
-import type { ProjectConfig, TokenFilter, TokenSection } from 'config/config'
+import type { ProjectConfig, TokenFilter } from 'config/config'
 import type { BrowseAvailableTokenData } from 'hooks/useBrowseAvailableTokenDatas'
 import {
   filterPaymentMints,
   useBrowseAvailableTokenDatas,
 } from 'hooks/useBrowseAvailableTokenDatas'
-import { useBrowseAvailableTokenDatas2 } from 'hooks/useBrowseAvailableTokenDatas2'
 import type { BrowseClaimedTokenData } from 'hooks/useBrowseClaimedTokenDatas'
 import { useBrowseClaimedTokenDatas } from 'hooks/useBrowseClaimedTokenDatas'
 import { useClaimEventsForConfig } from 'hooks/useClaimEventsForConfig'
@@ -37,7 +36,6 @@ import { useOtp } from 'hooks/useOtp'
 import { mintSymbol, usePaymentMints } from 'hooks/usePaymentMints'
 import { useWalletId } from 'hooks/useWalletId'
 import { logConfigEvent } from 'monitoring/amplitude'
-import type { Environment } from 'providers/EnvironmentProvider'
 import { filterTokens, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useUTCNow } from 'providers/UTCNowProvider'
 import { useState } from 'react'
@@ -238,29 +236,6 @@ export function sortTokens<
   return sortedTokens
 }
 
-export const groupTokens = (
-  tokens: TokenData[],
-  sections: TokenSection[],
-  environment: Environment
-): TokenSection[] => {
-  return tokens.reduce((acc, tk) => {
-    let isPlaced = false
-    return acc.map((section) => {
-      const filteredToken = !isPlaced
-        ? filterTokens([tk], section.filter, environment.label)
-        : []
-      if (filteredToken.length > 0 && !isPlaced) {
-        isPlaced = true
-        return {
-          ...section,
-          tokens: [...(section.tokens ?? []), tk],
-        }
-      }
-      return section
-    })
-  }, sections)
-}
-
 export const Browse = () => {
   const walletId = useWalletId()
   const otpKeypair = useOtp()
@@ -277,17 +252,7 @@ export const Browse = () => {
   const tokenSections = tokenSectionsForConfig(config)
   const [selectedGroup, setSelectedGroup] = useState(0)
   const [pane, setPane] = useState<PANE_OPTIONS>('browse')
-  const _availableTokenDatas2 = useBrowseAvailableTokenDatas2(
-    false,
-    selectedGroup !== 0,
-    subFilter
-  )
-
-  const availableTokenDatas = useBrowseAvailableTokenDatas(
-    false,
-    selectedGroup !== 0,
-    subFilter
-  )
+  const availableTokenDatas = useBrowseAvailableTokenDatas(subFilter)
   const claimedTokenDatas = useBrowseClaimedTokenDatas(
     selectedGroup !== 1,
     subFilter
@@ -297,11 +262,11 @@ export const Browse = () => {
 
   const claimEvents = useClaimEventsForConfig(true)
 
-  const tokenDatas = [
+  const sortedAttributes = getAllAttributes([
     ...(availableTokenDatas.data ?? []),
     ...(claimedTokenDatas.data ?? []),
-  ]
-  const sortedAttributes = getAllAttributes(tokenDatas)
+  ])
+  const tokenDatas = tokenQuery.data ?? []
   const attrFilteredAndSortedTokens = sortTokens(
     filterTokensByAttributes<BrowseAvailableTokenData | BrowseClaimedTokenData>(
       tokenDatas,
