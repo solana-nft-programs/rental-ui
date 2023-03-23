@@ -17,9 +17,9 @@ import { useMintsForConfig } from './useMintsForConfig'
 
 export const useTokenManagersForConfig = (subFilter?: TokenFilter) => {
   const { config } = useProjectConfig()
-  const { connection } = useEnvironmentCtx()
-  const page = 0
-  const pageSize = 5000
+  const { connection, environment } = useEnvironmentCtx()
+  // const page = 0
+  // const pageSize = 10000
   const mintList = useMintsForConfig(subFilter ?? config.filter)
   return useQuery<AccountData<TokenManagerData>[]>(
     [
@@ -27,13 +27,13 @@ export const useTokenManagersForConfig = (subFilter?: TokenFilter) => {
       'useTokenManagersForConfig',
       config.name,
       subFilter,
-      page,
       mintList.data?.join(','),
     ],
     async () => {
+      if (environment.index) return []
+
       // get token manager ids from mint list
-      const mintIds =
-        mintList.data?.slice(page * pageSize, (page + 1) * pageSize) ?? []
+      const mintIds = mintList.data ?? []
       const tokenManagerIds = mintIds.map(({ mint }) =>
         findTokenManagerAddress(new PublicKey(mint))
       )

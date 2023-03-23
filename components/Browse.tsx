@@ -34,6 +34,7 @@ import { useBrowseClaimedTokenDatas } from 'hooks/useBrowseClaimedTokenDatas'
 import { useClaimEventsForConfig } from 'hooks/useClaimEventsForConfig'
 import { useOtp } from 'hooks/useOtp'
 import { mintSymbol, usePaymentMints } from 'hooks/usePaymentMints'
+import { useTokenManagersForConfig } from 'hooks/useTokenManagersForConfig'
 import { useWalletId } from 'hooks/useWalletId'
 import { logConfigEvent } from 'monitoring/amplitude'
 import { filterTokens, useProjectConfig } from 'providers/ProjectConfigProvider'
@@ -257,6 +258,7 @@ export const Browse = () => {
     selectedGroup !== 1,
     subFilter
   )
+  const tokenManagersForConfig = useTokenManagersForConfig(subFilter)
   const tokenQuery =
     selectedGroup === 0 ? availableTokenDatas : claimedTokenDatas
 
@@ -442,7 +444,12 @@ export const Browse = () => {
                 : claimEvents.dataUpdatedAt
             }
             handleClick={() =>
-              pane === 'browse' ? tokenQuery.refetch() : claimEvents.refetch()
+              pane === 'browse'
+                ? Promise.all([
+                    tokenQuery.refetch(),
+                    tokenManagersForConfig.refetch(),
+                  ])
+                : claimEvents.refetch()
             }
           />
           <TabSelector<PANE_OPTIONS>
