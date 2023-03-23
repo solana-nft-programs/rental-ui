@@ -29,9 +29,6 @@ export const ENVIRONMENTS: Environment[] = [
     primaryBeta:
       process.env.MAINNET_PRIMARY_BETA || 'https://rpc.ankr.com/solana',
     secondary: process.env.MAINNET_SECONDARY || 'https://rpc.ankr.com/solana',
-    index: INDEX_ENABLED
-      ? 'https://graph.holaplex.tools/v1/graphql'
-      : undefined,
   },
   {
     label: 'testnet',
@@ -96,7 +93,13 @@ export function EnvironmentProvider({
   return (
     <EnvironmentContext.Provider
       value={{
-        environment,
+        environment: {
+          ...environment,
+          index:
+            INDEX_ENABLED || query.index
+              ? 'https://graph.holaplex.tools/v1/graphql'
+              : undefined,
+        },
         setEnvironment,
         connection,
         secondaryConnection,
