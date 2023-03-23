@@ -26,7 +26,7 @@ export const useTokenManagersForConfig = (subFilter?: TokenFilter) => {
       TOKEN_DATA_KEY,
       'useTokenManagersForConfig',
       config.name,
-      subFilter,
+      subFilter?.value.join(','),
       mintList.data?.join(','),
     ],
     async () => {

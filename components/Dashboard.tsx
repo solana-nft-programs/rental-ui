@@ -94,8 +94,16 @@ export const Dashboard = () => {
   const userRegion = useUserRegion()
   const { secondaryConnection, environment } = useEnvironmentCtx()
   const { config, setProjectConfig } = useProjectConfig()
-  const userTokenDatas = useUserTokenData(config.filter)
+
+  const [selectedTokens, setSelectedTokens] = useState<TokenData[]>([])
+  const [selectedGroup, setSelectedGroup] = useState<ManageTokenGroupId>('all')
+  const [selectedConfig, setSelectedConfig] = useState<
+    ProjectConfig | undefined
+  >(undefined)
   const [pane, setPane] = useState<PANE_OPTIONS>('browse')
+
+  const claimEvents = useClaimEventsForConfig(true, walletId)
+  const userTokenDatas = useUserTokenData(config.filter)
   const { data: addressImage, isFetching: loadingImage } = useAddressImage(
     secondaryConnection,
     walletId
@@ -104,31 +112,31 @@ export const Dashboard = () => {
     secondaryConnection,
     walletId
   )
-  const managedTokens = useManagedTokens()
-  const allManagedTokens = useQuery(
-    [
-      'useAllManagedTokens',
-      walletId?.toString(),
-      tokenDatasId(userTokenDatas.data),
-      tokenDatasId(managedTokens.data),
-    ],
-    () => {
-      return [
-        ...(userTokenDatas.data ?? []),
-        ...(managedTokens.data?.filter(
-          (tokenData) =>
-            !userTokenDatas.data
-              ?.map(
-                (userTokenData) => getMintfromTokenData(userTokenData) ?? ''
-              )
-              .includes(getMintfromTokenData(tokenData) ?? '')
-        ) ?? []),
-      ]
-    },
-    {
-      enabled: userTokenDatas.isFetched && managedTokens.isFetched,
-    }
-  )
+  const managedTokens = useManagedTokens(selectedConfig)
+  // const allManagedTokens = useQuery(
+  //   [
+  //     'useAllManagedTokens',
+  //     walletId?.toString(),
+  //     tokenDatasId(userTokenDatas.data),
+  //     tokenDatasId(managedTokens.data),
+  //   ],
+  //   () => {
+  //     return [
+  //       ...(userTokenDatas.data ?? []),
+  //       ...(managedTokens.data?.filter(
+  //         (tokenData) =>
+  //           !userTokenDatas.data
+  //             ?.map(
+  //               (userTokenData) => getMintfromTokenData(userTokenData) ?? ''
+  //             )
+  //             .includes(getMintfromTokenData(tokenData) ?? '')
+  //       ) ?? []),
+  //     ]
+  //   },
+  //   {
+  //     enabled: userTokenDatas.isFetched && managedTokens.isFetched,
+  //   }
+  // )
   const availableTokens = useQuery(
     [
       'availableTokens',
@@ -161,15 +169,8 @@ export const Dashboard = () => {
     }
   )
 
-  const [selectedTokens, setSelectedTokens] = useState<TokenData[]>([])
-  const [selectedGroup, setSelectedGroup] = useState<ManageTokenGroupId>('all')
-  const [selectedConfig, setSelectedConfig] = useState<
-    ProjectConfig | undefined
-  >(undefined)
-  const claimEvents = useClaimEventsForConfig(true, walletId)
-
   const tokenQuery = {
-    all: allManagedTokens,
+    all: availableTokens,
     available: availableTokens,
     rented: rentedTokens,
     'rented-out': managedTokens,
@@ -270,15 +271,17 @@ export const Dashboard = () => {
           <div className="flex flex-wrap gap-4">
             <TabSelector<ManageTokenGroupId>
               defaultOption={{
-                value: 'all',
+                value: 'available',
                 label: manageTokenGroups(walletId).find(
                   (g) => g.id === selectedGroup
                 )?.header,
               }}
-              options={manageTokenGroups(walletId).map((g) => ({
-                label: g.header,
-                value: g.id,
-              }))}
+              options={manageTokenGroups(walletId)
+                .filter((v) => v.id !== 'all')
+                .map((g) => ({
+                  label: g.header,
+                  value: g.id,
+                }))}
               onChange={(o) => {
                 logConfigEvent('dashboard: click tab', config, {
                   name: o.value,
@@ -357,7 +360,13 @@ export const Dashboard = () => {
           {
             activity: <Activity user={walletId} />,
             browse:
-              tokenQuery.isFetched && groupedTokens.length === 0 ? (
+              selectedGroup === 'rented-out' && !selectedConfig ? (
+                <div className="my-40 flex w-full flex-col items-center justify-center gap-1">
+                  <div className="mt-4 text-medium-4">
+                    Please select a filter first
+                  </div>
+                </div>
+              ) : tokenQuery.isFetched && groupedTokens.length === 0 ? (
                 <div className="my-40 flex w-full flex-col items-center justify-center gap-1">
                   <GlyphLargeClose />
                   <div className="mt-4 text-medium-4">

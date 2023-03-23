@@ -15,6 +15,7 @@ import type { Account } from '@solana/spl-token'
 import type { PublicKey } from '@solana/web3.js'
 import { useQuery } from '@tanstack/react-query'
 import type { TokenData } from 'apis/api'
+import type { ProjectConfig } from 'config/config'
 import { withTrace } from 'monitoring/trace'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
@@ -35,12 +36,15 @@ export type ManagedTokenData = Pick<
   | 'timeInvalidator'
 >
 
-export const useManagedTokens = () => {
+export const useManagedTokens = (configOverride?: ProjectConfig) => {
   const walletId = useWalletId()
-  const { config } = useProjectConfig()
+  const { config: globalConfig } = useProjectConfig()
+  const config = configOverride ?? globalConfig
   const { connection, environment } = useEnvironmentCtx()
   const { getAccountDataById } = useAccounts()
-  const tokenManagersForConfig = useTokenManagersForConfig()
+  const tokenManagersForConfig = useTokenManagersForConfig(
+    configOverride?.filter
+  )
   return useQuery<ManagedTokenData[]>(
     [
       TOKEN_DATA_KEY,
