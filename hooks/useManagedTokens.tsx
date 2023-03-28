@@ -1,18 +1,27 @@
 import { ApolloClient, gql, InMemoryCache } from '@apollo/client'
 import type { AccountData } from '@cardinal/common'
-import { findMintMetadataId } from '@cardinal/common'
+import {
+  fetchAccountDataById,
+  findMintMetadataId,
+  tryDecodeIdlAccount,
+  tryPublicKey,
+} from '@cardinal/common'
 import type { PaidClaimApproverData } from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
 import type { TimeInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
 import { TIME_INVALIDATOR_ADDRESS } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
 import { findTimeInvalidatorAddress } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator/pda'
-import type { TokenManagerData } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
+import type {
+  TOKEN_MANAGER_PROGRAM,
+  TokenManagerData,
+} from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
+import { TOKEN_MANAGER_IDL } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { getTokenManagers } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/accounts'
 import type { UseInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
 import { USE_INVALIDATOR_ADDRESS } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
 import type { Metadata } from '@metaplex-foundation/mpl-token-metadata'
 import * as Sentry from '@sentry/browser'
 import type { Account } from '@solana/spl-token'
-import type { PublicKey } from '@solana/web3.js'
+import { PublicKey } from '@solana/web3.js'
 import { useQuery } from '@tanstack/react-query'
 import type { TokenData } from 'apis/api'
 import type { ProjectConfig } from 'config/config'
@@ -189,6 +198,136 @@ export const useManagedTokens = (configOverride?: ProjectConfig) => {
 
         trace.finish()
         return tokenDatas
+      } else if (environment.index2) {
+        ////////////////////// index2 //////////////////////
+        const indexer = new ApolloClient({
+          uri: environment.index2,
+          cache: new InMemoryCache({ resultCaching: false }),
+        })
+        const tokenManagerResponse = await (config.filter?.type === 'creators'
+          ? indexer.query({
+              query: gql`
+                query GetTokenManagersForIssuer(
+                  $issuer: String!
+                  $creators: [String!]!
+                ) {
+                  token_manager(
+                    where: {
+                      issuer: { _eq: $issuer }
+                      token_manager_mint_token_metadata_creators: {
+                        _and: {
+                          creator: { _in: $creators }
+                          _and: { verified: { _eq: true } }
+                        }
+                      }
+                    }
+                  ) {
+                    id
+                    mint
+                  }
+                }
+              `,
+              variables: {
+                issuer: walletId.toBase58(),
+                creators: config.filter.value,
+              },
+            })
+          : indexer.query({
+              query: gql`
+                query GetTokenManagersForIssuer($issuer: String!) {
+                  token_manager(where: { issuer: { _eq: $issuer } }) {
+                    id
+                    mint
+                  }
+                }
+              `,
+              variables: {
+                issuer: walletId.toBase58(),
+              },
+            }))
+        const issuedTokenManagers = tokenManagerResponse.data[
+          'token_manager'
+        ] as {
+          id: string
+          mint: string
+        }[]
+
+        const tokenManagerIds = issuedTokenManagers
+          .map(({ id }) => tryPublicKey(id))
+          .filter((v): v is PublicKey => !!v)
+
+        // get token managers
+        const tokenManagerAccountInfos = await fetchAccountDataById(
+          connection,
+          tokenManagerIds
+        )
+        let tokenManagerDatas: AccountData<TokenManagerData>[] = []
+        Object.entries(tokenManagerAccountInfos).forEach(([k, a]) => {
+          const tm = tryDecodeIdlAccount<'tokenManager', TOKEN_MANAGER_PROGRAM>(
+            a,
+            'tokenManager',
+            TOKEN_MANAGER_IDL
+          )
+          if (tm.parsed) {
+            tokenManagerDatas.push({ ...tm, pubkey: new PublicKey(k) })
+          }
+        })
+
+        // filter known invalidators
+        tokenManagerDatas = config.showUnknownInvalidators
+          ? tokenManagerDatas
+          : tokenManagerDatas.filter(
+              ({ parsed, pubkey }) =>
+                !parsed?.invalidators?.some(
+                  (invalidator) =>
+                    !invalidator.equals(findTimeInvalidatorAddress(pubkey))
+                )
+            )
+
+        // fetch related accounts
+        const idsToFetch = tokenManagerDatas.reduce(
+          (acc, tm) => [
+            ...acc,
+            tm.parsed.claimApprover,
+            ...tm.parsed.invalidators,
+            findMintMetadataId(tm.parsed.mint),
+          ],
+          [] as (PublicKey | null)[]
+        )
+        const accountsById = await getAccountDataById(idsToFetch)
+
+        // collect
+        return tokenManagerDatas.map((tokenManagerData) => {
+          const timeInvalidatorId = tokenManagerData.parsed.invalidators.filter(
+            (invalidator) =>
+              accountsById[invalidator.toString()]?.owner?.toString() ===
+              TIME_INVALIDATOR_ADDRESS.toString()
+          )[0]
+          const mintMetadataId = findMintMetadataId(
+            tokenManagerData.parsed.mint
+          )
+          return {
+            tokenManager: tokenManagerData,
+            recipientTokenAccount: tokenManagerData.parsed.recipientTokenAccount
+              ? (accountsById[
+                  tokenManagerData.parsed.recipientTokenAccount.toString()
+                ] as AccountData<Account>)
+              : undefined,
+            metaplexData: accountsById[
+              mintMetadataId?.toString()
+            ] as AccountData<Metadata>,
+            claimApprover: tokenManagerData.parsed.claimApprover?.toString()
+              ? (accountsById[
+                  tokenManagerData.parsed.claimApprover?.toString()
+                ] as AccountData<PaidClaimApproverData>)
+              : undefined,
+            timeInvalidator: timeInvalidatorId
+              ? (accountsById[
+                  timeInvalidatorId.toString()
+                ] as AccountData<TimeInvalidatorData>)
+              : undefined,
+          }
+        })
       } else {
         ////////////////////// non-indexed //////////////////////
         if (!tokenManagersForConfig.data) return []

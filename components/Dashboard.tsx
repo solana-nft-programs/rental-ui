@@ -360,13 +360,7 @@ export const Dashboard = () => {
           {
             activity: <Activity user={walletId} />,
             browse:
-              selectedGroup === 'rented-out' && !selectedConfig ? (
-                <div className="my-40 flex w-full flex-col items-center justify-center gap-1">
-                  <div className="mt-4 text-medium-4">
-                    Please select a filter first
-                  </div>
-                </div>
-              ) : tokenQuery.isFetched && groupedTokens.length === 0 ? (
+              tokenQuery.isFetched && groupedTokens.length === 0 ? (
                 <div className="my-40 flex w-full flex-col items-center justify-center gap-1">
                   <GlyphLargeClose />
                   <div className="mt-4 text-medium-4">

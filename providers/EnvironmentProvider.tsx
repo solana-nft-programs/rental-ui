@@ -10,6 +10,7 @@ export interface Environment {
   secondary?: string
   api?: string
   index?: string
+  index2?: string
 }
 
 export interface EnvironmentContextValues {
@@ -99,6 +100,7 @@ export function EnvironmentProvider({
             INDEX_ENABLED || query.index
               ? 'https://graph.holaplex.tools/v1/graphql'
               : undefined,
+          index2: `https://welcome-elk-85.hasura.app/v1/graphql`,
         },
         setEnvironment,
         connection,
