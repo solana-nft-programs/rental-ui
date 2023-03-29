@@ -21,6 +21,7 @@ import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useAccounts } from 'providers/SolanaAccountsProvider'
 
 import { filterKnownInvalidators, getTokenIndexData } from './indexData'
+import { filterKnownInvalidators2, getTokenIndexData2 } from './indexData2'
 import { WRAPPED_SOL_MINT } from './usePaymentMints'
 import { useTokenManagersForConfig } from './useTokenManagersForConfig'
 
@@ -174,6 +175,70 @@ export const useBrowseAvailableTokenDatas = (subFilter?: TokenFilter) => {
           }
         })
         trace.finish()
+        if (config.type === 'Collection') {
+          tokenDatas = filterPaymentMints(tokenDatas, config)
+        }
+        return tokenDatas
+      } else if (environment.index2) {
+        // filter by state
+        const indexedTokenManagers = await getTokenIndexData2(
+          environment,
+          subFilter ?? config.filter ?? null,
+          state
+        )
+
+        // filter known invalidators
+        const { tokenManagerIds } = await filterKnownInvalidators2(
+          config.showUnknownInvalidators ?? false,
+          indexedTokenManagers
+        )
+
+        // get data
+        const tokenManagerDatas = (
+          await getTokenManagers(connection, tokenManagerIds)
+        ).filter((tm): tm is AccountData<TokenManagerData> => !!tm.parsed)
+
+        // fetch related accounts
+        const idsToFetch = tokenManagerDatas.reduce(
+          (acc, tm) => [
+            ...acc,
+            tm.parsed.claimApprover,
+            ...tm.parsed.invalidators,
+            findMintMetadataId(tm.parsed.mint),
+          ],
+          [] as (PublicKey | null)[]
+        )
+        const accountsById = await getAccountDataById(idsToFetch)
+
+        // collect
+        let tokenDatas = tokenManagerDatas.map((tokenManagerData) => {
+          const timeInvalidatorId = tokenManagerData.parsed.invalidators.filter(
+            (invalidator) =>
+              accountsById[invalidator.toString()]?.owner?.toString() ===
+              TIME_INVALIDATOR_ADDRESS.toString()
+          )[0]
+          const mintMetadataId = findMintMetadataId(
+            tokenManagerData.parsed.mint
+          )
+          return {
+            tokenManager: tokenManagerData,
+            claimApprover: tokenManagerData.parsed.claimApprover?.toString()
+              ? (accountsById[
+                  tokenManagerData.parsed.claimApprover?.toString()
+                ] as AccountData<PaidClaimApproverData>)
+              : undefined,
+            metaplexData: accountsById[
+              mintMetadataId?.toString()
+            ] as AccountData<Metadata>,
+            timeInvalidator: timeInvalidatorId
+              ? (accountsById[
+                  timeInvalidatorId.toString()
+                ] as AccountData<TimeInvalidatorData>)
+              : undefined,
+          }
+        })
+
+        // filter payment mints
         if (config.type === 'Collection') {
           tokenDatas = filterPaymentMints(tokenDatas, config)
         }

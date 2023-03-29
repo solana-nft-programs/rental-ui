@@ -71,7 +71,7 @@ export const PANE_TABS: {
       </div>
     ),
     value: 'activity',
-    disabled: false,
+    disabled: true,
     tooltip: 'View recent activity',
   },
 ]
@@ -356,32 +356,34 @@ export const Browse = () => {
             }}
           />
 
-          <MultiSelector<string>
-            colorized
-            placeholder="Select filters"
-            defaultValue={
-              Object.values(selectedFilters).reduce(
-                (acc, v) => acc + v.length,
-                0
-              ) > 0 ? (
-                <div className="text-light-0">
-                  {Object.values(selectedFilters).reduce(
-                    (acc, v) => acc + v.length,
-                    0
-                  )}{' '}
-                  filter applied
-                </div>
-              ) : undefined
-            }
-            onChange={(v) => !v && setSelectedFilters({})}
-            groups={getNFTAtrributeFilters({
-              tokenDatas,
-              config,
-              sortedAttributes,
-              selectedFilters,
-              setSelectedFilters,
-            })}
-          />
+          {Object.keys(sortedAttributes).length > 0 && (
+            <MultiSelector<string>
+              colorized
+              placeholder="Select filters"
+              defaultValue={
+                Object.values(selectedFilters).reduce(
+                  (acc, v) => acc + v.length,
+                  0
+                ) > 0 ? (
+                  <div className="text-light-0">
+                    {Object.values(selectedFilters).reduce(
+                      (acc, v) => acc + v.length,
+                      0
+                    )}{' '}
+                    filter applied
+                  </div>
+                ) : undefined
+              }
+              onChange={(v) => !v && setSelectedFilters({})}
+              groups={getNFTAtrributeFilters({
+                tokenDatas,
+                config,
+                sortedAttributes,
+                selectedFilters,
+                setSelectedFilters,
+              })}
+            />
+          )}
           <Selector<OrderCategories>
             colorized
             className="min-w-[240px]"

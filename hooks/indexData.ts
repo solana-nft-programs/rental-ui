@@ -69,7 +69,7 @@ export async function filterKnownInvalidators(
 ) {
   /////
   const filterSpan = trace?.startChild({
-    op: 'filter-known-invalidators',
+    op: 'filter-known-invwalidators',
   })
   const filteredData = showUnknownInvalidators
     ? indexedTokenManagers

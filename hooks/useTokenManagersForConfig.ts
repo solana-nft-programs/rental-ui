@@ -35,7 +35,7 @@ export const useTokenManagersForConfig = (subFilter?: TokenFilter) => {
       mintList.data?.join(','),
     ],
     async () => {
-      if (environment.index) return []
+      if (environment.index || environment.index2) return []
 
       // get token manager ids from mint list
       const mintIds = mintList.data ?? []
