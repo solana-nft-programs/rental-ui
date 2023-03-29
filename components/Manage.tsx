@@ -1,4 +1,5 @@
 import type { PublicKey } from '@solana/web3.js'
+import { useQuery } from '@tanstack/react-query'
 import type { TokenData } from 'apis/api'
 import { HeaderSlim } from 'common/HeaderSlim'
 import { HeroSmall } from 'common/HeroSmall'
@@ -12,7 +13,6 @@ import { useUserTokenData } from 'hooks/useUserTokenData'
 import { useWalletId } from 'hooks/useWalletId'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
 
 import { tokenDatasId } from './Dashboard'
 import { TokenQueryResults } from './TokenQueryResults'
@@ -87,7 +87,7 @@ export const Manage = () => {
   const walletId = useWalletId()
   const { config } = useProjectConfig()
 
-  const userTokenDatas = useUserTokenData(config.filter, true)
+  const userTokenDatas = useUserTokenData(config.filter, false)
   const managedTokens = useManagedTokens()
   const allManagedTokens = useQuery(
     [

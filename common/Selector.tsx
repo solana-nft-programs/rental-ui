@@ -92,7 +92,7 @@ export const Selector = <T,>({
         </div>
       </div>
       <div
-        className={`absolute w-full rounded-md bg-dark-4 transition-all ${
+        className={`absolute max-h-[50vh] w-full overflow-y-auto rounded-md bg-dark-4 transition-all ${
           isOpen ? 'h-auto opacity-100' : 'h-0 overflow-hidden opacity-0'
         }`}
       >

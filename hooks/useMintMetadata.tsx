@@ -1,11 +1,11 @@
 import type { AccountData } from '@cardinal/common'
 import { tryPublicKey } from '@cardinal/common'
+import { useQueries, useQuery } from '@tanstack/react-query'
 import type { TokenData } from 'apis/api'
 import { getMintfromTokenData } from 'common/tokenDataUtils'
 import type { ProjectConfig } from 'config/config'
 import { tracer, withTrace } from 'monitoring/trace'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
-import { useQueries, useQuery } from '@tanstack/react-query'
 
 export const mintMetadataQueryKey = (
   tokenData: Pick<TokenData, 'metaplexData'> | Pick<TokenData, 'indexedData'>

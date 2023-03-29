@@ -267,7 +267,6 @@ export const useUserTokenData = (
     },
     {
       enabled: !!walletId,
-      refetchInterval: 40000,
     }
   )
 }

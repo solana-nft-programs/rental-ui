@@ -6,11 +6,14 @@ import type { ProjectConfig } from 'config/config'
 import { queryId, useGlobalStats } from 'hooks/useGlobalStats'
 import { useRouter } from 'next/router'
 import { transparentize } from 'polished'
+import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
+
+import { SocialIcon } from './Socials'
 
 export const CollectionsGrid = ({ configs }: { configs: ProjectConfig[] }) => {
   const router = useRouter()
   const stats = useGlobalStats()
-
+  const { environment } = useEnvironmentCtx()
   return (
     <div className="grid grid-cols-1 flex-wrap gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {configs.map((config) => (
@@ -55,36 +58,62 @@ export const CollectionsGrid = ({ configs }: { configs: ProjectConfig[] }) => {
             </div>
           }
           content={
-            <Stats
-              stats={[
-                {
-                  header: 'Total rentals',
-                  value:
-                    stats.data &&
-                    !!stats.data[queryId(config.name, true)]?.aggregate
-                      .count !== undefined ? (
-                      stats.data[
-                        queryId(config.name, true)
-                      ]?.aggregate.count.toString()
-                    ) : (
-                      <div className="mt-1 h-5 w-12 animate-pulse rounded-md bg-border" />
-                    ),
-                },
-                {
-                  header: 'Listed rentals',
-                  value:
-                    stats.data &&
-                    !!stats.data[queryId(config.name, false)]?.aggregate
-                      .count !== undefined ? (
-                      stats.data[
-                        queryId(config.name, false)
-                      ]?.aggregate.count.toString()
-                    ) : (
-                      <div className="mt-1 h-5 w-12 animate-pulse rounded-md bg-border" />
-                    ),
-                },
-              ]}
-            />
+            environment.index ? (
+              <Stats
+                stats={[
+                  {
+                    header: 'Total rentals',
+                    value:
+                      stats.data &&
+                      !!stats.data[queryId(config.name, true)]?.aggregate
+                        .count !== undefined ? (
+                        stats.data[
+                          queryId(config.name, true)
+                        ]?.aggregate.count.toString()
+                      ) : (
+                        <div className="mt-1 h-5 w-12 animate-pulse rounded-md bg-border" />
+                      ),
+                  },
+                  {
+                    header: 'Listed rentals',
+                    value:
+                      stats.data &&
+                      !!stats.data[queryId(config.name, false)]?.aggregate
+                        .count !== undefined ? (
+                        stats.data[
+                          queryId(config.name, false)
+                        ]?.aggregate.count.toString()
+                      ) : (
+                        <div className="mt-1 h-5 w-12 animate-pulse rounded-md bg-border" />
+                      ),
+                  },
+                ]}
+              />
+            ) : config.socialLinks ? (
+              <Stats
+                stats={config.socialLinks?.map(({ icon, link }, i) => ({
+                  header: icon[0]?.toUpperCase() + icon.slice(1),
+                  value: (
+                    <a
+                      key={i}
+                      href={link}
+                      target="_blank"
+                      rel="noreferrer"
+                      className={`cursor-pointer text-xl text-light-0 transition-all duration-300 hover:text-primary`}
+                      css={css`
+                        &:hover {
+                          color: ${config.colors.accent} !important;
+                        }
+                      `}
+                    >
+                      <SocialIcon iconKey={icon} />
+                    </a>
+                  ),
+                }))}
+              />
+            ) : (
+              <></>
+            )
           }
         />
       ))}

@@ -23,7 +23,7 @@ import {
   isClaimable,
 } from 'common/tokenDataUtils'
 import { Activity } from 'components/Activity'
-import type { ProjectConfig, TokenFilter, TokenSection } from 'config/config'
+import type { ProjectConfig, TokenFilter } from 'config/config'
 import type { BrowseAvailableTokenData } from 'hooks/useBrowseAvailableTokenDatas'
 import {
   filterPaymentMints,
@@ -34,9 +34,9 @@ import { useBrowseClaimedTokenDatas } from 'hooks/useBrowseClaimedTokenDatas'
 import { useClaimEventsForConfig } from 'hooks/useClaimEventsForConfig'
 import { useOtp } from 'hooks/useOtp'
 import { mintSymbol, usePaymentMints } from 'hooks/usePaymentMints'
+import { useTokenManagersForConfig } from 'hooks/useTokenManagersForConfig'
 import { useWalletId } from 'hooks/useWalletId'
 import { logConfigEvent } from 'monitoring/amplitude'
-import type { Environment } from 'providers/EnvironmentProvider'
 import { filterTokens, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useUTCNow } from 'providers/UTCNowProvider'
 import { useState } from 'react'
@@ -71,7 +71,7 @@ export const PANE_TABS: {
       </div>
     ),
     value: 'activity',
-    disabled: false,
+    disabled: true,
     tooltip: 'View recent activity',
   },
 ]
@@ -237,29 +237,6 @@ export function sortTokens<
   return sortedTokens
 }
 
-export const groupTokens = (
-  tokens: TokenData[],
-  sections: TokenSection[],
-  environment: Environment
-): TokenSection[] => {
-  return tokens.reduce((acc, tk) => {
-    let isPlaced = false
-    return acc.map((section) => {
-      const filteredToken = !isPlaced
-        ? filterTokens([tk], section.filter, environment.label)
-        : []
-      if (filteredToken.length > 0 && !isPlaced) {
-        isPlaced = true
-        return {
-          ...section,
-          tokens: [...(section.tokens ?? []), tk],
-        }
-      }
-      return section
-    })
-  }, sections)
-}
-
 export const Browse = () => {
   const walletId = useWalletId()
   const otpKeypair = useOtp()
@@ -276,25 +253,22 @@ export const Browse = () => {
   const tokenSections = tokenSectionsForConfig(config)
   const [selectedGroup, setSelectedGroup] = useState(0)
   const [pane, setPane] = useState<PANE_OPTIONS>('browse')
-  const availableTokenDatas = useBrowseAvailableTokenDatas(
-    false,
-    selectedGroup !== 0,
-    subFilter
-  )
+  const availableTokenDatas = useBrowseAvailableTokenDatas(subFilter)
   const claimedTokenDatas = useBrowseClaimedTokenDatas(
     selectedGroup !== 1,
     subFilter
   )
+  const tokenManagersForConfig = useTokenManagersForConfig(subFilter)
   const tokenQuery =
     selectedGroup === 0 ? availableTokenDatas : claimedTokenDatas
 
   const claimEvents = useClaimEventsForConfig(true)
 
-  const tokenDatas = [
+  const sortedAttributes = getAllAttributes([
     ...(availableTokenDatas.data ?? []),
     ...(claimedTokenDatas.data ?? []),
-  ]
-  const sortedAttributes = getAllAttributes(tokenDatas)
+  ])
+  const tokenDatas = tokenQuery.data ?? []
   const attrFilteredAndSortedTokens = sortTokens(
     filterTokensByAttributes<BrowseAvailableTokenData | BrowseClaimedTokenData>(
       tokenDatas,
@@ -382,32 +356,34 @@ export const Browse = () => {
             }}
           />
 
-          <MultiSelector<string>
-            colorized
-            placeholder="Select filters"
-            defaultValue={
-              Object.values(selectedFilters).reduce(
-                (acc, v) => acc + v.length,
-                0
-              ) > 0 ? (
-                <div className="text-light-0">
-                  {Object.values(selectedFilters).reduce(
-                    (acc, v) => acc + v.length,
-                    0
-                  )}{' '}
-                  filter applied
-                </div>
-              ) : undefined
-            }
-            onChange={(v) => !v && setSelectedFilters({})}
-            groups={getNFTAtrributeFilters({
-              tokenDatas,
-              config,
-              sortedAttributes,
-              selectedFilters,
-              setSelectedFilters,
-            })}
-          />
+          {Object.keys(sortedAttributes).length > 0 && (
+            <MultiSelector<string>
+              colorized
+              placeholder="Select filters"
+              defaultValue={
+                Object.values(selectedFilters).reduce(
+                  (acc, v) => acc + v.length,
+                  0
+                ) > 0 ? (
+                  <div className="text-light-0">
+                    {Object.values(selectedFilters).reduce(
+                      (acc, v) => acc + v.length,
+                      0
+                    )}{' '}
+                    filter applied
+                  </div>
+                ) : undefined
+              }
+              onChange={(v) => !v && setSelectedFilters({})}
+              groups={getNFTAtrributeFilters({
+                tokenDatas,
+                config,
+                sortedAttributes,
+                selectedFilters,
+                setSelectedFilters,
+              })}
+            />
+          )}
           <Selector<OrderCategories>
             colorized
             className="min-w-[240px]"
@@ -470,7 +446,12 @@ export const Browse = () => {
                 : claimEvents.dataUpdatedAt
             }
             handleClick={() =>
-              pane === 'browse' ? tokenQuery.refetch() : claimEvents.refetch()
+              pane === 'browse'
+                ? Promise.all([
+                    tokenQuery.refetch(),
+                    tokenManagersForConfig.refetch(),
+                  ])
+                : claimEvents.refetch()
             }
           />
           <TabSelector<PANE_OPTIONS>

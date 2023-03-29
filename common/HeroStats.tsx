@@ -87,7 +87,7 @@ export const HeroStats: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   const { config, subFilter } = useProjectConfig()
   const projectStats = useProjectStats()
   const paymentMints = usePaymentMints()
-  const availableTokens = useBrowseAvailableTokenDatas(false, true, subFilter)
+  const availableTokens = useBrowseAvailableTokenDatas(subFilter)
   return (
     <div className={`flex flex-wrap gap-y-5 ${className}`}>
       <div className="flex flex-col items-center justify-center">

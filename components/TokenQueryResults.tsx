@@ -1,3 +1,4 @@
+import type { UseQueryResult } from '@tanstack/react-query'
 import type { TokenData } from 'apis/api'
 import { Info } from 'common/Info'
 import { MultiSelector } from 'common/MultiSelector'
@@ -16,7 +17,6 @@ import { useWalletId } from 'hooks/useWalletId'
 import { logConfigEvent } from 'monitoring/amplitude'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useState } from 'react'
-import type { UseQueryResult } from '@tanstack/react-query'
 
 import { Activity } from './Activity'
 import type { PANE_OPTIONS } from './Browse'
@@ -98,34 +98,35 @@ export const TokenQueryResults: React.FC<Props> = ({
               setPane('browse')
             }}
           />
-          {attributeFilterOptions && (
-            <MultiSelector<string>
-              colorized
-              placeholder="Select filters"
-              onChange={(v) => !v && setSelectedFilters({})}
-              defaultValue={
-                Object.values(selectedFilters).reduce(
-                  (acc, v) => acc + v.length,
-                  0
-                ) > 0 ? (
-                  <div className="text-light-0">
-                    {Object.values(selectedFilters).reduce(
-                      (acc, v) => acc + v.length,
-                      0
-                    )}{' '}
-                    filter applied
-                  </div>
-                ) : undefined
-              }
-              groups={getNFTAtrributeFilters({
-                tokenDatas: tokenQuery.data,
-                config,
-                sortedAttributes: attributeFilterOptions,
-                selectedFilters,
-                setSelectedFilters,
-              })}
-            />
-          )}
+          {attributeFilterOptions &&
+            Object.keys(attributeFilterOptions).length > 0 && (
+              <MultiSelector<string>
+                colorized
+                placeholder="Select filters"
+                onChange={(v) => !v && setSelectedFilters({})}
+                defaultValue={
+                  Object.values(selectedFilters).reduce(
+                    (acc, v) => acc + v.length,
+                    0
+                  ) > 0 ? (
+                    <div className="text-light-0">
+                      {Object.values(selectedFilters).reduce(
+                        (acc, v) => acc + v.length,
+                        0
+                      )}{' '}
+                      filter applied
+                    </div>
+                  ) : undefined
+                }
+                groups={getNFTAtrributeFilters({
+                  tokenDatas: tokenQuery.data,
+                  config,
+                  sortedAttributes: attributeFilterOptions,
+                  selectedFilters,
+                  setSelectedFilters,
+                })}
+              />
+            )}
         </div>
         <div className="flex gap-4">
           <RefreshButton

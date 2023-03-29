@@ -5,6 +5,7 @@ import {
 } from '@cardinal/namespaces-components'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { css } from '@emotion/react'
+import { useQuery } from '@tanstack/react-query'
 import type { TokenData } from 'apis/api'
 import { GlyphLargeClose } from 'assets/GlyphLargeClose'
 import { SolanaLogo } from 'assets/SolanaLogo'
@@ -33,7 +34,6 @@ import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { filterTokens, useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useEffect, useState } from 'react'
 import { HiUserCircle } from 'react-icons/hi'
-import { useQuery } from '@tanstack/react-query'
 
 import { Activity } from './Activity'
 import type { PANE_OPTIONS } from './Browse'
@@ -94,8 +94,16 @@ export const Dashboard = () => {
   const userRegion = useUserRegion()
   const { secondaryConnection, environment } = useEnvironmentCtx()
   const { config, setProjectConfig } = useProjectConfig()
-  const userTokenDatas = useUserTokenData(config.filter)
+
+  const [selectedTokens, setSelectedTokens] = useState<TokenData[]>([])
+  const [selectedGroup, setSelectedGroup] = useState<ManageTokenGroupId>('all')
+  const [selectedConfig, setSelectedConfig] = useState<
+    ProjectConfig | undefined
+  >(undefined)
   const [pane, setPane] = useState<PANE_OPTIONS>('browse')
+
+  const claimEvents = useClaimEventsForConfig(true, walletId)
+  const userTokenDatas = useUserTokenData(config.filter)
   const { data: addressImage, isFetching: loadingImage } = useAddressImage(
     secondaryConnection,
     walletId
@@ -104,31 +112,31 @@ export const Dashboard = () => {
     secondaryConnection,
     walletId
   )
-  const managedTokens = useManagedTokens()
-  const allManagedTokens = useQuery(
-    [
-      'useAllManagedTokens',
-      walletId?.toString(),
-      tokenDatasId(userTokenDatas.data),
-      tokenDatasId(managedTokens.data),
-    ],
-    () => {
-      return [
-        ...(userTokenDatas.data ?? []),
-        ...(managedTokens.data?.filter(
-          (tokenData) =>
-            !userTokenDatas.data
-              ?.map(
-                (userTokenData) => getMintfromTokenData(userTokenData) ?? ''
-              )
-              .includes(getMintfromTokenData(tokenData) ?? '')
-        ) ?? []),
-      ]
-    },
-    {
-      enabled: userTokenDatas.isFetched && managedTokens.isFetched,
-    }
-  )
+  const managedTokens = useManagedTokens(selectedConfig)
+  // const allManagedTokens = useQuery(
+  //   [
+  //     'useAllManagedTokens',
+  //     walletId?.toString(),
+  //     tokenDatasId(userTokenDatas.data),
+  //     tokenDatasId(managedTokens.data),
+  //   ],
+  //   () => {
+  //     return [
+  //       ...(userTokenDatas.data ?? []),
+  //       ...(managedTokens.data?.filter(
+  //         (tokenData) =>
+  //           !userTokenDatas.data
+  //             ?.map(
+  //               (userTokenData) => getMintfromTokenData(userTokenData) ?? ''
+  //             )
+  //             .includes(getMintfromTokenData(tokenData) ?? '')
+  //       ) ?? []),
+  //     ]
+  //   },
+  //   {
+  //     enabled: userTokenDatas.isFetched && managedTokens.isFetched,
+  //   }
+  // )
   const availableTokens = useQuery(
     [
       'availableTokens',
@@ -161,15 +169,8 @@ export const Dashboard = () => {
     }
   )
 
-  const [selectedTokens, setSelectedTokens] = useState<TokenData[]>([])
-  const [selectedGroup, setSelectedGroup] = useState<ManageTokenGroupId>('all')
-  const [selectedConfig, setSelectedConfig] = useState<
-    ProjectConfig | undefined
-  >(undefined)
-  const claimEvents = useClaimEventsForConfig(true, walletId)
-
   const tokenQuery = {
-    all: allManagedTokens,
+    all: availableTokens,
     available: availableTokens,
     rented: rentedTokens,
     'rented-out': managedTokens,
@@ -270,15 +271,17 @@ export const Dashboard = () => {
           <div className="flex flex-wrap gap-4">
             <TabSelector<ManageTokenGroupId>
               defaultOption={{
-                value: 'all',
+                value: 'available',
                 label: manageTokenGroups(walletId).find(
                   (g) => g.id === selectedGroup
                 )?.header,
               }}
-              options={manageTokenGroups(walletId).map((g) => ({
-                label: g.header,
-                value: g.id,
-              }))}
+              options={manageTokenGroups(walletId)
+                .filter((v) => v.id !== 'all')
+                .map((g) => ({
+                  label: g.header,
+                  value: g.id,
+                }))}
               onChange={(o) => {
                 logConfigEvent('dashboard: click tab', config, {
                   name: o.value,

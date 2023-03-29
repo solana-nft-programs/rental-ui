@@ -10,6 +10,7 @@ export interface Environment {
   secondary?: string
   api?: string
   index?: string
+  index2?: string
 }
 
 export interface EnvironmentContextValues {
@@ -19,7 +20,7 @@ export interface EnvironmentContextValues {
   secondaryConnection: Connection
 }
 
-const INDEX_ENABLED = true
+const INDEX_ENABLED = false
 const RPC_BETA_THRESHOLD = 0.25
 
 export const ENVIRONMENTS: Environment[] = [
@@ -29,9 +30,6 @@ export const ENVIRONMENTS: Environment[] = [
     primaryBeta:
       process.env.MAINNET_PRIMARY_BETA || 'https://rpc.ankr.com/solana',
     secondary: process.env.MAINNET_SECONDARY || 'https://rpc.ankr.com/solana',
-    index: INDEX_ENABLED
-      ? 'https://graph.holaplex.tools/v1/graphql'
-      : undefined,
   },
   {
     label: 'testnet',
@@ -96,7 +94,14 @@ export function EnvironmentProvider({
   return (
     <EnvironmentContext.Provider
       value={{
-        environment,
+        environment: {
+          ...environment,
+          index:
+            INDEX_ENABLED || query.index
+              ? 'https://graph.holaplex.tools/v1/graphql'
+              : undefined,
+          index2: `https://welcome-elk-85.hasura.app/v1/graphql`,
+        },
         setEnvironment,
         connection,
         secondaryConnection,

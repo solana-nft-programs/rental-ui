@@ -4,6 +4,7 @@ import type { ProjectConfig } from 'config/config'
 import { queryId, useGlobalStats } from 'hooks/useGlobalStats'
 import { useRouter } from 'next/router'
 import { transparentize } from 'polished'
+import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useState } from 'react'
 import { BiChevronDown, BiChevronUp } from 'react-icons/bi'
 
@@ -13,6 +14,7 @@ import { SocialIcon } from './Socials'
 export const CollectionsList = ({ configs }: { configs: ProjectConfig[] }) => {
   const router = useRouter()
   const stats = useGlobalStats()
+  const { environment } = useEnvironmentCtx()
   const [sort, setSort] = useState<'total' | 'listed'>('total')
   const [sortDirection, setSortDirection] = useState<
     'ascending' | 'descending'
@@ -23,48 +25,52 @@ export const CollectionsList = ({ configs }: { configs: ProjectConfig[] }) => {
       <div className="flex w-full min-w-fit flex-col">
         <div className="flex w-full gap-4 rounded-xl bg-dark-4 px-8 py-2">
           <div className="flex-[4]">Collection</div>
-          <div
-            className="flex flex-1 cursor-pointer items-center"
-            onClick={() => {
-              if (sort === 'total') {
-                setSortDirection((d) =>
-                  d === 'ascending' ? 'descending' : 'ascending'
-                )
-              } else {
-                setSort('total')
-                setSortDirection('descending')
-              }
-            }}
-          >
-            <div>Total rentals</div>
-            {sort === 'total' &&
-              (sortDirection === 'descending' ? (
-                <BiChevronDown />
-              ) : (
-                <BiChevronUp />
-              ))}
-          </div>
-          <div
-            className="flex flex-1 cursor-pointer items-center"
-            onClick={() => {
-              if (sort === 'listed') {
-                setSortDirection((d) =>
-                  d === 'ascending' ? 'descending' : 'ascending'
-                )
-              } else {
-                setSort('listed')
-                setSortDirection('descending')
-              }
-            }}
-          >
-            <div>Listed rentals</div>
-            {sort === 'listed' &&
-              (sortDirection === 'descending' ? (
-                <BiChevronDown />
-              ) : (
-                <BiChevronUp />
-              ))}
-          </div>
+          {environment.index && (
+            <>
+              <div
+                className="flex flex-1 cursor-pointer items-center"
+                onClick={() => {
+                  if (sort === 'total') {
+                    setSortDirection((d) =>
+                      d === 'ascending' ? 'descending' : 'ascending'
+                    )
+                  } else {
+                    setSort('total')
+                    setSortDirection('descending')
+                  }
+                }}
+              >
+                <div>Total rentals</div>
+                {sort === 'total' &&
+                  (sortDirection === 'descending' ? (
+                    <BiChevronDown />
+                  ) : (
+                    <BiChevronUp />
+                  ))}
+              </div>
+              <div
+                className="flex flex-1 cursor-pointer items-center"
+                onClick={() => {
+                  if (sort === 'listed') {
+                    setSortDirection((d) =>
+                      d === 'ascending' ? 'descending' : 'ascending'
+                    )
+                  } else {
+                    setSort('listed')
+                    setSortDirection('descending')
+                  }
+                }}
+              >
+                <div>Listed rentals</div>
+                {sort === 'listed' &&
+                  (sortDirection === 'descending' ? (
+                    <BiChevronDown />
+                  ) : (
+                    <BiChevronUp />
+                  ))}
+              </div>
+            </>
+          )}
           <div className="flex-1">Links</div>
         </div>
         <div className="flex flex-col">
@@ -118,33 +124,36 @@ export const CollectionsList = ({ configs }: { configs: ProjectConfig[] }) => {
                     ))}
                   </div>
                 </div>
-
-                <div className="my-auto flex-1">
-                  {stats.data &&
-                  !!stats.data[queryId(config.name, true)]?.aggregate.count !==
-                    undefined ? (
-                    <div>
-                      {stats.data[
-                        queryId(config.name, true)
-                      ]!.aggregate.count.toString()}
+                {environment.index && (
+                  <>
+                    <div className="my-auto flex-1">
+                      {stats.data &&
+                      !!stats.data[queryId(config.name, true)]?.aggregate
+                        .count !== undefined ? (
+                        <div>
+                          {stats.data[
+                            queryId(config.name, true)
+                          ]!.aggregate.count.toString()}
+                        </div>
+                      ) : (
+                        <div className="mt-1 h-5 w-12 animate-pulse rounded-md bg-border" />
+                      )}
                     </div>
-                  ) : (
-                    <div className="mt-1 h-5 w-12 animate-pulse rounded-md bg-border" />
-                  )}
-                </div>
-                <div className="my-auto flex-1">
-                  {stats.data &&
-                  !!stats.data[queryId(config.name, false)]?.aggregate.count !==
-                    undefined ? (
-                    <div>
-                      {stats.data[
-                        queryId(config.name, false)
-                      ]!.aggregate.count.toString()}
+                    <div className="my-auto flex-1">
+                      {stats.data &&
+                      !!stats.data[queryId(config.name, false)]?.aggregate
+                        .count !== undefined ? (
+                        <div>
+                          {stats.data[
+                            queryId(config.name, false)
+                          ]!.aggregate.count.toString()}
+                        </div>
+                      ) : (
+                        <div className="mt-1 h-5 w-12 animate-pulse rounded-md bg-border" />
+                      )}
                     </div>
-                  ) : (
-                    <div className="mt-1 h-5 w-12 animate-pulse rounded-md bg-border" />
-                  )}
-                </div>
+                  </>
+                )}
                 <div className="my-auto flex-1">
                   <div className="flex gap-4 text-light-0">
                     {config.socialLinks?.map(({ icon, link }, i) => {

@@ -23,9 +23,11 @@ import {
   SolflareWalletAdapter,
   TorusWalletAdapter,
 } from '@solana/wallet-adapter-wallets'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ToastContainer } from 'common/Notification'
 import type { ProjectConfig } from 'config/config'
 import type { AppProps } from 'next/app'
+import Head from 'next/head'
 import { EnvironmentProvider } from 'providers/EnvironmentProvider'
 import { ModalProvider } from 'providers/ModalProvider'
 import {
@@ -35,9 +37,7 @@ import {
 import { SolanaAccountsProvider } from 'providers/SolanaAccountsProvider'
 import { UTCNowProvider } from 'providers/UTCNowProvider'
 import { useMemo } from 'react'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
-import Head from 'next/head'
 
 require('@solana/wallet-adapter-react-ui/styles.css')
 
