@@ -4,7 +4,6 @@ import {
   fetchAccountDataById,
   findMintMetadataId,
   tryDecodeIdlAccount,
-  tryPublicKey,
 } from '@cardinal/common'
 import type { PaidClaimApproverData } from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
 import type { TimeInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
@@ -32,6 +31,8 @@ import { useAccounts } from 'providers/SolanaAccountsProvider'
 
 import type { IndexedData } from './indexData'
 import { filterKnownInvalidators, indexedDataBody } from './indexData'
+import type { IndexedData2 } from './indexData2'
+import { filterKnownInvalidators2 } from './indexData2'
 import { TOKEN_DATA_KEY } from './useBrowseAvailableTokenDatas'
 import { useTokenManagersForConfig } from './useTokenManagersForConfig'
 import { useWalletId } from './useWalletId'
@@ -224,6 +225,7 @@ export const useManagedTokens = (configOverride?: ProjectConfig) => {
                   ) {
                     id
                     mint
+                    invalidators
                   }
                 }
               `,
@@ -238,6 +240,7 @@ export const useManagedTokens = (configOverride?: ProjectConfig) => {
                   token_manager(where: { issuer: { _eq: $issuer } }) {
                     id
                     mint
+                    invalidators
                   }
                 }
               `,
@@ -245,23 +248,22 @@ export const useManagedTokens = (configOverride?: ProjectConfig) => {
                 issuer: walletId.toBase58(),
               },
             }))
-        const issuedTokenManagers = tokenManagerResponse.data[
+        const indexedTokenManagers = tokenManagerResponse.data[
           'token_manager'
-        ] as {
-          id: string
-          mint: string
-        }[]
+        ] as IndexedData2[]
 
-        const tokenManagerIds = issuedTokenManagers
-          .map(({ id }) => tryPublicKey(id))
-          .filter((v): v is PublicKey => !!v)
+        // filter known invalidators
+        const { tokenManagerIds } = await filterKnownInvalidators2(
+          true,
+          indexedTokenManagers
+        )
 
         // get token managers
         const tokenManagerAccountInfos = await fetchAccountDataById(
           connection,
           tokenManagerIds
         )
-        let tokenManagerDatas: AccountData<TokenManagerData>[] = []
+        const tokenManagerDatas: AccountData<TokenManagerData>[] = []
         Object.entries(tokenManagerAccountInfos).forEach(([k, a]) => {
           const tm = tryDecodeIdlAccount<'tokenManager', TOKEN_MANAGER_PROGRAM>(
             a,
@@ -272,17 +274,6 @@ export const useManagedTokens = (configOverride?: ProjectConfig) => {
             tokenManagerDatas.push({ ...tm, pubkey: new PublicKey(k) })
           }
         })
-
-        // filter known invalidators
-        tokenManagerDatas = config.showUnknownInvalidators
-          ? tokenManagerDatas
-          : tokenManagerDatas.filter(
-              ({ parsed, pubkey }) =>
-                !parsed?.invalidators?.some(
-                  (invalidator) =>
-                    !invalidator.equals(findTimeInvalidatorAddress(pubkey))
-                )
-            )
 
         // fetch related accounts
         const idsToFetch = tokenManagerDatas.reduce(

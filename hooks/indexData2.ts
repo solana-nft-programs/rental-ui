@@ -17,6 +17,7 @@ export async function filterKnownInvalidators2(
   indexedTokenManagers: IndexedData2[]
 ) {
   /////
+  console.log(showUnknownInvalidators, indexedTokenManagers)
   const filteredData = showUnknownInvalidators
     ? indexedTokenManagers
     : indexedTokenManagers.filter(
