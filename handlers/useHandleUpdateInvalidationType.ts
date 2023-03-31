@@ -127,7 +127,7 @@ export const useHandleUpdateInvalidationType = () => {
         console.log('[error][useHandleUpdateInvalidationType]', e)
         notify({
           message: `Failed to update invalidation type`,
-          description: e,
+          description: `${e}`,
         })
         return e
       },

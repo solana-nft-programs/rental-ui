@@ -107,7 +107,10 @@ export const useHandleUpdateMaxExpiration = () => {
     {
       onError: async (e) => {
         console.log('[error][useHandleUpdateMaxExpiration]', e)
-        notify({ message: `Failed to update max expiration`, description: e })
+        notify({
+          message: `Failed to update max expiration`,
+          description: `${e}`,
+        })
         return e
       },
       onSuccess: () => {
