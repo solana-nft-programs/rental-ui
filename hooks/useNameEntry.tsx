@@ -1,6 +1,6 @@
 import { getNameEntry } from '@cardinal/namespaces'
-import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useQuery } from '@tanstack/react-query'
+import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 
 const DEFAULT_NAMESPACE = 'twitter'
 

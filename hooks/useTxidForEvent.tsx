@@ -1,8 +1,8 @@
 import type { TransactionSignature } from '@solana/web3.js'
 import { Connection, PublicKey } from '@solana/web3.js'
+import { useQuery } from '@tanstack/react-query'
 import { tracer, withTrace } from 'monitoring/trace'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
-import { useQuery } from '@tanstack/react-query'
 
 export const useTxidForEvent = (
   tokenManagerId: string | undefined,

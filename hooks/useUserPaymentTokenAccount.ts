@@ -2,8 +2,8 @@ import * as splToken from '@solana/spl-token'
 import { getAssociatedTokenAddressSync } from '@solana/spl-token'
 import type { PublicKey } from '@solana/web3.js'
 import { Connection } from '@solana/web3.js'
-import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useQuery } from '@tanstack/react-query'
+import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 
 import { useWalletId } from './useWalletId'
 

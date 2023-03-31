@@ -1,12 +1,12 @@
 import { invalidate } from '@cardinal/token-manager'
 import { useWallet } from '@solana/wallet-adapter-react'
+import { useQueryClient } from '@tanstack/react-query'
 import type { TokenData } from 'apis/api'
 import { TOKEN_DATA_KEY } from 'hooks/useBrowseAvailableTokenDatas'
 import { logConfigTokenDataEvent } from 'monitoring/amplitude'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useUTCNow } from 'providers/UTCNowProvider'
-import { useQueryClient } from '@tanstack/react-query'
 
 import { ButtonSmall } from './ButtonSmall'
 import { shouldBeInvalidated } from './tokenDataUtils'
