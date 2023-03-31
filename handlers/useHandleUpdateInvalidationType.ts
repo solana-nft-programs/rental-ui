@@ -5,6 +5,8 @@ import { tokenManagerProgram } from '@cardinal/token-manager/dist/cjs/programs/t
 import type { BN } from '@project-serum/anchor'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { Transaction } from '@solana/web3.js'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { notify } from 'common/Notification'
 import {
   getPriceFromTokenData,
   getTokenRentalRate,
@@ -17,7 +19,6 @@ import { logConfigTokenDataEvent } from 'monitoring/amplitude'
 import { tracer, withTrace } from 'monitoring/trace'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import type { TokenData } from './../apis/api'
 
@@ -124,6 +125,10 @@ export const useHandleUpdateInvalidationType = () => {
     {
       onError: async (e) => {
         console.log('[error][useHandleUpdateInvalidationType]', e)
+        notify({
+          message: `Failed to update invalidation type`,
+          description: e,
+        })
         return e
       },
       onSuccess: () => {
