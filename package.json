@@ -21,7 +21,7 @@
     "@cardinal/namespaces": "^5.0.1",
     "@cardinal/namespaces-components": "^5.1.0",
     "@cardinal/payment-manager": "^4.0.1",
-    "@cardinal/token-manager": "^4.5.0",
+    "@cardinal/token-manager": "^4.5.1",
     "@emotion/babel-plugin": "^11.7.2",
     "@emotion/babel-preset-css-prop": "^11.2.0",
     "@emotion/css": "^11.7.1",

@@ -1843,10 +1843,10 @@
     "@solana/spl-token" "^0.3.6"
     "@solana/web3.js" "^1.34.0"
 
-"@cardinal/token-manager@^4.5.0":
-  version "4.5.0"
-  resolved "https://registry.yarnpkg.com/@cardinal/token-manager/-/token-manager-4.5.0.tgz#45797824f8e4d01528bff2815249af2648b16ba8"
-  integrity sha512-iKjFS80LstubeFTrx7lhJopVV0vWlA7bAQAU1ECMa6a+5pBshwlBRwbZslzFu8qQ70kDKIDtXzr5qXwzsFGHSQ==
+"@cardinal/token-manager@^4.5.1":
+  version "4.5.1"
+  resolved "https://registry.yarnpkg.com/@cardinal/token-manager/-/token-manager-4.5.1.tgz#37ed638fa109fba24169bfa7fba486c529e8be52"
+  integrity sha512-/pvxl7VmCKbFlr0BBnwFtzPcIJ4Z6oE9fOkWSkjR1+6xF+iiLT+YGJZ2qrO54M9F3zMCQfRY1HwzWxChRJBSYQ==
   dependencies:
     "@cardinal/common" "^7.1.3"
     "@cardinal/creator-standard" "^2.1.7"
