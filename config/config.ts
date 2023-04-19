@@ -3440,4 +3440,43 @@ Welcome to the Underground.`,
       },
     },
   },
+  mbb: {
+    name: 'mbb',
+    displayName: 'Monkey Baby Business',
+    badges: [{ badgeType: 'recent' }],
+    type: 'Collection',
+    websiteUrl: 'https://www.monkeybaby.business/',
+    logoImage: '/logos/mbb.png',
+    hero: '/logos/mbb-hero.png',
+    colors: {
+      glow: '#9b4ee5',
+      accent: '#9b4ee5',
+    },
+    description: `Monkey Baby Business is a collection of 3,000 monkey baby NFTs that offers a suite of data driven premium platforms for Solana NFT minters, traders, and investors.`,
+    twitterHandle: '@MonkeyBabyBiz',
+    socialLinks: [
+      {
+        icon: 'web',
+        link: 'https://www.monkeybaby.business/',
+      },
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/MonkeyBabyBiz',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.gg/monkeybb',
+      },
+    ],
+    filter: {
+      type: 'creators',
+      value: ['CATPa1APxUC7L3KaWkR2Aiy5LYBThRiNQM1MFrTDC9ZC'],
+    },
+    rentalCard: {
+      ...defaultRentalCardConfig,
+      invalidationOptions: {
+        ...defaultRentalCardConfig.invalidationOptions,
+      },
+    },
+  },
 }
