@@ -84,7 +84,7 @@ export const getTokenIndexData2 = async (
     : indexer.query({
         query: gql`
           query GetTokenManagers(
-            $issuer: String!
+            $issuers: [String!]!
             $tokenManagerState: smallint!
           ) {
             token_manager(
