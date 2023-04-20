@@ -3476,6 +3476,10 @@ Welcome to the Underground.`,
       ...defaultRentalCardConfig,
       invalidationOptions: {
         ...defaultRentalCardConfig.invalidationOptions,
+        maxDurationAllowed: {
+          displayText: '1 week',
+          value: 604800,
+        },
       },
     },
   },
