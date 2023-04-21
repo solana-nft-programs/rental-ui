@@ -172,7 +172,7 @@ export function ProjectConfigProvider({
               (c) => filterTokens([tokenData], c.filter).length > 0
             )
           }
-          return newConfig ?? config
+          return newConfig?.name !== 'default' ? newConfig ?? config : config
         },
         subFilter,
         setSubFilter,
