@@ -365,7 +365,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     },
     filter: {
       type: 'creators',
-      value: ['SMBhYe5hTjZB5ioeaFxnYPn2cDU893ymgMkgYipgJw4'],
+      value: ['mdaoxg4DVGptU4WSpzGyVpK3zqsgn7Qzx5XNgWTcEA2'],
     },
     showUnknownInvalidators: true,
     rentalCard: defaultRentalCardConfig,
