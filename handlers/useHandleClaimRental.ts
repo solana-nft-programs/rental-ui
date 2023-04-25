@@ -1,12 +1,13 @@
 import type { AccountData } from '@cardinal/common'
 import {
+  executeTransaction,
   withFindOrInitAssociatedTokenAccount,
   withWrapSol,
 } from '@cardinal/common'
 import { findNamespaceId, tryGetName } from '@cardinal/namespaces'
 import { withClaimToken } from '@cardinal/token-manager'
 import type { TokenManagerData } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
-import { BN } from '@project-serum/anchor'
+import { BN } from '@coral-xyz/anchor'
 import { useWallet } from '@solana/wallet-adapter-react'
 import type { Connection, Keypair } from '@solana/web3.js'
 import { PublicKey, Transaction } from '@solana/web3.js'
@@ -14,7 +15,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import type { TokenData } from 'apis/api'
 import { notify } from 'common/Notification'
 import { getPriceFromTokenData } from 'common/tokenDataUtils'
-import { executeTransaction } from 'common/Transactions'
 import { asWallet } from 'common/Wallets'
 import type { ProjectConfig } from 'config/config'
 import { TOKEN_DATA_KEY } from 'hooks/useBrowseAvailableTokenDatas'
@@ -116,6 +116,7 @@ export const useHandleClaimRental = () => {
       const trace = tracer({ name: 'useHandleClaimRental' })
 
       const transaction = new Transaction()
+      const wrapSolTx = new Transaction()
       const paymentMint =
         tokenData?.claimApprover?.parsed?.paymentMint ||
         tokenData?.timeInvalidator?.parsed?.extensionPaymentMint
@@ -134,12 +135,21 @@ export const useHandleClaimRental = () => {
               : new BN(0)
           )
         if (amountToWrap.gt(new BN(0))) {
-          await withWrapSol(
-            transaction,
-            connection,
-            asWallet(wallet),
-            amountToWrap.toNumber()
-          )
+          if (tokenData.metaplexData?.parsed.programmableConfig) {
+            await withWrapSol(
+              wrapSolTx,
+              connection,
+              asWallet(wallet),
+              amountToWrap.toNumber()
+            )
+          } else {
+            await withWrapSol(
+              transaction,
+              connection,
+              asWallet(wallet),
+              amountToWrap.toNumber()
+            )
+          }
         }
       }
       if (
@@ -166,9 +176,30 @@ export const useHandleClaimRental = () => {
         asWallet(wallet),
         tokenData.tokenManager?.pubkey
       )
+
+      if (wrapSolTx.instructions.length > 0) {
+        await withTrace(
+          () =>
+            executeTransaction(connection, wrapSolTx, asWallet(wallet), {
+              confirmOptions: {
+                commitment: 'confirmed',
+                maxRetries: 3,
+              },
+              signers:
+                otpKeypair &&
+                tokenData?.tokenManager?.parsed.claimApprover?.equals(
+                  otpKeypair.publicKey
+                )
+                  ? [otpKeypair]
+                  : [],
+            }),
+          trace,
+          { op: 'executeTransaction' }
+        )
+      }
       const tx = await withTrace(
         () =>
-          executeTransaction(connection, asWallet(wallet), transaction, {
+          executeTransaction(connection, transaction, asWallet(wallet), {
             confirmOptions: {
               commitment: 'confirmed',
               maxRetries: 3,
@@ -180,11 +211,11 @@ export const useHandleClaimRental = () => {
               )
                 ? [otpKeypair]
                 : [],
-            notificationConfig: {},
           }),
         trace,
         { op: 'executeTransaction' }
       )
+
       logConfigTokenDataEvent('nft rental: claim', config, tokenData, {
         rental_type: rentalType,
         rental_price: getPriceFromTokenData(tokenData, paymentMints.data),

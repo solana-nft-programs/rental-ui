@@ -13,8 +13,8 @@ import { timeInvalidatorProgram } from '@cardinal/token-manager/dist/cjs/program
 import type { TokenManagerData } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import type { UseInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
 import { useInvalidatorProgram } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
+import { BN, utils } from '@coral-xyz/anchor'
 import * as metaplex from '@metaplex-foundation/mpl-token-metadata'
-import { BN, utils } from '@project-serum/anchor'
 import * as splToken from '@solana/spl-token'
 import {
   Connection,

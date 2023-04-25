@@ -1,4 +1,4 @@
-import { utils } from '@project-serum/anchor'
+import { utils } from '@coral-xyz/anchor'
 import QRCodeStyling from '@solana/qr-code-styling'
 import type { Keypair } from '@solana/web3.js'
 import type { TokenData } from 'apis/api'

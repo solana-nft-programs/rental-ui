@@ -2,8 +2,8 @@ import {
   InvalidationType,
   TokenManagerState,
 } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
+import { BN } from '@coral-xyz/anchor'
 import { css } from '@emotion/react'
-import { BN } from '@project-serum/anchor'
 import type { Keypair } from '@solana/web3.js'
 import { DatePicker } from 'antd'
 import type { TokenData } from 'apis/api'
@@ -93,7 +93,7 @@ export const RentalRateInfo = ({ tokenData }: { tokenData: TokenData }) => {
             <div className="h-[38px] w-full animate-pulse rounded-md bg-border" />
           ) : (
             <DatePicker
-              className="rounded-xl bg-dark-4 py-2 px-3 text-base"
+              className="rounded-xl bg-dark-4 px-3 py-2 text-base"
               css={css`
                 input {
                   line-height: 1.5rem !important;

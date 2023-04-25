@@ -1,5 +1,5 @@
 import { firstParam } from '@cardinal/common'
-import { utils } from '@project-serum/anchor'
+import { utils } from '@coral-xyz/anchor'
 import { Keypair } from '@solana/web3.js'
 import { useRouter } from 'next/router'
 import { useMemo, useState } from 'react'

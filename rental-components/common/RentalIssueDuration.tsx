@@ -1,5 +1,5 @@
 import { secondsToString, tryPublicKey } from '@cardinal/common'
-import { BN } from '@project-serum/anchor'
+import { BN } from '@coral-xyz/anchor'
 import type { TokenData } from 'apis/api'
 import { SolanaLogo } from 'assets/SolanaLogo'
 import { Alert } from 'common/Alert'
@@ -124,7 +124,7 @@ export const RentalIssueDuration = ({
               </div>
             </div>
           </div>
-          <div className="flex gap-3 border-t-[1px] border-border py-4 px-8 text-center text-sm text-medium-3">
+          <div className="flex gap-3 border-t-[1px] border-border px-8 py-4 text-center text-sm text-medium-3">
             {`This rental will be expire ${secondsToString(
               durationSeconds,
               false

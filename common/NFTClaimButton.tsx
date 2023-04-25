@@ -1,4 +1,4 @@
-import { BN } from '@project-serum/anchor'
+import { BN } from '@coral-xyz/anchor'
 import type * as splToken from '@solana/spl-token'
 import type { PublicKey } from '@solana/web3.js'
 import type { TokenData } from 'apis/api'

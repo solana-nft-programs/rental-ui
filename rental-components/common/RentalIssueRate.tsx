@@ -1,6 +1,6 @@
 import { capitalizeFirstLetter, secondstoDuration } from '@cardinal/common'
+import type * as anchor from '@coral-xyz/anchor'
 import { css } from '@emotion/react'
-import type * as anchor from '@project-serum/anchor'
 import { DatePicker } from 'antd'
 import type { TokenData } from 'apis/api'
 import { SolanaLogo } from 'assets/SolanaLogo'
@@ -171,7 +171,7 @@ export const RentalIssueRate = ({
         <div>
           <div className="mb-1 text-base text-light-0">Max rental duration</div>
           <DatePicker
-            className="rounded-xl bg-dark-4 py-2 px-3 text-base"
+            className="rounded-xl bg-dark-4 px-3 py-2 text-base"
             css={css`
               input {
                 line-height: 1.5rem !important;
@@ -201,7 +201,7 @@ export const RentalIssueRate = ({
               <div>You set the rate at {extensionRate()}</div>
             </div>
           </div>
-          <div className="flex gap-3 border-t-[1px] border-border py-4 px-8 text-sm text-medium-3">
+          <div className="flex gap-3 border-t-[1px] border-border px-8 py-4 text-sm text-medium-3">
             This token can be rented at the specified rate for any duration less
             than or equal to the max rental duration.{' '}
             {maxExpiration &&

@@ -24,8 +24,8 @@ import {
   USE_INVALIDATOR_IDL,
 } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
 import * as metaplex from '@metaplex-foundation/mpl-token-metadata'
-import { BorshAccountsCoder } from '@project-serum/anchor'
-import { TOKEN_PROGRAM_ID } from '@project-serum/anchor/dist/cjs/utils/token'
+import { BorshAccountsCoder } from '@coral-xyz/anchor'
+import { TOKEN_PROGRAM_ID } from '@coral-xyz/anchor/dist/cjs/utils/token'
 import * as splToken from '@solana/spl-token'
 import type { AccountInfo, Connection, PublicKey } from '@solana/web3.js'
 import type { ReactChild } from 'react'

@@ -1,6 +1,6 @@
 import { tryPublicKey } from '@cardinal/common'
+import { BN } from '@coral-xyz/anchor'
 import { css } from '@emotion/react'
-import { BN } from '@project-serum/anchor'
 import { DatePicker } from 'antd'
 import type { TokenData } from 'apis/api'
 import { SolanaLogo } from 'assets/SolanaLogo'
@@ -89,7 +89,7 @@ export const RentalIssueExpiration = ({
         <div>
           <div className="mb-1 text-base text-light-0">Expiration</div>
           <DatePicker
-            className="rounded-xl bg-dark-4 py-2 px-3 text-base"
+            className="rounded-xl bg-dark-4 px-3 py-2 text-base"
             css={css`
               input {
                 line-height: 1.5rem !important;
@@ -125,7 +125,7 @@ export const RentalIssueExpiration = ({
               </div>
             </div>
           </div>
-          <div className="flex gap-3 border-t-[1px] border-border py-4 px-8 text-center text-sm text-medium-3">
+          <div className="flex gap-3 border-t-[1px] border-border px-8 py-4 text-center text-sm text-medium-3">
             {maxExpiration &&
               `This rental will expire at ${new Date(
                 maxExpiration * 1000

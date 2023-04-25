@@ -1,4 +1,4 @@
-import { BN } from '@project-serum/anchor'
+import { BN } from '@coral-xyz/anchor'
 import { BigNumber } from 'bignumber.js'
 import { Selector } from 'common/Selector'
 import { PAYMENT_MINTS, usePaymentMints } from 'hooks/usePaymentMints'
@@ -126,7 +126,7 @@ export const MintPriceSelector: React.FC<Props> = ({
   return (
     <div className="relative flex w-full items-center gap-2 text-base">
       <input
-        className={`w-full rounded-xl border bg-dark-4 py-2 px-3 text-light-0 placeholder-medium-3 outline-none transition-all ${
+        className={`w-full rounded-xl border bg-dark-4 px-3 py-2 text-light-0 placeholder-medium-3 outline-none transition-all ${
           disabled ? 'cursor-default opacity-50' : 'cursor-pointer'
         } ${
           priceError

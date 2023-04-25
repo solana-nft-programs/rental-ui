@@ -1,13 +1,13 @@
 import {
+  emptyWallet,
   firstParam,
   tryPublicKey,
   withFindOrInitAssociatedTokenAccount,
   withWrapSol,
 } from '@cardinal/common'
 import { withClaimToken } from '@cardinal/token-manager'
-import { BN, utils } from '@project-serum/anchor'
+import { BN, utils } from '@coral-xyz/anchor'
 import { getAccount, getAssociatedTokenAddressSync } from '@solana/spl-token'
-import type { PublicKey } from '@solana/web3.js'
 import { Connection, Keypair, Transaction } from '@solana/web3.js'
 import { getTokenData } from 'apis/api'
 import { projectConfigs } from 'config/config'
@@ -39,12 +39,6 @@ interface PostResponse {
   message?: string
   error?: string
 }
-
-const emptyWallet = (accountId: PublicKey) => ({
-  signTransaction: async (tx: Transaction) => tx,
-  signAllTransactions: async (txs: Transaction[]) => txs,
-  publicKey: accountId,
-})
 
 const post: NextApiHandler<PostResponse> = async (req, res) => {
   const {

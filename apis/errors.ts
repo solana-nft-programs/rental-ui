@@ -18,7 +18,7 @@ import {
   USE_INVALIDATOR_ADDRESS,
   USE_INVALIDATOR_IDL,
 } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
-import type { Idl } from '@project-serum/anchor'
+import type { Idl } from '@coral-xyz/anchor'
 import type { PublicKey, SendTransactionError } from '@solana/web3.js'
 
 type ErrorCode = {

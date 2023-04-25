@@ -4,7 +4,7 @@ import type { PaidClaimApproverData } from '@cardinal/token-manager/dist/cjs/pro
 import type { TimeInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
 import { shouldTimeInvalidate } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator/utils'
 import { InvalidationType } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
-import { BN } from '@project-serum/anchor'
+import { BN } from '@coral-xyz/anchor'
 import type * as splToken from '@solana/spl-token'
 import type { Keypair, PublicKey } from '@solana/web3.js'
 import type { TokenData } from 'apis/api'

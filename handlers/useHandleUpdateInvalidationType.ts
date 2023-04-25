@@ -2,7 +2,7 @@ import { timeInvalidatorProgram } from '@cardinal/token-manager/dist/cjs/program
 import { findTimeInvalidatorAddress } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator/pda'
 import type { InvalidationType } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { tokenManagerProgram } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
-import type { BN } from '@project-serum/anchor'
+import type { BN } from '@coral-xyz/anchor'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { Transaction } from '@solana/web3.js'
 import { useMutation, useQueryClient } from '@tanstack/react-query'

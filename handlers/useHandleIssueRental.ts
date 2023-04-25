@@ -4,8 +4,8 @@ import type { IssueParameters } from '@cardinal/token-manager'
 import { issueToken } from '@cardinal/token-manager'
 import type { InvalidationType } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { TokenManagerKind } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
+import { BN, utils } from '@coral-xyz/anchor'
 import { TokenStandard } from '@metaplex-foundation/mpl-token-metadata'
-import { BN, utils } from '@project-serum/anchor'
 import { useWallet } from '@solana/wallet-adapter-react'
 import {
   Keypair,

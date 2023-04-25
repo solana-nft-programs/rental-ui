@@ -1,6 +1,6 @@
 import { capitalizeFirstLetter, shortDateString } from '@cardinal/common'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
-import { BN } from '@project-serum/anchor'
+import { BN } from '@coral-xyz/anchor'
 import type * as splToken from '@solana/spl-token'
 import type { TokenData } from 'apis/api'
 import {
