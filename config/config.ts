@@ -370,6 +370,37 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     showUnknownInvalidators: true,
     rentalCard: defaultRentalCardConfig,
   },
+  atomaio: {
+    name: 'atomaio',
+    displayName: 'Atom AIO',
+    type: 'Collection',
+    websiteUrl: 'https://twitter.com/Atom_AIO',
+    logoImage: '/logos/atom.gif',
+    hero: '/logos/atom-hero.jpeg',
+    description:
+      'Atom AIO is a collection of 200 NFTs granting exclusive access to our on-chain automation tools and community benefits.',
+    twitterHandle: '@Atom_AIO',
+    socialLinks: [
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/Atom_AIO',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.com/invite/atomaio',
+      },
+    ],
+    colors: {
+      accent: '#cccdff',
+      glow: '#cccdff',
+    },
+    filter: {
+      type: 'creators',
+      value: ['HsZTrWHEddsKDSbe1YdoNqnuoyrNstbvjiEdWovHtpQd'],
+    },
+    showUnknownInvalidators: true,
+    rentalCard: defaultRentalCardConfig,
+  },
   degenape: {
     name: 'degenape',
     displayName: 'Degenerate Ape Academy',
@@ -403,7 +434,20 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       type: 'creators',
       value: ['DC2mkgwhy56w3viNtHDjJQmc7SGu2QX785bS4aexojwX'],
     },
-    rentalCard: defaultRentalCardConfig,
+    rentalCard: {
+      invalidators: ['duration'],
+      invalidationOptions: {
+        durationOptions: ['hours', 'days', 'weeks'],
+        invalidationTypes: ['reissue', 'return'],
+        paymentMints: [WRAPPED_SOL_MINT],
+        showClaimRentalReceipt: false,
+        setClaimRentalReceipt: false,
+        maxDurationAllowed: {
+          displayText: '1 day',
+          value: 86400,
+        },
+      },
+    },
   },
   scalpempire: {
     name: 'scalpempire',
