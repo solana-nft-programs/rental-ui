@@ -376,7 +376,7 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
     type: 'Collection',
     websiteUrl: 'https://twitter.com/Atom_AIO',
     logoImage: '/logos/atom.gif',
-    hero: '/logos/atom-hero.jpeg',
+    hero: '/logos/atom-hero.jpg',
     description:
       'Atom AIO is a collection of 200 NFTs granting exclusive access to our on-chain automation tools and community benefits.',
     twitterHandle: '@Atom_AIO',
