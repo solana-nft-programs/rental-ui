@@ -2527,8 +2527,8 @@ Welcome to the Underground.`,
       glow: '#23866f',
     },
     filter: {
-      type: 'creators',
-      value: ['HsZTrWHEddsKDSbe1YdoNqnuoyrNstbvjiEdWovHtpQd'],
+      type: 'issuer',
+      value: ['F64NX1xmRPWkSasth1y4LZ1w9ySDVmGUoz2h2tn6vvex'],
     },
     showUnknownInvalidators: true,
     rentalCard: {
