@@ -391,8 +391,8 @@ export const projectConfigs: { [key: string]: ProjectConfig } = {
       },
     ],
     colors: {
-      accent: '#cccdff',
-      glow: '#cccdff',
+      accent: '#23866f',
+      glow: '#23866f',
     },
     filter: {
       type: 'creators',
@@ -2501,6 +2501,42 @@ Welcome to the Underground.`,
       value: ['9qoRqZmrAf6bqtmTAPA1UkgCRvKuaugF17xBdympy1vd'],
     },
     rentalCard: defaultRentalCardConfig,
+  },
+  ["atom-aio"]: {
+    name: 'atom-aio',
+    displayName: 'Atom AIO',
+    type: 'Guild',
+    websiteUrl: 'https://twitter.com/Atom_AIO',
+    logoImage: '/logos/atom.gif',
+    hero: '/logos/atom-hero.jpg',
+    description:
+      'Atom AIO is a collection of 200 NFTs granting exclusive access to our on-chain automation tools and community benefits.',
+    twitterHandle: '@Atom_AIO',
+    socialLinks: [
+      {
+        icon: 'twitter',
+        link: 'https://twitter.com/Atom_AIO',
+      },
+      {
+        icon: 'discord',
+        link: 'https://discord.com/invite/atomaio',
+      },
+    ],
+    colors: {
+      accent: '#23866f',
+      glow: '#23866f',
+    },
+    filter: {
+      type: 'issuer',
+      value: ['F64NX1xmRPWkSasth1y4LZ1w9ySDVmGUoz2h2tn6vvex'],
+    },
+    showUnknownInvalidators: true,
+    rentalCard: {
+      ...defaultRentalCardConfig,
+      invalidationOptions: {
+        ...defaultRentalCardConfig.invalidationOptions,
+      },
+    },
   },
   ['solanapuppypound']: {
     name: 'solanapuppypound',
