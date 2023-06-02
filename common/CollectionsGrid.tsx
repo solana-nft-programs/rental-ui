@@ -6,14 +6,12 @@ import type { ProjectConfig } from 'config/config'
 import { queryId, useGlobalStats } from 'hooks/useGlobalStats'
 import { useRouter } from 'next/router'
 import { transparentize } from 'polished'
-import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 
 import { SocialIcon } from './Socials'
 
 export const CollectionsGrid = ({ configs }: { configs: ProjectConfig[] }) => {
   const router = useRouter()
   const stats = useGlobalStats()
-  const { environment } = useEnvironmentCtx()
   return (
     <div className="grid grid-cols-1 flex-wrap gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {configs.map((config) => (
@@ -58,7 +56,7 @@ export const CollectionsGrid = ({ configs }: { configs: ProjectConfig[] }) => {
             </div>
           }
           content={
-            environment.index ? (
+            stats.data ? (
               <Stats
                 stats={[
                   {

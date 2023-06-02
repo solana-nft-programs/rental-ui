@@ -8,7 +8,6 @@ export interface Environment {
   primary: string
   primaryBeta?: string
   secondary?: string
-  api?: string
   index?: string
   index2?: string
 }

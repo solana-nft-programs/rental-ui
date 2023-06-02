@@ -4,7 +4,6 @@ import type { ProjectConfig } from 'config/config'
 import { queryId, useGlobalStats } from 'hooks/useGlobalStats'
 import { useRouter } from 'next/router'
 import { transparentize } from 'polished'
-import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useState } from 'react'
 import { BiChevronDown, BiChevronUp } from 'react-icons/bi'
 
@@ -14,7 +13,6 @@ import { SocialIcon } from './Socials'
 export const CollectionsList = ({ configs }: { configs: ProjectConfig[] }) => {
   const router = useRouter()
   const stats = useGlobalStats()
-  const { environment } = useEnvironmentCtx()
   const [sort, setSort] = useState<'total' | 'listed'>('total')
   const [sortDirection, setSortDirection] = useState<
     'ascending' | 'descending'
@@ -25,7 +23,7 @@ export const CollectionsList = ({ configs }: { configs: ProjectConfig[] }) => {
       <div className="flex w-full min-w-fit flex-col">
         <div className="flex w-full gap-4 rounded-xl bg-dark-4 px-8 py-2">
           <div className="flex-[4]">Collection</div>
-          {environment.index && (
+          {stats.data && (
             <>
               <div
                 className="flex flex-1 cursor-pointer items-center"
@@ -124,7 +122,7 @@ export const CollectionsList = ({ configs }: { configs: ProjectConfig[] }) => {
                     ))}
                   </div>
                 </div>
-                {environment.index && (
+                {stats.data && (
                   <>
                     <div className="my-auto flex-1">
                       {stats.data &&
