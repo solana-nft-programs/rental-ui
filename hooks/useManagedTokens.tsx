@@ -46,6 +46,8 @@ export type ManagedTokenData = Pick<
   | 'timeInvalidator'
 >
 
+const DISABLED_INDEX = true
+
 export const useManagedTokens = (configOverride?: ProjectConfig) => {
   const walletId = useWalletId()
   const { config: globalConfig } = useProjectConfig()
@@ -199,7 +201,7 @@ export const useManagedTokens = (configOverride?: ProjectConfig) => {
 
         trace.finish()
         return tokenDatas
-      } else if (environment.index2) {
+      } else if (environment.index2 && !DISABLED_INDEX) {
         ////////////////////// index2 //////////////////////
         const indexer = new ApolloClient({
           uri: environment.index2,
