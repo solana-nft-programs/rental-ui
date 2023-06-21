@@ -1,6 +1,6 @@
 import { css } from '@emotion/react'
-import type { TokenData } from 'apis/api'
 import type { ProjectConfig } from 'config/config'
+import type { TokenData } from 'data/data'
 import type { IssueTxResult } from 'handlers/useHandleIssueRental'
 import { logConfigTokenDataEvent } from 'monitoring/amplitude'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'

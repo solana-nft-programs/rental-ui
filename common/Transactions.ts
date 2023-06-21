@@ -8,8 +8,8 @@ import type {
   Transaction,
 } from '@solana/web3.js'
 import { sendAndConfirmRawTransaction } from '@solana/web3.js'
-import { handleError } from 'apis/errors'
 import { notify } from 'common/Notification'
+import { handleError } from 'data/errors'
 
 export const executeTransaction = async (
   connection: Connection,

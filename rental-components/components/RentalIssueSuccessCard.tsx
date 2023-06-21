@@ -1,4 +1,3 @@
-import type { TokenData } from 'apis/api'
 import { GlyphCheck } from 'assets/GlyphCheck'
 import { Alert } from 'common/Alert'
 import { Glow } from 'common/Glow'
@@ -10,6 +9,7 @@ import {
 } from 'common/ShareTwitterButton'
 import { getNameFromTokenData } from 'common/tokenDataUtils'
 import { transactionUrl } from 'common/utils'
+import type { TokenData } from 'data/data'
 import type { IssueTxResult } from 'handlers/useHandleIssueRental'
 import { useMintMetadatas } from 'hooks/useMintMetadata'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'

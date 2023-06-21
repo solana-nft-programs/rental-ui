@@ -12,11 +12,11 @@ import { useWallet } from '@solana/wallet-adapter-react'
 import type { Connection, Keypair } from '@solana/web3.js'
 import { PublicKey, Transaction } from '@solana/web3.js'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import type { TokenData } from 'apis/api'
 import { notify } from 'common/Notification'
 import { getPriceFromTokenData } from 'common/tokenDataUtils'
 import { asWallet } from 'common/Wallets'
 import type { ProjectConfig } from 'config/config'
+import type { TokenData } from 'data/data'
 import { TOKEN_DATA_KEY } from 'hooks/useBrowseAvailableTokenDatas'
 import {
   PAYMENT_MINTS,

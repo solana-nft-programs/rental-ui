@@ -1,5 +1,4 @@
 import { DisplayAddress, useAddressName } from '@cardinal/namespaces-components'
-import type { TokenData } from 'apis/api'
 import { GlyphCheck } from 'assets/GlyphCheck'
 import { Glow } from 'common/Glow'
 import { Pill } from 'common/Pill'
@@ -10,6 +9,7 @@ import {
 } from 'common/ShareTwitterButton'
 import { getNameFromTokenData } from 'common/tokenDataUtils'
 import { transactionUrl } from 'common/utils'
+import type { TokenData } from 'data/data'
 import { useMintMetadata } from 'hooks/useMintMetadata'
 import { useWalletId } from 'hooks/useWalletId'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'

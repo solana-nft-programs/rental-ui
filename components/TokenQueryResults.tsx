@@ -1,5 +1,5 @@
 import type { UseQueryResult } from '@tanstack/react-query'
-import type { TokenData } from 'apis/api'
+import type { TokenData } from 'data/data'
 import { Info } from 'common/Info'
 import { MultiSelector } from 'common/MultiSelector'
 import type { NFTAtrributeFilterValues } from 'common/NFTAttributeFilters'

@@ -3,7 +3,7 @@ import {
   InvalidationType,
   TokenManagerState,
 } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
-import type { TokenData } from 'apis/api'
+import type { TokenData } from 'data/data'
 import { useMintMetadata } from 'hooks/useMintMetadata'
 import { useUTCNow } from 'providers/UTCNowProvider'
 

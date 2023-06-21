@@ -1,4 +1,3 @@
-import type { TokenData } from 'apis/api'
 import { NFTAttributeInfo } from 'common/NFTAttributeInfo'
 import { Pill } from 'common/Pill'
 import {
@@ -8,6 +7,7 @@ import {
   rentalTypeName,
 } from 'common/tokenDataUtils'
 import type { ProjectConfig } from 'config/config'
+import type { TokenData } from 'data/data'
 import { useMintMetadata, useMintMetadatas } from 'hooks/useMintMetadata'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 

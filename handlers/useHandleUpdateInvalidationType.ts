@@ -20,7 +20,7 @@ import { tracer, withTrace } from 'monitoring/trace'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 
-import type { TokenData } from './../apis/api'
+import type { TokenData } from './../data/data'
 
 export const useHandleUpdateInvalidationType = () => {
   const wallet = useWallet()

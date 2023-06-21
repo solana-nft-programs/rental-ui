@@ -6,7 +6,7 @@ import {
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { css } from '@emotion/react'
 import { useQuery } from '@tanstack/react-query'
-import type { TokenData } from 'apis/api'
+import type { TokenData } from 'data/data'
 import { GlyphLargeClose } from 'assets/GlyphLargeClose'
 import { SolanaLogo } from 'assets/SolanaLogo'
 import { ButtonSmall } from 'common/ButtonSmall'

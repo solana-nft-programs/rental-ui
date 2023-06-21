@@ -1,4 +1,4 @@
-import type { TokenData } from 'apis/api'
+import type { TokenData } from 'data/data'
 import { useMintMetadata } from 'hooks/useMintMetadata'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { BsFillInfoCircleFill } from 'react-icons/bs'

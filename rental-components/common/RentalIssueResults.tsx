@@ -1,6 +1,6 @@
-import type { TokenData } from 'apis/api'
 import { Alert } from 'common/Alert'
 import { handleCopy } from 'common/NFTHeader'
+import type { TokenData } from 'data/data'
 import type { IssueTxResult } from 'handlers/useHandleIssueRental'
 
 export const RentalIssueResults = ({

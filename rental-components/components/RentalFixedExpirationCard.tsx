@@ -1,6 +1,5 @@
 import { capitalizeFirstLetter } from '@cardinal/common'
 import type { Keypair } from '@solana/web3.js'
-import type { TokenData } from 'apis/api'
 import { Alert } from 'common/Alert'
 import { Button } from 'common/Button'
 import { LoadingSpinner } from 'common/LoadingSpinner'
@@ -11,6 +10,7 @@ import {
   getSymbolFromTokenData,
   invalidationTypeInfo,
 } from 'common/tokenDataUtils'
+import type { TokenData } from 'data/data'
 import { useHandleClaimRental } from 'handlers/useHandleClaimRental'
 import { usePaymentMints } from 'hooks/usePaymentMints'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'

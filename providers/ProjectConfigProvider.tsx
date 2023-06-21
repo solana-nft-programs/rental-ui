@@ -1,5 +1,5 @@
 import { tryPublicKey } from '@cardinal/common'
-import type { TokenData } from 'apis/api'
+import type { TokenData } from 'data/data'
 import type { ProjectConfig, TokenFilter } from 'config/config'
 import { projectConfigs } from 'config/config'
 import type { NextPageContext } from 'next'

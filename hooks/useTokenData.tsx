@@ -12,7 +12,7 @@ import type * as splToken from '@solana/spl-token'
 import { getAccount } from '@solana/spl-token'
 import type { Connection, PublicKey } from '@solana/web3.js'
 import { useQuery } from '@tanstack/react-query'
-import type { TokenData } from 'apis/api'
+import type { TokenData } from 'data/data'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 import { fetchAccountDataById } from 'providers/SolanaAccountsProvider'
 

@@ -1,5 +1,5 @@
 import { css } from '@emotion/react'
-import type { TokenData } from 'apis/api'
+import type { TokenData } from 'data/data'
 import { GlyphClose } from 'assets/GlyphClose'
 import { logConfigEvent, logConfigTokenDataEvent } from 'monitoring/amplitude'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'

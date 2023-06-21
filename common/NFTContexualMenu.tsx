@@ -4,7 +4,7 @@ import {
   TokenManagerState,
 } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import Tooltip from '@mui/material/Tooltip'
-import type { TokenData } from 'apis/api'
+import type { TokenData } from 'data/data'
 import { GlyphEdit } from 'assets/GlyphEdit'
 import { LoadingSpinner } from 'common/LoadingSpinner'
 import { metadataUrl } from 'common/utils'

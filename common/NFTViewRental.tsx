@@ -1,4 +1,4 @@
-import type { TokenData } from 'apis/api'
+import type { TokenData } from 'data/data'
 import { useWalletId } from 'hooks/useWalletId'
 import { logConfigTokenDataEvent } from 'monitoring/amplitude'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'

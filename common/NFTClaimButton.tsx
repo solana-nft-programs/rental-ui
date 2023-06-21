@@ -1,7 +1,7 @@
 import { BN } from '@coral-xyz/anchor'
 import type * as splToken from '@solana/spl-token'
 import type { PublicKey } from '@solana/web3.js'
-import type { TokenData } from 'apis/api'
+import type { TokenData } from 'data/data'
 import { allowedToRent } from 'handlers/useHandleClaimRental'
 import { useOtp } from 'hooks/useOtp'
 import { mintSymbol, usePaymentMints } from 'hooks/usePaymentMints'

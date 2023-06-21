@@ -1,7 +1,7 @@
 import { invalidate } from '@cardinal/token-manager'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useQueryClient } from '@tanstack/react-query'
-import type { TokenData } from 'apis/api'
+import type { TokenData } from 'data/data'
 import { TOKEN_DATA_KEY } from 'hooks/useBrowseAvailableTokenDatas'
 import { logConfigTokenDataEvent } from 'monitoring/amplitude'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'

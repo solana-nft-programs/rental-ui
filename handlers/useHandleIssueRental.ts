@@ -15,7 +15,6 @@ import {
   Transaction,
 } from '@solana/web3.js'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import type { TokenData } from 'apis/api'
 import { DURATION_DATA } from 'common/DurationInput'
 import {
   getPriceFromTokenData,
@@ -24,6 +23,7 @@ import {
 import { executeAllTransactions } from 'common/Transactions'
 import { fmtMintAmount } from 'common/units'
 import { asWallet } from 'common/Wallets'
+import type { TokenData } from 'data/data'
 import { TOKEN_DATA_KEY } from 'hooks/useBrowseAvailableTokenDatas'
 import { PAYMENT_MINTS, usePaymentMints } from 'hooks/usePaymentMints'
 import { logConfigTokenDataEvent } from 'monitoring/amplitude'

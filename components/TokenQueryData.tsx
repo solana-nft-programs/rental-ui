@@ -1,6 +1,6 @@
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { css } from '@emotion/react'
-import type { TokenData } from 'apis/api'
+import type { TokenData } from 'data/data'
 import { GlyphLargeClose } from 'assets/GlyphLargeClose'
 import { ButtonSmall } from 'common/ButtonSmall'
 import { Card } from 'common/Card'

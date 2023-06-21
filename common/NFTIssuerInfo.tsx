@@ -12,7 +12,7 @@ import {
   TokenManagerState,
 } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import type * as splToken from '@solana/spl-token'
-import type { TokenData } from 'apis/api'
+import type { TokenData } from 'data/data'
 import {
   getPriceFromTokenData,
   getPriceOrRentalRate,

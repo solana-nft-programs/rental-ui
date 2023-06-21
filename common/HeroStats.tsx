@@ -1,7 +1,7 @@
 import { secondsToString } from '@cardinal/common'
 import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import type * as splToken from '@solana/spl-token'
-import type { TokenData } from 'apis/api'
+import type { TokenData } from 'data/data'
 import type { ProjectConfig } from 'config/config'
 import { useBrowseAvailableTokenDatas } from 'hooks/useBrowseAvailableTokenDatas'
 import { usePaymentMints } from 'hooks/usePaymentMints'

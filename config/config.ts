@@ -1,4 +1,4 @@
-import type { TokenData } from 'apis/api'
+import type { TokenData } from 'data/data'
 import type { AirdropMetadata } from 'common/Airdrop'
 import type { IconKey } from 'common/Socials'
 import { WRAPPED_SOL_MINT } from 'hooks/usePaymentMints'
@@ -2502,7 +2502,7 @@ Welcome to the Underground.`,
     },
     rentalCard: defaultRentalCardConfig,
   },
-  ["atom-aio"]: {
+  ['atom-aio']: {
     name: 'atom-aio',
     displayName: 'Atom AIO',
     type: 'Guild',

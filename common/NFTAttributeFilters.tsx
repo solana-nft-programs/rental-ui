@@ -1,5 +1,5 @@
 import { css } from '@emotion/react'
-import type { TokenData } from 'apis/api'
+import type { TokenData } from 'data/data'
 import type { ProjectConfig } from 'config/config'
 
 export const attributesForTokenData = (
