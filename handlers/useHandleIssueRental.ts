@@ -16,12 +16,12 @@ import {
 } from '@solana/web3.js'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import type { TokenData } from 'apis/api'
-import { executeAllTransactions } from 'apis/utils'
 import { DURATION_DATA } from 'common/DurationInput'
 import {
   getPriceFromTokenData,
   getTokenRentalRate,
 } from 'common/tokenDataUtils'
+import { executeAllTransactions } from 'common/Transactions'
 import { fmtMintAmount } from 'common/units'
 import { asWallet } from 'common/Wallets'
 import { TOKEN_DATA_KEY } from 'hooks/useBrowseAvailableTokenDatas'
