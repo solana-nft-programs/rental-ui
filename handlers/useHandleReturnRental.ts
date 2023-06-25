@@ -1,6 +1,6 @@
 import { withResetExpiration, withReturn } from '@cardinal/token-manager'
 import { useWallet } from '@solana/wallet-adapter-react'
-import { Transaction } from '@solana/web3.js'
+import { ComputeBudgetProgram, Transaction } from '@solana/web3.js'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { executeTransaction } from 'common/Transactions'
 import { asWallet } from 'common/Wallets'
@@ -39,6 +39,12 @@ export const useHandleReturnRental = () => {
         trace,
         { op: 'withReturn' }
       )
+      transaction.instructions = [
+        ComputeBudgetProgram.setComputeUnitLimit({
+          units: 2_000_000,
+        }),
+        ...transaction.instructions,
+      ]
 
       if (tokenData.timeInvalidator) {
         await withTrace(
