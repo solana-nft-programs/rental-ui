@@ -1,6 +1,6 @@
-import { firstParam } from '@cardinal/common'
 import { utils } from '@coral-xyz/anchor'
 import { Keypair } from '@solana/web3.js'
+import { firstParam } from '@solana-nft-programs/common'
 import { useRouter } from 'next/router'
 import { useMemo, useState } from 'react'
 

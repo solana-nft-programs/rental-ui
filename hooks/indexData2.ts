@@ -1,8 +1,8 @@
 import { ApolloClient, gql, InMemoryCache } from '@apollo/client'
-import { tryPublicKey } from '@cardinal/common'
-import { findTimeInvalidatorAddress } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator/pda'
-import type { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { PublicKey } from '@solana/web3.js'
+import { tryPublicKey } from '@solana-nft-programs/common'
+import { findTimeInvalidatorAddress } from '@solana-nft-programs/token-manager/dist/cjs/programs/timeInvalidator/pda'
+import type { TokenManagerState } from '@solana-nft-programs/token-manager/dist/cjs/programs/tokenManager'
 import type { TokenFilter } from 'config/config'
 import type { Environment } from 'providers/EnvironmentProvider'
 

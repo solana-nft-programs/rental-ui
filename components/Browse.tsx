@@ -1,5 +1,5 @@
-import { tryPublicKey } from '@cardinal/common'
-import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
+import { tryPublicKey } from '@solana-nft-programs/common'
+import { TokenManagerState } from '@solana-nft-programs/token-manager/dist/cjs/programs/tokenManager'
 import type * as splToken from '@solana/spl-token'
 import type { Keypair, PublicKey } from '@solana/web3.js'
 import type { TokenData } from 'data/data'

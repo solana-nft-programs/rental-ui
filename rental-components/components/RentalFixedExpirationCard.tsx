@@ -1,5 +1,5 @@
-import { capitalizeFirstLetter } from '@cardinal/common'
 import type { Keypair } from '@solana/web3.js'
+import { capitalizeFirstLetter } from '@solana-nft-programs/common'
 import { Alert } from 'common/Alert'
 import { Button } from 'common/Button'
 import { LoadingSpinner } from 'common/LoadingSpinner'

@@ -1,14 +1,14 @@
+import { BN, utils } from '@coral-xyz/anchor'
+import { getAccount, getAssociatedTokenAddressSync } from '@solana/spl-token'
+import { Connection, Keypair, Transaction } from '@solana/web3.js'
 import {
   emptyWallet,
   firstParam,
   tryPublicKey,
   withFindOrInitAssociatedTokenAccount,
   withWrapSol,
-} from '@cardinal/common'
-import { withClaimToken } from '@cardinal/token-manager'
-import { BN, utils } from '@coral-xyz/anchor'
-import { getAccount, getAssociatedTokenAddressSync } from '@solana/spl-token'
-import { Connection, Keypair, Transaction } from '@solana/web3.js'
+} from '@solana-nft-programs/common'
+import { withClaimToken } from '@solana-nft-programs/token-manager'
 import { projectConfigs } from 'config/config'
 import { WRAPPED_SOL_MINT } from 'hooks/usePaymentMints'
 import { getTokenData } from 'hooks/useTokenData'

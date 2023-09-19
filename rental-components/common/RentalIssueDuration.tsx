@@ -1,5 +1,5 @@
-import { secondsToString, tryPublicKey } from '@cardinal/common'
 import { BN } from '@coral-xyz/anchor'
+import { secondsToString, tryPublicKey } from '@solana-nft-programs/common'
 import { SolanaLogo } from 'assets/SolanaLogo'
 import { Alert } from 'common/Alert'
 import { Button } from 'common/Button'

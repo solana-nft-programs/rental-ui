@@ -1,9 +1,9 @@
-import { shortPubKey } from '@cardinal/common'
+import { shortPubKey } from '@solana-nft-programs/common'
 import {
   useAddressImage,
   useAddressName,
-} from '@cardinal/namespaces-components'
-import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
+} from '@solana-nft-programs/namespaces-components'
+import { TokenManagerState } from '@solana-nft-programs/token-manager/dist/cjs/programs/tokenManager'
 import { css } from '@emotion/react'
 import { useQuery } from '@tanstack/react-query'
 import type { TokenData } from 'data/data'

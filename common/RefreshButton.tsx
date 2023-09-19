@@ -1,4 +1,4 @@
-import { secondsToString } from '@cardinal/common'
+import { secondsToString } from '@solana-nft-programs/common'
 import { css } from '@emotion/react'
 import { useProjectConfig } from 'providers/ProjectConfigProvider'
 import { useUTCNow } from 'providers/UTCNowProvider'

@@ -1,5 +1,9 @@
-import { pubKeyUrl, shortPubKey, tryPublicKey } from '@cardinal/common'
 import { css } from '@emotion/react'
+import {
+  pubKeyUrl,
+  shortPubKey,
+  tryPublicKey,
+} from '@solana-nft-programs/common'
 import { Alert } from 'common/Alert'
 import { Button } from 'common/Button'
 import { handleCopy } from 'common/NFTHeader'

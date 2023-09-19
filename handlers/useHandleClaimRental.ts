@@ -1,16 +1,16 @@
-import type { AccountData } from '@cardinal/common'
-import {
-  executeTransaction,
-  withFindOrInitAssociatedTokenAccount,
-  withWrapSol,
-} from '@cardinal/common'
-import { findNamespaceId, tryGetName } from '@cardinal/namespaces'
-import { withClaimToken } from '@cardinal/token-manager'
-import type { TokenManagerData } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { BN } from '@coral-xyz/anchor'
 import { useWallet } from '@solana/wallet-adapter-react'
 import type { Connection, Keypair } from '@solana/web3.js'
 import { PublicKey, Transaction } from '@solana/web3.js'
+import type { AccountData } from '@solana-nft-programs/common'
+import {
+  executeTransaction,
+  withFindOrInitAssociatedTokenAccount,
+  withWrapSol,
+} from '@solana-nft-programs/common'
+import { findNamespaceId, tryGetName } from '@solana-nft-programs/namespaces'
+import { withClaimToken } from '@solana-nft-programs/token-manager'
+import type { TokenManagerData } from '@solana-nft-programs/token-manager/dist/cjs/programs/tokenManager'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { notify } from 'common/Notification'
 import { getPriceFromTokenData } from 'common/tokenDataUtils'

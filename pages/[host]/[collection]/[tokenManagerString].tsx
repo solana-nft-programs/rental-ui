@@ -1,8 +1,8 @@
-import { findMintMetadataId, tryPublicKey } from '@cardinal/common'
-import { tokenManager } from '@cardinal/token-manager/dist/cjs/programs'
-import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import * as metaplex from '@metaplex-foundation/mpl-token-metadata'
 import { Connection } from '@solana/web3.js'
+import { findMintMetadataId, tryPublicKey } from '@solana-nft-programs/common'
+import { tokenManager } from '@solana-nft-programs/token-manager/dist/cjs/programs'
+import { TokenManagerState } from '@solana-nft-programs/token-manager/dist/cjs/programs/tokenManager'
 import Claim from 'components/Claim'
 import { ENVIRONMENTS } from 'providers/EnvironmentProvider'
 

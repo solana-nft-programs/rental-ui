@@ -1,4 +1,4 @@
-import { DisplayAddress } from '@cardinal/namespaces-components'
+import { DisplayAddress } from '@solana-nft-programs/namespaces-components'
 import type { TokenData } from 'data/data'
 import { logConfigTokenDataEvent } from 'monitoring/amplitude'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'

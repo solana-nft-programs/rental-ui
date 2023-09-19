@@ -41,8 +41,8 @@ export const useProjectStats = () => {
       if (index && config.filter?.type === 'creators') {
         const collectionClaimEvents = await index.query({
           query: gql`
-            query GetCardinalClaimEvents($creators: [String!]) {
-              cardinal_claim_events(
+            query GetClaimEvents($creators: [String!]) {
+              claim_events(
                 where: {
                   mint_address_nfts: {
                     metadatas_attributes: {
@@ -74,7 +74,7 @@ export const useProjectStats = () => {
           },
         })
 
-        const claimEvents = collectionClaimEvents.data['cardinal_claim_events']
+        const claimEvents = collectionClaimEvents.data['claim_events']
 
         if (claimEvents.length === 0) {
           return {}
@@ -134,8 +134,8 @@ export const useProjectStats = () => {
       } else if (config.filter?.type === 'issuer') {
         const collectionClaimEvents = await index.query({
           query: gql`
-            query GetCardinalClaimEvents($issuers: [String!]!) {
-              cardinal_claim_events(where: { issuer: { _in: $issuers } }) {
+            query GetClaimEvents($issuers: [String!]!) {
+              claim_events(where: { issuer: { _in: $issuers } }) {
                 mint_address_nfts {
                   name
                   symbol
@@ -159,7 +159,7 @@ export const useProjectStats = () => {
           },
         })
 
-        const claimEvents = collectionClaimEvents.data['cardinal_claim_events']
+        const claimEvents = collectionClaimEvents.data['claim_events']
         if (claimEvents.length === 0) {
           return {}
         }

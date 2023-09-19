@@ -1,4 +1,4 @@
-import { getNameEntry } from '@cardinal/namespaces'
+import { getNameEntry } from '@solana-nft-programs/namespaces'
 import { useQuery } from '@tanstack/react-query'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
 

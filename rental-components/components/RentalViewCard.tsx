@@ -1,5 +1,5 @@
-import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import type { Keypair } from '@solana/web3.js'
+import { TokenManagerState } from '@solana-nft-programs/token-manager/dist/cjs/programs/tokenManager'
 import { RentalSummary } from 'common/RentalSummary'
 import { rentalType } from 'common/tokenDataUtils'
 import type { TokenData } from 'data/data'

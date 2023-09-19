@@ -1,5 +1,5 @@
-import { InvalidationType } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import type { Keypair } from '@solana/web3.js'
+import { InvalidationType } from '@solana-nft-programs/token-manager/dist/cjs/programs/tokenManager'
 import { Alert } from 'common/Alert'
 import { Button } from 'common/Button'
 import { LoadingSpinner } from 'common/LoadingSpinner'

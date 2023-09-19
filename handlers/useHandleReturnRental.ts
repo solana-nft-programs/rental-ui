@@ -1,6 +1,9 @@
-import { withResetExpiration, withReturn } from '@cardinal/token-manager'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { ComputeBudgetProgram, Transaction } from '@solana/web3.js'
+import {
+  withResetExpiration,
+  withReturn,
+} from '@solana-nft-programs/token-manager'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { executeTransaction } from 'common/Transactions'
 import { asWallet } from 'common/Wallets'

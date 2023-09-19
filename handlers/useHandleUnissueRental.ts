@@ -1,5 +1,5 @@
-import { unissueToken } from '@cardinal/token-manager'
 import { useWallet } from '@solana/wallet-adapter-react'
+import { unissueToken } from '@solana-nft-programs/token-manager'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { executeTransaction } from 'common/Transactions'
 import { asWallet } from 'common/Wallets'

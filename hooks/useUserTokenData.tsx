@@ -1,18 +1,18 @@
-import type { AccountData } from '@cardinal/common'
-import {
-  findMintEditionId,
-  findMintMetadataId,
-  getBatchedMultipleAccounts,
-} from '@cardinal/common'
-import { tryPublicKey } from '@cardinal/namespaces-components'
-import type { PaidClaimApproverData } from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
-import type { TimeInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
-import type { TokenManagerData } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
-import type { UseInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
 import * as metaplex from '@metaplex-foundation/mpl-token-metadata'
 import * as Sentry from '@sentry/browser'
 import type * as spl from '@solana/spl-token'
 import { PublicKey } from '@solana/web3.js'
+import type { AccountData } from '@solana-nft-programs/common'
+import {
+  findMintEditionId,
+  findMintMetadataId,
+  getBatchedMultipleAccounts,
+} from '@solana-nft-programs/common'
+import { tryPublicKey } from '@solana-nft-programs/namespaces-components'
+import type { PaidClaimApproverData } from '@solana-nft-programs/token-manager/dist/cjs/programs/claimApprover'
+import type { TimeInvalidatorData } from '@solana-nft-programs/token-manager/dist/cjs/programs/timeInvalidator'
+import type { TokenManagerData } from '@solana-nft-programs/token-manager/dist/cjs/programs/tokenManager'
+import type { UseInvalidatorData } from '@solana-nft-programs/token-manager/dist/cjs/programs/useInvalidator'
 import { useQuery } from '@tanstack/react-query'
 import type { TokenFilter } from 'config/config'
 import type { TokenData } from 'data/data'

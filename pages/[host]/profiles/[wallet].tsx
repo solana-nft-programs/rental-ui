@@ -1,5 +1,5 @@
-import { firstParam, tryPublicKey } from '@cardinal/common'
-import { useAddressName } from '@cardinal/namespaces-components'
+import { firstParam, tryPublicKey } from '@solana-nft-programs/common'
+import { useAddressName } from '@solana-nft-programs/namespaces-components'
 import { Banner } from 'common/Banner'
 import { FooterSlim } from 'common/FooterSlim'
 import { Dashboard } from 'components/Dashboard'
@@ -35,7 +35,7 @@ export default function Profile() {
       <div className="blur-4xl absolute left-10 top-52 -z-10 h-[120px] w-[300px] -rotate-[60deg] bg-glow blur-[100px]"></div>
       <div className="blur-4xl absolute right-12 top-52 -z-10 h-[120px] w-[350px] -rotate-[60deg] bg-glow blur-[120px]"></div>
       <Head>
-        <title>Cardinal | {displayName}</title>
+        <title> | {displayName}</title>
         <link rel="icon" href="/favicon.ico" />
         <link
           href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"

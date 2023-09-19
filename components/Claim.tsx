@@ -1,6 +1,6 @@
-import { tryPublicKey } from '@cardinal/common'
-import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { css } from '@emotion/react'
+import { tryPublicKey } from '@solana-nft-programs/common'
+import { TokenManagerState } from '@solana-nft-programs/token-manager/dist/cjs/programs/tokenManager'
 import { GlyphQuestion } from 'assets/GlyphQuestion'
 import { ButtonSmall } from 'common/ButtonSmall'
 import { Card } from 'common/Card'
@@ -59,18 +59,18 @@ function Claim(props: {
     <div className="flex h-screen flex-col">
       <Head>
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:site" content="@cardinal_labs" />
+        <meta name="twitter:site" content="@" />
         <meta
           name="og:title"
           content={
             props.isClaimed
-              ? `Just claimed ${props.nftName} on Cardinal's NFT Rental Marketplace`
-              : `Rent ${props.nftName} on Cardinal's NFT Rental Marketplace`
+              ? `Just claimed ${props.nftName} on  NFT Rental Marketplace`
+              : `Rent ${props.nftName} on  NFT Rental Marketplace`
           }
         />
         <meta
           name="og:description"
-          content="Rent and Claim your favorite NFTs on Cardinal's Rental Marketplace"
+          content="Rent and Claim your favorite NFTs on  Rental Marketplace"
         />
         <meta
           name="og:image"

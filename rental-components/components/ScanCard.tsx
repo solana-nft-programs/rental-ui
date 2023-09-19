@@ -1,5 +1,5 @@
-import { useTransaction } from '@cardinal/token-manager'
 import { useWallet } from '@solana/wallet-adapter-react'
+import { useTransaction } from '@solana-nft-programs/token-manager'
 import { Alert } from 'common/Alert'
 import { LoadingSpinner } from 'common/LoadingSpinner'
 import { QRCode } from 'common/QRCode'

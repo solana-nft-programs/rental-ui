@@ -1,4 +1,4 @@
-import { invalidate } from '@cardinal/token-manager'
+import { invalidate } from '@solana-nft-programs/token-manager'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useQueryClient } from '@tanstack/react-query'
 import type { TokenData } from 'data/data'

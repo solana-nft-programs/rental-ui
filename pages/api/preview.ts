@@ -33,9 +33,9 @@ const preview = async (req: NextApiRequest, res: NextApiResponse) => {
   const claimed = claimParam === 'true'
   const baseImgUri = claimParam
     ? claimed
-      ? 'https://rent.cardinal.so/assets/twitter-claimed.png'
-      : 'https://rent.cardinal.so/assets/twitter-rented.png'
-    : 'https://rent.cardinal.so/assets/preview.png'
+      ? 'https://rent.host.so/assets/twitter-claimed.png'
+      : 'https://rent.host.so/assets/twitter-rented.png'
+    : 'https://rent.host.so/assets/preview.png'
 
   const backgroundCtx = imageCanvas.getContext('2d')
   backgroundCtx.fillStyle = 'rgba(26, 27, 32, 1)'

@@ -1,6 +1,6 @@
-import { capitalizeFirstLetter } from '@cardinal/common'
-import { InvalidationType } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { css } from '@emotion/react'
+import { capitalizeFirstLetter } from '@solana-nft-programs/common'
+import { InvalidationType } from '@solana-nft-programs/token-manager/dist/cjs/programs/tokenManager'
 import { Switch } from 'common/Switch'
 import { Toggle } from 'common/Toggle'
 import { useWalletId } from 'hooks/useWalletId'

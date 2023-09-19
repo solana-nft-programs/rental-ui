@@ -1,17 +1,17 @@
 import { ApolloClient, gql, InMemoryCache } from '@apollo/client'
-import type { AccountData } from '@cardinal/common'
+import { PublicKey } from '@solana/web3.js'
+import type { AccountData } from '@solana-nft-programs/common'
 import {
   fetchAccountDataById,
   tryDecodeIdlAccount,
   tryPublicKey,
-} from '@cardinal/common'
+} from '@solana-nft-programs/common'
 import type {
   TOKEN_MANAGER_PROGRAM,
   TokenManagerData,
-} from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
-import { TOKEN_MANAGER_IDL } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
-import { findTokenManagerAddress } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/pda'
-import { PublicKey } from '@solana/web3.js'
+} from '@solana-nft-programs/token-manager/dist/cjs/programs/tokenManager'
+import { TOKEN_MANAGER_IDL } from '@solana-nft-programs/token-manager/dist/cjs/programs/tokenManager'
+import { findTokenManagerAddress } from '@solana-nft-programs/token-manager/dist/cjs/programs/tokenManager/pda'
 import { useQuery } from '@tanstack/react-query'
 import type { TokenFilter } from 'config/config'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'

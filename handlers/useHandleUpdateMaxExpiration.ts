@@ -1,7 +1,7 @@
-import { withUpdateMaxExpiration } from '@cardinal/token-manager'
 import type { BN } from '@coral-xyz/anchor'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { Transaction } from '@solana/web3.js'
+import { withUpdateMaxExpiration } from '@solana-nft-programs/token-manager'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { notify } from 'common/Notification'
 import {

@@ -1712,18 +1712,18 @@
     eip1193-provider "^1.0.1"
     js-sha3 "^0.8.0"
 
-"@cardinal/certificates@^4.0.0":
+"@solana-nft-programs/certificates@^4.0.0":
   version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@cardinal/certificates/-/certificates-4.0.0.tgz#f164781db76c9b9bb8c41a3f7ba21ada24615797"
+  resolved "https://registry.yarnpkg.com/@solana-nft-programs/certificates/-/certificates-4.0.0.tgz#f164781db76c9b9bb8c41a3f7ba21ada24615797"
   integrity sha512-8Np8UHJwP92VKS+n4TeVUMUQQS5CINmMAzxyRXNacsN5hLOm/S1alsu4x53LbPGdpNZbJxOfq14/YpRT2XETbg==
   dependencies:
     "@project-serum/anchor" "0.26.0"
     "@solana/spl-token" "^0.3.5"
     typescript "^4.5.5"
 
-"@cardinal/common@^5.0.2":
+"@solana-nft-programs/common@^5.0.2":
   version "5.0.7"
-  resolved "https://registry.yarnpkg.com/@cardinal/common/-/common-5.0.7.tgz#f225b9eb4a8e7d780a14d80a1c0ba4c495be2d06"
+  resolved "https://registry.yarnpkg.com/@solana-nft-programs/common/-/common-5.0.7.tgz#f225b9eb4a8e7d780a14d80a1c0ba4c495be2d06"
   integrity sha512-7sZDczfvNFq9uSiYO94Mfjhf8GIk/644xTFawNtCau127GBK2BBsu06TEGLwfELc9dc0b22g4MWQJC0yoU90ow==
   dependencies:
     "@project-serum/anchor" "^0.25.0"
@@ -1734,9 +1734,9 @@
     polished "^4.2.2"
     tslib "^2.4.0"
 
-"@cardinal/common@^7.1.3":
+"@solana-nft-programs/common@^7.1.3":
   version "7.1.3"
-  resolved "https://registry.yarnpkg.com/@cardinal/common/-/common-7.1.3.tgz#1374e4ec4c7d64c95a986af82c75fc9c6b7ae240"
+  resolved "https://registry.yarnpkg.com/@solana-nft-programs/common/-/common-7.1.3.tgz#1374e4ec4c7d64c95a986af82c75fc9c6b7ae240"
   integrity sha512-Pg2a94QxQlh5lNx+4pXV/Qr6rHsGFafwJfAoKlcwgGQcfJs/7cWuEqJIqATAFzhpZmtn5QbgDZBxH5zcl37NJA==
   dependencies:
     "@coral-xyz/anchor" "^0.26.0"
@@ -1750,9 +1750,9 @@
     polished "^4.2.2"
     tslib "^2.4.0"
 
-"@cardinal/common@^8.0.0":
+"@solana-nft-programs/common@^8.0.0":
   version "8.0.0"
-  resolved "https://registry.yarnpkg.com/@cardinal/common/-/common-8.0.0.tgz#716c1f6f944c7521b7750cbd4211fca2c68830d5"
+  resolved "https://registry.yarnpkg.com/@solana-nft-programs/common/-/common-8.0.0.tgz#716c1f6f944c7521b7750cbd4211fca2c68830d5"
   integrity sha512-kgjPoD7owZ0vyX0vJ0oSOgyJCx/yzCek+w5gjPVFZxFtLWwxssBAbd1NnZ6qIq0er8S0wFsLZnBRNh32drprEw==
   dependencies:
     "@coral-xyz/anchor" "^0.27.0"
@@ -1766,9 +1766,9 @@
     polished "^4.2.2"
     tslib "^2.4.0"
 
-"@cardinal/creator-standard@^2.1.7":
+"@solana-nft-programs/creator-standard@^2.1.7":
   version "2.4.0"
-  resolved "https://registry.yarnpkg.com/@cardinal/creator-standard/-/creator-standard-2.4.0.tgz#cae7787a6003218a1030148cc99316058bbd3bb6"
+  resolved "https://registry.yarnpkg.com/@solana-nft-programs/creator-standard/-/creator-standard-2.4.0.tgz#cae7787a6003218a1030148cc99316058bbd3bb6"
   integrity sha512-VgQ4ksXamR9xCsycu7att1lYZdt7Sg4XnbTTVkYG1V5v/K5k6LXB4NlEfTMHizAaNktE8HOdsj+K8rptmemH7A==
   dependencies:
     "@metaplex-foundation/rustbin" "^0.3.1"
@@ -1777,15 +1777,15 @@
     "@solana/spl-token" "^0.3.5"
     "@solana/web3.js" "^1.66.2"
 
-"@cardinal/namespaces-components@^5.1.0":
+"@solana-nft-programs/namespaces-components@^5.1.0":
   version "5.1.0"
-  resolved "https://registry.yarnpkg.com/@cardinal/namespaces-components/-/namespaces-components-5.1.0.tgz#10f8fa365df5d655f0d03d61bba0dba1568a374e"
+  resolved "https://registry.yarnpkg.com/@solana-nft-programs/namespaces-components/-/namespaces-components-5.1.0.tgz#10f8fa365df5d655f0d03d61bba0dba1568a374e"
   integrity sha512-7t1X6LaUXA7Kq6ehPwcgq1d6Gvqpsf0ZZToAeiJNjQWVGTLogRcZ0uAELF5JIgPaBUJfaE+OVaMu2loYOTKK+g==
   dependencies:
-    "@cardinal/certificates" "^4.0.0"
-    "@cardinal/common" "^7.1.3"
-    "@cardinal/namespaces" "^5.0.1"
-    "@cardinal/token-manager" "^4.4.1"
+    "@solana-nft-programs/certificates" "^4.0.0"
+    "@solana-nft-programs/common" "^7.1.3"
+    "@solana-nft-programs/namespaces" "^5.0.1"
+    "@solana-nft-programs/token-manager" "^4.4.1"
     "@emotion/babel-preset-css-prop" "^11.10.0"
     "@emotion/core" "^11.0.0"
     "@emotion/css" "^11.7.1"
@@ -1808,50 +1808,50 @@
     typescript "^4.1.2"
     webpack-merge "^5.8.0"
 
-"@cardinal/namespaces@^5.0.1":
+"@solana-nft-programs/namespaces@^5.0.1":
   version "5.0.1"
-  resolved "https://registry.yarnpkg.com/@cardinal/namespaces/-/namespaces-5.0.1.tgz#e0ce131cee4b9a488bfc841d9247bb13cd4671ca"
+  resolved "https://registry.yarnpkg.com/@solana-nft-programs/namespaces/-/namespaces-5.0.1.tgz#e0ce131cee4b9a488bfc841d9247bb13cd4671ca"
   integrity sha512-+bbde/yjvEoBP3aSemS//9JfVocTBohWrVndn0YQYsZ+nCIlmQ/l5vPmRFt5n3cOn6KWsN+Qu35pPR0JPuzqNw==
   dependencies:
-    "@cardinal/certificates" "^4.0.0"
-    "@cardinal/common" "^7.1.3"
-    "@cardinal/payment-manager" "^3.0.0"
-    "@cardinal/token-manager" "^4.4.1"
+    "@solana-nft-programs/certificates" "^4.0.0"
+    "@solana-nft-programs/common" "^7.1.3"
+    "@solana-nft-programs/payment-manager" "^3.0.0"
+    "@solana-nft-programs/token-manager" "^4.4.1"
     "@metaplex-foundation/mpl-token-metadata" "^2.8.1"
     "@project-serum/anchor" "^0.26.0"
     "@solana/spl-token" "0.3.5"
     "@solana/web3.js" "^1.34.0"
 
-"@cardinal/payment-manager@^3.0.0":
+"@solana-nft-programs/payment-manager@^3.0.0":
   version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@cardinal/payment-manager/-/payment-manager-3.0.0.tgz#87aaa1961d80160001a87a4cd49c7d880ce09ede"
+  resolved "https://registry.yarnpkg.com/@solana-nft-programs/payment-manager/-/payment-manager-3.0.0.tgz#87aaa1961d80160001a87a4cd49c7d880ce09ede"
   integrity sha512-ChEaghyV1pcOaY3lz5tPogHxv4IPfSxjTyLOZSAtgHdRpMb3EhXnpYwsgQh2upSof4uYmAjOHNEKXOrRygoTHA==
   dependencies:
-    "@cardinal/common" "^5.0.2"
+    "@solana-nft-programs/common" "^5.0.2"
     "@metaplex-foundation/mpl-token-metadata" "^2.5.2"
     "@project-serum/anchor" "^0.26.0"
     "@solana/spl-token" "^0.3.6"
     "@solana/web3.js" "^1.66.2"
 
-"@cardinal/payment-manager@^4.0.1":
+"@solana-nft-programs/payment-manager@^4.0.1":
   version "4.0.1"
-  resolved "https://registry.yarnpkg.com/@cardinal/payment-manager/-/payment-manager-4.0.1.tgz#8f3dde29998f1a3cfb51530f90221e378367aacc"
+  resolved "https://registry.yarnpkg.com/@solana-nft-programs/payment-manager/-/payment-manager-4.0.1.tgz#8f3dde29998f1a3cfb51530f90221e378367aacc"
   integrity sha512-vPenOu9frkMRXmnL11Iqim0WjBc+El5MGmJVguQev81BOTSOgQ1uGH60fapFvNsYS263xNID8MRgzkACtoUjeA==
   dependencies:
-    "@cardinal/common" "^7.1.3"
+    "@solana-nft-programs/common" "^7.1.3"
     "@metaplex-foundation/mpl-token-metadata" "^2.8.3"
     "@project-serum/anchor" "^0.26.0"
     "@solana/spl-token" "^0.3.6"
     "@solana/web3.js" "^1.66.2"
 
-"@cardinal/token-manager@^4.4.1":
+"@solana-nft-programs/token-manager@^4.4.1":
   version "4.4.1"
-  resolved "https://registry.yarnpkg.com/@cardinal/token-manager/-/token-manager-4.4.1.tgz#185fa853798f545e000880a6b3c87f2e2120d3a0"
+  resolved "https://registry.yarnpkg.com/@solana-nft-programs/token-manager/-/token-manager-4.4.1.tgz#185fa853798f545e000880a6b3c87f2e2120d3a0"
   integrity sha512-V9s891OfL7M2fiysNrw3xE0TPyNK+lmMB2DPkKbVo3weG/ZupWH3T2pwwTeoo4DAVyAPOJFSO2Ec/g0VOGKXjg==
   dependencies:
-    "@cardinal/common" "^7.1.3"
-    "@cardinal/creator-standard" "^2.1.7"
-    "@cardinal/payment-manager" "^4.0.1"
+    "@solana-nft-programs/common" "^7.1.3"
+    "@solana-nft-programs/creator-standard" "^2.1.7"
+    "@solana-nft-programs/payment-manager" "^4.0.1"
     "@metaplex-foundation/mpl-token-auth-rules" "^1.0.0"
     "@metaplex-foundation/mpl-token-metadata" "^2.8.3"
     "@msgpack/msgpack" "^2.8.0"
@@ -1859,14 +1859,14 @@
     "@solana/spl-token" "^0.3.6"
     "@solana/web3.js" "^1.34.0"
 
-"@cardinal/token-manager@^4.5.1":
+"@solana-nft-programs/token-manager@^4.5.1":
   version "4.5.1"
-  resolved "https://registry.yarnpkg.com/@cardinal/token-manager/-/token-manager-4.5.1.tgz#37ed638fa109fba24169bfa7fba486c529e8be52"
+  resolved "https://registry.yarnpkg.com/@solana-nft-programs/token-manager/-/token-manager-4.5.1.tgz#37ed638fa109fba24169bfa7fba486c529e8be52"
   integrity sha512-/pvxl7VmCKbFlr0BBnwFtzPcIJ4Z6oE9fOkWSkjR1+6xF+iiLT+YGJZ2qrO54M9F3zMCQfRY1HwzWxChRJBSYQ==
   dependencies:
-    "@cardinal/common" "^7.1.3"
-    "@cardinal/creator-standard" "^2.1.7"
-    "@cardinal/payment-manager" "^4.0.1"
+    "@solana-nft-programs/common" "^7.1.3"
+    "@solana-nft-programs/creator-standard" "^2.1.7"
+    "@solana-nft-programs/payment-manager" "^4.0.1"
     "@metaplex-foundation/mpl-token-auth-rules" "^1.0.0"
     "@metaplex-foundation/mpl-token-metadata" "^2.8.3"
     "@msgpack/msgpack" "^2.8.0"

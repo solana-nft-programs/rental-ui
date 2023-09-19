@@ -1,5 +1,5 @@
-import { secondsToString } from '@cardinal/common'
-import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
+import { secondsToString } from '@solana-nft-programs/common'
+import { TokenManagerState } from '@solana-nft-programs/token-manager/dist/cjs/programs/tokenManager'
 import type * as splToken from '@solana/spl-token'
 import type { TokenData } from 'data/data'
 import type { ProjectConfig } from 'config/config'

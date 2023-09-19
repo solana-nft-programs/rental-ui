@@ -1,6 +1,6 @@
-import { firstParam } from '@cardinal/common'
-import { tryPublicKey } from '@cardinal/namespaces-components'
 import { useWallet } from '@solana/wallet-adapter-react'
+import { firstParam } from '@solana-nft-programs/common'
+import { tryPublicKey } from '@solana-nft-programs/namespaces-components'
 import { useRouter } from 'next/router'
 
 import { useNameEntry } from './useNameEntry'

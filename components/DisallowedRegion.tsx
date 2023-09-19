@@ -13,10 +13,10 @@ export default function DisallowedRegion() {
             to Access This Page
           </div>
           <div className="mt-8 text-sm text-light-2">
-            It is prohibited to use certain services offered by Cardinal if you
-            are a resident of, or are located, incorporated, or have a
-            registered agent in, {userRegion.data?.countryName} or any other
-            jurisdiction where the Services are restricted.
+            It is prohibited to use certain services offered by if you are a
+            resident of, or are located, incorporated, or have a registered
+            agent in, {userRegion.data?.countryName} or any other jurisdiction
+            where the Services are restricted.
           </div>
         </div>
       </div>

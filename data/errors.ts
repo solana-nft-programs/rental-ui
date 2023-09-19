@@ -1,25 +1,25 @@
+import type { Idl } from '@coral-xyz/anchor'
+import type { PublicKey, SendTransactionError } from '@solana/web3.js'
 import {
   PAYMENT_MANAGER_ADDRESS,
   PAYMENT_MANAGER_IDL,
-} from '@cardinal/payment-manager'
+} from '@solana-nft-programs/payment-manager'
 import {
   CLAIM_APPROVER_ADDRESS,
   CLAIM_APPROVER_IDL,
-} from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
+} from '@solana-nft-programs/token-manager/dist/cjs/programs/claimApprover'
 import {
   TIME_INVALIDATOR_ADDRESS,
   TIME_INVALIDATOR_IDL,
-} from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
+} from '@solana-nft-programs/token-manager/dist/cjs/programs/timeInvalidator'
 import {
   TOKEN_MANAGER_ADDRESS,
   TOKEN_MANAGER_IDL,
-} from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
+} from '@solana-nft-programs/token-manager/dist/cjs/programs/tokenManager'
 import {
   USE_INVALIDATOR_ADDRESS,
   USE_INVALIDATOR_IDL,
-} from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
-import type { Idl } from '@coral-xyz/anchor'
-import type { PublicKey, SendTransactionError } from '@solana/web3.js'
+} from '@solana-nft-programs/token-manager/dist/cjs/programs/useInvalidator'
 
 type ErrorCode = {
   code: string

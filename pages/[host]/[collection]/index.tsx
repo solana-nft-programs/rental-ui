@@ -1,5 +1,5 @@
-import { firstParam } from '@cardinal/common'
 import { css } from '@emotion/react'
+import { firstParam } from '@solana-nft-programs/common'
 import { Banner } from 'common/Banner'
 import { FooterSlim } from 'common/FooterSlim'
 import { Browse } from 'components/Browse'
@@ -57,7 +57,7 @@ export default function Home() {
         `}
       />
       <Head>
-        <title>Cardinal | {config.displayName}</title>
+        <title> | {config.displayName}</title>
         <link rel="icon" href="/favicon.ico" />
 
         <link

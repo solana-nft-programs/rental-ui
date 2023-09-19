@@ -1,6 +1,6 @@
-import { tryPublicKey } from '@cardinal/common'
 import { BN } from '@coral-xyz/anchor'
 import { css } from '@emotion/react'
+import { tryPublicKey } from '@solana-nft-programs/common'
 import { DatePicker } from 'antd'
 import { SolanaLogo } from 'assets/SolanaLogo'
 import { Alert } from 'common/Alert'

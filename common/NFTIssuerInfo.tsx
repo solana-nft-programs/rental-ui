@@ -1,16 +1,16 @@
-import type { AccountData } from '@cardinal/common'
+import type { AccountData } from '@solana-nft-programs/common'
 import {
   getExpirationString,
   secondsToString,
   shortPubKey,
-} from '@cardinal/common'
-import { DisplayAddress } from '@cardinal/namespaces-components'
-import type { PaidClaimApproverData } from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
-import type { TimeInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
+} from '@solana-nft-programs/common'
+import { DisplayAddress } from '@solana-nft-programs/namespaces-components'
+import type { PaidClaimApproverData } from '@solana-nft-programs/token-manager/dist/cjs/programs/claimApprover'
+import type { TimeInvalidatorData } from '@solana-nft-programs/token-manager/dist/cjs/programs/timeInvalidator'
 import {
   InvalidationType,
   TokenManagerState,
-} from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
+} from '@solana-nft-programs/token-manager/dist/cjs/programs/tokenManager'
 import type * as splToken from '@solana/spl-token'
 import type { TokenData } from 'data/data'
 import {

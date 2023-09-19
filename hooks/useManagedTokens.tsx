@@ -1,26 +1,26 @@
 import { ApolloClient, gql, InMemoryCache } from '@apollo/client'
-import type { AccountData } from '@cardinal/common'
-import {
-  fetchAccountDataById,
-  findMintMetadataId,
-  tryDecodeIdlAccount,
-} from '@cardinal/common'
-import type { PaidClaimApproverData } from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
-import type { TimeInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
-import { TIME_INVALIDATOR_ADDRESS } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
-import { findTimeInvalidatorAddress } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator/pda'
-import type {
-  TOKEN_MANAGER_PROGRAM,
-  TokenManagerData,
-} from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
-import { TOKEN_MANAGER_IDL } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
-import { getTokenManagers } from '@cardinal/token-manager/dist/cjs/programs/tokenManager/accounts'
-import type { UseInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
-import { USE_INVALIDATOR_ADDRESS } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
 import type { Metadata } from '@metaplex-foundation/mpl-token-metadata'
 import * as Sentry from '@sentry/browser'
 import type { Account } from '@solana/spl-token'
 import { PublicKey } from '@solana/web3.js'
+import type { AccountData } from '@solana-nft-programs/common'
+import {
+  fetchAccountDataById,
+  findMintMetadataId,
+  tryDecodeIdlAccount,
+} from '@solana-nft-programs/common'
+import type { PaidClaimApproverData } from '@solana-nft-programs/token-manager/dist/cjs/programs/claimApprover'
+import type { TimeInvalidatorData } from '@solana-nft-programs/token-manager/dist/cjs/programs/timeInvalidator'
+import { TIME_INVALIDATOR_ADDRESS } from '@solana-nft-programs/token-manager/dist/cjs/programs/timeInvalidator'
+import { findTimeInvalidatorAddress } from '@solana-nft-programs/token-manager/dist/cjs/programs/timeInvalidator/pda'
+import type {
+  TOKEN_MANAGER_PROGRAM,
+  TokenManagerData,
+} from '@solana-nft-programs/token-manager/dist/cjs/programs/tokenManager'
+import { TOKEN_MANAGER_IDL } from '@solana-nft-programs/token-manager/dist/cjs/programs/tokenManager'
+import { getTokenManagers } from '@solana-nft-programs/token-manager/dist/cjs/programs/tokenManager/accounts'
+import type { UseInvalidatorData } from '@solana-nft-programs/token-manager/dist/cjs/programs/useInvalidator'
+import { USE_INVALIDATOR_ADDRESS } from '@solana-nft-programs/token-manager/dist/cjs/programs/useInvalidator'
 import { useQuery } from '@tanstack/react-query'
 import type { ProjectConfig } from 'config/config'
 import type { TokenData } from 'data/data'
@@ -90,7 +90,7 @@ export const useManagedTokens = (configOverride?: ProjectConfig) => {
                       $issuer: String!
                       $creators: [String!]!
                     ) {
-                      cardinal_token_managers(
+                      token_managers(
                         where: {
                           issuer: { _eq: $issuer }
                           mint_address_nfts: {
@@ -113,7 +113,7 @@ export const useManagedTokens = (configOverride?: ProjectConfig) => {
               : indexer.query({
                   query: gql`
                     query GetTokenManagersForIssuer($issuer: String!) {
-                      cardinal_token_managers(
+                      token_managers(
                         where: { issuer: { _eq: $issuer } }
                       ) ${indexedDataBody}
                     }
@@ -122,9 +122,7 @@ export const useManagedTokens = (configOverride?: ProjectConfig) => {
                     issuer: walletId.toBase58(),
                   },
                 }))
-            return tokenManagerResponse.data[
-              'cardinal_token_managers'
-            ] as IndexedData[]
+            return tokenManagerResponse.data['token_managers'] as IndexedData[]
           },
           trace,
           { op: 'index-lookup' }

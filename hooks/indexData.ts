@@ -1,7 +1,7 @@
 import { ApolloClient, gql, InMemoryCache } from '@apollo/client'
-import { tryPublicKey } from '@cardinal/common'
-import type { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import type { PublicKey } from '@solana/web3.js'
+import { tryPublicKey } from '@solana-nft-programs/common'
+import type { TokenManagerState } from '@solana-nft-programs/token-manager/dist/cjs/programs/tokenManager'
 import type { TokenFilter } from 'config/config'
 import type { Trace } from 'monitoring/trace'
 import type { Environment } from 'providers/EnvironmentProvider'
@@ -117,7 +117,7 @@ export const getTokenIndexData = async (
               $tokenManagerState: smallint!
               $disallowedMints: [String!]!
             ) {
-              cardinal_token_managers(
+              token_managers(
                 where: {
                   state: { _eq: $tokenManagerState }
                   mint_address_nfts: {
@@ -153,7 +153,7 @@ export const getTokenIndexData = async (
               $tokenManagerState: smallint!
               $disallowedMints: [String!]!
             ) {
-              cardinal_token_managers(
+              token_managers(
                 where: {
                   state: { _eq: $tokenManagerState }
                   issuer: { _in: $issuers }
@@ -175,5 +175,5 @@ export const getTokenIndexData = async (
         })
   /////
   indexSpan?.finish()
-  return tokenManagerResponse.data['cardinal_token_managers'] as IndexedData[]
+  return tokenManagerResponse.data['token_managers'] as IndexedData[]
 }

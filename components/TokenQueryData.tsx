@@ -1,4 +1,4 @@
-import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
+import { TokenManagerState } from '@solana-nft-programs/token-manager/dist/cjs/programs/tokenManager'
 import { css } from '@emotion/react'
 import type { TokenData } from 'data/data'
 import { GlyphLargeClose } from 'assets/GlyphLargeClose'

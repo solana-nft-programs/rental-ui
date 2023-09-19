@@ -1,9 +1,3 @@
-import { tryPublicKey } from '@cardinal/common'
-import { findPaymentManagerAddress } from '@cardinal/payment-manager/dist/cjs/pda'
-import type { IssueParameters } from '@cardinal/token-manager'
-import { issueToken } from '@cardinal/token-manager'
-import type { InvalidationType } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
-import { TokenManagerKind } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { BN, utils } from '@coral-xyz/anchor'
 import { TokenStandard } from '@metaplex-foundation/mpl-token-metadata'
 import { useWallet } from '@solana/wallet-adapter-react'
@@ -14,6 +8,12 @@ import {
   SystemProgram,
   Transaction,
 } from '@solana/web3.js'
+import { tryPublicKey } from '@solana-nft-programs/common'
+import { findPaymentManagerAddress } from '@solana-nft-programs/payment-manager/dist/cjs/pda'
+import type { IssueParameters } from '@solana-nft-programs/token-manager'
+import { issueToken } from '@solana-nft-programs/token-manager'
+import type { InvalidationType } from '@solana-nft-programs/token-manager/dist/cjs/programs/tokenManager'
+import { TokenManagerKind } from '@solana-nft-programs/token-manager/dist/cjs/programs/tokenManager'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { DURATION_DATA } from 'common/DurationInput'
 import {

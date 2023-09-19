@@ -1,28 +1,28 @@
-import type { AccountData } from '@cardinal/common'
+import type { AccountData } from '@solana-nft-programs/common'
 import {
   getBatchedMultipleAccounts,
   METADATA_PROGRAM_ID,
-} from '@cardinal/common'
-import type { PaidClaimApproverData } from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
+} from '@solana-nft-programs/common'
+import type { PaidClaimApproverData } from '@solana-nft-programs/token-manager/dist/cjs/programs/claimApprover'
 import {
   CLAIM_APPROVER_ADDRESS,
   CLAIM_APPROVER_IDL,
-} from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
-import type { TimeInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
+} from '@solana-nft-programs/token-manager/dist/cjs/programs/claimApprover'
+import type { TimeInvalidatorData } from '@solana-nft-programs/token-manager/dist/cjs/programs/timeInvalidator'
 import {
   TIME_INVALIDATOR_ADDRESS,
   TIME_INVALIDATOR_IDL,
-} from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
-import type { TokenManagerData } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
+} from '@solana-nft-programs/token-manager/dist/cjs/programs/timeInvalidator'
+import type { TokenManagerData } from '@solana-nft-programs/token-manager/dist/cjs/programs/tokenManager'
 import {
   TOKEN_MANAGER_ADDRESS,
   TOKEN_MANAGER_IDL,
-} from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
-import type { UseInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
+} from '@solana-nft-programs/token-manager/dist/cjs/programs/tokenManager'
+import type { UseInvalidatorData } from '@solana-nft-programs/token-manager/dist/cjs/programs/useInvalidator'
 import {
   USE_INVALIDATOR_ADDRESS,
   USE_INVALIDATOR_IDL,
-} from '@cardinal/token-manager/dist/cjs/programs/useInvalidator'
+} from '@solana-nft-programs/token-manager/dist/cjs/programs/useInvalidator'
 import * as metaplex from '@metaplex-foundation/mpl-token-metadata'
 import { BorshAccountsCoder } from '@coral-xyz/anchor'
 import { TOKEN_PROGRAM_ID } from '@coral-xyz/anchor/dist/cjs/utils/token'

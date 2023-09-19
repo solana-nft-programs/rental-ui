@@ -8,7 +8,7 @@ const nextConfig = {
     MAINNET_SECONDARY: process.env.MAINNET_SECONDARY,
     BASE_CLUSTER: process.env.BASE_CLUSTER || 'devnet',
     NEXT_PUBLIC_BASE_URL:
-      process.env.NEXT_PUBLIC_BASE_URL || 'https://rent.cardinal.so',
+      process.env.NEXT_PUBLIC_BASE_URL || 'https://rent.host.so',
   },
   async rewrites() {
     return [

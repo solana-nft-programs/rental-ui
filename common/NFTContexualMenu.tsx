@@ -1,8 +1,8 @@
-import { pubKeyUrl, tryPublicKey } from '@cardinal/common'
+import { pubKeyUrl, tryPublicKey } from '@solana-nft-programs/common'
 import {
   InvalidationType,
   TokenManagerState,
-} from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
+} from '@solana-nft-programs/token-manager/dist/cjs/programs/tokenManager'
 import Tooltip from '@mui/material/Tooltip'
 import type { TokenData } from 'data/data'
 import { GlyphEdit } from 'assets/GlyphEdit'

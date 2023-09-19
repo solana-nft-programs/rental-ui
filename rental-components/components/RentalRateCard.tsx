@@ -1,10 +1,10 @@
-import {
-  InvalidationType,
-  TokenManagerState,
-} from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import { BN } from '@coral-xyz/anchor'
 import { css } from '@emotion/react'
 import type { Keypair } from '@solana/web3.js'
+import {
+  InvalidationType,
+  TokenManagerState,
+} from '@solana-nft-programs/token-manager/dist/cjs/programs/tokenManager'
 import { DatePicker } from 'antd'
 import { Alert } from 'common/Alert'
 import { Button } from 'common/Button'

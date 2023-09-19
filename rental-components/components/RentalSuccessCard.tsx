@@ -1,4 +1,7 @@
-import { DisplayAddress, useAddressName } from '@cardinal/namespaces-components'
+import {
+  DisplayAddress,
+  useAddressName,
+} from '@solana-nft-programs/namespaces-components'
 import { GlyphCheck } from 'assets/GlyphCheck'
 import { Glow } from 'common/Glow'
 import { Pill } from 'common/Pill'

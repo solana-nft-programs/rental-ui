@@ -1,4 +1,4 @@
-import { capitalizeFirstLetter } from '@cardinal/common'
+import { capitalizeFirstLetter } from '@solana-nft-programs/common'
 import { css } from '@emotion/react'
 import { useEffect, useState } from 'react'
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai'

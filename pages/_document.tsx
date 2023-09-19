@@ -26,7 +26,7 @@ class AppDocument extends Document {
           />
           <script
             defer
-            data-domain="rent.cardinal.so"
+            data-domain="rent.host.so"
             src="https://plausible.io/js/plausible.js"
           ></script>
         </Head>

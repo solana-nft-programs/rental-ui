@@ -1,5 +1,8 @@
-import { capitalizeFirstLetter, shortDateString } from '@cardinal/common'
-import { TokenManagerState } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
+import {
+  capitalizeFirstLetter,
+  shortDateString,
+} from '@solana-nft-programs/common'
+import { TokenManagerState } from '@solana-nft-programs/token-manager/dist/cjs/programs/tokenManager'
 import { BN } from '@coral-xyz/anchor'
 import type * as splToken from '@solana/spl-token'
 import type { TokenData } from 'data/data'

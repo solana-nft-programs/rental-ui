@@ -1,17 +1,17 @@
-import {
-  createMintTx,
-  findMintEditionId,
-  findMintMetadataId,
-} from '@cardinal/common'
+import { BN } from '@coral-xyz/anchor'
+import type { Wallet } from '@coral-xyz/anchor/dist/cjs/provider'
 import {
   createCreateMasterEditionV3Instruction,
   createCreateMetadataAccountV3Instruction,
 } from '@metaplex-foundation/mpl-token-metadata'
-import { BN } from '@coral-xyz/anchor'
-import type { Wallet } from '@coral-xyz/anchor/dist/cjs/provider'
 import { useWallet } from '@solana/wallet-adapter-react'
 import type { Connection } from '@solana/web3.js'
 import { Keypair, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js'
+import {
+  createMintTx,
+  findMintEditionId,
+  findMintMetadataId,
+} from '@solana-nft-programs/common'
 import { notify } from 'common/Notification'
 import { asWallet } from 'common/Wallets'
 import type { ProjectConfig } from 'config/config'

@@ -1,12 +1,12 @@
 import '@sentry/tracing'
 
 import { ApolloClient, gql, InMemoryCache } from '@apollo/client'
-import type { AccountData } from '@cardinal/common'
-import { tryPublicKey } from '@cardinal/common'
-import type { PaidClaimApproverData } from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
-import type { TimeInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
 import { BN } from '@coral-xyz/anchor'
 import type { PublicKey } from '@solana/web3.js'
+import type { AccountData } from '@solana-nft-programs/common'
+import { tryPublicKey } from '@solana-nft-programs/common'
+import type { PaidClaimApproverData } from '@solana-nft-programs/token-manager/dist/cjs/programs/claimApprover'
+import type { TimeInvalidatorData } from '@solana-nft-programs/token-manager/dist/cjs/programs/timeInvalidator'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { tracer } from 'monitoring/trace'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'
@@ -163,7 +163,7 @@ export const useClaimEventsForConfig = (
                   $creators: [String!]!
                   ${user ? '$issuer: String!' : ''}
                 ) {
-                  cardinal_claim_events(
+                  claim_events(
                     limit: $limit
                     offset: $offset
                     order_by: { state_changed_at: desc }
@@ -224,7 +224,7 @@ export const useClaimEventsForConfig = (
                   $offset: Int!
                   $issuers: [String!]!
                 ) {
-                  cardinal_claim_events(
+                  claim_events(
                     limit: $limit
                     offset: $offset
                     where: { 
@@ -271,7 +271,7 @@ export const useClaimEventsForConfig = (
             })
       /////
       const indexedClaimEvents = tokenManagerResponse.data[
-        'cardinal_claim_events'
+        'claim_events'
       ] as IndexedClaimEvent[]
       trace.finish()
 

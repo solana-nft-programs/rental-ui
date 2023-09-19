@@ -1,6 +1,9 @@
-import { capitalizeFirstLetter, secondstoDuration } from '@cardinal/common'
 import type * as anchor from '@coral-xyz/anchor'
 import { css } from '@emotion/react'
+import {
+  capitalizeFirstLetter,
+  secondstoDuration,
+} from '@solana-nft-programs/common'
 import { DatePicker } from 'antd'
 import { SolanaLogo } from 'assets/SolanaLogo'
 import { Alert } from 'common/Alert'

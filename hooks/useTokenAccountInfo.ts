@@ -1,6 +1,6 @@
-import type { AccountData } from '@cardinal/common'
 import type { Account } from '@solana/spl-token'
 import type { PublicKey } from '@solana/web3.js'
+import type { AccountData } from '@solana-nft-programs/common'
 import { useQuery } from '@tanstack/react-query'
 import { tracer, withTrace } from 'monitoring/trace'
 import { useEnvironmentCtx } from 'providers/EnvironmentProvider'

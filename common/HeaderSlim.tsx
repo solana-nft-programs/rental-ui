@@ -1,5 +1,8 @@
 import * as amplitude from '@amplitude/analytics-browser'
-import { AccountConnect, useAddressName } from '@cardinal/namespaces-components'
+import {
+  AccountConnect,
+  useAddressName,
+} from '@solana-nft-programs/namespaces-components'
 import * as Sentry from '@sentry/browser'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useWalletModal } from '@solana/wallet-adapter-react-ui'

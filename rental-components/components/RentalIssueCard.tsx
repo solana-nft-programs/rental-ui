@@ -1,5 +1,5 @@
-import { capitalizeFirstLetter } from '@cardinal/common'
 import { css } from '@emotion/react'
+import { capitalizeFirstLetter } from '@solana-nft-programs/common'
 import { GlyphEdit } from 'assets/GlyphEdit'
 import { Tooltip } from 'common/Tooltip'
 import type { TokenData } from 'data/data'

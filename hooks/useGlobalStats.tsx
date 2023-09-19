@@ -22,7 +22,7 @@ export const useGlobalStats = () => {
       })
       const aggregateClaimEventsByConfig = await index.query({
         query: gql`
-          query GetCardinalClaimEvents {
+          query GetClaimEvents {
             ${Object.entries(projectConfigs)
               .filter(([, c]) => !c.hidden)
               .map(([, c]) =>
@@ -31,7 +31,7 @@ export const useGlobalStats = () => {
               ${queryId(
                 c.name,
                 true
-              )}: cardinal_claim_events_aggregate(where: {time_invalidator_address: {_is_null: false}, mint_address_nfts: {metadatas_attributes: {first_verified_creator: {_in: [${c.filter?.value
+              )}: claim_events_aggregate(where: {time_invalidator_address: {_is_null: false}, mint_address_nfts: {metadatas_attributes: {first_verified_creator: {_in: [${c.filter?.value
                       .map((v) => `"${v}"`)
                       .join(',')}]}}}}) {
                 aggregate {
@@ -41,7 +41,7 @@ export const useGlobalStats = () => {
               ${queryId(
                 c.name,
                 false
-              )}: cardinal_token_managers_aggregate(where: {state: {_eq: "1"}, mint_address_nfts: {metadatas_attributes: {first_verified_creator: {_in: [${c.filter?.value
+              )}: token_managers_aggregate(where: {state: {_eq: "1"}, mint_address_nfts: {metadatas_attributes: {first_verified_creator: {_in: [${c.filter?.value
                       .map((v) => `"${v}"`)
                       .join(',')}]}}}}) {
                 aggregate {
@@ -54,7 +54,7 @@ export const useGlobalStats = () => {
                   ${queryId(
                     c.name,
                     true
-                  )}: cardinal_claim_events_aggregate(where: {issuer: {_in: [${c.filter?.value
+                  )}: claim_events_aggregate(where: {issuer: {_in: [${c.filter?.value
                       .map((v) => `"${v}"`)
                       .join(',')}]}}) {
                     aggregate {
@@ -64,7 +64,7 @@ export const useGlobalStats = () => {
                   ${queryId(
                     c.name,
                     false
-                  )}: cardinal_token_managers_aggregate(where: {state: {_eq: "1"}, issuer: {_in: [${c.filter?.value
+                  )}: token_managers_aggregate(where: {state: {_eq: "1"}, issuer: {_in: [${c.filter?.value
                       .map((v) => `"${v}"`)
                       .join(',')}]}}) {
                     aggregate {
@@ -78,7 +78,7 @@ export const useGlobalStats = () => {
             ${queryId(
               'global',
               true
-            )}: cardinal_claim_events_aggregate(where: {time_invalidator_address: {_is_null: false}}) {
+            )}: claim_events_aggregate(where: {time_invalidator_address: {_is_null: false}}) {
               aggregate {
                 count
               }
@@ -86,7 +86,7 @@ export const useGlobalStats = () => {
             ${queryId(
               'global',
               false
-            )}: cardinal_token_managers_aggregate(where: {state: {_eq: "1"}}) {
+            )}: token_managers_aggregate(where: {state: {_eq: "1"}}) {
               aggregate {
                 count
               }

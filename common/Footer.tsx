@@ -3,9 +3,9 @@ import { LogoTitled } from 'rental-components/common/LogoTitled'
 
 export const SOCIALS = {
   discord: { icon: <FaDiscord />, link: 'https://discord.gg/byq6uNTugq' },
-  github: { icon: <FaGithub />, link: 'https://github.com/cardinal-labs' },
-  medium: { icon: <FaMedium />, link: 'https://cardinal-labs.medium.com/' },
-  twitter: { icon: <FaTwitter />, link: 'https://twitter.com/cardinal_labs' },
+  github: { icon: <FaGithub />, link: 'https://github.com/' },
+  medium: { icon: <FaMedium />, link: 'https://.medium.com/' },
+  twitter: { icon: <FaTwitter />, link: 'https://twitter.com/' },
 }
 
 export const Footer = ({
@@ -20,12 +20,12 @@ export const Footer = ({
           <LogoTitled className="inline-block h-6" />
           {/* 
           <img
-            alt="Cardinal logo"
+            alt=" logo"
             className="inline-block h-[28px]"
-            src="/cardinal-crosshair.svg"
+            src="/-crosshair.svg"
           />
           <span className="ml-3 text-2xl font-semibold text-white">
-            Cardinal
+            
           </span> */}
         </div>
         <div className="flex gap-10 self-end text-center md:gap-20">
@@ -33,16 +33,13 @@ export const Footer = ({
             <div className="mb-2 text-lg font-semibold text-white">
               Resources
             </div>
-            <a href="https://docs.cardinal.so/" className="text-gray-400">
+            <a href="https://docs.host.so/" className="text-gray-400">
               Documentation
             </a>
-            <a
-              href="https://github.com/cardinal-labs"
-              className="text-gray-400"
-            >
+            <a href="https://github.com/" className="text-gray-400">
               Github
             </a>
-            <a href="mailto:team@cardinal.so" className="text-gray-400">
+            <a href="mailto:team@host.so" className="text-gray-400">
               Contact
             </a>
           </span>
@@ -50,7 +47,7 @@ export const Footer = ({
       </div>
       <div className="flex items-center justify-between border-t border-border py-8 text-sm text-gray-400">
         <div className="flex items-center justify-center gap-2 text-gray-400">
-          Powered by Cardinal
+          Powered by
         </div>
         <div className="flex gap-4 text-gray-200">
           {Object.entries(SOCIALS).map(([id, { icon, link }]) => {

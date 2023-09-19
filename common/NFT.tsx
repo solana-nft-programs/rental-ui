@@ -1,8 +1,8 @@
-import { getExpirationString } from '@cardinal/common'
+import { getExpirationString } from '@solana-nft-programs/common'
 import {
   InvalidationType,
   TokenManagerState,
-} from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
+} from '@solana-nft-programs/token-manager/dist/cjs/programs/tokenManager'
 import type { TokenData } from 'data/data'
 import { useMintMetadata } from 'hooks/useMintMetadata'
 import { useUTCNow } from 'providers/UTCNowProvider'

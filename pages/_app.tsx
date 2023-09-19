@@ -1,13 +1,9 @@
 import 'antd/dist/antd.dark.css'
 import './styles.css'
-import '@cardinal/namespaces-components/dist/esm/styles.css'
+import '@solana-nft-programs/namespaces-components/dist/esm/styles.css'
 import 'tailwindcss/tailwind.css'
 
 import * as amplitude from '@amplitude/analytics-browser'
-import {
-  IDENTITIES,
-  WalletIdentityProvider,
-} from '@cardinal/namespaces-components'
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base'
 import { WalletProvider } from '@solana/wallet-adapter-react'
 import { WalletModalProvider } from '@solana/wallet-adapter-react-ui'
@@ -23,6 +19,10 @@ import {
   SolflareWalletAdapter,
   TorusWalletAdapter,
 } from '@solana/wallet-adapter-wallets'
+import {
+  IDENTITIES,
+  WalletIdentityProvider,
+} from '@solana-nft-programs/namespaces-components'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ToastContainer } from 'common/Notification'
 import type { ProjectConfig } from 'config/config'
@@ -107,7 +107,7 @@ const App = ({
                     <WalletModalProvider>
                       <>
                         <Head>
-                          <title>Cardinal</title>
+                          <title></title>
                         </Head>
                         <ToastContainer />
                         <Component {...pageProps} />

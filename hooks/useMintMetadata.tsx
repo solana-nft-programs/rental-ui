@@ -1,5 +1,5 @@
-import type { AccountData } from '@cardinal/common'
-import { tryPublicKey } from '@cardinal/common'
+import type { AccountData } from '@solana-nft-programs/common'
+import { tryPublicKey } from '@solana-nft-programs/common'
 import { useQueries, useQuery } from '@tanstack/react-query'
 import { getMintfromTokenData } from 'common/tokenDataUtils'
 import type { ProjectConfig } from 'config/config'

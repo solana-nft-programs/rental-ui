@@ -1,21 +1,21 @@
-import type { AccountData } from '@cardinal/common'
-import {
-  withFindOrInitAssociatedTokenAccount,
-  withWrapSol,
-} from '@cardinal/common'
-import {
-  withClaimToken,
-  withExtendExpiration,
-  withResetExpiration,
-} from '@cardinal/token-manager'
-import type { PaidClaimApproverData } from '@cardinal/token-manager/dist/cjs/programs/claimApprover'
-import type { TimeInvalidatorData } from '@cardinal/token-manager/dist/cjs/programs/timeInvalidator'
-import type { TokenManagerData } from '@cardinal/token-manager/dist/cjs/programs/tokenManager'
 import type * as metaplex from '@metaplex-foundation/mpl-token-metadata'
 import type * as splToken from '@solana/spl-token'
 import { useWallet } from '@solana/wallet-adapter-react'
 import type { Keypair } from '@solana/web3.js'
 import { Connection, Transaction } from '@solana/web3.js'
+import type { AccountData } from '@solana-nft-programs/common'
+import {
+  withFindOrInitAssociatedTokenAccount,
+  withWrapSol,
+} from '@solana-nft-programs/common'
+import {
+  withClaimToken,
+  withExtendExpiration,
+  withResetExpiration,
+} from '@solana-nft-programs/token-manager'
+import type { PaidClaimApproverData } from '@solana-nft-programs/token-manager/dist/cjs/programs/claimApprover'
+import type { TimeInvalidatorData } from '@solana-nft-programs/token-manager/dist/cjs/programs/timeInvalidator'
+import type { TokenManagerData } from '@solana-nft-programs/token-manager/dist/cjs/programs/tokenManager'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { BN } from 'bn.js'
 import { getExtensionPrice } from 'common/RentalSummary'

@@ -1,6 +1,6 @@
-import { shortPubKey, tryPublicKey } from '@cardinal/common'
-import { DisplayAddress } from '@cardinal/namespaces-components'
 import type { PublicKey } from '@solana/web3.js'
+import { shortPubKey, tryPublicKey } from '@solana-nft-programs/common'
+import { DisplayAddress } from '@solana-nft-programs/namespaces-components'
 import { GlyphLargeClose } from 'assets/GlyphLargeClose'
 import { ButtonSmall } from 'common/ButtonSmall'
 import { getRentalRateDisplayText } from 'common/NFTIssuerInfo'

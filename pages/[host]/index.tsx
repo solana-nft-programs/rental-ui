@@ -37,7 +37,7 @@ export default function Home() {
         `}
       />
       <Head>
-        <title>Cardinal</title>
+        <title></title>
         <link rel="icon" href="/favicon.ico" />
 
         <link
@@ -58,18 +58,18 @@ export default function Home() {
           href="https://fonts.googleapis.com/css2?family=Karla:wght@600&display=swap"
           rel="stylesheet"
         />
-        <meta property="og:title" content="Cardinal Rental Marketplace" />
+        <meta property="og:title" content=" Rental Marketplace" />
         <meta
           name="og:description"
-          content="Rent and Claim your favorite NFTs on Cardinal's Rental Marketplace"
+          content="Rent and Claim your favorite NFTs on  Rental Marketplace"
         />
         <meta
           name="og:image"
           content={`${process.env.NEXT_PUBLIC_BASE_URL}/api/preview`}
         />
-        <meta property="og:url" content="https://rent.cardinal.so" />
+        <meta property="og:url" content="https://rent.host.so" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:site" content="@cardinal_labs" />
+        <meta name="twitter:site" content="@" />
       </Head>
       <Banner />
       {config.name !== 'default' || router.query.host?.includes(config.name) ? (
